@@ -13,6 +13,17 @@ ul.controls {
 	margin: 0;
 	padding: 0;
 	max-width: 200px;
+
+	/* icon animations ftw! */
+	.icon-cog {
+		opacity: 1;
+		transition: opacity 0.3s ease-in-out 0s;
+	}
+
+	.icon-spin {
+		opacity: 0.5;
+	}
+
 }
 ul.controls li {
 	float:left;

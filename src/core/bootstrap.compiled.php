@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 30 Apr 2015 11:47:08 -0400
+ * @compiled Thu, 14 May 2015 18:04:10 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -9091,6 +9091,9 @@ header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetCompon
 if(\ConfigHandler::Get('/core/security/x-frame-options')){
 header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
 }
+if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
+}
 header('HTTP/1.1 ' . $movetext);
 header('Location: ' . $page);
 \HookHandler::DispatchHook('/core/page/postrender');
@@ -9102,6 +9105,9 @@ $movetext = '302 Moved Temporarily';
 header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
 if(\ConfigHandler::Get('/core/security/x-frame-options')){
 header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+}
+if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
 }
 header('HTTP/1.1 302 Moved Temporarily');
 header('Location:' . CUR_CALL);
@@ -16852,6 +16858,9 @@ else header('Content-Type: ' . $this->contenttype);
 header('X-Content-Encoded-By: Core Plus' . (DEVELOPMENT_MODE ? ' ' . Core::GetComponent()->getVersion() : ''));
 if(\ConfigHandler::Get('/core/security/x-frame-options')){
 header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+}
+if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
 }
 if($this->updated !== null){
 header('Last-Modified: ' . Time::FormatGMT($this->updated, Time::TIMEZONE_USER, Time::FORMAT_RFC2822));
