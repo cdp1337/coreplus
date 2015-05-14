@@ -65,7 +65,7 @@ if [ -n "$VERSION" ]; then
 fi
 
 # Finally, do the actual minifying.
-java -jar $YUICOMPRESSOR -v $SRCFILE >> $DSTFILE
+java -jar "$YUICOMPRESSOR" -v "$SRCFILE" >> "$DSTFILE"
 
 S1=$(stat -c%s "$SRCFILE")
 S2=$(stat -c%s "$DSTFILE")
