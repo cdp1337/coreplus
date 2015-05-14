@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class Table definition in the coreplus project
- * 
+ *
  * @package Core\ListingTable
  * @author Charlie Powell <charlie@eval.bz>
  * @date 20140406.2004
@@ -22,6 +22,7 @@
  */
 
 namespace Core\ListingTable;
+use Core\Templates\Template;
 
 
 /**
@@ -48,7 +49,7 @@ namespace Core\ListingTable;
  * $b = $a;
  * </code>
  *
- * 
+ *
  * @package Core\ListingTable
  * @author Charlie Powell <charlie@eval.bz>
  *
@@ -78,6 +79,9 @@ class Table implements \Iterator {
 
 	/** @var array|null Array of the results, pulled directly from the ModelFactory's get method. */
 	private $_results;
+
+	/** @var null|\ViewControls Any controls added to this table as a whole. */
+	private $_controls = null;
 
 	public function __construct(){
 		// Set the name by default to the system request's baseurl.
@@ -171,6 +175,21 @@ class Table implements \Iterator {
 		}
 
 		return $this->_editform;
+	}
+
+	/**
+	 * Get the controls for this table, if any.
+	 *
+	 * @return \ViewControls
+	 */
+	public function getControls(){
+		if($this->_controls === null){
+			$this->_controls = new \ViewControls();
+			$this->_controls->setProxyText('Bulk Actions');
+			$this->_controls->setProxyForce(true);
+		}
+
+		return $this->_controls;
 	}
 
 
@@ -275,6 +294,45 @@ class Table implements \Iterator {
 	public function setDefaultSort($key, $direction = 'DESC'){
 		$this->getFilters()->setSortKey($key);
 		$this->getFilters()->setSortDirection($direction);
+	}
+
+	/**
+	 * Add a control into the page template.
+	 *
+	 * Useful for embedding functions and administrative utilities inline without having to adjust the
+	 * application template.
+	 *
+	 * @param string|array $title       The title to set for this control
+	 * @param string $link        The link to set for this control
+	 * @param string|array $class The class name or array of attributes to set on this control
+	 *                            If this is an array, it should be an associative array for the advanced parameters
+	 */
+	public function addControl($title, $link = null, $class = 'edit') {
+		$control = new \ViewControl();
+
+		// Completely associative-array based version!
+		if(func_num_args() == 1 && is_array($title)){
+			foreach($title as $k => $v){
+				$control->set($k, $v);
+			}
+		}
+		else{
+			// Advanced method, allow for associative arrays.
+			if(is_array($class)){
+				foreach($class as $k => $v){
+					$control->set($k, $v);
+				}
+			}
+			// Default method; just a string for the class name.
+			else{
+				$control->class = $class;
+			}
+
+			$control->title = $title;
+			$control->link = \Core::ResolveLink($link);
+		}
+
+		$this->getControls()->addLink($control);
 	}
 
 
@@ -437,7 +495,8 @@ class Table implements \Iterator {
 	 * @return string Full HTML Markup.
 	 */
 	private function _renderHead(){
-		$out = '';
+
+		$template = Template::Factory('includes/listingtable/head.tpl');
 
 		$f = $this->getFilters();
 
@@ -445,12 +504,6 @@ class Table implements \Iterator {
 			// One final check for if these filters are sortable.
 			$f->hassort = false;
 		}
-
-		if($f->getTotalCount() == 0 && !$f->hasSet()){
-			return '<p class="message-info">No records found!</p>';
-		}
-
-		$out .= $this->_renderFilters() . $this->_renderPagination();
 
 		$tableclasses = ['listing'];
 		if($this->_hassort){
@@ -460,37 +513,32 @@ class Table implements \Iterator {
 		$atts['class'] = implode(' ', $tableclasses);
 		$atts['data-table-name'] = $this->_name;
 		$atts['data-table-sortable'] = ($this->_hassort ? 1 : 0);
-
-		if($this->_editform !== null){
-			$out .= $this->_editform->render('head') . $this->_editform->render('body');
-		}
-
-		$out .= '<table';
+		$tableAttributes = '';
 		foreach($atts as $k => $v){
-			$out .= ' ' . $k . '="' . $v . '"';
-		}
-		$out .= '><tr>';
-		foreach($this->_columns as $c){
-			/** @var Column $c */
-			$out .= $c->getTH();
-		}
-		// One extra column for the control links.
-		$out .= '<th><ul class="controls">';
-		$out .= '<li><a href="#" class="control-column-selection"><i class="icon-columns"></i><span>Show / Hide Columns</span></a></li>';
-		if($this->_editform !== null){
-			$out .= '<li><a href="#" class="control-edit-toggle"><i class="icon-pencil-square-o"></i><span>Quick Edit</span></a></li>';
-		}
-		$out .= '</ul></th>';
-		$out .= '</tr>';
-
-		if($this->_editform !== null){
-			$out .= '<tr class="edit edit-record-buttons"><td colspan="' . (sizeof($this->_columns) + 1) . '">' .
-				'<a href="#" class="control-edit-toggle button">Cancel</a>' .
-				'<input type="submit" value="Save Quick Edit"/>' .
-				'</td></tr>';
+			$tableAttributes .= ' ' . $k . '="' . $v . '"';
 		}
 
-		return $out;
+		if($this->_editform !== null){
+			$this->addControl(
+				[
+					'link' => '#',
+					'class' => 'control-edit-toggle',
+					'icon' => 'pencil-square-o',
+					'title' => 'Quick Edit',
+				]
+			);
+		}
+
+		$template->assign('filters', $f);
+		$template->assign('filters_rendered', $this->_renderFilters());
+		$template->assign('pagination_rendered', $this->_renderPagination());
+		$template->assign('table_attributes', $tableAttributes);
+		$template->assign('edit_form', $this->_editform);
+		$template->assign('columns', $this->_columns);
+		$template->assign('controls', $this->getControls());
+
+
+		return $template->fetch();
 	}
 
 	/**
