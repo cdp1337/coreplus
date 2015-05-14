@@ -4,7 +4,8 @@ $(function(){
 			proxyicon: 'cog',
 			proxytext: 'Controls',
 			proxyforce: false,
-			position: 'right'
+			position: 'right',
+			spin: true
 		},
 		$currentopen = null,
 		$currentover = null,
@@ -12,18 +13,19 @@ $(function(){
 
 	//$('.controls-hover').each(function(){
 	$('.controls').each(function(){
-			// The original menu, this will become contextual.
+		// The original menu, this will become contextual.
 		var $original = $(this),
-			// A clone of it, this will be flattened and act as the anchor.
+		// A clone of it, this will be flattened and act as the anchor.
 			$clone = $original.clone(),
-			// The main wrapper
-			//$wrapper = $('<div class="controls-hover-wrapper"/>'),
+		// The main wrapper
+		//$wrapper = $('<div class="controls-hover-wrapper"/>'),
 			controlcount = $clone.find('li').length,
 			options = {
 				proxyicon: $original.data('proxy-icon'),
 				proxytext: $original.data('proxy-text'),
 				proxyforce: $original.data('proxy-force'),
-				position: $original.data('position')
+				position: $original.data('position'),
+				spin: $original.data('spin')
 			}, i;
 
 		for(i in options){
@@ -64,7 +66,18 @@ $(function(){
 
 		// If there are more than 3 options, hide the rest.
 		if(controlcount > 3 || options.proxyforce){
-			$clone.html('<li><i class="icon-' + options.proxyicon + '"></i>' + (options.proxytext ? ' ' + options.proxytext : '') + '</li>');
+			if(options.spin){
+				$clone.html('<li><i class="icon-' + options.proxyicon + ' icon-spin"></i>' + (options.proxytext ? ' ' + options.proxytext : '') + '</li>');
+			}
+			else{
+				$clone.html('<li><i class="icon-' + options.proxyicon + '"></i>' + (options.proxytext ? ' ' + options.proxytext : '') + '</li>');
+			}
+		}
+
+		if(options.spin){
+			setTimeout(function($o){
+				$o.find('i.icon-cog').removeClass('icon-spin');
+			}, 1000, $clone);
 		}
 
 		$clone
@@ -107,6 +120,13 @@ $(function(){
 
 				$currentopen = $original;
 				$currentover = $clone;
+
+				if(options.spin) {
+					$currentover.find('i.icon-cog').addClass('icon-spin');
+					setTimeout(function ($o) {
+						$o.find('i.icon-cog').removeClass('icon-spin');
+					}, 1000, $currentover);
+				}
 			})
 			.mouseleave(function(){
 				if(timer){
