@@ -423,6 +423,9 @@ function redirect($page, $code = 302){
 	if(\ConfigHandler::Get('/core/security/x-frame-options')){
 		header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
 	}
+	if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+		header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
+	}
 	header('HTTP/1.1 ' . $movetext);
 	header('Location: ' . $page);
 
@@ -442,6 +445,9 @@ function reload(){
 	header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
 	if(\ConfigHandler::Get('/core/security/x-frame-options')){
 		header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+	}
+	if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+		header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
 	}
 	header('HTTP/1.1 302 Moved Temporarily');
 	header('Location:' . CUR_CALL);
