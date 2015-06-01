@@ -7,11 +7,38 @@
  * To change this template use File | Settings | File Templates.
  */
 class JQueryCycle {
-    public static function Load(){
 
-        \Core\view()->addScript ('js/jquery.cycle.all.js');
+	protected static $_IncludedVersion = null;
 
-        // IMPORTANT!  Tells the script that the include succeeded!
-        return true;
-    }
+	public static function Load(){
+
+		JQuery::IncludeJQuery();
+
+		if(self::$_IncludedVersion === null || self::$_IncludedVersion === 1){
+			\Core\view()->addScript ('js/jquery.cycle.all.js');
+			// IMPORTANT!  Tells the script that the include succeeded!
+
+			self::$_IncludedVersion = 1;
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
+
+	public static function Load2(){
+
+		JQuery::IncludeJQuery();
+
+		if(self::$_IncludedVersion === null || self::$_IncludedVersion === 2){
+			\Core\view()->addScript ('js/jquery.cycle2.js');
+			// IMPORTANT!  Tells the script that the include succeeded!
+
+			self::$_IncludedVersion = 2;
+			return true;
+		}
+		else{
+			return false;
+		}
+	}
 }

@@ -7,10 +7,15 @@
 	</requires>
 	<provides>
 		<provide version="3.0.1" name="JQuery.cycle" type="library"/>
+		<provide version="2.1.6" name="JQuery.cycle2" type="library"/>
 		<scriptlibrary name="jquery.cycle" call="JQueryCycle::Load"/>
+		<scriptlibrary name="jquery.cycle2" call="JQueryCycle::Load2"/>
 	</provides>
 	<assets>
 		<file filename="assets/js/jquery.cycle.all.js" md5="2fdaf616681256cd6d32d811f2ee987b"/>
+		<file filename="assets/js/jquery.cycle.all.min.js" md5="7ed15a915d6207529595646872c843de"/>
+		<file filename="assets/js/jquery.cycle2.js" md5="73dcee81ec2da998367975c851ae9acd"/>
+		<file filename="assets/js/jquery.cycle2.min.js" md5="44b823255ba3033ffa4e913221e4f0b8"/>
 	</assets>
 	<upgrades>
 		<upgrade from="2.9999.5~core1" to="3.0.1~core1"/>
@@ -18,8 +23,8 @@
 		<upgrade from="3.0.1~core2" to="3.0.1~core3"/>
 	</upgrades>
 	<files>
-		<file filename="CHANGELOG" md5="f07d0365e35c9a4be18fccfbd2532fd2"/>
-		<file filename="JQueryCycle.lib.php" md5="c4aa39c19f24e1286d12baf7d01b3ebe">
+		<file filename="CHANGELOG" md5="37749ee9af35ef6d78517b7a96ca5f41"/>
+		<file filename="JQueryCycle.lib.php" md5="7ed024202af95f1b1649f4205977c127">
 			<class name="JQueryCycle"/>
 		</file>
 	</files>
