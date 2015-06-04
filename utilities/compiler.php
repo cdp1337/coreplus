@@ -439,8 +439,11 @@ else{
 }
 
 
-/*
+
 echo "Scanning for JS resources...\n";
+$compresults = [];
+$coreresults = [];
+$themeresults = [];
 exec('find "' . ROOT_PDIR . 'components/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
 exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
 exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
@@ -454,14 +457,21 @@ foreach($results as $file){
 		continue;
 	}
 
+	// Only compress files that are located within an "assets" directory.
+	// This is because if any script is used for server-side tasks or test-related tasks,
+	// there is no reason to need the minified version!
+	if(strpos($file, '/assets/') === false){
+		continue;
+	}
+
 	echo "Compiling $file...\n";
 
 
 	$cmd = escapeshellarg(BASE_DIR . 'utilities/minify.js.sh');
-	$cmd .= ' ' . $file;
+	$cmd .= ' ' . escapeshellarg($file);
 
 	exec($cmd);
 }
-*/
+
 
 echo "\n";
