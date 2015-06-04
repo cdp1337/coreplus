@@ -82,6 +82,9 @@ $(function(){
 	});
 
 	$('.widget-bucket-destination').delegate('a.control-edit', 'click', function(){
+		// Just in case this didn't get called before.
+		Core.User.init();
+
 		var $this = $(this),
 			$par = $this.closest('.widget-dragdropped'),
 			$widgetaccess = $par.find('.widgetaccess'),

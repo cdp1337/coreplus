@@ -60,7 +60,7 @@ class Widget_2_1 {
 	 *
 	 * @var WidgetInstanceModel
 	 */
-	public $_model = null;
+	public $_instance = null;
 
 	/**
 	 * Widgets that are manually called do not have instances attached to them,
@@ -128,17 +128,18 @@ class Widget_2_1 {
 	 * @return WidgetInstanceModel
 	 */
 	public function getWidgetInstanceModel() {
-		return $this->_model;
+		return $this->_instance;
 	}
 
 	/**
 	 * Get the actual widget model for this instance.
 	 *
 	 * @since 2.4.2
-	 * @return WidgetModel
+	 * @return WidgetModel|null
 	 */
 	public function getWidgetModel(){
-		return $this->getWidgetInstanceModel()->getLink('Widget');
+		$wi = $this->getWidgetInstanceModel();
+		return $wi ? $wi->getLink('Widget') : null;
 	}
 
 	/**
@@ -150,6 +151,19 @@ class Widget_2_1 {
 	 */
 	public function getFormSettings(){
 		return [];
+	}
+
+	/**
+	 * Get the path for the preview image for this widget.
+	 *
+	 * Should be an image of size 210x70, 210x140, or 210x210.
+	 *
+	 * @return string
+	 */
+	public function getPreviewImage(){
+		// Extend this method in your class and return the path you need.
+		// Optional.
+		return '';
 	}
 
 
@@ -243,7 +257,7 @@ class Widget_2_1 {
 }
 
 class WidgetRequest{
-	public $parameters = array();
+	public $parameters = [];
 
 	/**
 	 * Get all parameters from the GET or inline variables.

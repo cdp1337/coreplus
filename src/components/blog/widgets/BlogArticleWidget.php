@@ -129,8 +129,41 @@ class BlogArticleWidget extends Widget_2_1 {
 			return '';
 		}
 
+		$view->assign('count', $this->getSetting('count'));
 		$view->assign('sort', $this->getSetting('sort'));
 		$view->assign('title', $this->getSetting('title'));
-		$view->assign('links', $fac->get());
+		// The template is expecting an array, if count is 1, only a single Model is returned from the factory.
+		$view->assign('links', $this->getSetting('count') == 1 ? [$fac->get()] : $fac->get());
+	}
+
+	/**
+	 * Get the path for the preview image for this widget.
+	 *
+	 * Should be an image of size 210x70, 210x140, or 210x210.
+	 *
+	 * @return string
+	 */
+	public function getPreviewImage(){
+		// Extend this method in your class and return the path you need.
+		// Optional.
+		$base = 'assets/images/previews/blog/templates/widgets/blogarticle/execute/';
+
+		$wi = $this->getWidgetInstanceModel();
+		$template = $wi === null ? '' : $wi->get('display_template');
+
+		switch($template){
+			case 'everything-small.tpl':
+				return $base . 'everything-small.png';
+			case 'everything-large.tpl':
+				return $base . 'everything-large.png';
+			case 'unordered-list.tpl':
+				return $base . 'unordered-list.png';
+			case 'unordered-list-with-date.tpl':
+				return $base . 'unordered-list-with-date.png';
+			case 'unordered-list-with-thumbnail.tpl':
+				return $base . 'unordered-list-with-thumbnail.png';
+			default:
+				return $base . 'unordered-list.png';
+		}
 	}
 } 

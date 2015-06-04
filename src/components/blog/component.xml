@@ -32,7 +32,7 @@
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
 		<file filename="upgrades/150_to_151_filepathchange.php" md5="d37162704ef850a8954bf11dcc66dc43"/>
 		<file filename="upgrades/next_page_updates.php" md5="6d72fdf11b4261f55bf3b8bc367d4e78"/>
-		<file filename="widgets/BlogArticleWidget.php" md5="df5578a54b08a3db283e48f1af8b57e6">
+		<file filename="widgets/BlogArticleWidget.php" md5="177ff8cf2a84b309f862df72db718be4">
 			<class name="BlogArticleWidget"/>
 		</file>
 		<file filename="widgets/BlogSearchWidget.php" md5="eb16d45169d27f54a878a48c03cbc97a">
@@ -68,6 +68,10 @@
 		<file filename="templates/pages/blog/view-blog.tpl" md5="e0c979c842903fe844dea48825b327e9"/>
 		<file filename="templates/widgets/blog/execute.tpl" md5="07ef69514345efa6a6b5acc80d277236"/>
 		<file filename="templates/widgets/blogarticle/execute.tpl" md5="e425954a687b9e4545dabce7b95aa935"/>
+		<file filename="templates/widgets/blogarticle/execute/everything-small.tpl" md5="45579b35d605eabca2850da737cf9942"/>
+		<file filename="templates/widgets/blogarticle/execute/unordered-list-with-date.tpl" md5="6164965a3187341967e21bdf457af7ce"/>
+		<file filename="templates/widgets/blogarticle/execute/unordered-list-with-thumbnail.tpl" md5="763a0b06ad296720338505c94cae75d6"/>
+		<file filename="templates/widgets/blogarticle/execute/unordered-list.tpl" md5="75fc5f437df9237ce39f312a92f46f3e"/>
 		<file filename="templates/widgets/blogsearch/execute.tpl" md5="084b3c6165680bd05193ea6c2f96cef4"/>
 	</view>
 	<upgrades>
@@ -124,6 +128,12 @@
 		<file filename="assets/css/blog.css" md5="057d4488d69c927125d516cde602edb1"/>
 		<file filename="assets/css/blog.css.map" md5="a8ffec0ddb8ed844f1c88fa3dbe9a2e1"/>
 		<file filename="assets/css/blog.min.css" md5="9a06df1537392f830267903f5fb7232a"/>
+		<file filename="assets/images/previews/blog/templates/widgets/blogarticle/execute/everything-large.png" md5="f32049f0a6d74510fb87e16af649cde7"/>
+		<file filename="assets/images/previews/blog/templates/widgets/blogarticle/execute/everything-small.png" md5="d718220b031cb7749a4b68454b50024e"/>
+		<file filename="assets/images/previews/blog/templates/widgets/blogarticle/execute/everything-small.xcf" md5="87764982486fa4ec5222fa3fbe79febf"/>
+		<file filename="assets/images/previews/blog/templates/widgets/blogarticle/execute/unordered-list-with-date.png" md5="8dbf59c3d35e2a2187fd4e7a716804c7"/>
+		<file filename="assets/images/previews/blog/templates/widgets/blogarticle/execute/unordered-list-with-thumbnail.png" md5="df9fbd665ee5ec88edbc650c21fe9aed"/>
+		<file filename="assets/images/previews/blog/templates/widgets/blogarticle/execute/unordered-list.png" md5="38f7e4cd0e01cd825919190ea9b1247a"/>
 		<file filename="assets/images/valid-atom.png" md5="e343955a970cb2f7834fdb550f600ab2"/>
 		<file filename="assets/images/valid-rss.png" md5="7dac8fdd319e86cf82fa27bc7e2d416f"/>
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>

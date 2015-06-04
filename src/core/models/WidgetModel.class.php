@@ -30,6 +30,9 @@ class WidgetModel extends Model {
 	 */
 	private $_settings = null;
 
+	/** @var Widget_2_1|null */
+	private $_widget;
+
 
 	public static $Schema = array(
 		'site' => array(
@@ -170,8 +173,58 @@ class WidgetModel extends Model {
 		else return null;
 	}
 
+	/**
+	 * Get an array of all the parts of this request, including:
+	 * 'controller', 'method', 'parameters', 'baseurl', 'rewriteurl'
+	 *
+	 * @return array
+	 */
+	public function splitParts() {
+		$ret = WidgetModel::SplitBaseURL($this->get('baseurl'));
 
+		// No?
+		if (!$ret) {
+			$ret = [
+				'controller' => null,
+				'method'     => null,
+				'parameters' => null,
+				'baseurl'    => null
+			];
+		}
 
+		// Tack on the parameters
+		if ($ret['parameters'] === null) $ret['parameters'] = [];
+
+		return $ret;
+	}
+
+	/**
+	 * Get the associated model for this instance, if available.
+	 *
+	 * @return Widget_2_1|null
+	 */
+	public function getWidget(){
+		if($this->_widget === null){
+			$pagedat = $this->splitParts();
+
+			// This will be a Widget object.
+			/** @var Widget_2_1 $c */
+			$this->_widget = Widget_2_1::Factory($pagedat['controller']);
+
+			// Make sure it's linked
+			$this->_widget->_instance = $this;
+
+			// Was installable passed in?  It may contain data useful to the widget.
+			if($this->get('installable')){
+				$this->_widget->_installable = $this->get('installable');
+			}
+
+			// Pass in any base and customer parameters
+			$this->_widget->_params = $pagedat['parameters'];
+		}
+
+		return $this->_widget;
+	}
 
 
 	/**

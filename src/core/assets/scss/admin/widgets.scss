@@ -9,8 +9,20 @@
 
 	.widgetarea {
 		float: left;
-		width: 250px;
+		width: 212px;
 		margin-right: 5px;
+	}
+
+	.widget-instance {
+		border: 1px solid #666;
+		text-align: center;
+		padding-bottom: 5px;
+		min-height: 130px;
+
+		.widget-title {
+			display: block;
+			text-align: center;
+		}
 	}
 
 	.widget-droptarget {
@@ -61,6 +73,35 @@
 				display: block;
 			}
 		}
+	}
+}
+
+.widget-bucket-source {
+	.widget-source {
+		float: left;
+		border: 1px solid #666;
+		margin: 0 5px 5px 0;
+		text-align: center;
+		padding-bottom: 5px;
+		min-height: 200px;
+		width: 210px;
+
+		.widget-title {
+			display: block;
+			text-align: center;
+		}
+	}
+}
+
+.widget-bucket-registration {
+	.widget-registration {
+		float: left;
+		border: 1px solid #666;
+		margin: 0 5px 5px 0;
+		text-align: center;
+		padding-bottom: 5px;
+		min-height: 140px;
+		width: 210px;
 	}
 }
 

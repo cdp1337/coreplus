@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 14 May 2015 18:04:10 -0400
+ * @compiled Thu, 04 Jun 2015 01:19:28 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6206,6 +6206,7 @@ return self::getAsFormElement();
 ### REQUIRE_ONCE FROM core/models/WidgetModel.class.php
 class WidgetModel extends Model {
 private $_settings = null;
+private $_widget;
 public static $Schema = array(
 'site' => array(
 'type' => Model::ATT_TYPE_INT,
@@ -6294,6 +6295,31 @@ $split = self::SplitBaseURL($this->get('baseurl'));
 if(!$split) return null;
 if(isset($split['parameters'][0])) return $split['parameters'][0];
 else return null;
+}
+public function splitParts() {
+$ret = WidgetModel::SplitBaseURL($this->get('baseurl'));
+if (!$ret) {
+$ret = [
+'controller' => null,
+'method'     => null,
+'parameters' => null,
+'baseurl'    => null
+];
+}
+if ($ret['parameters'] === null) $ret['parameters'] = [];
+return $ret;
+}
+public function getWidget(){
+if($this->_widget === null){
+$pagedat = $this->splitParts();
+$this->_widget = Widget_2_1::Factory($pagedat['controller']);
+$this->_widget->_instance = $this;
+if($this->get('installable')){
+$this->_widget->_installable = $this->get('installable');
+}
+$this->_widget->_params = $pagedat['parameters'];
+}
+return $this->_widget;
 }
 public static function SplitBaseURL($base) {
 if (!$base) return null;
@@ -10635,7 +10661,7 @@ $preview = $this->getPreviewFile($dimensions);
 if ($includeHeader){
 header('Content-Type: ' . $this->getMimetype());
 header('Content-Length: ' . $preview->getFilesize());
-header('X-Alternate-Location: ' . $preview->getURL());
+header('X-Alternative-Location: ' . $preview->getURL());
 header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
 }
 echo $preview->getContents();
@@ -11423,7 +11449,7 @@ if ($includeHeader){
 $view->contenttype = $this->getMimetype();
 $view->updated = $this->getMTime();
 $view->addHeader('Content-Length', $resized->getFilesize());
-$view->addHeader('X-Alternate-Location', $resized->getURL());
+$view->addHeader('X-Alternative-Location', $resized->getURL());
 $view->mode = \View::MODE_NOOUTPUT;
 $view->render();
 }
@@ -12887,6 +12913,7 @@ class ViewControls implements Iterator, ArrayAccess {
 public $hovercontext = true;
 private $_links = [];
 private $_pos = 0;
+private $_data = [];
 public function current() {
 return $this->_links[$this->_pos];
 }
@@ -12952,10 +12979,25 @@ foreach($links as $l){
 $this[] = $l;
 }
 }
+public function addLink($link){
+$this[] = $link;
+}
 public function fetch(){
+if(!$this->hasLinks()){
+return '';
+}
 $ulclass = ['controls'];
 if($this->hovercontext) $ulclass[] = 'controls-hover';
-$html = '<ul class="' . implode(' ', $ulclass) . '">';
+$atts = [];
+$atts['class'] = implode(' ', $ulclass);
+foreach($this->_data as $k => $v){
+$atts['data-' . $k] = $v;
+}
+$html = '<ul ';
+foreach($atts as $k => $v){
+$html .= $k . '="' . str_replace('"', '&quot;', $v) . '" ';
+}
+$html .= '>';
 foreach($this->_links as $l){
 $html .= $l->fetch();
 }
@@ -12964,6 +13006,12 @@ return $html;
 }
 public function hasLinks(){
 return (sizeof($this->_links) > 0);
+}
+public function setProxyText($text){
+$this->_data['proxy-text'] = $text;
+}
+public function setProxyForce($force){
+$this->_data['proxy-force'] = $force ? '1' : '0';
 }
 public static function Dispatch($baseurl, $subject){
 $links = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
@@ -12987,6 +13035,19 @@ public $confirm = '';
 public $otherattributes = [];
 public function fetch(){
 $html = '';
+if(!$this->icon){
+switch($this->class){
+case 'delete':
+$this->icon = 'remove';
+break;
+case 'view':
+$this->icon = 'eye-open';
+break;
+default:
+$this->icon = $this->class;
+break;
+}
+}
 $html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
 if($this->link){
 $html .= $this->_fetchA();
@@ -16932,24 +16993,6 @@ $control->class = $class;
 $control->title = $title;
 $control->link = Core::ResolveLink($link);
 }
-if(!$control->icon){
-switch($control->class){
-case 'add':
-case 'edit':
-case 'directory':
-$control->icon = $control->class;
-break;
-case 'delete':
-$control->icon = 'remove';
-break;
-case 'view':
-$control->icon = 'eye-open';
-break;
-default:
-$control->icon = $control->class;
-break;
-}
-}
 if($control->link != Core::ResolveLink($this->baseurl)){
 $this->controls[] = $control;
 }
@@ -17159,7 +17202,7 @@ private $_view = null;
 private $_request = null;
 public $is_simple = false;
 public $settings = [];
-public $_model = null;
+public $_instance = null;
 public $_params = null;
 public $_installable = null;
 public function getView() {
@@ -17189,13 +17232,17 @@ $this->_request = new WidgetRequest();
 return $this->_request;
 }
 public function getWidgetInstanceModel() {
-return $this->_model;
+return $this->_instance;
 }
 public function getWidgetModel(){
-return $this->getWidgetInstanceModel()->getLink('Widget');
+$wi = $this->getWidgetInstanceModel();
+return $wi ? $wi->getLink('Widget') : null;
 }
 public function getFormSettings(){
 return [];
+}
+public function getPreviewImage(){
+return '';
 }
 protected function setAccess($accessstring) {
 $this->getWidgetInstanceModel()->set('access', $accessstring);
@@ -17239,7 +17286,7 @@ return true;
 }
 }
 class WidgetRequest{
-public $parameters = array();
+public $parameters = [];
 public function getParameters() {
 return $this->parameters;
 }
@@ -17591,7 +17638,10 @@ public function getInputAttributes() {
 $out = '';
 if(isset($this->_attributes['source']) && !isset($this->_attributes['options'])){
 $source = $this->_attributes['source'];
-if (strpos($source, '::') !== false) {
+if(
+(is_array($source) && sizeof($source) == 2) ||
+strpos($source, '::') !== false
+){
 $this->_attributes['options'] = call_user_func($source);
 }
 }
@@ -17953,6 +18003,9 @@ die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
 unset($formatts['type']);
 foreach($defaults as $k => $v){
 if(!isset($formatts[$k])) $formatts[$k] = $v;
+}
+if(isset($formatts['source']) && strpos($formatts['source'], 'this::') === 0){
+$formatts['source'] = [$model, substr($formatts['source'], 6)];
 }
 $el->setFromArray($formatts);
 $model->setToFormElement($k, $el);

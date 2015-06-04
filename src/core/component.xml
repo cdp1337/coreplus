@@ -72,12 +72,12 @@
 	<files>
 		<file filename="config/configuration.example.xml" md5="a756e78cb48c89692edd57f2a3cdce28"/>
 		<file filename="core/CHANGELOG" md5="963d9abafbc5ba80b6a68f759ab99a95"/>
-		<file filename="core/assets/scss/admin/widgets.scss" md5="a0683ffda789e9bc43107c86f2a8754b"/>
+		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="4416faccfd246a2049882672b8a6d7cb"/>
 		<file filename="core/bootstrap_preincludes.php" md5="703e467a570cb33401af9a865d35a4ff"/>
-		<file filename="core/controllers/AdminController.php" md5="54bdbd4f95eb81b1083abf06ccc7f199">
+		<file filename="core/controllers/AdminController.php" md5="e6222fa8b7d6df2b1b3d999ae42fbe3a">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="4dbc0eddd9a3538357bf59b3b83d1866">
@@ -118,6 +118,9 @@
 		</file>
 		<file filename="core/controllers/UserGroupAdminController.php" md5="d9ad469521844ff035800105d37d9a16">
 			<controller name="UserGroupAdminController"/>
+		</file>
+		<file filename="core/controllers/WidgetController.php" md5="ec114d7f357d77b30795c0ee6a0dfa58">
+			<controller name="WidgetController"/>
 		</file>
 		<file filename="core/forms/FormAccessStringInput.php" md5="9c845a48949b63a8f9e92dd3aa3a3b26">
 			<class name="FormAccessStringInput"/>
@@ -195,7 +198,7 @@
 		<file filename="core/forms/FormUserInput.php" md5="ef1fbd4fff17d8ea275b723746643078">
 			<class name="FormUserInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="eb1073fdec6a907c7e98a793b09ec3c2"/>
+		<file filename="core/functions/Core.functions.php" md5="750b2c18f995483f7f492ac446e1bd3b"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="d30419047aee346d119cf990054ab851">
 			<class name="RewriteMapHelper"/>
 		</file>
@@ -419,7 +422,7 @@
 		<file filename="core/libs/core/FilterForm.class.php" md5="7fc2721d14be167410f99375132d87f2">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="419361d27f5cb3c12b95ac0ae80e85b6">
+		<file filename="core/libs/core/Form.class.php" md5="71f47c5d7fd94ef756d84460d5811a50">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -437,7 +440,6 @@
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="c7351b3405e94c5bf5bc876361b8aa2d">
 			<class name="InstallArchiveAPI"/>
 		</file>
-		<file filename="core/libs/core/InstallTask.class.php.DISABLED" md5="78b24bb7af7d1175eb2d8f797f7bb783"/>
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
@@ -462,7 +464,6 @@
 		<file filename="core/libs/core/RepoXML.class.php" md5="bd3274a0b229e4f016c4240545ec256c">
 			<class name="RepoXML"/>
 		</file>
-		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
 		<file filename="core/libs/core/Session.class.php" md5="19a7526bfe14f417ae608436d7490695">
 			<class name="Session"/>
 		</file>
@@ -475,11 +476,11 @@
 		<file filename="core/libs/core/VersionString.php" md5="e99572e6240670e3d33b630cfd588af9">
 			<class name="Core\VersionString"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="d96cde866125c24eec4fc4f27339b788">
+		<file filename="core/libs/core/View.class.php" md5="61f75c07145c26c0ca4744ca23b3e6c0">
 			<class name="View"/>
 			<class name="ViewException"/>
 		</file>
-		<file filename="core/libs/core/ViewControl.class.php" md5="40c8d29324af209e7c4adecc67efc223">
+		<file filename="core/libs/core/ViewControl.class.php" md5="3350969e0b79911da1a809b1dc585310">
 			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
@@ -498,7 +499,7 @@
 			<class name="Widget"/>
 			<class name="WidgetException"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="3b1c00c28bc74e7340bf27b2930c8c7a">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="48bf638d5fd1298bd192bee59851a12d">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -618,10 +619,10 @@
 		<file filename="core/libs/core/filestore/backends/DirectoryLocal.php" md5="a1704d9f81e28f66ed7cf349f110993f">
 			<class name="Core\Filestore\Backends\DirectoryLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="40ac29997756410b4d5772b8a15dc2fd">
+		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="af2e84ce2241597cdc78f35c23216e80">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="a00204515606919502c2543cbc950b82">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="dbd94d505d0fcdaf6b5f4f18878d37b3">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="aeeca0844b4d79ae040936f0bfdc6564">
@@ -685,7 +686,7 @@
 		<file filename="core/libs/core/listingtable/Column.php" md5="22fdfe8137e3128adb947056d31640e3">
 			<class name="Core\ListingTable\Column"/>
 		</file>
-		<file filename="core/libs/core/listingtable/Table.php" md5="7e6df4eebfd2cf1b3582fa0e80a2708f">
+		<file filename="core/libs/core/listingtable/Table.php" md5="f9ffb095f166b434ffc1e4c5389885ba">
 			<class name="Core\ListingTable\Table"/>
 		</file>
 		<file filename="core/libs/core/search/DoubleMetaPhone.php" md5="83b809f860d8bbad75fc44499c60bdcc">
@@ -1295,10 +1296,10 @@
 		<file filename="core/models/UserUserGroupModel.php" md5="b73a3b87b6c88707449404fa942cf90e">
 			<class name="UserUserGroupModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="8cb6489e61d4060f8efbef843f1e87d8">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="f3133948255a77b594403402c91c8285">
 			<class name="WidgetInstanceModel"/>
 		</file>
-		<file filename="core/models/WidgetModel.class.php" md5="c6f85f25218b6fb2943afe84e569418b">
+		<file filename="core/models/WidgetModel.class.php" md5="f7244d73b2d519b38ce302f44d024a11">
 			<class name="WidgetModel"/>
 		</file>
 		<file filename="core/patches/README" md5="a6b3f1a04205df566eaba3d6704df484"/>
@@ -1314,7 +1315,7 @@
 		<file filename="core/widgets/AdminMenuWidget.php" md5="3dcda1c6187cf18de17de1f4fc2d0101">
 			<class name="AdminMenuWidget"/>
 		</file>
-		<file filename="core/widgets/PageSearchWidget.php" md5="37480eef26942f1997460adc64b163af">
+		<file filename="core/widgets/PageSearchWidget.php" md5="ef7c4777fe434f0279ac6a16aaacdfd4">
 			<class name="PageSearchWidget"/>
 		</file>
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
@@ -1399,7 +1400,7 @@
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
 		<page baseurl="/form/testui" admin="1" access="g:admin" title="Test Form Element UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="All Pages" group="Content"/>
-		<page baseurl="/admin/widgets" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="All Widgets" group="Content"/>
+		<page baseurl="/widget/admin" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="All Widgets" group="Content"/>
 		<page baseurl="/admin/testui" admin="1" access="g:admin" title="Test General UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/page/sitemap" admin="0" access="*" title="Sitemap" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="SEO Options" group="Configure"/>
@@ -1461,6 +1462,7 @@
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="f8def8d34a18483bb59dddba141e5645"/>
 		<file filename="core/templates/forms/groups/tabs.tpl" md5="7fa8235d668d17b2f1514a7e009aea4a"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="773d38b034052c270569be7a7d9bb957"/>
+		<file filename="core/templates/includes/listingtable/head.tpl" md5="966c0f9181a572c51a6435a1655f1813"/>
 		<file filename="core/templates/includes/user/datastore_login.tpl" md5="730b9bc5dc16ab64b46902d2511a6444"/>
 		<file filename="core/templates/includes/user/datastore_register.tpl" md5="c4e41f20ce32bd95e232b96406003804"/>
 		<file filename="core/templates/includes/user/edit_create_contextgroups.tpl" md5="fe043ab28c1c3b3bd3dd0cdfeae2393f"/>
@@ -1474,9 +1476,6 @@
 		<file filename="core/templates/pages/admin/seo_config.tpl" md5="214967a352786e78563f5b875e9b3d7c"/>
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
 		<file filename="core/templates/pages/admin/testui.tpl" md5="fa6b91950d5be2823472e4dfe6f1f458"/>
-		<file filename="core/templates/pages/admin/widget_create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/admin/widget_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/admin/widgets.tpl" md5="40cf529f1c35e2cb8b9802d064f8b414"/>
 		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="ed40e9f26a0782f1185c46dce4d5cc4c"/>
 		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="5085e6075a5978854f1a1a40ef410c30"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
@@ -1533,7 +1532,11 @@
 		<file filename="core/templates/pages/userconfig/admin.tpl" md5="8335bec250e1d970663fbe0409f2d242"/>
 		<file filename="core/templates/pages/usergroupadmin/create_update.tpl" md5="11147e16c5f3bc41ad5c7c6b9cfdf099"/>
 		<file filename="core/templates/pages/usergroupadmin/index.tpl" md5="cec6b41cb710d55cdef2f3a1e4a6a08c"/>
+		<file filename="core/templates/pages/widget/admin.tpl" md5="d69561f2e5e8faa6c5f40ce8eae32d9c"/>
+		<file filename="core/templates/pages/widget/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
+		<file filename="core/templates/pages/widget/instance_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/pages/widget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/widget/view.tpl" md5="4549f633b75d5f1891ede8fb739e53f4"/>
 		<file filename="core/templates/search/model/page.tpl" md5="69cd2ac6a8f3b0d3f224f200215ec766"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
@@ -1623,9 +1626,9 @@
 	<assets>
 		<file filename="core/assets/css/admin/adminbar.css" md5="d8da9e0ce639d5b1fa97e7ca7fb506f9"/>
 		<file filename="core/assets/css/admin/config.css" md5="1cae5af5ea1e4821b3f53684cdc416bf"/>
-		<file filename="core/assets/css/admin/widgets.css" md5="ac8b776eb8e9489f929649bfb8e759ca"/>
-		<file filename="core/assets/css/admin/widgets.css.map" md5="72ab95445d1efa5484fdb1f182b641e8"/>
-		<file filename="core/assets/css/admin/widgets.min.css" md5="ced1cc61f4203874ef3fc29ec5c6224d"/>
+		<file filename="core/assets/css/admin/widgets.css" md5="30dbeabf5cf98f140f4c7479aabeb0fe"/>
+		<file filename="core/assets/css/admin/widgets.css.map" md5="b40b5cfab536f1373c5cf2b68c7ba564"/>
+		<file filename="core/assets/css/admin/widgets.min.css" md5="452ec1a122669a1b896e91a9972cd5fa"/>
 		<file filename="core/assets/css/reset.css" md5="968510374a9ff8a69e49ddd2719eca0d"/>
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
@@ -1751,13 +1754,14 @@
 		<file filename="core/assets/images/placeholders/photo.png" md5="0665e6fda435b01116122b863a4548d2"/>
 		<file filename="core/assets/images/placeholders/placeholder-generic1.jpg" md5="7ee2b126c0396dcb5f3f41c25bea16d6"/>
 		<file filename="core/assets/images/placeholders/template.xcf" md5="2099f59f0748cd56d0f33022b5282b99"/>
+		<file filename="core/assets/images/previews/core/templates/widgets/pagesearch/page-search-execute.png" md5="80ad59afc22d02795c57848c87aaade4"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
-		<file filename="core/assets/js/admin/widgets.js" md5="08000f5af9e2d05458df069fc744e203"/>
+		<file filename="core/assets/js/admin/widgets.js" md5="6ff46c468f481229e30f009fced422be"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
 		<file filename="core/assets/js/core.ajaxlinks.min.js" md5="e944625c6a07892bc4b4de2d8defe9c8"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
-		<file filename="core/assets/js/core.context-controls.js" md5="f6747cb55af47b0f2457f2a169bb6b47"/>
+		<file filename="core/assets/js/core.context-controls.js" md5="5f2804fa70f5706ef09a766cf0f7c7ff"/>
 		<file filename="core/assets/js/core.context-controls.min.js" md5="ebaca3e4872e53327acb4bec47df325c"/>
 		<file filename="core/assets/js/core.email.js" md5="b5f2a018dd9a739e19bba3b9c34ef862"/>
 		<file filename="core/assets/js/core.email.min.js" md5="20aea3e7761dbdf2817f121cf0d702ae"/>
