@@ -1,6 +1,6 @@
 # Core UL Controls
 
-Core has a javascript feature on <ul/> tags to convert them into page-contextual menus.
+Core has a javascript feature on &lt;ul/&gt; tags to convert them into page-contextual menus.
 
 ## Usage
 
@@ -30,7 +30,7 @@ This proxy element will have an icon and optionally a text label.
 
 ## Options
 
-Context controls do support a few options, which are specified in the <ul/> markup as data-* attributes.
+Context controls do support a few options, which are specified in the &lt;ul/&gt; markup as data-* attributes.
 
 * data-proxy-icon
 	* Set to the string of the icon name (sans-"icon"), to use for the proxy.
@@ -38,3 +38,6 @@ Context controls do support a few options, which are specified in the <ul/> mark
 	* Set to the string of the proxy to use beside the icon.
 * data-proxy-force
 	* Set to "0" or "1" to force the use of the proxy.
+* data-proxy-icon-animation
+	* Set to "spin", "bounce", "float", or any of the other supported font-awesome animations
+	to make the proxy icon animated on page load and mouse over.

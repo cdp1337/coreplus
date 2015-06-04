@@ -1,11 +1,11 @@
 $(function(){
 	var $body = $('body'),
 		defaults = {
-			proxyicon: 'cog',
-			proxytext: 'Controls',
+			proxyIcon: 'cog',
+			proxyIconAnimation: 'spin',
+			proxyText: 'Controls',
 			proxyforce: false,
-			position: 'right',
-			spin: true
+			position: 'right'
 		},
 		$currentopen = null,
 		$currentover = null,
@@ -21,12 +21,23 @@ $(function(){
 		//$wrapper = $('<div class="controls-hover-wrapper"/>'),
 			controlcount = $clone.find('li').length,
 			options = {
-				proxyicon: $original.data('proxy-icon'),
-				proxytext: $original.data('proxy-text'),
-				proxyforce: $original.data('proxy-force'),
+				proxyIcon: $original.data('proxy-icon'),
+				proxyText: $original.data('proxy-text'),
+				proxyForce: $original.data('proxy-force'),
 				position: $original.data('position'),
-				spin: $original.data('spin')
-			}, i;
+				proxyIconAnimation: $original.data('proxy-icon-animation')
+			}, i, proxyclass;
+
+		// Legacy options.
+		if($original.data('spin')){
+			options.proxyIconAnimation = 'spin';
+		}
+		else if($original.data('bounce')){
+			options.proxyIconAnimation = 'bounce';
+		}
+		else if($original.data('float')){
+			options.proxyIconAnimation = 'float';
+		}
 
 		for(i in options){
 			if(options[i] == undefined){
@@ -65,18 +76,20 @@ $(function(){
 		$original.hide();
 
 		// If there are more than 3 options, hide the rest.
-		if(controlcount > 3 || options.proxyforce){
-			if(options.spin){
-				$clone.html('<li><i class="icon-' + options.proxyicon + ' icon-spin"></i>' + (options.proxytext ? ' ' + options.proxytext : '') + '</li>');
+		if(controlcount > 3 || options.proxyForce){
+
+			proxyclass = 'controls-proxy-icon icon-' + options.proxyIcon;
+			if(options.proxyIconAnimation){
+				proxyclass += ' icon-' + options.proxyIconAnimation;
+				$clone.addClass('controls-animated');
 			}
-			else{
-				$clone.html('<li><i class="icon-' + options.proxyicon + '"></i>' + (options.proxytext ? ' ' + options.proxytext : '') + '</li>');
-			}
+
+			$clone.addClass('controls-proxy').html('<li><i class="' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
 		}
 
-		if(options.spin){
+		if(options.proxyIconAnimation){
 			setTimeout(function($o){
-				$o.find('i.icon-cog').removeClass('icon-spin');
+				$o.find('.controls-proxy-icon').removeClass('icon-' + options.proxyIconAnimation);
 			}, 1000, $clone);
 		}
 
@@ -93,7 +106,7 @@ $(function(){
 					$currentopen.hide();
 				}
 
-				if(position == 'bottom'){
+				if(position === 'bottom'){
 					nc = {
 						top: (co.top + $clone.height()) + 'px',
 						left: co.left + 'px'
@@ -121,10 +134,10 @@ $(function(){
 				$currentopen = $original;
 				$currentover = $clone;
 
-				if(options.spin) {
-					$currentover.find('i.icon-cog').addClass('icon-spin');
+				if(options.proxyIconAnimation) {
+					$currentover.find('.controls-proxy-icon').addClass('icon-' + options.proxyIconAnimation);
 					setTimeout(function ($o) {
-						$o.find('i.icon-cog').removeClass('icon-spin');
+						$o.find('.controls-proxy-icon').removeClass('icon-' + options.proxyIconAnimation);
 					}, 1000, $currentover);
 				}
 			})
