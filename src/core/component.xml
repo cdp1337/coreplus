@@ -1532,7 +1532,7 @@
 		<file filename="core/templates/pages/userconfig/admin.tpl" md5="8335bec250e1d970663fbe0409f2d242"/>
 		<file filename="core/templates/pages/usergroupadmin/create_update.tpl" md5="11147e16c5f3bc41ad5c7c6b9cfdf099"/>
 		<file filename="core/templates/pages/usergroupadmin/index.tpl" md5="cec6b41cb710d55cdef2f3a1e4a6a08c"/>
-		<file filename="core/templates/pages/widget/admin.tpl" md5="d69561f2e5e8faa6c5f40ce8eae32d9c"/>
+		<file filename="core/templates/pages/widget/admin.tpl" md5="5c1b30d7d8a5dc02fbe7afef4e0f982f"/>
 		<file filename="core/templates/pages/widget/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/instance_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -1756,32 +1756,44 @@
 		<file filename="core/assets/images/placeholders/template.xcf" md5="2099f59f0748cd56d0f33022b5282b99"/>
 		<file filename="core/assets/images/previews/core/templates/widgets/pagesearch/page-search-execute.png" md5="80ad59afc22d02795c57848c87aaade4"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
+		<file filename="core/assets/js/admin/adminmenu-widget.min.js" md5="7a4fab4753cf1d44bc1775a1ebd04ca2"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
+		<file filename="core/assets/js/admin/config.min.js" md5="32c10ad22e7b3eb7e89b9c45e327f133"/>
 		<file filename="core/assets/js/admin/widgets.js" md5="6ff46c468f481229e30f009fced422be"/>
+		<file filename="core/assets/js/admin/widgets.min.js" md5="dede4a14ba9225f9eb542f6f43442eae"/>
 		<file filename="core/assets/js/core.ajaxlinks.js" md5="afcbaf5ffaebe993b37530d7606ec956"/>
 		<file filename="core/assets/js/core.ajaxlinks.min.js" md5="e944625c6a07892bc4b4de2d8defe9c8"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
-		<file filename="core/assets/js/core.context-controls.js" md5="5f2804fa70f5706ef09a766cf0f7c7ff"/>
-		<file filename="core/assets/js/core.context-controls.min.js" md5="ebaca3e4872e53327acb4bec47df325c"/>
+		<file filename="core/assets/js/core.base64.min.js" md5="f5ad50e340c30409e5a0542c3b6a085d"/>
+		<file filename="core/assets/js/core.context-controls.js" md5="aa46f7101236ab27b23a8e190996e9dc"/>
+		<file filename="core/assets/js/core.context-controls.min.js" md5="a8dcb26c6c7eabc04a26c738dffa1a08"/>
 		<file filename="core/assets/js/core.email.js" md5="b5f2a018dd9a739e19bba3b9c34ef862"/>
 		<file filename="core/assets/js/core.email.min.js" md5="20aea3e7761dbdf2817f121cf0d702ae"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
+		<file filename="core/assets/js/core.example.min.js" md5="1c5c63b5faba5e464625102d64a225aa"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="410f3db11a6426a7d0f9b3f27da0063c"/>
+		<file filename="core/assets/js/core.fileupload.min.js" md5="0a743961f0e6f83efa01966e946c4c27"/>
 		<file filename="core/assets/js/core.js" md5="2118f03b4f84204a991378b85a28f20e"/>
 		<file filename="core/assets/js/core.listingtable.js" md5="18548b296ff1dd98108c3e13db815643"/>
+		<file filename="core/assets/js/core.listingtable.min.js" md5="76884a089c44519cf82201a9f26fffaa"/>
 		<file filename="core/assets/js/core.min.js" md5="e3750038c81c0685c54c6cf89d020820"/>
 		<file filename="core/assets/js/core.strings.js" md5="302a98cc6b18f96cff21f06a302824f2"/>
+		<file filename="core/assets/js/core.strings.min.js" md5="a5ee829f38ff228ee1a79c19dd76b3b2"/>
 		<file filename="core/assets/js/html5shiv.js" md5="2079db7476a330b2d0edee6210a81534"/>
-		<file filename="core/assets/js/html5shiv.min.js" md5="0c34f014c0765b3618c51684df4a0707"/>
+		<file filename="core/assets/js/html5shiv.min.js" md5="24fe4b10e50b700443db621f7accf89f"/>
 		<file filename="core/assets/js/json2.js" md5="530288da8a07173f94d9690d3679ac5d"/>
+		<file filename="core/assets/js/json2.min.js" md5="4effa60853efbcdbd6e673e21eb0bcec"/>
 		<file filename="core/assets/js/less-1.5.0.js" md5="1052db44a3a0b1bb238ad37f3ad5e51d"/>
-		<file filename="core/assets/js/less-1.5.0.min.js" md5="2de86cf4db63fa284fe5dd0d84d4fb02"/>
+		<file filename="core/assets/js/less-1.5.0.min.js" md5="081283516fc385c335ef6cbc8f88146a"/>
 		<file filename="core/assets/js/less-1.7.1.js" md5="711eed4660fc8854febd8f10d58f77a8"/>
-		<file filename="core/assets/js/less-1.7.1.min.js" md5="76516dd4ba5957ed53c2200583ff23bf"/>
+		<file filename="core/assets/js/less-1.7.1.min.js" md5="9b7fc7fc8119cb16f0cab3eefe282e6b"/>
 		<file filename="core/assets/js/updater/index.js" md5="4900c41083ac914b4bd42873efa4718f"/>
+		<file filename="core/assets/js/updater/index.min.js" md5="a35ff053e200d1679dadbb1e18e6f519"/>
 		<file filename="core/assets/js/user/admin.js" md5="d3f53ce195341a7d7d01ba263cbc1501"/>
 		<file filename="core/assets/js/user/login.js" md5="75c4eecb226faf73423b3fc5dabd8ffc"/>
+		<file filename="core/assets/js/user/login.min.js" md5="f864b57429fb2b00c41d5d611fcff100"/>
 		<file filename="core/assets/js/user/user.js" md5="e5e4dc7f8ff932ce7acd330031dbeec2"/>
+		<file filename="core/assets/js/user/user.min.js" md5="3f3d760fb7084da6b673fd1840a26c25"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="0.0.2"/>
