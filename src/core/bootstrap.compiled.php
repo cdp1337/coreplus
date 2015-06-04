@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 04 Jun 2015 01:19:28 -0400
+ * @compiled Thu, 04 Jun 2015 15:06:41 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1102,6 +1102,17 @@ $this->_iterator->scan();
 }
 return clone $this->_iterator;
 }
+}
+
+
+### REQUIRE_ONCE FROM core/libs/core/Exceptions.php
+class ModelException extends Exception {
+}
+class ModelValidationException extends ModelException {
+}
+class GeneralValidationException extends Exception {
+}
+class CoreException extends Exception {
 }
 
 
@@ -3198,10 +3209,6 @@ $s = new ModelSchema($model);
 return $s;
 }
 }
-class ModelException extends Exception {
-}
-class ModelValidationException extends ModelException {
-}
 
 
 ### REQUIRE_ONCE FROM core/libs/core/ModelSchema.php
@@ -3327,14 +3334,6 @@ $column->encoding = 'utf8';
 break;
 }
 return $column;
-}
-}
-
-
-### REQUIRE_ONCE FROM core/libs/core/Controller.class.php
-class Controller {
-public static $AccessString = null;
-public function __construct() {
 }
 }
 
@@ -6584,833 +6583,6 @@ public static $Indexes = array(
 }
 
 
-### REQUIRE_ONCE FROM core/libs/core/Component.class.php
-class Component extends XMLLoader {
-protected $_name;
-protected $_version;
-protected $_description;
-protected $_updateSites = [];
-protected $_authors = [];
-protected $_iterator;
-protected $_type;
-public $enabled = true;
-public $_versionDB = false;
-private $_requires = [];
-private $_execMode = 'WEB';
-const ERROR_NOERROR = 0;           // 000000
-const ERROR_INVALID = 1;           // 000001
-const ERROR_WRONGEXECMODE = 2;     // 000010
-const ERROR_MISSINGDEPENDENCY = 4; // 000100
-const ERROR_CONFLICT = 8;          // 001000
-const ERROR_UPGRADEPATH = 16;      // 010000
-public $error = 0;
-public $errstrs = [];
-public function __construct($name = null) {
-$this->_name     = $name;
-$this->_type     = InstallArchiveAPI::TYPE_COMPONENT;
-$this->_rootname = 'component';
-}
-public function load() {
-try {
-$XMLFilename = $this->getXMLFilename();
-if (!is_readable($XMLFilename)) {
-throw new Exception('Unable to open XML Metafile [' . $XMLFilename . '] for reading.');
-}
-$this->setFilename($XMLFilename);
-$this->setRootName($this->_type);
-if (!parent::load()) {
-throw new Exception('Parsing of XML Metafile [' . $XMLFilename . '] failed, not valid XML.');
-}
-if (strtolower($this->getRootDOM()->getAttribute("name")) != strtolower($this->_name)) {
-throw new Exception('Name mismatch in XML Metafile [' . $XMLFilename . '], defined name does not match expected name.');
-}
-$this->_version = $this->getRootDOM()->getAttribute("version");
-$dat = ComponentFactory::_LookupComponentData($this->_name);
-if (!$dat) return;
-$this->_versionDB = $dat['version'];
-$this->_enabled   = ($dat['enabled']) ? true : false;
-}
-catch (Exception $e) {
-echo '<pre>' . $e->__toString() . '</pre>';
-die("Could not load " . $this->getName());
-}
-if (($mode = @$this->getRootDOM()->getAttribute('execmode'))) {
-$this->_execMode = strtoupper($mode);
-}
-return true;
-}
-public function save($minified = false) {
-$this->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
-$this->removeElements('//otherfiles');
-$this->removeElements('//library/file');
-$this->removeElements('//module/file');
-$this->removeElements('//view/file');
-$otherfilesnode = $this->getElement('//otherfiles');
-$it      = $this->getDirectoryIterator();
-$hasview = $this->hasView();
-$viewd   = ($hasview) ? $this->getViewSearchDir() : null;
-$assetd  = $this->getAssetDir();
-$strlen  = strlen($this->getBaseDir());
-foreach ($it as $file) {
-$el    = false;
-$fname = substr($file->getFilename(), $strlen);
-if ($hasview && $file->inDirectory($viewd)) {
-$el = $this->getElement('/view/file[@filename="' . $fname . '"]');
-}
-elseif ($assetd && $file->inDirectory($assetd)) {
-$el = $this->getElement('/assets/file[@filename="' . $fname . '"]');
-}
-else {
-$el = $this->getElement('//library/file[@filename="' . $fname . '"]|//module/file[@filename="' . $fname . '"]|//view/file[@filename="' . $fname . '"]', false);
-if (preg_match('/\.php$/i', $fname)) {
-$fconts = file_get_contents($file->getFilename());
-$fconts = preg_replace(':/\*.*\*/:Us', '', $fconts);
-$fconts = preg_replace('://.*$:', '', $fconts);
-if ($el) {
-$getnames = ($el->parentNode->nodeName == 'library' || $el->parentNode->nodeName == 'module');
-}
-else {
-if (preg_match('/^(abstract ){0,1}class[ ]*[a-z0-9_\-]*[ ]*extends controller/im', $fconts)) {
-$el       = $this->getElement('/module/file[@filename="' . $fname . '"]');
-$getnames = true;
-}
-elseif (preg_match('/^class[ ]*[a-z0-9_\-]*[ ]*extends widget/im', $fconts)) {
-$el       = $this->getElement('/module/file[@filename="' . $fname . '"]');
-$getnames = true;
-}
-elseif (preg_match('/^(abstract |final ){0,1}class[ ]*[a-z0-9_\-]*/im', $fconts)) {
-$el       = $this->getElement('/library/file[@filename="' . $fname . '"]');
-$getnames = true;
-}
-elseif (preg_match('/^interface[ ]*[a-z0-9_\-]*/im', $fconts)) {
-$el       = $this->getElement('/library/file[@filename="' . $fname . '"]');
-$getnames = true;
-}
-else {
-$el       = $this->getElement('/otherfiles/file[@filename="' . $fname . '"]');
-$getnames = false;
-}
-}
-if ($getnames) {
-$viewclasses = [];
-preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*controller/im', $fconts, $ret);
-foreach ($ret[2] as $foundclass) {
-$this->getElementFrom('provides[@type="controller"][@name="' . $foundclass . '"]', $el);
-$viewclasses[] = $foundclass;
-}
-preg_match_all('/^class[ ]*([a-z0-9_\-]*)[ ]*extends[ ]*widget/im', $fconts, $ret);
-foreach ($ret[1] as $foundclass) {
-$this->getElementFrom('provides[@type="widget"][@name="' . $foundclass . '"]', $el);
-$viewclasses[] = $foundclass;
-}
-preg_match_all('/^(abstract |final ){0,1}class[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
-foreach ($ret[2] as $foundclass) {
-if (in_array($foundclass, $viewclasses)) continue;
-$this->getElementFrom('provides[@type="class"][@name="' . $foundclass . '"]', $el);
-}
-preg_match_all('/^(interface)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
-foreach ($ret[2] as $foundclass) {
-if (in_array($foundclass, $viewclasses)) continue;
-$this->getElementFrom('provides[@type="interface"][@name="' . $foundclass . '"]', $el);
-}
-}
-}
-if (!$el) {
-$el = $this->getElement('/otherfiles/file[@filename="' . $fname . '"]');
-}
-}
-if ($el) {
-$el->setAttribute('md5', $file->getHash());
-}
-}
-if (!isset($viewclasses)) $viewclasses = [];
-foreach ($viewclasses as $c) {
-if (strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
-$data = Core\Datamodel\Dataset::Init()->table('page')->select('*')->where("baseurl = /$c", 'admin=1', 'fuzzy=0')->execute();
-foreach ($data as $row) {
-$node = $this->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
-$node->setAttribute('admin', $row['admin']);
-$node->setAttribute('widget', $row['widget']);
-$node->setAttribute('access', $row['access']);
-$node->setAttribute('title', $row['title']);
-}
-$data = Core\Datamodel\Dataset::Init()->table('page')->select('*')->where("baseurl LIKE /$c/%", 'admin=1', 'fuzzy=0')->execute();
-foreach ($data as $row) {
-$node = $this->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
-$node->setAttribute('admin', $row['admin']);
-$node->setAttribute('widget', $row['widget']);
-$node->setAttribute('access', $row['access']);
-$node->setAttribute('title', $row['title']);
-}
-}
-$data = Core\Datamodel\Dataset::Init()->table('config')->select('*')->where('key LIKE /' . $this->getName() . '/%')->execute();
-foreach ($data as $row) {
-$node = $this->getElement('/configs/config[@key="' . $row['key'] . '"]');
-$node->setAttribute('type', $row['type']);
-$node->setAttribute('default', $row['default_value']);
-$node->setAttribute('description', $row['description']);
-if ($row['options']) $node->setAttribute('options', $row['options']);
-else $node->removeAttribute('options');
-}
-$XMLFilename = $this->getXMLFilename();
-if ($minified) {
-file_put_contents($XMLFilename, $this->asMinifiedXML());
-}
-else {
-file_put_contents($XMLFilename, $this->asPrettyXML());
-}
-}
-public function savePackageXML($minified = true, $filename = false) {
-$dom = new XMLLoader();
-$dom->setRootName('package');
-$dom->load();
-$dom->getRootDOM()->setAttribute('type', 'component');
-$dom->getRootDOM()->setAttribute('name', $this->getName());
-$dom->getRootDOM()->setAttribute('version', $this->getVersion());
-$dom->createElement('packager[version="' . Core::GetComponent()->getVersion() . '"]');
-foreach ($this->getRootDOM()->getElementsByTagName('provides') as $u) {
-$newu = $dom->getDOM()->importNode($u);
-$dom->getRootDOM()->appendChild($newu);
-}
-$dom->getElement('/provides[type="component"][name="' . strtolower($this->getName()) . '"][version="' . $this->getVersion() . '"]');
-foreach ($this->getRootDOM()->getElementsByTagName('requires') as $u) {
-$newu = $dom->getDOM()->importNode($u);
-$dom->getRootDOM()->appendChild($newu);
-}
-foreach ($this->getRootDOM()->getElementsByTagName('upgrade') as $u) {
-$newu = $dom->getDOM()->importNode($u);
-$dom->getRootDOM()->appendChild($newu);
-}
-$desc = $this->getElement('/description', false);
-if ($desc) {
-$newd            = $dom->getDOM()->importNode($desc);
-$newd->nodeValue = $desc->nodeValue;
-$dom->getRootDOM()->appendChild($newd);
-}
-$out = ($minified) ? $dom->asMinifiedXML() : $dom->asPrettyXML();
-if ($filename) {
-file_put_contents($filename, $out);
-}
-else {
-return $out;
-}
-}
-public function loadFiles() {
-if ($this->hasLibrary()) {
-foreach ($this->getElementByTagName('library')->getElementsByTagName('file') as $f) {
-$type = strtolower(@$f->getAttribute('type'));
-if ($type == 'autoload') require_once($this->getBaseDir() . $f->getAttribute('filename'));
-}
-}
-foreach ($this->getElementsByTagName('hookregister') as $h) {
-$hook              = new Hook($h->getAttribute('name'));
-$hook->description = $h->getAttribute('description');
-HookHandler::RegisterHook($hook);
-}
-foreach ($this->getElementsByTagName('hook') as $h) {
-$event = $h->getAttribute('name');
-$call  = $h->getAttribute('call');
-$type  = @$h->getAttribute('type');
-HookHandler::AttachToHook($event, $call, $type);
-}
-foreach ($this->getElements('/forms/formelement') as $node) {
-Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
-}
-return true;
-}
-public function getLibraryList() {
-$libs = [];
-if ($this->hasLibrary()) {
-$libs[strtolower($this->_name)] = $this->_versionDB;
-}
-foreach ($this->getElements('//provides') as $p) {
-if (strtolower($p->getAttribute('type')) == 'library') {
-$v = @$p->getAttribute('version');
-if (!$v) $v = $this->_versionDB;
-$libs[strtolower($p->getAttribute('name'))] = $v;
-}
-}
-return $libs;
-}
-public function getClassList() {
-$classes = [];
-if ($this->hasLibrary()) {
-foreach ($this->getElementByTagName('library')->getElementsByTagName('file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
-foreach ($f->getElementsByTagName('provides') as $p) {
-$n = strtolower($p->getAttribute('name'));
-if (strtolower($p->getAttribute('type')) == 'class') $classes[$n] = $filename;
-if (strtolower($p->getAttribute('type')) == 'interface') $classes[$n] = $filename;
-}
-}
-}
-if ($this->hasModule()) {
-foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
-foreach ($f->getElementsByTagName('provides') as $p) {
-$n = strtolower($p->getAttribute('name'));
-switch (strtolower($p->getAttribute('type'))) {
-case 'class':
-case 'controller':
-case 'widget':
-$classes[$n] = $filename;
-break;
-}
-}
-}
-}
-return $classes;
-}
-public function getWidgetList() {
-$widgets = [];
-if ($this->hasModule()) {
-foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
-foreach ($f->getElementsByTagName('provides') as $p) {
-if (strtolower($p->getAttribute('type')) == 'widget') {
-$widgets[] = $p->getAttribute('name');
-}
-}
-}
-}
-return $widgets;
-}
-public function getViewClassList() {
-$classes = [];
-if ($this->hasModule()) {
-foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
-foreach ($f->getElementsByTagName('provides') as $p) {
-switch (strtolower($p->getAttribute('type'))) {
-case 'viewclass':
-case 'view_class':
-$classes[$p->getAttribute('name')] = $filename;
-break;
-}
-}
-}
-}
-return $classes;
-}
-public function getViewList() {
-$views = [];
-if ($this->hasView()) {
-foreach ($this->getElementByTagName('view')->getElementsByTagName('tpl') as $t) {
-$filename     = $this->getBaseDir() . $t->getAttribute('filename');
-$name         = $t->getAttribute('name');
-$views[$name] = $filename;
-}
-}
-return $views;
-}
-public function getControllerList() {
-$classes = [];
-if ($this->hasModule()) {
-foreach ($this->getElementByTagName('module')->getElementsByTagName('file') as $f) {
-$filename = $this->getBaseDir() . $f->getAttribute('filename');
-foreach ($f->getElementsByTagName('provides') as $p) {
-$n = strtolower($p->getAttribute('name'));
-switch (strtolower($p->getAttribute('type'))) {
-case 'controller':
-$classes[$n] = $filename;
-break;
-}
-}
-}
-}
-return $classes;
-}
-public function getSmartyPluginDirectory() {
-$d = $this->getElement('/smartyplugins')->getAttribute('directory');
-if ($d) return $this->getBaseDir() . $d;
-else return false;
-}
-public function getScriptLibraryList() {
-$libs = [];
-if ($this->hasLibrary()) {
-foreach ($this->getElementByTagName('library')->getElementsByTagName('scriptlibrary') as $s) {
-$libs[strtolower($s->getAttribute('name'))] = $s->getAttribute('call');
-}
-}
-return $libs;
-}
-public function getViewSearchDir() {
-if($this->hasView()) {
-$att = @$this->getElement('/view')->getAttribute('searchdir');
-if ($att) {
-return $this->getBaseDir() . $att . '/';
-}
-elseif (($att = $this->getElements('/view/searchdir')->item(0))) {
-return $this->getBaseDir() . $att->getAttribute('dir') . '/';
-}
-elseif (is_dir($this->getBaseDir() . 'templates')) {
-return $this->getBaseDir() . 'templates';
-}
-else return false;
-}
-}
-public function getAssetDir() {
-if ($this->getName() == 'core') $d = $this->getBaseDir() . 'core/assets';
-else $d = $this->getBaseDir() . 'assets';
-if (is_dir($d)) return $d;
-else return null;
-}
-public function getIncludePaths() {
-$dirs = [];
-if ($this->hasLibrary()) {
-foreach ($this->getElementByTagName('library')->getElementsByTagName('includepath') as $t) {
-$dir = $t->getAttribute('dir');
-if ($dir == '.') $dirs[] = $this->getBaseDir();
-else $dirs[] = $this->getBaseDir() . $t->getAttribute('dir') . '/';
-}
-}
-return $dirs;
-}
-public function getDBSchemaTableNames() {
-$ret = [];
-foreach ($this->getElement('dbschema')->getElementsByTagName('table') as $table) {
-$ret[] = $table->getAttribute('name');
-}
-return $ret;
-}
-public function setDBSchemaTableNames($arr) {
-$this->getRootDOM()->removeChild($this->getElement('/dbschema'));
-$node = $this->getElement('/dbschema[@prefix="' . DB_PREFIX . '"]');
-foreach ($arr as $k) {
-if (!trim($k)) continue;
-$tablenode = $this->getDOM()->createElement('table');
-$tablenode->setAttribute('name', $k);
-$node->appendChild($tablenode);
-unset($tablenode);
-}
-}
-public function getVersionInstalled() {
-return $this->_versionDB;
-}
-public function getType() {
-if ($this->_name == 'core') return 'core';
-else return 'component';
-}
-public function isValid() {
-return (!$this->error & Component::ERROR_INVALID);
-}
-public function isInstalled() {
-return ($this->_versionDB === false) ? false : true;
-}
-public function needsUpdated() {
-return ($this->_versionDB != $this->_version);
-}
-public function getErrors($glue = '<br/>') {
-if ($glue) {
-return implode($glue, $this->errstrs);
-}
-else {
-return $this->errors;
-}
-}
-public function isLoadable() {
-if ($this->error & Component::ERROR_INVALID) {
-return false;
-}
-$this->error   = 0;
-$this->errstrs = [];
-if ($this->_execMode != 'BOTH') {
-if ($this->_execMode != EXEC_MODE) {
-$this->error     = $this->error | Component::ERROR_WRONGEXECMODE;
-$this->errstrs[] = 'Wrong execution mode, can only be ran in ' . $this->_execMode . ' mode';
-}
-}
-foreach ($this->getRequires() as $r) {
-switch ($r['type']) {
-case 'library':
-if (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing library ' . $r['name'] . ' ' . $r['version'];
-}
-break;
-case 'jslibrary':
-if (!Core::IsJSLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing JSlibrary ' . $r['name'] . ' ' . $r['version'];
-}
-break;
-case 'component':
-if (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
-}
-break;
-case 'define':
-if (!defined($r['name'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing define ' . $r['name'];
-}
-if ($r['value'] != null && constant($r['name']) != $r['value']) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires wrong define ' . $r['name'] . '(' . $r['value'] . ')';
-}
-break;
-}
-}
-if ($this->error) return false;
-$cs = $this->getClassList();
-foreach ($cs as $c => $file) {
-if (Core::IsClassAvailable($c)) {
-$this->error     = $this->error | Component::ERROR_CONFLICT;
-$this->errstrs[] = $c . ' already defined in another component';
-break;
-}
-}
-return (!$this->error) ? true : false;
-}
-public function getJSLibraries() {
-$ret = [];
-foreach ($this->getRootDOM()->getElementsByTagName('jslibrary') as $node) {
-$lib       = new JSLibrary();
-$lib->name = $node->getAttribute('name');
-$lib->version                = (($v = @$node->getAttribute('version')) ? $v : $this->getRootDOM()->getAttribute('version'));
-$lib->baseDirectory          = ROOT_PDIR . 'components/' . $this->getName() . '/';
-$lib->DOMNode                = $node;
-$ret[strtolower($lib->name)] = $lib;
-}
-return $ret;
-}
-public function hasLibrary() {
-return ($this->getRootDOM()->getElementsByTagName('library')->length) ? true : false;
-}
-public function hasJSLibrary() {
-return ($this->getRootDOM()->getElementsByTagName('jslibrary')->length) ? true : false;
-}
-public function hasModule() {
-return ($this->getRootDOM()->getElementsByTagName('module')->length) ? true : false;
-}
-public function hasView() {
-return ($this->getRootDOM()->getElementsByTagName('view')->length) ? true : false;
-}
-public function install() {
-if ($this->isInstalled()) return false;
-if (!$this->isLoadable()) return false;
-$this->_parseDBSchema();
-$this->_parseConfigs();
-$this->_parsePages();
-$this->_installAssets();
-$c = new ComponentModel($this->_name);
-$c->set('version', $this->_version);
-$c->save();
-$this->_versionDB = $this->_version;
-$this->loadFiles();
-if (class_exists('Core')) {
-$ch = Core::Singleton();
-$ch->_registerComponent($this);
-}
-return true;
-}
-public function reinstall() {
-if (!$this->isInstalled()) return false;
-$changed = false;
-if ($this->_parseDBSchema()) $changed = true;
-if ($this->_parseConfigs()) $changed = true;
-if ($this->_parsePages()) $changed = true;
-if ($this->_installAssets()) $changed = true;
-return $changed;
-}
-public function upgrade() {
-if (!$this->isInstalled()) return false;
-$canBeUpgraded = true;
-while ($canBeUpgraded) {
-$canBeUpgraded = false;
-foreach ($this->getRootDOM()->getElementsByTagName('upgrade') as $u) {
-if ($this->_versionDB == @$u->getAttribute('from')) {
-$canBeUpgraded = true;
-$result = InstallTask::ParseNode($u, $this->getBaseDir());
-if (!$result) {
-if (DEVELOPMENT_MODE) {
-trigger_error('Upgrade of Component ' . $this->_name . ' failed.', E_USER_NOTICE);
-}
-return;
-}
-$this->_versionDB = @$u->getAttribute('to');
-$c                = new ComponentModel($this->_name);
-$c->set('version', $this->_versionDB);
-$c->save();
-}
-}
-}
-$this->_parseDBSchema();
-$this->_parseConfigs();
-$this->_parsePages();
-$this->_installAssets();
-}
-public function getProvides() {
-$ret = [];
-$ret[] = [
-'name'    => strtolower($this->getName()),
-'type'    => 'component',
-'version' => $this->getVersion()
-];
-foreach ($this->getElements('provides') as $el) {
-$ret[] = [
-'name'      => strtolower($el->getAttribute('name')),
-'type'      => $el->getAttribute('type'),
-'version'   => $el->getAttribute('version'),
-'operation' => $el->getAttribute('operation'),
-];
-}
-return $ret;
-}
-public function getRequires() {
-$ret = [];
-foreach ($this->getRootDOM()->getElementsByTagName('requires') as $r) {
-$t  = $r->getAttribute('type');
-$n  = $r->getAttribute('name');
-$v  = @$r->getAttribute('version');
-$op = @$r->getAttribute('operation');
-if ($v == '') $v = false;
-if ($op == '') $op = 'ge';
-$ret[] = [
-'type'      => strtolower($t),
-'name'      => $n,
-'version'   => strtolower($v),
-'operation' => strtolower($op),
-];
-}
-return $ret;
-}
-public function getDescription() {
-if (is_null($this->_description)) $this->_description = $this->getElement('//description')->nodeValue;
-return $this->_description;
-}
-public function setDescription($desc) {
-$this->_description = $desc;
-$this->getElement('//description')->nodeValue = $desc;
-}
-public function setPackageMaintainer($name, $email) {
-$this->getElement('/changelog[@version="' . $this->_version . '"]/packagemeta/date')->nodeValue = Time::GetCurrent(Time::TIMEZONE_GMT, 'r');
-$this->getElement('/changelog[@version="' . $this->_version . '"]/packagemeta/maintainer[@name="' . $name . '"][@email="' . $email . '"]');
-$this->getElement('/changelog[@version="' . $this->_version . '"]/packagemeta/packager')->nodeValue = 'CAE2 ' . ComponentHandler::GetComponent('core')->getVersion();
-}
-public function getChangelog($version = false) {
-if (!$version) $version = $this->getVersion();
-return $this->getElement('/changelog[@version="' . $version . '"]/notes')->nodeValue;
-}
-public function setChangelog($text, $version = false) {
-if (!$version) $version = $this->getVersion();
-$this->getElement('/changelog[@version="' . $version . '"]/notes')->nodeValue = $text;
-}
-public function getXMLFilename($prefix = ROOT_PDIR) {
-if ($this->_name == 'core') return $prefix . 'core/' . 'component.xml';
-else return $prefix . 'components/' . $this->_name . '/' . 'component.xml';
-}
-public function getBaseDir($prefix = ROOT_PDIR) {
-switch ($this->_type) {
-case InstallArchiveAPI::TYPE_COMPONENT:
-if ($this->_name == 'core') return $prefix;
-else return $prefix . 'components/' . $this->_name . '/';
-break;
-case InstallArchiveAPI::TYPE_LIBRARY:
-return $prefix . 'libraries/' . $this->_name . '/';
-break;
-case InstallArchiveAPI::TYPE_THEME:
-return $prefix . 'themes/' . $this->_name . '/';
-break;
-}
-}
-public function getChangedFiles() {
-$ret = [];
-foreach ($this->getElementsByTagName('file') as $node) {
-if (!($filename = @$node->getAttribute('filename'))) continue;
-if ($node->getAttribute('md5') != md5_file($this->getBaseDir() . $filename)) {
-$ret[] = $filename;
-}
-}
-return $ret;
-}
-public function getName() {
-return $this->_name;
-}
-public function getVersion() {
-return $this->_version;
-}
-public function setVersion($vers) {
-if ($vers == $this->_version) return;
-if (($upg = $this->getElement('/upgrade[@from=""][@to=""]', false))) {
-$upg->setAttribute('from', $this->_version);
-$upg->setAttribute('to', $vers);
-}
-elseif (($upg = $this->getElement('/upgrade[@from="' . $this->_version . '"][@to=""]', false))) {
-$upg->setAttribute('to', $vers);
-}
-else {
-$newupgrade = $this->getElement('/upgrade[@from="' . $this->_version . '"][@to="' . $vers . '"]');
-}
-$newchangelog = $this->getElement('/changelog[@version="' . $vers . '"]');
-foreach ($this->getElementsByTagName('changelog') as $el) {
-if (!@$el->getAttribute('version')) {
-$newchangelog->nodeValue .= "\n" . $el->nodeValue;
-$el->nodeValue = '';
-break;
-}
-}
-$this->_version = $vers;
-$this->getRootDOM()->setAttribute('version', $vers);
-}
-public function getRawXML() {
-return $this->asPrettyXML();
-}
-public function getLicenses() {
-$ret = [];
-foreach ($this->getRootDOM()->getElementsByTagName('license') as $el) {
-$url   = @$el->getAttribute('url');
-$ret[] = [
-'title' => $el->nodeValue,
-'url'   => $url
-];
-}
-return $ret;
-}
-public function setLicenses($licenses) {
-$this->removeElements('/license');
-foreach ($licenses as $lic) {
-$str          = '/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
-$l            = $this->getElement($str);
-$l->nodeValue = $lic['title'];
-}
-}
-public function getAuthors() {
-$ret = [];
-foreach ($this->getRootDOM()->getElementsByTagName('author') as $el) {
-$ret[] = [
-'name'  => $el->getAttribute('name'),
-'email' => @$el->getAttribute('email'),
-];
-}
-return $ret;
-}
-public function setAuthors($authors) {
-$this->removeElements('/author');
-foreach ($authors as $a) {
-if (isset($a['email']) && $a['email']) {
-$this->getElement('//component/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
-}
-else {
-$this->getElement('//component/author[@name="' . $a['name'] . '"]');
-}
-}
-}
-public function getAllFilenames() {
-$ret  = [];
-$list = $this->getElements('//component/library/file|//component/module/file|//component/view/file|//component/otherfiles/file|//component/assets/file');
-foreach ($list as $el) {
-$md5   = @$el->getAttribute('md5');
-$ret[] = [
-'file' => $el->getAttribute('filename'),
-'md5'  => $md5
-];
-}
-return $ret;
-}
-public function getDirectoryIterator() {
-if (is_null($this->_iterator)) {
-$this->_iterator = new CAEDirectoryIterator();
-$this->_iterator->addIgnore($this->getXMLFilename());
-if ($this->_name == 'core') {
-$this->_iterator->addIgnores('components/', 'config/', 'dropins/', 'exports/', 'nbproject/', 'scripts/', 'themes/', 'update_site/', 'utils/');
-if (ConfigHandler::Get('/core/filestore/assetdir')) $this->_iterator->addIgnore(ConfigHandler::Get('/core/filestore/assetdir'));
-if (ConfigHandler::Get('/core/filestore/publicdir')) $this->_iterator->addIgnore(ConfigHandler::Get('/core/filestore/publicdir'));
-}
-$list = $this->getElements('/ignorefiles/file');
-foreach ($list as $el) {
-$this->_iterator->addIgnores($this->getBaseDir() . $el->getAttribute('filename'));
-}
-$this->_iterator->setPath($this->getBaseDir());
-$this->_iterator->scan();
-}
-return clone $this->_iterator;
-}
-private function _parseConfigs() {
-$changed = false;
-$node = $this->getElement('configs');
-foreach ($node->getElementsByTagName('config') as $confignode) {
-$key = $confignode->getAttribute('key');
-$m   = ConfigHandler::GetConfig($key);
-$m->set('options', $confignode->getAttribute('options'));
-$m->set('type', $confignode->getAttribute('type'));
-$m->set('default_value', $confignode->getAttribute('default'));
-$m->set('description', $confignode->getAttribute('description'));
-$m->set('mapto', $confignode->getAttribute('mapto'));
-if (!$m->get('value')) $m->set('value', $confignode->getAttribute('default'));
-if ($m->save()) $changed = true;
-}
-return $changed;
-} // private function _parseConfigs
-private function _parsePages() {
-$changed = false;
-$node = $this->getElement('pages');
-foreach ($node->getElementsByTagName('page') as $subnode) {
-$m = new PageModel($subnode->getAttribute('baseurl'));
-if (!$m->get('rewriteurl')) {
-if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
-else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
-}
-if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-if ($m->get('access') == '*') $m->set('access', $subnode->getAttribute('access'));
-$m->set('widget', $subnode->getAttribute('widget'));
-$m->set('admin', $subnode->getAttribute('admin'));
-if ($m->save()) $changed = true;
-}
-return $changed;
-}
-private function _parseDBSchema() {
-$node   = $this->getElement('dbschema');
-$prefix = $node->getAttribute('prefix');
-$changed = false;
-$classes = $this->getClassList();
-foreach ($classes as $k => $v) {
-if ($k == 'model' || strpos($k, 'model') !== strlen($k) - 5) unset($classes[$k]);
-}
-foreach ($classes as $m => $file) {
-require_once($file);
-$s         = $m::GetSchema();
-$i         = $m::GetIndexes();
-$tablename = $m::GetTableName();
-$schema = ['schema'  => $s,
-'indexes' => $i];
-if (Core::DB()->tableExists($tablename)) {
-Core::DB()->modifyTable($tablename, $schema);
-}
-else {
-Core::DB()->createTable($tablename, $schema);
-}
-}
-return $changed;
-} // private function _parseDBSchema()
-private function _installAssets() {
-$assetbase = ConfigHandler::Get('/core/filestore/assetdir');
-$theme     = ConfigHandler::Get('/theme/selected');
-$changed   = false;
-foreach ($this->getElements('/assets/file') as $node) {
-$b = $this->getBaseDir();
-$f = \Core\Filestore\Factory::File($b . $node->getAttribute('filename'));
-$newfilename = 'assets' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
-$nf          = \Core\Filestore\Factory::File($newfilename);
-if ($theme === null) {
-}
-elseif ($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false) {
-$nf->setFilename(str_replace($assetbase . $theme, $assetbase . 'default', $nf->getFilename()));
-}
-if ($nf->exists() && $nf->identicalTo($f)) continue;
-$f->copyTo($nf, true);
-$changed = true;
-}
-if (!$changed) return false;
-\Core\Cache::Delete('asset-resolveurl');
-return true;
-}
-public function isEnabled() {
-return ($this->_versionDB !== false);
-}
-}
-
-
 ### REQUIRE_ONCE FROM core/libs/core/VersionString.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core {
@@ -7630,11 +6802,12 @@ private $_execMode = 'WEB';
 private $_file;
 private $_permissions = array();
 private $_hasview = null;
-const ERROR_NOERROR = 0;           // 00000
-const ERROR_INVALID = 1;           // 00001
-const ERROR_WRONGEXECMODE = 2;     // 00010
-const ERROR_MISSINGDEPENDENCY = 4; // 00100
-const ERROR_CONFLICT = 8;          // 01000
+const ERROR_NOERROR = 0;           // 000000
+const ERROR_INVALID = 1;           // 000001
+const ERROR_WRONGEXECMODE = 2;     // 000010
+const ERROR_MISSINGDEPENDENCY = 4; // 000100
+const ERROR_CONFLICT = 8;          // 001000
+const ERROR_UPGRADEPATH = 16;      // 010000
 public $error = 0;
 public $errstrs = array();
 private $_loaded = false;
@@ -8101,7 +7274,7 @@ public function getRawXML() {
 return $this->_xmlloader->asPrettyXML();
 }
 public function isValid() {
-return (!$this->error & Component::ERROR_INVALID);
+return (!$this->error & Component_2_1::ERROR_INVALID);
 }
 public function isInstalled() {
 return ($this->_versionDB === false) ? false : true;
@@ -8121,7 +7294,7 @@ public function isEnabled() {
 return ($this->_enabled === true);
 }
 public function isLoadable() {
-if ($this->error & Component::ERROR_INVALID) {
+if ($this->error & Component_2_1::ERROR_INVALID) {
 return false;
 }
 if($this->_filesloaded) return true;
@@ -8131,29 +7304,29 @@ foreach ($this->getRequires() as $r) {
 switch ($r['type']) {
 case 'library':
 if (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 $this->errstrs[] = 'Requires missing library ' . $r['name'] . ' ' . $r['version'];
 }
 break;
 case 'jslibrary':
 if (!Core::IsJSLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 $this->errstrs[] = 'Requires missing JSlibrary ' . $r['name'] . ' ' . $r['version'];
 }
 break;
 case 'component':
 if (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 $this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
 }
 break;
 case 'define':
 if (!defined($r['name'])) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 $this->errstrs[] = 'Requires missing define ' . $r['name'];
 }
 if ($r['value'] != null && constant($r['name']) != $r['value']) {
-$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 $this->errstrs[] = 'Requires wrong define ' . $r['name'] . '(' . $r['value'] . ')';
 }
 break;
@@ -8163,7 +7336,7 @@ if ($this->error) return false;
 $cs = $this->getClassList();
 foreach ($cs as $c => $file) {
 if (Core::IsClassAvailable($c)) {
-$this->error     = $this->error | Component::ERROR_CONFLICT;
+$this->error     = $this->error | Component_2_1::ERROR_CONFLICT;
 $this->errstrs[] = $c . ' already defined in another component';
 break;
 }
@@ -8171,13 +7344,13 @@ break;
 $liblist = $this->getLibraryList();
 foreach($liblist as $k => $v){
 if(Core::IsLibraryAvailable($k)){
-$this->error     = $this->error | Component::ERROR_CONFLICT;
+$this->error     = $this->error | Component_2_1::ERROR_CONFLICT;
 $this->errstrs[] = 'Library ' . $k . ' already provided by another component!';
 break;
 }
 }
 if(!$this->_checkUpgradePath()){
-$this->error = $this->error | Component::ERROR_UPGRADEPATH;
+$this->error = $this->error | Component_2_1::ERROR_UPGRADEPATH;
 $this->errstrs[] = 'No upgrade path found (' . $this->_versionDB . ' to ' . $this->_version . ')';
 }
 return (!$this->error) ? true : false;
@@ -12606,7 +11779,7 @@ continue;
 while ($size > 0 && ($size != sizeof($list)));
 if (DEVELOPMENT_MODE) {
 foreach ($list as $l) {
-if ($l->error & Component::ERROR_WRONGEXECMODE) continue;
+if ($l->error & Component_2_1::ERROR_WRONGEXECMODE) continue;
 $msg = 'Could not load installed component ' . $l->getName() . ' due to requirement failed.<br/>' . $l->getErrors();
 echo $msg . '<br/>';
 }
@@ -14070,7 +13243,7 @@ continue;
 while ($size > 0 && ($size != sizeof($list)));
 foreach ($list as $n => $c) {
 $this->_componentsDisabled[$n] = $c;
-if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
+if ($c->error & Component_2_1::ERROR_WRONGEXECMODE) continue;
 if (DEVELOPMENT_MODE) {
 SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
 }
@@ -14568,8 +13741,6 @@ public static function GenerateUUID(){
 $serverid = 1;
 return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
 }
-}
-class CoreException extends Exception {
 }
 spl_autoload_register('Core::CheckClass');
 
@@ -17192,8 +16363,6 @@ trigger_error('View::GetFoot is deprecated, please use \Core\view()->getFootCont
 return \Core\view()->getFootContent();
 }
 }
-class ViewException extends Exception {
-}
 
 
 ### REQUIRE_ONCE FROM core/libs/core/Widget_2_1.class.php
@@ -18084,6 +17253,10 @@ if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $for
 else $status = false;
 }
 catch(ModelValidationException $e){
+Core::SetMessage($e->getMessage(), 'error');
+$status = false;
+}
+catch(GeneralValidationException $e){
 Core::SetMessage($e->getMessage(), 'error');
 $status = false;
 }

@@ -76,7 +76,7 @@
 		<file filename="core/bootstrap.php" md5="4413ef9bdb639f2c0d2064c5631491cc"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="4416faccfd246a2049882672b8a6d7cb"/>
-		<file filename="core/bootstrap_preincludes.php" md5="703e467a570cb33401af9a865d35a4ff"/>
+		<file filename="core/bootstrap_preincludes.php" md5="2653106644c4a097292b1fa182de695c"/>
 		<file filename="core/controllers/AdminController.php" md5="e6222fa8b7d6df2b1b3d999ae42fbe3a">
 			<controller name="AdminController"/>
 		</file>
@@ -85,9 +85,6 @@
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="3c272c73dcc0b73a83235e55bc7f84a3">
 			<class name="DirectoryController"/>
-		</file>
-		<file filename="core/controllers/ErrorController.php" md5="5a6f21e4b347626429e581ec427051cb">
-			<class name="ErrorController"/>
 		</file>
 		<file filename="core/controllers/FileController.class.php" md5="373a206f7598a782d09f618e375a8bd4">
 			<controller name="FileController"/>
@@ -382,30 +379,23 @@
 		<file filename="core/libs/core/Cache.php" md5="75f4084ec3f15399b5de5f222554017e">
 			<class name="Core\Cache"/>
 		</file>
-		<file filename="core/libs/core/Component.class.php" md5="7349e5bc05f53ec1cf6fc64a8dac5ce8">
-			<class name="Component"/>
-		</file>
 		<file filename="core/libs/core/ComponentFactory.php" md5="d153c8bf2dfbf65eba63bb0e7b1ceae9">
 			<class name="ComponentFactory"/>
 		</file>
-		<file filename="core/libs/core/ComponentHandler.class.php" md5="86528c28183175e5ca94abf369c48b99">
+		<file filename="core/libs/core/ComponentHandler.class.php" md5="b842bd3f0179c0828b9eab66453436b3">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="8569f51ceeacccd75563e35035225363">
+		<file filename="core/libs/core/Component_2_1.php" md5="02a49619ffc6d38df5ee226e2668e99d">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="96a305b9360065ee8430e12e9688867f">
 			<class name="ConfigHandler"/>
 		</file>
-		<file filename="core/libs/core/Controller.class.php" md5="4a3878d079bb023ff3fd5fac74ffe830">
-			<class name="Controller"/>
-		</file>
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="e98e239c2fc5cbd62729d74a58f21962">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="8f690a839f86e058c522b3d82c29cbdf">
+		<file filename="core/libs/core/Core.class.php" md5="8e62b3200459b3ab883a6ac7e102963a">
 			<class name="Core"/>
-			<class name="CoreException"/>
 		</file>
 		<file filename="core/libs/core/CoreDateTime.php" md5="3213bb356fb936d95d1411d922ff7859">
 			<class name="CoreDateTime"/>
@@ -419,10 +409,16 @@
 		<file filename="core/libs/core/Email.class.php" md5="79a40d1ce38ee17cbd9146a55f78dd77">
 			<class name="Email"/>
 		</file>
+		<file filename="core/libs/core/Exceptions.php" md5="aee5a74ba70a86c647fc3ec517e56688">
+			<class name="ModelException"/>
+			<class name="ModelValidationException"/>
+			<class name="GeneralValidationException"/>
+			<class name="CoreException"/>
+		</file>
 		<file filename="core/libs/core/FilterForm.class.php" md5="7fc2721d14be167410f99375132d87f2">
 			<class name="FilterForm"/>
 		</file>
-		<file filename="core/libs/core/Form.class.php" md5="71f47c5d7fd94ef756d84460d5811a50">
+		<file filename="core/libs/core/Form.class.php" md5="d8c988c990ce46bd32850815f9566349">
 			<class name="FormGroup"/>
 			<class name="FormElement"/>
 			<class name="Form"/>
@@ -443,11 +439,9 @@
 		<file filename="core/libs/core/InstallerException.php" md5="7bae1b2886a742915df7086624d5d819">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="d0bfddcfa95521a9f6445ee5086d4d0d">
+		<file filename="core/libs/core/Model.class.php" md5="7b178542f3dfcf43f42f61dc90cad01e">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
-			<class name="ModelException"/>
-			<class name="ModelValidationException"/>
 		</file>
 		<file filename="core/libs/core/ModelImportLogger.php" md5="e3a00dc14b72f2536f53973d8f698306">
 			<class name="Core\ModelImportLogger"/>
@@ -476,9 +470,8 @@
 		<file filename="core/libs/core/VersionString.php" md5="e99572e6240670e3d33b630cfd588af9">
 			<class name="Core\VersionString"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="61f75c07145c26c0ca4744ca23b3e6c0">
+		<file filename="core/libs/core/View.class.php" md5="cd9e555ff84893f623451229ceaf0d5d">
 			<class name="View"/>
-			<class name="ViewException"/>
 		</file>
 		<file filename="core/libs/core/ViewControl.class.php" md5="3350969e0b79911da1a809b1dc585310">
 			<class name="ViewControls"/>
@@ -494,10 +487,6 @@
 			<class name="ViewMeta_canonical"/>
 			<class name="ViewMeta_generator"/>
 			<class name="ViewMeta_image"/>
-		</file>
-		<file filename="core/libs/core/Widget.class.php" md5="d788a4d5bb2063ae6208f4bc7f2bac21">
-			<class name="Widget"/>
-			<class name="WidgetException"/>
 		</file>
 		<file filename="core/libs/core/Widget_2_1.class.php" md5="48bf638d5fd1298bd192bee59851a12d">
 			<class name="Widget_2_1"/>

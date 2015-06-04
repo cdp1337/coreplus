@@ -130,7 +130,7 @@ class Core implements ISingleton {
 
 
 		/*if (!parent::load()) {
-			$this->error     = $this->error | Component::ERROR_INVALID;
+			$this->error     = $this->error | Component_2_1::ERROR_INVALID;
 			$this->errstrs[] = $XMLFilename . ' parsing failed, not valid XML.';
 			$this->valid     = false;
 			return;
@@ -523,7 +523,7 @@ class Core implements ISingleton {
 			$this->_componentsDisabled[$n] = $c;
 
 			// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
-			if ($c->error & Component::ERROR_WRONGEXECMODE) continue;
+			if ($c->error & Component_2_1::ERROR_WRONGEXECMODE) continue;
 
 			if (DEVELOPMENT_MODE) {
 				SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
@@ -1632,10 +1632,6 @@ class Core implements ISingleton {
 		$serverid = 1;
 		return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
 	}
-
-}
-
-class CoreException extends Exception {
 
 }
 

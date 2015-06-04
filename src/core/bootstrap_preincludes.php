@@ -36,10 +36,10 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 
 
 // The PHP elements of the MVC framework.
+require_once(ROOT_PDIR . 'core/libs/core/Exceptions.php');
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ModelSchema.php');
-require_once(ROOT_PDIR . 'core/libs/core/Controller.class.php');
 
 // Time is a useful component.
 require_once(ROOT_PDIR . 'core/libs/core/Time.class.php');
@@ -57,8 +57,6 @@ require_once(ROOT_PDIR . 'core/models/WidgetModel.class.php');
 require_once(ROOT_PDIR . 'core/models/UserUserConfigModel.php');
 require_once(ROOT_PDIR . 'core/models/UserConfigModel.php');
 
-/** @deprecated 2011.11 */
-require_once(ROOT_PDIR . 'core/libs/core/Component.class.php');
 /**
  * The Component system written for API 2.1
  */

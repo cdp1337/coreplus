@@ -1499,10 +1499,3 @@ class View {
 		return \Core\view()->getFootContent();
 	}
 }
-
-
-class ViewException extends Exception {
-
-}
-
-

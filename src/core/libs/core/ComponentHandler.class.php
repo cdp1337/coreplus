@@ -253,7 +253,7 @@ class ComponentHandler implements ISingleton {
 		if (DEVELOPMENT_MODE) {
 			foreach ($list as $l) {
 				// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
-				if ($l->error & Component::ERROR_WRONGEXECMODE) continue;
+				if ($l->error & Component_2_1::ERROR_WRONGEXECMODE) continue;
 
 				$msg = 'Could not load installed component ' . $l->getName() . ' due to requirement failed.<br/>' . $l->getErrors();
 				echo $msg . '<br/>';

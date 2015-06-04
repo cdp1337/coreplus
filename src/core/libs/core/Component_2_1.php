@@ -121,11 +121,12 @@ class Component_2_1 {
 	private $_hasview = null;
 
 	// A set of error codes components may encounter.
-	const ERROR_NOERROR = 0;           // 00000
-	const ERROR_INVALID = 1;           // 00001
-	const ERROR_WRONGEXECMODE = 2;     // 00010
-	const ERROR_MISSINGDEPENDENCY = 4; // 00100
-	const ERROR_CONFLICT = 8;          // 01000
+	const ERROR_NOERROR = 0;           // 000000
+	const ERROR_INVALID = 1;           // 000001
+	const ERROR_WRONGEXECMODE = 2;     // 000010
+	const ERROR_MISSINGDEPENDENCY = 4; // 000100
+	const ERROR_CONFLICT = 8;          // 001000
+	const ERROR_UPGRADEPATH = 16;      // 010000
 
 	/**
 	 * This is the error code of any errors encountered.
@@ -1045,7 +1046,7 @@ class Component_2_1 {
 
 
 	public function isValid() {
-		return (!$this->error & Component::ERROR_INVALID);
+		return (!$this->error & Component_2_1::ERROR_INVALID);
 	}
 
 	public function isInstalled() {
@@ -1077,7 +1078,7 @@ class Component_2_1 {
 	 */
 	public function isLoadable() {
 		// Invalid ones are not loadable... don't even try ;)
-		if ($this->error & Component::ERROR_INVALID) {
+		if ($this->error & Component_2_1::ERROR_INVALID) {
 			return false;
 		}
 
@@ -1095,7 +1096,7 @@ class Component_2_1 {
 		// Same thing vice versa... if there is a CLI application, it simply won't have Controllers or what not.
 		//if ($this->_execMode != 'BOTH') {
 		//	if ($this->_execMode != EXEC_MODE) {
-		//		$this->error     = $this->error | Component::ERROR_WRONGEXECMODE;
+		//		$this->error     = $this->error | Component_2_1::ERROR_WRONGEXECMODE;
 		//		$this->errstrs[] = 'Wrong execution mode, can only be ran in ' . $this->_execMode . ' mode';
 		//	}
 		//}
@@ -1105,31 +1106,31 @@ class Component_2_1 {
 			switch ($r['type']) {
 				case 'library':
 					if (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-						$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 						$this->errstrs[] = 'Requires missing library ' . $r['name'] . ' ' . $r['version'];
 					}
 					break;
 				case 'jslibrary':
 					if (!Core::IsJSLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-						$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 						$this->errstrs[] = 'Requires missing JSlibrary ' . $r['name'] . ' ' . $r['version'];
 					}
 					break;
 				case 'component':
 					if (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
-						$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 						$this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
 					}
 					break;
 				case 'define':
 					// Ensure that whatever define the script is expecting is there... this is useful for the EXEC_MODE define.
 					if (!defined($r['name'])) {
-						$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 						$this->errstrs[] = 'Requires missing define ' . $r['name'];
 					}
 					// Also if they opted to include a value... check that too.
 					if ($r['value'] != null && constant($r['name']) != $r['value']) {
-						$this->error     = $this->error | Component::ERROR_MISSINGDEPENDENCY;
+						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 						$this->errstrs[] = 'Requires wrong define ' . $r['name'] . '(' . $r['value'] . ')';
 					}
 					break;
@@ -1142,7 +1143,7 @@ class Component_2_1 {
 		$cs = $this->getClassList();
 		foreach ($cs as $c => $file) {
 			if (Core::IsClassAvailable($c)) {
-				$this->error     = $this->error | Component::ERROR_CONFLICT;
+				$this->error     = $this->error | Component_2_1::ERROR_CONFLICT;
 				$this->errstrs[] = $c . ' already defined in another component';
 				break;
 			}
@@ -1154,7 +1155,7 @@ class Component_2_1 {
 		// Make sure the libraries contained herein aren't provided already!
 		foreach($liblist as $k => $v){
 			if(Core::IsLibraryAvailable($k)){
-				$this->error     = $this->error | Component::ERROR_CONFLICT;
+				$this->error     = $this->error | Component_2_1::ERROR_CONFLICT;
 				$this->errstrs[] = 'Library ' . $k . ' already provided by another component!';
 				break;
 			}
@@ -1162,7 +1163,7 @@ class Component_2_1 {
 
 		// Check that if the version installed is not what's in the component file, that there is a valid upgrade path.
 		if(!$this->_checkUpgradePath()){
-			$this->error = $this->error | Component::ERROR_UPGRADEPATH;
+			$this->error = $this->error | Component_2_1::ERROR_UPGRADEPATH;
 			$this->errstrs[] = 'No upgrade path found (' . $this->_versionDB . ' to ' . $this->_version . ')';
 		}
 
