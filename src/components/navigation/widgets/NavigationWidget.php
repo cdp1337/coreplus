@@ -35,21 +35,25 @@ class NavigationWidget extends Widget_2_1 {
 
 		// View won't quite just have a flat list of entries, as they need to be checked and sorted
 		// into a nested array.
-		$sortedentries = array();
+		$sortedentries = [];
 		// First level children
 		foreach ($entries as $k => $e) {
 			if (!$e->get('parentid')) {
 
-				$classes = array();
+				$classes = [];
 				$classes[] = Core\str_to_url($e->get('title')) . '-link';
 				if($e->get('baseurl') == $currenturl) $classes[] = 'active';
 
+				if(\Core\user()->checkAccess($e->getAccessString())){
+					// There's a weird bug where sometimes the access cache is empty.
+					// In that case, just allow the user to view the page.
+					$sortedentries[] = [
+						'obj' => $e,
+						'children' => [],
+						'classes' => $classes
+					];
+				}
 
-				$sortedentries[] = array(
-					'obj' => $e,
-					'children' => array(),
-					'classes' => $classes
-				);
 				unset($entries[$k]);
 			}
 		}
@@ -60,24 +64,28 @@ class NavigationWidget extends Widget_2_1 {
 				foreach ($entries as $k => $e) {
 					if ($e->get('parentid') == $se['obj']->get('id')) {
 
-						$classes = array();
-						$classes[] = Core\str_to_url($e->get('title')) . '-link';
-						if($e->get('baseurl') == $currenturl) {
-							$classes[] = 'active';
+						if(\Core\user()->checkAccess($e->getAccessString())){
+							// There's a weird bug where sometimes the access cache is empty.
+							// In that case, just allow the user to view the page.
+							$classes   = [];
+							$classes[] = Core\str_to_url($e->get('title')) . '-link';
+							if($e->get('baseurl') == $currenturl) {
+								$classes[] = 'active';
 
-							// also set active class on the parent so frontenders don't rage :)
-							$sortedentries[$sk]['classes'][] =  'active';
+								// also set active class on the parent so frontenders don't rage :)
+								$sortedentries[ $sk ]['classes'][] = 'active';
+							}
+
+							// Add the "more" class to the parent.
+							$sortedentries[ $sk ]['classes'][] = 'more';
+
+							$sortedentries[ $sk ]['children'][] = [
+								'obj'      => $e,
+								'children' => [],
+								'classes'  => $classes
+							];
 						}
-
-						// Add the "more" class to the parent.
-						$sortedentries[$sk]['classes'][] = 'more';
-
-						$sortedentries[$sk]['children'][] = array(
-							'obj' => $e,
-							'children' => array(),
-							'classes' => $classes
-						);
-						unset($entries[$k]);
+						unset($entries[ $k ]);
 					}
 				}
 			}
@@ -91,23 +99,25 @@ class NavigationWidget extends Widget_2_1 {
 					foreach ($entries as $k => $e) {
 						if ($e->get('parentid') == $subse['obj']->get('id')) {
 
-							$classes = array();
-							$classes[] = Core\str_to_url($e->get('title')) . '-link';
-							if($e->get('baseurl') == $currenturl) {
-								$classes[] = 'active';
+							if(\Core\user()->checkAccess($e->getAccessString())){
+								$classes = [];
+								$classes[] = Core\str_to_url($e->get('title')) . '-link';
+								if($e->get('baseurl') == $currenturl) {
+									$classes[] = 'active';
 
-								// also set active class on the top-most nav parent so frontenders don't rage :)
-								$sortedentries[$sk]['children'][$subsk]['class'][] =  'active';
+									// also set active class on the top-most nav parent so frontenders don't rage :)
+									$sortedentries[$sk]['children'][$subsk]['class'][] =  'active';
+								}
+
+								// Add the "more" class to the parent.
+								$sortedentries[$sk]['children'][$subsk]['class'][] = 'more';
+
+								$sortedentries[$sk]['children'][$subsk]['children'][] = [
+									'obj' => $e,
+									'children' => [],
+									'classes' => $classes
+								];
 							}
-
-							// Add the "more" class to the parent.
-							$sortedentries[$sk]['children'][$subsk]['class'][] = 'more';
-
-							$sortedentries[$sk]['children'][$subsk]['children'][] = array(
-								'obj' => $e,
-								'children' => array(),
-								'classes' => $classes
-							);
 							unset($entries[$k]);
 						}
 					}
@@ -118,9 +128,6 @@ class NavigationWidget extends Widget_2_1 {
 		foreach($sortedentries as $k => $el){
 			$this->_transposeClass($sortedentries[$k]);
 		}
-
-
-		// @todo Check page permissions
 
 		$view->title        = $m->get('title');
 		$view->access       = $m->get('access');
@@ -151,15 +158,15 @@ class NavigationWidget extends Widget_2_1 {
 		if (!$baseurl) return '';
 
 		if ($model->get('admin')) {
-			$pages = PageModel::Find(array('admin = 1', 'baseurl != /admin'), null, 'title');
+			$pages = PageModel::Find(['admin = 1', 'baseurl != /admin'], null, 'title');
 		} else {
 			// Give me all the siblings of that baseurl.
-			$pages = PageModel::Find(array('parenturl' => $baseurl), null, 'title');
+			$pages = PageModel::Find(['parenturl' => $baseurl], null, 'title');
 		}
 
-		$entries = array();
+		$entries = [];
 		foreach ($pages as $page) {
-			$entries[] = array('obj' => $page, 'children' => array(), 'class' => '');
+			$entries[] = ['obj' => $page, 'children' => [], 'class' => ''];
 		}
 
 		$view->assign('entries', $entries);
@@ -183,23 +190,23 @@ class NavigationWidget extends Widget_2_1 {
 		if (!$baseurl) return '';
 
 		if ($model->get('admin')) {
-			$pages = PageModel::Find(array('admin = 1', 'baseurl != /admin'), null, 'title');
+			$pages = PageModel::Find(['admin = 1', 'baseurl != /admin'], null, 'title');
 		} else {
 			// Give me all the siblings of that baseurl.
-			$pages = PageModel::Find(array('parenturl' => $baseurl, 'selectable' => 1), null, 'title');
+			$pages = PageModel::Find(['parenturl' => $baseurl, 'selectable' => 1], null, 'title');
 		}
 
-		$entries = array();
+		$entries = [];
 		foreach ($pages as $page) {
 			if ($page->get('baseurl') == $model->get('baseurl')) {
-				$subpages   = PageModel::Find(array('parenturl' => $model->get('baseurl'), 'selectable' => 1), null, 'title');
-				$subentries = array();
+				$subpages   = PageModel::Find(['parenturl' => $model->get('baseurl'), 'selectable' => 1], null, 'title');
+				$subentries = [];
 				foreach ($subpages as $subpage) {
-					$subentries[] = array('obj' => $subpage, 'children' => array(), 'class' => '');
+					$subentries[] = ['obj' => $subpage, 'children' => [], 'class' => ''];
 				}
-				$entries[] = array('obj' => $page, 'children' => $subentries, 'class' => 'active');
+				$entries[] = ['obj' => $page, 'children' => $subentries, 'class' => 'active'];
 			} else {
-				$entries[] = array('obj' => $page, 'children' => array(), 'class' => '');
+				$entries[] = ['obj' => $page, 'children' => [], 'class' => ''];
 			}
 		}
 
@@ -221,16 +228,16 @@ class NavigationWidget extends Widget_2_1 {
 		$baseurl = $model->get('baseurl');
 
 		// Give me all the siblings of that baseurl.
-		$pages = PageModel::Find(array('parenturl' => $baseurl, 'selectable' => 1), null, 'title');
+		$pages = PageModel::Find(['parenturl' => $baseurl, 'selectable' => 1], null, 'title');
 
-		$entries = array();
+		$entries = [];
 		foreach ($pages as $page) {
-			$subpages   = PageModel::Find(array('parenturl' => $page->get('baseurl'), 'selectable' => 1), null, 'title');
-			$subentries = array();
+			$subpages   = PageModel::Find(['parenturl' => $page->get('baseurl'), 'selectable' => 1], null, 'title');
+			$subentries = [];
 			foreach ($subpages as $subpage) {
-				$subentries[] = array('obj' => $subpage, 'children' => array(), 'class' => '');
+				$subentries[] = ['obj' => $subpage, 'children' => [], 'class' => ''];
 			}
-			$entries[] = array('obj' => $page, 'children' => $subentries, 'class' => 'active');
+			$entries[] = ['obj' => $page, 'children' => $subentries, 'class' => 'active'];
 		}
 
 		$view->assign('entries', $entries);

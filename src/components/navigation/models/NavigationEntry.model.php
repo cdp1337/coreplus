@@ -21,57 +21,57 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 class NavigationEntryModel extends Model {
-	public static $Schema = array(
-		'id'           => array(
+	public static $Schema = [
+		'id'           => [
 			'type'     => Model::ATT_TYPE_ID,
 			'required' => true,
 			'null'     => false,
-		),
-		'navigationid' => array(
+		],
+		'navigationid' => [
 			'type' => Model::ATT_TYPE_INT,
 			'null' => false,
-		),
-		'parentid'     => array(
+		],
+		'parentid'     => [
 			'type' => Model::ATT_TYPE_INT,
 			'null' => false,
-		),
-		'type'         => array(
+		],
+		'type'         => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 6,
 			'null'      => false,
-		),
-		'baseurl'      => array(
+		],
+		'baseurl'      => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 255,
 			'null'      => false,
-		),
-		'title'        => array(
+		],
+		'title'        => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'null'      => false,
-		),
-		'target'       => array(
+		],
+		'target'       => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 16,
 			'null'      => false,
-		),
-		'weight'       => array(
+		],
+		'weight'       => [
 			'type' => Model::ATT_TYPE_INT,
 			'null' => false,
-		),
-		'created'      => array(
+		],
+		'created'      => [
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
-		),
-		'updated'      => array(
+		],
+		'updated'      => [
 			'type' => Model::ATT_TYPE_UPDATED,
 			'null' => false,
-		),
-	);
+		],
+	];
 
-	public static $Indexes = array(
-		'primary' => array('id'),
-	);
+	public static $Indexes = [
+		'primary' => ['id'],
+	];
 
 	/**
 	 * Based on the type of this entry, ie: int or ext, resolve the URL fully.
@@ -88,6 +88,35 @@ class NavigationEntryModel extends Model {
 				else return 'http://' . $this->get('baseurl');
 				break;
 		}
+	}
+
+	/**
+	 * Get the access string of the current page, if possible.
+	 * This is pulled from the corresponding page, but if it's an external page or manual URL, there won't be any Page to lookup,
+	 * so '*' is returned instead.
+	 *
+	 * @return string
+	 */
+	public function getAccessString(){
+		if($this->get('type') != 'int'){
+			// External pages never can support access permissions, I don't know what the external page has!
+			return '*';
+		}
+
+		$page = PageModel::Construct($this->get('baseurl'));
+
+		if(!$page->exists()){
+			// If the page doesn't exist, then there's nothing to go off of either!
+			return '*';
+		}
+		if($page->get('access') == ''){
+			// There's a weird bug where sometimes the access cache is empty.
+			// In that case, just allow the user to view the page.
+			return '*';
+		}
+
+		// Otherwise!
+		return $page->get('access');
 	}
 
 } // END class NavigationEntryModel extends Model

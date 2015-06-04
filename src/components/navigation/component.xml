@@ -12,11 +12,11 @@
 		<file filename="models/Navigation.model.php" md5="b32c7e6c49435b94bb3abc18053d5729">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="b65fb8a4aad99b7a608027fdac97fca7">
+		<file filename="models/NavigationEntry.model.php" md5="d2b54fc5c2f7be7b94902a8e10b5b64b">
 			<class name="NavigationEntryModel"/>
 		</file>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="69e975de8b8c91420a6f5759d154e6aa"/>
-		<file filename="widgets/NavigationWidget.php" md5="0102d5769009f5e3e420d563595c90b2">
+		<file filename="widgets/NavigationWidget.php" md5="e29a20ab074e7ed8ad4b788c8d8079aa">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
