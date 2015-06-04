@@ -234,10 +234,20 @@ Set the description for this linked form element.
 
 #### source
 
-Set a method's return value to be used for the options value of this element, (MUST be public static).
+Set a method's return value to be used for the options value of this element.
 This is only useful for select form element types.
 
-Ex: `'source' => 'MyFooModel::GetBlahOptions'`,
+The return of the method MUST be an array and it is passed into the option set as-is.
+
+##### Examples
+
+`'source' => 'MyFooModel::GetBlahOptions'`,
+
+Set the options as the return value from the 'GetBlahOptions' static method on the 'MyFooModel' class.
+
+`'source' => 'this::getBlahOptions'`,
+
+Set the options as the return value from the 'getBlahOptions' instantiated method of the original source instance.
 
 ## Linked Models
 

@@ -661,8 +661,15 @@ class FormElement {
 			// Validation exists... check it.
 			$source = $this->_attributes['source'];
 
-			// Allow the source to be specified as a static public function
-			if (strpos($source, '::') !== false) {
+
+			if(
+				// Allow an array of object, method to be called.
+				// This is generally only used with the Model's "this::foo" construct.
+				(is_array($source) && sizeof($source) == 2) ||
+
+				// Allow the source to be specified as a static public function
+				strpos($source, '::') !== false
+			){
 				// the method can either be true, false or a string.
 				// Only if true is returned will that be triggered as success.
 				$this->_attributes['options'] = call_user_func($source);
@@ -1330,6 +1337,12 @@ class Form extends FormGroup {
 			// Merge in any defaults, (without overriding).
 			foreach($defaults as $k => $v){
 				if(!isset($formatts[$k])) $formatts[$k] = $v;
+			}
+
+			// Add special functionality here to allow passing in "this" as a valid reference for the "source" attribute.
+			// This will allow the instantiated Model object as a whole to be used as a reference when retriving options.
+			if(isset($formatts['source']) && strpos($formatts['source'], 'this::') === 0){
+				$formatts['source'] = [$model, substr($formatts['source'], 6)];
 			}
 
 			// And set everything else.
