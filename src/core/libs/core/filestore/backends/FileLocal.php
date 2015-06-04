@@ -549,7 +549,7 @@ class FileLocal implements Filestore\File {
 		if ($includeHeader){
 			header('Content-Type: ' . $this->getMimetype());
 			header('Content-Length: ' . $preview->getFilesize());
-			header('X-Alternate-Location: ' . $preview->getURL());
+			header('X-Alternative-Location: ' . $preview->getURL());
 			header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
 		}
 		echo $preview->getContents();

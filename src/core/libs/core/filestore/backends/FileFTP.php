@@ -457,7 +457,7 @@ class FileFTP implements Filestore\File{
 				$view->contenttype = $this->getMimetype();
 				$view->updated = $this->getMTime();
 				$view->addHeader('Content-Length', $resized->getFilesize());
-				$view->addHeader('X-Alternate-Location', $resized->getURL());
+				$view->addHeader('X-Alternative-Location', $resized->getURL());
 				$view->mode = \View::MODE_NOOUTPUT;
 
 				$view->render();
