@@ -7,6 +7,7 @@
  ** javascript to make it a popup menu for better usability.                **
  *****************************************************************************
  *****************************************************************************/
+
 /*** Controls that can be implemented throughout the site ***/
 ul.controls {
 	height:20px;
@@ -15,47 +16,44 @@ ul.controls {
 	max-width: 200px;
 
 	/* icon animations ftw! */
-	.icon-cog {
-		opacity: 1;
-		transition: opacity 0.3s ease-in-out 0s;
+	&.controls-animated {
+		.controls-proxy-icon {
+			opacity: 1;
+			transition: opacity 0.3s ease-in-out 0s;
+		}
+
+		.icon-spin {
+			opacity: 0.5;
+		}
 	}
 
-	.icon-spin {
-		opacity: 0.5;
+	&.controls-proxy {
+		color: #477DCA;
 	}
 
-}
-ul.controls li {
-	float:left;
-	margin-right:0.1em;
-	list-style:none;
-}
-/*
-And their images.  Stand-alone "control" buttons also get the same styling.
-Since the icons are now being handled by font-awesome, the bulk of this logic will have been removed.
-*/
+	li {
+		float:left;
+		margin-right:0.1em;
+		list-style:none;
 
+		a {
+			text-decoration: none;
+			font-size: 14px;
+			padding: 2px;
+			line-height: 18px;
+		}
 
-/* First, the common styles for all icon'd controls. */
-ul.controls li {
-	a {
-		text-decoration: none;
-		font-size: 14px;
-		padding: 2px;
-		line-height: 18px;
-	}
+		a:hover {
+			text-shadow: none;
+			font-size: 18px;
+			padding: 0;
+		}
 
-	a:hover {
-		text-shadow: none;
-		font-size: 18px;
-		padding: 0;
-	}
-
-	span {
-		display: none;
+		span {
+			display: none;
+		}
 	}
 }
-
 
 /** Spruce up FA with some color :) **/
 ul.controls li i.icon-remove,
