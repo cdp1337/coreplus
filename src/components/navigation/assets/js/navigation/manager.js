@@ -27,7 +27,7 @@ var NavigationManager = null;
 		return s.replace(/ \(.*\)$/, '').replace(/.*» (.*)$/, '$1')
 	};
 
-	controlshtml = '<ul class="controls" style="float:right;">' +
+	controlshtml = '<ul class="controls" style="display:inline-block; margin-left:1em;">' +
 		'<li>' +
 		'<a href="#" class="edit-entry-link control control-edit"><i class="icon-edit"></i><span>edit entry</span></a>' +
 		'</li>' +

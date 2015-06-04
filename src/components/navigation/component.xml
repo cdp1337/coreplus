@@ -6,7 +6,7 @@
 	</requires>
 	<files>
 		<file filename="CHANGELOG" md5="c9237e00fa438bf406a93952c4f5abeb"/>
-		<file filename="controllers/NavigationController.php" md5="2931c3c881dbf618f00534db85542d8f">
+		<file filename="controllers/NavigationController.php" md5="5b3309d73b32f544c9f982fcd8d0d394">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="models/Navigation.model.php" md5="b32c7e6c49435b94bb3abc18053d5729">
@@ -22,7 +22,7 @@
 	</files>
 	<view>
 		<file filename="templates/pages/navigation/create.tpl" md5="75c1c4157d0b64b0f5e05fa3a0ee9846"/>
-		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="f947dd94c0aa9f42b952995ce2e516b4"/>
+		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="57d170ffdb0eeef720a1861874507088"/>
 		<file filename="templates/pages/navigation/delete.tpl" md5="76e1949488cb9acaaf83eb1a95c9abd5"/>
 		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
 		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
@@ -40,7 +40,8 @@
 		<widgetcreate title="Navigation Menu" baseurl="/navigation/create"/>
 	</widgets>
 	<assets>
-		<file filename="assets/js/navigation/manager.js" md5="e7852b3c06f5b208e35b1cb5ad08f84f"/>
+		<file filename="assets/js/navigation/manager.js" md5="d328d065a3112868ef914999072f77e0"/>
+		<file filename="assets/js/navigation/manager.min.js" md5="f2fd31e0aa29eeb560c52c665c466116"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>

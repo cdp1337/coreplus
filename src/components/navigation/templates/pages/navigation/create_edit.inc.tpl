@@ -3,6 +3,14 @@
 {script name="jqueryui.nestedSortable"}{/script}
 {script src="js/navigation/manager.js"}{/script}
 
+{css}<style>
+	#entry-listings ol {
+		margin-left: 2em;
+		border-left: 2px solid black;
+		padding-left: 0.5em;
+	}
+</style>{/css}
+
 {$form->render('head')}
 
 {$form->render('body')}

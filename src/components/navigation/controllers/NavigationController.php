@@ -43,6 +43,7 @@ class NavigationController extends Controller_2_1 {
 		// Get the entries for this model as well.
 		$entries = $m->getLink('NavigationEntry', 'weight ASC');
 
+		$view->mastertemplate = 'admin';
 		$view->title = 'Edit ' . $m->get('name');
 		$view->assignVariable('model', $m);
 		$view->assignVariable('form', $form);
@@ -65,6 +66,7 @@ class NavigationController extends Controller_2_1 {
 		//$views = PageModel::GetPagesAsOptions("fuzzy = 0");
 		$views = PageModel::GetPagesAsOptions();
 
+		$view->mastertemplate = 'admin';
 		$view->title        = 'New Navigation Menu';
 		$view->templatename = '/pages/navigation/create.tpl';
 		$view->assignVariable('model', $m);
@@ -152,6 +154,7 @@ class NavigationController extends Controller_2_1 {
 			}
 		}
 
-		return '/Navigation';
+		Core::SetMessage('Updated/Created navigation successfully!', 'success');
+		return 'back';
 	}
 }
