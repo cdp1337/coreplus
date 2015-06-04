@@ -2929,11 +2929,7 @@ class ModelFactory {
 }
 
 
-class ModelException extends Exception {
-}
 
-class ModelValidationException extends ModelException {
-}
 
 
 

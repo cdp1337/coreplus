@@ -1516,6 +1516,10 @@ class Form extends FormGroup {
 			Core::SetMessage($e->getMessage(), 'error');
 			$status = false;
 		}
+		catch(GeneralValidationException $e){
+			Core::SetMessage($e->getMessage(), 'error');
+			$status = false;
+		}
 		catch(Exception $e){
 			if(DEVELOPMENT_MODE){
 				// Developers get the full message
