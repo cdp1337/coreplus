@@ -83,6 +83,14 @@
 												<span>Edit Installed Options</span>
 											</a>
 										</li>
+										{if $widget.Widget.editurl}
+											<li>
+												{a href="`$widget.Widget.editurl`"}
+													<i class="icon-wrench"></i>
+													<span>Edit Widget Settings</span>
+												{/a}
+											</li>
+										{/if}
 										{if !$smarty.foreach.widgets.last}
 											<li>
 												{a href="/widget/instance/movedown/`$widget.id`" class="control control-delete" title="Move Widget Instance Down" confirm=""}
@@ -139,8 +147,8 @@
 					{if $widget.editurl}
 						<li>
 							{a href="`$widget.editurl`"}
-								<i class="icon-edit"></i>
-								<span>Edit</span>
+								<i class="icon-wrench"></i>
+								<span>Edit Widget Settings</span>
 							{/a}
 						</li>
 					{/if}
@@ -148,7 +156,7 @@
 						<li>
 							{a href="`$widget.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
 								<i class="icon-remove"></i>
-								<span>Delete</span>
+								<span>Delete Widget</span>
 							{/a}
 						</li>
 					{/if}
