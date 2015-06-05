@@ -389,44 +389,6 @@ class WidgetController extends Controller_2_1 {
 			]
 		);
 
-		// Figure out the template directory for custom pages, (if it exists)
-		// In order to get the types, I need to sift through all the potential template directories and look for a directory
-		// with the matching name.
-		$tmpname = 'widgets' . dirname($baseurl);
-
-		$matches = [];
-
-		foreach(\Core\Templates\Template::GetPaths() as $d){
-			if(is_dir($d . $tmpname)){
-				// Yay, sift through that and get the files!
-				$dir = \Core\Filestore\Factory::Directory($d . $tmpname);
-				foreach($dir->ls('tpl') as $file){
-					// Skip directories
-					if($file instanceof \Core\Filestore\Directory) continue;
-
-					/** @var $file \Core\Filestore\File */
-					//$fullpath = $tmpname . $file->getBaseFilename();
-					$name = $fullpath = $file->getBaseFilename();
-					// Do some template updates and make it a little more friendlier to read.
-					$name = ucwords(str_replace('-', ' ', substr($name, 0, -4))) . ' Template';
-					$matches[ $fullpath ] = $name;
-				}
-			}
-		}
-
-		// If there are matches, set them to the form element's optionset.
-		if(sizeof($matches)){
-			$form->addElement(
-				'select',
-				[
-					'name' => 'template',
-					'title' => 'Alternative Template',
-					'value' => $model->get('template'),
-					'options' => ['' => '-- Default Template --'] + $matches,
-				]
-			);
-		}
-
 		$defaults = $obj->settings;
 		$formdata = $obj->getFormSettings();
 
@@ -808,9 +770,6 @@ class WidgetController extends Controller_2_1 {
 		$model->set('editurl', '/admin/widget/update?baseurl=' . $baseurl);
 		$model->set('deleteurl', '/admin/widget/delete?baseurl=' . $baseurl);
 		$model->set('title', $form->getElement('title')->get('value'));
-		if($form->getElement('template')){
-			$model->set('template', $form->getElementValue('template'));
-		}
 
 		$elements = $form->getElements();
 		foreach($elements as $el){
