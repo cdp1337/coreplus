@@ -220,10 +220,15 @@ class Widget_2_1 {
 	 *
 	 * @param string $name
 	 *
-	 * @return Widget_2_1
+	 * @return Widget_2_1|null
 	 */
 	public static function Factory($name) {
-		return new $name();
+		if(class_exists($name) && is_subclass_of($name, 'Widget_2_1')){
+			return new $name();
+		}
+		else{
+			return null;
+		}
 	}
 
 	/**

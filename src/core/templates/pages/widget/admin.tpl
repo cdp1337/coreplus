@@ -164,23 +164,28 @@
 				</div>
 			{/if}
 
-			{if $widget->getWidget()->getPreviewImage()}
+			{if $widget->getWidget() === null}
+				[ Widget Not Found! ]<br/>
+				{$widget.baseurl}
+			{elseif $widget->getWidget()->getPreviewImage()}
 				{img width="210" src="`$widget->getWidget()->getPreviewImage()`"}
 			{else}
 				{$widget.baseurl}
 			{/if}
 
-			<form action="{link '/widget/instance/install'}" method="POST">
-				<select name="area">
-					<option value="">-- Select Widget Area --</option>
-					{foreach from=$areas item='area'}
-						<option value="{$area.name}">{$area.name}</option>
-					{/foreach}
-				</select>
-				<input type="hidden" name="template" value="{$template}"/>
-				<input type="hidden" name="widget_baseurl" value="{$widget.baseurl}"/>
-				<input type="submit" value="Install Widget"/>
-			</form>
+			{if $widget->getWidget() !== null}
+				<form action="{link '/widget/instance/install'}" method="POST">
+					<select name="area">
+						<option value="">-- Select Widget Area --</option>
+						{foreach from=$areas item='area'}
+							<option value="{$area.name}">{$area.name}</option>
+						{/foreach}
+					</select>
+					<input type="hidden" name="template" value="{$template}"/>
+					<input type="hidden" name="widget_baseurl" value="{$widget.baseurl}"/>
+					<input type="submit" value="Install Widget"/>
+				</form>
+			{/if}
 
 			{*widget.installable*}
 		</div>

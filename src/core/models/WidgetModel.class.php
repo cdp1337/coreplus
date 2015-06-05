@@ -211,19 +211,24 @@ class WidgetModel extends Model {
 			/** @var Widget_2_1 $c */
 			$this->_widget = Widget_2_1::Factory($pagedat['controller']);
 
-			// Make sure it's linked
-			$this->_widget->_instance = $this;
-
-			// Was installable passed in?  It may contain data useful to the widget.
-			if($this->get('installable')){
-				$this->_widget->_installable = $this->get('installable');
+			if($this->_widget === null){
+				$this->_widget = false;
 			}
+			else{
+				// Make sure it's linked
+				$this->_widget->_instance = $this;
 
-			// Pass in any base and customer parameters
-			$this->_widget->_params = $pagedat['parameters'];
+				// Was installable passed in?  It may contain data useful to the widget.
+				if($this->get('installable')){
+					$this->_widget->_installable = $this->get('installable');
+				}
+
+				// Pass in any base and customer parameters
+				$this->_widget->_params = $pagedat['parameters'];
+			}
 		}
 
-		return $this->_widget;
+		return $this->_widget === false ? null : $this->_widget;
 	}
 
 
