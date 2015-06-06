@@ -35,6 +35,138 @@ define('MAX_RECURSE_LEVEL', 4);
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
 
+require_once(ROOT_PDIR . 'core/libs/core/cli/Arguments.php');
+require_once(ROOT_PDIR . 'core/libs/core/cli/Argument.php');
+
+
+$arguments = new \Core\CLI\Arguments([
+	'help' => [
+		'description' => 'Display help and exit.',
+		'value' => false,
+		'shorthand' => ['?', 'h'],
+	],
+	'php' => [
+		'description' => 'Compile PHP files into the compiled bootstrap.',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'scss' => [
+		'description' => 'Compile SASS/SCSS files into corresponding css.',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'sass' => [
+		'description' => 'Alias of --scss',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'js' => [
+		'description' => 'Minify javascript assets',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'javascript' => [
+		'description' => 'Alias of --js',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'core' => [
+		'description' => 'Minify Core assets.  (Overrides --component and --theme)',
+		'value' => false,
+		'shorthand' => [],
+	],
+	'component' => [
+		'description' => 'Minify only a requested component. (Overrides --theme)',
+		'value' => true,
+		'shorthand' => ['c'],
+	],
+	'theme' => [
+		'description' => 'Minify only a requested theme.',
+		'value' => true,
+		'shorthand' => ['t'],
+	],
+]);
+$arguments->usageHeader = 'This utility will compile all resources into minified versions.
+
+Standard Usage:
+  Simply run it without any arguments to compile/minify everything.
+
+Advanced Options:';
+$arguments->processArguments();
+
+
+// Allow for inline arguments.
+$opts = [
+	'compile_php'    => null,
+	'minify_scss'    => null,
+	'minify_js'      => null,
+	'only_core'      => null,
+    'only_component' => null,
+    'only_theme'     => null,
+];
+
+
+// Process and validate those arguments now.
+if($arguments->getArgumentValue('help')){
+	$arguments->printUsage();
+	exit;
+}
+
+$set = false;
+if($arguments->getArgumentValue('php')){
+	$opts['compile_php'] = true;
+	$set = true;
+}
+if($arguments->getArgumentValue('scss')){
+	$opts['minify_scss'] = true;
+	$set = true;
+}
+if($arguments->getArgumentValue('sass')){
+	$opts['minify_scss'] = true;
+	$set = true;
+}
+if($arguments->getArgumentValue('js')){
+	$opts['minify_js'] = true;
+	$set = true;
+}
+if($arguments->getArgumentValue('javascript')){
+	$opts['minify_js'] = true;
+	$set = true;
+}
+
+if($set){
+	if($opts['compile_php'] === null){
+		$opts['compile_php'] = false;
+	}
+	if($opts['minify_scss'] === null){
+		$opts['minify_scss'] = false;
+	}
+	if($opts['minify_js'] === null){
+		$opts['minify_js'] = false;
+	}
+}
+else{
+	// Default, no arguments provided.
+	$opts['compile_php'] = true;
+	$opts['minify_scss'] = true;
+	$opts['minify_js'] = true;
+}
+unset($set);
+
+
+if($arguments->getArgumentValue('core')){
+	$opts['only_core'] = true;
+}
+elseif($arguments->getArgumentValue('component')){
+	$opts['only_component'] = $arguments->getArgumentValue('component');
+	$opts['compile_php'] = false;
+}
+elseif($arguments->getArgumentValue('theme')){
+	$opts['only_theme'] = $arguments->getArgumentValue('theme');
+	$opts['compile_php'] = false;
+}
+
+
 // Open the bootstrap.php file and read in the sourcecode of the requested files.
 
 class CompilerNamespace {
@@ -66,7 +198,7 @@ class CompilerNamespace {
  * Since it is require_once... it'll check first.
  */
 global $included_files;
-$included_files = array();
+$included_files = [];
 
 function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentnamespace){
 
@@ -171,10 +303,10 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 		if(strpos($line, 'require_once') === 0 && $recursivelevel <= MAX_RECURSE_LEVEL){
 			$subfile = preg_replace('#require_once[ ]*\([ ]*([^\)]*)[ ]*\)[ ]*;#', '$1', $line);
 			// The file probably has relative paths...
-			$replaces = array(
+			$replaces = [
 				'__DIR__' => "'" . dirname($filename) . "'",
 				'ROOT_PDIR' => "'" . ROOT_PDIR . "'"
-			);
+			];
 			$subfile = str_replace(array_keys($replaces), array_values($replaces), $subfile);
 
 			// If this looks like a variable or something, skip it!
@@ -261,14 +393,15 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 	return $contents;
 }
 
-$globalnamespace = new CompilerNamespace();
-// Start the namespace.
-$contents = $globalnamespace->getOpeningTag();
-$contents .= compile_file(ROOT_PDIR . 'core/bootstrap.php', 0, $globalnamespace);
+if($opts['compile_php']){
+	$globalnamespace = new CompilerNamespace();
+	// Start the namespace.
+	$contents = $globalnamespace->getOpeningTag();
+	$contents .= compile_file(ROOT_PDIR . 'core/bootstrap.php', 0, $globalnamespace);
 
-// The compiled file will have a header stating some useful information.
-$date = Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822);
-$header = <<<EOD
+	// The compiled file will have a header stating some useful information.
+	$date = Time::GetCurrent(Time::TIMEZONE_DEFAULT, Time::FORMAT_RFC2822);
+	$header = <<<EOD
 /**
  * Core bootstrap (COMPILED) file that kicks off the entire application
  *
@@ -282,7 +415,7 @@ $header = <<<EOD
  * @package Core\Core
  * @since 2.1.5
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * @compiled $date
@@ -336,27 +469,20 @@ $header = <<<EOD
 
 EOD;
 
-file_put_contents(ROOT_PDIR . 'core/bootstrap.compiled.php', '<?php' . "\n" . $header . $contents . $globalnamespace->getClosingTag());
+	file_put_contents(
+		ROOT_PDIR . 'core/bootstrap.compiled.php',
+		'<?php' . "\n" . $header . $contents . $globalnamespace->getClosingTag()
+	);
 
-echo "\n\n";
-
-
-
-
-
-
-
-
-
-
-
+	echo "\n\n";
+}
 
 
 // Can we compile SCSS files too?
-if(exec('which sass') == ''){
+if($opts['minify_scss'] && exec('which sass') == ''){
 	echo "Skipping compiling of SASS resources, you do not have the sass compiler installed!\n";
 }
-else{
+elseif($opts['minify_scss']){
 	$sassversion = exec("sass --version | sed 's:^Sass \\([0-9\\.]*\\).*:\\1:'");
 	echo "Using SASS version " . $sassversion . "\n";
 
@@ -364,9 +490,25 @@ else{
 	// [Filename] [CSS] [MIN]
 	echo 'FILENAME                                                                          DEV    MIN' . "\n";
 	echo '---------------------------------------------------------------------------------------------' . "\n";
-	exec('find "' . ROOT_PDIR . 'components/" -name "[a-z]*.scss"', $compresults);
-	exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z]*.scss"', $themeresults);
-	exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
+
+	$compresults  = [];
+	$coreresults  = [];
+	$themeresults = [];
+	// Allow specifying core, a component, or a theme.
+	if($opts['only_core'] === true){
+		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
+	}
+	elseif($opts['only_component'] !== null){
+		exec('find "' . ROOT_PDIR . 'components/' . $opts['only_component'] . '/" -name "[a-z]*.scss"', $compresults);
+	}
+	elseif($opts['only_theme'] !== null){
+		exec('find "' . ROOT_PDIR . 'themes/' . $opts['only_theme'] . '/" -name "[a-z]*.scss"', $themeresults);
+	}
+	else{
+		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
+		exec('find "' . ROOT_PDIR . 'components/" -name "[a-z]*.scss"', $compresults);
+		exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z]*.scss"', $themeresults);
+	}
 
 	$results = array_merge($compresults, $themeresults, $coreresults);
 
@@ -439,39 +581,52 @@ else{
 }
 
 
+if($opts['minify_js']) {
+	echo "Scanning for JS resources...\n";
 
-echo "Scanning for JS resources...\n";
-$compresults = [];
-$coreresults = [];
-$themeresults = [];
-exec('find "' . ROOT_PDIR . 'components/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
-exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
-exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
+	$compresults  = [];
+	$coreresults  = [];
+	$themeresults = [];
 
-$results = array_merge($compresults, $coreresults, $themeresults);
-
-foreach($results as $file){
-
-	// Is this already a minified file?
-	if(strpos($file, 'min.js') !== false){
-		continue;
+	// Allow specifying core, a component, or a theme.
+	if($opts['only_core'] === true){
+		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
+	}
+	elseif($opts['only_component'] !== null){
+		exec('find "' . ROOT_PDIR . 'components/' . $opts['only_component'] . '/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
+	}
+	elseif($opts['only_theme'] !== null){
+		exec('find "' . ROOT_PDIR . 'themes/' . $opts['only_theme'] . '/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
+	}
+	else{
+		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
+		exec('find "' . ROOT_PDIR . 'components/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
+		exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
 	}
 
-	// Only compress files that are located within an "assets" directory.
-	// This is because if any script is used for server-side tasks or test-related tasks,
-	// there is no reason to need the minified version!
-	if(strpos($file, '/assets/') === false){
-		continue;
+	$results = array_merge($compresults, $coreresults, $themeresults);
+
+	foreach($results as $file) {
+
+		// Is this already a minified file?
+		if(strpos($file, 'min.js') !== false) {
+			continue;
+		}
+
+		// Only compress files that are located within an "assets" directory.
+		// This is because if any script is used for server-side tasks or test-related tasks,
+		// there is no reason to need the minified version!
+		if(strpos($file, '/assets/') === false) {
+			continue;
+		}
+
+		echo "Compiling $file...\n";
+
+
+		$cmd = escapeshellarg(BASE_DIR . 'utilities/minify.js.sh');
+		$cmd .= ' ' . escapeshellarg($file);
+
+		exec($cmd);
 	}
-
-	echo "Compiling $file...\n";
-
-
-	$cmd = escapeshellarg(BASE_DIR . 'utilities/minify.js.sh');
-	$cmd .= ' ' . escapeshellarg($file);
-
-	exec($cmd);
+	echo "\n";
 }
-
-
-echo "\n";
