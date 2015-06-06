@@ -12,10 +12,10 @@
  * @package Core\Core
  * @since 2.1.5
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 04 Jun 2015 15:06:41 -0400
+ * @compiled Fri, 05 Jun 2015 21:58:55 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6312,13 +6312,18 @@ public function getWidget(){
 if($this->_widget === null){
 $pagedat = $this->splitParts();
 $this->_widget = Widget_2_1::Factory($pagedat['controller']);
+if($this->_widget === null){
+$this->_widget = false;
+}
+else{
 $this->_widget->_instance = $this;
 if($this->get('installable')){
 $this->_widget->_installable = $this->get('installable');
 }
 $this->_widget->_params = $pagedat['parameters'];
 }
-return $this->_widget;
+}
+return $this->_widget === false ? null : $this->_widget;
 }
 public static function SplitBaseURL($base) {
 if (!$base) return null;
@@ -16434,7 +16439,12 @@ protected function getSetting($key){
 return $this->getWidgetModel()->getSetting($key);
 }
 public static function Factory($name) {
+if(class_exists($name) && is_subclass_of($name, 'Widget_2_1')){
 return new $name();
+}
+else{
+return null;
+}
 }
 public static function HookPageRender(){
 $viewer = \Core\user()->checkAccess('p:/core/widgets/manage');
