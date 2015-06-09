@@ -1003,6 +1003,8 @@ class FileLocal implements Filestore\File {
 			return;
 		}
 
+		\Core\Utilities\Logger\write_debug('Resizing image ' . $this->getFilename('') . ' to ' . $width . 'x' . $height . $mode);
+
 		$m = $this->getMimetype();
 
 		// Make sure the directory of the destination file exists!
@@ -1014,13 +1016,41 @@ class FileLocal implements Filestore\File {
 			// Granted of course, that imagemagick's convert is available on the server.
 			$resize = escapeshellarg($mode . $width . 'x' . $height);
 			exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
+
+			\Core\Utilities\Logger\write_debug('Resizing complete (via convert)');
 			return;
 		}
 
 		// Traditional resizing logic.
 		switch ($m) {
 			case 'image/jpeg':
-				$img = imagecreatefromjpeg($this->getFilename());
+				$thumbType = 'JPEG';
+				$thumbWidth = $width;
+				$thumbHeight = $height;
+				if($width <= 200 && $height <= 200){
+					// Try to write out from the thumbnail img instead of the full size.
+					// This is done to increase server performance.
+					// eg: resizing a 5MB JPEG can take upwards of 50-100ms,
+					// whereas the embedded thumbnail will take only 2-10ms.
+					// Not to mention professional JPEG management tools such as PS and Gimp
+					// produce marginally higher-quality thumbnails than GD will.
+					// (The resulting filesize is negligible.)
+					// Of course if the requested image is larger than a thumbnail size, (200x200 in this case),
+					// using the thumbnail is counter-productive!
+					$img = exif_thumbnail($this->getFilename(), $thumbWidth, $thumbHeight, $thumbType);
+					if($img){
+						\Core\Utilities\Logger\write_debug('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
+						$file->putContents($img);
+						$img = imagecreatefromjpeg($file->getFilename());
+					}
+					else{
+						$img = imagecreatefromjpeg($this->getFilename());
+					}
+				}
+				else{
+					$img = imagecreatefromjpeg($this->getFilename());
+				}
+
 				break;
 			case 'image/png':
 				$img = imagecreatefrompng($this->getFilename());
@@ -1030,6 +1060,7 @@ class FileLocal implements Filestore\File {
 				break;
 			default:
 				// Hmmm...
+				\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
 				return;
 		}
 		if ($img) {
@@ -1098,6 +1129,13 @@ class FileLocal implements Filestore\File {
 					}
 			}
 
+			// If it's a JPEG, try to find the original thumbnail.
+			/*if(false && $m == 'image/jpeg'){
+				$type = 'JPEG';
+				$img = exif_thumbnail($this->getFilename(), $nW, $nH, $type);
+				$file->putContents($img);
+				return;
+			}*/
 
 			$img2 = imagecreatetruecolor($nW, $nH);
 			imagealphablending($img2, false);
@@ -1113,15 +1151,19 @@ class FileLocal implements Filestore\File {
 			switch ($m) {
 				case 'image/jpeg':
 					imagejpeg($img2, $file->getFilename(), 60);
+					\Core\Utilities\Logger\write_debug('Resizing complete (via imagejpeg)');
 					break;
 				case 'image/png':
 					imagepng($img2, $file->getFilename(), 9);
+					\Core\Utilities\Logger\write_debug('Resizing complete (via imagepng)');
 					break;
 				case 'image/gif':
 					imagegif($img2, $file->getFilename());
+					\Core\Utilities\Logger\write_debug('Resizing complete (via imagegif)');
 					break;
 				default:
 					// Hmmm...
+					\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
 					return;
 			}
 		}
