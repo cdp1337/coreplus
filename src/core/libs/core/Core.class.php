@@ -1549,6 +1549,13 @@ class Core implements ISingleton {
 		return true;
 	}
 
+	public static function _AttachJSON(){
+		\Core\view()->addScript ('js/json2.js', 'head');
+
+		// IMPORTANT!  Tells the script that the include succeeded!
+		return true;
+	}
+
 
 	/**
 	 * Clone of the php version_compare function, with the exception that it treats

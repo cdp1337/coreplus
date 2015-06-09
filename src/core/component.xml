@@ -8,9 +8,11 @@
 		<provide type="library" name="phpMailer" version="5.2.4"/>
 		<provide type="library" name="user" version="3.0.0"/>
 		<provide type="library" name="sitemap" version="3.0.0"/>
+		<provide type="library" name="JSONjs" version="2015-02-25"/>
 		<scriptlibrary name="Core.Strings" call="Core::_AttachCoreStrings"/>
 		<scriptlibrary name="Core.AjaxLinks" call="Core::_AttachAjaxLinks"/>
 		<scriptlibrary name="lesscss" call="Core::_AttachLessJS"/>
+		<scriptlibrary name="JSONjs" call="Core::_AttachJSON"/>
 	</provides>
 	<requires>
 		<!-- Core can't have any requires! -->
@@ -77,7 +79,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="4416faccfd246a2049882672b8a6d7cb"/>
 		<file filename="core/bootstrap_preincludes.php" md5="2653106644c4a097292b1fa182de695c"/>
-		<file filename="core/controllers/AdminController.php" md5="e6222fa8b7d6df2b1b3d999ae42fbe3a">
+		<file filename="core/controllers/AdminController.php" md5="e8e35b4b2660724230718f59e461ab8d">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="4dbc0eddd9a3538357bf59b3b83d1866">
@@ -116,7 +118,7 @@
 		<file filename="core/controllers/UserGroupAdminController.php" md5="d9ad469521844ff035800105d37d9a16">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="core/controllers/WidgetController.php" md5="ec114d7f357d77b30795c0ee6a0dfa58">
+		<file filename="core/controllers/WidgetController.php" md5="676d7eaf98b36559a0721ea180e02b8f">
 			<controller name="WidgetController"/>
 		</file>
 		<file filename="core/forms/FormAccessStringInput.php" md5="9c845a48949b63a8f9e92dd3aa3a3b26">
@@ -488,7 +490,7 @@
 			<class name="ViewMeta_generator"/>
 			<class name="ViewMeta_image"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="48bf638d5fd1298bd192bee59851a12d">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="e96f732167654ed8ad33da81483600de">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -611,7 +613,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="af2e84ce2241597cdc78f35c23216e80">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="dbd94d505d0fcdaf6b5f4f18878d37b3">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="c06fc65ef1d56b32e6aa2544e145c508">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="aeeca0844b4d79ae040936f0bfdc6564">
@@ -1288,7 +1290,7 @@
 		<file filename="core/models/WidgetInstanceModel.class.php" md5="f3133948255a77b594403402c91c8285">
 			<class name="WidgetInstanceModel"/>
 		</file>
-		<file filename="core/models/WidgetModel.class.php" md5="f7244d73b2d519b38ce302f44d024a11">
+		<file filename="core/models/WidgetModel.class.php" md5="c1c57942e8de3172ca2156545c778500">
 			<class name="WidgetModel"/>
 		</file>
 		<file filename="core/patches/README" md5="a6b3f1a04205df566eaba3d6704df484"/>
@@ -1304,7 +1306,7 @@
 		<file filename="core/widgets/AdminMenuWidget.php" md5="3dcda1c6187cf18de17de1f4fc2d0101">
 			<class name="AdminMenuWidget"/>
 		</file>
-		<file filename="core/widgets/PageSearchWidget.php" md5="ef7c4777fe434f0279ac6a16aaacdfd4">
+		<file filename="core/widgets/PageSearchWidget.php" md5="04662b7805c5beffbaf2d4f18baae322">
 			<class name="PageSearchWidget"/>
 		</file>
 		<file filename="core/widgets/PageWidget.php" md5="612cd59aef22cda09804b489cb64f327">
@@ -1319,7 +1321,7 @@
 		<file filename="core/widgets/UserLoginWidget.class.php" md5="2d635bc86b35d3aa7459885e16a30d30">
 			<class name="UserLoginWidget"/>
 		</file>
-		<file filename="core/widgets/UserWidget.class.php" md5="ba266261af6678b97ec674758eeb95aa">
+		<file filename="core/widgets/UserWidget.class.php" md5="52163a1410668e3268a8d9116afa0d07">
 			<class name="UserWidget"/>
 		</file>
 		<file filename="htaccess.example" md5="99482b498dd2154bce3949f4fdf6b9da"/>
@@ -1521,7 +1523,7 @@
 		<file filename="core/templates/pages/userconfig/admin.tpl" md5="8335bec250e1d970663fbe0409f2d242"/>
 		<file filename="core/templates/pages/usergroupadmin/create_update.tpl" md5="11147e16c5f3bc41ad5c7c6b9cfdf099"/>
 		<file filename="core/templates/pages/usergroupadmin/index.tpl" md5="cec6b41cb710d55cdef2f3a1e4a6a08c"/>
-		<file filename="core/templates/pages/widget/admin.tpl" md5="5c1b30d7d8a5dc02fbe7afef4e0f982f"/>
+		<file filename="core/templates/pages/widget/admin.tpl" md5="50c1d94e8f84dcea5bfffb813d2f199d"/>
 		<file filename="core/templates/pages/widget/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/instance_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -1743,7 +1745,16 @@
 		<file filename="core/assets/images/placeholders/photo.png" md5="0665e6fda435b01116122b863a4548d2"/>
 		<file filename="core/assets/images/placeholders/placeholder-generic1.jpg" md5="7ee2b126c0396dcb5f3f41c25bea16d6"/>
 		<file filename="core/assets/images/placeholders/template.xcf" md5="2099f59f0748cd56d0f33022b5282b99"/>
-		<file filename="core/assets/images/previews/core/templates/widgets/pagesearch/page-search-execute.png" md5="80ad59afc22d02795c57848c87aaade4"/>
+		<file filename="core/assets/images/previews/templates/widgets/pagesearch/page-search-execute.png" md5="80ad59afc22d02795c57848c87aaade4"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-login-form-140.png" md5="91fea25ca3a9a34ff78b43ac0ca33a62"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-login-form-210.png" md5="497b422faa93f97261891087e17bd1dc"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-login-form.png" md5="07ecc35ed0f1e5352dc365d47e8c5c3f"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-login-link-140.png" md5="631e527d8bc0ad51881d7d4682079cbf"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-login-link-210.png" md5="807c47b7c88e9960bfd716ba70f6814d"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-login-link.png" md5="1e77ad4e0ac28ee1e10ed5a3c68681ec"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-registration-form-140.png" md5="1b9231d8cbaca7d2ae54b7a34118f41d"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-registration-form-210.png" md5="7ea57a8fe6df7b925ed6b9bc61ffd4d7"/>
+		<file filename="core/assets/images/previews/templates/widgets/user/user-registration-form.png" md5="471ddd7c5a78386bdb442783fef6ef84"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.js" md5="306b7baee9b250a9da2b378f5047ff30"/>
 		<file filename="core/assets/js/admin/adminmenu-widget.min.js" md5="7a4fab4753cf1d44bc1775a1ebd04ca2"/>
 		<file filename="core/assets/js/admin/config.js" md5="d40fe150398e88aa4ff0a3447d43edef"/>
