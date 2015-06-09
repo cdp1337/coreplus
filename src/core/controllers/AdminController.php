@@ -532,6 +532,8 @@ class AdminController extends Controller_2_1 {
 
 			$componentopts[$c->getKeyName()] = $c->getName();
 		}
+		// Sort them by name!
+		asort($componentopts);
 
 		$pageschema = PageModel::GetSchema();
 
