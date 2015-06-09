@@ -58,7 +58,7 @@ class PageSearchWidget extends Widget_2_1 {
 	 * @return string
 	 */
 	public function getPreviewImage(){
-		return 'assets/images/previews/core/templates/widgets/pagesearch/page-search-execute.png';
+		return 'assets/images/previews/templates/widgets/pagesearch/page-search-execute.png';
 	}
 
 	/**

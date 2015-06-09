@@ -243,6 +243,36 @@ class NavigationWidget extends Widget_2_1 {
 		$view->assign('entries', $entries);
 	}
 
+	/**
+	 * Get the path for the preview image for this widget.
+	 *
+	 * Should be an image of size 210x70, 210x140, or 210x210.
+	 *
+	 * @return string
+	 */
+	public function getPreviewImage(){
+		$instance = $this->getWidgetInstanceModel();
+		$baseurl = $instance ? $instance->get('baseurl') : null;
+		$base = 'assets/images/previews/templates/widgets/navigation/';
+
+		switch($baseurl){
+			case '/navigation/siblings':
+				return $base . 'navigation-siblings.png';
+			case '/navigation/children':
+				return $base . 'navigation-children.png';
+			case '/navigation/siblingsandchildren':
+				return $base . 'navigation-children_siblings.png';
+			default:
+				if(strpos($baseurl, '/navigation/view') === 0){
+					return $base . 'navigation.png';
+				}
+				else{
+					//var_dump($baseurl);
+					return '';
+				}
+		}
+	}
+
 
 
 	private function _transposeClass(&$el){

@@ -155,6 +155,6 @@ class NavigationController extends Controller_2_1 {
 		}
 
 		Core::SetMessage('Updated/Created navigation successfully!', 'success');
-		return 'back';
+		return '/widget/admin';
 	}
 }

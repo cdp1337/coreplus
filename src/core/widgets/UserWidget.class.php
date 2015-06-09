@@ -78,4 +78,29 @@ class UserWidget extends Widget_2_1{
 		$auths = \Core\User\Helper::GetEnabledAuthDrivers();
 		$view->assign('drivers', $auths);
 	}
+
+	/**
+	 * Get the path for the preview image for this widget.
+	 *
+	 * Should be an image of size 210x70, 210x140, or 210x210.
+	 *
+	 * @return string
+	 */
+	public function getPreviewImage(){
+		$instance = $this->getWidgetInstanceModel();
+		$baseurl = $instance ? $instance->get('baseurl') : null;
+		$base = 'assets/images/previews/templates/widgets/user/';
+
+		switch($baseurl){
+			case '/user/login':
+				return $base . 'user-login-link.png';
+			case '/user/loginfull':
+				return $base . 'user-login-form.png';
+			case '/user/register':
+				return $base . 'user-registration-form.png';
+			default:
+				//var_dump($baseurl);
+				return '';
+		}
+	}
 }

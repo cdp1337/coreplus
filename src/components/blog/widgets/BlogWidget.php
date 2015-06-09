@@ -64,6 +64,19 @@ class BlogWidget extends Widget_2_1 {
 		return $settings;
 	}
 
+	/**
+	 * Get the path for the preview image for this widget.
+	 *
+	 * Should be an image of size 210x70, 210x140, or 210x210.
+	 *
+	 * @return string
+	 */
+	public function getPreviewImage(){
+		// Extend this method in your class and return the path you need.
+		// Optional.
+		return 'assets/images/previews/blog/templates/widgets/blog/blog-listing.png';
+	}
+
 	public function execute(){
 		$view = $this->getView();
 

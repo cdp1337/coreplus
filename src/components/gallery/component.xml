@@ -37,7 +37,7 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="fb9f12f8b4743b72bc23a6766cc3070d"/>
+		<file filename="CHANGELOG" md5="dc83f098db1390ae0d2633a6bccacaca"/>
 		<file filename="controllers/GalleryController.php" md5="52a012b19267b67a54cd9076afa7ad2f">
 			<controller name="GalleryController"/>
 		</file>
@@ -50,18 +50,21 @@
 		<file filename="models/GalleryAlbumModel.php" md5="42e066aebc160e4bf0f587cf588157c2">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="daebab783fc3772dc1481b4adb357d54">
+		<file filename="models/GalleryImageModel.php" md5="6458fbacfad0588c370b14a5f8ac921f">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
 		<file filename="upgrades/143_to_144_filepathchange.php" md5="c18cc4452f6f806c4b91f82e48f25e73"/>
-		<file filename="widgets/GalleryWidget.php" md5="7daa22785667f4e5ec91e4991952114b">
+		<file filename="widgets/GalleryWidget.php" md5="e1e520a5f6f06ffa79016e306ca590cd">
 			<class name="GalleryWidget"/>
 		</file>
 	</files>
 	<assets>
 		<file filename="assets/css/gallery.css" md5="e067bf7c123c06eda156cba4c5f1ea06"/>
 		<file filename="assets/gallery-arrow.png" md5="16bc541d24d9c8d5a124369eb51a4f8e"/>
+		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-140.png" md5="0d6f5d18020961db2d13f3f39940bcc1"/>
+		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-210.png" md5="ba153cf5bb8065ea1b472fca35a6189b"/>
+		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery.png" md5="ed55d46d67fa34a10801b670d32652e5"/>
 	</assets>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.1.0"/>

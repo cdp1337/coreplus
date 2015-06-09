@@ -4,6 +4,9 @@
 	<requires>
 		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
+	<pages>
+		<page baseurl="/navigation/create" title="Create Navigation Menu" group="Content" access="g:admin" admin="1"/>
+	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="c9237e00fa438bf406a93952c4f5abeb"/>
 		<file filename="controllers/NavigationController.php" md5="5b3309d73b32f544c9f982fcd8d0d394">
@@ -16,7 +19,7 @@
 			<class name="NavigationEntryModel"/>
 		</file>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="69e975de8b8c91420a6f5759d154e6aa"/>
-		<file filename="widgets/NavigationWidget.php" md5="e29a20ab074e7ed8ad4b788c8d8079aa">
+		<file filename="widgets/NavigationWidget.php" md5="862836f6bfe6f01ce279f6f7686f97e0">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -40,6 +43,18 @@
 		<widgetcreate title="Navigation Menu" baseurl="/navigation/create"/>
 	</widgets>
 	<assets>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-140.png" md5="b802371dccad4efd732bc4d64fc6a6fc"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-210.png" md5="0707ae53fa3b89eecc1f2624abd366f3"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children-140.png" md5="a825bcc2dbed754cb091d733233acf88"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children-210.png" md5="fd47e856a75d6804bd5fca5fd9de9919"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children.png" md5="c5bff0ca58c4b889a5c80da5f52d1e5d"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children_siblings-140.png" md5="bfce07745240b4db3f722a6bd66df9e8"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children_siblings-210.png" md5="f3a06604793b74e9bd60958e9dcdc68b"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children_siblings.png" md5="3e1c8b2da25bd50dcda4e020510a51b9"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings-140.png" md5="e359cea3ff7ad6186a64071fc85e6464"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings-210.png" md5="4e29f372ac875463ba69775015ae2473"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings.png" md5="761d4dbc6447ef141b489e66b86749c2"/>
+		<file filename="assets/images/previews/templates/widgets/navigation/navigation.png" md5="5e7c947318ea439be1c066c6b578f106"/>
 		<file filename="assets/js/navigation/manager.js" md5="d328d065a3112868ef914999072f77e0"/>
 		<file filename="assets/js/navigation/manager.min.js" md5="f2fd31e0aa29eeb560c52c665c466116"/>
 	</assets>

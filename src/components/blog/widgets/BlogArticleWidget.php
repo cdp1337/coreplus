@@ -146,7 +146,7 @@ class BlogArticleWidget extends Widget_2_1 {
 	public function getPreviewImage(){
 		// Extend this method in your class and return the path you need.
 		// Optional.
-		$base = 'assets/images/previews/blog/templates/widgets/blogarticle/execute/';
+		$base = 'assets/images/previews/templates/widgets/blogarticle/execute/';
 
 		$wi = $this->getWidgetInstanceModel();
 		$template = $wi === null ? '' : $wi->get('display_template');
