@@ -9,17 +9,23 @@
  */
 
 /*jshint maxlen:255 */
+/*eslint max-len:0 */
 /*global tinymce:true */
 
 tinymce.PluginManager.add('media', function(editor, url) {
 	var urlPatterns = [
-		{regex: /youtu\.be\/([a-z1-9.-_]+)/, type: 'iframe', w: 425, h: 350, url: 'http://www.youtube.com/embed/$1'},
-		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: 'http://www.youtube.com/embed/$2'},
-		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: 'http://player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc'},
-		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: 'http://maps.google.com/maps/ms?msid=$2&output=embed"'}
+		{regex: /youtu\.be\/([\w\-.]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$1'},
+		{regex: /youtube\.com(.+)v=([^&]+)/, type: 'iframe', w: 425, h: 350, url: '//www.youtube.com/embed/$2'},
+		{regex: /vimeo\.com\/([0-9]+)/, type: 'iframe', w: 425, h: 350, url: '//player.vimeo.com/video/$1?title=0&byline=0&portrait=0&color=8dc7dc'},
+		{regex: /vimeo\.com\/(.*)\/([0-9]+)/, type: "iframe", w: 425, h: 350, url: "//player.vimeo.com/video/$2?title=0&amp;byline=0"},
+		{regex: /maps\.google\.([a-z]{2,3})\/maps\/(.+)msid=(.+)/, type: 'iframe', w: 425, h: 350, url: '//maps.google.com/maps/ms?msid=$2&output=embed"'}
 	];
 
+	var embedChange = (tinymce.Env.ie && tinymce.Env.ie <= 8) ? 'onChange' : 'onInput';
+
 	function guessMime(url) {
+		url = url.toLowerCase();
+
 		if (url.indexOf('.mp3') != -1) {
 			return 'audio/mpeg';
 		}
@@ -40,11 +46,43 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			return 'video/ogg';
 		}
 
+		if (url.indexOf('.swf') != -1) {
+			return 'application/x-shockwave-flash';
+		}
+
 		return '';
+	}
+
+	function getVideoScriptMatch(src) {
+		var prefixes = editor.settings.media_scripts;
+
+		if (prefixes) {
+			for (var i = 0; i < prefixes.length; i++) {
+				if (src.indexOf(prefixes[i].filter) !== -1) {
+					return prefixes[i];
+				}
+			}
+		}
 	}
 
 	function showDialog() {
 		var win, width, height, data;
+
+		var generalFormItems = [
+			{
+				name: 'source1',
+				type: 'filepicker',
+				filetype: 'media',
+				size: 40,
+				autofocus: true,
+				label: 'Source',
+				onchange: function(e) {
+					tinymce.each(e.meta, function(value, key) {
+						win.find('#' + key).value(value);
+					});
+				}
+			}
+		];
 
 		function recalcSize(e) {
 			var widthCtrl, heightCtrl, newWidth, newHeight;
@@ -58,10 +96,16 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			if (win.find('#constrain')[0].checked() && width && height && newWidth && newHeight) {
 				if (e.control == widthCtrl) {
 					newHeight = Math.round((newWidth / width) * newHeight);
-					heightCtrl.value(newHeight);
+
+					if (!isNaN(newHeight)) {
+						heightCtrl.value(newHeight);
+					}
 				} else {
 					newWidth = Math.round((newHeight / height) * newWidth);
-					widthCtrl.value(newWidth);
+
+					if (!isNaN(newWidth)) {
+						widthCtrl.value(newWidth);
+					}
 				}
 			}
 
@@ -69,9 +113,50 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			height = newHeight;
 		}
 
+		if (editor.settings.media_alt_source !== false) {
+			generalFormItems.push({name: 'source2', type: 'filepicker', filetype: 'media', size: 40, label: 'Alternative source'});
+		}
+
+		if (editor.settings.media_poster !== false) {
+			generalFormItems.push({name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'});
+		}
+
+		if (editor.settings.media_dimensions !== false) {
+			generalFormItems.push({
+				type: 'container',
+				label: 'Dimensions',
+				layout: 'flex',
+				align: 'center',
+				spacing: 5,
+				items: [
+					{name: 'width', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: 'Width'},
+					{type: 'label', text: 'x'},
+					{name: 'height', type: 'textbox', maxLength: 5, size: 3, onchange: recalcSize, ariaLabel: 'Height'},
+					{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
+				]
+			});
+		}
+
 		data = getData(editor.selection.getNode());
 		width = data.width;
 		height = data.height;
+
+		var embedTextBox = {
+			id: 'mcemediasource',
+			type: 'textbox',
+			flex: 1,
+			name: 'embed',
+			value: getSource(),
+			multiline: true,
+			label: 'Source'
+		};
+
+		function updateValueOnChange() {
+			data = htmlToData(this.value());
+			this.parent().parent().fromJSON(data);
+		}
+
+		embedTextBox[embedChange] = updateValueOnChange;
 
 		win = editor.windowManager.open({
 			title: 'Insert/edit video',
@@ -82,27 +167,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					title: 'General',
 					type: "form",
 					onShowTab: function() {
-						this.fromJSON(htmlToData(this.next().find('#embed').value()));
+						data = htmlToData(this.next().find('#embed').value());
+						this.fromJSON(data);
 					},
-					items: [
-						{name: 'source1', type: 'filepicker', filetype: 'image', size: 40, autofocus: true, label: 'Source'},
-						{name: 'source2', type: 'filepicker', filetype: 'image', size: 40, label: 'Alternative source'},
-						{name: 'poster', type: 'filepicker', filetype: 'image', size: 40, label: 'Poster'},
-						{
-							type: 'container',
-							label: 'Dimensions',
-							layout: 'flex',
-							direction: 'row',
-							align: 'center',
-							spacing: 5,
-							items: [
-								{name: 'width', type: 'textbox', maxLength: 3, size: 3, onchange: recalcSize},
-								{type: 'label', text: 'x'},
-								{name: 'height', type: 'textbox', maxLength: 3, size: 3, onchange: recalcSize},
-								{name: 'constrain', type: 'checkbox', checked: true, text: 'Constrain proportions'}
-							]
-						}
-					]
+					items: generalFormItems
 				},
 
 				{
@@ -119,21 +187,31 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					items: [
 						{
 							type: 'label',
-							text: 'Paste your embed code below:'
+							text: 'Paste your embed code below:',
+							forId: 'mcemediasource'
 						},
-						{
-							type: 'textbox',
-							flex: 1,
-							name: 'embed',
-							value: getSource(),
-							multiline: true,
-							label: 'Source'
-						}
+						embedTextBox
 					]
 				}
 			],
 			onSubmit: function() {
+				var beforeObjects, afterObjects, i, y;
+
+				beforeObjects = editor.dom.select('img[data-mce-object]');
 				editor.insertContent(dataToHtml(this.toJSON()));
+				afterObjects = editor.dom.select('img[data-mce-object]');
+
+				// Find new image placeholder so we can select it
+				for (i = 0; i < beforeObjects.length; i++) {
+					for (y = afterObjects.length - 1; y >= 0; y--) {
+						if (beforeObjects[i] == afterObjects[y]) {
+							afterObjects.splice(y, 1);
+						}
+					}
+				}
+
+				editor.selection.select(afterObjects[0]);
+				editor.nodeChanged();
 			}
 		});
 	}
@@ -156,6 +234,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 			}
 		}
 
+		if (!data.source2) {
+			data.source2 = '';
+		}
+
+		if (!data.poster) {
+			data.poster = '';
+		}
+
 		data.source1 = editor.convertURL(data.source1, "source");
 		data.source2 = editor.convertURL(data.source2, "source");
 		data.source1mime = guessMime(data.source1);
@@ -163,28 +249,36 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		data.poster = editor.convertURL(data.poster, "poster");
 		data.flashPlayerUrl = editor.convertURL(url + '/moxieplayer.swf', "movie");
 
+		tinymce.each(urlPatterns, function(pattern) {
+			var match, i, url;
+
+			if ((match = pattern.regex.exec(data.source1))) {
+				url = pattern.url;
+
+				for (i = 0; match[i]; i++) {
+					/*jshint loopfunc:true*/
+					/*eslint no-loop-func:0 */
+					url = url.replace('$' + i, function() {
+						return match[i];
+					});
+				}
+
+				data.source1 = url;
+				data.type = pattern.type;
+				data.width = data.width || pattern.w;
+				data.height = data.height || pattern.h;
+			}
+		});
+
 		if (data.embed) {
 			html = updateHtml(data.embed, data, true);
 		} else {
-			tinymce.each(urlPatterns, function(pattern) {
-				var match, i, url;
-
-				if ((match = pattern.regex.exec(data.source1))) {
-					url = pattern.url;
-
-					for (i = 0; match[i]; i++) {
-						/*jshint loopfunc:true*/
-						url = url.replace('$' + i, function() {
-							return match[i];
-						});
-					}
-
-					data.source1 = url;
-					data.type = pattern.type;
-					data.width = pattern.w;
-					data.height = pattern.h;
-				}
-			});
+			var videoScript = getVideoScriptMatch(data.source1);
+			if (videoScript) {
+				data.type = 'script';
+				data.width = videoScript.width;
+				data.height = videoScript.height;
+			}
 
 			data.width = data.width || 300;
 			data.height = data.height || 150;
@@ -195,6 +289,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 			if (data.type == "iframe") {
 				html += '<iframe src="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '"></iframe>';
+			} else if (data.source1mime == "application/x-shockwave-flash") {
+				html += '<object data="' + data.source1 + '" width="' + data.width + '" height="' + data.height + '" type="application/x-shockwave-flash">';
+
+				if (data.poster) {
+					html += '<img src="' + data.poster + '" width="' + data.width + '" height="' + data.height + '" />';
+				}
+
+				html += '</object>';
 			} else if (data.source1mime.indexOf('audio') != -1) {
 				if (editor.settings.audio_template_callback) {
 					html = editor.settings.audio_template_callback(data);
@@ -205,6 +307,8 @@ tinymce.PluginManager.add('media', function(editor, url) {
 						'</audio>'
 					);
 				}
+			} else if (data.type == "script") {
+				html += '<script src="' + data.source1 + '"></script>';
 			} else {
 				if (editor.settings.video_template_callback) {
 					html = editor.settings.video_template_callback(data);
@@ -227,6 +331,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		new tinymce.html.SaxParser({
 			validate: false,
+			allow_conditional_comments: true,
 			special: 'script,noscript',
 			start: function(name, attrs) {
 				if (!data.source1 && name == "param") {
@@ -234,7 +339,25 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				}
 
 				if (name == "iframe" || name == "object" || name == "embed" || name == "video" || name == "audio") {
+					if (!data.type) {
+						data.type = name;
+					}
+
 					data = tinymce.extend(attrs.map, data);
+				}
+
+				if (name == "script") {
+					var videoScript = getVideoScriptMatch(attrs.map.src);
+					if (!videoScript) {
+						return;
+					}
+
+					data = {
+						type: "script",
+						source1: attrs.map.src,
+						width: videoScript.width,
+						height: videoScript.height
+					};
 				}
 
 				if (name == "source") {
@@ -243,6 +366,10 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					} else if (!data.source2) {
 						data.source2 = attrs.map.src;
 					}
+				}
+
+				if (name == "img" && !data.poster) {
+					data.poster = attrs.map.src;
 				}
 			}
 		}).parse(html);
@@ -262,9 +389,59 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		return {};
 	}
 
+	function sanitize(html) {
+		if (editor.settings.media_filter_html === false) {
+			return html;
+		}
+
+		var writer = new tinymce.html.Writer();
+
+		new tinymce.html.SaxParser({
+			validate: false,
+			allow_conditional_comments: false,
+			special: 'script,noscript',
+
+			comment: function(text) {
+				writer.comment(text);
+			},
+
+			cdata: function(text) {
+				writer.cdata(text);
+			},
+
+			text: function(text, raw) {
+				writer.text(text, raw);
+			},
+
+			start: function(name, attrs, empty) {
+				if (name == 'script' || name == 'noscript') {
+					return;
+				}
+
+				for (var i = 0; i < attrs.length; i++) {
+					if (attrs[i].name.indexOf('on') === 0) {
+						return;
+					}
+				}
+
+				writer.start(name, attrs, empty);
+			},
+
+			end: function(name) {
+				if (name == 'script' || name == 'noscript') {
+					return;
+				}
+
+				writer.end(name);
+			}
+		}, new tinymce.html.Schema({})).parse(html);
+
+		return writer.getContent();
+	}
+
 	function updateHtml(html, data, updateAll) {
 		var writer = new tinymce.html.Writer();
-		var sourceCount = 0;
+		var sourceCount = 0, hasImage;
 
 		function setAttributes(attrs, updatedAttrs) {
 			var name, i, value, attr;
@@ -300,6 +477,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		new tinymce.html.SaxParser({
 			validate: false,
+			allow_conditional_comments: true,
 			special: 'script,noscript',
 
 			comment: function(text) {
@@ -318,13 +496,14 @@ tinymce.PluginManager.add('media', function(editor, url) {
 				switch (name) {
 					case "video":
 					case "object":
+					case "embed":
 					case "img":
 					case "iframe":
 						setAttributes(attrs, {
 							width: data.width,
 							height: data.height
 						});
-					break;
+						break;
 				}
 
 				if (updateAll) {
@@ -340,13 +519,13 @@ tinymce.PluginManager.add('media', function(editor, url) {
 									src: ""
 								});
 							}
-						break;
+							break;
 
 						case "iframe":
 							setAttributes(attrs, {
 								src: data.source1
 							});
-						break;
+							break;
 
 						case "source":
 							sourceCount++;
@@ -361,7 +540,15 @@ tinymce.PluginManager.add('media', function(editor, url) {
 									return;
 								}
 							}
-						break;
+							break;
+
+						case "img":
+							if (!data.poster) {
+								return;
+							}
+
+							hasImage = true;
+							break;
 					}
 				}
 
@@ -387,6 +574,19 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					}
 				}
 
+				if (data.poster && name == "object" && updateAll && !hasImage) {
+					var imgAttrs = [];
+					imgAttrs.map = {};
+
+					setAttributes(imgAttrs, {
+						src: data.poster,
+						width: data.width,
+						height: data.height
+					});
+
+					writer.start("img", imgAttrs, true);
+				}
+
 				writer.end(name);
 			}
 		}, new tinymce.html.Schema({})).parse(html);
@@ -397,7 +597,7 @@ tinymce.PluginManager.add('media', function(editor, url) {
 	editor.on('ResolveName', function(e) {
 		var name;
 
-		if ((name = e.target.getAttribute("data-mce-object"))) {
+		if (e.target.nodeType == 1 && (name = e.target.getAttribute("data-mce-object"))) {
 			e.name = name;
 		}
 	});
@@ -406,11 +606,11 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		// Make sure that any messy HTML is retained inside these
 		var specialElements = editor.schema.getSpecialElements();
 		tinymce.each('video audio iframe object'.split(' '), function(name) {
-			specialElements[name] = new RegExp('<\/' + name + '[^>]*>','gi');
+			specialElements[name] = new RegExp('<\/' + name + '[^>]*>', 'gi');
 		});
 
 		// Allow elements
-		editor.schema.addValidElements('object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]');
+		//editor.schema.addValidElements('object[id|style|width|height|classid|codebase|*],embed[id|style|width|height|type|src|*],video[*],audio[*]');
 
 		// Set allowFullscreen attribs as boolean
 		var boolAttrs = editor.schema.getBoolAttrs();
@@ -419,13 +619,35 @@ tinymce.PluginManager.add('media', function(editor, url) {
 		});
 
 		// Converts iframe, video etc into placeholder images
-		editor.parser.addNodeFilter('iframe,video,audio,object,embed', function(nodes, name) {
+		editor.parser.addNodeFilter('iframe,video,audio,object,embed,script', function(nodes, name) {
 			var i = nodes.length, ai, node, placeHolder, attrName, attrValue, attribs, innerHtml;
+			var videoScript;
 
 			while (i--) {
 				node = nodes[i];
+				if (!node.parent) {
+					continue;
+				}
+
+				if (node.name == 'script') {
+					videoScript = getVideoScriptMatch(node.attr('src'));
+					if (!videoScript) {
+						continue;
+					}
+				}
+
 				placeHolder = new tinymce.html.Node('img', 1);
 				placeHolder.shortEnded = true;
+
+				if (videoScript) {
+					if (videoScript.width) {
+						node.attr('width', videoScript.width.toString());
+					}
+
+					if (videoScript.height) {
+						node.attr('height', videoScript.height.toString());
+					}
+				}
 
 				// Prefix all attributes except width, height and style since we
 				// will add these to the placeholder
@@ -467,14 +689,19 @@ tinymce.PluginManager.add('media', function(editor, url) {
 
 		// Replaces placeholder images with real elements for video, object, iframe etc
 		editor.serializer.addAttributeFilter('data-mce-object', function(nodes, name) {
-			var i = nodes.length, node, realElm, ai, attribs, innerHtml, innerNode;
+			var i = nodes.length, node, realElm, ai, attribs, innerHtml, innerNode, realElmName;
 
 			while (i--) {
 				node = nodes[i];
-				realElm = new tinymce.html.Node(node.attr(name), 1);
+				if (!node.parent) {
+					continue;
+				}
+
+				realElmName = node.attr(name);
+				realElm = new tinymce.html.Node(realElmName, 1);
 
 				// Add width/height to everything but audio
-				if (node.attr(name) != "audio") {
+				if (realElmName != "audio" && realElmName != "script") {
 					realElm.attr({
 						width: node.attr('width'),
 						height: node.attr('height')
@@ -496,23 +723,28 @@ tinymce.PluginManager.add('media', function(editor, url) {
 					}
 				}
 
+				if (realElmName == "script") {
+					realElm.attr('type', 'text/javascript');
+				}
+
 				// Inject innerhtml
 				innerHtml = node.attr('data-mce-html');
 				if (innerHtml) {
 					innerNode = new tinymce.html.Node('#text', 3);
 					innerNode.raw = true;
-					innerNode.value = unescape(innerHtml);
+					innerNode.value = sanitize(unescape(innerHtml));
 					realElm.append(innerNode);
 				}
 
 				node.replace(realElm);
 			}
 		});
-
 	});
 
 	editor.on('ObjectSelected', function(e) {
-		if (e.target.getAttribute('data-mce-object') == "audio") {
+		var objectType = e.target.getAttribute('data-mce-object');
+
+		if (objectType == "audio" || objectType == "script") {
 			e.preventDefault();
 		}
 	});
@@ -537,12 +769,12 @@ tinymce.PluginManager.add('media', function(editor, url) {
 	editor.addButton('media', {
 		tooltip: 'Insert/edit video',
 		onclick: showDialog,
-		stateSelector: 'img[data-mce-object=video]'
+		stateSelector: ['img[data-mce-object=video]', 'img[data-mce-object=iframe]']
 	});
 
 	editor.addMenuItem('media', {
 		icon: 'media',
-		text: 'Insert video',
+		text: 'Insert/edit video',
 		onclick: showDialog,
 		context: 'insert',
 		prependToContext: true

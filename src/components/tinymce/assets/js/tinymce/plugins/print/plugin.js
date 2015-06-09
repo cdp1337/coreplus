@@ -10,18 +10,23 @@
 
 /*global tinymce:true */
 
-tinymce.PluginManager.add('print',function(editor) {
+tinymce.PluginManager.add('print', function(editor) {
 	editor.addCommand('mcePrint', function() {
 		editor.getWin().print();
 	});
 
-	editor.addButton('print', {title: 'Print', cmd: 'mcePrint'});
+	editor.addButton('print', {
+		title: 'Print',
+		cmd: 'mcePrint'
+	});
+
+	editor.addShortcut('Meta+P', '', 'mcePrint');
 
 	editor.addMenuItem('print', {
 		text: 'Print',
 		cmd: 'mcePrint',
 		icon: 'print',
-		shortcut: 'Ctrl+P',
+		shortcut: 'Meta+P',
 		context: 'file'
 	});
 });

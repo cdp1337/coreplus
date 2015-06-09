@@ -24,6 +24,19 @@ abstract class TinyMCE {
 		$loc = \Core::ResolveAsset('js/tinymce/tinymce.min.js');
 		$content = \Core::ResolveAsset('css/tinymce/content.css');
 
+		$pages = \PageModel::GetPagesAsOptions();
+		$links = [];
+		foreach($pages as $url => $title){
+			// Trim off the "(...)" at the end of the title.
+			// Core adds that as a benefit for knowing
+			$links[] = [
+				'title' => html_entity_decode(preg_replace('/(.*) \([^\)]*\)/', '$1', $title)),
+			    'value' => \Core::ResolveLink($url),
+			];
+		}
+		// And json the data.
+		$links = json_encode($links);
+
 		$script = <<< EOD
 <script type="text/javascript">
 
@@ -58,6 +71,7 @@ abstract class TinyMCE {
 		//external_link_list_url : "lists/link_list.js",
 		//external_image_list_url : "lists/image_list.js",
 		//media_external_list_url : "lists/media_list.js",
+		 link_list: $links,
 
 		// Replace values for the template plugin
 		//template_replace_values : {

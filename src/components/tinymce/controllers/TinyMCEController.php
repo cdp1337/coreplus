@@ -11,6 +11,8 @@ class TinyMCEController extends Controller_2_1 {
 	 * Get the rendered HTML template for the advlink plugin.
 	 *
 	 * This needs to be a full controller because it requires some of core+'s functionality to determine pages.
+	 *
+	 * @deprecated v4.1.0
 	 */
 	public function link(){
 		$view = $this->getView();

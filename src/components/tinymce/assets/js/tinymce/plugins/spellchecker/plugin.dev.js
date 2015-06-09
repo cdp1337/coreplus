@@ -106,7 +106,7 @@
 	exports.define = define;
 	exports.require = require;
 
-	expose(["tinymce/spellcheckerplugin/DomTextMatcher","tinymce/spellcheckerplugin/Plugin"]);
+	expose(["tinymce/spellcheckerplugin/DomTextMatcher"]);
 
 	load('classes/DomTextMatcher.js');
 	load('classes/Plugin.js');
@@ -114,4 +114,4 @@
 	writeScripts();
 })(this);
 
-// $hash: e3f81e95cba9e9ffe4891c889ea11e65
+// $hash: 71db3b0268e64137c268d50724a7efdc

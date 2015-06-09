@@ -11,12 +11,27 @@
 /*global tinymce:true */
 
 tinymce.PluginManager.add('contextmenu', function(editor) {
-	var menu;
+	var menu, contextmenuNeverUseNative = editor.settings.contextmenu_never_use_native;
 
 	editor.on('contextmenu', function(e) {
-		var contextmenu;
+		var contextmenu, doc = editor.getDoc();
+
+		// Block TinyMCE menu on ctrlKey
+		if (e.ctrlKey && !contextmenuNeverUseNative) {
+			return;
+		}
 
 		e.preventDefault();
+
+		/**
+		 * WebKit/Blink on Mac has the odd behavior of selecting the target word or line this causes
+		 * issues when for example inserting images see: #7022
+		 */
+		if (tinymce.Env.mac && tinymce.Env.webkit) {
+			if (e.button == 2 && doc.caretRangeFromPoint) {
+				editor.selection.setRng(doc.caretRangeFromPoint(e.x, e.y));
+			}
+		}
 
 		contextmenu = editor.settings.contextmenu || 'link image inserttable | cell row column deletetable';
 
@@ -48,23 +63,25 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 			menu = new tinymce.ui.Menu({
 				items: items,
 				context: 'contextmenu'
-			});
+			}).addClass('contextmenu').renderTo();
 
-			menu.renderTo(document.body);
+			editor.on('remove', function() {
+				menu.remove();
+				menu = null;
+			});
 		} else {
 			menu.show();
 		}
 
 		// Position menu
-		var pos = tinymce.DOM.getPos(editor.getContentAreaContainer());
-		pos.x += e.clientX;
-		pos.y += e.clientY;
+		var pos = {x: e.pageX, y: e.pageY};
+
+		if (!editor.inline) {
+			pos = tinymce.DOM.getPos(editor.getContentAreaContainer());
+			pos.x += e.clientX;
+			pos.y += e.clientY;
+		}
 
 		menu.moveTo(pos.x, pos.y);
-
-		editor.on('remove', function() {
-			menu.remove();
-			menu = null;
-		});
 	});
 });
