@@ -2,7 +2,7 @@
 /**
  * Test file to ensure that the blog RSS feed validates by w3c.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130712.1210
  * @package Blog
  */

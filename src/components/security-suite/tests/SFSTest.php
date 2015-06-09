@@ -3,7 +3,7 @@
  * The test suite for the StopForumSpam subsystem of the security suite.
  *
  * @package Security-Suite
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * Date: 2/11/13
  * Time: 6:19 PM
  */

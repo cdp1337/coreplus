@@ -5,7 +5,7 @@
  *
  * This is useful for package development that runs for several commits or have multiple developers.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20140305.1600
  * @package Core
  */

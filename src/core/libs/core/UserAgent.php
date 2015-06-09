@@ -3,7 +3,7 @@
  * User Agent object, fancy alternative PHP's native get_browser function.
  *
  * @package    Core
- * @author     Charlie Powell <charlie@eval.bz>
+ * @author     Charlie Powell <charlie@evalagency.com>
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://php.net/manual/en/function.get-browser.php
  * @link       http://tempdownloads.browserscap.com/
@@ -45,7 +45,7 @@ use Core\Filestore\Contents\ContentGZ;
  * </code>
  *
  * @package  Core
- * @author   Charlie Powell <charlie@eval.bz>
+ * @author   Charlie Powell <charlie@evalagency.com>
  * @link     http://php.net/manual/en/function.get-browser.php
  * @link     http://tempdownloads.browserscap.com/
  *

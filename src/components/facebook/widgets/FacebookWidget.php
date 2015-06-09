@@ -2,7 +2,7 @@
 /**
  * File for FacebookWidget
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130222.1011
  * @package Facebook
  */

@@ -2,7 +2,7 @@
 /**
  * File for the PhpWhoisController.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130429.0134
  * @package phpwhois
  */

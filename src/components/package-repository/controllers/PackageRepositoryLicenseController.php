@@ -3,7 +3,7 @@
  * Class file for the controller PackageRepositoryLicenseController
  *
  * @package Package Repository
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class PackageRepositoryLicenseController extends Controller_2_1 {
 

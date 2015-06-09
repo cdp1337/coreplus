@@ -2,7 +2,7 @@
 /**
  * Test file to ensure that logs can be written and are correctly written.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20131231.1718
  * @package Core\Utilities\Logger
  */

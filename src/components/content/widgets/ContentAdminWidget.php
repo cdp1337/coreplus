@@ -3,9 +3,9 @@
  * File for class ContentAdminWidget definition in the coreplus project
  *
  * @package Content
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20140405.0251
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -47,7 +47,7 @@
  * </code>
  *
  * @package Content
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 class ContentAdminWidget extends Widget_2_1 {

@@ -24,7 +24,7 @@
  * </code>
  *
  * @author Pete Nelson (@GunGeekATX)
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @link https://github.com/petenelson/bacon-ipsum Original code
  *
  * @version 2.1.3~cdp1337-1

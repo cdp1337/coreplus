@@ -2,10 +2,10 @@
 /**
  * File for class Profiler definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130410.1753
  * @package Core\Utilities\Profiler
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -66,7 +66,7 @@ namespace Core\Utilities\Profiler;
  * </code>
  * 
  * @package Core\Utilities\Profiler
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class Profiler {
 	private $_name;

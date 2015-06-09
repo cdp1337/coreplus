@@ -7,7 +7,7 @@
 #
 # To run it, simply execute this script.  No arguments supported or needed.
 #
-# @author Charlie Powell <charlie@eval.bz>
+# @author Charlie Powell <charlie@evalagency.com>
 # @date 2013.05.15
 
 BASEDIR="$(readlink -f $(dirname $0)/..)"

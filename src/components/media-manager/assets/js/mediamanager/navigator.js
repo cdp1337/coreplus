@@ -1,7 +1,7 @@
 /**
  * Navigator javascript logic
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 
 /**

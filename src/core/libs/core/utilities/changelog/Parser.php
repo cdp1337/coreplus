@@ -2,7 +2,7 @@
 /**
  * File for class Parser definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130409.1056
  * @package Core\Utilities\Changelog
  */

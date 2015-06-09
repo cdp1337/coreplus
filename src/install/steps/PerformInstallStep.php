@@ -2,7 +2,7 @@
 /**
  * File for class PerformInstallStep definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130325.0336
  * @package Core\Installer
  */

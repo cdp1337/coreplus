@@ -3,9 +3,9 @@
  * File for class LogFile definition in the coreplus project
  * 
  * @package Core\Utilities\Logger
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20131231.1523
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -52,7 +52,7 @@ use Core\Filestore\Backends\FileLocal;
  *
  * 
  * @package Core\Utilities\Logger
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 class LogFile extends FileLocal{

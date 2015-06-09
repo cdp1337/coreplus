@@ -309,14 +309,14 @@
 	</assets>
 	<authors>
 		<author name="Marijn Haverbeke" email="marijnh@gmail.com"/>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
 		<author name="Hans Engel"/>
-		<author name="Nick Hinsch &lt;nicholas@eval.bz"/>
+		<author name="Nick Hinsch &lt;nicholas@evalagency.com"/>
 		<author name="Stas Kobzar" email="stas@modulis.ca"/>
 		<author name="Author: Mike Brevoort" email="mike@brevoort.com"/>
 		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
-		<author name="Nick Hinsch" email="nicholas@eval.bz"/>
+		<author name="Nick Hinsch" email="nicholas@evalagency.com"/>
 	</authors>
 	<licenses>
 		<license>MIT</license>

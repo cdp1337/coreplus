@@ -4,7 +4,7 @@
 # It's in a sub directory because this directory may be named differently based on site configuration.
 #
 # @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
-# @author Charlie Powell <charlie@eval.bz>
+# @author Charlie Powell <charlie@evalagency.com>
 
 
 # I'm not real sure why this is inside an if block, because the site won't work without it anyway

@@ -11,7 +11,7 @@
  * This is bound and called with the hook <code>/core/page/error-404</code>
  *
  * @package Core
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 abstract class RewriteMapHelper {
 	public static function Catch404Hook(View $view){

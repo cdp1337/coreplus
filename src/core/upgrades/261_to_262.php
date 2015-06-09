@@ -5,7 +5,7 @@
  * Namely setting the last login for users that have a password set.
  * It's good indication that if they have a password set, that they've logged in already.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20131030.2031
  * @package Core
  */

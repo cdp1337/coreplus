@@ -69,7 +69,7 @@
 		<upgrade from="1.0.2" to="1.1.0"/>
 	</upgrades>
 	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 		<author name="Jose Rodriguez" email="jose.rodriguez@exec.cl"/>
 	</authors>
 	<licenses>

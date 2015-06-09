@@ -2,7 +2,7 @@
 /**
  * Test file for the Filestore\Factory class.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130829.1146
  * @package Core\Filestore
  *

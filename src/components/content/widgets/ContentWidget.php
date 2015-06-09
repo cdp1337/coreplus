@@ -2,7 +2,7 @@
 /**
  * File for class ContentWidget definition in the Core Plus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20150121.2343
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -46,7 +46,7 @@
  * </code>
  *
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 class ContentWidget extends Widget_2_1 {

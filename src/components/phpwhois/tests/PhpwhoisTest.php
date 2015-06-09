@@ -2,7 +2,7 @@
 /**
  * File for the PhpWhoisTest.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130429.0134
  * @package phpwhois
  */
@@ -61,22 +61,22 @@ class PhpwhoisTest extends PHPUnit_Framework_TestCase {
 	public function test_eval_bz_Lookup(){
 		$whois = new phpwhois\Whois();
 		$result = $whois->lookup('eval.bz');
-
+var_dump($result);
 		$this->assertEquals('eval.bz', $result['regrinfo']['domain']['name']);
-		$this->assertEquals('2015-04-13', $result['regrinfo']['domain']['expires']);
+		$this->assertEquals('2016-04-13', $result['regrinfo']['domain']['expires']);
 		$this->assertGreaterThan(0, sizeof($result['regrinfo']['domain']['nserver']));
 
 		$org = strtolower($result['regrinfo']['owner']['organization']);
-		$this->assertEquals('eval, ltd.', $org);
+		$this->assertEquals('eval agency', $org);
 
-		$this->assertEquals('396 South Washington Ave', $result['regrinfo']['admin']['address']['street']);
+		$this->assertEquals('175 S 3RD ST', $result['regrinfo']['admin']['address']['street']);
 		$this->assertEquals('Columbus', $result['regrinfo']['admin']['address']['city']);
 		$this->assertEquals('OH', $result['regrinfo']['admin']['address']['state']);
 		$this->assertEquals('43215', $result['regrinfo']['admin']['address']['pcode']);
 		$this->assertEquals('US', $result['regrinfo']['admin']['address']['country']);
 
 		$this->assertEquals('Charlie Powell', $result['regrinfo']['tech']['name']);
-		$this->assertEquals('domains@eval.bz', $result['regrinfo']['tech']['email']);
+		$this->assertEquals('domains@evalagency.com', $result['regrinfo']['tech']['email']);
 
 		$this->assertEquals('yes', $result['regrinfo']['registered']);
 
@@ -95,16 +95,16 @@ class PhpwhoisTest extends PHPUnit_Framework_TestCase {
 		$this->assertGreaterThan(0, sizeof($result['regrinfo']['domain']['nserver']));
 
 		$org = strtolower($result['regrinfo']['owner']['organization']);
-		$this->assertEquals('eval, ltd.', $org);
+		$this->assertEquals('eval agency', $org);
 
-		$this->assertEquals('396 South Washington Ave', $result['regrinfo']['admin']['address']['street']);
+		$this->assertEquals('175 S 3RD ST', $result['regrinfo']['admin']['address']['street']);
 		$this->assertEquals('Columbus', $result['regrinfo']['admin']['address']['city']);
 		$this->assertEquals('OH', $result['regrinfo']['admin']['address']['state']);
 		$this->assertEquals('43215', $result['regrinfo']['admin']['address']['pcode']);
 		$this->assertEquals('US', $result['regrinfo']['admin']['address']['country']);
 
 		$this->assertEquals('Charlie Powell', $result['regrinfo']['tech']['name']);
-		$this->assertEquals('domains@eval.bz', $result['regrinfo']['tech']['email']);
+		$this->assertEquals('domains@evalagency.com', $result['regrinfo']['tech']['email']);
 
 		$this->assertEquals('yes', $result['regrinfo']['registered']);
 
@@ -127,7 +127,7 @@ class PhpwhoisTest extends PHPUnit_Framework_TestCase {
 				'pcode'        => '43215',
 				'country'      => 'US',
 				'name'         => 'Charlie Powell',
-				'email'        => 'domains@eval.bz',
+				'email'        => 'domains@evalagency.com',
 			]
 		);
 	}

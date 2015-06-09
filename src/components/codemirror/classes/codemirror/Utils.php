@@ -3,8 +3,8 @@
  * File for class Utils definition in the coreplus project
  * 
  * @package CodeMirror
- * @author Charlie Powell <charlie@eval.bz>
- * @author Nick Hinsch <nicholas@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
+ * @author Nick Hinsch <nicholas@evalagency.com>
  * @date 20130509.1449
  * @copyright Copyright (C) 2009-2014  Author
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -51,7 +51,7 @@ namespace CodeMirror;
  *
  * 
  * @package CodeMirror
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 abstract class Utils {

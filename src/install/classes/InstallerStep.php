@@ -2,7 +2,7 @@
 /**
  * The scaffolding class for installer steps.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130320.0620
  * @package Core\Installer
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>

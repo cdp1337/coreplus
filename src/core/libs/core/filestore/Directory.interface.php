@@ -2,7 +2,7 @@
 /**
  * Enter a meaningful file description here!
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130604.1113
  * @package Core\Filestore
  */

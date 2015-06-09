@@ -3,8 +3,8 @@
  * Defines the schema for the Component table
  *
  * @package Core
- * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @author Charlie Powell <charlie@evalagency.com>
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -27,7 +27,7 @@
  * Generated automatically from the mysql_model_gen script.
  * Please update result to your preferences and copy to the final location.
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 2011-06-09 01:14:48
  */
 class ComponentModel extends Model {

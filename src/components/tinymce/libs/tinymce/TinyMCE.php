@@ -3,8 +3,8 @@
  * Handles all the integration of the TinyMCE plugin.
  *
  * @package TinyMCE-Enterprise
- * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2014  Charlie Powell
+ * @author Charlie Powell <charlie@evalagency.com>
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license All rights reserved
  */
 

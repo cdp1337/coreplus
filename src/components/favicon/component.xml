@@ -36,7 +36,7 @@
 		<upgrade from="1.2.0" to="1.2.1"/>
 	</upgrades>
 	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">

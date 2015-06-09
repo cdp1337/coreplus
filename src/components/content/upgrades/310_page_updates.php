@@ -2,7 +2,7 @@
 /**
  * Upgrade file to add control links for content pages.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20140228.1049
  * @package Content
  */

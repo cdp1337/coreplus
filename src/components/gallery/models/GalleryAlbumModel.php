@@ -3,7 +3,7 @@
  * Model for gallery albums
  *
  * @package Gallery
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (C) 2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *

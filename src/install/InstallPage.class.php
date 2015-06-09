@@ -4,7 +4,7 @@
  *
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * Copyright (C) 2010  Charlie Powell <charlie@eval.bz>
+ * Copyright (C) 2010  Charlie Powell <charlie@evalagency.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19,7 +19,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  *
  * @package Core\Installer
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @deprecated 2013.04 - This file has been deprecated and is a candidate for removal very soon.
  */
 

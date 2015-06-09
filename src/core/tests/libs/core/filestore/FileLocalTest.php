@@ -2,7 +2,7 @@
 /**
  * Test the local file backend
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130530.1925
  * @package Core\Filestore
  */

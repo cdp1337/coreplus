@@ -19,7 +19,7 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl.html">

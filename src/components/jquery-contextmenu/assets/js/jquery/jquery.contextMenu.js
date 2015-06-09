@@ -5,7 +5,7 @@
  *
  * @version 1.01~core2
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @author Cory S.N. LaViska - A Beautiful Site (http://abeautifulsite.net/)
  *
  * Terms of Use

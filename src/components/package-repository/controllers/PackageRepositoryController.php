@@ -5,7 +5,7 @@ use Core\Filestore\Factory;
  * Class file for the controller PackageRepositoryController
  *
  * @package Package Repository
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class PackageRepositoryController extends Controller_2_1 {
 

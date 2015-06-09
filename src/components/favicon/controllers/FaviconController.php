@@ -3,7 +3,7 @@
  * Class file for the controller FaviconController
  *
  * @package Favicon
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class FaviconController extends Controller_2_1 {
 	// Each controller can have many views, each defined by a different method.

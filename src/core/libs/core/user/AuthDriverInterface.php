@@ -2,7 +2,7 @@
 /**
  * File for AuthDriverInterface
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20131113.1510
  * @package Core\User
  */
@@ -13,7 +13,7 @@ namespace Core\User;
 /**
  * The interface that dictates how user authentication backends function.
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @package Core\User
  */
 interface AuthDriverInterface {

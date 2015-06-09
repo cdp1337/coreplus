@@ -3,7 +3,7 @@
  * File for class ModelImportLogger definition in the Agency-Portal project
  * 
  * @package Core
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20150120.1122
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -52,7 +52,7 @@ use Core\Utilities\Profiler\Profiler;
  *
  * 
  * @package Core
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 class ModelImportLogger {

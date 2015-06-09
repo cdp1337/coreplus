@@ -2,7 +2,7 @@
 /**
  * File for the various utilities used throughout the installer.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130320.2026
  * @package Core\Installer
  */

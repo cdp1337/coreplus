@@ -2,7 +2,7 @@
 /**
  * The file that contains all the error management functions
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20131018.0206
  * @package Core\ErrorManagement
  */

@@ -3,7 +3,7 @@
  * Class file for the model GeoAddressModel
  *
  * @package Geographic Codes
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class GeoAddressModel extends Model {
 	/**

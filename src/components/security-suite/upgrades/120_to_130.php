@@ -5,7 +5,7 @@
  * The security model has been migrated into Core as of 3.0, so this script
  * migrates the data from the security component into Core.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20131229.2033
  */
 

@@ -2,7 +2,7 @@
 /**
  * File for class PreflightCheckStep definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130320.0640
  * @package Core\Installer
  */

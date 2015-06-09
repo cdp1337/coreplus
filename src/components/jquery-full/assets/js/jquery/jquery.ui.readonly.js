@@ -17,7 +17,7 @@
  * @todo Write example docs
  *
  *
- * @copyright Copyright (c) 2009 Charlie Powell <charlie@eval.bz>
+ * @copyright Copyright (c) 2009 Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (c) 2011 Charlie Powell <cpowell@blindacre.com>
  * 
  *

@@ -2,7 +2,7 @@
 /**
  * Common functions used in conjunction with the Config system.
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130818.2333
  * @package Core
  */

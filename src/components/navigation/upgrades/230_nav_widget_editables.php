@@ -2,7 +2,7 @@
 /**
  * Upgrade file to migrate the existing navigation widgets to the new schema, (edit and delete URLs)
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20140228.1049
  * @package Blog
  */

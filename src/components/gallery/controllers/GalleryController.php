@@ -3,7 +3,7 @@
  * Gallery listing page, the main interface for all gallery frontend and most backend functions.
  *
  * @package Gallery
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (C) 2012  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *

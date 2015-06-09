@@ -4,7 +4,7 @@
 # and prepend the file header and file version.
 # This is basic information to help the developer keep the file insync.
 # 
-# @author Charlie Powell <charlie@eval.bz>
+# @author Charlie Powell <charlie@evalagency.com>
 
 BASEDIR="$(readlink -f $(dirname $0)/..)"
 YUICOMPRESSOR="$BASEDIR/vendor/yuicompressor-2.4.8.jar"

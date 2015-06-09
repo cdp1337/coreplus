@@ -2,7 +2,7 @@
 /**
  * File for the NonceTest test suite.
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130412.1031
  * @package Nonce
  */

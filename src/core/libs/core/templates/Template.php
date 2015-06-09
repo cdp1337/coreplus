@@ -2,7 +2,7 @@
 /**
  * File for class Template definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130411.1238
  * @package Core\Templates
  */

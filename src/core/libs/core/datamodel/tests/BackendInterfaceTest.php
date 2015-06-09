@@ -4,7 +4,7 @@
  *
  * This suite uses \Core\db() to pull whichever the default backend is.
  *
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130312.0529
  * @package Core\Datamodel
  */
