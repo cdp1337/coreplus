@@ -99,6 +99,11 @@ for i in $COMPONENTS; do
 
 		sync_component "google"
 
+	elif [ "$i" == "jsonjs" ]; then
+		# User has been migrated into Core as of 2.8.x
+		echo "Deleting legacy component $i..."
+		rm -fr "$BASEDIR/src/components/$i"
+
 	else
 		echo "Skipping component $i, (does not exist in upstream)"
 	fi
