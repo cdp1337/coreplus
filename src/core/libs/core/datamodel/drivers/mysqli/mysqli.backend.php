@@ -31,35 +31,15 @@ use Core\Datamodel\Schema;
 use Core\Datamodel\SchemaColumn;
 use Core\Filestore\Factory;
 use Core\Filestore\File;
+use Core\Utilities\Profiler\DatamodelProfiler;
 
 class mysqli_backend implements BackendInterface {
-
-	/**
-	 * Number of reads done from the database from the 'execute' function.
-	 * @var int
-	 */
-	private $_reads = 0;
-
-	/**
-	 * Number of writes done to the database from the 'execute' function.
-	 * @var int
-	 */
-	private $_writes = 0;
-
 
 	/**
 	 *
 	 * @var \mysqli
 	 */
 	private $_conn = null;
-
-	/**
-	 * A log of every query ran on this page.  Useful for debugging.
-	 *
-	 * @var array
-	 */
-	private $_querylog = array();
-
 
 	////////////////////\\\\\\\\\\\\\\\\\\\\
 	////        PUBLIC METHODS          \\\\
@@ -190,7 +170,7 @@ class mysqli_backend implements BackendInterface {
 
 		// Table doesn't exist, just do a simple create
 		$q = 'CREATE TABLE `' . $table . '` ';
-		$directives = array();
+		$directives = [];
 		foreach($newschema->definitions as $column){
 			/** @var SchemaColumn $column */
 
@@ -305,7 +285,7 @@ class mysqli_backend implements BackendInterface {
 		}
 
 		// Useful for determining if I need to do weird voodoo for UUIDs...
-		$newcolumns      = array();
+		$newcolumns      = [];
 
 		// My simple counter.  Helps keep track of column order.
 		$x = 0;
@@ -471,34 +451,6 @@ class mysqli_backend implements BackendInterface {
 		return ($this->_rawExecute('write', $q));
 	}
 
-
-	/**
-	 * Get the number of reads that have been performed on this page load.
-	 *
-	 * @return int
-	 */
-	public function readCount() {
-		return $this->_reads;
-	}
-
-	/**
-	 * Get the number of writes that have been performed on this page load.
-	 *
-	 * @return int
-	 */
-	public function writeCount() {
-		return $this->_writes;
-	}
-
-	/**
-	 * Get the query log for this backend.
-	 *
-	 * @return array
-	 */
-	public function queryLog(){
-		return $this->_querylog;
-	}
-
 	/**
 	 * Get a flat array of table names currently available on this backend.
 	 *
@@ -506,7 +458,7 @@ class mysqli_backend implements BackendInterface {
 	 */
 	public function showTables(){
 		$rs = $this->_rawExecute('read', 'SHOW TABLES');
-		$ret = array();
+		$ret = [];
 		while($row = $rs->fetch_row()){
 			$ret[] = $row[0];
 		}
@@ -590,40 +542,9 @@ class mysqli_backend implements BackendInterface {
 			}
 		}
 
-		if(FULL_DEBUG || (DEVELOPMENT_MODE && $this->_reads+$this->_writes < 40)){
-			// By skipping this in production, memory usage is cut by nearly 50% on über DB heavy pages!
-			// (This occurs on pages that have more than 10k queries.
-			$debug = debug_backtrace();
-			$callinglocation = array();
-			$count = 0;
-			$totalcount = 0;
-			foreach($debug as $d){
-				$class = (isset($d['class'])) ? $d['class'] : null;
-				++$totalcount;
+		$profiler = DatamodelProfiler::GetDefaultProfiler();
+		$profiler->start($type, $string);
 
-				if($class == 'Core\\Datamodel\\Drivers\\mysqli\\mysqli_backend') continue;
-				if($class == 'Core\\Datamodel\\Dataset') continue;
-				if($class == 'Model') continue;
-
-				$file = (isset($d['file'])) ? (substr($d['file'], strlen(ROOT_PDIR)+2)) : 'anonymous';
-				$line = (isset($d['line'])) ? (':' . $d['line']) : '';
-				$func = ($class !== null) ? ($d['class'] . $d['type'] . $d['function']) : $d['function'];
-
-				$callinglocation[] = $file . $line . ', [' . $func . '()]';
-				++$count;
-				if($count >= 3 && sizeof($debug) >= $totalcount + 2){
-					$callinglocation[] = '...';
-					break;
-				}
-			}
-		}
-		else{
-			$callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
-		}
-
-
-		$start = microtime(true) * 1000;
-		//echo $string . '<br/>'; // DEBUGGING //
 		$res = $this->_conn->query($string);
 
 		if(DEVELOPMENT_MODE && is_object($res) && property_exists($res, 'num_rows')){
@@ -634,29 +555,18 @@ class mysqli_backend implements BackendInterface {
 			$rows = null;
 		}
 
-		// Record this query!
-		// This needs to include the query itself, what type it was, how long it took to execute,
-		// any errors it produced, and where in the code it was called.
-		$this->_querylog[] = array(
-			'query'  => $string,
-			'type'   => $type,
-			'time'   => round( (microtime(true) * 1000 - $start), 3),
-			'errno'  => $this->_conn->errno,
-			'error'  => $this->_conn->error,
-			'caller' => $callinglocation,
-			'rows'   => $rows,
-		);
-
-		// And increase the count.
-		if($type == 'read') ++$this->_reads;
-		else ++$this->_writes;
-
 		if($this->_conn->errno){
+			$profiler->stopError($this->_conn->errno, $this->_conn->error);
+
 			$e = new \DMI_Query_Exception($this->_conn->error, $this->_conn->errno);
 			$e->query = $string;
 			throw $e;
 		}
-		return $res;
+		else{
+			$profiler->stopSuccess($rows);
+
+			return $res;
+		}
 	}
 
 	/**
@@ -686,7 +596,7 @@ class mysqli_backend implements BackendInterface {
 		// Generate a query to run.
 		$q = 'SELECT';
 		if($dataset->uniquerecords) $q .= ' DISTINCT';
-		$ss = array();
+		$ss = [];
 		foreach($dataset->_selects as $s){
 			// Check the escaping for this column.
 			if(strpos($s, '.')){
@@ -714,7 +624,7 @@ class mysqli_backend implements BackendInterface {
 			// Support keys as complex as "key DESC, value ASC"
 			// and as simple as "sortnum"
 			$orders = explode(',', $dataset->_order);
-			$os = array();
+			$os = [];
 			foreach($orders as $o){
 				$o = trim($o);
 
@@ -734,7 +644,7 @@ class mysqli_backend implements BackendInterface {
 		$res = $this->_rawExecute('read', $q);
 
 		$dataset->num_rows = $res->num_rows;
-		$dataset->_data = array();
+		$dataset->_data = [];
 		while($row = $res->fetch_assoc()){
 			$dataset->_data[] = $row;
 		}
@@ -755,7 +665,7 @@ class mysqli_backend implements BackendInterface {
 			$i     = 0;
 			foreach($dataset->_sets as $dat){
 				++$i;
-				$vals = array();
+				$vals = [];
 
 				if($i == 1){
 					// Create the list of keys on the first pass.
@@ -785,8 +695,8 @@ class mysqli_backend implements BackendInterface {
 			$q .= implode(', ', $qvals);
 		}
 		else{
-			$keys = array();
-			$vals = array();
+			$keys = [];
+			$vals = [];
 			foreach($dataset->_sets as $k => $v){
 				$keys[] = "`$k`";
 				if($v === null){
@@ -809,7 +719,7 @@ class mysqli_backend implements BackendInterface {
 		$this->_rawExecute('write', $q);
 
 		$dataset->num_rows = $this->_conn->affected_rows;
-		$dataset->_data = array();
+		$dataset->_data = [];
 		// Inserts don't have any data, but do have an ID, (which mysql handles internally)
 		if($dataset->_idcol){
 			// Unless it's set externally, say a UUID.
@@ -827,7 +737,7 @@ class mysqli_backend implements BackendInterface {
 		// Generate a query to run.
 		$q = "UPDATE `" . $dataset->_table . "`";
 
-		$sets = array();
+		$sets = [];
 		foreach($dataset->_sets as $k => $v){
 			if($v === null){
 				$valstr = 'NULL';
@@ -850,7 +760,7 @@ class mysqli_backend implements BackendInterface {
 		$this->_rawExecute('write', $q);
 
 		$dataset->num_rows = $this->_conn->affected_rows;
-		$dataset->_data = array();
+		$dataset->_data = [];
 		// Inserts don't have any data, but do have an ID, (which mysql handles internally)
 		//if($dataset->_idcol) $dataset->_idval = $this->_conn->insert_id;
 	}
@@ -995,7 +905,7 @@ class mysqli_backend implements BackendInterface {
 	private function _parseWhereClause(DatasetWhereClause $group){
 		$statements = $group->getStatements();
 
-		$ws = array();
+		$ws = [];
 		foreach($statements as $w){
 			if($w instanceof DatasetWhereClause){
 				// Recursively recurring recursion, RECURSE!
@@ -1032,7 +942,7 @@ class mysqli_backend implements BackendInterface {
 				}
 				// IN statements allow an array to be passed in.  Check the values in the array and wrap them with parentheses.
 				elseif(is_array($w->value) && $op == 'IN'){
-					$vs = array();
+					$vs = [];
 					foreach($w->value as $bit){
 						$vs[] = "'" . $this->_conn->real_escape_string($bit) . "'";
 					}
@@ -1090,7 +1000,7 @@ class mysqli_backend implements BackendInterface {
 					throw new \DMI_Exception('Invalid column definition for, type ENUM must include at least one option.');
 				}
 
-				$opts = array();
+				$opts = [];
 				foreach($column->options as $opt){
 					// Ensure that any single quotes are escaped out.
 					$opts[] = str_replace("'", "\\'", $opt);

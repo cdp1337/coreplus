@@ -720,8 +720,8 @@ class View {
 					$debug .= sprintf($legend, 'Performance Information');
 					$debug .= "<span>";
 					$debug .= $xhprof_link;
-					$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
-					$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
+					$debug .= "Database Reads: " . \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->readCount() . "\n";
+					$debug .= "Database Writes: " . \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->writeCount() . "\n";
 					//$debug .= "Number of queries: " . DB::Singleton()->counter . "\n";
 					//$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_usage()) . "\n";
 					$debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
@@ -788,28 +788,10 @@ class View {
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
 					$debug .= sprintf($legend, 'Query Log');
-					$ql = \Core\DB()->queryLog();
-					$qls = sizeof($ql);
-					foreach($ql as $i => $dat){
-						if($i > 1000){
-							$debug .= 'Plus ' . ($qls - 1000) . ' more!' . "\n";
-							break;
-						}
-
-						$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
-						$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
-						$type   = $dat['type'];
-						$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
-						$query  = $dat['query'];
-						$caller = print_r($dat['caller'], true);
-						if($dat['rows'] !== null){
-							$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
-						}
-						$debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
-					}
+					$profiler = \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler();
+					$debug .= $profiler->getEventTimesFormatted();
 					$debug .= '</fieldset>';
 					$debug .= '</pre>';
-
 
 					// And append!
 					$foot .= "\n" . $debug;

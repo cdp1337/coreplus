@@ -45,6 +45,7 @@ umask(0);
 
 // Start a timer for performance tuning purposes.
 require_once(__DIR__ . '/libs/core/utilities/profiler/Profiler.php');
+require_once(__DIR__ . '/libs/core/utilities/profiler/DatamodelProfiler.php');
 require_once(__DIR__ . '/libs/core/utilities/logger/functions.php');
 $profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
 

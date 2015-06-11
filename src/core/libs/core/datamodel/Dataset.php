@@ -428,10 +428,13 @@ class Dataset implements \Iterator{
 	 */
 	public function execute($interface = null){
 		// Default to the system interface.
-		if(!$interface) $interface = \DMI::GetSystemDMI();
+		if(!$interface){
+			$dmi = \DMI::GetSystemDMI();
+			$interface = $dmi->connection();
+		}
 
 		// This actually goes the other way, as the interface has the logic.
-		$interface->connection()->execute($this);
+		$interface->execute($this);
 
 		if( $this->_data === null && $this->_mode == Dataset::MODE_GET ){
 			// It's been executed, so data should at least be something.
