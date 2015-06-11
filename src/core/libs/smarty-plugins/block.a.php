@@ -90,10 +90,8 @@ function smarty_block_a($params, $content, $smarty, &$repeat){
 	// This has the cool ability of not requiring jquery to run, since it is all handled with PHP logic.
 	if(isset($params['confirm'])){
 		$params['onclick'] = 'return Core.ConfirmEvent(this);';
-		// @todo Convert these to the data- prefix instead of data:
-		$params['data:href'] = Core::ResolveLink($params['href']);
-		$params['data:confirm'] = $params['confirm'];
-		//$params['onClick'] = "if(confirm('" . str_replace("'", "\\'", $params['confirm']) . "')){ Core.PostURL('" . str_replace("'", "\\'", Core::ResolveLink($params['href'])) . "'); } return false;";
+		$params['data-href'] = Core::ResolveLink($params['href']);
+		$params['data-confirm'] = $params['confirm'];
 		$params['href'] = '#false';
 	}
 

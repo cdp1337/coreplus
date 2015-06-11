@@ -71,17 +71,34 @@ Core.PostURL = function(u){
  * @constructor
  */
 Core.ConfirmEvent = function(node){
-	var confirmtext = node.getAttribute('data:confirm'),
-		href = node.getAttribute('data:href');
+	var confirmText, href;
+
+	if(typeof node.dataset === 'undefined'){
+		// IE < 11 support
+		if(node.getAttribute('data-confirm') !== null){
+			confirmText = node.getAttribute('data-confirm');
+		}
+		if(node.getAttribute('data-href') !== null){
+			href = node.getAttribute('data-href');
+		}
+	}
+	else{
+		// Rest of the world.
+		if(node.dataset.confirm !== undefined){
+			confirmText = node.dataset.confirm;
+		}
+		if(node.dataset.href !== undefined){
+			href = node.dataset.href;
+		}
+	}
 
 	//event.stopPropagation();
-	if(typeof window.event != 'undefined'){
+	if(typeof window.event !== 'undefined'){
 		// IE hack
 		window.event.cancelBubble = true;
 	}
 
-
-	if(confirmtext == '' || confirm(confirmtext)){
+	if(confirmText === '' || confirm(confirmText)){
 		Core.PostURL(href);
 	}
 
