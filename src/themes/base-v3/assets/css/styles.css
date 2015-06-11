@@ -880,68 +880,78 @@ pre.xdebug-var-dump .debug-section.collapsed i {display:inline;}
 /*** Controls that can be implemented throughout the site ***/
 /* line 12, ../scss/_controls.scss */
 ul.controls {
-  height: 20px;
+  /*height:20px;*/
   margin: 0;
   padding: 0;
   max-width: 200px;
+  border: 1px solid;
   /* icon animations ftw! */
 }
-/* line 20, ../scss/_controls.scss */
-ul.controls.controls-animated .controls-proxy-icon {
-  opacity: 1;
-  transition: opacity 0.3s ease-in-out 0s;
-}
-/* line 25, ../scss/_controls.scss */
-ul.controls.controls-animated .icon-spin {
-  opacity: 0.5;
-}
-/* line 30, ../scss/_controls.scss */
-ul.controls.controls-proxy {
-  color: #477DCA;
-}
-/* line 34, ../scss/_controls.scss */
+/* line 19, ../scss/_controls.scss */
 ul.controls li {
   float: left;
-  margin-right: 0.1em;
+  margin-right: 0.5em;
   list-style: none;
 }
-/* line 39, ../scss/_controls.scss */
+/* line 24, ../scss/_controls.scss */
 ul.controls li a {
   text-decoration: none;
   font-size: 14px;
-  padding: 2px;
+  padding: 0.05em;
   line-height: 18px;
 }
-/* line 46, ../scss/_controls.scss */
+/* line 31, ../scss/_controls.scss */
 ul.controls li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
-/* line 52, ../scss/_controls.scss */
+/* line 37, ../scss/_controls.scss */
 ul.controls li span {
   display: none;
 }
+/* line 42, ../scss/_controls.scss */
+ul.controls li:last-child {
+  float: none;
+}
+/* line 48, ../scss/_controls.scss */
+ul.controls.controls-animated .controls-proxy-icon {
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out 0s;
+}
+/* line 53, ../scss/_controls.scss */
+ul.controls.controls-animated .icon-spin {
+  opacity: 0.5;
+}
+/* line 58, ../scss/_controls.scss */
+ul.controls.controls-proxy {
+  color: #477DCA;
+  padding: 0.25em;
+}
+/* line 62, ../scss/_controls.scss */
+ul.controls.controls-proxy li {
+  float: none;
+}
 
 /** Spruce up FA with some color :) **/
-/* line 59, ../scss/_controls.scss */
+/* line 69, ../scss/_controls.scss */
 ul.controls li i.icon-remove,
 ul.controls li i.icon-delete {
   color: #7a0200;
 }
 
-/* line 61, ../scss/_controls.scss */
+/* line 71, ../scss/_controls.scss */
 ul.controls li i.icon-edit {
   color: blue;
 }
 
-/* line 62, ../scss/_controls.scss */
+/* line 72, ../scss/_controls.scss */
 ul.controls li i.icon-plus,
 ul.controls li i.icon-add {
   color: green;
 }
 
-/* line 64, ../scss/_controls.scss */
+/* line 74, ../scss/_controls.scss */
 ul.controls li i.icon-rss {
   color: #e99700;
 }
@@ -950,7 +960,7 @@ ul.controls li i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 70, ../scss/_controls.scss */
+/* line 80, ../scss/_controls.scss */
 ul.controls.context-menu {
   background: #eee;
   border: 1px solid #999;
@@ -960,7 +970,7 @@ ul.controls.context-menu {
   text-align: left;
   z-index: 9999;
 }
-/* line 79, ../scss/_controls.scss */
+/* line 89, ../scss/_controls.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -969,35 +979,32 @@ ul.controls.context-menu li {
   /* This will get overwritten by a's */
   color: #555;
 }
-/* line 87, ../scss/_controls.scss */
-ul.controls.context-menu li i {
-  line-height: 1.5em;
-}
-/* line 92, ../scss/_controls.scss */
-ul.controls.context-menu a {
-  padding: 0;
+/* line 97, ../scss/_controls.scss */
+ul.controls.context-menu li a {
+  padding: 0.15em;
   display: block;
   color: #000;
 }
-/* line 98, ../scss/_controls.scss */
-ul.controls.context-menu a:hover {
+/* line 103, ../scss/_controls.scss */
+ul.controls.context-menu li a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
-/* line 104, ../scss/_controls.scss */
-ul.controls.context-menu i {
+/* line 109, ../scss/_controls.scss */
+ul.controls.context-menu li i {
+  line-height: 1.5em;
   padding-left: 4px;
 }
-/* line 108, ../scss/_controls.scss */
-ul.controls.context-menu span {
+/* line 114, ../scss/_controls.scss */
+ul.controls.context-menu li span {
   line-height: 1.9em;
   padding: 0 2px;
   display: inline;
 }
 
 /* The many links have a bit different styles. */
-/* line 116, ../scss/_controls.scss */
+/* line 123, ../scss/_controls.scss */
 ul.controls.context-menu-many-links {
   box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
   opacity: 0.9;

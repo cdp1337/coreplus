@@ -10,10 +10,38 @@
 
 /*** Controls that can be implemented throughout the site ***/
 ul.controls {
-	height:20px;
 	margin: 0;
 	padding: 0;
 	max-width: 200px;
+	border: 1px solid;
+
+	li {
+		float:left;
+		margin-right:0.5em;
+		list-style:none;
+
+		a {
+			text-decoration: none;
+			font-size: 14px;
+			padding: 0.05em;
+			line-height: 18px;
+		}
+
+		a:hover {
+			text-shadow: none;
+			font-size: 18px;
+			padding: 0;
+		}
+
+		span {
+			display: none;
+		}
+	}
+
+	li:last-child {
+		// Remove the float on the last LI to prevent the UL box from collapsing.
+		float: none;
+	}
 
 	/* icon animations ftw! */
 	&.controls-animated {
@@ -29,28 +57,10 @@ ul.controls {
 
 	&.controls-proxy {
 		color: #477DCA;
-	}
+		padding: 0.25em;
 
-	li {
-		float:left;
-		margin-right:0.1em;
-		list-style:none;
-
-		a {
-			text-decoration: none;
-			font-size: 14px;
-			padding: 2px;
-			line-height: 18px;
-		}
-
-		a:hover {
-			text-shadow: none;
-			font-size: 18px;
-			padding: 0;
-		}
-
-		span {
-			display: none;
+		li {
+			float: none;
 		}
 	}
 }
@@ -84,31 +94,28 @@ ul.controls.context-menu {
 		/* This will get overwritten by a's */
 		color: #555;
 
+		a {
+			padding: 0.15em;
+			display: block;
+			color: #000;
+		}
+
+		a:hover {
+			font-size: 14px;
+			background: #AFC5EE;
+			color: #000;
+		}
+
 		i {
 			line-height: 1.5em;
+			padding-left: 4px;
 		}
-	}
 
-	a {
-		padding: 0;
-		display: block;
-		color: #000;
-	}
-
-	a:hover {
-		font-size: 14px;
-		background: #AFC5EE;
-		color: #000;
-	}
-
-	i {
-		padding-left: 4px;
-	}
-
-	span {
-		line-height: 1.9em;
-		padding: 0 2px;
-		display: inline;
+		span {
+			line-height: 1.9em;
+			padding: 0 2px;
+			display: inline;
+		}
 	}
 }
 
