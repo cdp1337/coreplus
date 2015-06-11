@@ -66,6 +66,7 @@ require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
 require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/functions.php');
 require_once(ROOT_PDIR . 'install/utilities.php');
 require_once(ROOT_PDIR . 'core/libs/core/utilities/profiler/Profiler.php');
+require_once(ROOT_PDIR . 'core/libs/core/utilities/profiler/DatamodelProfiler.php');
 require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/functions.php');
 
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
