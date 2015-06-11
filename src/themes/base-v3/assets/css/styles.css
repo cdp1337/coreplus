@@ -784,9 +784,43 @@ html {
   margin-bottom: 0.20em;
 }
 /* line 10, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator, .formelement.formuserinput.user-valid .user-invalid-indicator {
+  display: none;
+}
+/* line 14, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator, .formelement.formuserinput.user-invalid .user-valid-indicator {
+  display: none;
+}
+/* line 19, ../scss/_form_elements.scss */
 .formelement .form-element-description {
   color: #5c5c5c;
   font-size: 0.9em;
+}
+
+/* line 26, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput,
+.formelement.formuserinput {
+  /* Meta-Author input styles */
+}
+/* line 29, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput .form-element-value,
+.formelement.formuserinput .form-element-value {
+  position: relative;
+}
+/* line 32, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput .form-element-value input,
+.formelement.formuserinput .form-element-value input {
+  padding-left: 24px;
+  width: 93%;
+}
+/* line 36, ../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator,
+.formelement.formpagemetaauthorinput .form-element-value .user-indicator,
+.formelement.formuserinput .form-element-value .meta-author-indicator,
+.formelement.formuserinput .form-element-value .user-indicator {
+  position: absolute;
+  left: 8px;
+  top: 4px;
 }
 
 /*****************************************************************************

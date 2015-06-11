@@ -7,8 +7,37 @@
 		margin-bottom: 0.20em;
 	}
 
+	&.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator,
+	&.formuserinput.user-valid .user-invalid-indicator {
+		display: none;
+	}
+	&.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator,
+	&.formuserinput.user-invalid .user-valid-indicator{
+		display: none;
+	}
+
 	.form-element-description {
 		color: lighten($dark-gray, 16%);
 		font-size: $base-font-size * .9;
+	}
+}
+
+
+.formelement.formpagemetaauthorinput,
+.formelement.formuserinput {
+	/* Meta-Author input styles */
+	.form-element-value {
+		position: relative;
+
+		input {
+			padding-left: 24px;
+			width: 93%;
+		}
+		.meta-author-indicator,
+		.user-indicator{
+			position: absolute;
+			left: 8px;
+			top: 4px;
+		}
 	}
 }
