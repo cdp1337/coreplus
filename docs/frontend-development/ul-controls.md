@@ -37,7 +37,7 @@ Context controls do support a few options, which are specified in the &lt;ul/&gt
 * data-proxy-text
 	* Set to the string of the proxy to use beside the icon.
 * data-proxy-force
-	* Set to "0" or "1" to force the use of the proxy.
+	* Set to "0" to force no proxy, or "1" to force the proxy.
 * data-proxy-icon-animation
 	* Set to "spin", "bounce", "float", or any of the other supported font-awesome animations
 	to make the proxy icon animated on page load and mouse over.

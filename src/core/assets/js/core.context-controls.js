@@ -4,7 +4,7 @@ $(function(){
 			proxyIcon: 'cog',
 			proxyIconAnimation: 'spin',
 			proxyText: 'Controls',
-			proxyforce: false,
+			proxyforce: null,
 			position: 'right'
 		},
 		$currentopen = null,
@@ -26,7 +26,7 @@ $(function(){
 				proxyForce: $original.data('proxy-force'),
 				position: $original.data('position'),
 				proxyIconAnimation: $original.data('proxy-icon-animation')
-			}, i, proxyclass;
+			}, i, proxyclass, useProxy;
 
 		// Legacy options.
 		if($original.data('spin')){
@@ -76,7 +76,19 @@ $(function(){
 		$original.hide();
 
 		// If there are more than 3 options, hide the rest.
-		if(controlcount > 3 || options.proxyForce){
+		if (
+			(options.proxyForce === null && controlcount > 3) ||
+			options.proxyForce === true ||
+			options.proxyForce === 1 ||
+			options.proxyForce === '1'
+		) {
+			useProxy = true;
+		}
+		else {
+			useProxy = false;
+		}
+
+		if(useProxy){
 
 			proxyclass = 'controls-proxy-icon icon-' + options.proxyIcon;
 			if(options.proxyIconAnimation){

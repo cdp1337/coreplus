@@ -36,6 +36,8 @@
  *   * If baseurl is requested, this can be an ID, string, object, or anything else that the hook should pass along with the request.
  * * hover
  *   * Set to "0" to disable hover functionality in the UI.
+ * * proxy-force
+ *   * Set to "0" to disallow a proxy and "1" to force a proxy.
  *
  * #### Example Usage
  *
@@ -98,6 +100,10 @@ function smarty_function_controls($params, $smarty){
 	$controls = new ViewControls();
 	$controls->hovercontext = $hover;
 	$controls->addLinks($links);
+
+	if(isset($params['proxy-force'])){
+		$controls->setProxyForce($params['proxy-force']);
+	}
 
 	echo $controls->fetch();
 }
