@@ -33,7 +33,7 @@
 </span>
 
 <table class="listing" id="core-list">
-	<tr type="core">
+	<tr data-type="core">
 		<td>Core {$core->getVersion()}</td>
 		<td>
 			<a href="#" class="update-link perform-update" style="display:none;">Update</a>
@@ -51,7 +51,7 @@
 	</tr>
 	{foreach from=$components item=c}
 		{if $c->isEnabled() && !$c->isReady()}
-			<tr componentname="{$c->getKeyName()}" type="components">
+			<tr data-name="{$c->getKeyName()}" data-type="components">
 				<td colspan="4">
 					<p class="message-error">
 						Errors with {$c->getName()} {$c->getVersion()}
@@ -62,7 +62,7 @@
 				</td>
 			</tr>
 		{else}
-			<tr componentname="{$c->getKeyName()}" type="components">
+			<tr data-name="{$c->getKeyName()}" data-type="components">
 				<td>{$c->getName()}</td>
 				<td>{$c->getVersion()}</td>
 				<td>
@@ -80,7 +80,7 @@
 						{if $c->isInstalled()}
 							<a href="#" class="enable-link">Enable</a>
 						{else}
-							<a href="#" class="perform-update" type="components" name="{$c->getName()}" version="{$c->getVersion()}">Install</a>
+							<a href="#" class="perform-update" data-type="components" data-name="{$c->getKeyName()}" data-version="{$c->getVersion()}">Install</a>
 						{/if}
 					{/if}
 				</td>
@@ -101,7 +101,7 @@
 			<th>&nbsp;</th>
 		</tr>
 		{foreach from=$themes item=t}
-			<tr themename="{$t->getKeyName()}" type="themes">
+			<tr data-name="{$t->getKeyName()}" data-type="themes">
 				<td>{$t->getName()}</td>
 				<td>{$t->getVersion()}</td>
 				<td>

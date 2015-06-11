@@ -129,27 +129,27 @@ Updater = {};
 
 		if(testupdater){
 			$l = $coretable.find('.update-link');
-			$l.html('Update to 99.1337 (TEST)').show();
-			$l.attr('version', '99.1337~(TEST)').attr('type', 'core').attr('name', 'core');
+			$l.html('Update to 99.1337 (test)').show();
+			$l.data('version', '99.1337~(test)').data('type', 'core').data('name', 'core');
 		}
 
 		// Since this table will contain only components that are actually updatable.. I can do this.
 		for( i in packages.components){
 			// Find the update link in the tr
-			$l = $ctable.find('tr[componentname="' + i + '"]').find('.update-link');
+			$l = $ctable.find('tr[data-type=components][data-name="' + i + '"]').find('.update-link');
 			// Set the text and show it
 			$l.html('Update to ' + packages.components[i].version).show();
 			// Set the version number so the called script knows what version to get
-			$l.attr('version', packages.components[i].version).attr('type', 'components').attr('name', packages.components[i].name);
+			$l.data('version', packages.components[i].version).data('type', 'components').data('name', packages.components[i].name);
 		}
 
 		for( i in packages.themes){
 			// Find the update link in the tr
-			$l = $ttable.find('tr[themename="' + i + '"]').find('.update-link');
+			$l = $ttable.find('tr[data-type=themes][data-name="' + i + '"]').find('.update-link');
 			// Set the text and show it
 			$l.html('Update to ' + packages.themes[i].version).show();
 			// Set the version number so the called script knows what version to get
-			$l.attr('version', packages.themes[i].version).attr('type', 'themes').attr('name', packages.themes[i].name);
+			$l.data('version', packages.themes[i].version).data('type', 'themes').data('name', packages.themes[i].name);
 		}
 
 		if(typeof packages.core != 'undefined' && packages.core){
@@ -158,7 +158,7 @@ Updater = {};
 			// Set the text and show it
 			$l.html('Update to ' + packages.core.version).show();
 			// Set the version number so the called script knows what version to get
-			$l.attr('version', packages.core.version).attr('type', 'core').attr('name', 'core');
+			$l.data('version', packages.core.version).data('type', 'core').data('name', 'core');
 		}
 	};
 
@@ -183,21 +183,21 @@ Updater = {};
 			version = cur.version;
 
 			// Skip components that are not updated.
-			if(cur.status == 'downgrade') continue;
+			if(cur.status === 'downgrade') continue;
 
 			html = '<tr><td>' + cur.title + '</td><td>' + version + '</td>';
-			if(cur.status == 'installed'){
+			if(cur.status === 'installed'){
 				// Don't bother displaying installed packages.. that's what the updater is for!
 				continue;
-				html += '<td>Installed</td>';
+				//html += '<td>Installed</td>';
 			}
-			else if(cur.status == 'new'){
+			else if(cur.status === 'new'){
 				html += '<td><a href="#" class="perform-update" type="components" name="' + name + '" version="' + version + '">Install</a></td>';
 			}
-			else if(cur.status == 'update'){
+			else if(cur.status === 'update'){
 				// Don't bother displaying installed packages.. that's what the updater is for!
 				continue;
-				html += '<td><a href="#" class="perform-update" type="components" name="' + name + '" version="' + version + '">Update</a></td>';
+				//html += '<td><a href="#" class="perform-update" type="components" name="' + name + '" version="' + version + '">Update</a></td>';
 			}
 			else{
 				html += '<td>' + cur.status + '</td>';
@@ -207,7 +207,7 @@ Updater = {};
 			$componentstable.append(html);
 			++counter;
 		}
-		if(counter == 0){
+		if(counter === 0){
 			$componentstable.append('<tr><td colspan="3">No new components available</td></tr>');
 		}
 
@@ -220,21 +220,21 @@ Updater = {};
 			version = cur.version;
 
 			// Skip components that are not updated.
-			if(cur.status == 'downgrade') continue;
+			if(cur.status === 'downgrade') continue;
 
 			html = '<tr><td>' + cur.title + '</td><td>' + version + '</td>';
-			if(cur.status == 'installed'){
+			if(cur.status === 'installed'){
 				// Don't bother displaying installed packages.. that's what the updater is for!
 				continue;
-				html += '<td>Installed</td>';
+				//html += '<td>Installed</td>';
 			}
-			else if(cur.status == 'new'){
+			else if(cur.status === 'new'){
 				html += '<td><a href="#" class="perform-update" type="themes" name="' + name + '" version="' + version + '">Install</a></td>';
 			}
-			else if(cur.status == 'update'){
+			else if(cur.status === 'update'){
 				// Don't bother displaying installed packages.. that's what the updater is for!
 				continue;
-				html += '<td><a href="#" class="perform-update" type="themes" name="' + name + '" version="' + version + '">Update</a></td>';
+				//html += '<td><a href="#" class="perform-update" type="themes" name="' + name + '" version="' + version + '">Update</a></td>';
 			}
 			else{
 				html += '<td>' + cur.status + '</td>';
@@ -244,7 +244,7 @@ Updater = {};
 			$themestable.append(html);
 			++counter;
 		}
-		if(counter == 0){
+		if(counter === 0){
 			$themestable.append('<tr><td colspan="3">No new themes available</td></tr>');
 		}
 
@@ -293,13 +293,13 @@ Updater = {};
 
 		switch(type){
 			case 'components':
-				url = Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version;
+				url = Core.ROOT_WDIR + 'updater/component/install/' + name + '?version=' + version;
 				break;
 			case 'themes':
-				url = Core.ROOT_WDIR + 'updater/theme/install/' + name + '/' + version;
+				url = Core.ROOT_WDIR + 'updater/theme/install/' + name + '?version=' + version;
 				break;
 			case 'core':
-				url = Core.ROOT_WDIR + 'updater/core/install/' + version;
+				url = Core.ROOT_WDIR + 'updater/core/install?version=' + version;
 				break;
 			default:
 				alert('Invalid type, ' + type);
@@ -311,12 +311,12 @@ Updater = {};
 			$terminal = $('#terminal');
 			$form = $terminaldiv.find('form');
 
-			$form.attr('action', url + '?verbose=1');
+			$form.attr('action', url + '&verbose=1');
 		}
 		else{
 			// Create an iframe to contain the progress.
 			$terminal = $('<iframe name="terminal" id="terminal"></iframe>');
-			$form = $('<form action="' + url + '?verbose=1" method="POST" target="terminal"></form>');
+			$form = $('<form action="' + url + '&verbose=1" method="POST" target="terminal"></form>');
 
 			$terminal.load(function(){
 				var $body = $(this).contents().find('body'),
@@ -392,8 +392,8 @@ Updater = {};
 		$('.disable-link, .enable-link').click(function(){
 			var $this = $(this),
 				$tr = $this.closest('tr'),
-				name = $tr.attr('componentname'),
-				action = ($this.text() == 'Enable') ? 'enable' : 'disable';
+				name = $tr.data('name'),
+				action = ($this.text() === 'Enable') ? 'enable' : 'disable';
 
 			// Cancel the last request.
 			if(xhr !== null) xhr.abort();
@@ -414,7 +414,7 @@ Updater = {};
 					// or if there's only one.
 					if(
 						(r.changes.length > 1 && confirm('The following components will be ' + action + 'd: \n\n' + r.changes.join('\n')) ) ||
-							(r.changes.length == 1)
+							(r.changes.length === 1)
 						){
 						xhr = $.ajax({
 							url: Core.ROOT_WDIR + 'updater/component/' + action + '/' + name + '?dryrun=0',
@@ -440,9 +440,9 @@ Updater = {};
 
 		$('body').delegate('.perform-update', 'click', function(){
 			var $this   = $(this),
-				name    = $this.attr('name'),
-				version = $this.attr('version'),
-				type    = $this.attr('type'),
+				name    = $this.data('name'),
+				version = $this.data('version'),
+				type    = $this.data('type'),
 				url     = null;
 
 			// Cancel the last request.
@@ -450,13 +450,13 @@ Updater = {};
 
 			switch(type){
 				case 'components':
-					url = Core.ROOT_WDIR + 'updater/component/install/' + name + '/' + version;
+					url = Core.ROOT_WDIR + 'updater/component/install/' + name + '?version=' + version;
 					break;
 				case 'themes':
-					url = Core.ROOT_WDIR + 'updater/theme/install/' + name + '/' + version;
+					url = Core.ROOT_WDIR + 'updater/theme/install/' + name + '?version=' + version;
 					break;
 				case 'core':
-					url = Core.ROOT_WDIR + 'updater/core/install/' + version;
+					url = Core.ROOT_WDIR + 'updater/core/install?version=' + version;
 					break;
 				default:
 					alert('Invalid type, ' + type);
@@ -464,14 +464,14 @@ Updater = {};
 			}
 
 			// Give some useful feedback to the user.
-			if(!$this.attr('original-text')){
-				$this.attr('original-text', $this.text());
+			if(!$this.data('original-text')){
+				$this.data('original-text', $this.text());
 			}
 			$this.html($('#loading-replacement-text').html());
 
 			// Do a dry run
 			xhr = $.ajax({
-				url: url + '?dryrun=1',
+				url: url + '&dryrun=1',
 				type: 'POST',
 				dataType: 'json',
 				success: function(r){
@@ -479,7 +479,7 @@ Updater = {};
 
 					// This system returns a "status" field.
 					if(!r.status){
-						$this.html($this.attr('original-text'));
+						$this.html($this.data('original-text'));
 						$this.removeAttr('original-text');
 
 						// and a message.
@@ -500,7 +500,7 @@ Updater = {};
 
 
 
-					$this.html($this.attr('original-text'));
+					$this.html($this.data('original-text'));
 					$this.removeAttr('original-text');
 
 					if(confirm(msg)){
@@ -508,7 +508,7 @@ Updater = {};
 					}
 				},
 				error: function(jqxhr, data, error){
-					$this.html($this.attr('original-text'));
+					$this.html($this.data('original-text'));
 					$this.removeAttr('original-text');
 
 					alert(error);
