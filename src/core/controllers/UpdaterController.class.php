@@ -702,8 +702,8 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 		$req = $this->getPageRequest();
 
-		$name    = strtolower($req->getParameter(0));
-		$version = $req->getParameter(1);
+		$name    = $req->getParameter(0);
+		$version = $req->getParameter('version');
 
 		$this->_performInstall('components', $name, $version);
 	}
@@ -715,8 +715,8 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 		$req  = $this->getPageRequest();
 
-		$name    = strtolower($req->getParameter(0));
-		$version = $req->getParameter(1);
+		$name    = $req->getParameter(0);
+		$version = $req->getParameter('version');
 
 		$this->_performInstall('themes', $name, $version);
 	}
@@ -728,7 +728,7 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 		$req  = $this->getPageRequest();
 
-		$version = $req->getParameter(0);
+		$version = $req->getParameter('version');
 
 		$this->_performInstall('core', 'core', $version);
 	}
