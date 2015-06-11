@@ -71,13 +71,21 @@
 		// On changing the username, the authorid should be blanked out automatically!
 		//$element.change(function(){
 		$element.keyup(function(){
+			var ev = $element.val();
 
 			// The key did not cause a change, just return.
-			if(lastval == $element.val()) return;
+			if(lastval == ev) return;
+			lastval = ev;
 
-			$hidden.val('');
-			$parent.removeClass('user-valid').addClass('user-invalid');
-			lastval = $element.val();
+			if(ev.indexOf('@') != -1 && ev.indexOf('.') != -1){
+				// Allow entering an email address instead.
+				$hidden.val(ev);
+				$parent.removeClass('user-invalid').addClass('user-valid');
+			}
+			else{
+				$hidden.val('');
+				$parent.removeClass('user-valid').addClass('user-invalid');
+			}
 		});
 
 		// Initial load
