@@ -437,11 +437,11 @@ class ViewControl implements ArrayAccess {
 		// Start by grabbing the "other" attributes, these will get overwrote with the specific elements.
 		$dat = $this->otherattributes;
 
-		if($this->confirm){
-			$dat['onclick'] = "if(confirm('" . str_replace(["'", '"'], ["\\'", '&quot;'], $this->confirm) . "')){" .
-				"Core.PostURL('" . str_replace(["'", '"'], ["\\'", '&quot;'], Core::ResolveLink($this->link)) . "');" .
-				"} return false; ";
-			$dat['href'] = '#';
+		if($this->confirm !== null){
+			$dat['onclick'] = 'return Core.ConfirmEvent(this);';
+			$dat['data-href'] = Core::ResolveLink($this->link);
+			$dat['data-confirm'] = $this->confirm;
+			$dat['href'] = '#false';
 		}
 		else{
 			$dat['href'] = $this->link;
