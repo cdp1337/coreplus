@@ -4,7 +4,7 @@ $(function(){
 			proxyIcon: 'cog',
 			proxyIconAnimation: 'spin',
 			proxyText: 'Controls',
-			proxyforce: null,
+			proxyForce: null,
 			position: 'right'
 		},
 		$currentopen = null,
@@ -40,7 +40,7 @@ $(function(){
 		}
 
 		for(i in options){
-			if(options[i] == undefined){
+			if(options[i] === undefined){
 				options[i] = defaults[i];
 			}
 		}
