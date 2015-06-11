@@ -321,6 +321,25 @@ required - SSL is always required for all pages.
 		</value>
 		</define>
 	-->
+
+	<define name="DMI_QUERY_LOG_TIMEOUT" type="int" formtype="text">
+		<value>-1</value>
+		<description>
+			Set to a number >= 0 to record queries that take that long in milliseconds to execute.  AKA "slow query log".
+			&lt;br/&gt;
+			(Hint, most reads should complete within 4ms and writes should complete within 10ms, otherwise something may be wrong with the server.)
+			&lt;br/&gt;&lt;br/&gt;
+			&lt;ul&gt;
+			&lt;li&gt;Set to "-1" to disable query logging altogether (default)&lt;/li&gt;
+			&lt;li&gt;Set to "0" to log all queries to logs/query.log&lt;/li&gt;
+			&lt;li&gt;Set to "10" to log queries taking longer than 10ms to logs/query.log&lt;/li&gt;
+			&lt;li&gt;Set to "1000" to log queries taking longer than 1 second to logs/query.log&lt;/li&gt;
+			&lt;li&gt;Set to "2000" to log queries taking longer than 2 seconds to logs/query.log&lt;/li&gt;
+			&lt;li&gt;etc...&lt;/li&gt;
+			&lt;/ul&gt;
+		</description>
+	</define>
+
 	<define name="DEFAULT_DIRECTORY_PERMS" type="octal" formtype="text">
 		<value>0755</value>
 		<description>
