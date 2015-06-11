@@ -132,36 +132,58 @@ class UserAgent {
 	 * @var string Full string of the useragent
 	 */
 	public $useragent                    = null;
+
 	/**
 	 * @var string Parent user agent, can generally be safely ignored.
 	 */
 	public $parent                       = null;
+
 	/**
-	 * @var string Operating system version,
+	 * @var string Comment, can generally be ignored.
 	 */
-	public $platform_version             = null;
 	public $comment                      = null;
+
 	/**
 	 * @var string The name of the user agent, ie: "Firefox", "Chrome", etc.
 	 */
 	public $browser                      = null;
+
 	/**
 	 * @var float Full version of the user agent
 	 */
 	public $version                      = 0.0;
+
 	/**
 	 * @var int Major version of the user agent
 	 */
 	public $major_ver                    = 0;
+
 	/**
 	 * @var int Minor version of the user agent
 	 */
 	public $minor_ver                    = 0;
+
 	/**
 	 * @var string Operating System, (or platform), of the host.
-	 * Example: "Linux", "Win7", "Win8", etc.
+	 * Example: "Linux", "Windows", "MacOSX", etc.
 	 */
 	public $platform                     = null;
+
+	/**
+	 * @var string Operating system version,
+	 */
+	public $platform_version             = null;
+
+	/**
+	 * @var string OS architecture, eg: x86, powerpc, risc, etc.
+	 */
+	public $platform_architecture        = null;
+
+	/**
+	 * @var string bit address space, generally 8, 16, 32, or 64.
+	 */
+	public $platform_bits                = null;
+
 	/**
 	 * @var bool true/false if frames are supported.
 	 */
@@ -270,14 +292,14 @@ class UserAgent {
 		// This will also return the cached data.
 		$data = self::_LoadData();
 
-		$browser = array();
+		$browser = [];
 		foreach ($data['patterns'] as $key => $pattern) {
 			if (preg_match($pattern . 'i', $useragent)) {
-				$browser = array(
+				$browser = [
 					$useragent, // Original useragent
 					trim(strtolower($pattern), self::REGEX_DELIMITER),
 					$data['useragents'][$key]
-				);
+				];
 
 				$browser = $value = $browser + $data['browsers'][$key];
 
@@ -312,10 +334,122 @@ class UserAgent {
 
 		// Try to guess if there are still empty slots!
 		if($this->platform == 'unknown'){
-			if(stripos($this->useragent, 'linux') !== false){
+			if(stripos($this->useragent, 'Ubuntu') !== false){
+				// Ubuntu has a useragent of "Ubuntu; Linux x86_64"
+				$this->platform = 'Ubuntu';
+			}
+			elseif(stripos($this->useragent, 'linux') !== false){
+				// Generic Linux OS
 				$this->platform = 'Linux';
 			}
+			elseif(stripos($this->useragent, 'windows nt 5.0') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '5.0'; // February 17, 2000
+			}
+			elseif(stripos($this->useragent, 'windows nt 5.1') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '5.1'; // October 25, 2001
+			}
+			elseif(stripos($this->useragent, 'windows nt 5.2') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '5.2'; // March 28, 2003
+			}
+			elseif(stripos($this->useragent, 'windows nt 6.0') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '6.0'; // January 30, 2007
+			}
+			elseif(stripos($this->useragent, 'windows nt 6.1') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '6.1'; // October 22, 2009
+			}
+			elseif(stripos($this->useragent, 'windows nt 6.2') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '6.2'; // October 26, 2012
+			}
+			elseif(stripos($this->useragent, 'windows nt 6.3') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '6.3'; // October 18, 2013
+			}
+			elseif(stripos($this->useragent, 'windows nt 10') !== false){
+				$this->platform = 'Windows';
+				$this->platform_version = '10.0'; // July 29, 2015
+			}
+			elseif(stripos($this->useragent, 'windows phone 8.0') !== false){
+				$this->platform = 'Windows Phone';
+				$this->platform_version = '8.0';
+				$this->is_mobile_device = true;
+			}
 		}
+
+
+		// Remap some platform options around to make them more usable.
+		switch($this->platform){
+			case 'WinXP':
+				$this->platform = 'Windows';
+				$this->platform_version = '5.1';
+				break;
+			case 'WinVista':
+				$this->platform = 'Windows';
+				$this->platform_version = '6.0';
+				break;
+			case 'Win7':
+				$this->platform = 'Windows';
+				$this->platform_version = '6.1';
+				break;
+			case 'Win8':
+				$this->platform = 'Windows';
+				$this->platform_version = '6.2';
+				break;
+			case 'Win8.1':
+				$this->platform = 'Windows';
+				$this->platform_version = '6.3';
+				break;
+			case 'Win10':
+				$this->platform = 'Windows';
+				$this->platform_version = '10';
+				break;
+			case 'Linux':
+				if(strpos($this->useragent, 'Ubuntu') !== false){
+					$this->platform = 'Ubuntu';
+				}
+				break;
+			case 'MacOSX':
+				$this->platform_version = preg_replace('#.*Mac OS X ([0-9\.]+);.*#', '$1', $this->useragent);
+				break;
+			case 'Android':
+				$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+				break;
+		}
+
+
+		// Architecture bits?
+		if($this->platform_bits === null){
+			if($this->platform == 'Windows'){
+				if(strpos($this->useragent, 'WOW64') !== false){
+					$this->platform_bits = '64';
+				}
+				else{
+					$this->platform_bits = '32';
+				}
+			}
+			elseif($this->platform == 'Linux'){
+				if(strpos($this->useragent, 'x86_64') !== false){
+					$this->platform_bits = '64';
+					$this->platform_architecture = 'x86';
+				}
+				elseif(strpos($this->useragent, 'x86') !== false){
+					$this->platform_bits = '32';
+					$this->platform_architecture = 'x86';
+				}
+			}
+			elseif($this->platform == 'MacOSX'){
+				if(strpos($this->useragent, 'Intel Mac') !== false){
+					$this->platform_architecture = 'x86';
+				}
+			}
+		}
+
+
 		if($this->browser == 'Default Browser'){
 			if(stripos($this->useragent, 'firefox/') !== false){
 				$this->browser = 'Firefox';
@@ -335,20 +469,46 @@ class UserAgent {
 				$this->iframes = true;
 				$this->crawler = true;
 			}
+			elseif(stripos($this->useragent, 'msie ') !== false){
+				$this->browser = 'IE';
+				$this->javascript = true;
+				$this->cookies = true;
+				$this->tables = true;
+				$this->frames = true;
+				$this->iframes = true;
+
+				$this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
+			}
 		}
+
 		if($this->version == 0.0){
 			if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
 				$this->version = preg_replace('#.*' . $this->browser . '/([0-9\.]+).*#', '$1', $this->useragent);
-				$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
-				$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
 			}
 		}
+
+		if($this->major_ver == 0){
+			$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
+			$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
+
+			// Remove extra version strings from Chrome, (ex: 18.0.1025.166)
+			if(strpos($this->minor_ver, '.') !== false){
+				$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
+			}
+		}
+
 		if($this->rendering_engine_name == 'unknown' || $this->rendering_engine_name == null){
 			if(stripos($this->useragent, 'gecko/') !== false){
 				$this->rendering_engine_name = 'Gecko';
+				$this->rendering_engine_version = preg_replace('#.*Gecko/([0-9\.]+).*#i', '$1', $this->useragent);
 			}
-			elseif(stripos($this->useragent, 'AppleWebKit/')){
+			elseif(stripos($this->useragent, 'AppleWebKit/') !== false){
 				$this->rendering_engine_name = 'WebKit';
+				$this->rendering_engine_version = preg_replace('#.*AppleWebKit/([0-9\.]+).*#i', '$1', $this->useragent);
+			}
+			elseif(stripos($this->useragent, 'trident/') !== false){
+				$this->rendering_engine_name = 'Trident';
+				$this->rendering_engine_version = preg_replace('#.*trident/([0-9\.]+).*#i', '$1', $this->useragent);
 			}
 		}
 	}
@@ -375,7 +535,7 @@ class UserAgent {
 	 * Get this user agent as an associative array.
 	 */
 	public function asArray(){
-		$ret = array();
+		$ret = [];
 		$ret['useragent'] = $this->useragent;
 
 		foreach(self::$Map as $k => $v){
@@ -475,8 +635,8 @@ class UserAgent {
 			$user_agents_keys = array_flip($uas);
 			$properties_keys = array_flip($properties);
 
-			$search = array('\*', '\?');
-			$replace = array('.*', '.');
+			$search = ['\*', '\?'];
+			$replace = ['.*', '.'];
 
 			foreach ($uas as $user_agent) {
 				$browser = [];
