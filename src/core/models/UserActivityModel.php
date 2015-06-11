@@ -16,7 +16,8 @@ class UserActivityModel extends Model{
 
 	public static $Schema = array(
 		'datetime' => array(
-			'type' => Model::ATT_TYPE_CREATED
+			'type' => Model::ATT_TYPE_FLOAT,
+			'precision' => '16,4',
 		),
 		'session_id' => array(
 			'type' => Model::ATT_TYPE_STRING,
