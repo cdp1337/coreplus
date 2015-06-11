@@ -202,10 +202,10 @@ class Session implements SessionHandlerInterface {
 	 * Force the saving of the contents of $_SESSION back to the database.
 	 */
 	public static function ForceSave(){
-		$session = self::$Instance;
+		/*$session = self::$Instance;
 		if($session){
 			$session->write(session_id(), serialize($_SESSION));
-		}
+		}*/
 	}
 
 	/**

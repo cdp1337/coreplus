@@ -432,7 +432,6 @@ function redirect($page, $code = 302){
 	// Just before the page stops execution...
 	\HookHandler::DispatchHook('/core/page/postrender');
 
-	\Session::ForceSave();
 	die('If your browser does not refresh, please <a href="' . $page . '">Click Here</a>');
 }
 
@@ -455,7 +454,6 @@ function reload(){
 	// Just before the page stops execution...
 	\HookHandler::DispatchHook('/core/page/postrender');
 
-	\Session::ForceSave();
 	die('If your browser does not refresh, please <a href="' . CUR_CALL . '">Click Here</a>');
 }
 
