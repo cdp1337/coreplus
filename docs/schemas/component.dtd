@@ -59,7 +59,7 @@ type CDATA #IMPLIED
 <!ELEMENT require EMPTY>
 <!ATTLIST require
 	name CDATA #REQUIRED
-	type CDATA #REQUIRED
+	type (component|define|function|jslibrary|library) #REQUIRED
 	version CDATA #IMPLIED
 	operation (lt|le|eq|ge|gt) "ge"
 	>

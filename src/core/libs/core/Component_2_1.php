@@ -1122,6 +1122,14 @@ class Component_2_1 {
 						$this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
 					}
 					break;
+				case 'function':
+					// Requires a specific function to exist.  This is most common with built-in PHP functions,
+					// such as gd, ldap, or imap support.
+					if(!function_exists($r['name'])){
+						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
+						$this->errstrs[] = 'Requires missing function ' . $r['name'];
+					}
+					break;
 				case 'define':
 					// Ensure that whatever define the script is expecting is there... this is useful for the EXEC_MODE define.
 					if (!defined($r['name'])) {
