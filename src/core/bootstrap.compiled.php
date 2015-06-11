@@ -11,11 +11,11 @@
  *
  * @package Core\Core
  * @since 2.1.5
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 05 Jun 2015 21:58:55 -0400
+ * @compiled Thu, 11 Jun 2015 17:54:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -153,6 +153,181 @@ self::$_DefaultProfiler = $profiler;
 }
 else{
 self::$_DefaultProfiler = new self('Default');
+}
+}
+return self::$_DefaultProfiler;
+}
+}
+} // ENDING NAMESPACE Core\Utilities\Profiler
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/utilities/profiler/DatamodelProfiler.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Utilities\Profiler {
+class DatamodelProfiler {
+private $_name;
+private $_events = [];
+private $_last = [];
+private static $_DefaultProfiler;
+private $_reads = 0;
+private $_writes = 0;
+public function __construct($name){
+$this->_name = $name;
+if(self::$_DefaultProfiler === null){
+self::$_DefaultProfiler = $this;
+}
+}
+public function readCount(){
+return $this->_reads;
+}
+public function writeCount(){
+return $this->_writes;
+}
+public function start($type, $query){
+if(FULL_DEBUG || (DEVELOPMENT_MODE && sizeof($this->_events) < 40)){
+$debug = debug_backtrace();
+$callinglocation = array();
+$count = 0;
+$totalcount = 0;
+foreach($debug as $d){
+$class = (isset($d['class'])) ? $d['class'] : null;
+++$totalcount;
+if(strpos($class, 'Core\\Datamodel') === 0) continue;
+if(strpos($class, 'Core\\Utilities\\Profiler') === 0) continue;
+if($class == 'Model') continue;
+$file = (isset($d['file'])) ? (substr($d['file'], strlen(ROOT_PDIR))) : 'anonymous';
+$line = (isset($d['line'])) ? (':' . $d['line']) : '';
+$func = ($class !== null) ? ($d['class'] . $d['type'] . $d['function']) : $d['function'];
+$callinglocation[] = $file . $line . ', [' . $func . '()]';
+++$count;
+if($count >= 3 && sizeof($debug) >= $totalcount + 2){
+$callinglocation[] = '...';
+break;
+}
+}
+}
+else{
+$callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
+}
+$this->_last[] = [
+'start' => microtime(true),
+'type' => $type,
+'query' => $query,
+'caller' => $callinglocation,
+'memory'  => memory_get_usage(true),
+];
+}
+public function stopSuccess($count){
+if(sizeof($this->_last) == 0){
+return;
+}
+$last = array_pop($this->_last);
+$time = microtime(true) - $last['start'];
+$timeFormatted = $this->getTimeFormatted($time);
+$this->_events[] = array(
+'query'  => $last['query'],
+'type'   => $last['type'],
+'time'   => $timeFormatted,
+'errno'  => null,
+'error'  => '',
+'caller' => $last['caller'],
+'rows'   => $count
+);
+if($last['type'] == 'read'){
+++$this->_reads;
+}
+else{
+++$this->_writes;
+}
+if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
+if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
+\Core\Utilities\Logger\append_to('query', '[' . $timeFormatted . '] ' . $last['query'], 0);
+}
+}
+}
+public function stopError($code, $error){
+if(sizeof($this->_last) == 0){
+return;
+}
+$last = array_pop($this->_last);
+$time = microtime(true) - $last['start'];
+$timeFormatted = $this->getTimeFormatted($time);
+$this->_events[] = array(
+'query'  => $last['query'],
+'type'   => $last['type'],
+'time'   => $timeFormatted,
+'errno'  => $code,
+'error'  => $error,
+'caller' => $last['caller'],
+'rows'   => 0
+);
+if($last['type'] == 'read'){
+++$this->_reads;
+}
+else{
+++$this->_writes;
+}
+if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
+if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
+\Core\Utilities\Logger\append_to('query', '[' . $timeFormatted . '] ' . $last['query'], 0);
+}
+}
+}
+public function getEvents(){
+return $this->_events;
+}
+public function getTimeFormatted($time){
+if($time < 0.001){
+return round($time, 4) * 1000000 . ' µs';
+}
+elseif($time < 2.0){
+return round($time, 4) * 1000 . ' ms';
+}
+elseif($time < 120){
+return round($time, 0) . ' s';
+}
+elseif($time < 3600) {
+$m = round($time, 0) / 60;
+$s = round($time - $m*60, 0);
+return $m . ' m ' . $s . ' s';
+}
+else{
+$h = round($time, 0) / 3600;
+$m = round($time - $h*3600, 0);
+return $h . ' h ' . $m . ' m';
+}
+}
+public function getEventTimesFormatted(){
+$out = '';
+$ql = $this->getEvents();
+$qls = sizeof($this->_events);
+foreach($ql as $i => $dat){
+if($i > 1000){
+$out .= 'Plus ' . ($qls - 1000) . ' more!' . "\n";
+break;
+}
+$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
+$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
+$type   = $dat['type'];
+$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
+$query  = $dat['query'];
+$caller = print_r($dat['caller'], true);
+if($dat['rows'] !== null){
+$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
+}
+$out .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time}] $query</span>\n";
+}
+return $out;
+}
+public static function GetDefaultProfiler(){
+if(self::$_DefaultProfiler === null){
+global $datamodelprofiler;
+if($datamodelprofiler){
+self::$_DefaultProfiler = $datamodelprofiler;
+}
+else{
+self::$_DefaultProfiler = new self('Query Log');
 }
 }
 return self::$_DefaultProfiler;
@@ -1123,16 +1298,12 @@ define('__DMI_PDIR', ROOT_PDIR . 'core/libs/core/datamodel/');
 namespace Core\Datamodel {
 interface BackendInterface {
 public function execute(Dataset $dataset);
-public function _rawExecute($type, $string);
 public function tableExists($tablename);
 public function createTable($table, Schema $schema);
 public function modifyTable($table, Schema $schema);
 public function dropTable($table);
 public function describeTable($table);
 public function showTables();
-public function readCount();
-public function writeCount();
-public function queryLog();
 }
 } // ENDING NAMESPACE Core\Datamodel
 
@@ -1305,8 +1476,11 @@ else throw new \DMI_Exception('Invalid amount of parameters requested for Datase
 return $this;
 }
 public function execute($interface = null){
-if(!$interface) $interface = \DMI::GetSystemDMI();
-$interface->connection()->execute($this);
+if(!$interface){
+$dmi = \DMI::GetSystemDMI();
+$interface = $dmi->connection();
+}
+$interface->execute($this);
 if( $this->_data === null && $this->_mode == Dataset::MODE_GET ){
 $this->_data = [];
 reset($this->_data);
@@ -3458,10 +3632,6 @@ self::$Instance->destroy(session_id());
 }
 }
 public static function ForceSave(){
-$session = self::$Instance;
-if($session){
-$session->write(session_id(), serialize($_SESSION));
-}
 }
 public static function CleanupExpired(){
 static $lastexecuted = 0;
@@ -7325,6 +7495,12 @@ $this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
 $this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
 }
 break;
+case 'function':
+if(!function_exists($r['name'])){
+$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
+$this->errstrs[] = 'Requires missing function ' . $r['name'];
+}
+break;
 case 'define':
 if (!defined($r['name'])) {
 $this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
@@ -8301,7 +8477,6 @@ header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Ge
 header('HTTP/1.1 ' . $movetext);
 header('Location: ' . $page);
 \HookHandler::DispatchHook('/core/page/postrender');
-\Session::ForceSave();
 die('If your browser does not refresh, please <a href="' . $page . '">Click Here</a>');
 }
 function reload(){
@@ -8316,7 +8491,6 @@ header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Ge
 header('HTTP/1.1 302 Moved Temporarily');
 header('Location:' . CUR_CALL);
 \HookHandler::DispatchHook('/core/page/postrender');
-\Session::ForceSave();
 die('If your browser does not refresh, please <a href="' . CUR_CALL . '">Click Here</a>');
 }
 function go_back($depth=1) {
@@ -10070,16 +10244,34 @@ private function _resizeTo(Filestore\File $file, $width, $height, $mode){
 if(!$this->isImage()){
 return;
 }
+\Core\Utilities\Logger\write_debug('Resizing image ' . $this->getFilename('') . ' to ' . $width . 'x' . $height . $mode);
 $m = $this->getMimetype();
 $file->putContents('');
 if($m == 'image/gif' && exec('which convert 2>/dev/null')){
 $resize = escapeshellarg($mode . $width . 'x' . $height);
 exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
+\Core\Utilities\Logger\write_debug('Resizing complete (via convert)');
 return;
 }
 switch ($m) {
 case 'image/jpeg':
+$thumbType = 'JPEG';
+$thumbWidth = $width;
+$thumbHeight = $height;
+if($width <= 200 && $height <= 200){
+$img = exif_thumbnail($this->getFilename(), $thumbWidth, $thumbHeight, $thumbType);
+if($img){
+\Core\Utilities\Logger\write_debug('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
+$file->putContents($img);
+$img = imagecreatefromjpeg($file->getFilename());
+}
+else{
 $img = imagecreatefromjpeg($this->getFilename());
+}
+}
+else{
+$img = imagecreatefromjpeg($this->getFilename());
+}
 break;
 case 'image/png':
 $img = imagecreatefrompng($this->getFilename());
@@ -10088,6 +10280,7 @@ case 'image/gif':
 $img = imagecreatefromgif($this->getFilename());
 break;
 default:
+\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
 return;
 }
 if ($img) {
@@ -10152,14 +10345,18 @@ imagedestroy($img);
 switch ($m) {
 case 'image/jpeg':
 imagejpeg($img2, $file->getFilename(), 60);
+\Core\Utilities\Logger\write_debug('Resizing complete (via imagejpeg)');
 break;
 case 'image/png':
 imagepng($img2, $file->getFilename(), 9);
+\Core\Utilities\Logger\write_debug('Resizing complete (via imagepng)');
 break;
 case 'image/gif':
 imagegif($img2, $file->getFilename());
+\Core\Utilities\Logger\write_debug('Resizing complete (via imagegif)');
 break;
 default:
+\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
 return;
 }
 }
@@ -12243,11 +12440,11 @@ return $html;
 private function _fetchA(){
 if(!$this->link) return null;
 $dat = $this->otherattributes;
-if($this->confirm){
-$dat['onclick'] = "if(confirm('" . str_replace(["'", '"'], ["\\'", '&quot;'], $this->confirm) . "')){" .
-"Core.PostURL('" . str_replace(["'", '"'], ["\\'", '&quot;'], Core::ResolveLink($this->link)) . "');" .
-"} return false; ";
-$dat['href'] = '#';
+if($this->confirm !== null){
+$dat['onclick'] = 'return Core.ConfirmEvent(this);';
+$dat['data-href'] = Core::ResolveLink($this->link);
+$dat['data-confirm'] = $this->confirm;
+$dat['href'] = '#false';
 }
 else{
 $dat['href'] = $this->link;
@@ -13727,6 +13924,10 @@ return true;
 }
 public static function _AttachLessJS(){
 \Core\view()->addScript('js/less-1.7.1.js', 'head');
+return true;
+}
+public static function _AttachJSON(){
+\Core\view()->addScript ('js/json2.js', 'head');
 return true;
 }
 public static function VersionCompare($version1, $version2, $operation = null) {
@@ -15353,13 +15554,15 @@ public static $Map = [
 ];
 public $useragent                    = null;
 public $parent                       = null;
-public $platform_version             = null;
 public $comment                      = null;
 public $browser                      = null;
 public $version                      = 0.0;
 public $major_ver                    = 0;
 public $minor_ver                    = 0;
 public $platform                     = null;
+public $platform_version             = null;
+public $platform_architecture        = null;
+public $platform_bits                = null;
 public $frames                       = false;
 public $iframes                      = false;
 public $tables                       = false;
@@ -15389,14 +15592,14 @@ protected static $_Cache = [];
 public function __construct($useragent = null) {
 if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
 $data = self::_LoadData();
-$browser = array();
+$browser = [];
 foreach ($data['patterns'] as $key => $pattern) {
 if (preg_match($pattern . 'i', $useragent)) {
-$browser = array(
+$browser = [
 $useragent, // Original useragent
 trim(strtolower($pattern), self::REGEX_DELIMITER),
 $data['useragents'][$key]
-);
+];
 $browser = $value = $browser + $data['browsers'][$key];
 while (array_key_exists(3, $value) && $value[3]) {
 $value = $data['browsers'][$value[3]];
@@ -15422,8 +15625,110 @@ $this->$prop = $value;
 }
 }
 if($this->platform == 'unknown'){
-if(stripos($this->useragent, 'linux') !== false){
+if(stripos($this->useragent, 'Ubuntu') !== false){
+$this->platform = 'Ubuntu';
+}
+elseif(stripos($this->useragent, 'linux') !== false){
 $this->platform = 'Linux';
+}
+elseif(stripos($this->useragent, 'windows nt 5.0') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '5.0'; // February 17, 2000
+}
+elseif(stripos($this->useragent, 'windows nt 5.1') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '5.1'; // October 25, 2001
+}
+elseif(stripos($this->useragent, 'windows nt 5.2') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '5.2'; // March 28, 2003
+}
+elseif(stripos($this->useragent, 'windows nt 6.0') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '6.0'; // January 30, 2007
+}
+elseif(stripos($this->useragent, 'windows nt 6.1') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '6.1'; // October 22, 2009
+}
+elseif(stripos($this->useragent, 'windows nt 6.2') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '6.2'; // October 26, 2012
+}
+elseif(stripos($this->useragent, 'windows nt 6.3') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '6.3'; // October 18, 2013
+}
+elseif(stripos($this->useragent, 'windows nt 10') !== false){
+$this->platform = 'Windows';
+$this->platform_version = '10.0'; // July 29, 2015
+}
+elseif(stripos($this->useragent, 'windows phone 8.0') !== false){
+$this->platform = 'Windows Phone';
+$this->platform_version = '8.0';
+$this->is_mobile_device = true;
+}
+}
+switch($this->platform){
+case 'WinXP':
+$this->platform = 'Windows';
+$this->platform_version = '5.1';
+break;
+case 'WinVista':
+$this->platform = 'Windows';
+$this->platform_version = '6.0';
+break;
+case 'Win7':
+$this->platform = 'Windows';
+$this->platform_version = '6.1';
+break;
+case 'Win8':
+$this->platform = 'Windows';
+$this->platform_version = '6.2';
+break;
+case 'Win8.1':
+$this->platform = 'Windows';
+$this->platform_version = '6.3';
+break;
+case 'Win10':
+$this->platform = 'Windows';
+$this->platform_version = '10';
+break;
+case 'Linux':
+if(strpos($this->useragent, 'Ubuntu') !== false){
+$this->platform = 'Ubuntu';
+}
+break;
+case 'MacOSX':
+$this->platform_version = preg_replace('#.*Mac OS X ([0-9\.]+);.*#', '$1', $this->useragent);
+break;
+case 'Android':
+$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+break;
+}
+if($this->platform_bits === null){
+if($this->platform == 'Windows'){
+if(strpos($this->useragent, 'WOW64') !== false){
+$this->platform_bits = '64';
+}
+else{
+$this->platform_bits = '32';
+}
+}
+elseif($this->platform == 'Linux'){
+if(strpos($this->useragent, 'x86_64') !== false){
+$this->platform_bits = '64';
+$this->platform_architecture = 'x86';
+}
+elseif(strpos($this->useragent, 'x86') !== false){
+$this->platform_bits = '32';
+$this->platform_architecture = 'x86';
+}
+}
+elseif($this->platform == 'MacOSX'){
+if(strpos($this->useragent, 'Intel Mac') !== false){
+$this->platform_architecture = 'x86';
+}
 }
 }
 if($this->browser == 'Default Browser'){
@@ -15445,20 +15750,40 @@ $this->frames = true;
 $this->iframes = true;
 $this->crawler = true;
 }
+elseif(stripos($this->useragent, 'msie ') !== false){
+$this->browser = 'IE';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+$this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
+}
 }
 if($this->version == 0.0){
 if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
 $this->version = preg_replace('#.*' . $this->browser . '/([0-9\.]+).*#', '$1', $this->useragent);
+}
+}
+if($this->major_ver == 0){
 $this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
 $this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
+if(strpos($this->minor_ver, '.') !== false){
+$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
 }
 }
 if($this->rendering_engine_name == 'unknown' || $this->rendering_engine_name == null){
 if(stripos($this->useragent, 'gecko/') !== false){
 $this->rendering_engine_name = 'Gecko';
+$this->rendering_engine_version = preg_replace('#.*Gecko/([0-9\.]+).*#i', '$1', $this->useragent);
 }
-elseif(stripos($this->useragent, 'AppleWebKit/')){
+elseif(stripos($this->useragent, 'AppleWebKit/') !== false){
 $this->rendering_engine_name = 'WebKit';
+$this->rendering_engine_version = preg_replace('#.*AppleWebKit/([0-9\.]+).*#i', '$1', $this->useragent);
+}
+elseif(stripos($this->useragent, 'trident/') !== false){
+$this->rendering_engine_name = 'Trident';
+$this->rendering_engine_version = preg_replace('#.*trident/([0-9\.]+).*#i', '$1', $this->useragent);
 }
 }
 }
@@ -15469,7 +15794,7 @@ public function isMobile(){
 return $this->is_mobile_device;
 }
 public function asArray(){
-$ret = array();
+$ret = [];
 $ret['useragent'] = $this->useragent;
 foreach(self::$Map as $k => $v){
 $ret[$v] = $this->$v;
@@ -15528,8 +15853,8 @@ create_function(self::ORDER_FUNC_ARGS, self::ORDER_FUNC_LOGIC)
 );
 $user_agents_keys = array_flip($uas);
 $properties_keys = array_flip($properties);
-$search = array('\*', '\?');
-$replace = array('.*', '.');
+$search = ['\*', '\?'];
+$replace = ['.*', '.'];
 foreach ($uas as $user_agent) {
 $browser = [];
 $pattern = preg_quote($user_agent, self::REGEX_DELIMITER);
@@ -15931,8 +16256,8 @@ $debug .= '<fieldset class="debug-section collapsible" id="debug-section-perform
 $debug .= sprintf($legend, 'Performance Information');
 $debug .= "<span>";
 $debug .= $xhprof_link;
-$debug .= "Database Reads: " . Core::DB()->readCount() . "\n";
-$debug .= "Database Writes: " . Core::DB()->writeCount() . "\n";
+$debug .= "Database Reads: " . \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->readCount() . "\n";
+$debug .= "Database Writes: " . \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->writeCount() . "\n";
 $debug .= "Amount of memory used by PHP: " . \Core\Filestore\format_size(memory_get_peak_usage(true)) . "\n";
 $profiler = Core\Utilities\Profiler\Profiler::GetDefaultProfiler();
 $debug .= "Total processing time: " . $profiler->getTimeFormatted() . "\n";
@@ -15985,24 +16310,8 @@ $debug .= '<span>'. implode("<br/>", get_included_files()) . "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
 $debug .= sprintf($legend, 'Query Log');
-$ql = \Core\DB()->queryLog();
-$qls = sizeof($ql);
-foreach($ql as $i => $dat){
-if($i > 1000){
-$debug .= 'Plus ' . ($qls - 1000) . ' more!' . "\n";
-break;
-}
-$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
-$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
-$type   = $dat['type'];
-$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
-$query  = $dat['query'];
-$caller = print_r($dat['caller'], true);
-if($dat['rows'] !== null){
-$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
-}
-$debug .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time} ms] $query</span>\n";
-}
+$profiler = \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler();
+$debug .= $profiler->getEventTimesFormatted();
 $debug .= '</fieldset>';
 $debug .= '</pre>';
 $foot .= "\n" . $debug;
