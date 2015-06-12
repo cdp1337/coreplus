@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 11 Jun 2015 17:54:34 -0400
+ * @compiled Thu, 11 Jun 2015 21:50:54 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1500,6 +1500,14 @@ return (isset($this->_data[0][$k])) ? $this->_data[0][$k] : null;
 else{
 return $this->_data[0];
 }
+}
+elseif(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
+$ret = [];
+$k = $this->_selects[0];
+foreach($this as $d){
+$ret[] = isset($d[$k]) ? $d[$k] : null;
+}
+return $ret;
 }
 else{
 $ret = [];
@@ -12406,7 +12414,7 @@ public $link = '#';
 public $title = '';
 public $class = '';
 public $icon = '';
-public $confirm = '';
+public $confirm = null;
 public $otherattributes = [];
 public function fetch(){
 $html = '';
