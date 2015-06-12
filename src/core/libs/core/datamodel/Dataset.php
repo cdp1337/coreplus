@@ -451,6 +451,7 @@ class Dataset implements \Iterator{
 	 *
 	 * If limit == 1 and only one select was issued, that singular value or null is returned.
 	 * If limit == 1 and more than one select was issued, an associative array is returned.
+	 * If select contains 1 key and it's not "*", an indexed array is returned containing all results.
 	 * Otherwise, an array of associative arrays is returned.
 	 *
 	 * @param null $interface
@@ -475,6 +476,15 @@ class Dataset implements \Iterator{
 				// Return a single record
 				return $this->_data[0];
 			}
+		}
+		elseif(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
+			// Only one column was selected, just return an array of that column instead of an indexed array containing a 1-record associative array.
+			$ret = [];
+			$k = $this->_selects[0];
+			foreach($this as $d){
+				$ret[] = isset($d[$k]) ? $d[$k] : null;
+			}
+			return $ret;
 		}
 		else{
 			$ret = [];
