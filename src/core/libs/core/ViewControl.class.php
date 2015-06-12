@@ -368,9 +368,9 @@ class ViewControl implements ArrayAccess {
 	/**
 	 * Confirm text for this link, useful for setting them as POST links.
 	 *
-	 * @var string
+	 * @var string|null
 	 */
-	public $confirm = '';
+	public $confirm = null;
 
 	/**
 	 * Any other attributes for the a tag.
