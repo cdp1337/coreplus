@@ -1,7 +1,7 @@
 <?php
 /**
  * File for class Profiler definition in the coreplus project
- * 
+ *
  * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130410.1753
  * @package Core\Utilities\Profiler
@@ -64,7 +64,7 @@ namespace Core\Utilities\Profiler;
  * // Or if you want a breakdown of the events themselves...
  * echo '&lt;pre&gt;' . $profiler-&gt;getEventTimesFormatted() . '&lt;/pre&gt;';
  * </code>
- * 
+ *
  * @package Core\Utilities\Profiler
  * @author Charlie Powell <charlie@eval.bz>
  */
@@ -96,7 +96,7 @@ class DatamodelProfiler {
 	 * @return int
 	 */
 	public function readCount(){
-		return $this->_reads;
+		return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['reads'] : 0;
 	}
 
 	/**
@@ -105,7 +105,7 @@ class DatamodelProfiler {
 	 * @return int
 	 */
 	public function writeCount(){
-		return $this->_writes;
+		return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['writes'] : 0;
 	}
 
 	/**
@@ -153,8 +153,8 @@ class DatamodelProfiler {
 		$this->_last[] = [
 			'start' => microtime(true),
 			'type' => $type,
-		    'query' => $query,
-		    'caller' => $callinglocation,
+			'query' => $query,
+			'caller' => $callinglocation,
 			'memory'  => memory_get_usage(true),
 		];
 	}
@@ -170,7 +170,16 @@ class DatamodelProfiler {
 		$time = microtime(true) - $last['start'];
 		$timeFormatted = $this->getTimeFormatted($time);
 
-		$this->_events[] = array(
+		if(!isset($_SESSION['datamodel_profiler_events'])){
+			// Record this event in the SESSION so that POST pages that redirect can still display the full query log
+			// on the next page load.  This buffer is purged on rendering the event times formatted.
+			$_SESSION['datamodel_profiler_events'] = [
+				'events' => [],
+				'reads' => 0,
+				'writes' => 0,
+			];
+		}
+		$_SESSION['datamodel_profiler_events']['events'][] = array(
 			'query'  => $last['query'],
 			'type'   => $last['type'],
 			'time'   => $timeFormatted,
@@ -181,10 +190,10 @@ class DatamodelProfiler {
 		);
 
 		if($last['type'] == 'read'){
-			++$this->_reads;
+			++$_SESSION['datamodel_profiler_events']['reads'];
 		}
 		else{
-			++$this->_writes;
+			++$_SESSION['datamodel_profiler_events']['writes'];
 		}
 
 		if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
@@ -205,7 +214,16 @@ class DatamodelProfiler {
 		$time = microtime(true) - $last['start'];
 		$timeFormatted = $this->getTimeFormatted($time);
 
-		$this->_events[] = array(
+		if(!isset($_SESSION['datamodel_profiler_events'])){
+			// Record this event in the SESSION so that POST pages that redirect can still display the full query log
+			// on the next page load.  This buffer is purged on rendering the event times formatted.
+			$_SESSION['datamodel_profiler_events'] = [
+				'events' => [],
+				'reads' => 0,
+				'writes' => 0,
+			];
+		}
+		$_SESSION['datamodel_profiler_events']['events'][] = array(
 			'query'  => $last['query'],
 			'type'   => $last['type'],
 			'time'   => $timeFormatted,
@@ -216,10 +234,10 @@ class DatamodelProfiler {
 		);
 
 		if($last['type'] == 'read'){
-			++$this->_reads;
+			++$_SESSION['datamodel_profiler_events']['reads'];
 		}
 		else{
-			++$this->_writes;
+			++$_SESSION['datamodel_profiler_events']['writes'];
 		}
 
 		if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
@@ -235,7 +253,7 @@ class DatamodelProfiler {
 	 * @return array
 	 */
 	public function getEvents(){
-		return $this->_events;
+		return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['events'] : [];
 	}
 
 	/**
@@ -279,7 +297,7 @@ class DatamodelProfiler {
 
 	/**
 	 * Get the breakdown of recorded events and their time into the profiler operation.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getEventTimesFormatted(){
@@ -304,6 +322,13 @@ class DatamodelProfiler {
 			}
 			$out .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time}] $query</span>\n";
 		}
+
+		// Purge the output.
+		$_SESSION['datamodel_profiler_events'] = [
+			'events' => [],
+			'reads' => 0,
+			'writes' => 0,
+		];
 
 		return $out;
 	}
