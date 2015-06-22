@@ -67,43 +67,39 @@
 function smarty_function_controls($params, $smarty){
 
 	if(isset($params['model'])){
+		// There is a "model" attribute provided, this must be a valid Model object,
+		// (and is the preferred way of handling this system).
 		$subject = $params['model'];
 		if(!$subject instanceof Model){
 			throw new SmartyException('Only Models can be used with the {controls model=...} syntax!');
 		}
-		$baseurl = '/' . strtolower(get_class($subject));
+
+		$controls = ViewControls::DispatchModel($subject);
 	}
 	elseif(isset($params['baseurl'])){
+		// There is a baseurl provided, this does not require a full object and simply a string will suffice.
+		// Since there is no Model provided, only the registered hooks will be called.
 		$baseurl = $params['baseurl'];
 
 		// They may or may not have subjects.
 		// The subject is the subject matter of this control link.
 		$subject = (isset($params['subject'])) ? $params['subject'] : null;
+
+		$controls = ViewControls::Dispatch($baseurl, $subject);
 	}
 	else{
 		throw new SmartyException('Unable to get links without a baseurl!');
 	}
 
-	// Hover should be the default behaviour.
+	// Other options
 	if(isset($params['hover'])){
-		$hover = ($params['hover']);
+		$controls->hovercontext = ($params['hover']);
 	}
-	else{
-		$hover = true;
-	}
-
-	$firstlinks = ($subject instanceof Model) ? $subject->getControlLinks() : [];
-	$additionallinks = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
-
-	$links = array_merge($firstlinks, $additionallinks);
-
-	$controls = new ViewControls();
-	$controls->hovercontext = $hover;
-	$controls->addLinks($links);
 
 	if(isset($params['proxy-force'])){
 		$controls->setProxyForce($params['proxy-force']);
 	}
 
+	// Render out controls.
 	echo $controls->fetch();
 }

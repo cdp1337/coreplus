@@ -293,6 +293,27 @@ class ViewControls implements Iterator, ArrayAccess {
 	/**
 	 * Shortcut function to dispatch the /core/controllinks hook to request functions for a given subject.
 	 *
+	 * @param \Model $model The subject matter of this hook, (if any)
+	 *
+	 * @return ViewControls
+	 */
+	public static function DispatchModel(\Model $model){
+		$baseurl = '/' . strtolower(get_class($model));
+
+		$firstlinks = $model->getControlLinks();
+		$additionallinks = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $model);
+
+		$links = array_merge($firstlinks, $additionallinks);
+
+		$controls = new ViewControls();
+		$controls->addLinks($links);
+
+		return $controls;
+	}
+
+	/**
+	 * Shortcut function to dispatch the /core/controllinks hook to request functions for a given subject.
+	 *
 	 * @param string $baseurl The baseurl, (excluding /core/controllinks), of the request
 	 * @param mixed  $subject The subject matter of this hook, (if any)
 	 *
