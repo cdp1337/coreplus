@@ -2092,6 +2092,15 @@ class Model implements ArrayAccess {
 					continue 2;
 			}
 
+			// Fringe case for Address case.
+			// In this case, a full Model is passed in as the value.
+			// However, saving a full model as a singular key doesn't work, (obviously).
+			// Instead, save that Model and return the key as the value instead.
+			if($v instanceof Model){
+				$v->save();
+				$v = $v->get('id');
+			}
+
 			// Make sure this value is resolved to its strict version!
 			// This is because the underlying data layer will throw kinipshits if (for example),
 			// NULL is passed in on a non-null column.
@@ -2927,10 +2936,3 @@ class ModelFactory {
 		return $s;
 	}
 }
-
-
-
-
-
-
-
