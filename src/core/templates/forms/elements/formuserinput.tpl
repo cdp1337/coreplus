@@ -32,72 +32,89 @@
 	{script library="jqueryui"}{/script}
 	{script library="Core.Strings"}{/script}
 	{script location="foot"}<script>
-	$(function(){
+		$(function(){
 
-		var
-			elementid = "{$element->getID()}-ac", hiddenid = "{$element->getID()}",
-			$element, $hidden, $parent, lastval;
+			var
+				elementid = "{$element->getID()}-ac", hiddenid = "{$element->getID()}",
+				$element, $hidden, $parent, lastval;
 
-		$element = $('#' + elementid);
-		$hidden = $('#' + hiddenid);
-		$parent = $element.closest('.formelement');
+			$element = $('#' + elementid);
+			$hidden = $('#' + hiddenid);
+			$parent = $element.closest('.formelement');
 
-		// Gogo autocomplete!
-		$element.autocomplete({
-			source: Core.ROOT_URL + 'form/pagemetas/autocompleteuser.ajax',
-			minLength: 2,
-			select: function( event, ui ) {
+			// Gogo autocomplete!
+			$element.autocomplete({
+				source: Core.ROOT_URL + 'form/pagemetas/autocompleteuser.ajax',
+				minLength: 2,
+				select: function( event, ui ) {
 
-				if(ui.item){
-					// This is a bit different because the value is actually going to a different field.
-					$hidden.val(ui.item.id);
-					$(this).val(ui.item.label);
+					if(ui.item){
+						// This is a bit different because the value is actually going to a different field.
+						$hidden.val(ui.item.id);
+						$(this).val(ui.item.label);
+						$parent.removeClass('user-invalid').addClass('user-valid');
+						$hidden.data('is-valid', true);
+						lastval = $element.val();
+
+						// Trigger any change watcher on the hidden input, just in case there is one.
+						$hidden.trigger('change');
+
+						// The return false is to prevent jqueryui from setting the value to the id of the user.
+						// I want the label instead, (set above).
+						return false;
+					}
+					else{
+						// Just clear out the user id.
+						$hidden.val('');
+						$parent.removeClass('user-valid').addClass('user-invalid');
+						$hidden.data('is-valid', false);
+						lastval = $element.val();
+
+						// Trigger any change watcher on the hidden input, just in case there is one.
+						$hidden.trigger('change');
+					}
+				}
+				// ui-autocomplete-loading
+			});
+
+			// On changing the username, the authorid should be blanked out automatically!
+			//$element.change(function(){
+			$element.keyup(function(){
+				var ev = $element.val();
+
+				// The key did not cause a change, just return.
+				if(lastval == ev) return;
+				lastval = ev;
+
+				if(ev.indexOf('@') != -1 && ev.indexOf('.') != -1){
+					// Allow entering an email address instead.
+					$hidden.val(ev);
 					$parent.removeClass('user-invalid').addClass('user-valid');
-					lastval = $element.val();
-					// The return false is to prevent jqueryui from setting the value to the id of the user.
-					// I want the label instead, (set above).
-					return false;
+					$hidden.data('is-valid', false);
+
+					// Trigger any change watcher on the hidden input, just in case there is one.
+					$hidden.trigger('change');
 				}
 				else{
-					// Just clear out the user id.
 					$hidden.val('');
 					$parent.removeClass('user-valid').addClass('user-invalid');
-					lastval = $element.val();
+					$hidden.data('is-valid', false);
+
+					// Trigger any change watcher on the hidden input, just in case there is one.
+					$hidden.trigger('change');
 				}
-			}
-			// ui-autocomplete-loading
-		});
+			});
 
-		// On changing the username, the authorid should be blanked out automatically!
-		//$element.change(function(){
-		$element.keyup(function(){
-			var ev = $element.val();
-
-			// The key did not cause a change, just return.
-			if(lastval == ev) return;
-			lastval = ev;
-
-			if(ev.indexOf('@') != -1 && ev.indexOf('.') != -1){
-				// Allow entering an email address instead.
-				$hidden.val(ev);
-				$parent.removeClass('user-invalid').addClass('user-valid');
+			// Initial load
+			if($hidden.val()){
+				$parent.addClass('user-valid');
 			}
 			else{
-				$hidden.val('');
-				$parent.removeClass('user-valid').addClass('user-invalid');
+				$parent.addClass('user-invalid');
 			}
+			lastval = $element.val();
+
 		});
-
-		// Initial load
-		if($hidden.val()){
-			$parent.addClass('user-valid');
-		}
-		else{
-			$parent.addClass('user-invalid');
-		}
-		lastval = $element.val();
-
-	});
 
 	</script>{/script}
 
