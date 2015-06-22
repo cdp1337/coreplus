@@ -14,7 +14,7 @@
 		<userconfig weight="1" key="username" name="Username" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
 	</users>
 	<hooks>
-		<hook name="/core/controllinks/user/view" call="UserSocialHelper::GetUserLinks"/>
+		<hook name="/core/controllinks/usermodel" call="UserSocialHelper::GetUserLinks"/>
 	</hooks>
 	<files>
 		<file filename="CHANGELOG" md5="d70293948a34857a02bf790f00cb6eeb"/>

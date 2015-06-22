@@ -37,7 +37,6 @@
 		<hookregister name="/core/admin/view" description="Called when an admin views the /admin page.  Useful for functions that need to inform the admin of happenings or what not."/>
 		<hookregister name="/core/model/presave" description="Called immediately before a model save"/>
 		<hookregister name="/core/model/postsave" description="Called immediately after a model save"/>
-		<hookregister name="/core/controllinks/user/view" description="Control links when viewing a specific user" return="array"/>
 		<hookregister name="/user/postsave" description="Hook that is called after the user object is saved"/>
 		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
 		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
@@ -61,9 +60,8 @@
 		<hook name="/cron/weekly" call="\Core\Utilities\Logger\LogFile::RotateWeekly"/>
 		<hook name="/cron/monthly" call="\Core\Utilities\Logger\LogFile::RotateMonthly"/>
 		<hook name="/core/model/presave" call="Core\Search\Helper::ModelPreSaveHandler"/>
-		<hook name="/core/controllinks/user/view" call="Core\User\Helper::GetControlLinks"/>
-		<hook name="/core/controllinks/user/view" call="DatastoreAuthController::GetUserControlLinks"/>
-		<hook name="/core/controllinks/user/view" call="GPGAuthController::GetUserControlLinks"/>
+		<hook name="/core/controllinks/usermodel" call="DatastoreAuthController::GetUserControlLinks"/>
+		<hook name="/core/controllinks/usermodel" call="GPGAuthController::GetUserControlLinks"/>
 		<hook name="/user/postsave" call="Core\User\Helper::ForceSessionSync"/>
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>

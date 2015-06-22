@@ -60,7 +60,7 @@
 
 			<td>
 
-				{controls baseurl="/user/view" subject="`$user.id`" hover="true"}
+				{controls model=$user}
 
 			</td>
 		</tr>

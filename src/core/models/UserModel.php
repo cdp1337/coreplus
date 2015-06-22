@@ -953,6 +953,70 @@ class UserModel extends Model {
 	}
 
 	/**
+	 * Get the control links for a given user based on the current user's access permissions.
+	 *
+	 * @return array
+	 */
+	public function getControlLinks(){
+		$a = array();
+
+		$userid      = $this->get('id');
+		$usersudo    = \Core\user()->checkAccess('p:/user/users/sudo');
+		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
+		$selfaccount = \Core\user()->get('id') == $userid;
+
+		if($usersudo && !$selfaccount){
+			$a[] = array(
+				'title' => 'Switch To User',
+				'icon' => 'bullseye',
+				'link' => '/user/sudo/' . $userid,
+				'confirm' => 'By switching, (or SUDOing), to a user, you inherit that user permissions.',
+			);
+		}
+
+		if($usermanager){
+			$a[] = array(
+				'title' => 'View',
+				'icon' => 'view',
+				'link' => '/user/view/' . $userid,
+			);
+		}
+		elseif($selfaccount){
+			$a[] = array(
+				'title' => 'View',
+				'icon' => 'view',
+				'link' => '/user/me',
+			);
+		}
+
+		if($usermanager || $selfaccount){
+			$a[] = array(
+				'title' => 'Edit',
+				'icon' => 'edit',
+				'link' => '/user/edit/' . $userid,
+			);
+
+			$a[] = array(
+				'title' => 'Public Profiles',
+				'icon' => 'link',
+				'link' => '/user/connectedprofiles/' . $userid,
+			);
+
+			// Even though this user has admin access, he/she cannot remove his/her own account!
+			if(!$selfaccount){
+				$a[] = array(
+					'title' => 'Delete',
+					'icon' => 'remove',
+					'link' => '/user/delete/' . $userid,
+					'confirm' => 'Are you sure you want to delete user ' . $this->getDisplayName() . '?',
+				);
+			}
+		}
+
+		return $a;
+	}
+
+	/**
 	 * Get an array of resolved permissions for this user using the group membership.
 	 *
 	 * @param null|Model $context The context to search for.

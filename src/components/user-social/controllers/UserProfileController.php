@@ -48,7 +48,7 @@ class UserProfileController extends Controller_2_1 {
 			$editor = false;
 		}
 
-		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
+		$view->controls = ViewControls::DispatchModel($user);
 
 		$view->title = $user->getDisplayName();
 		$view->assign('user', $user);

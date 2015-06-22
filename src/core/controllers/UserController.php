@@ -124,13 +124,13 @@ class UserController extends Controller_2_1{
 
 		// Grab the login attempts for this user
 		$logins = SystemLogModel::Find(
-			//['affected_user_id = ' . $user->get('id'), 'code = /user/login'],
+		//['affected_user_id = ' . $user->get('id'), 'code = /user/login'],
 			['affected_user_id = ' . $user->get('id')],
 			20,
 			'datetime DESC'
 		);
 
-		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
+		$view->controls = ViewControls::DispatchModel($user);
 
 		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
 		$view->title = 'My Profile';
@@ -140,6 +140,71 @@ class UserController extends Controller_2_1{
 		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
 
 		return null;
+	}
+
+	/**
+	 * Show a user's profile, (Admin view only).
+	 *
+	 * @return null|int
+	 */
+	public function view(){
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/user/users/manage')){
+			// This check MUST be first, as only admin users should have the ability to lookup full account details.
+			// If you need this functionality for another component, with a different permission set,
+			// then copy this method and implement it in your own controller with your own access permissions,
+			// but only return what data you actually need!
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		/** @var UserModel $user */
+		$user = UserModel::Construct($request->getParameter(0));
+
+		if(!$user->exists()){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		// Grab the login attempts for this user
+		$logins = SystemLogModel::Find(
+		//['affected_user_id = ' . $user->get('id'), 'code = /user/login'],
+			['affected_user_id = ' . $user->get('id')],
+			20,
+			'datetime DESC'
+		);
+
+		if($request->isJSON()){
+			$view->mode = View::MODE_PAGEORAJAX;
+			$view->contenttype = View::CTYPE_JSON;
+
+			$view->jsondata['user'] = $user->getAsArray();
+			$view->jsondata['logins'] = $logins;
+			$view->jsondata['profiles'] = json_decode($user->get('json:profiles'), true);
+
+			// Massage some user data a bit, and remove things that don't need to be exported.
+			unset($view->jsondata['user']['password']);
+			foreach($user->getConfigObjects() as $c){
+				/** @var UserUserConfigModel $c */
+				if(!$c->getLink('UserConfig')->get('hidden')){
+					$view->jsondata['user'][ $c->get('key') ] = $c->get('value');
+				}
+			}
+
+			return;
+		}
+
+		if(!$user->isActive()){
+			Core::SetMessage('This account is not active!', 'warning');
+		}
+
+		$view->controls = ViewControls::DispatchModel($user);
+
+		$view->mastertemplate = 'admin';
+		$view->title = $user->getLabel() . ' Profile';
+		$view->assign('user', $user);
+		$view->assign('logins', $logins);
+		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
 	}
 
 
@@ -199,7 +264,7 @@ class UserController extends Controller_2_1{
 
 
 
-		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
+		$view->controls = ViewControls::DispatchModel($user);
 		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
 		$view->title = 'Editing ' . $user->getDisplayName();
 		$view->assign('form', $form);
@@ -271,7 +336,12 @@ class UserController extends Controller_2_1{
 			}
 		}
 
-		//$view->addBreadcrumb($user->getDisplayName(), UserSocialHelper::ResolveProfileLinkById($user->get('id')));
+		if($manager){
+			$view->addBreadcrumb($user->getDisplayName(), '/user/view/' . $user->get('id'));
+		}
+		else{
+			$view->addBreadcrumb($user->getDisplayName(), '/user/me');
+		}
 		$view->title = 'Edit Connected Profiles';
 		$view->assign('profiles_json', $jsonprofiles);
 		$view->assign('profiles', $profiles);
@@ -816,7 +886,7 @@ class UserController extends Controller_2_1{
 				'name' => '##NAME##',
 				'description' => '##DESCRIPTION##',
 				'class' => '##CLASS##',
-                'value' => 'none'
+				'value' => 'none'
 			));
 			$data['accessstringtemplate'] = $templateel->render();
 		}
@@ -829,7 +899,7 @@ class UserController extends Controller_2_1{
 	public static function _HookHandler403(View $view){
 
 		if(\Core\user()->exists()){
-		//if(Core::User()->exists()){
+			//if(Core::User()->exists()){
 			// User is already logged in... I can't do anything.
 			return true;
 		}

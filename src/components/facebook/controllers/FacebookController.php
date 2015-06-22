@@ -379,7 +379,7 @@ class FacebookController extends Controller_2_1{
 	}
 
 	/**
-	 * Hook receiver for /core/controllinks/user/view
+	 * Hook receiver for /core/controllinks/usermodel
 	 *
 	 * @param int $userid
 	 *
