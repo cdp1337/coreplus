@@ -159,7 +159,7 @@ class GeoAddressFormInput extends FormElement {
 
 			// Make sure that the model exists so I can populate it.
 			if(!$this->_model){
-				$this->_model = GeoAddressModel::Construct( isset($value['id']) ? $value['id'] : null );
+				$this->_model = GeoAddressModel::Construct( (isset($value['id']) && $value['id'] !== '') ? $value['id'] : null );
 			}
 
 			if(!($value['address1'] || $value['postal'])){
