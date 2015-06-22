@@ -116,7 +116,6 @@ class Dataset implements \Iterator{
 	 * multiple arguments: add each value to the columns
 	 *
 	 * @throws \DMI_Exception
-	 * @internal param mixed $select
 	 * @return Dataset
 	 */
 	public function select(){
