@@ -106,7 +106,13 @@ class WidgetController extends Controller_2_1 {
 					/** @var Widget_2_1 $obj */
 					$obj = Widget_2_1::Factory($node->getAttribute('class'));
 					$nodebaseurl = '/widget/create?class=' . $node->getAttribute('class');
-					$image = $obj->getPreviewImage();
+					if($obj){
+						$image = $obj->getPreviewImage();
+					}
+					else{
+						Core::SetMessage('Invalid "widgetcreate" found in ' .$node->getAttribute('class') . ', ' . $node->getAttribute('title'), 'error');
+						$image = '';
+					}
 				}
 				else{
 					Core::SetMessage('Invalid "widgetcreate" found in ' . $c->getName() . ', ' . $node->getAttribute('title'), 'error');
