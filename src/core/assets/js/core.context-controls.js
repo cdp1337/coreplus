@@ -9,7 +9,8 @@ $(function(){
 		},
 		$currentopen = null,
 		$currentover = null,
-		timer = null;
+		timer = null,
+		isMobile = Core.Browser.is_mobile;
 
 	//$('.controls-hover').each(function(){
 	$('.controls').each(function(){
@@ -181,5 +182,19 @@ $(function(){
 					}
 				}, 500);
 			});
+
+
+		if(isMobile){
+			$original.click(function(e){
+
+				$(this).toggleClass('controls-open');
+
+				if( $(this).hasClass('controls-open') ){
+					e.preventDefault();
+				}
+
+			});
+
+		}
 	});
 });
