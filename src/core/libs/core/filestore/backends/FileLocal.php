@@ -98,7 +98,7 @@ class FileLocal implements Filestore\File {
 		// These should simply guess the application based on the extension.
 		$ext = $this->getExtension();
 		if(
-			($ext == 'js' || $ext == 'csv' || $ext == 'css' || $ext == 'html') &&
+			($ext == 'js' || $ext == 'csv' || $ext == 'css' || $ext == 'html' || $ext == 'fgl') &&
 			(strpos($type, 'text/') === 0)
 		){
 			$type = \Core\Filestore\extension_to_mimetype($ext);
@@ -1027,7 +1027,7 @@ class FileLocal implements Filestore\File {
 				$thumbType = 'JPEG';
 				$thumbWidth = $width;
 				$thumbHeight = $height;
-				if($width <= 200 && $height <= 200){
+				if($width <= 200 && $height <= 200 && function_exists('exif_thumbnail')){
 					// Try to write out from the thumbnail img instead of the full size.
 					// This is done to increase server performance.
 					// eg: resizing a 5MB JPEG can take upwards of 50-100ms,
