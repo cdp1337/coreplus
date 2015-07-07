@@ -727,6 +727,8 @@ function extension_to_mimetype($ext){
 			return 'text/css';
 		case 'csv':
 			return 'text/csv';
+		case 'fgl':
+			return 'application/fgl+text';
 		case 'gif':
 			return 'image/gif';
 		case 'html':
