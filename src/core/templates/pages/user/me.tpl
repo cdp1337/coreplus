@@ -6,6 +6,14 @@
 		<li>User Name: {$user->getDisplayName()}</li>
 		<li>Email: {$user.email}</li>
 		<li>Member Since: {date format="FD" $user.created}</li>
+		<li>
+			API Key:
+			<a href="#" class="reveal-hidden-value" data-target="user-apikey">
+				Show
+				<i class="icon-lock" title="Show API Key"></i>
+			</a>
+			<span class="hidden-value" id="user-apikey" style="display:none;">{$user.apikey}</span>
+		</li>
 
 		{if $profiles}
 			{foreach $profiles as $profile}
@@ -60,6 +68,11 @@
 			$('#user-edit-form').toggle();
 			$('#user-edit-listing').toggle();
 
+			return false;
+		});
+
+		$('.reveal-hidden-value').click(function() {
+			$('#' + $(this).data('target')).toggle();
 			return false;
 		});
 	});
