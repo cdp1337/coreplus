@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 11 Jun 2015 21:50:54 -0400
+ * @compiled Mon, 06 Jul 2015 11:58:27 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -179,10 +179,10 @@ self::$_DefaultProfiler = $this;
 }
 }
 public function readCount(){
-return $this->_reads;
+return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['reads'] : 0;
 }
 public function writeCount(){
-return $this->_writes;
+return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['writes'] : 0;
 }
 public function start($type, $query){
 if(FULL_DEBUG || (DEVELOPMENT_MODE && sizeof($this->_events) < 40)){
@@ -225,7 +225,14 @@ return;
 $last = array_pop($this->_last);
 $time = microtime(true) - $last['start'];
 $timeFormatted = $this->getTimeFormatted($time);
-$this->_events[] = array(
+if(!isset($_SESSION['datamodel_profiler_events'])){
+$_SESSION['datamodel_profiler_events'] = [
+'events' => [],
+'reads' => 0,
+'writes' => 0,
+];
+}
+$_SESSION['datamodel_profiler_events']['events'][] = array(
 'query'  => $last['query'],
 'type'   => $last['type'],
 'time'   => $timeFormatted,
@@ -235,10 +242,10 @@ $this->_events[] = array(
 'rows'   => $count
 );
 if($last['type'] == 'read'){
-++$this->_reads;
+++$_SESSION['datamodel_profiler_events']['reads'];
 }
 else{
-++$this->_writes;
+++$_SESSION['datamodel_profiler_events']['writes'];
 }
 if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
@@ -253,7 +260,14 @@ return;
 $last = array_pop($this->_last);
 $time = microtime(true) - $last['start'];
 $timeFormatted = $this->getTimeFormatted($time);
-$this->_events[] = array(
+if(!isset($_SESSION['datamodel_profiler_events'])){
+$_SESSION['datamodel_profiler_events'] = [
+'events' => [],
+'reads' => 0,
+'writes' => 0,
+];
+}
+$_SESSION['datamodel_profiler_events']['events'][] = array(
 'query'  => $last['query'],
 'type'   => $last['type'],
 'time'   => $timeFormatted,
@@ -263,10 +277,10 @@ $this->_events[] = array(
 'rows'   => 0
 );
 if($last['type'] == 'read'){
-++$this->_reads;
+++$_SESSION['datamodel_profiler_events']['reads'];
 }
 else{
-++$this->_writes;
+++$_SESSION['datamodel_profiler_events']['writes'];
 }
 if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
@@ -275,7 +289,7 @@ if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
 }
 }
 public function getEvents(){
-return $this->_events;
+return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['events'] : [];
 }
 public function getTimeFormatted($time){
 if($time < 0.001){
@@ -318,6 +332,11 @@ $caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 }
 $out .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time}] $query</span>\n";
 }
+$_SESSION['datamodel_profiler_events'] = [
+'events' => [],
+'reads' => 0,
+'writes' => 0,
+];
 return $out;
 }
 public static function GetDefaultProfiler(){
@@ -2403,7 +2422,7 @@ else {
 return $msg;
 }
 }
-public function translateKey($k, $v){
+public function translateKey($k, $v, $commit = false){
 $s = self::GetSchema();
 if(!isset($s[$k])) return $v;
 $t = &$s[$k];
@@ -2480,6 +2499,10 @@ break;
 default:
 if($v === null){
 $v = $default;
+}
+elseif($v instanceof Model && $commit){
+$v->save();
+$v = $v->get('id');
 }
 break;
 }
@@ -2904,7 +2927,7 @@ $dat->insert($k, $v);
 }
 break;
 default:
-$v = $this->translateKey($k, $v);
+$v = $this->translateKey($k, $v, true);
 $dat->insert($k, $v);
 break;
 }
@@ -2942,7 +2965,7 @@ $dat->setID($k, $this->_data[$k]);
 $idcol = $k; // Remember this for after the save.
 continue 2;
 }
-$v = $this->translateKey($k, $v);
+$v = $this->translateKey($k, $v, true);
 if (in_array($k, $pri)) {
 if ($this->_datainit[$k] != $v){
 if($useset){
@@ -5929,6 +5952,56 @@ die('Implement that access string check!');
 $cache = $default;
 return $default;
 }
+public function getControlLinks(){
+$a = array();
+$userid      = $this->get('id');
+$usersudo    = \Core\user()->checkAccess('p:/user/users/sudo');
+$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
+$selfaccount = \Core\user()->get('id') == $userid;
+if($usersudo && !$selfaccount){
+$a[] = array(
+'title' => 'Switch To User',
+'icon' => 'bullseye',
+'link' => '/user/sudo/' . $userid,
+'confirm' => 'By switching, (or SUDOing), to a user, you inherit that user permissions.',
+);
+}
+if($usermanager){
+$a[] = array(
+'title' => 'View',
+'icon' => 'view',
+'link' => '/user/view/' . $userid,
+);
+}
+elseif($selfaccount){
+$a[] = array(
+'title' => 'View',
+'icon' => 'view',
+'link' => '/user/me',
+);
+}
+if($usermanager || $selfaccount){
+$a[] = array(
+'title' => 'Edit',
+'icon' => 'edit',
+'link' => '/user/edit/' . $userid,
+);
+$a[] = array(
+'title' => 'Public Profiles',
+'icon' => 'link',
+'link' => '/user/connectedprofiles/' . $userid,
+);
+if(!$selfaccount){
+$a[] = array(
+'title' => 'Delete',
+'icon' => 'remove',
+'link' => '/user/delete/' . $userid,
+'confirm' => 'Are you sure you want to delete user ' . $this->getDisplayName() . '?',
+);
+}
+}
+return $a;
+}
 protected function _getResolvedPermissions($context = null) {
 if(!$this->isActive()) {
 return [];
@@ -8329,7 +8402,13 @@ function user(){
 if(!class_exists('\\UserModel')){
 return null;
 }
-if(!isset($_SESSION['user'])){
+if(isset($_SERVER['HTTP_X_CORE_AUTH_KEY'])){
+$user = \UserModel::Find(['apikey = ' . $_SERVER['HTTP_X_CORE_AUTH_KEY']], 1);
+if($user){
+$_SESSION['user'] = $user;
+}
+}
+elseif(!isset($_SESSION['user'])){
 $_SESSION['user'] = new \UserModel();
 }
 elseif(!$_SESSION['user'] instanceof \UserModel){
@@ -9325,6 +9404,8 @@ case 'css':
 return 'text/css';
 case 'csv':
 return 'text/csv';
+case 'fgl':
+return 'application/fgl+text';
 case 'gif':
 return 'image/gif';
 case 'html':
@@ -9765,7 +9846,7 @@ if (($pos = strpos($type, ';')) !== false) $type = substr($type, 0, $pos);
 $type = trim($type);
 $ext = $this->getExtension();
 if(
-($ext == 'js' || $ext == 'csv' || $ext == 'css' || $ext == 'html') &&
+($ext == 'js' || $ext == 'csv' || $ext == 'css' || $ext == 'html' || $ext == 'fgl') &&
 (strpos($type, 'text/') === 0)
 ){
 $type = \Core\Filestore\extension_to_mimetype($ext);
@@ -10266,7 +10347,7 @@ case 'image/jpeg':
 $thumbType = 'JPEG';
 $thumbWidth = $width;
 $thumbHeight = $height;
-if($width <= 200 && $height <= 200){
+if($width <= 200 && $height <= 200 && function_exists('exif_thumbnail')){
 $img = exif_thumbnail($this->getFilename(), $thumbWidth, $thumbHeight, $thumbType);
 if($img){
 \Core\Utilities\Logger\write_debug('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
@@ -12398,6 +12479,15 @@ $this->_data['proxy-force'] = $force ? '1' : '0';
 }
 public static function Dispatch($baseurl, $subject){
 $links = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $subject);
+$controls = new ViewControls();
+$controls->addLinks($links);
+return $controls;
+}
+public static function DispatchModel(\Model $model){
+$baseurl = '/' . strtolower(get_class($model));
+$firstlinks = $model->getControlLinks();
+$additionallinks = HookHandler::DispatchHook('/core/controllinks' . $baseurl, $model);
+$links = array_merge($firstlinks, $additionallinks);
 $controls = new ViewControls();
 $controls->addLinks($links);
 return $controls;
