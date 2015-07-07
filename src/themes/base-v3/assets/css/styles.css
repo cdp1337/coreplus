@@ -880,37 +880,36 @@ pre.xdebug-var-dump .debug-section.collapsed i {display:inline;}
 /*** Controls that can be implemented throughout the site ***/
 /* line 12, ../scss/_controls.scss */
 ul.controls {
-  /*height:20px;*/
   margin: 0;
   padding: 0;
   max-width: 200px;
   border: 1px solid;
   /* icon animations ftw! */
 }
-/* line 19, ../scss/_controls.scss */
+/* line 18, ../scss/_controls.scss */
 ul.controls li {
   float: left;
   margin-right: 0.5em;
   list-style: none;
 }
-/* line 24, ../scss/_controls.scss */
+/* line 23, ../scss/_controls.scss */
 ul.controls li a {
   text-decoration: none;
   font-size: 14px;
   padding: 0.05em;
   line-height: 18px;
 }
-/* line 31, ../scss/_controls.scss */
+/* line 30, ../scss/_controls.scss */
 ul.controls li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
-/* line 37, ../scss/_controls.scss */
+/* line 36, ../scss/_controls.scss */
 ul.controls li span {
   display: none;
 }
-/* line 42, ../scss/_controls.scss */
+/* line 41, ../scss/_controls.scss */
 ul.controls li:last-child {
   float: none;
 }
