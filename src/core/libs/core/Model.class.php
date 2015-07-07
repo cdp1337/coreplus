@@ -1112,12 +1112,13 @@ class Model implements ArrayAccess {
 	 * This will also handle null and default values more gracefully than trying to pass them directly to the
 	 * underlying datamodel.
 	 *
-	 * @param string $k The key to lookup
-	 * @param mixed $v  The value to check
+	 * @param string $k      Key to lookup
+	 * @param mixed  $v      Value to check
+	 * @param bool   $commit Set to true to commit any Model, (should the value be a linked Model).
 	 *
 	 * @return mixed The translated value
 	 */
-	public function translateKey($k, $v){
+	public function translateKey($k, $v, $commit = false){
 		$s = self::GetSchema();
 
 		// Not in the schema.... just return the value unmodified.
@@ -1217,9 +1218,17 @@ class Model implements ArrayAccess {
 				break;
 
 			default:
-				// These may or may not remapped... all depends on what the "default" value is.
 				if($v === null){
+					// This may or may not remapped... all depends on what the "default" value is.
 					$v = $default;
+				}
+				elseif($v instanceof Model && $commit){
+					// Fringe case for Address case.
+					// In this case, a full Model is passed in as the value.
+					// However, saving a full model as a singular key doesn't work, (obviously).
+					// Instead, save that Model and return the key as the value instead.
+					$v->save();
+					$v = $v->get('id');
 				}
 				break;
 		}
@@ -2026,7 +2035,7 @@ class Model implements ArrayAccess {
 					// Make sure this value is resolved to its strict version!
 					// This is because the underlying data layer will throw kinipshits if (for example),
 					// NULL is passed in on a non-null column.
-					$v = $this->translateKey($k, $v);
+					$v = $this->translateKey($k, $v, true);
 
 					$dat->insert($k, $v);
 					break;
@@ -2092,19 +2101,10 @@ class Model implements ArrayAccess {
 					continue 2;
 			}
 
-			// Fringe case for Address case.
-			// In this case, a full Model is passed in as the value.
-			// However, saving a full model as a singular key doesn't work, (obviously).
-			// Instead, save that Model and return the key as the value instead.
-			if($v instanceof Model){
-				$v->save();
-				$v = $v->get('id');
-			}
-
 			// Make sure this value is resolved to its strict version!
 			// This is because the underlying data layer will throw kinipshits if (for example),
 			// NULL is passed in on a non-null column.
-			$v = $this->translateKey($k, $v);
+			$v = $this->translateKey($k, $v, true);
 
 			//var_dump($k, $i['primary']);
 			// Everything else
