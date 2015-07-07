@@ -118,7 +118,14 @@ function user(){
 		return null;
 	}
 
-	if(!isset($_SESSION['user'])){
+	if(isset($_SERVER['HTTP_X_CORE_AUTH_KEY'])){
+		// Allow an auth key to be used to authentication the requested user instead!
+		$user = \UserModel::Find(['apikey = ' . $_SERVER['HTTP_X_CORE_AUTH_KEY']], 1);
+		if($user){
+			$_SESSION['user'] = $user;
+		}
+	}
+	elseif(!isset($_SESSION['user'])){
 		$_SESSION['user'] = new \UserModel();
 	}
 	elseif(!$_SESSION['user'] instanceof \UserModel){
