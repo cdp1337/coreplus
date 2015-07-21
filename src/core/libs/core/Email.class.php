@@ -210,23 +210,18 @@ class Email {
 	public function setBody($body, $ishtml = false) {
 		$m = $this->getMailer();
 
-		// Is the body HTML and there's already a non-HTML body?
-		if ($ishtml) {
-			if ($m->ContentType == 'text/plain' && $m->Body){
-				// Switch it!
-				$m->AltBody = $m->Body;
-				$m->IsHTML(true);
-				$m->Body = $body;
-			}
-			else{
-				$m->MsgHTML($body);
-			}
+		if($ishtml){
+			// Message is an HTML message, OK!  The internal mailer will handle all conversions.
+			$m->MsgHTML($body);
 		}
-		else {
-			// If the mailer is already an HTML email, set this on the ALT body.
-			// Otherwise it'll be the regular body.
-			if ($m->ContentType == 'text/html') $m->AltBody = $body;
-			else $m->Body = $body;
+		elseif($m->ContentType == 'text/html'){
+			// No, but there is already an HTML message set, so update the alt body only.
+			$m->AltBody = $body;
+		}
+		else{
+			// Nope, and there's no message anyway, OK!
+			$m->ContentType = 'text/plain';
+			$m->Body = $body;
 		}
 
 		// Make sure the template is blanked out too!
