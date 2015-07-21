@@ -149,6 +149,15 @@ interface File {
 	public function getBaseFilename($withoutext = false);
 
 	/**
+	 * Get the directory name of this file
+	 *
+	 * Will return the parent directory name, ending with a trailing slash.
+	 *
+	 * @return string
+	 */
+	public function getDirectoryName();
+
+	/**
 	 * Get the filename for a local clone of this file.
 	 * For local files, it's the same thing, but remote files will be copied to a temporary local location first.
 	 *
