@@ -160,19 +160,19 @@ if(EXEC_MODE == 'CLI'){
 }
 else{
 	// Line color, the separating characters
-	define('COLOR_LINE', "<span style='color:grey;'>");
+	define('COLOR_LINE', "<span style='color:grey; font-family:Courier,mono;'>");
 	// Heading color
-	define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold;'>");
+	define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold; font-family:Courier,mono;'>");
 	// Success color
-	define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold;'>");
+	define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold; font-family:Courier,mono;'>");
 	// Warning color
-	define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold;'>");
+	define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold; font-family:Courier,mono;'>");
 	// Error color
-	define('COLOR_ERROR', "<span style='color:red; font-weight:bold;'>");
+	define('COLOR_ERROR', "<span style='color:red; font-weight:bold; font-family:Courier,mono;'>");
 	// Debug color
-	define('COLOR_DEBUG', "<span style='color:lightskyblue;'>");
+	define('COLOR_DEBUG', "<span style='color:lightskyblue; font-family:Courier,mono;'>");
 	// Normal color, no styles applied, required because any RESET (</span>) needs a start span.
-	define('COLOR_NORMAL', "<span>");
+	define('COLOR_NORMAL', "<span style='font-family:Courier,mono;'>");
 	// Reset color
 	define('COLOR_RESET', "</span>");
 	// Space character
