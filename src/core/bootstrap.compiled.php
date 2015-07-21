@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 06 Jul 2015 11:58:27 -0400
+ * @compiled Tue, 21 Jul 2015 17:00:23 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -439,13 +439,13 @@ define('COLOR_RESET', "\033[0m");
 define('NBSP', ' ');
 }
 else{
-define('COLOR_LINE', "<span style='color:grey;'>");
-define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold;'>");
-define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold;'>");
-define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold;'>");
-define('COLOR_ERROR', "<span style='color:red; font-weight:bold;'>");
-define('COLOR_DEBUG', "<span style='color:lightskyblue;'>");
-define('COLOR_NORMAL', "<span>");
+define('COLOR_LINE', "<span style='color:grey; font-family:Courier,mono;'>");
+define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_ERROR', "<span style='color:red; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_DEBUG', "<span style='color:lightskyblue; font-family:Courier,mono;'>");
+define('COLOR_NORMAL', "<span style='font-family:Courier,mono;'>");
 define('COLOR_RESET', "</span>");
 define('NBSP', '&nbsp;');
 }
@@ -9568,6 +9568,7 @@ public function getFilename($prefix = \ROOT_PDIR);
 public function setFilename($filename);
 public function getBasename($withoutext = false);
 public function getBaseFilename($withoutext = false);
+public function getDirectoryName();
 public function getLocalFilename();
 public function getHash();
 public function getFilenameHash();
@@ -10820,6 +10821,9 @@ return $b;
 public function getBaseFilename($withoutext = false) {
 return $this->getBasename($withoutext);
 }
+public function getDirectoryName(){
+return dirname($this->getFilename()) . '/';
+}
 public function getLocalFilename() {
 return $this->_getTmpLocal()->getFilename();
 }
@@ -11209,6 +11213,9 @@ $this->_url = $filename;
 }
 public function getBaseFilename($withoutext = false) {
 return $this->getBasename($withoutext);
+}
+public function getDirectoryName(){
+return dirname($this->getFilename()) . '/';
 }
 public function getLocalFilename() {
 return $this->_getTmpLocal()->getFilename();
@@ -16696,7 +16703,7 @@ Core::_AttachLessJS();
 else{
 $rel = 'stylesheet';
 }
-$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="' . $rel . '"/>';
+$link = '<link type="text/css" href="' . \Core\resolve_asset($link) . '" media="' . $media . '" rel="' . $rel . '"/>';
 }
 if(isset($this)){
 $styles =& $this->stylesheets;
