@@ -87,7 +87,8 @@ function smarty_block_css($params, $content, $smarty, &$repeat){
 	if($repeat) return;
 	
 	// media type is the first parameter to check for.
-	$media = (isset($params['media'])) ? $params['media'] : 'all';
+	$media  = (isset($params['media'])) ? $params['media'] : 'all';
+	$inline = isset($params['inline']) && $params['inline'] == '1' ? true : false;
 
 	// See if there's a "href" set.  If so, that's probably an asset.
 	// I have a tendency of calling this different things, since things in the head all have
@@ -98,7 +99,7 @@ function smarty_block_css($params, $content, $smarty, &$repeat){
 	elseif(isset($params['link'])) $href = $params['link'];
 	elseif(isset($params['src'])) $href = $params['src'];
 
-	// Standard include from an external file.
+	// Standard include from an asset.
 	if($href !== null){
 
 		// If optional is set, then look up the data to see if it's set.
@@ -120,10 +121,44 @@ function smarty_block_css($params, $content, $smarty, &$repeat){
 			if(!$enabled) return;
 		}
 
-		\Core\view()->addStylesheet($href, $media);
+		if($inline){
+			// Allow stylesheets to be rendered "in-line" in the code.
+			// This is only really useful for emails and other HTML fragments.
+
+			$file = Core\Filestore\resolve_asset_file($href);
+
+			if(\ConfigHandler::Get('/core/javascript/minified')){
+				// Remove the extension from the filename, (makes the logic cleaner).
+				$dir      = $file->getDirectoryName();
+				$filename = $file->getBaseFilename(true);
+				$ext      = $file->getExtension();
+
+				// Core is set to use minified css and javascript assets, try to locate those!
+				// I need to do the check based on the base $filename, because 'assets/css/reset.css' may reside in one
+				// of many locations, and not all of them may have a minified version.
+
+				// Try to load the minified version instead.
+				$minified = $filename . '.min.' . $ext;
+				$minfile = \Core\Filestore\Factory::File($dir . $minified);
+				if($minfile->exists()){
+					// Overwrite the $file variable so it's returned instead.
+					$file = $minfile;
+				}
+			}
+
+			echo '<style media="' . $media . '">' . $file->getContents() . '</style>';
+		}
+		else{
+			\Core\view()->addStylesheet($href, $media);
+		}
 	}
 	// Styles defined inline, fine as well.  The styles will be displayed in the head.
 	elseif($content){
-		\Core\view()->addStyle($content);
+		if($inline){
+			echo '<style media="' . $media . '">' . $content . '</style>';
+		}
+		else{
+			\Core\view()->addStyle($content);
+		}
 	}
 }
