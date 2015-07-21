@@ -1307,7 +1307,7 @@ class View {
 			}
 
 			// Resolve the script and wrap it with a script block.
-			$link = '<link type="text/css" href="' . Core::ResolveAsset($link) . '" media="' . $media . '" rel="' . $rel . '"/>';
+			$link = '<link type="text/css" href="' . \Core\resolve_asset($link) . '" media="' . $media . '" rel="' . $rel . '"/>';
 		}
 
 		// This snippet is to allow AddStylesheet to be called statically.
