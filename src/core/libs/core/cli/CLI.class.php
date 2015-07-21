@@ -343,6 +343,43 @@ class CLI {
 		}
 	}
 
+	public static function PrintProgressBar($percent) {
+		static $last = -1;
+
+		// This progress bar displays up to 90 characters.
+		// (Which taken into account the 3 characters before, that makes it 87 in length.)
+		$percent = ceil($percent / 100 * 87);
+
+		// Allow the bar to be reset on a new pass too!
+		if($percent < $last){
+			$last = -1;
+		}
+
+		if($last === -1){
+			echo COLOR_LINE . '| ' . COLOR_RESET . COLOR_SUCCESS . '>' . COLOR_RESET;
+			$last++;
+		}
+
+		if($last == $percent || $last == 87){
+			return;
+		}
+
+		while($last < $percent){
+			++$last;
+			echo COLOR_SUCCESS . '=' . COLOR_RESET;
+		}
+
+		if($percent == 87){
+			// FIN!
+			echo (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+		}
+
+		if(EXEC_MODE == 'WEB'){
+			ob_flush();
+			flush();
+		}
+	}
+
 
 	/**
 	 * This can be used to load a saved session from the user's home directory.
