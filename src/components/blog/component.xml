@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.4" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.5" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="tags" type="component"/>
@@ -13,7 +13,7 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="5cfcb2c3bf907eceee4540351b156c4d"/>
+		<file filename="CHANGELOG" md5="e3e338933bc1fb8c6dd4fe15358a1fb7"/>
 		<file filename="controllers/BlogController.php" md5="38ccca8e11a807a48816c0fe5472e3f9">
 			<controller name="BlogController"/>
 		</file>
@@ -31,14 +31,14 @@
 		<file filename="upgrades/130_to_140_published.php" md5="c19cd9693ba732d34b95e4c2e2ab6f6a"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
 		<file filename="upgrades/150_to_151_filepathchange.php" md5="d37162704ef850a8954bf11dcc66dc43"/>
-		<file filename="upgrades/next_page_updates.php" md5="6d72fdf11b4261f55bf3b8bc367d4e78"/>
-		<file filename="widgets/BlogArticleWidget.php" md5="ed8bcb386d8fcdc0fdb870c9bd8703e5">
+		<file filename="upgrades/next_page_updates.php" md5="f82ccd03972ebb256d4bdbef64e8fb43"/>
+		<file filename="widgets/BlogArticleWidget.php" md5="f83188287aded92bab593a4564272edb">
 			<class name="BlogArticleWidget"/>
 		</file>
-		<file filename="widgets/BlogSearchWidget.php" md5="eb16d45169d27f54a878a48c03cbc97a">
+		<file filename="widgets/BlogSearchWidget.php" md5="330296744e3e58eee511694a57a2113a">
 			<class name="BlogSearchWidget"/>
 		</file>
-		<file filename="widgets/BlogWidget.php" md5="072ce495d59e92b1e6eceab926fc31da">
+		<file filename="widgets/BlogWidget.php" md5="f8080992f3d5f02d8e2c4b76f6bb16c8">
 			<class name="BlogWidget"/>
 		</file>
 	</files>
@@ -124,6 +124,7 @@
 		<upgrade from="1.6.1" to="1.6.2"/>
 		<upgrade from="1.6.2" to="1.6.3"/>
 		<upgrade from="1.6.3" to="1.6.4"/>
+		<upgrade from="1.6.4" to="1.6.5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="057d4488d69c927125d516cde602edb1"/>

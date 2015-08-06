@@ -1,3 +1,10 @@
+Blog 1.6.5
+
+	* Update the copyright to 2015 and my email address throughout the project.
+	* New widget previews for the widget manager.
+	* Heavy reworking of the widget system to support widget previews and alternative display templates.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 06 Aug 2015 17:39:06 -0400
+
 Blog 1.6.4
 
 	* Some backport fixes for updating old versions of the blog system on new versions of Core.
