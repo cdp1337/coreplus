@@ -1,3 +1,11 @@
+Geographic Codes 1.6.2
+
+	* [Bug] Fix for when there are multiple geoAddress inputs on a single page.
+	* Update the copyright to 2015 and my email address throughout the project.
+	* Minor code cleanups and removing some legacy code.
+	* Some beansbooks integration work on GeoAddressModel, not applicable without that component.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 06 Aug 2015 17:46:33 -0400
+
 Geographic Codes 1.6.1
 
 	* Use the bulk inserts for geographic codes installation to save time.

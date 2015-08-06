@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.1" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.2" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -9,25 +9,25 @@
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="f743f78a87e1a2e102a8afc5a7ad9497"/>
+		<file filename="CHANGELOG" md5="49db721de61e92cbed66784c8f768779"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
-		<file filename="classes/GeoAddressFormInput.php" md5="33de8bb8d9b108715b5759bf2c5fb372">
+		<file filename="classes/GeoAddressFormInput.php" md5="3d0aa78147d981b3915d3f5704078da3">
 			<class name="GeoAddressFormInput"/>
 		</file>
-		<file filename="controllers/GeoAddressController.php" md5="03720ed85f98e822f278f17048a9bf7e">
+		<file filename="controllers/GeoAddressController.php" md5="7f9482720683c72dc0237c9431a81b58">
 			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
 		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
 		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
-		<file filename="geocode/Country.php" md5="5ac98a7fa933f64f0f51d1a6bbbec8f7">
+		<file filename="geocode/Country.php" md5="a7b171d02e43247c4cc20fc4efdf9451">
 			<class name="geocode\Country"/>
 		</file>
-		<file filename="geocode/IPLookup.php" md5="cbc7211df34ab9c0df4b36b29f82070d">
+		<file filename="geocode/IPLookup.php" md5="8db9d1e2b0f754865f6341bd7ec676c2">
 			<class name="geocode\IPLookup"/>
 		</file>
-		<file filename="geocode/Updater.php" md5="35569631c12bf603e91c1bacdab9c3c8">
+		<file filename="geocode/Updater.php" md5="5aac57ef7a75f6a50443318450e1bedc">
 			<class name="geocode\Updater"/>
 		</file>
 		<file filename="libs/GeoIp2/CHANGELOG.md" md5="15e498e9e60e23fc6cad82a7c8b6962a"/>
@@ -168,16 +168,16 @@
 		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
 		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
 		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="93d5e5a9c4f5bab316e741d8b8a58bf6">
+		<file filename="models/GeoAddressModel.php" md5="c2c93ad9c91936110357ab9a919acdb5">
 			<class name="GeoAddressModel"/>
 		</file>
-		<file filename="models/GeoCountryModel.php" md5="34a72a9b1fdf67fea8a1f7bddd23a2d9">
+		<file filename="models/GeoCountryModel.php" md5="f8d5866511d6108257b82cb10cb0b4aa">
 			<class name="GeoCountryModel"/>
 		</file>
-		<file filename="models/GeoProvinceModel.php" md5="553b1e62a9fc8d54a8a987350a4ba28d">
+		<file filename="models/GeoProvinceModel.php" md5="9f04da03f83ebb6dd1c8604ceff3cfac">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="smarty-plugins/function.geoiplookup.php" md5="b5db916bacd508502ba3656cb428a026"/>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="4ca1586558330f45fd70c9641021dd67"/>
 	</files>
 	<assets>
 		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aa.png" md5="b51cd1f73e48dff9282fd18da28ebb9a"/>
@@ -453,10 +453,10 @@
 		<upgrade from="1.4.0" to="1.5.0"/>
 		<upgrade from="1.5.0" to="1.6.0"/>
 		<upgrade from="1.6.0" to="1.6.1"/>
+		<upgrade from="1.6.1" to="1.6.2"/>
 	</upgrades>
 	<view>
 		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>
-		<file filename="templates/pages/geoaddress/testform.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 	</view>
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
