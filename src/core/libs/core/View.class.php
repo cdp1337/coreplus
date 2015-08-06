@@ -102,6 +102,7 @@ class View {
 	const CTYPE_JSON  = 'application/json';
 	const CTYPE_XML   = 'application/xml';
 	const CTYPE_ICS   = 'text/calendar';
+	const CTYPE_RSS   = 'application/rss+xml';
 
 
 	public $error;

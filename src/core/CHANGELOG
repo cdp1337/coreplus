@@ -1,3 +1,70 @@
+Core Plus 4.1.0
+
+	* [Security] New Content Security Policy header system config option
+	* [Bug] Do not display the table header for listing tables if there are no entries!
+	* [Bug] Do not try to process JPEG thumbnails when exif_thumbnail doesn't exist.
+	* [Bug] Limit file upload names to 40 characters.
+	* [Bug] Add support for mobile browsers on the context menus.
+	* [Bug] Fix for invalid widgets from the createwidget metadata.
+	* [Bug] Fixes to the updater, (a GET parameter is better to use than the URL).
+	* [Bug] Fixes to the updater.
+	* [Bug] Fix issue #1273 Make non-existent widgets a little more forgiving, (no longer throw exceptions
+	  when trying to load a non-existent widget).
+	* [Bug] Fix issue #1118 - Add a new Validation exception for data entry errors that aren't thrown by
+	  the Model, but should still behave similarly.
+	* [Feature] Allow for "inline" CSS includes.
+	* [Feature] Rudementary support for the API key to be used for authenticating the user, (WIP)
+	* [Feature] Include MarkDown to HTML converter in Core.
+	* [Feature] More browsers supported for regex/str detection for if file detection fails.
+	* [Feature] New feature - spinning icons on the control cog.
+	* Trivial namespace change.
+	* Hand off more logic to phpMailer, (now that it is more functional in regards to HTML messages).
+	* Add getDirectoryName to the official FileInterface.
+	* New method, CLI::PrintProgressBar!
+	* Make the color messages monospace.
+	* Allow Models to have translateKey called without saving the underlying model in case of linked
+	  Models as the value.
+	* Add support for FGL text.
+	* Todo #1305 Switch from /user/view/# to /usermodel for the Control Links hook.
+	* Add support for a fringe case when an entire Model is set as a value of another Model.
+	* Minor javascript cleanup and add onChange event propagation for userInputs.
+	* Move support for dispatching control links on a specific Model up one level from the smarty function
+	  to the ViewControls object.
+	* Documentation fix.
+	* Switch dataprofiler to save to Session so that queries on POST/redirect pages can still be viewed.
+	* Links should default not to have confirm text, (so that they send GET requests instead of POST).
+	* Shorthand for selecting a single record via executeAndGet.
+	* Capitalization error with the context controls.
+	* Allow a full email address to be used for the user input.
+	* Switch the data: prefixed attributes to valid data attributes for {a} tags.
+	* Increase the precision of the user activity to allow more than one request per second per user.
+	* New DataProfiler to centralize profiling datasources and queries.
+	* Allow the proxy to be set as not used via "data-proxy-force=0" (or proxy-force when using
+	  {controls}.
+	* Add "function" as a requirement option for component <require> flags.
+	* Remove the force session save logic.
+	* New configuration option, DMI_QUERY_LOG_TIMEOUT, essentially slow_sql_log.
+	* Require the new dataprofiler on ClI reinstallations.
+	* Update the copyright to 2015 and my email address throughout the project.
+	* New widget previews for the widget manager.
+	* Sort components by name on the All Pages filter.
+	* Core now includes JSON-JS as an embedded library.
+	* Utilize embedded JPEG thumbnails when resizing an image to thumbnail-sizes.
+	* Re issue #1267 Remove the duplicate template element from the widget edit page, this was meant to
+	  reside only on the instance options page. @.25
+	* Purge some legacy files in Core that aren't used anymore.
+	* Cleanup the spin option on ul.controls a bit - proxy-icon-animation.
+	* Add the widget settings link on widget instances, it only makes sense to be able to edit them from
+	  the installed point too.
+	* Heavy reworking of the widget system to support widget previews and alternative display templates.
+	* Allow source to contain "this::" when passed in from a valid Model.
+	* Remove some legacy files.
+	* "Alternate" does not mean the same as "Alternative".
+	* Move some of the icon logic from View to ViewControl.
+	* Support control links on an entire listing table.
+	* fancy animations for controls icons and CSP header
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 06 Aug 2015 17:38:08 -0400
+
 Core Plus 4.0.8
 
 	* Include JSON2 for IE8 and lower.

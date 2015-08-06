@@ -571,9 +571,8 @@ class FileRemote implements Filestore\File {
 			foreach ($h as $line) {
 				if (strpos($line, 'HTTP/1.') !== false) {
 					$this->_response = substr($line, 9, 3);
-					continue;
 				}
-				if (strpos($line, ':') !== false) {
+				elseif (strpos($line, ':') !== false) {
 					$k                  = substr($line, 0, strpos($line, ':'));
 					$v                  = trim(substr($line, strpos($line, ':') + 1));
 					// Content-Type can have an embedded charset request.
