@@ -1,3 +1,9 @@
+JQuery-Full 2.1.3~core1
+
+	* Upgrade jquery.cookie to 1.4.1
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 06 Aug 2015 17:48:43 -0400
+
 JQuery-Full 1.11.4~core2
 
 	* [Bug] Reverted theme from default to smoothness

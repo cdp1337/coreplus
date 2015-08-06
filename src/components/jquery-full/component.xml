@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.11.4~core2" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.3~core1" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -93,47 +93,49 @@
 		<file filename="assets/css/jquery.icheck.css" md5="a75642d46565de832b31f2d073d25272"/>
 		<file filename="assets/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.js" md5="3b80424646a7ecdb19273d86800c1ac0"/>
-		<file filename="assets/js/jquery/jquery-1.11.0.min.js" md5="8fc25e27d42774aeae6edbc0a18b72aa"/>
+		<file filename="assets/js/jquery/jquery-1.11.0.min.js" md5="f5fb81fde31e9f5d0ccf14eb479cbc8d"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.min.map" md5="88960207dc799796278610d3febe4abb"/>
 		<file filename="assets/js/jquery/jquery-2.1.3.js" md5="cf26f8f0ccb06be71e92d8db0fb64ab5"/>
-		<file filename="assets/js/jquery/jquery-2.1.3.min.js" md5="32015dd42e9582a80a84736f5d9a44d7"/>
+		<file filename="assets/js/jquery/jquery-2.1.3.min.js" md5="a9cbb890fd77bd9d5faec3d286255305"/>
 		<file filename="assets/js/jquery/jquery-2.1.3.min.map" md5="54fb7b3bd4b6443f87b9916edf490f38"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.min.js" md5="a34697840e5bb92b47a5b28034f19b0f"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.min.js" md5="82264f45e5690c782c99c9d5e8172b8b"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.js" md5="387c83ae31050eee0b744c6ea62eaf9e"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.min.js" md5="ae6f04c088d76a69d33c1c954e08fcf0"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.min.js" md5="61fa3eb2b0301ee34e5b07555d92001d"/>
 		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.js" md5="c1af2a1f16eab3aa557897e9568775b2"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.min.js" md5="e9a4e8365783a4e3d96f908289f553ec"/>
+		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.min.js" md5="520532740803557246b37f9c9f506053"/>
 		<file filename="assets/js/jquery/jquery-ui-1.11.4.js" md5="535c509d4c3ebb2ce7cdbd038a0613c3"/>
-		<file filename="assets/js/jquery/jquery-ui-1.11.4.min.js" md5="40f96bd3d2cb933f9e34062b90b3656f"/>
-		<file filename="assets/js/jquery/jquery.cookie.js" md5="368c829b47c90cddb62256701654d950"/>
-		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="b2b5da3ba885603b0097b9a6bd6b032c"/>
+		<file filename="assets/js/jquery/jquery-ui-1.11.4.min.js" md5="17fe7a8a35ed7075a4cf2e2ee476e1fb"/>
+		<file filename="assets/js/jquery/jquery.cookie.js" md5="d5528dde0006c78be04817327c2f9b6f"/>
+		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="bb836b7da5be2acc803205b68a575801"/>
 		<file filename="assets/js/jquery/jquery.form.js" md5="a3aa2838a67b271230e38fb81dfa9748"/>
-		<file filename="assets/js/jquery/jquery.form.min.js" md5="95061e7415903f550f181206aa99e8d9"/>
+		<file filename="assets/js/jquery/jquery.form.min.js" md5="7feb80858558713ea0f8e394e2d21051"/>
 		<file filename="assets/js/jquery/jquery.icheck.js" md5="a1937ea5bb6c00387308061d0c957f6e"/>
-		<file filename="assets/js/jquery/jquery.icheck.min.js" md5="c5781ee1994e04226df0d291e131379e"/>
+		<file filename="assets/js/jquery/jquery.icheck.min.js" md5="972fdab9e362cb40e66631ee8d312e4e"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.js" md5="916c946e972ec0315db82ebaacbcf111"/>
-		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="f7b87723e700272150f9785de8f03f1c"/>
+		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="4353dbe52eb325ec766a1520f450638d"/>
 		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
 		<file filename="assets/js/jquery/jquery.minimalect.js" md5="1e544516b82f596d8ff5d6a81e514ecc"/>
-		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="aeaf108178bbe71a560f20519b28960e"/>
+		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="0b12dade9546bde491ad57507dd70199"/>
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
-		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="28fb224b45d2fdb5e5eef85d2dfc8458"/>
-		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="3de4b84a6cdbc15e6e42514d80bd743b"/>
-		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="ae62f410564d47cfec4593a0d5e1ffda"/>
+		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="dd45d742a6d4fbdd99332aec91b9773d"/>
+		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="cd04a69450026b78ed328237dfb4788c"/>
+		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="55025c93f11da391211ec622363b24d1"/>
 		<file filename="assets/js/jquery/jquery.ui.touch-punch.js" md5="700b877cd3ade98ce6cd4be349d81a5c"/>
+		<file filename="assets/js/jquery/jquery.ui.touch-punch.min.js" md5="448c18a1f5f01f814422e8248d53c113"/>
 		<file filename="assets/js/jquery/jqueryui.timepicker.js" md5="08d8151043927a37b472a4ae8d2a311f"/>
+		<file filename="assets/js/jquery/jqueryui.timepicker.min.js" md5="aeabf00d348a5c893b8a81754979e7e6"/>
 		<file filename="assets/js/jquery/tmpl.js" md5="5e2855f4f4a4fd07ac343c9f0823d67f"/>
-		<file filename="assets/js/jquery/tmpl.min.js" md5="411df7e2bc659d35015f7fdb7432b331"/>
+		<file filename="assets/js/jquery/tmpl.min.js" md5="e2751b6755a60363ff46117491e4a522"/>
 		<file filename="assets/js/jquery/waypoints.js" md5="b4536ce4cb3b88f2e66ce16e3102b9fd"/>
-		<file filename="assets/js/jquery/waypoints.min.js" md5="2cff0e2f1f5941053247e8d8b9aa6bde"/>
+		<file filename="assets/js/jquery/waypoints.min.js" md5="947d68af456805c965cd0c9e3fe2266e"/>
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="b6e3fa7212685413286fbf62ece429a0"/>
+		<file filename="CHANGELOG" md5="d117d667ca5466a59a16cf05e06f512f"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="e6054a12f52fafc9ea3e910053be498b">
+		<file filename="JQuery.lib.php" md5="8b8121efd6153eb7987ec70d6c95c9bf">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -173,6 +175,7 @@
 		<upgrade from="1.11.2~core1" to="1.11.2~core2"/>
 		<upgrade from="1.11.2~core2" to="1.11.4~core1"/>
 		<upgrade from="1.11.4~core1" to="1.11.4~core2"/>
+		<upgrade from="1.11.4~core2" to="2.1.3~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
