@@ -1,3 +1,8 @@
+Security-Suite 1.5.3
+
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 06 Aug 2015 17:49:38 -0400
+
 Security-Suite 1.5.2
 
 	* [Bug] Ensure that *all* the hooks have the proper namespace...
