@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.4" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.5" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -37,20 +37,20 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="dc83f098db1390ae0d2633a6bccacaca"/>
-		<file filename="controllers/GalleryController.php" md5="52a012b19267b67a54cd9076afa7ad2f">
+		<file filename="CHANGELOG" md5="c3eccd69b84d6a9cb0285d92d0de7880"/>
+		<file filename="controllers/GalleryController.php" md5="c3c1abb96658092c7c559186bc1b901b">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="controllers/GalleryWidgetController.php" md5="a0bb1c17c4cb7bc83f0c58386d759f74">
+		<file filename="controllers/GalleryWidgetController.php" md5="77960ded4999bb05560f105c53d6ebf7">
 			<controller name="GalleryWidgetController"/>
 		</file>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
 			<class name="GalleryFormHandler"/>
 		</file>
-		<file filename="models/GalleryAlbumModel.php" md5="42e066aebc160e4bf0f587cf588157c2">
+		<file filename="models/GalleryAlbumModel.php" md5="1183b08ffeb8637e71a310c2cf88319e">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="6458fbacfad0588c370b14a5f8ac921f">
+		<file filename="models/GalleryImageModel.php" md5="cdcc869182cff13f70ad0c95afb826e8">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
@@ -98,6 +98,7 @@
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.5.4"/>
+		<upgrade from="1.5.4" to="1.5.5"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
