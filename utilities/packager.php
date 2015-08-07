@@ -789,12 +789,13 @@ while(true){
 					CLI::PrintError('Version ' . $packager->getVersion() . ' is already marked as released!  Refusing to import GIT changes into a released version.');
 				}
 				else{
-					$thischange     = $packager->getChangelogSection();
-					$versioncheck   = $packager->getVersion();
-					$previouschange = $packager->getChangelog()->getPreviousSection($versioncheck);
-					$previousdate   = $previouschange->getReleasedDate() ? $previouschange->getReleasedDate() : '01 Jan 2013 00:00:00 -0400';
-					$changes        = $packager->getGitChangesSince($previousversion, $previousdate);
-					$linecount      = sizeof($thischange->getEntriesSorted());
+					$thischange      = $packager->getChangelogSection();
+					$versioncheck    = $packager->getVersion();
+					$previouschange  = $packager->getChangelog()->getPreviousSection($versioncheck);
+					$previousdate    = $previouschange->getReleasedDate() ? $previouschange->getReleasedDate() : '01 Jan 2013 00:00:00 -0400';
+					$previousversion = $previouschange->getVersion();
+					$changes         = $packager->getGitChangesSince($previousversion, $previousdate);
+					$linecount       = sizeof($thischange->getEntriesSorted());
 
 					foreach($changes as $line){
 						$thischange->addLine($line);
