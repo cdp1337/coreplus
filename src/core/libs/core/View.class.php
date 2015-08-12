@@ -1041,12 +1041,20 @@ class View {
 	 * Useful for embedding functions and administrative utilities inline without having to adjust the
 	 * application template.
 	 *
-	 * @param string|array $title       The title to set for this control
-	 * @param string $link        The link to set for this control
-	 * @param string|array $class The class name or array of attributes to set on this control
+	 * @param string|array|Model $title  The title to set for this control
+	 * @param string             $link   The link to set for this control
+	 * @param string|array       $class  The class name or array of attributes to set on this control
 	 *                            If this is an array, it should be an associative array for the advanced parameters
 	 */
 	public function addControl($title, $link = null, $class = 'edit') {
+
+		if($title instanceof Model){
+			// Allow a raw Model to be sent in as the control subject.
+			// This is a shortcut for Controllers much like the {controls} smarty function has.
+			$this->controls = ViewControls::DispatchModel($title);
+			return;
+		}
+
 		$control = new ViewControl();
 
 		// Completely associative-array based version!
@@ -1080,9 +1088,18 @@ class View {
 	/**
 	 * Add an array of controls at once, useful in conjunction with the model->getControlLinks method.
 	 *
-	 * @param array $controls
+	 * If a Model is provided as the subject, that is used as the subject and all system hooks apply thereof.
+	 *
+	 * @param array|Model $controls
 	 */
 	public function addControls($controls){
+		if($controls instanceof Model){
+			// Allow a raw Model to be sent in as the control subject.
+			// This is a shortcut for Controllers much like the {controls} smarty function has.
+			$this->controls = ViewControls::DispatchModel($controls);
+			return;
+		}
+
 		foreach($controls as $c){
 			$this->addControl($c);
 		}
