@@ -1,7 +1,7 @@
 <?php
 /**
  * Smarty {script} block
- * 
+ *
  * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@evalagency.com>
@@ -91,7 +91,8 @@ function smarty_block_script($params, $content, $smarty, &$repeat){
 	// I guess using "library" to indicate the desired library would make sense too....
 	elseif(isset($params['library'])){
 		if(!Core::LoadScriptLibrary($params['library'])){
-			throw new SmartyException('Unable to load script library ' . $params['library']);
+			$libs = Core::GetJSLibraries();
+			throw new SmartyException('Unable to load script library ' . $params['library'] . '!<br/>(Did you mean one of the following?: ' . implode(', ', array_keys($libs)) . ')');
 		}
 	}
 	// Allow {script} tags to be called with the traditional src attribute.
