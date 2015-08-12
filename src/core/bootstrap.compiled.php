@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 21 Jul 2015 17:00:23 -0400
+ * @compiled Tue, 11 Aug 2015 22:46:07 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -11396,9 +11396,8 @@ curl_close($curl);
 foreach ($h as $line) {
 if (strpos($line, 'HTTP/1.') !== false) {
 $this->_response = substr($line, 9, 3);
-continue;
 }
-if (strpos($line, ':') !== false) {
+elseif (strpos($line, ':') !== false) {
 $k                  = substr($line, 0, strpos($line, ':'));
 $v                  = trim(substr($line, strpos($line, ':') + 1));
 if($k == 'Content-Type' && strpos($v, 'charset=') !== false){
@@ -13744,13 +13743,16 @@ else return true;
 public static function IsJSLibraryAvailable($name, $version = false, $operation = 'ge') {
 $ch   = self::Singleton();
 $name = strtolower($name);
-if (!isset($ch->_jslibraries[$name])) return false;
-elseif ($version) return version_compare(str_replace('~', '-', $ch->_jslibraries[$name]->version), $version, $operation);
+if (!isset($ch->_scriptlibraries[$name])) return false;
+elseif ($version) return version_compare(str_replace('~', '-', $ch->_scriptlibraries[$name]->version), $version, $operation);
 else return true;
 }
 public static function GetJSLibrary($library) {
 $library = strtolower($library);
-return self::Singleton()->_jslibraries[$library];
+return self::Singleton()->_scriptlibraries[$library];
+}
+public static function GetJSLibraries() {
+return self::Singleton()->_scriptlibraries;
 }
 public static function LoadScriptLibrary($library) {
 $library = strtolower($library);
@@ -16046,6 +16048,7 @@ const CTYPE_PLAIN = 'text/plain';
 const CTYPE_JSON  = 'application/json';
 const CTYPE_XML   = 'application/xml';
 const CTYPE_ICS   = 'text/calendar';
+const CTYPE_RSS   = 'application/rss+xml';
 public $error;
 private $_template;
 private $_params;
@@ -16565,6 +16568,10 @@ $seen[] = $dat['link'];
 return $crumbs;
 }
 public function addControl($title, $link = null, $class = 'edit') {
+if($title instanceof Model){
+$this->controls = ViewControls::DispatchModel($title);
+return;
+}
 $control = new ViewControl();
 if(func_num_args() == 1 && is_array($title)){
 foreach($title as $k => $v){
@@ -16588,6 +16595,10 @@ $this->controls[] = $control;
 }
 }
 public function addControls($controls){
+if($controls instanceof Model){
+$this->controls = ViewControls::DispatchModel($controls);
+return;
+}
 foreach($controls as $c){
 $this->addControl($c);
 }
