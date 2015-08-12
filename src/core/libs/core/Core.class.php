@@ -395,9 +395,9 @@ class Core implements ISingleton {
 		Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
 
 		// The core component at a minimum needs to be loaded and registered.
-//		$this->_registerComponent($list['core']);
-//		$this->_components['core']->loadFiles();
-//		unset($list['core']);
+		//		$this->_registerComponent($list['core']);
+		//		$this->_components['core']->loadFiles();
+		//		unset($list['core']);
 
 		// Now that I have a list of components available, copy them into a list of 
 		//	components that are installed.
@@ -940,15 +940,24 @@ class Core implements ISingleton {
 		$name = strtolower($name);
 		//if($name == 'DB') return true;
 		//echo "Checking jslibrary name[$name] v[$version] op[$operation]<br>";
-		if (!isset($ch->_jslibraries[$name])) return false;
+		if (!isset($ch->_scriptlibraries[$name])) return false;
 		// There's a bit of an issue with the debian-style versions... PHP considers 1.2.3~1 < 1.2.3...
-		elseif ($version) return version_compare(str_replace('~', '-', $ch->_jslibraries[$name]->version), $version, $operation);
+		elseif ($version) return version_compare(str_replace('~', '-', $ch->_scriptlibraries[$name]->version), $version, $operation);
 		else return true;
 	}
 
 	public static function GetJSLibrary($library) {
 		$library = strtolower($library);
-		return self::Singleton()->_jslibraries[$library];
+		return self::Singleton()->_scriptlibraries[$library];
+	}
+
+	/**
+	 * Get a flat list of javascript libraries currently available.
+	 *
+	 * @return array
+	 */
+	public static function GetJSLibraries() {
+		return self::Singleton()->_scriptlibraries;
 	}
 
 	public static function LoadScriptLibrary($library) {
@@ -1158,8 +1167,8 @@ class Core implements ISingleton {
 			else $extraparams[] = $k . '=' . $v;
 		}
 		return $base .
-			(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
-			(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
+		(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
+		(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
 	}
 
 	/**
