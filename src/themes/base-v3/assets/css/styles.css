@@ -1124,6 +1124,13 @@ table.listing .edit {
   display: none;
 }
 
+/* line 75, ../scss/_listing_tables.scss */
+.listing-table-column-select label {
+  float: left;
+  margin-right: 1%;
+  width: 23%;
+}
+
 /*****************************************************************************
  *****************************************************************************
  **                               MESSAGES                                  **

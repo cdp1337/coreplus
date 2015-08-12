@@ -118,14 +118,16 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 			if(current[$th.data('viewkey')]){
 				html += ' checked="checked"';
 			}
-			html += '>&nbsp;' + $th.data('viewtitle') + '</label><br/>';
+			html += '>&nbsp;' + $th.data('viewtitle') + '</label>';
 		});
 
-		$dialog = $('<div>' + html + '</div>');
+		$dialog = $('<div class="listing-table-column-select">' + html + '</div>');
 
 		$dialog.dialog({
 			modal: true,
-			title: 'Select Columns'
+			title: 'Select Columns',
+			width: '75%',
+			resizable: false
 		}).find('input').change(function(){
 			var n = $(this).attr('name');
 			// INVERSE!
