@@ -3,9 +3,9 @@
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.1" name="Base V3">
 	<assets>
 		<file filename="assets/css/custom.css" md5="a48d02e7c72d9a0ec1adcf942f910b16"/>
-		<file filename="assets/css/styles.css" md5="02d951d9cf5ea9bafa1d392279c7a8d3"/>
-		<file filename="assets/css/styles.css.map" md5="af214b332d377c7d20c35acc24ce0655"/>
-		<file filename="assets/css/styles.min.css" md5="a25f28971d02fac0cef78387e6290a99"/>
+		<file filename="assets/css/styles.css" md5="b0823f41433d48703b53c4b18a451664"/>
+		<file filename="assets/css/styles.css.map" md5="8d5cb7c8ee12f4e7127e89d32d7998e8"/>
+		<file filename="assets/css/styles.min.css" md5="139bb6f691f42b02e3422b4aeca7fff3"/>
 	</assets>
 	<skins>
 		<file filename="basic.tpl" md5="8f78a58a8c664f1e6e24fe4587956e1f" title=""/>
@@ -19,12 +19,13 @@
 	<otherfiles>
 		<file filename="CHANGELOG" md5="8e91ef256d1a0012bcb78805a6f8ad00"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
-		<file filename="assets/scss/_controls.scss" md5="9f345b3c4cd3f4c797b4c137366c4913"/>
+		<file filename="assets/scss/_content.scss" md5="097bf438eda632d02a7ed9ca403101bc"/>
+		<file filename="assets/scss/_controls.scss" md5="b885ad473325601bf7b48d7ce007dd10"/>
 		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
-		<file filename="assets/scss/_form_elements.scss" md5="053ef1b0713e10e49c2eee4c47def953"/>
+		<file filename="assets/scss/_form_elements.scss" md5="a8d0c814567f07d9cefff2c0235d39a5"/>
 		<file filename="assets/scss/_layout.scss" md5="a68495db61287838291f4fea2ed9d152"/>
-		<file filename="assets/scss/_listing_tables.scss" md5="445bf87b5085fe82f48b04c6dd765d67"/>
+		<file filename="assets/scss/_listing_tables.scss" md5="4f01f08dd25ec56522f0a2ba1daddcb7"/>
 		<file filename="assets/scss/_messages.scss" md5="002d7e2910f33c36ff9bcccb9a49e2ed"/>
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
@@ -32,7 +33,7 @@
 		<file filename="assets/scss/pages/_theme.scss" md5="1039df69f0df35e4c7c9883a109ef103"/>
 		<file filename="assets/scss/pages/_updater.scss" md5="071f9f71dda94d07e8423f02e811e72b"/>
 		<file filename="assets/scss/pages/_widgets.scss" md5="13db361c6afd511138cf054c9cafebab"/>
-		<file filename="assets/scss/styles.scss" md5="ac4aab352fe81ed32c899ad2beb249f9"/>
+		<file filename="assets/scss/styles.scss" md5="f9b399a0e63bafdb33cd4787899e2c5e"/>
 		<file filename="assets/scss/vendor/_normalize.scss" md5="7caceed677229c6cc84aa3f4754ff3a4"/>
 		<file filename="assets/scss/vendor/bitters/_base.scss" md5="563284be5f71a4f841237d8fc09b3957"/>
 		<file filename="assets/scss/vendor/bitters/_buttons.scss" md5="a699743c04866fcf0d71cfd2acf3e2de"/>

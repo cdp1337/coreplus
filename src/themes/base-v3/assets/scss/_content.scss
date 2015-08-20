@@ -1,0 +1,22 @@
+/**
+ * General content styles
+ */
+
+a.button {
+	@include button();
+}
+
+pre code {
+	display: block;
+	padding: 0.5em 1em;
+	border: 1px solid;
+}
+
+aside.markdown-toc {
+	float: left;
+	margin-right: 1em;
+
+	ul {
+		margin-left: 1em;
+	}
+}

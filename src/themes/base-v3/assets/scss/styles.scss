@@ -23,15 +23,11 @@
 @import "pages/updater";
 @import "pages/widgets";
 @import "pages/theme";
+@import "content";
 
 #admin-bar {
 	@include clearfix;
 }
-
-a.button {
-	@include button();
-}
-
 
 @media print {
 	@import "print";
