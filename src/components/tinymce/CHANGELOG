@@ -1,3 +1,10 @@
+TinyMCE 4.2.4~core1
+
+	* Upgrade TinyMCE to newest upstream version.
+	* Update the copyright to 2015 and my email address throughout the project.
+	* New version of TInyMCE from upstream, now with proper link support!!!
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:26:41 -0400
+
 TinyMCE 4.0.1~core6
 
 	* DAMN CLRF!

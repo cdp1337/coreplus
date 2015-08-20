@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.1~core6" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.4~core1" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -20,16 +20,16 @@
 		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="7ea2753959b2b13f395706cfe16ea5c3"/>
+		<file filename="CHANGELOG" md5="64ee6fb3c1cd877ecd9bc2e93d29e0c0"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
-		<file filename="TinyMCEFormElement.class.php" md5="c92a201c2bd939d64a4e0fbd9a9f3ceb">
+		<file filename="TinyMCEFormElement.class.php" md5="6c34bac6e75b958403c34d264b09f813">
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="4d7505646c4aa7e07037ad0b773dd681"/>
 		<file filename="controllers/TinyMCEController.php" md5="8eb7247078c961fdc790f3976844fff5">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="libs/tinymce/TinyMCE.php" md5="38178b19a292059c072b7e6534c82e05">
+		<file filename="libs/tinymce/TinyMCE.php" md5="fc9de7a9db5f834fd601e75b25c7c928">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
@@ -46,13 +46,13 @@
 		<file filename="assets/js/tinymce/plugins/anchor/plugin.js" md5="8bcceef07c5d78b26e2ceefb2798b236"/>
 		<file filename="assets/js/tinymce/plugins/anchor/plugin.min.js" md5="25917fb0c34e22440af7f5814b8744af"/>
 		<file filename="assets/js/tinymce/plugins/autolink/plugin.js" md5="85ea7d134349b24085e444a2c5504c96"/>
-		<file filename="assets/js/tinymce/plugins/autolink/plugin.min.js" md5="d3f8d3767cd94dbed5e714f510d1866e"/>
+		<file filename="assets/js/tinymce/plugins/autolink/plugin.min.js" md5="8555ba362094f59d7b13d10ba31c245f"/>
 		<file filename="assets/js/tinymce/plugins/autoresize/plugin.js" md5="6df8c21374adf770186957a561733594"/>
 		<file filename="assets/js/tinymce/plugins/autoresize/plugin.min.js" md5="2dc1ea2c539de10a14504b29eda652af"/>
 		<file filename="assets/js/tinymce/plugins/autosave/plugin.js" md5="7c20e2e4f142f50a833d1e9436099669"/>
 		<file filename="assets/js/tinymce/plugins/autosave/plugin.min.js" md5="4dec5af212b093dd999c9f823138b645"/>
 		<file filename="assets/js/tinymce/plugins/bbcode/plugin.js" md5="5a5a73513a57d4c474f93a033275e5ed"/>
-		<file filename="assets/js/tinymce/plugins/bbcode/plugin.min.js" md5="c0659a68f5de69f1b1632b73a2c534cc"/>
+		<file filename="assets/js/tinymce/plugins/bbcode/plugin.min.js" md5="0e2d453acd9b6f77e05b70ed37334d3e"/>
 		<file filename="assets/js/tinymce/plugins/charmap/plugin.js" md5="61d3e5d077b1d76704eac85c63a148bc"/>
 		<file filename="assets/js/tinymce/plugins/charmap/plugin.min.js" md5="aeb8638d01b2c3c7fbf36e69893f4b25"/>
 		<file filename="assets/js/tinymce/plugins/code/plugin.js" md5="c31379345d6da76ee596a90d8d559703"/>
@@ -75,7 +75,7 @@
 		<file filename="assets/js/tinymce/plugins/compat3x/utils/mctabs.js" md5="9f78248e9e0a64aa17f3062ce25099cb"/>
 		<file filename="assets/js/tinymce/plugins/compat3x/utils/validate.js" md5="681466e5980a5b99d9baeded56c67d34"/>
 		<file filename="assets/js/tinymce/plugins/contextmenu/plugin.js" md5="01287143bd3cc5b6c019590a587ba445"/>
-		<file filename="assets/js/tinymce/plugins/contextmenu/plugin.min.js" md5="7e934aa155cfa1a906f53f6fde407f8a"/>
+		<file filename="assets/js/tinymce/plugins/contextmenu/plugin.min.js" md5="f64498580e137ac0206b9b655bcfa297"/>
 		<file filename="assets/js/tinymce/plugins/directionality/plugin.js" md5="2a8fc756a0859acaac1b9d20481979f5"/>
 		<file filename="assets/js/tinymce/plugins/directionality/plugin.min.js" md5="60de57253ca9143a6f1e4aff10fc39d2"/>
 		<file filename="assets/js/tinymce/plugins/emoticons/img/smiley-cool.gif" md5="e26e97a318f82ec144b0818e5a8f8edb"/>
@@ -108,7 +108,8 @@
 		<file filename="assets/js/tinymce/plugins/hr/plugin.js" md5="b4853cda3c7b4c55371939381cecdb86"/>
 		<file filename="assets/js/tinymce/plugins/hr/plugin.min.js" md5="5c23255ad2d11db3f72c33b649f1389a"/>
 		<file filename="assets/js/tinymce/plugins/image/plugin.js" md5="fa6112d5a89c5ad4cf3bbcd577c6504a"/>
-		<file filename="assets/js/tinymce/plugins/image/plugin.min.js" md5="18cf193fe62a968e443817ee3e9aa8c0"/>
+		<file filename="assets/js/tinymce/plugins/image/plugin.min.js" md5="adf632ad3a790f6eb7bfcd8f00ba9d24"/>
+		<file filename="assets/js/tinymce/plugins/imagetools/plugin.min.js" md5="3def1257597d4ce1ca3823da71073bdd"/>
 		<file filename="assets/js/tinymce/plugins/importcss/plugin.js" md5="55a46ba19f5eddd4ecc9571f20169a34"/>
 		<file filename="assets/js/tinymce/plugins/importcss/plugin.min.js" md5="46010d328fee5d680f92277de734ae0f"/>
 		<file filename="assets/js/tinymce/plugins/insertdatetime/plugin.js" md5="7c870937d1bf95baeae3eda4afc72666"/>
@@ -123,7 +124,7 @@
 		<file filename="assets/js/tinymce/plugins/lists/plugin.min.js" md5="6bdcee3180998f7f8e13dc4917d8f9a9"/>
 		<file filename="assets/js/tinymce/plugins/media/moxieplayer.swf" md5="4e59d34efb2da0b9a033596a85e4b1ef"/>
 		<file filename="assets/js/tinymce/plugins/media/plugin.js" md5="117eed22aeeccaa7a85ad2c2a5760a01"/>
-		<file filename="assets/js/tinymce/plugins/media/plugin.min.js" md5="7ac22f7e2e534de4364c1de8351b175c"/>
+		<file filename="assets/js/tinymce/plugins/media/plugin.min.js" md5="97be670f640078c794e1615dceb5a80f"/>
 		<file filename="assets/js/tinymce/plugins/nonbreaking/plugin.js" md5="d48385a9cef51c799d65eede32cc2461"/>
 		<file filename="assets/js/tinymce/plugins/nonbreaking/plugin.min.js" md5="57e70fea5eafa39e96baef5e3a161345"/>
 		<file filename="assets/js/tinymce/plugins/noneditable/plugin.js" md5="f9b0ec05ebc6c10e7113546f7bff66f7"/>
@@ -137,7 +138,7 @@
 		<file filename="assets/js/tinymce/plugins/paste/classes/WordFilter.js" md5="229428f1001637df2421ef72a37f4c89"/>
 		<file filename="assets/js/tinymce/plugins/paste/plugin.dev.js" md5="cb889d35fef4742d637e038a97687971"/>
 		<file filename="assets/js/tinymce/plugins/paste/plugin.js" md5="1e031c368742554084b13814a53c6261"/>
-		<file filename="assets/js/tinymce/plugins/paste/plugin.min.js" md5="f0293e817c1dae4b042a1a1d6248b007"/>
+		<file filename="assets/js/tinymce/plugins/paste/plugin.min.js" md5="4bcf636bad04e64f10be7003828c210e"/>
 		<file filename="assets/js/tinymce/plugins/preview/plugin.js" md5="f4f05020f53b60ec8ac2447cfd21e0dc"/>
 		<file filename="assets/js/tinymce/plugins/preview/plugin.min.js" md5="9d70ec722727adb76413e682f0a0e588"/>
 		<file filename="assets/js/tinymce/plugins/print/plugin.js" md5="02044b8c2805fcdf2b7b1f238a65ff26"/>
@@ -145,12 +146,12 @@
 		<file filename="assets/js/tinymce/plugins/save/plugin.js" md5="31ac4fdb7f088b1f7e3af5ddaa5d2743"/>
 		<file filename="assets/js/tinymce/plugins/save/plugin.min.js" md5="0beaf2b3982cd2479ea22f11e037b817"/>
 		<file filename="assets/js/tinymce/plugins/searchreplace/plugin.js" md5="b002533502476b29c63128ffbdf7f0d9"/>
-		<file filename="assets/js/tinymce/plugins/searchreplace/plugin.min.js" md5="3fcb99dc392b80524fb985e66f68cad8"/>
+		<file filename="assets/js/tinymce/plugins/searchreplace/plugin.min.js" md5="749a6aa59cce02be33fd63a74bf2aae3"/>
 		<file filename="assets/js/tinymce/plugins/spellchecker/classes/DomTextMatcher.js" md5="f05d698e4e7df69f3a61450bf775c309"/>
 		<file filename="assets/js/tinymce/plugins/spellchecker/classes/Plugin.js" md5="bcc2c5c9bd046d20bf1a4905a862d382"/>
 		<file filename="assets/js/tinymce/plugins/spellchecker/plugin.dev.js" md5="60e3f2c81643d07f020669491cc0d4fe"/>
 		<file filename="assets/js/tinymce/plugins/spellchecker/plugin.js" md5="e17d5859bd3a2eeaf7681cb2994de921"/>
-		<file filename="assets/js/tinymce/plugins/spellchecker/plugin.min.js" md5="cffe89d197482490e4a4895f9a4da91b"/>
+		<file filename="assets/js/tinymce/plugins/spellchecker/plugin.min.js" md5="5cfa9381b6a00505b372cd1dc41f2266"/>
 		<file filename="assets/js/tinymce/plugins/tabfocus/plugin.js" md5="f26aeec9641346d082e288224578f806"/>
 		<file filename="assets/js/tinymce/plugins/tabfocus/plugin.min.js" md5="d810b096023695b38bf682f20774af98"/>
 		<file filename="assets/js/tinymce/plugins/table/classes/CellSelection.js" md5="2e59a9289252cdf095446a08acd0998b"/>
@@ -160,7 +161,7 @@
 		<file filename="assets/js/tinymce/plugins/table/classes/TableGrid.js" md5="345e0c04cad7491b2bad92b39131fce7"/>
 		<file filename="assets/js/tinymce/plugins/table/plugin.dev.js" md5="f28104b7cf646116e4b650c129bc8c59"/>
 		<file filename="assets/js/tinymce/plugins/table/plugin.js" md5="6e612250ce60b6568204619ed65eacd9"/>
-		<file filename="assets/js/tinymce/plugins/table/plugin.min.js" md5="47c93156ca71456e3f27fa93133da4e2"/>
+		<file filename="assets/js/tinymce/plugins/table/plugin.min.js" md5="f409e97992cfc8ab53ea9597d6f98e8d"/>
 		<file filename="assets/js/tinymce/plugins/template/plugin.js" md5="ab7728d2695d3e52bcb740a7295ebc79"/>
 		<file filename="assets/js/tinymce/plugins/template/plugin.min.js" md5="c409f9fda82f973a1106a7b5878dd85e"/>
 		<file filename="assets/js/tinymce/plugins/textcolor/plugin.js" md5="f6f2de940de4a60ee25d7cff7a0ceab3"/>
@@ -193,24 +194,24 @@
 		<file filename="assets/js/tinymce/plugins/visualchars/plugin.min.js" md5="eb356ff4f273a544b6d546eb674dc165"/>
 		<file filename="assets/js/tinymce/plugins/wordcount/plugin.js" md5="12604388623f2e28d23782bad0dc4a4a"/>
 		<file filename="assets/js/tinymce/plugins/wordcount/plugin.min.js" md5="e025cce6ea770be54ef578112d797ae4"/>
-		<file filename="assets/js/tinymce/skins/lightgray/content.inline.min.css" md5="5b10ce987c2e7a6ccb8f2e8e197dd5ac"/>
-		<file filename="assets/js/tinymce/skins/lightgray/content.min.css" md5="6f53d570185a3510ecd0c79b34be53d0"/>
+		<file filename="assets/js/tinymce/skins/lightgray/content.inline.min.css" md5="35b20a1298ab637a58ac70fa73df335c"/>
+		<file filename="assets/js/tinymce/skins/lightgray/content.min.css" md5="b7c6c39dbee52e316139d6f41ec805ca"/>
 		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce-small.eot" md5="e33420c71c1a5c429069874d1de98a8b"/>
 		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce-small.svg" md5="473611093dd8089b0ed33c199725a723"/>
 		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce-small.ttf" md5="b86135446ecf06e0ac722d6d8f403550"/>
 		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce-small.woff" md5="d725b287d3d6816c20520a31924fde17"/>
-		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.eot" md5="50b8dc1736855fc2b8d71d669b0eabf7"/>
-		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.svg" md5="0d83661ec506e1571bee29a7cba9e2c2"/>
-		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.ttf" md5="04f99db6f827ff1f7c68d6bc6b38ca99"/>
-		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.woff" md5="90a61cfad08585040f6bebe2234d8aae"/>
+		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.eot" md5="a4e6a52223e2edbd1bc2b621ec7c08c3"/>
+		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.svg" md5="006a3d1ce8aad3f9d3d6a9c3f6129a36"/>
+		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.ttf" md5="20eaff7be8a4f2cde874a39a898155c4"/>
+		<file filename="assets/js/tinymce/skins/lightgray/fonts/tinymce.woff" md5="5acd099f84c92a932b0e2897f49be665"/>
 		<file filename="assets/js/tinymce/skins/lightgray/img/anchor.gif" md5="abd3613571800fdcc891181d5f34f840"/>
 		<file filename="assets/js/tinymce/skins/lightgray/img/loader.gif" md5="394bafc3cc4dfb3a0ee48c1f54669539"/>
 		<file filename="assets/js/tinymce/skins/lightgray/img/object.gif" md5="f3726450d7457d750a2f4d9441c7ee20"/>
 		<file filename="assets/js/tinymce/skins/lightgray/img/trans.gif" md5="12bf9e19374920de3146a64775f46a5e"/>
-		<file filename="assets/js/tinymce/skins/lightgray/skin.ie7.min.css" md5="16b6170794ca6d5f7fd29073d4a5477f"/>
-		<file filename="assets/js/tinymce/skins/lightgray/skin.min.css" md5="c12daa75772a539d80c0bfffae2db05d"/>
-		<file filename="assets/js/tinymce/themes/modern/theme.min.js" md5="39a6f145c905584f0faa045a842931a9"/>
-		<file filename="assets/js/tinymce/tinymce.min.js" md5="512ce4c9525fc7c47df743c67ff21664"/>
+		<file filename="assets/js/tinymce/skins/lightgray/skin.ie7.min.css" md5="cea6608407da4b0d07f4bdad387059c2"/>
+		<file filename="assets/js/tinymce/skins/lightgray/skin.min.css" md5="25579e36a4a794e535f9473382b1c94c"/>
+		<file filename="assets/js/tinymce/themes/modern/theme.min.js" md5="f4ff5f284a52f15aecc48ef1b04f5724"/>
+		<file filename="assets/js/tinymce/tinymce.min.js" md5="b78c6b8097ae4c48a25cfc435ff832da"/>
 	</assets>
 	<upgrades>
 		<upgrade from="3.4.6" to="3.4.6~core1"/>
@@ -241,6 +242,7 @@
 		<upgrade from="4.0.1~core3" to="4.0.1~core4"/>
 		<upgrade from="4.0.1~core4" to="4.0.1~core5"/>
 		<upgrade from="4.0.1~core5" to="4.0.1~core6"/>
+		<upgrade from="4.0.1~core6" to="4.2.4~core1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
