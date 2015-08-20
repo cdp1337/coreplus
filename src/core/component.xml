@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.1.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.1.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04a0ed3fdf116d2454775b81223e19b3"/>
-		<file filename="core/CHANGELOG" md5="a342d23b3d90ad7fe459145b7feae9de"/>
+		<file filename="core/CHANGELOG" md5="552ca93e899fdc89aa2e97f4ed90d94d"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="3d44d71b98c1371956970bd6fd610a60"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -590,7 +590,7 @@
 		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="e45f4606dbf5abca44ad0839d6e1960f">
 			<class name="SQL_Parser_DatasetTest"/>
 		</file>
-		<file filename="core/libs/core/date/DateTime.php" md5="343cd78a48b5182b2f983e1a94607b08">
+		<file filename="core/libs/core/date/DateTime.php" md5="f6c2b7ffca5b72b86a19ea60a7546228">
 			<class name="Core\Date\DateTime"/>
 		</file>
 		<file filename="core/libs/core/date/Timezone.php" md5="f5543cdcfe62f0d68236b215d5cbeea5">
@@ -761,7 +761,7 @@
 			<class name="Core\Utilities\Logger\LogFile"/>
 		</file>
 		<file filename="core/libs/core/utilities/logger/functions.php" md5="58023778b3eb6c9cb737bc430a15c76d"/>
-		<file filename="core/libs/core/utilities/profiler/DatamodelProfiler.php" md5="7102b36aa70269a34ee93956bbb15737">
+		<file filename="core/libs/core/utilities/profiler/DatamodelProfiler.php" md5="43c97cac580b0fa949bd3794d6df3b99">
 			<class name="Core\Utilities\Profiler\DatamodelProfiler"/>
 		</file>
 		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="9a3de6bcbc4a995bf5eb2414c5cc6740">
@@ -938,7 +938,7 @@
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="242a8d967e9969def3a22e5fc84ff50d"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="288c4a8adfcc88509c453842d1d789d9"/>
 		<file filename="core/libs/smarty-plugins/block.script.php" md5="7b10d114342c3ae1ca8135b73ff9b7bf"/>
-		<file filename="core/libs/smarty-plugins/function.add_form_element.php" md5="40a743d588149b4d2bf4aacf9939e067"/>
+		<file filename="core/libs/smarty-plugins/function.add_form_element.php" md5="b515136479b3d0d8397d8e55a81e8c6f"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="9aa4b5cc22bb4ac72b4668ab58f61f16"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="e8fc7c5a3c4f93345862831e59e7f650"/>
 		<file filename="core/libs/smarty-plugins/function.date.php" md5="29d2834831722c515a0bd074e5e80fc5"/>
@@ -1348,7 +1348,7 @@
 			<class name="UserWidget"/>
 		</file>
 		<file filename="htaccess.example" md5="05cce4fe80af355250616acae4efd239"/>
-		<file filename="index.php" md5="44ac04ad2ad31066a32ec4e1108ae757"/>
+		<file filename="index.php" md5="8216bc56b35165c18e0b3265635303e2"/>
 		<file filename="install/InstallPage.class.php" md5="2987f4e8cf94c5fb78ebae74e3ef22ea">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1953,6 +1953,7 @@
 		<upgrade from="4.0.6" to="4.0.7"/>
 		<upgrade from="4.0.7" to="4.0.8"/>
 		<upgrade from="4.0.8" to="4.1.0"/>
+		<upgrade from="4.1.0" to="4.1.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

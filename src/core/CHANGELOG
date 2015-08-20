@@ -1,3 +1,19 @@
+Core Plus 4.1.1
+
+	* [Bug] Sanitize out HTML from the query string when sending to debug output.
+	* [Bug] Fix page template selection form retrieval and add support for inactive users in the User
+	  input element.
+	* [Bug] Fix a variable renaming from jslibraries to scriptlibraries, (not sure how this didn't happen
+	  before).
+	* [Bug] Listing table column selection display fixes.
+	* [Feature] Add markdown support for insertables.
+	* [Feature] Add the available libraries to {script library="..."} tags for developers.
+	* [Feature] Allow Models to be passed in to addControl and addControls methods.
+	* Add nextYear and prevYear to the DateTime object, (convenience methods).
+	* Allow the form parameter to be optional in add_form_element.
+	* Add Core::GetClasses method, useful in some fringe cases.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 16:36:06 -0400
+
 Core Plus 4.1.0
 
 	* [Security] New Content Security Policy header system config option
