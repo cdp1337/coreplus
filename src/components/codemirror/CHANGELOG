@@ -1,3 +1,9 @@
+CodeMirror 5.6.0~core1
+
+	* Upgrade CodeMirror to newest upstream version, 5.6.0
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:15:26 -0400
+
 CodeMirror 3.12~core4
 
 	* New codemirror mode, "sql".
