@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.3" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,18 +10,18 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="5d4c793fa4044fe1d52786fd604f36b7"/>
+		<file filename="CHANGELOG" md5="521d8932de18c54ff8c1d6a63169ca69"/>
 		<file filename="controllers/ThemeController.class.php" md5="39b9f4686be70fc025f2d444ef2baf94">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="f4970155987c165172c8a4b56e974407">
+		<file filename="libs/Theme/Theme.php" md5="b522e869c9b3c6d3d8f4e637ecba96bc">
 			<class name="Theme\Theme"/>
 		</file>
-		<file filename="libs/ThemeHandler.class.php" md5="f9406dd7a2af3c1e76ae3c90f57dc62f">
+		<file filename="libs/ThemeHandler.class.php" md5="4360132aa1f405d144f9330cb1083176">
 			<class name="ThemeHandler"/>
 		</file>
-		<file filename="models/ThemeTemplateChangeModel.php" md5="4e14433a608d4d43bd55910fb7c9c172">
+		<file filename="models/ThemeTemplateChangeModel.php" md5="e5efd9e570cea5d666acd586df59893b">
 			<class name="ThemeTemplateChangeModel"/>
 		</file>
 	</files>
@@ -44,6 +44,7 @@
 		<file filename="assets/css/theme/admin.css" md5="de1b2508bc649081b8e58fc4d8df2243"/>
 		<file filename="assets/css/theme/widgets.css" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
 		<file filename="assets/js/theme/widgets.js" md5="0ac5f62b8fb3bddc6c918379a01ed36f"/>
+		<file filename="assets/js/theme/widgets.min.js" md5="434ba7ab0e7ada349d4d3f2a62a055b0"/>
 	</assets>
 	<description/>
 	<upgrades>
@@ -70,6 +71,7 @@
 		<upgrade from="2.4.0" to="2.4.1"/>
 		<upgrade from="2.4.1" to="2.4.2"/>
 		<upgrade from="2.4.2" to="2.4.3"/>
+		<upgrade from="2.4.3" to="2.4.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

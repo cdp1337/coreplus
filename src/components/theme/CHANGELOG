@@ -1,3 +1,8 @@
+Theme 2.4.4
+
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:25:13 -0400
+
 Theme 2.4.3
 
 	* [Bug] Only autoinstall the theme assets if it's the currently selected theme.
