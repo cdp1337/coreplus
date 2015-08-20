@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Tags" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.3" name="Tags" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -9,7 +9,7 @@
 		<file filename="templates/widgets/tags/display.tpl" md5="996f7e27fee023d4746420afce23c6c2"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="3fa3bd3a40195f6a1b19011cc9b79cc3"/>
+		<file filename="CHANGELOG" md5="8232ce5379327d9f1160e66ea2c58db9"/>
 		<file filename="widgets/TagsWidget.php" md5="374cfa66e8b651a72d1c1cd279a71d1b">
 			<class name="TagsWidget"/>
 		</file>
@@ -17,6 +17,7 @@
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.0.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
