@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.2" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.0" name="Content" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -12,7 +12,7 @@
 		<widgetcreate title="Content Area" class="ContentWidget"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="866582afdc05aa3aa14babd8978f51dd"/>
+		<file filename="CHANGELOG" md5="975d87d6e284d2b4b56881024a555864"/>
 		<file filename="controllers/ContentController.php" md5="b9a5d76d9db7e391504ec9de83ef2098">
 			<controller name="ContentController"/>
 		</file>
@@ -40,6 +40,7 @@
 		<file filename="templates/pages/content/view.tpl" md5="f9a40b24658d333da22f7726de3d032e"/>
 		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="e1e5c9eecae297583fb1b91f9a6a6bd8"/>
 		<file filename="templates/pages/content/view/blog-article.tpl" md5="d29f440cd4e863e00d963d9cd5c34bac"/>
+		<file filename="templates/pages/content/view/markdown.tpl" md5="6d535f0b3cb7bbabdd70b9e1935bf034"/>
 		<file filename="templates/pages/content/view/option1.tpl" md5="4c8037182441dcac26d7f31496ac2a1a"/>
 		<file filename="templates/widgets/content/execute.tpl" md5="0db0ff3eae107a310d9b9fe853452575"/>
 		<file filename="templates/widgets/contentadmin/quickdraft.tpl" md5="3cecd393584eb3ddc9684b9f4196fe5d"/>
@@ -68,6 +69,7 @@
 		<upgrade from="2.3.1" to="2.4.0"/>
 		<upgrade from="2.4.0" to="2.4.1"/>
 		<upgrade from="2.4.1" to="2.4.2"/>
+		<upgrade from="2.4.2" to="2.5.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-140.png" md5="673cfa327007694704fe95e47dcc9ec0"/>
