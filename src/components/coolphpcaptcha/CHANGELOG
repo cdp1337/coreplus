@@ -1,3 +1,8 @@
+CoolPHPCaptcha 1.1.1
+
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:20:02 -0400
+
 CoolPHPCaptcha 1.1.0
 
 	* Ensure that the content type returned on the captcha is image/png.
