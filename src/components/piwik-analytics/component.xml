@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Piwik Analytics" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="Piwik Analytics" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 	</requires>
@@ -27,11 +27,11 @@
 		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="a3571b30988600d3b88516e9bb5085fc"/>
-		<file filename="controllers/PiwikController.php" md5="2c5e033c1c3c0ca2f1ff36ae97ab552c">
+		<file filename="CHANGELOG" md5="bfa5f21d42b6cc46373db2ef6bc975ba"/>
+		<file filename="controllers/PiwikController.php" md5="d2ab6e1f0b9384beb4cd5d189540bb6c">
 			<controller name="PiwikController"/>
 		</file>
-		<file filename="libs/piwik/PiwikHelper.php" md5="cff6c6de484327618b672d724fefd10a">
+		<file filename="libs/piwik/PiwikHelper.php" md5="da108e991a47d36b662df5153811eb9b">
 			<class name="Piwik\PiwikHelper"/>
 		</file>
 	</files>
@@ -43,6 +43,7 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
 		<upgrade from="1.0.3" to="1.1.0"/>
+		<upgrade from="1.1.0" to="1.1.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
