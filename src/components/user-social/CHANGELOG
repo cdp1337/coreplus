@@ -1,3 +1,9 @@
+User-Social 1.2.1
+
+	* Todo #1305 Switch from /user/view/# to /usermodel for the Control Links hook.
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:27:07 -0400
+
 User-Social 1.2.0
 
 	* [Bug] Fix for invalid metatag usersocial in component.xml
