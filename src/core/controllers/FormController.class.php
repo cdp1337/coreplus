@@ -125,14 +125,31 @@ class FormController extends Controller_2_1 {
 				}
 
 				// Now that the previous insertables are removed, update the value on the model and add the new insertables.
+				// This block of logic is required because the template systems look at the last template set in the database.
+				// Since what's in the databse isn't what we want here, we need to spoof it so the correct template is
+				// used for retrieving form elements.
 				$model->set('page_template', $pagetemplate->get('value'));
+
+				// Set the last_template so that the traditional queries to getTemplate work without reverting back to the default template.
+				$t = $model->getBaseTemplateName();
+
+				// Allow the specific template to be overridden.
+				if (($override = $model->get('page_template'))){
+					$t = substr($t, 0, -4) . '/' . $override;
+					$model->set('last_template', $t);
+				}
+				else{
+					$model->set('last_template', null);
+				}
+
 				$tpl = Core\Templates\Template::Factory($model->getTemplateName());
 				if($tpl){
 					// My counter for which element was added last... I need this because I have "addElementAfter"...
 					// so if I just kept adding the stack after a single element, they'd be in reverse order.
 					// ie: stack: [a, b, c] -> {ref_el}, c, b, a
 					$lastelementadded = $pagetemplate;
-					foreach($tpl->getInsertables() as $key => $dat){
+					$insertables = $tpl->getInsertables();
+					foreach($insertables as $key => $dat){
 						$type = $dat['type'];
 						$dat['name'] = $prefix . '[insertables][' . $key . ']';
 
@@ -160,6 +177,7 @@ class FormController extends Controller_2_1 {
 				$view->jsondata = array(
 					'status' => '1',
 					'message' => 'Switched templatename successfully',
+					'formid' => $form->get('uniqueid'),
 				);
 				return null;
 			} // if($model instanceof PageModel && $form->getElement($prefix . '[page_template]'))
@@ -169,6 +187,7 @@ class FormController extends Controller_2_1 {
 		$view->jsondata = array(
 			'status' => '0',
 			'message' => 'No page found :/',
+			'formid' => null,
 		);
 	}
 
@@ -189,6 +208,7 @@ class FormController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
+		$includeInactive = ($request->getParameter('inactive') == '1');
 		$term = $request->getParameter('term');
 		$results = UserModel::Search($term);
 
@@ -205,7 +225,7 @@ class FormController extends Controller_2_1 {
 			$model = $user->_model;
 
 			// This model will only be added to the form if it's active.
-			if(!$model->get('active')){
+			if(!($model->get('active') || $includeInactive)){
 				continue;
 			}
 

@@ -36,15 +36,17 @@
 
 			var
 				elementid = "{$element->getID()}-ac", hiddenid = "{$element->getID()}",
-				$element, $hidden, $parent, lastval;
+				$element, $hidden, $parent, lastval, inactive;
 
 			$element = $('#' + elementid);
 			$hidden = $('#' + hiddenid);
 			$parent = $element.closest('.formelement');
 
+			inactive = $element.data('include-inactive') ? $element.data('include-inactive') : 0;
+
 			// Gogo autocomplete!
 			$element.autocomplete({
-				source: Core.ROOT_URL + 'form/pagemetas/autocompleteuser.ajax',
+				source: Core.ROOT_URL + 'form/pagemetas/autocompleteuser.ajax?inactive=' + inactive,
 				minLength: 2,
 				select: function( event, ui ) {
 
