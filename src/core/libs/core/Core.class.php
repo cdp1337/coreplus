@@ -960,6 +960,15 @@ class Core implements ISingleton {
 		return self::Singleton()->_scriptlibraries;
 	}
 
+	/**
+	 * Get all the classes that are currently available and loaded.
+	 *
+	 * @return array
+	 */
+	public static function GetClasses(){
+		return self::Singleton()->_classes;
+	}
+
 	public static function LoadScriptLibrary($library) {
 		$library = strtolower($library);
 		$obj     = self::Singleton();
