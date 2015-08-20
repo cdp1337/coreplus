@@ -1,3 +1,15 @@
+Theme/Base V3 1.3.0
+
+	* Add some styling for pre code, markdown TOC's, and a new file '_content.scss' to house any little
+	  content style.
+	* Listing table column selection display fixes.
+	* Comment change
+	* Increase the padding of control elements a bit and add a border to make them stand out a bit more.
+	* Add the stylings for user inputs fields and their indicators back into base-v3.
+	* Minor cleanup of the ul.controls styling code in SCSS.
+	* fancy animations for controls icons and CSP header
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:27:46 -0400
+
 Theme/Base V3 1.2.1
 
 	* New IE8 upgrade message.

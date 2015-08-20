@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.1" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="Base V3">
 	<assets>
 		<file filename="assets/css/custom.css" md5="a48d02e7c72d9a0ec1adcf942f910b16"/>
 		<file filename="assets/css/styles.css" md5="b0823f41433d48703b53c4b18a451664"/>
@@ -17,7 +17,7 @@
 	</emailskins>
 	<view/>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="8e91ef256d1a0012bcb78805a6f8ad00"/>
+		<file filename="CHANGELOG" md5="cf5f20f86e677a0363af990932016384"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
 		<file filename="assets/scss/_content.scss" md5="097bf438eda632d02a7ed9ca403101bc"/>
 		<file filename="assets/scss/_controls.scss" md5="b885ad473325601bf7b48d7ce007dd10"/>
@@ -146,6 +146,7 @@
 		<upgrade from="1.1.0" to="1.1.1"/>
 		<upgrade from="1.1.1" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.2.1"/>
+		<upgrade from="1.2.1" to="1.3.0"/>
 	</upgrades>
 	<screenshots>
 		<!--<screenshot file="screenshots/screen1.png" title="Home Page"/>
