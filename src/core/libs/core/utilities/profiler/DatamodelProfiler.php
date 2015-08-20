@@ -320,7 +320,15 @@ class DatamodelProfiler {
 			if($dat['rows'] !== null){
 				$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 			}
-			$out .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time}] $query</span>\n";
+			$out .= sprintf(
+				"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] %s</span>\n",
+				$caller,
+				$typecolor,
+				$type,
+				$tpad,
+				$time,
+				htmlentities($query, ENT_QUOTES | ENT_HTML5)
+			);
 		}
 
 		// Purge the output.
