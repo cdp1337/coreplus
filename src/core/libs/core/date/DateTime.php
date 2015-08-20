@@ -273,6 +273,23 @@ class DateTime extends \DateTime{
 		$this->setDate($y, $m, $d);
 	}
 
+	/**
+	 * Jump the date forward by N year(s)
+	 *
+	 * @param int $jump
+	 */
+	public function nextYear($jump = 1){
+		$this->modify('+' . $jump . ' years');
+	}
+
+	/**
+	 * Jump the date backwards by N year(s)
+	 *
+	 * @param int $jump
+	 */
+	public function prevYear($jump = 1){
+		$this->modify('-' . $jump . ' years');
+	}
 
 	/**
 	 * Shortcut function for getting the time now.
