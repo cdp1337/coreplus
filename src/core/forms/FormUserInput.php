@@ -29,21 +29,36 @@
  *
  * <h3>Usage Examples</h3>
  *
- *
- * @todo Write documentation for FormUserInput
- * <h4>Example 1</h4>
- * <p>Description 1</p>
+ * <h4>Standard Usage</h4>
  * <code>
- * // Some code for example 1
- * $a = $b;
+ * $form->addElement(
+ *     'user',
+ *     [
+ *         'name' => 'user',
+ *         'title' => 'User',
+ *         'description' => 'Search by user name or email!',
+ *     ]
+ * );
  * </code>
  *
+ * <h4>Retrieve All Users</h4>
+ * <p>
+ *     This is used to retrieve both active AND inactive users.
+ *     By default, inactive users are omitted as this is meant to be used for providing the admin with a list of only
+ *     active users, such as post authors or the such.  However, by providing the "data-include-inactive" flag with the
+ *     parameters, inactive users will be included in the results.
+ * </p>
  *
- * <h4>Example 2</h4>
- * <p>Description 2</p>
  * <code>
- * // Some code for example 2
- * $b = $a;
+ * $form->addElement(
+ *     'user',
+ *     [
+ *         'name' => 'user',
+ *         'title' => 'User',
+ *         'description' => 'Search by user name or email!',
+ *         'data-include-inactive' => 1,
+ *     ]
+ * );
  * </code>
  *
  * @package \Core\User
