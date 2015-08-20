@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.2">
 	<configs>
 		<config key="/package_repository/base_directory" description="Base directory of the package files" type="string"/>
 		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
@@ -15,15 +15,15 @@
 		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin" access="p:/package_repository/licenses/manager"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="b1b76265d92457bb9d9687ca54d88540"/>
+		<file filename="CHANGELOG" md5="ec1ff2b69a812fb9d30e32d6a9fd8305"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="99a7e7eaa1087f9a6fdd54c9ef76588a">
+		<file filename="controllers/PackageRepositoryController.php" md5="11ea559f79512cff6a1bb9d10af97234">
 			<controller name="PackageRepositoryController"/>
 		</file>
-		<file filename="controllers/PackageRepositoryLicenseController.php" md5="864567ef6ca9b018ca590973d1e07ea4">
+		<file filename="controllers/PackageRepositoryLicenseController.php" md5="181fa2ec1c74406f03b5238d8503629f">
 			<controller name="PackageRepositoryLicenseController"/>
 		</file>
-		<file filename="models/PackageRepositoryLicenseModel.php" md5="ab717e31d2ff558535262909aca3070d">
+		<file filename="models/PackageRepositoryLicenseModel.php" md5="e836cd516352361b1ba5ce06138ea1d5">
 			<class name="PackageRepositoryLicenseModel"/>
 		</file>
 	</files>
@@ -35,6 +35,7 @@
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
