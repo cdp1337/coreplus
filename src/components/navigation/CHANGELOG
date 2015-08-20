@@ -1,3 +1,13 @@
+Navigation 2.5.0
+
+	* [Bug] Fix bug #1080 - the navigation administration styling not being intuitive when creating and
+	  updating menus.
+	* [Feature] New widget previews for the widget manager.
+	* [Feature] Implement feature #150 - Check page permissions on a navigation element before displaying
+	  to the user.
+	* Update the copyright to 2015 and my email address throughout the project.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 20 Aug 2015 17:24:07 -0400
+
 Navigation 2.4.1
 
 	* Comment change.

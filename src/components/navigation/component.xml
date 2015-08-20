@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.1" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.0" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
@@ -8,18 +8,18 @@
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="Content" access="g:admin" admin="1"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="c9237e00fa438bf406a93952c4f5abeb"/>
-		<file filename="controllers/NavigationController.php" md5="5b3309d73b32f544c9f982fcd8d0d394">
+		<file filename="CHANGELOG" md5="994f6a47fc4f49623a546ab87acbb450"/>
+		<file filename="controllers/NavigationController.php" md5="eed9c06e18c80fbf59536fc3b93cbcc3">
 			<controller name="NavigationController"/>
 		</file>
-		<file filename="models/Navigation.model.php" md5="b32c7e6c49435b94bb3abc18053d5729">
+		<file filename="models/Navigation.model.php" md5="3f004ebde2cae91ebd2c15793ca817cd">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="d2b54fc5c2f7be7b94902a8e10b5b64b">
+		<file filename="models/NavigationEntry.model.php" md5="4b6179cfa06d5bd0f073b32d28824a20">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="upgrades/230_nav_widget_editables.php" md5="69e975de8b8c91420a6f5759d154e6aa"/>
-		<file filename="widgets/NavigationWidget.php" md5="862836f6bfe6f01ce279f6f7686f97e0">
+		<file filename="upgrades/230_nav_widget_editables.php" md5="d7b466a521859a4670ce8e0d98b7fa5c"/>
+		<file filename="widgets/NavigationWidget.php" md5="b399826bec832f078d08829bb3ef92f9">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -79,6 +79,7 @@
 			<php file="upgrades/230_nav_widget_editables.php"/>
 		</upgrade>
 		<upgrade from="2.4.0" to="2.4.1"/>
+		<upgrade from="2.4.1" to="2.5.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
