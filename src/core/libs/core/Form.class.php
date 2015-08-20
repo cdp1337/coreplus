@@ -779,6 +779,7 @@ class Form extends FormGroup {
 		'file'             => 'FormFileInput',
 		'hidden'           => 'FormHiddenInput',
 		'license'          => 'FormLicenseInput',
+		'markdown'         => 'FormMarkdownInput',
 		'pageinsertables'  => 'FormPageInsertables',
 		'pagemeta'         => 'FormPageMeta',
 		'pagemetas'        => 'FormPageMetasInput',

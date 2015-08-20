@@ -104,8 +104,15 @@ function smarty_block_insertable($params, $content, $smarty, &$repeat){
 		$value = $content;
 	}
 
-	// Coreify the string
-	$value = \Core\parse_html($value);
+	if(isset($params['type']) && $params['type'] == 'markdown'){
+		// Convert this markdown code to HTML via the built-in Michielf library.
+		$value = Core\MarkdownProcessor::defaultTransform($value);
+		//$value = Michelf\MarkdownExtra::defaultTransform($value);
+	}
+	else{
+		// Coreify the string
+		$value = \Core\parse_html($value);
+	}
 
 	if($assign){
 		$smarty->assign($assign, $value);
