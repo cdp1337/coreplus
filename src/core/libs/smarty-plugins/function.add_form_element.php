@@ -32,24 +32,25 @@
 function smarty_function_add_form_element($params, $smarty){
 
 	if(!isset($params['form'])){
-		throw new SmartyException('{add_form_element} requires a form attribute!');
+		$form = null;
 	}
-
-	if($params['form'] instanceof Form){
+	elseif($params['form'] instanceof Form){
 		$form = $params['form'];
 	}
 	elseif($params['form'] instanceof \Core\ListingTable\Table){
 		$form = $params['form']->getEditForm();
 	}
 	else{
-		throw new SmartyException('Unsupported value provided for "form", please ensure it is a valid Form object!');
+		throw new SmartyException('Unsupported value provided for "form", please ensure it is either a valid Form object or omitted completely!');
 	}
 
 	$type = isset($params['type']) ? $params['type'] : 'text';
 
 	$element = FormElement::Factory($type, $params);
 
-	$form->addElement($element);
+	if($form){
+		$form->addElement($element);
+	}
 
 	// Assign or render?
 	if(isset($params['assign'])){
