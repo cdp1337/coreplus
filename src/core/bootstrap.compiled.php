@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 11 Aug 2015 22:46:07 -0400
+ * @compiled Thu, 20 Aug 2015 11:07:56 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -13754,6 +13754,9 @@ return self::Singleton()->_scriptlibraries[$library];
 public static function GetJSLibraries() {
 return self::Singleton()->_scriptlibraries;
 }
+public static function GetClasses(){
+return self::Singleton()->_classes;
+}
 public static function LoadScriptLibrary($library) {
 $library = strtolower($library);
 $obj     = self::Singleton();
@@ -17308,6 +17311,7 @@ public static $Mappings = array(
 'file'             => 'FormFileInput',
 'hidden'           => 'FormHiddenInput',
 'license'          => 'FormLicenseInput',
+'markdown'         => 'FormMarkdownInput',
 'pageinsertables'  => 'FormPageInsertables',
 'pagemeta'         => 'FormPageMeta',
 'pagemetas'        => 'FormPageMetasInput',
