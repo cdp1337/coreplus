@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 20 Aug 2015 11:07:56 -0400
+ * @compiled Fri, 21 Aug 2015 12:18:48 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -330,7 +330,15 @@ $caller = print_r($dat['caller'], true);
 if($dat['rows'] !== null){
 $caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 }
-$out .= "<span title='$caller'><span style='color:$typecolor;'>[$type]</span>{$tpad}[{$time}] $query</span>\n";
+$out .= sprintf(
+"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] %s</span>\n",
+$caller,
+$typecolor,
+$type,
+$tpad,
+$time,
+htmlentities($query, ENT_QUOTES | ENT_HTML5)
+);
 }
 $_SESSION['datamodel_profiler_events'] = [
 'events' => [],
@@ -11327,20 +11335,35 @@ public function getMTime() {
 return false;
 }
 public function getBasename($withoutext = false) {
-$h = $this->_getHeaders();
-if (isset($h['Location'])) $f = $h['Location'];
-else $f = $this->_url;
-if (strpos($f, '?') !== false) {
-$f = substr($f, 0, strpos($f, '?'));
+$basename = null;
+$d = $this->_getHeader('Content-Disposition');
+if($d !== null) {
+$dParts = explode(';', $d);
+foreach($dParts as $p) {
+if(strpos($p, 'filename=') !== false) {
+$value = trim(substr($p, strpos($p, '=') + 1), " '\"");
+$value = str_replace('/', '-', $value);
+$basename = $value;
 }
-$b = basename($f);
+}
+}
+if($basename === null && ($l = $this->_getHeader('Location'))){
+$basename = $l;
+}
+if($basename === null){
+$basename = $this->getFilename();
+}
+if (strpos($basename, '?') !== false) {
+$basename = substr($basename, 0, strpos($basename, '?'));
+}
+$basename = basename($basename);
 if ($withoutext) {
 $ext = $this->getExtension();
 if($ext != '') {
-return substr($b, 0, (-1 - strlen($ext)));
+return substr($basename, 0, (-1 - strlen($ext)));
 }
 }
-return $b;
+return $basename;
 }
 public function rename($newname) {
 return false;
@@ -15743,62 +15766,66 @@ $this->platform = 'Linux';
 }
 elseif(stripos($this->useragent, 'windows nt 5.0') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '5.0'; // February 17, 2000
+$this->platform_version = '2000'; // February 17, 2000
 }
 elseif(stripos($this->useragent, 'windows nt 5.1') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '5.1'; // October 25, 2001
+$this->platform_version = 'XP'; // October 25, 2001
 }
 elseif(stripos($this->useragent, 'windows nt 5.2') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '5.2'; // March 28, 2003
+$this->platform_version = 'XP'; // March 28, 2003
 }
 elseif(stripos($this->useragent, 'windows nt 6.0') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '6.0'; // January 30, 2007
+$this->platform_version = 'Vista'; // January 30, 2007
 }
 elseif(stripos($this->useragent, 'windows nt 6.1') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '6.1'; // October 22, 2009
+$this->platform_version = '7'; // October 22, 2009
 }
 elseif(stripos($this->useragent, 'windows nt 6.2') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '6.2'; // October 26, 2012
+$this->platform_version = '8'; // October 26, 2012
 }
 elseif(stripos($this->useragent, 'windows nt 6.3') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '6.3'; // October 18, 2013
+$this->platform_version = '8.1'; // October 18, 2013
 }
 elseif(stripos($this->useragent, 'windows nt 10') !== false){
 $this->platform = 'Windows';
-$this->platform_version = '10.0'; // July 29, 2015
+$this->platform_version = '10'; // July 29, 2015
 }
 elseif(stripos($this->useragent, 'windows phone 8.0') !== false){
 $this->platform = 'Windows Phone';
 $this->platform_version = '8.0';
 $this->is_mobile_device = true;
 }
+elseif(stripos($this->useragent, 'mozilla/5.0 (mobile;') !== false){
+$this->platform = 'FirefoxOS';
+$this->is_mobile_device = true;
+}
 }
 switch($this->platform){
 case 'WinXP':
 $this->platform = 'Windows';
-$this->platform_version = '5.1';
+$this->platform_version = 'XP';
 break;
 case 'WinVista':
 $this->platform = 'Windows';
-$this->platform_version = '6.0';
+$this->platform_version = 'Vista';
 break;
 case 'Win7':
 $this->platform = 'Windows';
-$this->platform_version = '6.1';
+$this->platform_version = '7';
 break;
 case 'Win8':
 $this->platform = 'Windows';
-$this->platform_version = '6.2';
+$this->platform_version = '8';
 break;
 case 'Win8.1':
 $this->platform = 'Windows';
-$this->platform_version = '6.3';
+$this->platform_version = '8.1';
 break;
 case 'Win10':
 $this->platform = 'Windows';
@@ -15810,10 +15837,17 @@ $this->platform = 'Ubuntu';
 }
 break;
 case 'MacOSX':
-$this->platform_version = preg_replace('#.*Mac OS X ([0-9\.]+);.*#', '$1', $this->useragent);
+$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
+$this->platform_version = str_replace('_', '.', $this->platform_version);
 break;
 case 'Android':
 $this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+$this->is_mobile_device = true;
+break;
+case 'iOS':
+$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
+$this->platform_version = str_replace('_', '.', $this->platform_version);
+$this->is_mobile_device = true;
 break;
 }
 if($this->platform_bits === null){
@@ -15825,7 +15859,7 @@ else{
 $this->platform_bits = '32';
 }
 }
-elseif($this->platform == 'Linux'){
+elseif($this->platform == 'Linux' || $this->platform == 'Ubuntu'){
 if(strpos($this->useragent, 'x86_64') !== false){
 $this->platform_bits = '64';
 $this->platform_architecture = 'x86';
@@ -15872,7 +15906,7 @@ $this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
 }
 if($this->version == 0.0){
 if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
-$this->version = preg_replace('#.*' . $this->browser . '/([0-9\.]+).*#', '$1', $this->useragent);
+$this->version = preg_replace('#.*' . $this->browser . '/([0-9]+)\.([0-9]+).*#', '$1.$2', $this->useragent);
 }
 }
 if($this->major_ver == 0){
