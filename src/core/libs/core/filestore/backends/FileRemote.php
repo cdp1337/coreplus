@@ -432,34 +432,71 @@ class FileRemote implements Filestore\File {
 	/**
 	 * Get the base filename of this file.
 	 *
+	 * This makes use of the Content-Disposition header as per RFC2616 Section 19.5 Item 1
+	 * @url http://www.w3.org/Protocols/rfc2616/rfc2616-sec19.html
+	 *
+	 * For example:
+	 * <pre>
+	 *  Content-Type: image/jpeg
+	 *  Content-Disposition: attachment; filename=genome.jpeg;
+	 *      modification-date="Wed, 12 Feb 1997 16:29:51 -0500";
+	 *  Content-Description: a complete map of the human genome
+	 *
+	 *  &lt;jpeg data&gt;
+	 * </pre>
+	 *
 	 * @param boolean $withoutext Set to true to drop the extension.
 	 *
 	 * @return string
 	 */
 	public function getBasename($withoutext = false) {
-		// This will also intelligently pull from the Location header if it's set.
-		$h = $this->_getHeaders();
+		$basename = null;
 
-		if (isset($h['Location'])) $f = $h['Location'];
-		else $f = $this->_url;
+		// First, check the Content-Disposition Header.
+		$d = $this->_getHeader('Content-Disposition');
+		if($d !== null) {
+			// Content-Disposition WAS provided by the server!
+			// This means that we can read that filename and know what the server wanted the file to be named.
+			$dParts = explode(';', $d);
+			foreach($dParts as $p) {
+				if(strpos($p, 'filename=') !== false) {
+					$value = trim(substr($p, strpos($p, '=') + 1), " '\"");
 
-		if (strpos($f, '?') !== false) {
+					// Any directories requested? (Directories here are NOT supported by the spec)
+					$value = str_replace('/', '-', $value);
+
+					$basename = $value;
+				}
+			}
+		}
+
+		if($basename === null && ($l = $this->_getHeader('Location'))){
+			// This will also pull from the Location header if it's set.
+			$basename = $l;
+		}
+
+		// Still no?  Just use the URL.
+		if($basename === null){
+			$basename = $this->getFilename();
+		}
+
+		if (strpos($basename, '?') !== false) {
 			// Take off everything after the '?'.
-			$f = substr($f, 0, strpos($f, '?'));
+			$basename = substr($basename, 0, strpos($basename, '?'));
 		}
 
 		// Drop off the directory and everything else.
 		// (yes, basename somehow works on URLs too!)
-		$b = basename($f);
+		$basename = basename($basename);
 
 		if ($withoutext) {
 			$ext = $this->getExtension();
 			if($ext != '') {
-				return substr($b, 0, (-1 - strlen($ext)));
+				return substr($basename, 0, (-1 - strlen($ext)));
 			}
 		}
 
-		return $b;
+		return $basename;
 	}
 
 	/**
