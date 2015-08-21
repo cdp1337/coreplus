@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.2">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.3">
 	<configs>
 		<config key="/package_repository/base_directory" description="Base directory of the package files" type="string"/>
 		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
@@ -15,9 +15,9 @@
 		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin" access="p:/package_repository/licenses/manager"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="ec1ff2b69a812fb9d30e32d6a9fd8305"/>
+		<file filename="CHANGELOG" md5="831aea1a68b87df5fec23716fcdb0ec0"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="11ea559f79512cff6a1bb9d10af97234">
+		<file filename="controllers/PackageRepositoryController.php" md5="c8a790823feda82bf3b1859e564a0977">
 			<controller name="PackageRepositoryController"/>
 		</file>
 		<file filename="controllers/PackageRepositoryLicenseController.php" md5="181fa2ec1c74406f03b5238d8503629f">
@@ -36,6 +36,7 @@
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.0.3"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
