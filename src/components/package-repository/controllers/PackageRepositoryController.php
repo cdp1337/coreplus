@@ -113,6 +113,8 @@ class PackageRepositoryController extends Controller_2_1 {
 
 		if(!\ConfigHandler::Get('/package_repository/base_directory')){
 			// Check if the config is even set, can't proceed if it's not.
+			trigger_error('The package repository does not appear to be setup yet.  Please browse to Configuration and the appropriate options.');
+
 			return [
 				'status' => View::ERROR_SERVERERROR,
 				'message' => 'The package repository is not setup on this server.'
@@ -122,12 +124,16 @@ class PackageRepositoryController extends Controller_2_1 {
 		$dir = Factory::Directory(\ConfigHandler::Get('/package_repository/base_directory'));
 
 		if(!$dir->exists()){
+			trigger_error($dir->getPath() . ' does not appear to exist!  Unable to browse repo.xml without it.');
+
 			return [
 				'status' => View::ERROR_SERVERERROR,
 				'message' => $dir->getPath() . ' does not seem to exist!'
 			];
 		}
 		elseif(!$dir->isReadable()){
+			trigger_error($dir->getPath() . ' does not appear to be readable!  Unable to browse repo.xml without it.');
+
 			return [
 				'status' => View::ERROR_SERVERERROR,
 				'message' => $dir->getPath() . ' does not seem to be readable!'
