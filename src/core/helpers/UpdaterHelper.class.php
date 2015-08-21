@@ -677,8 +677,19 @@ class UpdaterHelper {
 				// Decrypt the signed file.
 				if($verbose) self::_PrintInfo('Decrypting signed file', $timer);
 
-				/** @var $localfile \Core\Filestore\File */
-				$localfile = $obj->decrypt('tmp/updater/');
+				if(version_compare(Core::GetComponent('core')->getVersionInstalled(), '4.1.1', '<=') && $file->getBaseFilename() == 'download'){
+					// HACK < 4.1.2
+					// Retrieve the filename from the last part of the URL.
+					// This is required because the URL may be /download?file=component/blah.tgz.asc
+					$f = substr($file->getFilename(), strrpos($file->getFilename(), '/'), -4);
+					/** @var $localfile \Core\Filestore\File */
+					$localfile = $obj->decrypt('tmp/updater/' . $f);
+				}
+				else{
+					/** @var $localfile \Core\Filestore\File */
+					$localfile = $obj->decrypt('tmp/updater/');
+				}
+
 				/** @var $localobj \Core\Filestore\Contents\ContentTGZ */
 				$localobj = $localfile->getContentsObject();
 				if($verbose) self::_PrintInfo('OK!', $timer);
