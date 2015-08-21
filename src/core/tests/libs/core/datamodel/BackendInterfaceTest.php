@@ -158,18 +158,18 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 	 * By this stage, there should be some read count
 	 */
 	public function testReadCount(){
-		$this->assertGreaterThan(1, \Core\db()->readCount());
+		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->readCount());
 	}
 
 	/**
 	 * By this stage, there should be some write count
 	 */
 	public function testWriteCount(){
-		$this->assertGreaterThan(1, \Core\db()->writeCount());
+		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->writeCount());
 	}
 
 	public function testQueryLog(){
-		$log = \Core\db()->queryLog();
+		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->getEvents());
 
 		$this->assertGreaterThan(1, sizeof($log));
 	}

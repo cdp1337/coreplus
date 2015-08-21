@@ -19,11 +19,13 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 	protected $_testimage;
 	protected $_testfile;
 	protected $_test404;
+	protected $_testDisposition;
 
 	protected function setUp(){
 		$this->_testimage = 'http://corepl.us/files/assets/coreplus/img/core-plus.png';
 		$this->_testfile = 'https://raw.githubusercontent.com/nicholasryan/CorePlus/master/README.md';
 		$this->_test404 = 'https://raw.githubusercontent.com/nicholasryan/CorePlus/master/NOTFOUND';
+		$this->_testDisposition = 'http://corepl.us/random/test-content-disposition.php';
 	}
 
 	/**
@@ -72,6 +74,10 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 		$file = \Core\Filestore\Factory::File($this->_testimage);
 
 		$this->assertNotEmpty($file->getURL());
+
+		// In this test, the Content-Disposition header is provided, but the URL is still the same.
+		$file2 = \Core\Filestore\Factory::File($this->_testDisposition);
+		$this->assertEquals('http://corepl.us/random/test-content-disposition.php', $file2->getURL());
 	}
 
 	/**
@@ -94,6 +100,9 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 
 		// Sending in null should return the path with the fully resolved path.
 		$this->assertEquals($this->_testfile, $file->getFilename());
+
+		// The filename should also be the same as the URL in remote files.
+		$this->assertEquals($file->getFilename(), $file->getURL());
 	}
 
 	/**
@@ -115,6 +124,11 @@ class FileRemoteTest extends PHPUnit_Framework_TestCase {
 
 		$this->assertEquals('README.md', $file->getBasename());
 		$this->assertEquals('README', $file->getBasename(true));
+
+		// This tests that content-disposition is working as expected.
+		$file2 = \Core\Filestore\Factory::File($this->_testDisposition);
+		$this->assertEquals('out.txt', $file2->getBasename());
+		$this->assertEquals('out', $file2->getBasename(true));
 	}
 
 	/**

@@ -55,7 +55,7 @@ class Bug253Test extends PHPUnit_Framework_TestCase {
 		// Get the body of this page and make sure that it's there.
 		$html = $view->fetchBody();
 		$matchtitle = 'Test Component';
-		$matchmarkup = 'componentname="test-component" type="components"';
+		$matchmarkup = 'data-name="test-component" data-type="components"';
 
 
 		$this->assertContains($matchtitle, $html, 'Failed to find the string "' . $matchtitle . '" on the updater page!');
