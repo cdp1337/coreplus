@@ -1,3 +1,13 @@
+Core Plus 4.1.2
+
+	* [Bug] Add the patch for <4.1.2 code bases being able to pull a filename without relying on
+	  Content-Disposition.
+	* [Bug] Various fixes in the UserAgent detection for unknown devices.
+	* [Bug] Drop the path prefix from package locations.
+	* [Feature] Add support for content-disposition headers on remote files when determining the filename.
+	* Test case maintenance.
+	-- Charlie Powell <charlie@evalagency.com>  Fri, 21 Aug 2015 14:58:24 -0400
+
 Core Plus 4.1.1
 
 	* [Bug] Sanitize out HTML from the query string when sending to debug output.

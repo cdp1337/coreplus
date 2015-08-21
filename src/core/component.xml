@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.1.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.1.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -71,7 +71,7 @@
 	</includes>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04a0ed3fdf116d2454775b81223e19b3"/>
-		<file filename="core/CHANGELOG" md5="552ca93e899fdc89aa2e97f4ed90d94d"/>
+		<file filename="core/CHANGELOG" md5="219917076c0374286a0ebf374ba259b4"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="3d44d71b98c1371956970bd6fd610a60"/>
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
@@ -202,7 +202,7 @@
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="75a21a9412e2a01a9b7b123410bf2fd1">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="574683cd212c181553f251e0a2fc8bbc">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="6417598b67728d3e4920ab99c48477c6">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
@@ -486,7 +486,7 @@
 		<file filename="core/libs/core/Time.class.php" md5="722a2fe53b1b3832af100c8f606ef2b4">
 			<class name="Time"/>
 		</file>
-		<file filename="core/libs/core/UserAgent.php" md5="ad0935aa6921bf12c11c158b8b10f853">
+		<file filename="core/libs/core/UserAgent.php" md5="664084f30169e3c2f4fde7500f09527b">
 			<class name="Core\UserAgent"/>
 		</file>
 		<file filename="core/libs/core/VersionString.php" md5="71406214494d76a6dc8bed114c8e0b91">
@@ -584,12 +584,6 @@
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="1152e22804d35e35852b5e13b809e43c">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_Schema"/>
 		</file>
-		<file filename="core/libs/core/datamodel/tests/BackendInterfaceTest.php" md5="4c735daeeac42dbcc916c79108c6b6d4">
-			<class name="BackendInterfaceTest"/>
-		</file>
-		<file filename="core/libs/core/datamodel/tests/SQL_Parser_DatasetTest.php" md5="e45f4606dbf5abca44ad0839d6e1960f">
-			<class name="SQL_Parser_DatasetTest"/>
-		</file>
 		<file filename="core/libs/core/date/DateTime.php" md5="f6c2b7ffca5b72b86a19ea60a7546228">
 			<class name="Core\Date\DateTime"/>
 		</file>
@@ -636,7 +630,7 @@
 		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="0dd6835bf63c21d5a8bca90938a9c57d">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="7111792024698b0ce743cc8e114542b3">
+		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="9aea972079e7ff5da711f0d0ac52a632">
 			<class name="Core\Filestore\Backends\FileRemote"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/file_awss3.backend.php" md5="9d036c259c2e3f6cea7905a014fef487">
@@ -1954,6 +1948,7 @@
 		<upgrade from="4.0.7" to="4.0.8"/>
 		<upgrade from="4.0.8" to="4.1.0"/>
 		<upgrade from="4.1.0" to="4.1.1"/>
+		<upgrade from="4.1.1" to="4.1.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
