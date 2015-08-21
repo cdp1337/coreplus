@@ -344,39 +344,43 @@ class UserAgent {
 			}
 			elseif(stripos($this->useragent, 'windows nt 5.0') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '5.0'; // February 17, 2000
+				$this->platform_version = '2000'; // February 17, 2000
 			}
 			elseif(stripos($this->useragent, 'windows nt 5.1') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '5.1'; // October 25, 2001
+				$this->platform_version = 'XP'; // October 25, 2001
 			}
 			elseif(stripos($this->useragent, 'windows nt 5.2') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '5.2'; // March 28, 2003
+				$this->platform_version = 'XP'; // March 28, 2003
 			}
 			elseif(stripos($this->useragent, 'windows nt 6.0') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '6.0'; // January 30, 2007
+				$this->platform_version = 'Vista'; // January 30, 2007
 			}
 			elseif(stripos($this->useragent, 'windows nt 6.1') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '6.1'; // October 22, 2009
+				$this->platform_version = '7'; // October 22, 2009
 			}
 			elseif(stripos($this->useragent, 'windows nt 6.2') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '6.2'; // October 26, 2012
+				$this->platform_version = '8'; // October 26, 2012
 			}
 			elseif(stripos($this->useragent, 'windows nt 6.3') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '6.3'; // October 18, 2013
+				$this->platform_version = '8.1'; // October 18, 2013
 			}
 			elseif(stripos($this->useragent, 'windows nt 10') !== false){
 				$this->platform = 'Windows';
-				$this->platform_version = '10.0'; // July 29, 2015
+				$this->platform_version = '10'; // July 29, 2015
 			}
 			elseif(stripos($this->useragent, 'windows phone 8.0') !== false){
 				$this->platform = 'Windows Phone';
 				$this->platform_version = '8.0';
+				$this->is_mobile_device = true;
+			}
+			elseif(stripos($this->useragent, 'mozilla/5.0 (mobile;') !== false){
+				$this->platform = 'FirefoxOS';
 				$this->is_mobile_device = true;
 			}
 		}
@@ -386,23 +390,23 @@ class UserAgent {
 		switch($this->platform){
 			case 'WinXP':
 				$this->platform = 'Windows';
-				$this->platform_version = '5.1';
+				$this->platform_version = 'XP';
 				break;
 			case 'WinVista':
 				$this->platform = 'Windows';
-				$this->platform_version = '6.0';
+				$this->platform_version = 'Vista';
 				break;
 			case 'Win7':
 				$this->platform = 'Windows';
-				$this->platform_version = '6.1';
+				$this->platform_version = '7';
 				break;
 			case 'Win8':
 				$this->platform = 'Windows';
-				$this->platform_version = '6.2';
+				$this->platform_version = '8';
 				break;
 			case 'Win8.1':
 				$this->platform = 'Windows';
-				$this->platform_version = '6.3';
+				$this->platform_version = '8.1';
 				break;
 			case 'Win10':
 				$this->platform = 'Windows';
@@ -414,10 +418,17 @@ class UserAgent {
 				}
 				break;
 			case 'MacOSX':
-				$this->platform_version = preg_replace('#.*Mac OS X ([0-9\.]+);.*#', '$1', $this->useragent);
+				$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
+				$this->platform_version = str_replace('_', '.', $this->platform_version);
 				break;
 			case 'Android':
 				$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+				$this->is_mobile_device = true;
+				break;
+			case 'iOS':
+				$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
+				$this->platform_version = str_replace('_', '.', $this->platform_version);
+				$this->is_mobile_device = true;
 				break;
 		}
 
@@ -432,7 +443,7 @@ class UserAgent {
 					$this->platform_bits = '32';
 				}
 			}
-			elseif($this->platform == 'Linux'){
+			elseif($this->platform == 'Linux' || $this->platform == 'Ubuntu'){
 				if(strpos($this->useragent, 'x86_64') !== false){
 					$this->platform_bits = '64';
 					$this->platform_architecture = 'x86';
@@ -483,7 +494,7 @@ class UserAgent {
 
 		if($this->version == 0.0){
 			if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
-				$this->version = preg_replace('#.*' . $this->browser . '/([0-9\.]+).*#', '$1', $this->useragent);
+				$this->version = preg_replace('#.*' . $this->browser . '/([0-9]+)\.([0-9]+).*#', '$1.$2', $this->useragent);
 			}
 		}
 
