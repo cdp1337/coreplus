@@ -9,7 +9,7 @@
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5shiv.js'}"></script>
 			<script type="text/javascript" src="{asset src='js/json2.js'}"></script>
-		<![endif]-->
+		<![endif]-->ex
 		{script library="fontawesome"}{/script}
 		{* This will enable the Core Plus context menus new in 2.4.0 *}
 		{script library="jquery"}{/script}
