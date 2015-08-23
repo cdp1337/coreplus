@@ -1,0 +1,84 @@
+.page-theme {
+	.theme-section {
+		margin: 1.5em 0.5em;
+		padding: 0.25em;
+		border: 1px solid;
+	}
+	fieldset.collapsible.collapsed {
+		padding: 0 0.5em;
+	}
+	fieldset.collapsible .fieldset-title {
+		margin: 0;
+	}
+
+	.theme-picker {
+		.theme {
+			border: 1px solid #AAAAAA;
+			float: left;
+			margin: 10px;
+			padding: 10px;
+			text-align: center;
+			width: 220px;
+			height: 15em;
+			overflow: hidden;
+			position: relative;
+
+			.button {
+				position: absolute;
+				bottom: 0.8em;
+				left: 2.2em;
+			}
+
+			img {
+				box-shadow: 0 1px 4px rgba(45, 45, 45, 0.4);
+			}
+		}
+
+		.current-theme {
+			background: white;
+			font-weight: bold;
+		}
+
+	}
+
+
+	.directory-listing {
+		ul {
+			margin: 0;
+		}
+
+		li {
+			margin-left: 1em;
+			list-style: none;
+
+			span {
+				line-height: 28px;
+			}
+		}
+
+		.collapsed ul {
+			display: none;
+		}
+		.expanded-hint, .collapsed-hint {
+			cursor: pointer;
+		}
+		.collapsed > .expanded-hint{
+			display:none;
+		}
+		.expanded > .collapsed-hint{
+			display:none;
+		}
+
+		.filename {
+			display: inline-block;
+			width: 120px;
+		}
+
+		.inline-control {
+			display: inline-block;
+			font-size: 85%;
+			white-space: nowrap;
+			width: 120px;
+		}
+	}
+}

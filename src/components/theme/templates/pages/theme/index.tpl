@@ -16,8 +16,8 @@
 			{$theme->getName()}<br/>
 
 			{if $screen.file}
-				{img src="assets/images/placeholders/generic.png" dimensions="220x160"}
-				<!--<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/>-->
+				<!--{img src="assets/images/placeholders/generic.png" dimensions="220x160"}-->
+				<img src="{$screen.file->getPreviewURL('220x160')}" title="{$screen.title}"/>
 			{else}
 				{img src="assets/images/placeholders/generic.png" dimensions="220x160"}
 			{/if}
@@ -187,66 +187,15 @@
 	{/if}
 </div>
 
-
-
-
-
-
-
-
-
-
-{css}<style>
-	.directory-listing ul {
-		margin: 0;
-	}
-	.directory-listing li {
-		margin-left: 1em;
-		list-style: none;
-	}
-
-	.directory-listing li span {
-		line-height: 28px;
-	}
-
-	.directory-listing .collapsed ul {
-		display: none;
-	}
-
-	.directory-listing .expanded-hint,
-	.directory-listing .collapsed-hint {
-		cursor: pointer;
-	}
-
-	.directory-listing .collapsed > .expanded-hint{
-		display:none;
-	}
-	.directory-listing .expanded > .collapsed-hint{
-		display:none;
-	}
-
-	.directory-listing .filename {
-		display: inline-block;
-		width: 120px;
-	}
-	.directory-listing .inline-control {
-		display: inline-block;
-		font-size: 85%;
-		white-space: nowrap;
-		width: 120px;
-	}
-	</style>{/css}
-
-	{script location="foot"}<script>
-	$('.expanded-hint').click(function(){
-		$(this).closest('li').removeClass('expanded').addClass('collapsed');
-		return false;
-	});
-	$('.collapsed-hint').click(function(){
-		$(this).closest('li').removeClass('collapsed').addClass('expanded');
-		return false;
-	});
-	</script>{/script}
+<div class="theme-section">
+	<h3>Edit Custom CSS</h3>
+	{a href="/theme/editor?file=assets/css/custom.css" class="button"}
+		<span>Open Full Editor</span>
+	{/a}
+	<div id="theme-editor-wysiwyg">
+		{$cssform->render()}
+	</div>
+</div>
 
 {function name=printAssetList}
 	<ul>
@@ -303,24 +252,59 @@
 {/function}
 
 
-<br/><br/>
-<h3>Assets</h3>
-<p class="message-tutorial">
-	Assets are stylesheets, javascript files, and other static resources used by components that get installed to your CDN.
-</p>
-<div class="directory-listing">
-	{call name=printAssetList items=$assets.assets}
-</div>
+<fieldset class="collapsed collapsible theme-section">
+	<h3 class="fieldset-title">
+		Assets
+		<i class="icon-chevron-down expandable-hint"></i>
+		<i class="icon-chevron-up collapsible-hint"></i>
+	</h3>
+	<p class="message-tutorial">
+		Assets are stylesheets, javascript files, and other static resources used by components that get installed to your CDN.
+	</p>
+	<div class="directory-listing">
+		{call name=printAssetList items=$assets.assets}
+	</div>
+</fieldset>
 
 
 {if sizeof($templates)}
-	<br/><br/>
-	<h3>Templates</h3>
-	<p class="message-tutorial">
-		Templates are pages, emails, widgets, and other views that are used throughout your site.
-	</p>
+	<fieldset class="collapsed collapsible theme-section">
+		<h3 class="fieldset-title">
+			Templates
+			<i class="icon-chevron-down expandable-hint"></i>
+			<i class="icon-chevron-up collapsible-hint"></i>
+		</h3>
+		<p class="message-tutorial">
+			Templates are pages, emails, widgets, and other views that are used throughout your site.
+		</p>
 
-	<div class="directory-listing">
-		{call name=printTemplateList items=$templates}
-	</div>
+		<div class="directory-listing">
+			{call name=printTemplateList items=$templates}
+		</div>
+	</fieldset>
+{/if}
+
+
+
+{script location="foot"}<script>
+	$('.expanded-hint').click(function(){
+		$(this).closest('li').removeClass('expanded').addClass('collapsed');
+		return false;
+	});
+	$('.collapsed-hint').click(function(){
+		$(this).closest('li').removeClass('collapsed').addClass('expanded');
+		return false;
+	});
+</script>{/script}
+{if Core::IsComponentAvailable('codemirror')}
+	{script library="codemirror_css"}{/script}
+	{css href="assets/codemirror/theme/ambiance.css"}{/css}
+	{script location="foot"}<script>
+		CodeMirror.fromTextArea(document.getElementById("formtextareainput-model-content"), {
+			//theme: 'ambiance',
+			lineNumbers: true,
+			lineWrapping: true,
+			mode: 'css'
+		});
+	</script>{/script}
 {/if}

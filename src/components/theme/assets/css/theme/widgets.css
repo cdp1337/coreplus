@@ -1,34 +1,75 @@
 /*** Widget and Widgetareas ***/
-.widget-dragtarget { padding:15px 0px; border:2px dashed #9A9; }
-.widget-dragtarget.highlightdroptarget { padding:15px 0px; border:2px dashed blue; }
-.widget-source { z-index:2000; border: 2px solid green; padding:0.25em; cursor:move;}
-.widget-dragsource.ui-sortable { border:2px solid green; cursor:move;}
+/* line 2, ../../scss/theme/widgets.scss */
+.widget-dragtarget {
+  padding: 15px 0px;
+  border: 2px dashed #9A9;
+}
 
+/* line 3, ../../scss/theme/widgets.scss */
+.widget-dragtarget.highlightdroptarget {
+  padding: 15px 0px;
+  border: 2px dashed blue;
+}
 
+/* line 4, ../../scss/theme/widgets.scss */
+.widget-source {
+  z-index: 2000;
+  border: 2px solid green;
+  padding: 0.25em;
+  cursor: move;
+}
+
+/* line 5, ../../scss/theme/widgets.scss */
+.widget-dragsource.ui-sortable {
+  border: 2px solid green;
+  cursor: move;
+}
+
+/* line 8, ../../scss/theme/widgets.scss */
 .widget-dragsource,
 .widget-dragdropped {
-	height: 35px;
-	padding-top: 5px;
-	padding-left: 10px;
-	cursor: move;
-	margin-bottom:5px;
-	width: 340px;
+  height: 35px;
+  padding-top: 5px;
+  padding-left: 10px;
+  cursor: move;
+  margin-bottom: 5px;
+  width: 340px;
 }
 
-.widget-dragsource { border: 1px solid #999; }
-.widget-dragdropped { border: 1px solid #9C9; }
+/* line 18, ../../scss/theme/widgets.scss */
+.widget-dragsource {
+  border: 1px solid #999;
+}
+
+/* line 19, ../../scss/theme/widgets.scss */
+.widget-dragdropped {
+  border: 1px solid #9C9;
+}
+
+/* line 20, ../../scss/theme/widgets.scss */
 .widget-dragsource span.widget-title,
-.widget-dragdropped span.widget-title
-{
-	display: inline-block;
-	overflow: hidden;
-	white-space: nowrap;
-	width: 300px;
+.widget-dragdropped span.widget-title {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 300px;
 }
 
+/* line 30, ../../scss/theme/widgets.scss */
+.widget-bucket-source {
+  float: left;
+  width: 50%;
+}
 
-.widget-bucket-source { float:left; width:50%; }
-.widget-bucket-source a.control { display:none; }
+/* line 31, ../../scss/theme/widgets.scss */
+.widget-bucket-source a.control {
+  display: none;
+}
 
-.widget-bucket-destination { float:left; width:50%; }
+/* line 33, ../../scss/theme/widgets.scss */
+.widget-bucket-destination {
+  float: left;
+  width: 50%;
+}
 
+/*# sourceMappingURL=widgets.css.map */
