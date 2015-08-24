@@ -23,7 +23,12 @@ $('.page-search-form').find('i').css('cursor', 'pointer').click(function(){
 			 * This if statement is for multi-site mode,
 			 * since pages on other sites do not technically exist when on a different site.
 			 *}
-			{if $page.site != $site}
+			{if strpos($page.baseurl, '://') !== false}
+				{* It's already resolved *}
+				{a href="`$page.baseurl`" title="`$page.title`" class="page-title" itemprop="url"}
+					<span itemprop="name">{$page.title}</span>
+				{/a}
+			{elseif $page.site != $site}
 				{a href="site:`$page.site``$page.baseurl`" title="`$page.title`" class="page-title" itemprop="url"}
 					<span itemprop="name">{$page.title}</span>
 				{/a}
