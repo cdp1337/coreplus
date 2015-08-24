@@ -1,34 +1,35 @@
 /************************************************
  ****           Frontend styles
  ***********************************************/
-/* line 6, ../../dev/assets/scss/blog.scss */
+/* line 6, ../scss/blog.scss */
 .blog-listing .blog-article {
   border-bottom: 1px solid #BBBBBB;
   margin-bottom: 1em;
   padding-bottom: 0.5em;
+  clear: both;
 }
-/* line 11, ../../dev/assets/scss/blog.scss */
+/* line 12, ../scss/blog.scss */
 .blog-listing .blog-article-title {
   font-size: 115%;
   line-height: 1.5em;
 }
-/* line 15, ../../dev/assets/scss/blog.scss */
+/* line 16, ../scss/blog.scss */
 .blog-listing .blog-article-image {
   float: left;
   width: 90px;
   text-align: center;
 }
-/* line 20, ../../dev/assets/scss/blog.scss */
+/* line 21, ../scss/blog.scss */
 .blog-listing .blog-article-date {
   float: right;
   font-size: 90%;
 }
-/* line 24, ../../dev/assets/scss/blog.scss */
+/* line 25, ../scss/blog.scss */
 .blog-listing .blog-article-read-more {
   color: #666;
   font-size: 90%;
 }
-/* line 28, ../../dev/assets/scss/blog.scss */
+/* line 29, ../scss/blog.scss */
 .blog-listing .blog-article.blog-article-status-draft {
   background-color: rgba(200, 150, 50, 0.4);
 }
@@ -36,7 +37,7 @@
 /************************************************
  ****           Backend styles
  ***********************************************/
-/* line 38, ../../dev/assets/scss/blog.scss */
+/* line 39, ../scss/blog.scss */
 table.listing tbody .blog-article-status-draft {
   background-color: rgba(200, 150, 50, 0.4);
 }
@@ -47,23 +48,23 @@ table.listing tbody .blog-article-status-draft {
 /**
  * Search Widget
  */
-/* line 51, ../../dev/assets/scss/blog.scss */
+/* line 52, ../scss/blog.scss */
 .blog-search-widget .blog-search-widget-entry {
   float: right;
   position: relative;
 }
-/* line 55, ../../dev/assets/scss/blog.scss */
+/* line 56, ../scss/blog.scss */
 .blog-search-widget .blog-search-widget-entry i {
   position: absolute;
   right: 5px;
   top: 5px;
 }
-/* line 60, ../../dev/assets/scss/blog.scss */
+/* line 61, ../scss/blog.scss */
 .blog-search-widget .blog-search-widget-submit {
   display: none;
 }
 
-/* line 66, ../../dev/assets/scss/blog.scss */
+/* line 67, ../scss/blog.scss */
 .blog-article-widget .blog-article-widget-link {
   display: block;
   padding-bottom: 0.25em;
