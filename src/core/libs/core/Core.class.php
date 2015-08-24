@@ -1499,7 +1499,7 @@ class Core implements ISingleton {
 		}
 		$uastring .= "\t\t\tis_mobile: " . ($ua->isMobile() ? 'true' : 'false') . "\n";
 
-		$url = \Core\page_request()->uriresolved;
+		$url = htmlentities(\Core\page_request()->uriresolved);
 
 		$script = '<script type="text/javascript">
 	var Core = {
