@@ -34,7 +34,11 @@ source "/opt/eval/basescript.sh"
 
 # Install the necessary dependencies
 if [ "$OSFAMILY" == "debian" ]; then
-	if [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 14 ]; then
+	if [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 15 ]; then
+		# Ubuntu 15.04 requires the nd library for phpmysql.
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush php5-mysqlnb php5-mcrypt php5-curl php5-gd
+		a2enmod rewrite
+	elif [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 14 ]; then
 		# Ubuntu 14.04 changed the name from rubygems to simply ruby, (all encompassing).
 		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush
 	else
@@ -43,7 +47,21 @@ if [ "$OSFAMILY" == "debian" ]; then
 
 elif [ "$OSFAMILY" == "redhat" ]; then
 	# RH based distros need some updates to utilize 3rd party projects.
-	if [ "$OSVERSIONMAJ" == "6" ]; then
+	if [ "$OSVERSIONMAJ" == "7" ]; then
+		if [ ! -e /etc/yum.repos.d/MariaDB.repo ]; then
+			# Install the MariaDB repo!
+			echo "# MariaDB 10.0 CentOS repository list - created 2015-07-20 23:12 UTC
+# http://mariadb.org/mariadb/repositories/
+[mariadb]
+name = MariaDB
+baseurl = http://yum.mariadb.org/10.0/centos7-amd64
+gpgkey=https://yum.mariadb.org/RPM-GPG-KEY-MariaDB
+gpgcheck=1" > /etc/yum.repos.d/MariaDB.repo
+		fi
+		install epel-release
+		yum update -y
+		install httpd php php-mysqlnd php-mbstring php-xml php-soap php-mcrypt php-gd php-curl libmcrypt-devel MariaDB-server MariaDB-client
+	elif [ "$OSVERSIONMAJ" == "6" ]; then
 		rpm -Uvh http://download.fedoraproject.org/pub/epel/6/i386/epel-release-6-8.noarch.rpm
 		rpm -Uvh http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
 	elif [ "$OSVERSIONMAJ" == "5" ]; then
@@ -58,6 +76,8 @@ elif [ "$OSFAMILY" == "suse" ]; then
 	install ant php5-pear php5-xsl php5-bcmath pngcrush
 else
 	printerror "Unknown / Unsupported operating system, [${OSFAMILY}]."
+	echo "We'd love your contibution for this operating system!"
+	echo "Post to https://github.com/nicholasryan/CorePlus/issues your howto and help out the project."
 	exit 1
 fi
 
