@@ -41,6 +41,7 @@
 		<hookregister name="/user/postlogin/getredirecturl" description="Hook that is called after the user has successfully logged in.  Return a non-empty string to redirect to that page." return="string"/>
 		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
 		<hookregister name="/core/shutdown" description="Hooks onto the PHP shutdown_register function to be called very very last after any page execution."/>
+		<hookregister name="/core/page/search/results" description="Hook on the page search results with the search object, useful for integration with analytical libraries"/>
 		<hook name="/core/components/loaded" call="\Core\i18n\Loader::Init"/>
 		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
