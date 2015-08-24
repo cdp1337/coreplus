@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 23 Aug 2015 21:36:02 -0400
+ * @compiled Sun, 23 Aug 2015 22:24:08 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14022,7 +14022,7 @@ $uastring .= "\t\t\t$k: \"$v\",\n";
 }
 }
 $uastring .= "\t\t\tis_mobile: " . ($ua->isMobile() ? 'true' : 'false') . "\n";
-$url = \Core\page_request()->uriresolved;
+$url = htmlentities(\Core\page_request()->uriresolved);
 $script = '<script type="text/javascript">
 var Core = {
 Version: "' . (DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '') . '",
