@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 21 Aug 2015 12:18:48 -0400
+ * @compiled Sun, 23 Aug 2015 21:36:02 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4439,6 +4439,9 @@ $insertablesgroup->addElement($type, $dat);
 }
 }
 public function getResolvedURL() {
+if(strpos($this->get('baseurl'), '://') !== false){
+return $this->get('baseurl');
+}
 if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
 if($this->get('site') == -1){
 $base = ROOT_URL;
@@ -15545,6 +15548,9 @@ return false;
 }
 }
 public function getWidgetAreas(){
+if(!is_readable($this->_filename)){
+return [];
+}
 $fullsearch = file_get_contents($this->_filename);
 $fullsearch = preg_replace('#\{widgetarea(.*)\}#isU', '<widgetarea$1/>', $fullsearch);
 $areas = [];
