@@ -1061,6 +1061,9 @@ class PageModel extends Model {
 	}
 
 	public function getResolvedURL() {
+		if(strpos($this->get('baseurl'), '://') !== false){
+			return $this->get('baseurl');
+		}
 
 		// If enterprise // multisite mode is enabled and this page model is NOT the current site...
 		// I need to lookup THAT site's root url and use that instead.
