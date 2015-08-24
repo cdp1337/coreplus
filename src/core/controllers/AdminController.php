@@ -484,11 +484,11 @@ class AdminController extends Controller_2_1 {
 			)
 		);
 		$filters->addElement(
-			'hidden',
+			'user',
 			array(
-				'title' => 'Affected User',
+				'title' => 'User',
 				'name' => 'affected_user_id',
-				'link' => FilterForm::LINK_TYPE_STANDARD,
+				//'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
 		$filters->setSortkeys(array('datetime', 'session_id', 'user_id', 'useragent', 'action', 'affected_user_id', 'status'));
@@ -497,6 +497,14 @@ class AdminController extends Controller_2_1 {
 
 		$factory = new ModelFactory('SystemLogModel');
 		$filters->applyToFactory($factory);
+
+		// The user is different because it requires an OR where clause for user or affected_user.
+		$w = new \Core\Datamodel\DatasetWhereClause();
+		$w->setSeparator('OR');
+		$w->addWhere('user_id = ' . $filters->get('affected_user_id'));
+		$w->addWhere('affected_user_id = ' . $filters->get('affected_user_id'));
+		$factory->where($w);
+
 		$listings = $factory->get();
 
 		$view->title = 'System Log';

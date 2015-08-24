@@ -28,11 +28,15 @@
 
 	{if sizeof($logins) > 1}
 		Latest Security Logs<br/>
+		{a href="/admin/log?filter[affected_user_id]=`$user.id`" class="button"}
+			<span>View All Logs</span>
+		{/a}
 		<table class="listing">
 			<tr>
 				<th>Date</th>
 				<th>IP</th>
 				<th>Location</th>
+				<th>User Agent</th>
 				<th>Notes</th>
 			</tr>
 			{foreach $logins as $login}
@@ -40,6 +44,7 @@
 					<td>{date format="SDT" $login.datetime}</td>
 					<td>{$login.ip_addr}</td>
 					<td>{geoiplookup $login.ip_addr}</td>
+					<td>{$login.useragent}</td>
 					<td>{($login.message) ? $login.message : $login.code}</td>
 				</tr>
 			{/foreach}

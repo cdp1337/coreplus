@@ -163,7 +163,7 @@ class UserController extends Controller_2_1{
 		$user = UserModel::Construct($request->getParameter(0));
 
 		if(!$user->exists()){
-			return View::ERROR_ACCESSDENIED;
+			return View::ERROR_NOTFOUND;
 		}
 
 		// Grab the login attempts for this user
