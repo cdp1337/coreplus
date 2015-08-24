@@ -6,6 +6,7 @@
 	</requires>
 	<hooks>
 		<hook name="/core/page/preexecute" call="\Piwik\PiwikHelper::InstallTracking"/>
+		<hook name="/core/page/search/results" call="\Piwik\PiwikHelper::SearchResultsTracking"/>
 	</hooks>
 	<description>
 		Piwik displays reports regarding the geographic location of visits, the source of visits

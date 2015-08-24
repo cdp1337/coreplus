@@ -60,6 +60,7 @@ class PageController extends Controller_2_1 {
 		}
 
 		$search = new \Core\Search\SearchResults();
+		$search->query = $request->getParameter('q');
 		$results = PageModel::Search($request->getParameter('q'), ['indexable = 1']);
 
 		$isadmin = \Core\user()->checkAccess('g:admin');
@@ -95,6 +96,8 @@ class PageController extends Controller_2_1 {
 		}
 
 		$search->sortResults();
+
+		HookHandler::DispatchHook('/core/page/search/results', $search);
 
 		$view->title = 'Site Search';
 		$view->assign('query', $request->getParameter('q'));

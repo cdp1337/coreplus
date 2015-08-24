@@ -22,6 +22,7 @@
  */
 
 namespace Piwik;
+use Core\Search\SearchResults;
 
 
 /**
@@ -109,6 +110,16 @@ EOD;
 		// Add the necessary scripts
 		\Core\view()->addScript($script, 'head');
 		\Core\view()->appendBodyContent('<noscript><p><img src="http://' . $server . '/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>');
+
+		return true;
+	}
+
+
+
+	public static function SearchResultsTracking(SearchResults $search){
+		// trackSiteSearch(keyword, [category], [resultsCount]
+		$snippet = '<script>if(typeof(Piwik) != "undefined"){ Piwik.getAsyncTracker().trackSiteSearch("' . htmlentities($search->query) . '", null, ' . $search->getCount() . ');}</script>';
+		\Core\view()->addScript($snippet, 'foot');
 
 		return true;
 	}
