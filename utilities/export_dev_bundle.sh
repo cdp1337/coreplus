@@ -36,7 +36,7 @@ src/components/navigation src/components/nonce \
 src/components/phpwhois \
 src/components/security-suite \
 src/components/tinymce src/components/theme \
-src/themes/base-v2 \
+src/themes/base-v3 \
 src/config/configuration.example.xml src/config/.htaccess \
 src/core src/install src/htaccess.example src/index.php
 echo "OK!  Created $BASEEXPORTTGZ"
