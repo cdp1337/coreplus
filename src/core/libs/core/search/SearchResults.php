@@ -63,6 +63,15 @@ class SearchResults {
 	public $haspagination = false;
 
 	/**
+	 * The query for this search result query.
+	 *
+	 * Optional, but can be used by tracking software.
+	 *
+	 * @var string
+	 */
+	public $query = '';
+
+	/**
 	 * @var array Array of results in this search result, set by addResults.
 	 */
 	private $_results = array();
