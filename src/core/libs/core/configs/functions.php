@@ -19,5 +19,5 @@ namespace Core\Configs;
  * @throws \Exception
  */
 function get_form_element_from_config(\ConfigModel $config){
-	return $config->asFormElement();
+	return $config->getAsFormElement();
 }
