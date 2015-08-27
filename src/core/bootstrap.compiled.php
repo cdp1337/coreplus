@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 23 Aug 2015 22:24:08 -0400
+ * @compiled Thu, 27 Aug 2015 12:38:47 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6315,8 +6315,7 @@ public static $Schema = array(
 'null'    => true,
 ],
 'options'       => [
-'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => 511,
+'type'      => Model::ATT_TYPE_TEXT,
 'default'   => null,
 'null'      => true,
 ],
@@ -6340,6 +6339,10 @@ public static $Schema = array(
 'type' => Model::ATT_TYPE_BOOL,
 'default' => false,
 'comment' => 'If children sites can override this configuration option',
+],
+'form_attributes' => [
+'type' => Model::ATT_TYPE_TEXT,
+'comment' => 'Set from the content of the form-attributes XML parameter.',
 ],
 'created'       => [
 'type' => Model::ATT_TYPE_CREATED
@@ -6399,66 +6402,101 @@ default:
 return $value;
 }
 }
-function getAsFormElement(){
+public function getFormAttributes(){
+$opts = [];
+$formOptions = $this->get('form_attributes');
+if($formOptions != ''){
+$formOptions = array_map('trim', explode(';', $formOptions));
+foreach($formOptions as $o){
+if(($cpos = strpos($o, ':')) !== false){
+$k = substr($o, 0, $cpos);
+$v = substr($o, $cpos+1);
+$opts[$k] = $v;
+}
+}
+}
+if(!isset($opts['type'])){
+switch ($this->get('type')) {
+case 'string':
+case 'int':
+$opts['type'] = 'text';
+break;
+case 'text':
+$opts['type'] = 'textarea';
+break;
+case 'enum':
+$opts['type'] = 'select';
+break;
+case 'boolean':
+$opts['type'] = 'radio';
+break;
+case 'set':
+$opts['type'] ='checkboxes';
+break;
+default:
+$opts['type'] = 'text';
+break;
+}
+}
+if($opts['type'] == 'select' || $opts['type'] == 'checkboxes'){
+$opts['options'] =  array_map('trim', explode('|', $this->get('options')));
+}
+if($opts['type'] == 'radio'){
+$opts['options'] = ['false' => 'No/False', 'true'  => 'Yes/True'];
+}
 $key = $this->get('key');
 $gname = substr($key, 1);
 $gname = ucwords(substr($gname, 0, strpos($gname, '/')));
-$title = $this->get('title') ? $this->get('title') : substr($key, strlen($gname) + 2);
+if(!isset($opts['title'])){
+if($this->get('title')){
+$opts['title'] = $this->get('title');
+}
+else{
+$title = substr($key, strlen($gname) + 2);
 $title = str_replace('/', ' ', $title);
 $title = str_replace('_', ' ', $title);
 $title = ucwords($title);
-$val   = \ConfigHandler::Get($key);
-$name  = 'config[' . $key . ']';
-switch ($this->get('type')) {
-case 'string':
-$el = \FormElement::Factory('text');
-break;
-case 'text':
-$el = \FormElement::Factory('textarea');
-break;
-case 'enum':
-$el = \FormElement::Factory('select');
-$el->set('options', array_map('trim', explode('|', $this->get('options'))));
-break;
-case 'boolean':
-$el = \FormElement::Factory('radio');
-$el->set(
-'options', array('false' => 'No/False',
-'true'  => 'Yes/True')
-);
-if ($val == '1' || $val == 'true' || $val == 'yes') $val = 'true';
-else $val = 'false';
-break;
-case 'int':
-$el                    = \FormElement::Factory('text');
-$el->validation        = '/^[0-9]*$/';
-$el->validationmessage = $gname . ' - ' . $title . ' expects only whole numbers with no punctuation.';
-break;
-case 'set':
-$el = \FormElement::Factory('checkboxes');
-$el->set('options', array_map('trim', explode('|', $this->get('options'))));
-if(is_array($val)){
+$opts['title'] = $title;
 }
-else{
-$val  = array_map('trim', explode('|', $val));
 }
-$name = 'config[' . $key . '][]';
-break;
-default:
-throw new \Exception('Unsupported configuration type for ' . $key . ', [' . $this->get('type') . ']');
-break;
-}
-$el->set('group', $gname);
-$el->set('title', $title);
-$el->set('name', $name);
-$el->set('value', $val);
+if(!isset($opts['description'])){
 $desc = $this->get('description');
 if ($this->get('default_value') && $desc) $desc .= ' (default value is ' . $this->get('default_value') . ')';
 elseif ($this->get('default_value')) $desc = 'Default value is ' . $this->get('default_value');
-$el->set('description', $desc);
+$opts['description'] = $desc;
+}
+if(!isset($opts['group'])){
+$opts['group'] = $gname;
+}
+if($opts['type'] == 'checkboxes'){
+$opts['name'] = 'config[' . $key . '][]';
+}
+else{
+$opts['name'] = 'config[' . $key . ']';
+}
+return $opts;
+}
+public function getAsFormElement(){
+$key        = $this->get('key');
+$attributes = $this->getFormAttributes();
+$val        = \ConfigHandler::Get($key);
+$type       = $attributes['type'];
+$el         = \FormElement::Factory($type, $attributes);
+if($type == 'radio'){
+if ($val == '1' || $val == 'true' || $val == 'yes') $val = 'true';
+else $val = 'false';
+}
+if($this->get('type') == 'int' && $type == 'text'){
+$el->validation        = '/^[0-9]*$/';
+$el->validationmessage = $attributes['group'] . ' - ' . $attributes['title'] . ' expects only whole numbers with no punctuation.';
+}
+if($type == 'checkboxes' && !is_array($val)){
+$val  = array_map('trim', explode('|', $val));
+}
+$el->set('value', $val);
 return $el;
 }
-function asFormElement(){
+public function asFormElement(){
 return self::getAsFormElement();
 }
 } // END class ConfigModel extends Model
@@ -7972,7 +8010,9 @@ $title       = $confignode->getAttribute('title');
 $description = $confignode->getAttribute('description');
 $mapto       = $confignode->getAttribute('mapto');
 $encrypted   = $confignode->getAttribute('encrypted');
+$formAtts    = $confignode->getAttribute('form-attributes');
 if($encrypted === null || $encrypted === '') $encrypted = '0';
+if(!$type) $type = 'string';
 $m   = ConfigHandler::GetConfig($key);
 $m->set('options', $options);
 $m->set('type', $type);
@@ -7981,6 +8021,7 @@ $m->set('title', $title);
 $m->set('description', $description);
 $m->set('mapto', $mapto);
 $m->set('encrypted', $encrypted);
+$m->set('form_attributes', $formAtts);
 if ($m->get('value') === null || !$m->exists()){
 $m->set('value', $confignode->getAttribute('default'));
 }
@@ -17076,7 +17117,8 @@ if (!empty($this->_attributes['id'])){
 return $this->_attributes['id'];
 }
 else{
-$n = \Core\str_to_url($this->get('name'));
+$n = str_replace(['/', '[', ']'], '-', $this->get('name'));
+$n = \Core\str_to_url($n);
 $c = strtolower(get_class($this));
 $id = $c . '-' . $n;
 $id = str_replace('[]', '', $id);
@@ -17273,7 +17315,8 @@ if (!empty($this->_attributes['id'])){
 return $this->_attributes['id'];
 }
 else{
-$n = $this->get('name');
+$n = str_replace(['/', '[', ']'], '-', $this->get('name'));
+$n = \Core\str_to_url($n);
 $c = strtolower(get_class($this));
 $id = $c . '-' . $n;
 $id = str_replace('[]', '', $id);
