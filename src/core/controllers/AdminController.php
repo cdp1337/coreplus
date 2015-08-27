@@ -1081,7 +1081,7 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage('Updated ' . $updatedcount . ' configuration options', 'success');
 		}
 
-		return 'back';
+		return true;
 	}
 
 	/**
