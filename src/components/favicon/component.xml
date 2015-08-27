@@ -5,7 +5,7 @@
 		A simple component to display a favicon for various browsers and mobile devices.
 	</description>
 	<configs>
-		<config key="/favicon/image" type="string" description="Filename of the favicon"/>
+		<config key="/favicon/image" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
 	</configs>
 	<pages>
 		<page baseurl="/favicon/admin" title="Site Favicon" access="g:admin" admin="1" group="Configure"/>

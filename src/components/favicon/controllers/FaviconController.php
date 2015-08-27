@@ -22,17 +22,8 @@ class FaviconController extends Controller_2_1 {
 		$image = ConfigHandler::Get('/favicon/image');
 
 		$form = new Form();
-		$form->set('callsmethod', 'FaviconController::AdminHandler');
-		$form->addElement(
-			'file',
-			[
-				'name' => 'image',
-				'title' => 'Image',
-				'accept' => 'image/*',
-				'basedir' => 'public/favicon/',
-				'value' => $image,
-			]
-		);
+		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
+		$form->addElement(ConfigHandler::GetConfig('/favicon/image')->getAsFormElement());
 		$form->addElement('submit', ['value' => 'Save']);
 
 		$view->title = 'Site Favicon';
@@ -74,11 +65,5 @@ class FaviconController extends Controller_2_1 {
 	 */
 	public static function PageHook(View $view) {
 		$view->addMetaName('favicon', null);
-	}
-
-	public static function AdminHandler(Form $form) {
-		ConfigHandler::Set('/favicon/image', $form->getElement('image')->get('value'));
-
-		return true;
 	}
 }
