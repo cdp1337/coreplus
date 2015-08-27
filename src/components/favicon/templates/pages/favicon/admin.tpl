@@ -15,7 +15,10 @@
 
 {if $current}
 	<fieldset class="collapsible collapsed">
-		<legend> How does this look on different devices? </legend>
+		<div class="fieldset-title">
+			How does this look on different devices?
+			<i class="icon-chevron-down expandable-hint"></i><i class="icon-chevron-up collapsible-hint"></i>
+		</div>
 		<div class="preview-tile">
 			i[Pad/Phone] with Retina Display<br/>
 			{img src="$current" dimensions="512x512!"}
