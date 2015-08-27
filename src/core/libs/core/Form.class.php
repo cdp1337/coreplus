@@ -257,7 +257,10 @@ class FormGroup {
 		}
 		// I need to generate a javascript and UA friendly version from the name.
 		else{
-			$n = \Core\str_to_url($this->get('name'));
+			// Names such as config[/blah/foo] are valid, but throw IDs for a loop when config-/blah/foo is rendered!
+			$n = str_replace(['/', '[', ']'], '-', $this->get('name'));
+			// Convert the rest of the characters to valid URl characters.
+			$n = \Core\str_to_url($n);
 			$c = strtolower(get_class($this));
 			// Prepend the form type to the name.
 			$id = $c . '-' . $n;
@@ -636,7 +639,10 @@ class FormElement {
 		}
 		// I need to generate a javascript and UA friendly version from the name.
 		else{
-			$n = $this->get('name');
+			// Names such as config[/blah/foo] are valid, but throw IDs for a loop when config-/blah/foo is rendered!
+			$n = str_replace(['/', '[', ']'], '-', $this->get('name'));
+			// Convert the rest of the characters to valid URl characters.
+			$n = \Core\str_to_url($n);
 			$c = strtolower(get_class($this));
 			// Prepend the form type to the name.
 			$id = $c . '-' . $n;
