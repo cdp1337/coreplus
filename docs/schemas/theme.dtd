@@ -24,7 +24,7 @@
 	The name MUST match the theme's directory, (capitalization is optional).
 	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
 -->
-<!ELEMENT theme ((assets|skins|otherfiles|upgrades|screenshots)?)>
+<!ELEMENT theme ((assets|skins|otherfiles|upgrades|screenshots|configs)?)>
 <!ATTLIST theme
 	name CDATA #REQUIRED
 	version CDATA #REQUIRED
@@ -53,10 +53,13 @@
 <!ELEMENT config EMPTY>
 <!ATTLIST config
 	key CDATA #REQUIRED
-	type CDATA #IMPLIED
+	type (string|text|int|boolean|enum|set) 'string'
+	title CDATA #IMPLIED
 	options CDATA #IMPLIED
 	description CDATA #IMPLIED
 	default CDATA #IMPLIED
+	mapto CDATA #IMPLIED
+	form-attributes CDATA #IMPLIED
 >
 
 <!--- User config options, since they're usually defined by the components. -->

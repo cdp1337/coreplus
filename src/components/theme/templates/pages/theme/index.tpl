@@ -35,6 +35,17 @@
 </div>
 
 <div class="theme-section">
+	<h3>Theme {$current->getName()} Configurable Options</h3>
+	{if $options_form}
+		{$options_form->render()}
+	{else}
+		<p class="message-info">
+			There are no configurable options for your selected theme.
+		</p>
+	{/if}
+</div>
+
+<div class="theme-section">
 	<h3>Theme {$current->getName()} Skins</h3>
 	<p class="message-tutorial">
 		Theme skins are your site's main container controlling the entire look and feel.
@@ -117,7 +128,7 @@
 
 
 <div class="theme-section">
-	<h3>Site Skin Options</h3>
+	<h3>Theme {$current->getName()} Site Skin Options</h3>
 	<p class="message-tutorial">
 		Any application that supports a skin to be set site-wide.
 	</p>

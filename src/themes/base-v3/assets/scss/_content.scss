@@ -2,6 +2,13 @@
  * General content styles
  */
 
+header.page-header {
+	.site-social-links {
+		float: right;
+		font-size: 200%;
+	}
+}
+
 a.button {
 	@include button();
 }

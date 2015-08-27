@@ -610,6 +610,35 @@ class Theme{
 		return (is_dir($d)) ? $d : null;
 	}
 
+	/**
+	 * Get all ConfigModels loaded for this specific theme.
+	 *
+	 * @return array of ConfigModel
+	 */
+	public function getConfigs(){
+		$configs = array();
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('configs');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('config') as $confignode) {
+			/** @var \DOMElement $confignode */
+			$key         = $confignode->getAttribute('key');
+
+			// Themes only allow for keys starting with "/theme/"!
+			// This is to encourage that all themes share a common subset of configuration options.
+			// EG: if the end user sees: "Site Logo", "Business Address", "Business Phone" on one theme,
+			// they would be expecting to see those same options with the same values if they change the theme,
+			// (and the new theme supports those same options).
+			if(strpos($key, '/theme/') === 0){
+				$configs[] = \ConfigHandler::GetConfig($key);
+			}
+		}
+
+		return $configs;
+	}
+
 	public function isLoadable(){
 		return true; // Themes really can't quite be *not* loadable.
 	}
@@ -757,7 +786,7 @@ class Theme{
 		$change = $this->_installAssets($verbose);
 		if($change !== false) $changed = array_merge($changed, $change);
 
-		$change = $this->_parseConfigs($verbose);
+		$change = $this->_parseConfigs(true);
 		if($change !== false) $changed = array_merge($changed, $change);
 
 		// Make sure the version is correct in the database.
@@ -774,28 +803,78 @@ class Theme{
 	 *
 	 * Returns false if nothing changed, else will return the configuration options changed.
 	 *
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 *
 	 * @return false | array
+	 *
 	 * @throws \InstallerException
 	 */
-	private function _parseConfigs(){
-		$changes = [];
+	private function _parseConfigs($install = true){
+		// Keep track of if this changed anything.
+		$changes = array();
+
+		$action = $install ? 'Installing' : 'Uninstalling';
+		$set    = $install ? 'Set' : 'Unset';
+
+		\Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
 
 		// Now, get every table under this node.
-		foreach($node->getElementsByTagName('config') as $confignode){
-			$m = new \ConfigModel($confignode->getAttribute('key'));
-			$m->set('type', $confignode->getAttribute('type'));
-			$m->set('default_value', $confignode->getAttribute('default'));
-			// Themes overwrite the settings regardless.
-			$m->set('value', $confignode->getAttribute('default'));
-			$m->set('description', $confignode->getAttribute('description'));
-			if($m->save()) $changes[] = 'Set configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+		foreach ($node->getElementsByTagName('config') as $confignode) {
+			/** @var \DOMElement $confignode */
+			$key         = $confignode->getAttribute('key');
+			$options     = $confignode->getAttribute('options');
+			$type        = $confignode->getAttribute('type');
+			$default     = $confignode->getAttribute('default');
+			$title       = $confignode->getAttribute('title');
+			$description = $confignode->getAttribute('description');
+			$mapto       = $confignode->getAttribute('mapto');
+			$encrypted   = $confignode->getAttribute('encrypted');
+			$formAtts    = $confignode->getAttribute('form-attributes');
+
+			if($encrypted === null || $encrypted === '') $encrypted = '0';
+
+			// Themes only allow for keys starting with "/theme/"!
+			// This is to encourage that all themes share a common subset of configuration options.
+			// EG: if the end user sees: "Site Logo", "Business Address", "Business Phone" on one theme,
+			// they would be expecting to see those same options with the same values if they change the theme,
+			// (and the new theme supports those same options).
+			if(strpos($key, '/theme/') !== 0){
+				trigger_error('Please ensure that all config options in themes start with "/theme/"! (Mismatched config found in ' . $this->getName() . ':' . $key, E_USER_NOTICE);
+				continue;
+			}
+
+			// Default if omitted.
+			if(!$type) $type = 'string';
+
+			$m   = \ConfigHandler::GetConfig($key);
+			$m->set('options', $options);
+			$m->set('type', $type);
+			$m->set('default_value', $default);
+			$m->set('title', $title);
+			$m->set('description', $description);
+			$m->set('mapto', $mapto);
+			$m->set('encrypted', $encrypted);
+			$m->set('form_attributes', $formAtts);
+
+			// Default from the xml, only if it's not already set.
+			if ($m->get('value') === null || !$m->exists()){
+				$m->set('value', $confignode->getAttribute('default'));
+			}
+			// Allow configurations to overwrite any value.  This is useful on the initial installation.
+			if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
+				$m->set('value', $_SESSION['configs'][$key]);
+			}
+
+			if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+
+			// Make it available immediately
+			\ConfigHandler::CacheConfig($m);
 		}
 
-		// Are there changes?
 		return (sizeof($changes)) ? $changes : false;
 	} // private function _parseConfigs
 

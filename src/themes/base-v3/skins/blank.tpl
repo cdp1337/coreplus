@@ -19,6 +19,10 @@
 
 		{$body}
 		<footer>
+			{include file='includes/site_schema_information.tpl'}
+
+			{include file='includes/site_social_links.tpl'}
+
 			<p class="legal-notice">
 				Licensed under the
 				<a href="https://www.gnu.org/licenses/agpl" target="_blank" title="Licensed Under AGPLv3" class="agplv3-tag">AGPLv3</a>.

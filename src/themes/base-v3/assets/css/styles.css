@@ -1451,7 +1451,13 @@ fieldset.collapsible.collapsed .collapsible-hint {
 /**
  * General content styles
  */
-/* line 5, ../scss/_content.scss */
+/* line 6, ../scss/_content.scss */
+header.page-header .site-social-links {
+  float: right;
+  font-size: 200%;
+}
+
+/* line 12, ../scss/_content.scss */
 a.button {
   border: 1px solid #2459a6;
   border-radius: 3px;
@@ -1487,19 +1493,19 @@ a.button:disabled {
   cursor: not-allowed;
 }
 
-/* line 9, ../scss/_content.scss */
+/* line 16, ../scss/_content.scss */
 pre code {
   display: block;
   padding: 0.5em 1em;
   border: 1px solid;
 }
 
-/* line 15, ../scss/_content.scss */
+/* line 22, ../scss/_content.scss */
 aside.markdown-toc {
   float: left;
   margin-right: 1em;
 }
-/* line 19, ../scss/_content.scss */
+/* line 26, ../scss/_content.scss */
 aside.markdown-toc ul {
   margin-left: 1em;
 }

@@ -12,6 +12,51 @@
 		<file filename="blank.tpl" md5="598953b552263e28f6a97c930cacbec6" title=""/>
 		<file filename="wide.tpl" md5="61140233b8792c60e62b919f76b9192a" title=""/>
 	</skins>
+	<configs>
+		<config key="/theme/site_logo" mapto="THEME_SITE_LOGO" form-attributes="type:file;basedir:public/logo/;accept:image/*;"/>
+		<config
+			key="/theme/listing_type"
+			mapto="THEME_LISTING_TYPE"
+			type="string"
+			default="None"
+			form-attributes="type:select;"
+		    options="None|Organization|Place|LocalBusiness|Airline|AnimalShelter|AutomotiveBusiness|ChildCare|Corporation|DryCleaningOrLaundry|EducationalOrganization|EmergencyService|EmploymentAgency|EntertainmentBusiness|FinancialService|FoodEstablishment|GovernmentOffice|GovernmentOrganization|HealthAndBeautyBusiness|HomeAndConstructionBusiness|InternetCafe|Library|LodgingBusiness|MedicalOrganization|NGO|PerformingGroup|ProfessionalService|RadioStation|RealEstateAgent|RecyclingCenter|SelfStorage|ShoppingCenter|SportsActivityLocation|SportsOrganization|Store|TelevisionStation|TouristInformationCenter|TravelAgency"
+		    />
+		<config key="/theme/listing_name" mapto="THEME_LISTING_NAME"/>
+		<config key="/theme/listing_address" mapto="THEME_LISTING_ADDRESS" title="Listing Physical Address"/>
+		<config key="/theme/listing_city" mapto="THEME_LISTING_CITY" title="Listing City"/>
+		<config key="/theme/listing_province" mapto="THEME_LISTING_PROVINCE" title="Listing Province/State"/>
+		<config key="/theme/listing_postal" mapto="THEME_LISTING_POSTAL" title="Listing Postal/Zip"/>
+		<config key="/theme/listing_phone" mapto="THEME_LISTING_PHONE" title="Listing Phone Number"/>
+		<config key="/theme/listing_fax" mapto="THEME_LISTING_FAX" title="Listing Fax Number"/>
+		<config
+			key="/theme/listing_hours"
+			mapto="THEME_LISTING_HOURS"
+			title="Listing Hours"
+			type="text"
+			description="Open hours of this business.
+			For multiple records, please list each record on its own line in the format of &quot;Machine Version Days/Time|Human Readable Version Days/Time&quot;.
+			&lt;br/&gt;&lt;br/&gt;
+			* Multiple days can be listed with commas ',' separating each day.&lt;br/&gt;
+			* Day or time ranges are specified using a hyphen '-'.&lt;br/&gt;
+			* Days are specified using the following two-letter combinations: Mo, Tu, We, Th, Fr, Sa, Su.&lt;br/&gt;
+			* Times are specified using 24:00 time. For example, 3pm is specified as 15:00.&lt;br/&gt;
+			* EXAMPLE: &quot;Tu,Th 16:00-20:00|Tuesdays and Thursdays 4-8pm&quot;&lt;br/&gt;
+			* EXAMPLE: &quot;Mo-Su|24-hours a day, 7-days a week!&quot;&lt;br/&gt;"
+			/>
+		<config key="/theme/social_link_facebook" mapto="THEME_SOCIAL_FACEBOOK"/>
+		<config key="/theme/social_link_foursquare" mapto="THEME_SOCIAL_FOURSQUARE"/>
+		<config key="/theme/social_link_github" mapto="THEME_SOCIAL_GITHUB"/> <!-- github-square -->
+		<config key="/theme/social_link_gittip" mapto="THEME_SOCIAL_GITTIP"/>
+		<config key="/theme/social_link_gplus" mapto="THEME_SOCIAL_GPLUS"/> <!-- google-plus-square -->
+		<config key="/theme/social_link_instagram" mapto="THEME_SOCIAL_INSTAGRAM"/>
+		<config key="/theme/social_link_linkedin" mapto="THEME_SOCIAL_LINKEDIN"/>
+		<config key="/theme/social_link_pinterest" mapto="THEME_SOCIAL_PINTEREST"/> <!-- pinterest-square -->
+		<config key="/theme/social_link_twitter" mapto="THEME_SOCIAL_TWITTER"/> <!-- twitter-square -->
+		<config key="/theme/social_link_vimeo" mapto="THEME_SOCIAL_VIMEO"/>
+		<config key="/theme/social_link_youtube" mapto="THEME_SOCIAL_YOUTUBE"/>
+		<config key="/theme/social_link_generic" mapto="THEME_SOCIAL_GENERIC"/> <!-- globe -->
+	</configs>
 	<emailskins>
 		<file filename="basic.tpl"/>
 	</emailskins>

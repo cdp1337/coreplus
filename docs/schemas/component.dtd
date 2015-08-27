@@ -197,6 +197,7 @@ For simple widgets, set the class to the class name of the widget.
 	description CDATA #IMPLIED
 	default CDATA #IMPLIED
 	mapto CDATA #IMPLIED
+	form-attributes CDATA #IMPLIED
 >
 
 <!-- 2.8.x User options, all contained within the <user/> key -->

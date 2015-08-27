@@ -23,6 +23,21 @@ class ThemeController extends Controller_2_1{
 		$themes = ThemeHandler::GetAllThemes();
 		$current = ThemeHandler::GetTheme($selected);
 
+
+		$configOptions = $current->getConfigs();
+		if(!sizeof($configOptions)){
+			$optionForm = null;
+		}
+		else{
+			$optionForm = new Form();
+			$optionForm->set('callsmethod', 'AdminController::_ConfigSubmit');
+			foreach($configOptions as $c){
+				/** @var $c ConfigModel */
+				$optionForm->addElement($c->getAsFormElement());
+			}
+			$optionForm->addElement('submit', ['value' => 'Save Configurable Options']);
+		}
+
 		// The source objects to look for assets in.
 		// Set initially to all the installed components.
 		$assetsources = Core::GetComponents();
@@ -215,6 +230,7 @@ class ThemeController extends Controller_2_1{
 		$view->title = 'Theme Manager';
 		$view->assign('themes', $themes);
 		$view->assign('current', $current);
+		$view->assign('options_form', $optionForm);
 		$view->assign('assets', $nestedassets);
 		$view->assign('templates', $nestedtemplates);
 		$view->assign('url_themeeditor', Core::ResolveLink('/theme/editor'));

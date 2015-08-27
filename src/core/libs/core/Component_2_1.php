@@ -1783,9 +1783,12 @@ class Component_2_1 {
 			$description = $confignode->getAttribute('description');
 			$mapto       = $confignode->getAttribute('mapto');
 			$encrypted   = $confignode->getAttribute('encrypted');
+			$formAtts    = $confignode->getAttribute('form-attributes');
 
 			if($encrypted === null || $encrypted === '') $encrypted = '0';
 
+			// Default if omitted.
+			if(!$type) $type = 'string';
 
 			$m   = ConfigHandler::GetConfig($key);
 			$m->set('options', $options);
@@ -1795,6 +1798,7 @@ class Component_2_1 {
 			$m->set('description', $description);
 			$m->set('mapto', $mapto);
 			$m->set('encrypted', $encrypted);
+			$m->set('form_attributes', $formAtts);
 
 			// Default from the xml, only if it's not already set.
 			if ($m->get('value') === null || !$m->exists()){

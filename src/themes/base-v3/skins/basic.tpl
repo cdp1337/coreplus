@@ -34,8 +34,16 @@
 		{/if}
 
 		<div class="outer-wrapper" id="outer-wrapper">
-			<header>
-				<a href="{$smarty.const.ROOT_URL}" title="{$smarty.const.SITENAME|escape}"><img src="{asset src='images/logo.png'}" alt="{$smarty.const.SITENAME|escape}"/></a>
+			<header class="page-header">
+				{a href="`$smarty.const.ROOT_URL`" title="`$smarty.const.SITENAME|escape`"}
+					{if $smarty.const.THEME_SITE_LOGO}
+						{img src="`$smarty.const.THEME_SITE_LOGO`" alt="`$smarty.const.SITENAME|escape`"}
+					{else}
+						{img src="assets/images/logo.png" alt="`$smarty.const.SITENAME|escape`"}
+					{/if}
+				{/a}
+
+				{include file='includes/site_social_links.tpl'}
 			</header>
 
 			<nav id="primary-nav">
@@ -116,6 +124,10 @@
 
 			<footer class="page-footer">
 				{widgetarea name="Footer"}
+
+				{include file='includes/site_schema_information.tpl'}
+
+				{include file='includes/site_social_links.tpl'}
 
 				<p class="legal-notice">
 					Licensed under the
