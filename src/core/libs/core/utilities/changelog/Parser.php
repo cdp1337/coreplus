@@ -2,7 +2,7 @@
 /**
  * File for class Parser definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130409.1056
  * @package Core\Utilities\Changelog
  */
@@ -21,13 +21,34 @@ class Parser {
 	private $_name;
 	private $_sections;
 
+
 	public function __construct($name, $file){
 		$this->_name = $name;
 		$this->_file = $file;
 	}
 
+	/**
+	 * Check if this file exists on the disk
+	 *
+	 * @return bool
+	 */
 	public function exists(){
 		return file_exists($this->_file);
+	}
+
+	/**
+	 * Check if this file has been modified and not saved yet
+	 *
+	 * @return bool
+	 */
+	public function changed(){
+		foreach($this->_sections as $s){
+			/** @var Section $s */
+			if($s->_changed){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -37,7 +58,7 @@ class Parser {
 	 */
 	public function parse(){
 		// Blank out the existing sections, if any.
-		$this->_sections = array();
+		$this->_sections = [];
 
 		if($this->exists()){
 
@@ -73,6 +94,12 @@ class Parser {
 				}
 			}
 			fclose($fh);
+
+			// Don't forget to mark all sections as not-changed, since the underlying section doesn't know if parse was called from the original load or from a set.
+			foreach($this->_sections as $s){
+				/** @var Section $s */
+				$s->_changed = false;
+			}
 		}
 		else{
 			throw new \Exception($this->_file . ' does not exist, cannot parse!');
@@ -110,8 +137,9 @@ class Parser {
 		$this->sort();
 
 		// Transpose the indexes to a numeric array so I can easily grab the next one.
-		$versioned = array();
+		$versioned = [];
 		foreach($this->_sections as $s){
+			/** @var Section $s */
 			$versioned[] = $s->getVersion();
 		}
 
@@ -131,8 +159,9 @@ class Parser {
 	public function sort(){
 
 		// I'd like to sort the sections by version number.
-		$versioned = array();
+		$versioned = [];
 		foreach($this->_sections as $s){
+			/** @var Section $s */
 			$versioned[ $s->getVersion() ] = $s;
 		}
 
@@ -157,6 +186,24 @@ class Parser {
 	}
 
 	/**
+	 * Create the initial CHANGELOG file with an optional message.
+	 *
+	 * Will throw an exception if the file already exists!
+	 *
+	 * @param $version
+	 *
+	 * @throws \Exception
+	 */
+	public function createInitial($version, $message = 'Initial Version'){
+		if($this->exists()){
+			throw new \Exception('Refusing to create initial CHANGELOG, file already exists!');
+		}
+
+		$section = $this->getSection($version);
+		$section->addLine($message);
+	}
+
+	/**
 	 * Save this CHANGELOG back out as the standard format
 	 *
 	 * @param null|string $filename Set to a string to save as another file instead of the original
@@ -173,7 +220,10 @@ class Parser {
 
 		$out = '';
 		foreach($this->_sections as $s){
+			/** @var Section $s */
 			$out .= $s->fetchFormatted() . "\n";
+
+			$s->_changed = false;
 		}
 
 		// make sure the directory exists.
@@ -183,12 +233,22 @@ class Parser {
 		file_put_contents($filename, $out);
 	}
 
+	/**
+	 * Export this CHANGELOG out to an HTML file.
+	 *
+	 * This is considered an export operation because it cannot be read back in as a valid CHANGELOG object,
+	 * and therefore does not trigger the changed flag to be dropped.
+	 *
+	 * @param     $filename
+	 * @param int $startinglevel
+	 */
 	public function saveHTML($filename, $startinglevel = 1){
 		// Make sure they're sorted.
 		$this->sort();
 
 		$out = '<h' . $startinglevel . '>' . $this->_name . ' Change Log</h' . $startinglevel . '>' . "\n";
 		foreach($this->_sections as $s){
+			/** @var Section $s */
 			$out .= $s->fetchAsHTML($startinglevel + 1) . "\n<hr/>\n";
 		}
 

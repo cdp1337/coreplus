@@ -6,8 +6,8 @@
  *  all the necessary paths, settings and includes.
  *
  * @package Core
- * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @author Charlie Powell <charlie@evalagency.com>
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -102,6 +102,74 @@ define('TAB', "\t");
  * define shorthand directory separator constant
  */
 define('DS', DIRECTORY_SEPARATOR);
+
+##
+# Gimme some colors!
+# These are used to prettify the terminal.
+# Color 1 is always standard and
+# Color 2 is always the bold version.
+
+/*
+const C_BLK1 = "\033[0;30m";
+const C_BLK2 = "\033[1;30m";
+const C_RED1 = "\033[0;31m";
+const C_RED2 = "\033[1;31m";
+const C_GRN1 = "\033[0;32m";
+const C_GRN2 = "\033[1;32m";
+const C_YLW1 = "\033[0;33m";
+const C_YLW2 = "\033[1;33m";
+const C_BLU1 = "\033[0;34m";
+const C_BLU2 = "\033[1;34m";
+const C_PRP1 = "\033[0;35m";
+const C_PRP2 = "\033[1;35m";
+const C_CYN1 = "\033[0;36m";
+const C_CYN2 = "\033[1;36m";
+const C_WHT1 = "\033[0;37m";
+const C_WHT2 = "\033[1;37m";
+const C_RESET = "\033[0m";
+const C_NONE = "";
+*/
+
+if(EXEC_MODE == 'CLI'){
+	// Line color, the separating characters
+	define('COLOR_LINE', "\033[0;30m");
+	// Heading color
+	define('COLOR_HEADER', "\033[1;36m");
+	// Success color
+	define('COLOR_SUCCESS', "\033[1;32m");
+	// Warning color
+	define('COLOR_WARNING', "\033[1;33m");
+	// Error color
+	define('COLOR_ERROR', "\033[1;31m");
+	// Debug color
+	define('COLOR_DEBUG', "\033[0;34m");
+	// Normal color, alias of RESET for CLI operation, but has other meaning on WEB operation.
+	define('COLOR_NORMAL', "\033[0m");
+	// Reset color
+	define('COLOR_RESET', "\033[0m");
+	// Space character
+	define('NBSP', ' ');
+}
+else{
+	// Line color, the separating characters
+	define('COLOR_LINE', "<span style='color:grey; font-family:Courier,mono;'>");
+	// Heading color
+	define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold; font-family:Courier,mono;'>");
+	// Success color
+	define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold; font-family:Courier,mono;'>");
+	// Warning color
+	define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold; font-family:Courier,mono;'>");
+	// Error color
+	define('COLOR_ERROR', "<span style='color:red; font-weight:bold; font-family:Courier,mono;'>");
+	// Debug color
+	define('COLOR_DEBUG', "<span style='color:lightskyblue; font-family:Courier,mono;'>");
+	// Normal color, no styles applied, required because any RESET (</span>) needs a start span.
+	define('COLOR_NORMAL', "<span style='font-family:Courier,mono;'>");
+	// Reset color
+	define('COLOR_RESET', "</span>");
+	// Space character
+	define('NBSP', '&nbsp;');
+}
 
 
 // Cleanup!

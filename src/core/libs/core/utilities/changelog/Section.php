@@ -2,7 +2,7 @@
 /**
  * File for class Section definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130409.1100
  * @package Core\Utilities\Changelog
  */
@@ -35,6 +35,8 @@ class Section {
 
 	private $_packageddate;
 
+	/** @var bool Watches if the file has been changed between what's on disk and what's in memory. */
+	public $_changed = false;
 
 	/**
 	 * The last entry processed, useful for parseLine and its continuation ability.
@@ -85,6 +87,8 @@ class Section {
 			// Ok, I'll accept a continuation of the last entry.
 			$this->_lastentry->appendLine($line);
 		}
+
+		$this->_changed = true;
 	}
 
 	/**
@@ -116,11 +120,13 @@ class Section {
 
 		// And append it to the list of entries.
 		$this->_entries[] = $entry;
+		$this->_changed   = true;
 	}
 
 	public function clearEntries(){
-		$this->_entries = array();
+		$this->_entries = [];
 		$this->_lastentry = null;
+		$this->_changed   = true;
 	}
 
 	/**
@@ -139,6 +145,26 @@ class Section {
 	 */
 	public function getReleasedDate(){
 		return $this->_packageddate;
+	}
+
+	/**
+	 * Mark this CHANGELOG section as released by the requested user and email, optionally on a given timestamp.
+	 *
+	 * @param string      $packager_name  Packager's name
+	 * @param string      $packager_email Packager's email
+	 * @param string|null $date           Date (in RFC-2822 format), or null for now
+	 *
+	 * @throws \Exception
+	 */
+	public function markReleased($packager_name, $packager_email, $date = null) {
+		if($this->getReleasedDate()){
+			throw new \Exception('CHANGELOG section has already been marked as released.');
+		}
+
+		if(!$date){
+			$date = \Time::GetCurrent(\Time::TIMEZONE_DEFAULT, \Time::FORMAT_RFC2822);
+		}
+		$this->parseLine("--$packager_name <$packager_email>  " . $date);
 	}
 
 	/**
