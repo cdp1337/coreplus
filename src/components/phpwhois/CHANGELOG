@@ -1,3 +1,17 @@
+PHPWhois 5.0.0-2~bpo265
+
+	* Accidentally moved the JSHelper outside of the phpwhois/lib directory...
+	* Import newest version of phpwhois from the new eVAL library
+	* Re-architect the entire structure of phpWhois to make it more manageable and compliant with PHP 5.5
+	  standards.
+	* Documentation standardization
+	* Repackage a number of components to fix a minor packaging bug.
+	* Newest version of phpwhois from github.
+	* Documentation cleanup.
+	* Switch to the new interface for accessing Core cache.
+	* Documentation change, @copyright.
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 01 Sep 2015 17:56:48 -0400
+
 PHPWhois 4.2.2~core4
 
 	* Make use of the namespace versions of View instead of static.

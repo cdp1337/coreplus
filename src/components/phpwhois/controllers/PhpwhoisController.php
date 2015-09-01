@@ -2,9 +2,9 @@
 /**
  * File for class PhpwhoisController definition in the coreplus project
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130424.2342
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -46,7 +46,7 @@
  * </code>
  *
  * 
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 class PhpwhoisController extends Controller_2_1{
@@ -60,11 +60,7 @@ class PhpwhoisController extends Controller_2_1{
 		$view->mode = View::MODE_AJAX;
 		$view->record = false;
 
-		$whois = new phpwhois\Whois();
-
-		$result = $whois->lookup($query);
-
-//var_dump($result, $result->getOrganization(), $result->getNetwork()); die();
+		$result = Whois::Lookup($query);
 
 		$view->jsondata = [
 			'query'        => $query,
