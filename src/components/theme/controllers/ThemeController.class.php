@@ -186,45 +186,68 @@ class ThemeController extends Controller_2_1{
 
 
 		$customdest = \Core\directory('themes/custom');
-		if(!$customdest->isWritable()){
-			$cssform = false;
-		}
-		else{
-			// Load the editor for the custom CSS file, as this is a very common thing to do!
-			$file = 'css/custom.css';
-			// And try to look up and find this damn file...
-			$srcdirs = array();
-			$srcdirs[] = ROOT_PDIR . 'themes/custom/assets/';
-			$srcdirs[] = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets/';
-			foreach(Core::GetComponents() as $c){
-				if($c->getAssetDir()){
-					$srcdirs[] = $c->getAssetDir();
+
+		$cssform = false;
+		$cssprintform = false;
+
+		if($customdest->isWritable()){
+			$sets = [
+				[
+					'file' => 'css/custom.css',
+				    'form' => null,
+				],
+				[
+					'file' => 'css/custom_print.css',
+					'form' => null,
+				],
+			];
+
+			foreach($sets as $k => $set){
+				// Load the editor for the custom CSS file, as this is a very common thing to do!
+				$file = $set['file'];
+				// And try to look up and find this damn file...
+				$srcdirs = array();
+				$srcdirs[] = ROOT_PDIR . 'themes/custom/assets/';
+				$srcdirs[] = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets/';
+				foreach(Core::GetComponents() as $c){
+					if($c->getAssetDir()){
+						$srcdirs[] = $c->getAssetDir();
+					}
 				}
-			}
-			foreach($srcdirs as $dir){
-				if(file_exists($dir . $file)){
-					$file = $dir . $file;
-					break;
+				foreach($srcdirs as $dir){
+					if(file_exists($dir . $file)){
+						$file = $dir . $file;
+						break;
+					}
 				}
+
+				$fh = \Core\Filestore\Factory::File($file);
+				$content = $fh->getContents();
+
+				$m = new ThemeTemplateChangeModel();
+				$m->set('content', $content);
+				$m->set('filename', 'assets/css/custom.css');
+
+				$form = Form::BuildFromModel($m);
+
+				$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
+				// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
+				//$form->addElement('system', array('name' => 'revision', 'value' => $revision));
+				$form->addElement('system', array('name' => 'file', 'value' => 'assets/' . $set['file']));
+				$form->addElement('system', array('name' => 'filetype', 'value' => 'file'));
+				// No one uses this anyways!
+				$form->switchElementType('model[comment]', 'hidden');
+
+				$form->getElement('model[content]')->set('id', 'custom_content_' . $k);
+
+				$form->addElement('submit', array('value' => 'Save Custom CSS'));
+
+				// Save it back down to the original array
+				$sets[$k]['form'] = $form;
 			}
 
-			$fh = \Core\Filestore\Factory::File($file);
-			$content = $fh->getContents();
-
-			$m = new ThemeTemplateChangeModel();
-			$m->set('content', $content);
-			$m->set('filename', 'assets/css/custom.css');
-
-			$cssform = Form::BuildFromModel($m);
-			$cssform->set('callsmethod', 'ThemeController::_SaveEditorHandler');
-			// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
-			//$form->addElement('system', array('name' => 'revision', 'value' => $revision));
-			$cssform->addElement('system', array('name' => 'file', 'value' => 'assets/css/custom.css'));
-			$cssform->addElement('system', array('name' => 'filetype', 'value' => 'file'));
-			// No one uses this anyways!
-			$cssform->switchElementType('model[comment]', 'hidden');
-
-			$cssform->addElement('submit', array('value' => 'Save Custom CSS'));
+			$cssform = $sets[0]['form'];
+			$cssprintform = $sets[1]['form'];
 		}
 
 		$view->title = 'Theme Manager';
@@ -238,6 +261,7 @@ class ThemeController extends Controller_2_1{
 		$view->assign('url_themestylesheets', Core::ResolveLink('/theme/selectstylesheets'));
 		$view->assign('site_skins_form', $siteskinform);
 		$view->assign('cssform', $cssform);
+		$view->assign('cssprintform', $cssprintform);
 	}
 
 	/**

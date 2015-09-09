@@ -200,13 +200,38 @@
 
 <div class="theme-section">
 	<h3>Edit Custom CSS</h3>
-	{a href="/theme/editor?file=assets/css/custom.css" class="button"}
-		<span>Open Full Editor</span>
-	{/a}
-	<div id="theme-editor-wysiwyg">
-		{$cssform->render()}
-	</div>
+	<p class="message-tutorial">
+		This stylesheet allows you to add custom styles to your site.
+	</p>
+	{if $cssform}
+		{a href="/theme/editor?file=assets/css/custom.css" class="button"}
+			<span>Open Full Editor</span>
+		{/a}
+		<div id="theme-editor-wysiwyg">
+			{$cssform->render()}
+		</div>
+	{else}
+		<p class="message-tutorial">
+			Please ensure that themes/custom exists and is writable by the web server in order to enable custom CSS editing!
+		</p>
+	{/if}
 </div>
+
+{if $cssprintform}
+	<div class="theme-section">
+		<h3>Edit Custom Print CSS</h3>
+		<p class="message-tutorial">
+			This stylesheet allows you to add custom styles to the print styles of your site.<br/><br/>
+			Print styles take effect automatically when a page is printed and for operations such as PDF generation.
+		</p>
+		{a href="/theme/editor?file=assets/css/custom_print.css" class="button"}
+			<span>Open Full Editor</span>
+		{/a}
+		<div id="theme-editor-wysiwyg">
+			{$cssprintform->render()}
+		</div>
+	</div>
+{/if}
 
 {function name=printAssetList}
 	<ul>
@@ -311,7 +336,13 @@
 	{script library="codemirror_css"}{/script}
 	{css href="assets/codemirror/theme/ambiance.css"}{/css}
 	{script location="foot"}<script>
-		CodeMirror.fromTextArea(document.getElementById("formtextareainput-model-content"), {
+		CodeMirror.fromTextArea(document.getElementById("custom_content_0"), {
+			//theme: 'ambiance',
+			lineNumbers: true,
+			lineWrapping: true,
+			mode: 'css'
+		});
+		CodeMirror.fromTextArea(document.getElementById("custom_content_1"), {
 			//theme: 'ambiance',
 			lineNumbers: true,
 			lineWrapping: true,
