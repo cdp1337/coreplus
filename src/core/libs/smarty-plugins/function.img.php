@@ -42,21 +42,9 @@
  *
  * #### Smarty Parameters
  *
- *  * file
- *    * \Core\Filestore\File
- *    * File object passed in to display
- *    * Either "file" or "src" is required.
- *  * src
+ *  * assign
  *    * string
- *    * Source filename to display.  This can start with "assets" for an asset, or "public" for a public file.
- *    * Either "file" or "src" is required.
- *  * width
- *    * int
- *    * Maximum image width (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
- *
- *  * height
- *    * int
- *    * Maximum image height (in pixels).  If both width and height are provided, the image will be constrained to both without any distortion.
+ *    * Set to a string to assign that variable name instead of returning the output.
  *  * dimensions
  *    * Provide both width and height in pixels, along with special instructions
  *    * Structure is "widthxheight" with no spaces between the "x" and the two integers.
@@ -65,10 +53,30 @@
  *    * Exclamation mark "`!`" at the end forces size regardless of aspect ratio.
  *    * Greater than "`>`" at the end will only increase image sizes.
  *    * Less than "`<`" at the end will only decrease image sizes.
+ *  * file
+ *    * \Core\Filestore\File
+ *    * File object passed in to display
+ *    * Either "file" or "src" is required.
+ *  * height
+ *    * int
+ *    * Maximum image height (in pixels).
+ *    * If both width and height are provided, the image will be constrained to both without any distortion.
+ *  * inline
+ *    * int "1" or "0", (default "0")
+ *    * New in Core 4.2.0
+ *    * Request that the resized image be encoded as base64 and inserted inline in the markdown instead of returned as the URL.
  *  * placeholder
  *    * string
  *    * placeholder image if the requested image is blank or not found.  Useful for optional fields that should still display something.
  *    * Current values: "building", "generic", "person", "person-tall", "person-wide", "photo"
+ *  * src
+ *    * string
+ *    * Source filename to display.  This can start with "assets" for an asset, or "public" for a public file.
+ *    * Either "file" or "src" is required.
+ *  * width
+ *    * int
+ *    * Maximum image width (in pixels).
+ *    * If both width and height are provided, the image will be constrained to both without any distortion.
  *
  * Any other parameter is transparently sent to the resulting `<img/>` tag.
  *
@@ -104,21 +112,21 @@ function smarty_function_img($params, $smarty){
 	else{
 		$f = null;
 	}
-	
+
 	// Some optional parameters, (and their defaults)
-	$assign = $width = $height = $dimensions = false;
-	$placeholder = null;
-	
+	$assign = $width = $height = $dimensions = $inline = false;
+	$placeholder = $previewfile = null;
+
 	if(isset($params['assign'])){
 		$assign = $params['assign'];
 		unset($params['assign']);
 	}
-	
+
 	if(isset($params['width'])){
 		$width = $params['width'];
 		unset($params['width']);
 	}
-	
+
 	if(isset($params['height'])){
 		$height = $params['height'];
 		unset($params['height']);
@@ -135,7 +143,12 @@ function smarty_function_img($params, $smarty){
 		$placeholder = $params['placeholder'];
 		unset($params['placeholder']);
 	}
-	
+
+	if(isset($params['inline'])){
+		$inline = ($params['inline'] == '1');
+		unset($params['inline']);
+	}
+
 
 	if($dimensions){
 		// Passing in dimensions raw will allow the user more control over the size of the images.
@@ -188,6 +201,11 @@ function smarty_function_img($params, $smarty){
 			// Ok, it doesn't exist... return a link to the controller to render this file.
 			$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
 		}
+		elseif($inline && $previewfile->getFilesize() < 524288){
+			// Overwrite the src attribute with the base64 contents.
+			// This can only happen after the preview file exists!
+			$attributes['src'] = 'data:' . $previewfile->getMimetype() . ';base64,' . base64_encode($previewfile->getContents());
+		}
 		else{
 			$attributes['src'] = $previewfile->getURL();
 		}
@@ -197,7 +215,7 @@ function smarty_function_img($params, $smarty){
 	if(!isset($attributes['alt'])){
 		$attributes['alt'] = $f->getTitle();
 	}
-	
+
 	// Merge them back together in one string.
 	$html = '<img';
 	foreach($attributes as $k => $v) $html .= " $k=\"$v\"";
@@ -213,5 +231,5 @@ function smarty_function_img($params, $smarty){
 		}
 	}
 
-    return $assign ? $smarty->assign($assign, $html) : $html;
+	return $assign ? $smarty->assign($assign, $html) : $html;
 }
