@@ -2,18 +2,18 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="Base V3">
 	<assets>
-		<file filename="assets/css/print.css" md5="8819cca99b3c7f7e9e4a8982f29df989"/>
-		<file filename="assets/css/print.css.map" md5="e125cb330d57977e3c90ae3aec206407"/>
-		<file filename="assets/css/print.min.css" md5="fc4f5c01537ca8ac5317f0871cc40c44"/>
-		<file filename="assets/css/styles.css" md5="fef9de41a1da1a36b082d63054219eb1"/>
-		<file filename="assets/css/styles.css.map" md5="4ee997ef780c6ed3cd1b427ce5574fcf"/>
-		<file filename="assets/css/styles.min.css" md5="8a67cff470f83852a5b583ea9de8e794"/>
+		<file filename="assets/css/print.css" md5="80732f27a79415d3160a2cea3466742c"/>
+		<file filename="assets/css/print.css.map" md5="75fcc4d5f80b304e394c942b3dfaaac4"/>
+		<file filename="assets/css/print.min.css" md5="61d7e8c3aabf7cfa82d398c969bc5c9b"/>
+		<file filename="assets/css/styles.css" md5="73d58beb7af7677027fe5f9324c1ac20"/>
+		<file filename="assets/css/styles.css.map" md5="625db8a4ddc369a2392d625a6d73fb54"/>
+		<file filename="assets/css/styles.min.css" md5="28e6c782d5e57ea4bab8acac89ffb5f6"/>
 	</assets>
 	<skins>
 		<file filename="basic.tpl" md5="4675daf72a60bdb370e0ab9f8e32978c" title=""/>
 		<file filename="blank.tpl" md5="e0fe07062c844b9a1353d71edf5cc025" title=""/>
-		<file filename="wide.tpl" md5="a22695c89059c0f90418f9626d73e6b1" title=""/>
-		<file filename="print.tpl" md5="22ba06e8932244ff1cea9b2a471c4dbd" title=""/>
+		<file filename="wide.tpl" md5="05728603032b1c0b960e38750cbd1b67" title=""/>
+		<file filename="print.tpl" md5="f00ef5717d9b0188ee26d0acc49267a2" title=""/>
 	</skins>
 	<configs>
 		<config key="/theme/site_logo" mapto="THEME_SITE_LOGO" form-attributes="type:file;basedir:public/logo/;accept:image/*;"/>
@@ -52,12 +52,12 @@
 	<otherfiles>
 		<file filename="CHANGELOG" md5="cf5f20f86e677a0363af990932016384"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
-		<file filename="assets/scss/_content.scss" md5="6b9170dd47c7d63fb47fe0ce8127b842"/>
+		<file filename="assets/scss/_content.scss" md5="026b2d3d9488d97690dfa8b8e247d4d5"/>
 		<file filename="assets/scss/_controls.scss" md5="b885ad473325601bf7b48d7ce007dd10"/>
 		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
 		<file filename="assets/scss/_form_elements.scss" md5="fbeffbc3e985af3b98d1dc2f9726cf4a"/>
-		<file filename="assets/scss/_layout.scss" md5="eb70aa63301723c5d8da9b5cff15735e"/>
+		<file filename="assets/scss/_layout.scss" md5="905e9dc01c9500178c8c583c7235d88b"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="4f01f08dd25ec56522f0a2ba1daddcb7"/>
 		<file filename="assets/scss/_messages.scss" md5="002d7e2910f33c36ff9bcccb9a49e2ed"/>
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>

@@ -13,6 +13,7 @@
 }
 .skin-wide .outer-wrapper {
 	@include outer-container(115em);
+	margin: 0 1em;
 }
 
 .page-column-width-2 {
