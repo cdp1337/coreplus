@@ -101,7 +101,7 @@
 				<section class="page-content">
 					{if !empty($messages)}
 						{foreach from=$messages item="m"}
-							<p class="message-{$m.mtype} rounded">
+							<p class="message-{$m.mtype}">
 								{$m.mtext}
 							</p>
 						{/foreach}
@@ -124,7 +124,7 @@
 				{/if}
 			</div>
 
-			<footer>
+			<footer class="page-footer">
 				{widgetarea name="Footer"}
 
 				{include file='includes/site_schema_information.tpl'}
