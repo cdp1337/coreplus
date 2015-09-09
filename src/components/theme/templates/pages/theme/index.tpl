@@ -200,10 +200,10 @@
 
 <div class="theme-section">
 	<h3>Edit Custom CSS</h3>
-	<p class="message-tutorial">
-		This stylesheet allows you to add custom styles to your site.
-	</p>
 	{if $cssform}
+		<p class="message-tutorial">
+			This stylesheet allows you to add custom styles to your site.
+		</p>
 		{a href="/theme/editor?file=assets/css/custom.css" class="button"}
 			<span>Open Full Editor</span>
 		{/a}
