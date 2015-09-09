@@ -7,6 +7,17 @@ header.page-header {
 		float: right;
 		font-size: 200%;
 	}
+
+	.listing-schema-information {
+		// Clear the social links that may be here too.
+		clear: right;
+		float: right;
+		font-size: 90%;
+	}
+}
+
+.page-content {
+	margin-top: 2em;
 }
 
 a.button {
@@ -25,5 +36,18 @@ aside.markdown-toc {
 
 	ul {
 		margin-left: 1em;
+	}
+}
+
+footer.page-footer {
+
+	padding-top: 2em;
+
+	.listing-schema-information {
+		font-size: 75%;
+	}
+
+	.legal {
+		font-size: 75%;
 	}
 }

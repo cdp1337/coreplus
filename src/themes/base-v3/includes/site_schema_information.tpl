@@ -24,6 +24,10 @@
 			<span class="listing-schema-faxlabel">Fax: </span>
 			<span property="faxNumber" class="listing-schema-fax">{$smarty.const.THEME_LISTING_FAX}</span>
 		{/if}
+		{if $smarty.const.THEME_LISTING_EMAIL}
+			<span class="listing-schema-emaillabel">Email: </span>
+			<span property="email" class="listing-schema-email">{$smarty.const.THEME_LISTING_EMAIL}</span>
+		{/if}
 		{if $smarty.const.THEME_LISTING_HOURS}
 			<div class="listing-schema-hours">
 				<span class="listing-schema-hours-header">Hours:</span>

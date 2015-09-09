@@ -1,3 +1,12 @@
+/**
+ * This is a print-only version of the main styles.scss for the use
+ * of print-only pages such as PDF generation and "print" ready page views,
+ * (for those strange cases where a client wants a print version on-screen).
+ *
+ * The only notable changes here is that it does not include the screen stylesheet
+ * and has no container around the print styles, (so they apply to everything).
+ */
+
 // Normalize styling.
 @import "vendor/normalize";
 
@@ -29,13 +38,11 @@
 	@include clearfix;
 }
 
-@media print {
-	@import "_print";
+a.button {
+	@include button();
 }
 
-@media screen,projection {
-	@import "screen";
-}
+@import "_print";
 
 a.agplv3-tag {
 	display: inline-block;
