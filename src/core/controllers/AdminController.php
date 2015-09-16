@@ -396,12 +396,11 @@ class AdminController extends Controller_2_1 {
 			$codes[$row['code']] = $row['code'];
 		}
 
-		$filters = new FilterForm();
-		$filters->setName('system-log');
-		$filters->hassort = true;
-		$filters->haspagination = true;
+		$listings = new Core\ListingTable\Table();
+		$listings->setModelName('SystemLogModel');
+		$listings->setName('system-log');
 
-		$filters->addElement(
+		$listings->addFilter(
 			'select',
 			array(
 				'title' => 'Type',
@@ -416,7 +415,7 @@ class AdminController extends Controller_2_1 {
 			)
 		);
 
-		$filters->addElement(
+		$listings->addFilter(
 			'select',
 			[
 				'title' => 'Code',
@@ -426,7 +425,7 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 
-		$filters->addElement(
+		$listings->addFilter(
 			'date',
 			[
 				'title' => 'On or After',
@@ -435,7 +434,7 @@ class AdminController extends Controller_2_1 {
 				'link' => FilterForm::LINK_TYPE_GE,
 			]
 		);
-		$filters->addElement(
+		$listings->addFilter(
 			'date',
 			[
 				'title' => 'On or Before',
@@ -475,7 +474,7 @@ class AdminController extends Controller_2_1 {
 			)
 		);*/
 
-		$filters->addElement(
+		$listings->addFilter(
 			'hidden',
 			array(
 				'title' => 'Session',
@@ -483,37 +482,29 @@ class AdminController extends Controller_2_1 {
 				'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
-		$filters->addElement(
+		$listings->addFilter(
 			'user',
 			array(
 				'title' => 'User',
 				'name' => 'affected_user_id',
+			    'linkname' => [
+				    'affected_user_id',
+			        'user_id',
+			    ]
 				//'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
-		$filters->setSortkeys(array('datetime', 'session_id', 'user_id', 'useragent', 'action', 'affected_user_id', 'status'));
-		$filters->load($request);
+		$listings->addColumn('Date Time', 'datetime');
+		$listings->addColumn('Session', 'session_id');
+		$listings->addColumn('User', 'user_id');
+		$listings->addColumn('IP Address', 'ip_addr');
+		$listings->addColumn('User Agent', 'useragent');
+		$listings->addColumn('Affected User', 'affected_user_id');
 
-
-		$factory = new ModelFactory('SystemLogModel');
-		$filters->applyToFactory($factory);
-
-		// The user is different because it requires an OR where clause for user or affected_user.
-		$w = new \Core\Datamodel\DatasetWhereClause();
-		$w->setSeparator('OR');
-		$w->addWhere('user_id = ' . $filters->get('affected_user_id'));
-		$w->addWhere('affected_user_id = ' . $filters->get('affected_user_id'));
-		$factory->where($w);
-
-		$listings = $factory->get();
+		$listings->loadFiltersFromRequest($request);
 
 		$view->title = 'System Log';
-		$view->assign('filters', $filters);
 		$view->assign('listings', $listings);
-		//$view->assign('sortkey', $filters->getSortKey());
-		//$view->assign('sortdir', $filters->getSortDirection());
-
-		//var_dump($listings); die();
 	}
 
 	/**
@@ -998,6 +989,130 @@ class AdminController extends Controller_2_1 {
 
 		$view->title = 'Performance Options';
 		$view->assign('form', $form);
+	}
+
+	public function email_config(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view = $this->getView();
+
+		$keys = [
+			'/core/email/enable_sending',
+			'/core/email/from',
+			'/core/email/from_name',
+			'/core/email/mailer',
+			'/core/email/sandbox_to',
+			'/core/email/sendmail_path',
+			'/core/email/smtp_host',
+			'/core/email/smtp_user',
+			'/core/email/smtp_password',
+			'/core/email/smtp_port',
+			'/core/email/smtp_security',
+		];
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
+
+		foreach($keys as $k){
+			$c = ConfigHandler::GetConfig($k);
+			$f = $c->asFormElement();
+			// Don't need them grouped
+			$f->set('group', '');
+			$form->addElement($f);
+		}
+		$form->addElement('submit', ['value' => 'Save Options']);
+
+		$view->title = 'Email Options &amp; Diagnostics';
+		$view->assign('form', $form);
+		$view->assign('email_enabled', ConfigHandler::Get('/core/email/enable_sending'));
+	}
+
+	public function email_test(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		if(!$request->getPost('email')){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$view->mode = View::MODE_NOOUTPUT;
+		$view->contenttype = View::CTYPE_HTML;
+		$view->render();
+
+		$dest         = $request->getPost('email');
+		$method       = ConfigHandler::Get('/core/email/mailer');
+		$smtpHost     = ConfigHandler::Get('/core/email/smtp_host');
+		$smtpUser     = ConfigHandler::Get('/core/email/smtp_user');
+		$smtpPass     = ConfigHandler::Get('/core/email/smtp_password');
+		$smtpPort     = ConfigHandler::Get('/core/email/smtp_port');
+		$smtpSec      = ConfigHandler::Get('/core/email/smtp_security');
+		$sendmailPath = ConfigHandler::Get('/core/email/sendmail_path');
+		$emailDebug   = [];
+
+		$emailDebug[] = 'Sending Method: ' . $method;
+
+		switch($method){
+			case 'smtp':
+				$emailDebug[] = 'SMTP Host: ' . $smtpHost . ($smtpPort ? ':' . $smtpPort : '');
+				$emailDebug[] = 'SMTP User/Pass: ' . ($smtpUser ? $smtpUser . '//' . ($smtpPass ? '*** saved ***' : 'NO PASS') : 'Anonymous');
+				$emailDebug[] = 'SMTP Security: ' . $smtpSec;
+				break;
+			case 'sendmail':
+				$emailDebug[] = 'Sendmail Path: ' . $sendmailPath;
+				break;
+		}
+
+		CLI::PrintHeader('Sending test email to ' . $dest);
+
+		CLI::PrintActionStart('Initializing Email System');
+		try{
+			$body = '<p>This is a test email!</p><ul><li>' . implode("</li><li>", $emailDebug) . '</li></ul>';
+
+			$email = new Email();
+			$email->addAddress($dest);
+			$email->setSubject('Test Email');
+			$email->setBody($body, true);
+			$email->getMailer()->SMTPDebug = 2;
+
+			CLI::PrintActionStatus(true);
+		}
+		catch(Exception $e){
+			CLI::PrintActionStatus(false);
+			CLI::PrintError($e->getMessage());
+			CLI::PrintLine($e->getTrace());
+
+			return;
+		}
+
+		CLI::PrintActionStart('Sending Email via ' . $method);
+		try{
+			$email->send();
+
+			CLI::PrintActionStatus(true);
+		}
+		catch(Exception $e){
+			CLI::PrintActionStatus(false);
+			CLI::PrintError($e->getMessage());
+			CLI::PrintLine(explode("\n", $e->getTraceAsString()));
+		}
+
+		CLI::PrintHeader('Sent Headers:');
+		CLI::PrintLine(explode("\n", $email->getMailer()->CreateHeader()));
+
+		CLI::PrintHeader('Sent Body:');
+		CLI::PrintLine(explode("\n", $email->getMailer()->CreateBody()));
 	}
 
 	public static function _WidgetCreateUpdateHandler(Form $form){
