@@ -647,24 +647,43 @@ class FilterForm {
 			}
 
 
-			if($el->get('linkname')){
-				$name = $el->get('linkname');
+			// New support for multiple link names!
+			if(!is_array($name)){
+				$name = [$name];
+			}
+			$statements = [];
+
+			foreach($name as $n){
+				switch($el->get('link')){
+					case FilterForm::LINK_TYPE_STANDARD:
+					case FilterForm::LINK_TYPE_GT:
+					case FilterForm::LINK_TYPE_GE:
+					case FilterForm::LINK_TYPE_LT:
+					case FilterForm::LINK_TYPE_LE:
+						$statements[] = $n . $el->get('link') . $value;
+						break;
+					case FilterForm::LINK_TYPE_STARTSWITH:
+						$statements[] = $n . ' LIKE ' . $value . '%';
+						break;
+					case FilterForm::LINK_TYPE_CONTAINS:
+						$statements[] = $n . ' LIKE %' . $value . '%';
+						break;
+				}
 			}
 
-			switch($el->get('link')){
-				case FilterForm::LINK_TYPE_STANDARD:
-				case FilterForm::LINK_TYPE_GT:
-				case FilterForm::LINK_TYPE_GE:
-				case FilterForm::LINK_TYPE_LT:
-				case FilterForm::LINK_TYPE_LE:
-					$factory->where($name . $el->get('link') . $value);
-					break;
-				case FilterForm::LINK_TYPE_STARTSWITH:
-					$factory->where($name . ' LIKE ' . $value . '%');
-					break;
-				case FilterForm::LINK_TYPE_CONTAINS:
-					$factory->where($name . ' LIKE %' . $value . '%');
-					break;
+			if(sizeof($statements) > 1){
+				// Create a sub where clause for these.
+				$subwhere = new \Core\Datamodel\DatasetWhereClause();
+				$subwhere->setSeparator('OR');
+				foreach($statements as $s){
+					$subwhere->addWhere($s);
+				}
+				// Add this sub clause to the main where clause.
+				$factory->where($subwhere);
+			}
+			else{
+				// A single command just gets added to the main clause.
+				$factory->where($statements[0]);
 			}
 		}
 

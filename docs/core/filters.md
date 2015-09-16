@@ -148,7 +148,9 @@ Upon calling `applyToFactory()`, the model factory's where clause is populated w
 	* FilterForm::LINK_TYPE_LT
 * linkname
 	* Optional if the model name is different from the element name.
-	* String
+	* String|Array
+	* If set to an array, a sub where is performed with an OR on all of the provided values.
+	  Useful for "Omni" searches such as "User Name" which search first, last, and email.
 	
 
 ## Common Public Properties
