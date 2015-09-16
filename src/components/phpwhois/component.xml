@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0~core2" name="PHPWhois" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0-2" name="PHPWhois" execmode="both">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
@@ -414,6 +414,8 @@
 		<upgrade from="4.2.2~core5" to="4.2.2~core6"/>
 		<upgrade from="4.2.2~core6" to="5.0.0~core1"/>
 		<upgrade from="5.0.0~core1" to="5.0.0~core2"/>
+		<upgrade from="5.0.0-2~bpo265" to="5.0.0-2"/>
+		<upgrade from="5.0.0~core2" to="5.0.0-2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/phpwhois/fancy_ip.css" md5="c78fb7fd4a37703a00f30ef4f2524361"/>
