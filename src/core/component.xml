@@ -4,7 +4,7 @@
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
-		<provide type="library" name="smarty" version="3.1.8"/>
+		<provide type="library" name="smarty" version="3.1.27"/>
 		<provide type="library" name="phpMailer" version="5.2.4"/>
 		<provide type="library" name="user" version="3.0.0"/>
 		<provide type="library" name="sitemap" version="3.0.0"/>
@@ -78,7 +78,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="3abc8324bf17e829ca17ec1b88e1b824"/>
 		<file filename="core/bootstrap_predefines.php" md5="3d8aecd7ba808d4220541cafe18bf65f"/>
 		<file filename="core/bootstrap_preincludes.php" md5="cac31271f54b0d9c6c9b68c10f13c0e4"/>
-		<file filename="core/controllers/AdminController.php" md5="1b0c146ba34e92869bcce5ccd9e53793">
+		<file filename="core/controllers/AdminController.php" md5="5ae2fd07c76ba4320922d70e09c00393">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="e0bdfe970714f96f94945e517cbdc034">
@@ -435,7 +435,7 @@
 			<class name="GeneralValidationException"/>
 			<class name="CoreException"/>
 		</file>
-		<file filename="core/libs/core/FilterForm.class.php" md5="7fc2721d14be167410f99375132d87f2">
+		<file filename="core/libs/core/FilterForm.class.php" md5="8233129a2d093e6c15e8eb912b25ceb0">
 			<class name="FilterForm"/>
 		</file>
 		<file filename="core/libs/core/Form.class.php" md5="18b81a6b5ed49fbf37bcf811c1d330b6">
@@ -493,7 +493,7 @@
 		<file filename="core/libs/core/VersionString.php" md5="71406214494d76a6dc8bed114c8e0b91">
 			<class name="Core\VersionString"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="abff8283f2ba1567f89c5bf54beadb78">
+		<file filename="core/libs/core/View.class.php" md5="a8b929dd698f03038f093b50f93273c7">
 			<class name="View"/>
 		</file>
 		<file filename="core/libs/core/ViewControl.class.php" md5="ae28bb9ace23a6102ab69d140acc54fd">
@@ -628,7 +628,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="5f4eb187b069c9219641101ee89558cf">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="0dd6835bf63c21d5a8bca90938a9c57d">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="39e71b124193c91fe74e2cc573c01182">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="9aea972079e7ff5da711f0d0ac52a632">
@@ -716,13 +716,13 @@
 		<file filename="core/libs/core/templates/Template.php" md5="dc2bc6623472f3d2d9fa70a816e44a6c">
 			<class name="Core\Templates\Template"/>
 		</file>
-		<file filename="core/libs/core/templates/TemplateInterface.php" md5="6c7b1ac09a5a2a7093ea25424e225339">
+		<file filename="core/libs/core/templates/TemplateInterface.php" md5="68331189c811f6838dc806c1638aabb2">
 			<interface name="Core\Templates\TemplateInterface"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/PHTML.php" md5="1e2ca26f3ceafdcb4672ee69be75fa82">
+		<file filename="core/libs/core/templates/backends/PHTML.php" md5="80dec242e74f52b0b44befcb856c798b">
 			<class name="Core\Templates\Backends\PHTML"/>
 		</file>
-		<file filename="core/libs/core/templates/backends/Smarty.php" md5="9f343614aea2eead1f65ff20ef66f250">
+		<file filename="core/libs/core/templates/backends/Smarty.php" md5="6bffad53caa96d5cb75792f61a8123eb">
 			<class name="Core\Templates\Backends\Smarty"/>
 		</file>
 		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="3e68dc6cfa03eab313bc589f133e1b6f">
@@ -930,330 +930,363 @@
 		<file filename="core/libs/phpmailer/test_script/test.html" md5="5b46db2c5d9ebbd89115ba62416c2e9d"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="b25943edd7f4c62a6655355c349a04d9"/>
 		<file filename="core/libs/smarty-plugins/block.access.php" md5="48d7e1ae68078cfb5aa79aed6cd6f9cd"/>
-		<file filename="core/libs/smarty-plugins/block.css.php" md5="242a8d967e9969def3a22e5fc84ff50d"/>
+		<file filename="core/libs/smarty-plugins/block.css.php" md5="6e3acd9716c25d32549ec0bae93549db"/>
 		<file filename="core/libs/smarty-plugins/block.insertable.php" md5="288c4a8adfcc88509c453842d1d789d9"/>
-		<file filename="core/libs/smarty-plugins/block.script.php" md5="7b10d114342c3ae1ca8135b73ff9b7bf"/>
+		<file filename="core/libs/smarty-plugins/block.script.php" md5="6f76134ab28b2e9a605115de1e293b1d"/>
 		<file filename="core/libs/smarty-plugins/function.add_form_element.php" md5="b515136479b3d0d8397d8e55a81e8c6f"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="9aa4b5cc22bb4ac72b4668ab58f61f16"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="e8fc7c5a3c4f93345862831e59e7f650"/>
 		<file filename="core/libs/smarty-plugins/function.date.php" md5="29d2834831722c515a0bd074e5e80fc5"/>
 		<file filename="core/libs/smarty-plugins/function.email.php" md5="f9b9761c4d6db57712a2f675c61a980d"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="125fa5aa86f1649b367380aa0b09a29b"/>
-		<file filename="core/libs/smarty-plugins/function.head.php" md5="0d7f75019287ec2cd27d80c252679f57"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="f2f961e50eccce635e2032c7e95c9b89"/>
+		<file filename="core/libs/smarty-plugins/function.head.php" md5="ac676cc8bfdec9c6961c76f5c7cfd7a1"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="0ff52bf7546f463eba553448329cc88e"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="ff5c63bd1e2be03087099fed4578bf71"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="855ccc5aaf32048ccf2e7818ea1d6417"/>
 		<file filename="core/libs/smarty-plugins/function.progress_log_iframe.php" md5="82ea26ab3eac02fd41e2d720e8c4db90"/>
 		<file filename="core/libs/smarty-plugins/function.t.php" md5="a0d46778ef03cad7d467ae4e033151e6"/>
 		<file filename="core/libs/smarty-plugins/function.user.php" md5="d7a4fb260a0ea8b46693494738bfa1be"/>
-		<file filename="core/libs/smarty-plugins/function.widget.php" md5="6c3ee0d710d20cb5bbd8c56e2dccc7d5"/>
-		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="700516b7b837b2d26d6405ce2cf3da9d"/>
+		<file filename="core/libs/smarty-plugins/function.widget.php" md5="c960c23520b5307b46efddbbddb67250"/>
+		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="3b9fab86942d009c1988a3806d12af81"/>
 		<file filename="core/libs/smarty-plugins/modifier.to_url.php" md5="3bff7dde152222e9469ca086676d2762"/>
-		<file filename="core/libs/smarty/COPYING.lib" md5="bb3ca60759f3202f1ae42e3519cd06bc"/>
-		<file filename="core/libs/smarty/README" md5="aca8e14a483f2fc601a88e7d6051be28"/>
-		<file filename="core/libs/smarty/SMARTY_2_BC_NOTES.txt" md5="2ab7f7fefe7d972da9a5e32eea92c97f"/>
-		<file filename="core/libs/smarty/SMARTY_3.0_BC_NOTES.txt" md5="f2347462a5ef9a369f52cbbcfa3d923d"/>
-		<file filename="core/libs/smarty/SMARTY_3.1_NOTES.txt" md5="f21fc869ecfaf36d1c8e379d5afc27a6"/>
-		<file filename="core/libs/smarty/Smarty.class.php" md5="4519383063821945547d49d9a8a62039">
+		<file filename="core/libs/smarty/Smarty.class.php" md5="8ce333387108d064d8c7d6c9f7354994">
 			<class name="Smarty"/>
-			<class name="SmartyException"/>
-			<class name="SmartyCompilerException"/>
 		</file>
-		<file filename="core/libs/smarty/SmartyBC.class.php" md5="967c1b2bdc8a2a2512eac85b40f1f3cd">
+		<file filename="core/libs/smarty/SmartyBC.class.php" md5="eecf376b6f4783a7b789661cee73b34e">
 			<class name="SmartyBC"/>
 		</file>
-		<file filename="core/libs/smarty/change_log.txt" md5="9bc0e2e90b024bba3c1d8eefcd0ae128"/>
-		<file filename="core/libs/smarty/debug.tpl" md5="98a94f077d2453138d657cf226051e95"/>
-		<file filename="core/libs/smarty/plugins/block.textformat.php" md5="b6c81aee9340bfe760681b7cf63da86d"/>
-		<file filename="core/libs/smarty/plugins/function.counter.php" md5="792bf8ccd82535695a601d078b49a7b1"/>
-		<file filename="core/libs/smarty/plugins/function.cycle.php" md5="1de9b1642f2bff44bf61c204a412bee7"/>
-		<file filename="core/libs/smarty/plugins/function.fetch.php" md5="aa8c2a12805c65eb7377dbeafabd9df2"/>
-		<file filename="core/libs/smarty/plugins/function.html_checkboxes.php" md5="21704aa65f387ba6d56165e9735ff8fa"/>
-		<file filename="core/libs/smarty/plugins/function.html_image.php" md5="d9eb493fe806b9191da1c1dcee453559"/>
-		<file filename="core/libs/smarty/plugins/function.html_options.php" md5="0a25bd9cbfd74346a0969b08d58f4f0d"/>
-		<file filename="core/libs/smarty/plugins/function.html_radios.php" md5="b64a0be1261d0ed0c5c40f76323f5500"/>
-		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="4c315d27f6cba90a880ad2fc125ba428"/>
-		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="c11fe71160a28c5a2dc20e3584c44b77"/>
-		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="0589173454ae896e5ffb90d8b3045eee"/>
-		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="a495d34af3a16aa205e71c3ccc521dbc"/>
-		<file filename="core/libs/smarty/plugins/function.math.php" md5="235410a5d2cc1f1236d9d4dc0a0f2e9c"/>
-		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="e294b04a8ab66566003b69bdf8c8fc14"/>
-		<file filename="core/libs/smarty/plugins/modifier.date_format.php" md5="6b5edccb1f6890abe1a4ed49148e9bd7"/>
-		<file filename="core/libs/smarty/plugins/modifier.debug_print_var.php" md5="083cd8934e80eb484606d29de18eb1cb"/>
-		<file filename="core/libs/smarty/plugins/modifier.escape.php" md5="f2260be9611e8816f2a9b95f30b91def"/>
-		<file filename="core/libs/smarty/plugins/modifier.regex_replace.php" md5="ffbbf55379b91892a040946a24671ed2"/>
-		<file filename="core/libs/smarty/plugins/modifier.replace.php" md5="a68a934055b4121a172a75e43f73cf04"/>
-		<file filename="core/libs/smarty/plugins/modifier.spacify.php" md5="bc084bf89967872c9ede08c62971fa08"/>
-		<file filename="core/libs/smarty/plugins/modifier.truncate.php" md5="5f11b18b8fdfd91cd3304894bb2c3a5d"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.cat.php" md5="c02bb9c50420ce8db8f29d5f41d7d1ca"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_characters.php" md5="1202940b96edbd7dd76f1c48a3175f51"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_paragraphs.php" md5="fedf9ef05fed1de3516d70e55b4520c1"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_sentences.php" md5="e51fa4341442fe8d4c9d76e060761bac"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.count_words.php" md5="bc6550f6f06d82a3c4a479d75f909236"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.default.php" md5="e3fe925da98d032e2fdf902b406495a3"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.escape.php" md5="1a630626bcc3a8d0780370be97bdfe57"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.from_charset.php" md5="3150d38dcf7b50a0e664c7ec02d8e6bf"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.indent.php" md5="43bce66499416229d5fc17f13d9e63e5"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.lower.php" md5="7317a58a734b831c7d03e2c1ce6409a5"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.noprint.php" md5="1c7894be6edfbb7f928c98821339bb43"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.string_format.php" md5="20ccb28bf1a0cfb5456d637a5654bafc"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.strip.php" md5="b7a497bdb1552c0ba0b5c5e81ef8fcc0"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.strip_tags.php" md5="39c919672acf8adaf00778bffbf2da9e"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.to_charset.php" md5="904d27e6a514bd34d2c0f7f161ef1e07"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.unescape.php" md5="5694dfff33f62222849dcf78bd6c6019"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.upper.php" md5="b6544cb6caf52df952b0bb81a96309f6"/>
-		<file filename="core/libs/smarty/plugins/modifiercompiler.wordwrap.php" md5="64bb939deb7ef1088fff3fd4d6d6c162"/>
-		<file filename="core/libs/smarty/plugins/outputfilter.trimwhitespace.php" md5="56c450d5033e3cd959a9e051436f20a7"/>
-		<file filename="core/libs/smarty/plugins/shared.escape_special_chars.php" md5="bea26407d94da5fcb25cc597483a0f4d"/>
-		<file filename="core/libs/smarty/plugins/shared.literal_compiler_param.php" md5="f59ae988d61bd68647b2cc89e4d0c328"/>
-		<file filename="core/libs/smarty/plugins/shared.make_timestamp.php" md5="70561a2c57d3b857ed3e1917163d67bf"/>
-		<file filename="core/libs/smarty/plugins/shared.mb_str_replace.php" md5="898f7fbf11e77c36ac64c9dd0ec7daf1"/>
-		<file filename="core/libs/smarty/plugins/shared.mb_unicode.php" md5="790a5acc89d13c8f4f43e7cbb8855cc8"/>
-		<file filename="core/libs/smarty/plugins/shared.mb_wordwrap.php" md5="739a72d21de23d819cdbb11a56130b3f"/>
-		<file filename="core/libs/smarty/plugins/variablefilter.htmlspecialchars.php" md5="212c16cd03c11f3bd99fb1289a0cfde7"/>
-		<file filename="core/libs/smarty/sysplugins/smarty_cacheresource.php" md5="10a9c9132fdf8523df8c44d49685a824">
+		<file filename="core/libs/smarty/debug.tpl" md5="99d35e3e1ab7ffa0f66b9ff64af262cb"/>
+		<file filename="core/libs/smarty/plugins/block.textformat.php" md5="e11583b48b0ba965316c9d4c6fdcb3ef"/>
+		<file filename="core/libs/smarty/plugins/function.counter.php" md5="ad8cdfa71c93fdfb1d85535296836951"/>
+		<file filename="core/libs/smarty/plugins/function.cycle.php" md5="44cd47835e325a3e18747b327f44f608"/>
+		<file filename="core/libs/smarty/plugins/function.fetch.php" md5="5b3acc1c58229e693ba23a7de4d80647"/>
+		<file filename="core/libs/smarty/plugins/function.html_checkboxes.php" md5="d5a3c5129fc2896bef21edc149e51dc3"/>
+		<file filename="core/libs/smarty/plugins/function.html_image.php" md5="2310e1b8bb2072d431ae3d14c4d7c401"/>
+		<file filename="core/libs/smarty/plugins/function.html_options.php" md5="0900bd1b9ecc790b1c8d4bdffdfc11ff"/>
+		<file filename="core/libs/smarty/plugins/function.html_radios.php" md5="62d734675bec70f2f616230ea8185e9c"/>
+		<file filename="core/libs/smarty/plugins/function.html_select_date.php" md5="7d16fff471d0bef50f7449cc0c8b7ee4"/>
+		<file filename="core/libs/smarty/plugins/function.html_select_time.php" md5="fc36738d4cb27deeb2827015d82e8981"/>
+		<file filename="core/libs/smarty/plugins/function.html_table.php" md5="ee37421855ea365ae0fdf5404f8c2dce"/>
+		<file filename="core/libs/smarty/plugins/function.mailto.php" md5="304019625bbac4e696da570ef62e518d"/>
+		<file filename="core/libs/smarty/plugins/function.math.php" md5="991c56755501325bbd421ddd0a987907"/>
+		<file filename="core/libs/smarty/plugins/modifier.capitalize.php" md5="35d7def91b1cfa8ec44facce157005a9"/>
+		<file filename="core/libs/smarty/plugins/modifier.date_format.php" md5="62408e62eed72557ffc2bb78d0a60157"/>
+		<file filename="core/libs/smarty/plugins/modifier.debug_print_var.php" md5="25e37e6bd59f9030b22b0df919205830"/>
+		<file filename="core/libs/smarty/plugins/modifier.escape.php" md5="833fd83e67a3bf4cb1d7bb09e60b43b6"/>
+		<file filename="core/libs/smarty/plugins/modifier.regex_replace.php" md5="0d6fd5da6c5ff811d60505727d03d4ec"/>
+		<file filename="core/libs/smarty/plugins/modifier.replace.php" md5="582d397d9afc332779c65ce5475a34c9"/>
+		<file filename="core/libs/smarty/plugins/modifier.spacify.php" md5="4997b2d4d29cd8d45b8761de9a1f5c22"/>
+		<file filename="core/libs/smarty/plugins/modifier.truncate.php" md5="8e07a040b5c9763c55c58548d26042b5"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.cat.php" md5="4158252d9e94f19c059a6691b9475f8b"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_characters.php" md5="2cd3d2946a5a6d06b594705a83e39a6a"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_paragraphs.php" md5="934e08e671eee4cdcb5e2b7f73dd8413"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_sentences.php" md5="20707d9e923ca450a90cef9f07b73457"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.count_words.php" md5="01b1e7634543e102bdd60f5744c2489a"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.default.php" md5="4f013addb5a27a351eeee68666019178"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.escape.php" md5="de3289e8e02ff6ec6900d53948361b5e"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.from_charset.php" md5="96daeb6646d794c0ae3158ffc23bf92e"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.indent.php" md5="7b31cf114c820641bf710d9a3b15d10d"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.lower.php" md5="6fefa095926562dacf5acf313a9a16e9"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.noprint.php" md5="a00b1fb8ad60eb35d97f2c004e5d4dc4"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.string_format.php" md5="5a31685d03b2effe97cc924a64debb67"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.strip.php" md5="d2a0ef9eb43a208546c4bffdd66e7c3c"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.strip_tags.php" md5="8ca607f6300bb86d117daaf6922b9a25"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.to_charset.php" md5="9c780cc4b805fae89b2c1d9f81050817"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.unescape.php" md5="462a1540cc735834dbd8783aa34e4116"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.upper.php" md5="44f2cb518c8ddb66d6ed3216a6dd7fd8"/>
+		<file filename="core/libs/smarty/plugins/modifiercompiler.wordwrap.php" md5="9857adaebf167b95f43901e25fbdd59f"/>
+		<file filename="core/libs/smarty/plugins/outputfilter.trimwhitespace.php" md5="8c266e5b8f8333bd8d2779619808f813"/>
+		<file filename="core/libs/smarty/plugins/shared.escape_special_chars.php" md5="d47302c6e9497ee3f8b6236663d312a0"/>
+		<file filename="core/libs/smarty/plugins/shared.literal_compiler_param.php" md5="d856e017f5803a5faa5d835e8e80ec87"/>
+		<file filename="core/libs/smarty/plugins/shared.make_timestamp.php" md5="882f576ea203ec933dfb7bd1a390bc44"/>
+		<file filename="core/libs/smarty/plugins/shared.mb_str_replace.php" md5="7197a4df3cdac37db3d26d8753e56d7a"/>
+		<file filename="core/libs/smarty/plugins/shared.mb_unicode.php" md5="c50b56b22d6e8d0437e4a50c21144fc2"/>
+		<file filename="core/libs/smarty/plugins/shared.mb_wordwrap.php" md5="31a231b4cd150462d9446c14e5e55931"/>
+		<file filename="core/libs/smarty/plugins/variablefilter.htmlspecialchars.php" md5="eaaa9a36bf26d609af23558cfb4928c0"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_cacheresource.php" md5="cb279ffdda0fc2720de6a037a18f7da1">
 			<class name="Smarty_CacheResource"/>
-			<class name="Smarty_Template_Cached"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_cacheresource_custom.php" md5="fbd76afde57357220b3cc484ee12996e">
+		<file filename="core/libs/smarty/sysplugins/smarty_cacheresource_custom.php" md5="80b790021f60a92374f6802888e09ea6">
 			<class name="Smarty_CacheResource_Custom"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_cacheresource_keyvaluestore.php" md5="72af987e1e39948d1b22e74cabfe5fde">
+		<file filename="core/libs/smarty/sysplugins/smarty_cacheresource_keyvaluestore.php" md5="e7eea46f6e140b53dd2ce44e21e8b660">
 			<class name="Smarty_CacheResource_KeyValueStore"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_config_source.php" md5="20ffbb78ad3e038ddfb588e6c7e55a99">
-			<class name="Smarty_Config_Source"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_data.php" md5="1e567bec92cbb5a537102bd5affa8aea">
+			<class name="Smarty_Data"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_cacheresource_file.php" md5="c56684a2f83f8c2ca6b018bf6a8f5070">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_cacheresource_file.php" md5="1e76f87461c9aac383ec0dcdd9b75fb7">
 			<class name="Smarty_Internal_CacheResource_File"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="ffa31e8b25bf56897f63f8f364917512">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_append.php" md5="984d83e53351edb73a4d2d1c3d1b01dd">
 			<class name="Smarty_Internal_Compile_Append"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_assign.php" md5="2fd093423d47bc077bdcba992945a44c">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_assign.php" md5="7774245f24f046ed94bf1d06997547e3">
 			<class name="Smarty_Internal_Compile_Assign"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_block.php" md5="ebaeff104d36a862436c520562f0817d">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_block.php" md5="bb1e6ab18e183f41592167c640f49eaa">
 			<class name="Smarty_Internal_Compile_Block"/>
 			<class name="Smarty_Internal_Compile_Blockclose"/>
 			<class name="Smarty_Internal_Compile_Private_Child_Block"/>
 			<class name="Smarty_Internal_Compile_Private_Child_Blockclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_break.php" md5="d96a5c99724e27d1eea75ed67c24a09f">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_break.php" md5="e171ff8d6b8fc5534d36c1422457b140">
 			<class name="Smarty_Internal_Compile_Break"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_call.php" md5="c55090a0db63e16c4e2e582014b10a33">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_call.php" md5="3dc7adefc36fdb8e5296a64cda5e7af9">
 			<class name="Smarty_Internal_Compile_Call"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_capture.php" md5="63da15e758511a90eca01813a8d57ece">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_capture.php" md5="12c6d8a654b4891f66cf7ee9765d8371">
 			<class name="Smarty_Internal_Compile_Capture"/>
 			<class name="Smarty_Internal_Compile_CaptureClose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_config_load.php" md5="23bea359eaac32b3da69062832e8c1d4">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_config_load.php" md5="23f4fa44941921ee5d19c1cc0adf1f1d">
 			<class name="Smarty_Internal_Compile_Config_Load"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_continue.php" md5="dc93cfc28e37182d62e7a51b62d6daef">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_continue.php" md5="944b4e5b9a8b2da195ddbe8192c63ad1">
 			<class name="Smarty_Internal_Compile_Continue"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_debug.php" md5="2b115c637d42543c4e810e41d5453dba">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_debug.php" md5="645254efb662796447df0760ba44cd49">
 			<class name="Smarty_Internal_Compile_Debug"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_eval.php" md5="cd81f628a28279635fe9b3c6726920e7">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_eval.php" md5="a7d6e36fa90e41b1b7ea52ad146e8141">
 			<class name="Smarty_Internal_Compile_Eval"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_extends.php" md5="28f4b7bf96cbdca842511221fa74db76">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_extends.php" md5="be900cffaa78f884021b96b21a822235">
 			<class name="Smarty_Internal_Compile_Extends"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_for.php" md5="065463c26157a39e3a1df1f079b92963">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_for.php" md5="f44d0ee0157e8d807066ec5b5ca7d53c">
 			<class name="Smarty_Internal_Compile_For"/>
 			<class name="Smarty_Internal_Compile_Forelse"/>
 			<class name="Smarty_Internal_Compile_Forclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_foreach.php" md5="1aa5fb231b4af6b85adda1e395d924f0">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_foreach.php" md5="41f643968076500be92e1010a2a60ff6">
 			<class name="Smarty_Internal_Compile_Foreach"/>
 			<class name="Smarty_Internal_Compile_Foreachelse"/>
 			<class name="Smarty_Internal_Compile_Foreachclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_function.php" md5="1da45d1c0355df0e23fe2ea7fd6074f8">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_function.php" md5="d7a805d932d78319e8e1e1ad5ec98464">
 			<class name="Smarty_Internal_Compile_Function"/>
 			<class name="Smarty_Internal_Compile_Functionclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_if.php" md5="cd7134209216ac842381c9b073d5c4f8">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_if.php" md5="67820a4db522a826c4417356b834928f">
 			<class name="Smarty_Internal_Compile_If"/>
 			<class name="Smarty_Internal_Compile_Else"/>
 			<class name="Smarty_Internal_Compile_Elseif"/>
 			<class name="Smarty_Internal_Compile_Ifclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include.php" md5="779a49ffe84f349de00f64edcdf49e30">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include.php" md5="940b23b97e57d6f9e6299d5519cde5a5">
 			<class name="Smarty_Internal_Compile_Include"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include_php.php" md5="0bf5c9121e2d6c71889cd5aadabbc4fb">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_include_php.php" md5="fd133f332efc845dae77ea45a324476f">
 			<class name="Smarty_Internal_Compile_Include_Php"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_insert.php" md5="835b471512bd17de3b92ec6677fb18ce">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_insert.php" md5="fa81a6079deeee079c6cfc1621db0a08">
 			<class name="Smarty_Internal_Compile_Insert"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_ldelim.php" md5="6c600702f32526fc97489bd2d24cf694">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_ldelim.php" md5="ce2d747a7d43ab48db3ebb80fa9e107f">
 			<class name="Smarty_Internal_Compile_Ldelim"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_nocache.php" md5="fb45c6e02d6d123f3d9a0cafb9715ab1">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_nocache.php" md5="a83737394fba7e39119904d7533a21ce">
 			<class name="Smarty_Internal_Compile_Nocache"/>
 			<class name="Smarty_Internal_Compile_Nocacheclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_block_plugin.php" md5="b1268ab799910965390bd98aa2f9b1bc">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_block_plugin.php" md5="f9dd2f4ffc0b33036c8271a0af3f08b0">
 			<class name="Smarty_Internal_Compile_Private_Block_Plugin"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_function_plugin.php" md5="71e63eda49cc793c10e86815e22f9193">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_function_plugin.php" md5="030d2185bf4866eb13dfaf71565340f1">
 			<class name="Smarty_Internal_Compile_Private_Function_Plugin"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_modifier.php" md5="6e115aa8da3d80bc5d164f5ad3eab95a">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_modifier.php" md5="af3a59a6f4fbc64bfec20c56de029966">
 			<class name="Smarty_Internal_Compile_Private_Modifier"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_block_function.php" md5="271fb78a874dfa9e18a15ab2c0fe102b">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_block_function.php" md5="9bbb1560011c159e8902a4c07e8421a8">
 			<class name="Smarty_Internal_Compile_Private_Object_Block_Function"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_function.php" md5="329402a92b1d8c94c4d37698c447d715">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_object_function.php" md5="ad77006282d73b83478711f0187919b3">
 			<class name="Smarty_Internal_Compile_Private_Object_Function"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_print_expression.php" md5="2d77d7ff5a4ca6758c0ed955ae65e0d9">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_php.php" md5="b853f7f12ffee027d6c7d1db4b973a9e">
+			<class name="Smarty_Internal_Compile_Private_Php"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_print_expression.php" md5="db8c70c3c64d1d4e4dce5ed1ec048c3f">
 			<class name="Smarty_Internal_Compile_Private_Print_Expression"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_block.php" md5="1f0ce9b384770395a6044fd8e7f92e96">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_block.php" md5="21eda8bac75e30c511c5491a217cef81">
 			<class name="Smarty_Internal_Compile_Private_Registered_Block"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_function.php" md5="b1be6a1457bcea72fc35ff9d5d80b1a6">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_registered_function.php" md5="20a48cf7ee83c34a503f372e22395a57">
 			<class name="Smarty_Internal_Compile_Private_Registered_Function"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_special_variable.php" md5="5dada1f43e49583a174eb0f9457807f4">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_private_special_variable.php" md5="1ac450feeae2201ef5183d6cffcc7413">
 			<class name="Smarty_Internal_Compile_Private_Special_Variable"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_rdelim.php" md5="1aa219c137b831d707dca12981a104a3">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_rdelim.php" md5="b8216dc575ee05f7900cbf8802fcaab4">
 			<class name="Smarty_Internal_Compile_Rdelim"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_section.php" md5="e1c2f6eaef3e70f257e3c2f4144cdefa">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_section.php" md5="06a5f8f09e3bc613fd727d91a714f4b6">
 			<class name="Smarty_Internal_Compile_Section"/>
 			<class name="Smarty_Internal_Compile_Sectionelse"/>
 			<class name="Smarty_Internal_Compile_Sectionclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_setfilter.php" md5="4953252d47bf5fab70b0c5096ad97a8c">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_setfilter.php" md5="4b494b5f43b0759bb9ab2a45005903d6">
 			<class name="Smarty_Internal_Compile_Setfilter"/>
 			<class name="Smarty_Internal_Compile_Setfilterclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_while.php" md5="5b8a326871ca3cd3b798760649a8a33b">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compile_while.php" md5="9640ba89c14f737ace7a2d2bb61833e9">
 			<class name="Smarty_Internal_Compile_While"/>
 			<class name="Smarty_Internal_Compile_Whileclose"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="47e81c3455aaea4c72ef1ecdf1469508">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_compilebase.php" md5="400a8d7935f5609fd5d86d4e51f1cdb8">
 			<class name="Smarty_Internal_CompileBase"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_config.php" md5="67ba0e2b63fa9f26567de1c27e2996f5">
-			<class name="Smarty_Internal_Config"/>
-		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_config_file_compiler.php" md5="91bfa10a3d30d9698702063237534d46">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_config_file_compiler.php" md5="75b3aedf92d78cadb9550c1638e5b614">
 			<class name="Smarty_Internal_Config_File_Compiler"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfilelexer.php" md5="a2f79f84e2871776c25b893cc8062e46">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfilelexer.php" md5="6fddcf32777f627e29041b9cb0d2b1f6">
 			<class name="Smarty_Internal_Configfilelexer"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfileparser.php" md5="307ef3bdaf2b2516b0daae29f1ae3022">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_configfileparser.php" md5="6fa0812afc4c88c5abc69af69307a9c1">
 			<class name="TPC_yyToken"/>
 			<class name="TPC_yyStackEntry"/>
 			<class name="Smarty_Internal_Configfileparser"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_data.php" md5="6f74d4a202cc1c0a639abec188985aab">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_data.php" md5="21dcfff05b346c5c1641e84b216553b5">
 			<class name="Smarty_Internal_Data"/>
-			<class name="Smarty_Data"/>
-			<class name="Smarty_Variable"/>
-			<class name="Undefined_Smarty_Variable"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_debug.php" md5="e2c5e2201036c07217518738d2404eb6">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_debug.php" md5="1d052eb732ba77475a55f9051ca8c724">
 			<class name="Smarty_Internal_Debug"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter_handler.php" md5="9cbaa14ca680c747253f5c8c36bdf677">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_extension_codeframe.php" md5="7146d30950a3ec79097f5999c1afbf52">
+			<class name="Smarty_Internal_Extension_CodeFrame"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_extension_config.php" md5="dad9a6081f28efc8474bf9d8154d91b0">
+			<class name="Smarty_Internal_Extension_Config"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_extension_defaulttemplatehandler.php" md5="3c3345622081faa65b0d6712877e10b7">
+			<class name="Smarty_Internal_Extension_DefaultTemplateHandler"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_filter_handler.php" md5="1b2d4357e9ae546017e9bdf1d0945ee6">
 			<class name="Smarty_Internal_Filter_Handler"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_function_call_handler.php" md5="689b43f69c9cd3f244ca51e78a4db191">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_function_call_handler.php" md5="56284e82daafe89a4b6d230f3c2ebff0">
 			<class name="Smarty_Internal_Function_Call_Handler"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_get_include_path.php" md5="a254a209e5526b908eb2b87835c459e5">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_get_include_path.php" md5="55788c289c92091ee09df999266f44e7">
 			<class name="Smarty_Internal_Get_Include_Path"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_nocache_insert.php" md5="8d831f5e80dd36dd474592c4056afec4">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_nocache_insert.php" md5="10fe81acd1b803c8a4e65d88d4eb8158">
 			<class name="Smarty_Internal_Nocache_Insert"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree.php" md5="636379d484ec68882b9a6142a5d259af">
-			<class name="_smarty_parsetree"/>
-			<class name="_smarty_tag"/>
-			<class name="_smarty_code"/>
-			<class name="_smarty_doublequoted"/>
-			<class name="_smarty_dq_content"/>
-			<class name="_smarty_template_buffer"/>
-			<class name="_smarty_text"/>
-			<class name="_smarty_linebreak"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree.php" md5="8f0cd90471456aa4f7b16bd01f7c7b27">
+			<class name="Smarty_Internal_ParseTree"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_eval.php" md5="288b9419dea2089cf64c34308c092b30">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree_code.php" md5="2e092a3fc0915792a2d4f615dbfd6b8b">
+			<class name="Smarty_Internal_ParseTree_Code"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree_dq.php" md5="1972ed2ee7fc70a61ba8e5e798ef2b7a">
+			<class name="Smarty_Internal_ParseTree_Dq"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree_dqcontent.php" md5="47307629580312826c554346724386f1">
+			<class name="Smarty_Internal_ParseTree_DqContent"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree_tag.php" md5="aac4da3d2e4a928595077fcf762ed700">
+			<class name="Smarty_Internal_ParseTree_Tag"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree_template.php" md5="1c8d82cde21e32903d92488255a7472e">
+			<class name="Smarty_Internal_ParseTree_Template"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_parsetree_text.php" md5="bd2db8ff3da569c7043d5395fd545de1">
+			<class name="Smarty_Internal_ParseTree_Text"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_eval.php" md5="3d396c58a9529d6d8d582994053ecd66">
 			<class name="Smarty_Internal_Resource_Eval"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_extends.php" md5="e81af7901b40ce7676e75a99bbaf0fc1">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_extends.php" md5="84e7ca715be534747a2f032c7ad2ee88">
 			<class name="Smarty_Internal_Resource_Extends"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_file.php" md5="919953d38f6c22da9cb7503eb5f966f8">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_file.php" md5="4ba6095a22d1a954c84c9093320114ae">
 			<class name="Smarty_Internal_Resource_File"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_php.php" md5="bc92fe4b2034d3600e494c2794aa905b">
-			<class name="Smarty_Internal_Resource_PHP"/>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_php.php" md5="6ddbb34c71e92b680e676eab0ba0c16f">
+			<class name="Smarty_Internal_Resource_Php"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_registered.php" md5="2f0f5455c08cf4b08bb4ebc5e52c494b">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_registered.php" md5="4d33157443568a5f7a62086e9d61ec46">
 			<class name="Smarty_Internal_Resource_Registered"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_stream.php" md5="645c52f989d182559113e3565cdb685e">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_stream.php" md5="92260d47ed6001fbe7743a085b9b8d63">
 			<class name="Smarty_Internal_Resource_Stream"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_string.php" md5="0648e405a5a41480ab6ae87cc363ec74">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_resource_string.php" md5="e056b9b6c1c91b7ef419a5ae9d2a3457">
 			<class name="Smarty_Internal_Resource_String"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_smartytemplatecompiler.php" md5="1698481eef38d41c154f2e0916b2f80d">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_smartytemplatecompiler.php" md5="2e7d9b9333aedeb7e2f9a5bfb0cae848">
 			<class name="Smarty_Internal_SmartyTemplateCompiler"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_template.php" md5="b53b929a0f339e5ec59b0187deeefbf8">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_template.php" md5="8476c907a1131caf5ada17998850f3d3">
 			<class name="Smarty_Internal_Template"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatebase.php" md5="5592a65bb281eae94636aa9824141c58">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatebase.php" md5="75de71730095407556036bc9ab8b81f4">
 			<class name="Smarty_Internal_TemplateBase"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatecompilerbase.php" md5="cd4413374760c9fd65498e8a29fc3d44">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatecompilerbase.php" md5="3c5798728c0d6282717c6fb497f85c92">
 			<class name="Smarty_Internal_TemplateCompilerBase"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatelexer.php" md5="866d34cb90a89aa331d890f187d5cbf7">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templatelexer.php" md5="4d8b2937f3f23b2c3cd0e5ac046110a9">
 			<class name="Smarty_Internal_Templatelexer"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_templateparser.php" md5="0dd46f0874488b905c3582ca58334b0e">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_templateparser.php" md5="02fed35ed7ec4a6431e89c29de424647">
 			<class name="TP_yyToken"/>
 			<class name="TP_yyStackEntry"/>
 			<class name="Smarty_Internal_Templateparser"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_utility.php" md5="b1a18d23b23fb260c50088feef6c2dfc">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_testinstall.php" md5="6c9ad063d486f083a4362a2a7e7a024d">
+			<class name="Smarty_Internal_TestInstall"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_utility.php" md5="ae32f1b17c43489c1af77cdb6b23fda2">
 			<class name="Smarty_Internal_Utility"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_internal_write_file.php" md5="b426067049627418a9954a8f0ce947a5">
+		<file filename="core/libs/smarty/sysplugins/smarty_internal_write_file.php" md5="ffc8e9ffe2cddcfb6a24c2733aee585f">
 			<class name="Smarty_Internal_Write_File"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_resource.php" md5="5e9c4df3ab21a0cd69a7c9ffcc78be16">
+		<file filename="core/libs/smarty/sysplugins/smarty_resource.php" md5="2d73dc1e19b26e428f1186a86f844a7e">
 			<class name="Smarty_Resource"/>
-			<class name="Smarty_Template_Source"/>
-			<class name="Smarty_Template_Compiled"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_resource_custom.php" md5="7bb983177bb7592eaaf365008c099515">
+		<file filename="core/libs/smarty/sysplugins/smarty_resource_custom.php" md5="0eeb68705ba92654a4c0a1cd48eaf0b4">
 			<class name="Smarty_Resource_Custom"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_resource_recompiled.php" md5="50eccd380d108c15ea6c31c5bf5dee8a">
+		<file filename="core/libs/smarty/sysplugins/smarty_resource_recompiled.php" md5="7fceca0e69eefb1d791e2ec3344f1ff4">
 			<class name="Smarty_Resource_Recompiled"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_resource_uncompiled.php" md5="9bd4a04f13cdc560cee0900c5229205f">
+		<file filename="core/libs/smarty/sysplugins/smarty_resource_uncompiled.php" md5="23a8ed001ca532e4488207545ec51379">
 			<class name="Smarty_Resource_Uncompiled"/>
 		</file>
-		<file filename="core/libs/smarty/sysplugins/smarty_security.php" md5="7b23859d1780da004540311113abdc09">
+		<file filename="core/libs/smarty/sysplugins/smarty_security.php" md5="df4e9d8509d016eef70d59c53cf518e7">
 			<class name="Smarty_Security"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_template_cached.php" md5="b384eaf40965374626f22be34511cea4">
+			<class name="Smarty_Template_Cached"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_template_compiled.php" md5="53991633d593865e9f6c7dbf7f6933eb">
+			<class name="Smarty_Template_Compiled"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_template_config.php" md5="95d3a00206dd00d4c9da1ea8bf18cfd3">
+			<class name="Smarty_Template_Config"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_template_source.php" md5="89313912ed41a54974607e8761115cef">
+			<class name="Smarty_Template_Source"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_undefined_variable.php" md5="19f6cc701a70a1dd90c425bd8016b6b6">
+			<class name="Smarty_Undefined_Variable"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smarty_variable.php" md5="d61f30ed65ca17e6543d3263b15124b3">
+			<class name="Smarty_Variable"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smartycompilerexception.php" md5="4184a5c73d55fc895f7fd7c02fb37dc0">
+			<class name="SmartyCompilerException"/>
+		</file>
+		<file filename="core/libs/smarty/sysplugins/smartyexception.php" md5="0c3dd289c27091850121e9a7a81ece63">
+			<class name="SmartyException"/>
 		</file>
 		<file filename="core/models/ComponentModel.class.php" md5="23149a97c2e5d788d8bc7fedd63ef1c6">
 			<class name="ComponentModel"/>
@@ -1415,6 +1448,7 @@
 		<page baseurl="/page/sitemap" admin="0" access="*" title="Sitemap" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="SEO Options" group="Configure"/>
 		<page baseurl="/admin/performance/config" admin="1" access="g:admin" title="Performance Options" group="Configure"/>
+		<page baseurl="/admin/email/config" admin="1" access="g:admin" title="Email Options &amp; Diagnostics" group="Configure"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
@@ -1479,8 +1513,9 @@
 		<file filename="core/templates/includes/user/edit_create_contextgroups.tpl" md5="fe043ab28c1c3b3bd3dd0cdfeae2393f"/>
 		<file filename="core/templates/includes/user/gpg_login.tpl" md5="e86915f5a78e7173aa60dca41a7c0c4b"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="d2b759910efc7ed41b989169ed9319d4"/>
+		<file filename="core/templates/pages/admin/email_config.tpl" md5="8c92c2f5513b99d7b0ede77616e93a2b"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
-		<file filename="core/templates/pages/admin/log.tpl" md5="03788adf6fc482a8c3d46087009f003d"/>
+		<file filename="core/templates/pages/admin/log.tpl" md5="e61f9b9aae76aa4536b8fd99966c23d7"/>
 		<file filename="core/templates/pages/admin/pages.tpl" md5="0b2b4e7efb52abd09ce0c7f3d3b41e01"/>
 		<file filename="core/templates/pages/admin/performance_config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="b3e66ba8c8318e78e434313ca5cdbf27"/>
