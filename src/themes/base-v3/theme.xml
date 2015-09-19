@@ -2,12 +2,12 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.3.0" name="Base V3">
 	<assets>
-		<file filename="assets/css/print.css" md5="80732f27a79415d3160a2cea3466742c"/>
-		<file filename="assets/css/print.css.map" md5="75fcc4d5f80b304e394c942b3dfaaac4"/>
-		<file filename="assets/css/print.min.css" md5="61d7e8c3aabf7cfa82d398c969bc5c9b"/>
-		<file filename="assets/css/styles.css" md5="73d58beb7af7677027fe5f9324c1ac20"/>
-		<file filename="assets/css/styles.css.map" md5="625db8a4ddc369a2392d625a6d73fb54"/>
-		<file filename="assets/css/styles.min.css" md5="28e6c782d5e57ea4bab8acac89ffb5f6"/>
+		<file filename="assets/css/print.css" md5="b7e398d718cf714e8f82eef49d6e6dcd"/>
+		<file filename="assets/css/print.css.map" md5="332166635c4dee8bb4abdb38850f4de9"/>
+		<file filename="assets/css/print.min.css" md5="7a099e55bb3b703ccf14f63d229c87a1"/>
+		<file filename="assets/css/styles.css" md5="483a3e62aaa010d559f868bf55a7035c"/>
+		<file filename="assets/css/styles.css.map" md5="f15deba5d79cb352fa9ec1ef1589e150"/>
+		<file filename="assets/css/styles.min.css" md5="6c6de25b4ecb9c6a2a400e91ac14f350"/>
 	</assets>
 	<skins>
 		<file filename="basic.tpl" md5="4675daf72a60bdb370e0ab9f8e32978c" title=""/>
@@ -52,7 +52,7 @@
 	<otherfiles>
 		<file filename="CHANGELOG" md5="cf5f20f86e677a0363af990932016384"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
-		<file filename="assets/scss/_content.scss" md5="026b2d3d9488d97690dfa8b8e247d4d5"/>
+		<file filename="assets/scss/_content.scss" md5="a6acb87f98906dc6b1fe34d2faafb280"/>
 		<file filename="assets/scss/_controls.scss" md5="b885ad473325601bf7b48d7ce007dd10"/>
 		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
