@@ -113,4 +113,22 @@ interface TemplateInterface {
 	 * @return array
 	 */
 	public function getInsertables();
+
+	/**
+	 * Get the registered view for this template, useful for setting CSS and Scripts in correct locations in the markup.
+	 *
+	 * If no view has been set on this template, then \Core\view() should be returned.
+	 *
+	 * @return \View
+	 */
+	public function getView();
+
+	/**
+	 * Set the registered view for this template, usually set from the View.
+	 *
+	 * @param \View $view
+	 *
+	 * @return void
+	 */
+	public function setView(\View $view);
 }

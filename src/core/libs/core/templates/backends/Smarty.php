@@ -36,6 +36,9 @@ class Smarty implements Templates\TemplateInterface {
 	 */
 	private $_smarty;
 
+	/** @var \View|null View that is responsible for this template, optional */
+	private $_view = null;
+
 	public function  __construct() {
 
 		// Smarty can resolve the template automatically too, providing I send in the directories.
@@ -147,6 +150,7 @@ class Smarty implements Templates\TemplateInterface {
 			$this->_smarty = new \Smarty();
 			$this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
 			$this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+			$this->_smarty->assign('__core_template', $this);
 		}
 		return $this->_smarty;
 	}
@@ -434,5 +438,27 @@ class Smarty implements Templates\TemplateInterface {
 		}
 
 		return $insertables;
+	}
+
+	/**
+	 * Get the registered view for this template, useful for setting CSS and Scripts in correct locations in the markup.
+	 *
+	 * If no view has been set on this template, then \Core\view() should be returned.
+	 *
+	 * @return \View
+	 */
+	public function getView() {
+		return $this->_view === null ? \Core\view() : $this->_view;
+	}
+
+	/**
+	 * Set the registered view for this template, usually set from the View.
+	 *
+	 * @param \View $view
+	 *
+	 * @return void
+	 */
+	public function setView(\View $view) {
+		$this->_view = $view;
 	}
 }

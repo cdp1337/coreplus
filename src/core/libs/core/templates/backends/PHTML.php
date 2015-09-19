@@ -44,6 +44,9 @@ class PHTML implements Templates\TemplateInterface {
 	 */
 	protected $_filename;
 
+	/** @var \View|null View that is responsible for this template, optional */
+	private $_view = null;
+
 	/**
 	 * Assign a variable to this template
 	 *
@@ -205,5 +208,27 @@ class PHTML implements Templates\TemplateInterface {
 	 */
 	public function getInsertables() {
 		// TODO: Implement getInsertables() method.
+	}
+
+	/**
+	 * Get the registered view for this template, useful for setting CSS and Scripts in correct locations in the markup.
+	 *
+	 * If no view has been set on this template, then \Core\view() should be returned.
+	 *
+	 * @return \View
+	 */
+	public function getView() {
+		return $this->_view === null ? \Core\view() : $this->_view;
+	}
+
+	/**
+	 * Set the registered view for this template, usually set from the View.
+	 *
+	 * @param \View $view
+	 *
+	 * @return void
+	 */
+	public function setView(\View $view) {
+		$this->_view = $view;
 	}
 }
