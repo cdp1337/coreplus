@@ -21,7 +21,7 @@
 	</head>
 
 	<body class="base-v3-skin skin-basic {$body_classes}">
-		{widget name="AdminMenu"}
+		{widget baseurl="adminmenu/view"}
 
 		{widgetarea name="Left Column" assign="left_col"}
 		{widgetarea name="Right Column" assign="right_col"}
