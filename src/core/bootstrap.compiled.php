@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 16 Sep 2015 23:51:09 -0400
+ * @compiled Fri, 18 Sep 2015 20:59:29 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -18191,7 +18191,7 @@ public function addHeader($key, $value){
 $this->headers[$key] = $value;
 }
 protected function _syncFromView(View $view){
-if($view == $this){
+if($view === $this){
 return;
 }
 foreach($view->head as $h){

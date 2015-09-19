@@ -646,6 +646,9 @@ class FilterForm {
 				$value = $date->getFormatted($format, Time::TIMEZONE_GMT);
 			}
 
+			if($el->get('linkname')){
+				$name = $el->get('linkname');
+			}
 
 			// New support for multiple link names!
 			if(!is_array($name)){
