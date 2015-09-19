@@ -29,10 +29,11 @@
 function smarty_function_widgetarea($params, $smarty) {
 	// Get all widgets set to load in this area.
 
-	$body = '';
-
-	$baseurl = PageRequest::GetSystemRequest()->getBaseURL();
+	$body     = '';
+	$baseurl  = PageRequest::GetSystemRequest()->getBaseURL();
 	$template = $smarty->template_resource;
+	$tmpl     = $smarty->getTemplateVars('__core_template');
+	$topview  = ($tmpl instanceof \Core\Templates\TemplateInterface) ? $tmpl->getView() : \Core\view();
 
 	$parameters  = [];
 	$name        = null;
@@ -59,6 +60,7 @@ function smarty_function_widgetarea($params, $smarty) {
 	foreach(Core\Templates\Template::GetPaths() as $base){
 		if(strpos($template, $base) === 0){
 			$template = substr($template, strlen($base));
+			break;
 		}
 	}
 
@@ -127,6 +129,9 @@ function smarty_function_widgetarea($params, $smarty) {
 			$contents = $view;
 		}
 		elseif($view->error == View::ERROR_NOERROR){
+			// Ensure that the widget's View knows it's linked to a parent!
+			$view->parent = $topview;
+
 			$contents = $view->fetch();
 		}
 		else{

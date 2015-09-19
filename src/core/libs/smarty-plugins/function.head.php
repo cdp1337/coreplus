@@ -27,7 +27,10 @@
  * @return string
  */
 function smarty_function_head($params, $smarty){
-	
+
+	$tmpl   = $smarty->getTemplateVars('__core_template');
+	$view   = ($tmpl instanceof \Core\Templates\TemplateInterface) ? $tmpl->getView() : \Core\view();
+
 	// Load any head elements currently in the CurrentPage cache
-	return \Core\view()->getHeadContent();
+	return $view->getHeadContent();
 }

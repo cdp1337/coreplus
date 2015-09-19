@@ -1,7 +1,7 @@
 <?php
 /**
  * File for the smarty css block function
- * 
+ *
  * @package Core\Templates\Smarty
  * @since 1.9
  * @author Charlie Powell <charlie@evalagency.com>
@@ -85,10 +85,12 @@
 function smarty_block_css($params, $content, $smarty, &$repeat){
 	// This only needs to be called once.
 	if($repeat) return;
-	
+
 	// media type is the first parameter to check for.
 	$media  = (isset($params['media'])) ? $params['media'] : 'all';
 	$inline = isset($params['inline']) && $params['inline'] == '1' ? true : false;
+	$tmpl   = $smarty->getTemplateVars('__core_template');
+	$view   = ($tmpl instanceof \Core\Templates\TemplateInterface) ? $tmpl->getView() : \Core\view();
 
 	// See if there's a "href" set.  If so, that's probably an asset.
 	// I have a tendency of calling this different things, since things in the head all have
@@ -146,19 +148,14 @@ function smarty_block_css($params, $content, $smarty, &$repeat){
 				}
 			}
 
-			echo '<style media="' . $media . '">' . $file->getContents() . '</style>';
+			$view->addStyle('<style media="' . $media . '">' . $file->getContents() . '</style>');
 		}
 		else{
-			\Core\view()->addStylesheet($href, $media);
+			$view->addStylesheet($href, $media);
 		}
 	}
 	// Styles defined inline, fine as well.  The styles will be displayed in the head.
 	elseif($content){
-		if($inline){
-			echo '<style media="' . $media . '">' . $content . '</style>';
-		}
-		else{
-			\Core\view()->addStyle($content);
-		}
+		$view->addStyle($content);
 	}
 }

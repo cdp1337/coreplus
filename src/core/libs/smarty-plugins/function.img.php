@@ -197,14 +197,19 @@ function smarty_function_img($params, $smarty){
 			$attributes['src'] = '#';
 			$attributes['title'] = 'No preview files available!';
 		}
+		elseif($inline && $f->getFilesize() < 1048576*4){
+			// Overwrite the src attribute with the base64 contents.
+			// This can only happen after the preview file exists!
+
+			if(!$previewfile->exists()){
+				// Since quick ran, ensure that it's actually resized!
+				$previewfile = $f->getPreviewFile($d);
+			}
+			$attributes['src'] = 'data:' . $previewfile->getMimetype() . ';base64,' . base64_encode($previewfile->getContents());
+		}
 		elseif(!$previewfile->exists()){
 			// Ok, it doesn't exist... return a link to the controller to render this file.
 			$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
-		}
-		elseif($inline && $previewfile->getFilesize() < 524288){
-			// Overwrite the src attribute with the base64 contents.
-			// This can only happen after the preview file exists!
-			$attributes['src'] = 'data:' . $previewfile->getMimetype() . ';base64,' . base64_encode($previewfile->getContents());
 		}
 		else{
 			$attributes['src'] = $previewfile->getURL();

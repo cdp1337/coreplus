@@ -33,8 +33,9 @@
  */
 function smarty_function_widget($params, $smarty){
 
-
-	$assign= (isset($params['assign']))? $params['assign'] : false;
+	$assign  = (isset($params['assign']))? $params['assign'] : false;
+	$tmpl    = $smarty->getTemplateVars('__core_template');
+	$topview = ($tmpl instanceof \Core\Templates\TemplateInterface) ? $tmpl->getView() : \Core\view();
 
 	// Version 2.0 uses baseurl as the defining call.
 	if(isset($params['baseurl'])){
@@ -85,6 +86,9 @@ function smarty_function_widget($params, $smarty){
 	// Version 2.0 API
 	elseif($api == 2.0){
 		$w->_params = $parameters;
+
+		// Ensure that the widget's View knows it's linked to a parent!
+		$w->getView()->parent = $topview;
 
 		// Populate the request with the inbound data too.
 		$request = $w->getRequest();

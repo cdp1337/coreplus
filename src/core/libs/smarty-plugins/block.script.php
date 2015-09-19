@@ -82,6 +82,9 @@ function smarty_block_script($params, $content, $smarty, &$repeat){
 	// This only needs to be called once.
 	if($repeat) return;
 
+	$tmpl   = $smarty->getTemplateVars('__core_template');
+	$view   = ($tmpl instanceof \Core\Templates\TemplateInterface) ? $tmpl->getView() : \Core\view();
+
 	// A script library name is provided.
 	if(isset($params['name'])){
 		if(!Core::LoadScriptLibrary($params['name'])){
@@ -100,7 +103,7 @@ function smarty_block_script($params, $content, $smarty, &$repeat){
 	// but also useful for any standard asset.
 	elseif(isset($params['src'])){
 		$loc = (isset($params['location']))? $params['location'] : 'head';
-		\Core\view()->addScript($params['src'], $loc);
+		$view->addScript($params['src'], $loc);
 	}
 	// a script tag can be called with no parameters, it is after all a script tag....
 	elseif($content){
@@ -109,6 +112,6 @@ function smarty_block_script($params, $content, $smarty, &$repeat){
 			$content = '<script type="text/javascript">' . $content . '</script>';
 		}
 		$loc = (isset($params['location']))? $params['location'] : 'head';
-		\Core\view()->addScript($content, $loc);
+		$view->addScript($content, $loc);
 	}
 }
