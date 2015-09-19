@@ -301,7 +301,16 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 		// If recursion is enabled, we will recurse into REQUIRE_ONCE statements.
 		// And if the namespace is global....
 		if(strpos($line, 'require_once') === 0 && $recursivelevel <= MAX_RECURSE_LEVEL){
-			$subfile = preg_replace('#require_once[ ]*\([ ]*([^\)]*)[ ]*\)[ ]*;#', '$1', $line);
+			// Trim off everything but the filename.
+			// Since this is code and it can be written in a variety of ways, I need to be as flexible as possible in reading it.
+
+			// Easiest way, trim off the first 12 characters, ("require_once").
+			$subfile = substr($line, 12);
+
+			// Now, the only thing left should be a semicolon, some spaces, and maybe a couple parenthesis.
+			$subfile = trim($subfile, " \t\n\r\0\x0B();");
+
+			//$subfile = preg_replace('#require_once[ ]*\([ ]*([^\)]*)[ ]*\)[ ]*;#', '$1', $line);
 			// The file probably has relative paths...
 			$replaces = [
 				'__DIR__' => "'" . dirname($filename) . "'",
@@ -326,7 +335,15 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 
 				eval("\$subfile = $subfile;");
 
-				$filecontents = compile_file($subfile, ($recursivelevel+1), $namespace);
+
+				if(!file_exists($subfile)){
+					echo "\nWARNING, $subfile does not appear to exist!  Unable to compile.";
+					echo "\nSource: $filename:$linenumber ($line)";
+					$filecontents = '';
+				}
+				else{
+					$filecontents = compile_file($subfile, ($recursivelevel+1), $namespace);
+				}
 
 				// Trim the root directory and put a location-independent one instead.
 				$subfilerelative = substr($subfile, strlen(ROOT_PDIR));
