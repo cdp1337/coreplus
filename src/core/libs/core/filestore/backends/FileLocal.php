@@ -547,6 +547,7 @@ class FileLocal implements Filestore\File {
 
 		//var_dump($preview, $this); die(';)');
 		if ($includeHeader){
+			header('Content-Disposition: filename="' . $this->getBaseFilename(true) . '-' . $dimensions . '.' . $this->getExtension() . '"');
 			header('Content-Type: ' . $this->getMimetype());
 			header('Content-Length: ' . $preview->getFilesize());
 			header('X-Alternative-Location: ' . $preview->getURL());
@@ -616,6 +617,12 @@ class FileLocal implements Filestore\File {
 		elseif ($this->isPreviewable()) {
 			// If no resize was requested, simply return the full size image.
 			if($width === false) return $this;
+
+			// If the image won't be resized, then just return the same image also!
+			$currentdata = getimagesize($this->getFilename());
+			if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
+				return $this;
+			}
 
 			// Yes, this must be within public because it's meant to be publicly visible.
 			//$preview = Factory::File('public/tmp/' . $key);
