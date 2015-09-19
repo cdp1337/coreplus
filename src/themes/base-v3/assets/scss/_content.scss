@@ -13,6 +13,10 @@ header.page-header {
 		clear: right;
 		float: right;
 		font-size: 90%;
+
+		.listing-schema-address-address {
+			display: block;
+		}
 	}
 }
 
@@ -45,6 +49,10 @@ footer.page-footer {
 
 	.listing-schema-information {
 		font-size: 75%;
+
+		.listing-schema-address-address {
+			display: block;
+		}
 	}
 
 	.legal-notice {
