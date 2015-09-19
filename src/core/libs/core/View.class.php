@@ -294,6 +294,14 @@ class View {
 	 */
 	public $cacheable = true;
 
+	/**
+	 * For widget and sub-page based views, they need to have a parent to render specific elements to,
+	 * namely classes, styles, scripts, and the like.
+	 *
+	 * @var null|View
+	 */
+	public $parent = null;
+
 	public function __construct() {
 		$this->error = View::ERROR_NOERROR;
 		$this->mode  = View::MODE_PAGE;
@@ -319,13 +327,17 @@ class View {
 	}
 
 	/**
+	 * Get the template responsible for rendering this View's body content.
+	 *
+	 * Based on templatename.
 	 *
 	 * @return Core\Templates\TemplateInterface
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
 			$this->_template = \Core\Templates\Template::Factory($this->templatename);
-			//$this->_template->setBaseURL($this->baseurl);
+			// Ensure that the template is linked to this View correctly.
+			$this->_template->setView($this);
 		}
 
 		return $this->_template;
@@ -487,8 +499,14 @@ class View {
 				if (!$tn) $tn = $tmpl;
 
 				$t = $this->getTemplate();
-				//var_dump($t);
 				$html = $t->fetch($tn);
+
+				// Retrieve any/all JS, CSS, and Meta elements from that widget's View and transpose them here!
+				// This is because now that View operations now correctly manipulate the View directly attached to the template,
+				// the top-level page view no longer gets these directives.
+				if($this->parent){
+					$this->parent->_syncFromView($this);
+				}
 				break;
 		}
 
@@ -567,6 +585,8 @@ class View {
 
 
 		$template = \Core\Templates\Template::Factory($mastertpl);
+		// Ensure that the template is linked to this View correctly.
+		$template->setView($this);
 		//$template = new Core\Templates\Template();
 		//$template->setBaseURL('/');
 		// Page-level views have some special variables.
@@ -1313,6 +1333,12 @@ class View {
 	 * @param string $media Media to display the stylesheet with.
 	 */
 	public function addStylesheet($link, $media = "all") {
+		if (strpos($link, '<style') === 0) {
+			// This is a style tag, not a stylesheet.  Use that method instead.
+			$this->addStyle($link);
+			return;
+		}
+
 		if (strpos($link, '<link') === false) {
 
 			// Is this a CSS file or a LESS file?
@@ -1349,7 +1375,14 @@ class View {
 	 * @param string $style The contents of the <style> tag.
 	 */
 	public function addStyle($style) {
+		if(strpos($style, '<link ') === 0){
+			// This is a full stylesheet, not a style!
+			$this->addStylesheet($style);
+			return;
+		}
+
 		if (strpos($style, '<style') === false) {
+			// Every style must be wrapped in style tags, so do that if not already done.
 			$style = '<style>' . $style . '</style>';
 		}
 
@@ -1475,6 +1508,47 @@ class View {
 	 */
 	public function addHeader($key, $value){
 		$this->headers[$key] = $value;
+	}
+
+	/**
+	 * Internal only method to sync another view's metadata into this one.
+	 *
+	 * This is to allow Views to have certain attributes bubble up to the top-most view to be rendered out correctly.
+	 *
+	 * @param View $view
+	 */
+	protected function _syncFromView(View $view){
+		if($view === $this){
+			// !??!
+			return;
+		}
+
+		foreach($view->head as $h){
+			$this->addHead($h);
+		}
+
+		foreach($view->meta as $m){
+			$this->addMeta($m);
+		}
+
+		foreach($view->scripts['head'] as $s){
+			$this->addScript($s, 'head');
+		}
+		foreach($view->scripts['foot'] as $s){
+			$this->addScript($s, 'foot');
+		}
+		foreach($view->stylesheets as $s){
+			$this->addStyle($s);
+		}
+
+		if($view->ssl){
+			// Allow children to mandate that a given page be presented in SSL if available.
+			$this->ssl = true;
+		}
+
+		// Simple merges are possible here!
+		$this->bodyclasses += $view->bodyclasses;
+		$this->htmlAttributes += $view->htmlAttributes;
 	}
 
 
