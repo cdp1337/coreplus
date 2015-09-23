@@ -294,6 +294,10 @@ class CLI {
 		self::PrintLine($line, COLOR_WARNING);
 	}
 
+	public static function PrintDebug($line) {
+		self::PrintLine($line, COLOR_DEBUG);
+	}
+
 	public static function PrintActionStart($line, $maxlen = 90, $suffix = '...'){
 		$flen = strlen($line) + strlen($suffix) + 8;
 		echo "$line..." . str_repeat(NBSP, max($maxlen - $flen, 1));
