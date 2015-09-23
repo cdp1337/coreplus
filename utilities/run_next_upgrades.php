@@ -25,10 +25,5 @@ require_once(ROOT_PDIR . 'core/bootstrap.php');
 foreach(Core::GetComponents() as $c){
 	/** @var Component_2_1 $c */
 
-	$r = $c->upgrade(true);
-
-	if(is_array($r)){
-		echo "Upgraded component " . $c->getName() . "\n";
-		echo implode("\n", $r) . "\n\n";
-	}
+	$c->upgrade(true, true);
 }

@@ -1360,13 +1360,19 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
-	 * @param boolean $next Set to true to run the "next" upgrades as well as any current.
+	 * @param boolean $next    Set to true to run the "next" upgrades as well as any current.
+	 * @param boolean $verbose Set to true to enable real-time output
 	 *
 	 * @return boolean | array
 	 * @throws InstallerException
 	 */
-	public function upgrade($next = false) {
-		if (!$this->isInstalled()) return false;
+	public function upgrade($next = false, $verbose = false) {
+		if (!$this->isInstalled()){
+			if($verbose) CLI::PrintDebug('Skipping ' . $this->getName() . ' as it is marked as uninstalled.');
+			return false;
+		}
+
+		if($verbose) CLI::PrintHeader('Beginning upgrade for ' . $this->getName());
 
 		$changes = array();
 
@@ -1389,6 +1395,10 @@ class Component_2_1 {
 					// w00t, found one...
 					$canBeUpgraded = true;
 
+					if($verbose){
+						CLI::PrintLine('Processing upgrade from ' . $from . ' to ' . $to);
+					}
+
 					// This gets a bit tricky, I need to get all the valid upgrade elements in the order that they
 					// are defined in the component.xml.
 					$children = $u->childNodes;
@@ -1398,19 +1408,19 @@ class Component_2_1 {
 						/** @var $child DOMElement */
 						switch($child->nodeName){
 							case 'dataset':
-								$datachanges = $this->_parseDatasetNode($child);
+								$datachanges = $this->_parseDatasetNode($child, $verbose);
 								if($datachanges !== false) $changes = array_merge($changes, $datachanges);
 								break;
 							case 'phpfileinclude':
 								// I need to do this in a method so that include file doesn't mess with my local variables!
-								$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue));
+								$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue), $verbose);
 								$changes[] = 'Included custom php file ' . basename($child->nodeValue);
 								break;
 							case 'php':
 								$file = $child->getAttribute('file');
 								if($file){
 									// I need to do this in a method so that include file doesn't mess with my local variables!
-									$this->_includeFileForUpgrade($this->getBaseDir() . $file);
+									$this->_includeFileForUpgrade($this->getBaseDir() . $file, $verbose);
 									$changes[] = 'Included custom php file ' . $file;
 								}
 								else{
@@ -1420,6 +1430,9 @@ class Component_2_1 {
 							case 'sql':
 								$file = $child->getAttribute('file');
 								if($file){
+									if($verbose){
+										CLI::PrintActionStart('Executing SQL statements from ' . $file);
+									}
 									$contents = file_get_contents($this->getBaseDir() . $file);
 									$execs = 0;
 									$parser = new SQL_Parser_Dataset($contents, SQL_Parser::DIALECT_MYSQL);
@@ -1427,6 +1440,9 @@ class Component_2_1 {
 									foreach($datasets as $ds){
 										$ds->execute();
 										$execs++;
+									}
+									if($verbose){
+										CLI::PrintActionStatus(true);
 									}
 									$changes[] = 'Executed custom sql file ' . $file . ' and ran ' . $execs . ($execs == 1 ? ' query' : ' queries');
 								}
@@ -1458,6 +1474,10 @@ class Component_2_1 {
 					}
 				}
 			}
+		}
+
+		if(sizeof($changes) == 0 && $verbose){
+			CLI::PrintLine('No changes performed.');
 		}
 
 		return (sizeof($changes)) ? $changes : false;
@@ -2050,17 +2070,17 @@ class Component_2_1 {
 				// If so install it to the admin widgetarea!
 				if($action == 'Added' && $installable == '/admin'){
 					$weight = WidgetInstanceModel::Count([
-								'widgetarea' => 'Admin Dashboard',
-								'page_baseurl' => '/admin',
-							]) + 1;
+							'widgetarea' => 'Admin Dashboard',
+							'page_baseurl' => '/admin',
+						]) + 1;
 
 					$wi = new WidgetInstanceModel();
 					$wi->setFromArray([
-							'baseurl' => $m->get('baseurl'),
-							'page_baseurl' => '/admin',
-							'widgetarea' => 'Admin Dashboard',
-							'weight' => $weight
-						]);
+						'baseurl' => $m->get('baseurl'),
+						'page_baseurl' => '/admin',
+						'widgetarea' => 'Admin Dashboard',
+						'weight' => $weight
+					]);
 					$wi->save();
 
 					$changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashboard!';
@@ -2152,9 +2172,11 @@ class Component_2_1 {
 	 * Unlike the other parse functions, this handles a single node at a time.
 	 *
 	 * @param $node DOMElement
+	 * @param $verbose bool
+	 *
 	 * @throws InstallerException
 	 */
-	private function _parseDatasetNode(DOMElement $node){
+	private function _parseDatasetNode(DOMElement $node, $verbose = false){
 		$action   = $node->getAttribute('action');
 		$table    = $node->getAttribute('table');
 		$haswhere = false;
@@ -2209,16 +2231,30 @@ class Component_2_1 {
 		}
 
 		// and GO!
+		if($verbose){
+			CLI::PrintActionStart('Executing dataset ' . $action . ' command on ' . $table);
+		}
+
 		$ds->execute();
 		if($ds->num_rows){
+			CLI::PrintActionStatus(true);
 			return array($action . ' on table ' . $table . ' affected ' . $ds->num_rows . ' records.');
 		}
 		else{
+			CLI::PrintActionStatus(false);
 			return false;
 		}
 	}
 
-	private function _includeFileForUpgrade($filename){
+	/**
+	 * @param $filename
+	 * @param $verbose bool Set to true for verbose real-time output.
+	 *
+	 */
+	private function _includeFileForUpgrade($filename, $verbose = false){
+		if($verbose){
+			CLI::PrintLine('Loading custom PHP file ' . $filename);
+		}
 		include($filename);
 	}
 
