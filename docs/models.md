@@ -261,11 +261,11 @@ GalleryAlbumModel may have a page for it, and numerous images under it, making t
         $this->_linked = array(
             'Page' => [
                 'link' => Model::LINK_HASONE,
-                'on' => 'baseurl',
+                'on' => 'baseurl', // Where both models share the same key "baseurl"
             ],
             'GalleryImage' => [
                 'link' => Model::LINK_HASMANY,
-                'on' => [ 'id' => 'albumid' ],
+                'on' => [ 'albumid' => 'id' ], // Where $that[key] => $this[key]
             ],
         );
         
