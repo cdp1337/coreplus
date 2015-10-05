@@ -8,6 +8,7 @@
  */
 
 namespace Core\Installer;
+use Core\Session;
 
 
 /**

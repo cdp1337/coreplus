@@ -22,6 +22,8 @@
  */
 
 namespace Core\User\AuthDrivers;
+use Core\Date\DateTime;
+use Core\Templates\Template;
 use Core\User\AuthDriverInterface;
 
 
@@ -109,7 +111,7 @@ class datastore implements AuthDriverInterface{
 
 		// Still here?  Then try to set it.
 		$status = $this->_usermodel->set('password', $password);
-		$this->_usermodel->set('last_password', \Core\Date\DateTime::NowGMT());
+		$this->_usermodel->set('last_password', DateTime::NowGMT());
 		return $status;
 	}
 
@@ -140,7 +142,7 @@ class datastore implements AuthDriverInterface{
 		$form->addElement('password', ['name' => 'pass', 'title' => 'Password', 'required' => false]);
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Login']);
 
-		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_login.tpl');
+		$tpl = Template::Factory('includes/user/datastore_login.tpl');
 		$tpl->assign('form', $form);
 
 		$tpl->render();
@@ -208,7 +210,7 @@ class datastore implements AuthDriverInterface{
 		);
 		$form->addElement('submit', ['value' => 'Continue']);
 
-		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_register.tpl');
+		$tpl = Template::Factory('includes/user/datastore_register.tpl');
 		$tpl->assign('is_manager', $usermanager);
 		$tpl->assign('form', $form);
 

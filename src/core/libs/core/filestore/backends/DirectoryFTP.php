@@ -65,10 +65,10 @@ class DirectoryFTP implements Filestore\Directory {
 			$this->_ftp = $ftpobject;
 		}
 		else{
-			$this->_ftp = \Core\FTP();
+			$this->_ftp = \Core\ftp();
 		}
 
-		if($this->_ftp == \Core\FTP()){
+		if($this->_ftp == \Core\ftp()){
 			$this->_islocal = true;
 		}
 
@@ -286,7 +286,7 @@ class DirectoryFTP implements Filestore\Directory {
 	 * Delete a directory and recursively any file inside it.
 	 */
 	public function delete() {
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 

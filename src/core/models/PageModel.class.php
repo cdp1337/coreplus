@@ -1854,16 +1854,10 @@ class PageModel extends Model {
 		}
 		// Not quite preferred way, but still works.
 		elseif (class_exists($controller)) {
-			switch (true) {
-				// 2.1 API
-				case is_subclass_of($controller, 'Controller_2_1'):
-					// 1.0 API
-				case is_subclass_of($controller, 'Controller'):
-					$controller = $controller;
-					break;
-				default:
-					// Not a valid controller
-					return null;
+			if(!
+				(is_subclass_of($controller, 'Controller_2_1') || is_subclass_of($controller, 'Controller'))
+			){
+				return null;
 			}
 		}
 		else {

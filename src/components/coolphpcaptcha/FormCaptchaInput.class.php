@@ -50,7 +50,7 @@ class FormCaptchaInput extends FormElement{
 			$this->_error = $this->get('title') . ' is required.';
 			return false;
 		}
-		if($value != $_SESSION['captcha']){
+		if($value != \Core\Session::Get('captcha')){
 			$this->_error = $this->get('title') . ' does not match image.';
 			return false;
 		}

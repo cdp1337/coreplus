@@ -81,7 +81,7 @@ class NavigationEntryModel extends Model {
 	public function getResolvedURL() {
 		switch ($this->get('type')) {
 			case 'int':
-				return Core::ResolveLink($this->get('baseurl'));
+				return \Core\resolve_link($this->get('baseurl'));
 				break;
 			case 'ext':
 				if (strpos(substr($this->get('baseurl'), 0, 8), '://') !== false) return $this->get('baseurl');

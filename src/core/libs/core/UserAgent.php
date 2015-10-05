@@ -592,7 +592,7 @@ class UserAgent {
 		// The number of seconds to have Core cache the records.
 		$cachetime = 86400;
 
-		$cache = \Core\Cache::Get($cachekey, $cachetime);
+		$cache = Cache::Get($cachekey, $cachetime);
 
 		if($cache === false){
 			$file   = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
@@ -674,7 +674,7 @@ class UserAgent {
 			}
 			unset($user_agents_keys, $properties_keys, $_browsers);
 
-			\Core\Cache::Set(
+			Cache::Set(
 				$cachekey,
 				[
 					'browsers'   => $browsers,
@@ -686,7 +686,7 @@ class UserAgent {
 			);
 		}
 
-		return \Core\Cache::Get($cachekey, $cachetime);
+		return Cache::Get($cachekey, $cachetime);
 	}
 
 	/**
@@ -700,10 +700,10 @@ class UserAgent {
 		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
 
 		$cachekey = 'useragent-constructor-' . md5($useragent);
-		$cache = \Core\Cache::Get($cachekey);
+		$cache = Cache::Get($cachekey);
 		if(!$cache){
 			$cache = new UserAgent($useragent);
-			\Core\Cache::Set($cachekey, $cache, 3600);
+			Cache::Set($cachekey, $cache, 3600);
 		}
 
 		return $cache;

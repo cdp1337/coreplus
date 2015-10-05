@@ -55,5 +55,3 @@ class DirectoryController extends Controller {
 		$page->assign('files', $d->ls());
 	}
 }
-
-?>

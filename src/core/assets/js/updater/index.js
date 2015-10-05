@@ -383,7 +383,7 @@ Updater = {};
 		$form.submit();
 
 		return false;
-	}
+	};
 
 
 	// These are all events that kick in after the DOM is loaded.

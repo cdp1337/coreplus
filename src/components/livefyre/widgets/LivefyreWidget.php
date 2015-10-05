@@ -23,7 +23,7 @@ class LivefyreWidget extends Widget_2_1{
 
 		if(!$siteid){
 			$msg = 'Livefyre is not configured yet.';
-			if(\Core\user()->checkAccess('g:admin')) $msg .= '  Please <a href="' . Core::ResolveLink('/livefyre') . '">configure it now</a>';
+			if(\Core\user()->checkAccess('g:admin')) $msg .= '  Please <a href="' . \Core\resolve_link('/livefyre') . '">configure it now</a>';
 			return $msg;
 		}
 

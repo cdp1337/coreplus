@@ -184,6 +184,6 @@ class ModelImportLogger {
 		}
 		$subject .= ' ' . implode(', ', $bits);
 
-		$log = \SystemLogModel::LogInfoEvent($this->_title, $subject, $this->_profiler->getEventTimesFormatted());
+		\SystemLogModel::LogInfoEvent($this->_title, $subject, $this->_profiler->getEventTimesFormatted());
 	}
 }

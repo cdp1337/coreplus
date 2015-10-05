@@ -26,6 +26,9 @@ namespace Core\User;
 
 
 use Core\Datamodel\DatasetWhereClause;
+use Core\Session;
+use Core\Utilities\Profiler\DatamodelProfiler;
+use Core\Utilities\Profiler\Profiler;
 
 abstract class Helper{
 
@@ -51,24 +54,24 @@ abstract class Helper{
 
 		try{
 
-			$processingtime = (round(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime(), 3) * 1000);
+			$processingtime = (round(Profiler::GetDefaultProfiler()->getTime(), 3) * 1000);
 
 			$log = new \UserActivityModel();
 			$log->setFromArray(
 				array(
-					'datetime' => microtime(true),
-					'session_id' => session_id(),
-					'user_id' => \Core\user()->get('id'),
-					'ip_addr' => REMOTE_IP,
-					'useragent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''),
-					'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
-					'type' => $_SERVER['REQUEST_METHOD'],
-					'request' => $_SERVER['REQUEST_URI'],
-					'baseurl' => $request->getBaseURL(),
-					'status' => $view->error,
-					'db_reads' => \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->readCount(),
-					'db_writes' => (\Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->writeCount() + 1),
-					'processing_time' => $processingtime,
+						'datetime' => microtime(true),
+						'session_id' => session_id(),
+						'user_id' => \Core\user()->get('id'),
+						'ip_addr' => REMOTE_IP,
+						'useragent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''),
+						'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
+						'type' => $_SERVER['REQUEST_METHOD'],
+						'request' => $_SERVER['REQUEST_URI'],
+						'baseurl' => $request->getBaseURL(),
+						'status' => $view->error,
+						'db_reads' => DatamodelProfiler::GetDefaultProfiler()->readCount(),
+						'db_writes' => (DatamodelProfiler::GetDefaultProfiler()->writeCount() + 1),
+						'processing_time' => $processingtime,
 				)
 			);
 
@@ -178,7 +181,7 @@ abstract class Helper{
 			$email->assign('password', $password);
 			$email->assign('sitename', SITENAME);
 			$email->assign('rooturl', ROOT_URL);
-			$email->assign('loginurl', \Core::ResolveLink('/user/login'));
+			$email->assign('loginurl', \Core\resolve_link('/user/login'));
 			$email->setSubject('Welcome to ' . SITENAME);
 			$email->templatename = 'emails/user/registration.tpl';
 			$email->to($user->get('email'));
@@ -198,15 +201,15 @@ abstract class Helper{
 		if(!\Core\user()->exists()){
 
 			// If the user came from the registration page, get the page before that.
-			if(REL_REQUEST_PATH == '/user/register2') $url = \Core::GetHistory(2);
+			//if(REL_REQUEST_PATH == '/user/register2') $url = \Core::GetHistory(2);
 			// else the registration link is now on the same page as the 403 handler.
-			else $url = REL_REQUEST_PATH;
+			//else $url = REL_REQUEST_PATH;
 
 			//$url = Core::GetHistory(2);
 			if($user->get('active')){
 				$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 				$user->save();
-				\Session::SetUser($user);
+				Session::SetUser($user);
 			}
 			//var_dump($url); echo '<pre>'; debug_print_backtrace();
 			\Core::SetMessage('Registered account successfully!', 'success');
@@ -223,7 +226,7 @@ abstract class Helper{
 			}
 			elseif(strpos(REL_REQUEST_PATH, '/user/register') === 0){
 				// If the user came from the registration page, get the page before that.
-				$url = \Core::GetHistory(2);
+				$url = '/';
 			}
 			else{
 				// else the registration link is now on the same page as the 403 handler.
@@ -296,7 +299,7 @@ abstract class Helper{
 				$email->assign('user', $user);
 				$email->assign('sitename', SITENAME);
 				$email->assign('rooturl', ROOT_URL);
-				$email->assign('loginurl', \Core::ResolveLink('/user/login'));
+				$email->assign('loginurl', \Core\resolve_link('/user/login'));
 				$email->setSubject('Welcome to ' . SITENAME);
 				$email->templatename = 'emails/user/activation.tpl';
 				$email->to($user->get('email'));
@@ -313,7 +316,7 @@ abstract class Helper{
 
 		// If this was the current user, update the session data too!
 		if($user->get('id') == \core\user()->get('id')){
-			\Session::SetUser($user);
+			Session::SetUser($user);
 
 			if(\ConfigHandler::Get('/user/profileedits/requireapproval') && \Core::IsComponentAvailable('model-audit')){
 				\Core::SetMessage('Updated your account successfully, but an administrator will need to approve all changes.', 'success');
@@ -676,7 +679,7 @@ abstract class Helper{
 	public static function ForceSessionSync(\UserModel $user){
 
 		// BEFORE I do this, cleanup any old sessions!
-		\Session::CleanupExpired();
+		Session::CleanupExpired();
 
 		$me = (\Core\user() && \Core\user()->get('id') == $user->get('id'));
 
@@ -687,7 +690,7 @@ abstract class Helper{
 				// It's this current session!
 				// Reload this user object :)
 				// Remember, the external data cannot be set from within the same session!
-				\Session::SetUser($user);
+				Session::SetUser($user);
 				continue;
 			}
 
@@ -705,7 +708,7 @@ abstract class Helper{
 
 		if($auths === null){
 			// Get the available user auth systems available.
-			$allauths = \Core\User\Helper::$AuthDrivers;
+			$allauths = Helper::$AuthDrivers;
 			// Which ones are currently enabled by the admin.
 			$enabled = array_map('trim', explode('|', \ConfigHandler::Get('/user/authdrivers')));
 			// The classes of the actual driver backend.
@@ -734,7 +737,7 @@ abstract class Helper{
 
 			// There needs to be at least one!
 			if(!sizeof($auths)){
-				$auths['datastore'] = new \Core\User\AuthDrivers\datastore();
+				$auths['datastore'] = new AuthDrivers\datastore();
 			}
 		}
 

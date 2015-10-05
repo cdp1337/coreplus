@@ -430,7 +430,7 @@ class SecurityController extends Controller_2_1 {
 
 			$ban->save();
 			Core::SetMessage('Banned IP range ' . $ban->get('ip_addr'), 'success');
-			return Core::GetHistory(2);
+			return 'back';
 		}
 		catch(Exception $e){
 			Core::SetMessage($e->getMessage());

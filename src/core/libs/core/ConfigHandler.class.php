@@ -125,6 +125,7 @@ class ConfigHandler implements ISingleton {
 					break;
 				case 'octal':
 					$value = octdec($value);
+					break;
 				case 'boolean':
 					$value = (($value == 'true' || $value == '1' || $value == 'yes') ? true : false);
 					break;
@@ -159,8 +160,8 @@ class ConfigHandler implements ISingleton {
 			}
 		}
 		// Not there either?  Allow the SESSION to contain config variables.  This is critical for installation.
-		elseif(isset($_SESSION) && isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
-			return $_SESSION['configs'][$key];
+		elseif(\Core\Session::Get('configs/' . $key) !== null){
+			return \Core\Session::Get('configs/' . $key);
 		}
 		// Else, just return null.
 		else{

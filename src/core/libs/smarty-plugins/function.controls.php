@@ -38,6 +38,8 @@
  *   * Set to "0" to disable hover functionality in the UI.
  * * proxy-force
  *   * Set to "0" to disallow a proxy and "1" to force a proxy.
+ * * proxy-text
+ *   * Set the proxy text to a given value
  *
  * #### Example Usage
  *
@@ -88,7 +90,7 @@ function smarty_function_controls($params, $smarty){
 		$controls = ViewControls::Dispatch($baseurl, $subject);
 	}
 	else{
-		throw new SmartyException('Unable to get links without a baseurl!');
+		throw new SmartyException('Unable to get links without a baseurl!  Provided Parameters: ' . print_r($params, true));
 	}
 
 	// Other options
@@ -98,6 +100,10 @@ function smarty_function_controls($params, $smarty){
 
 	if(isset($params['proxy-force'])){
 		$controls->setProxyForce($params['proxy-force']);
+	}
+
+	if(isset($params['proxy-text'])){
+		$controls->setProxyText($params['proxy-text']);
 	}
 
 	// Render out controls.

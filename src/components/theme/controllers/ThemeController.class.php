@@ -256,9 +256,9 @@ class ThemeController extends Controller_2_1{
 		$view->assign('options_form', $optionForm);
 		$view->assign('assets', $nestedassets);
 		$view->assign('templates', $nestedtemplates);
-		$view->assign('url_themeeditor', Core::ResolveLink('/theme/editor'));
-		$view->assign('url_themewidgets', Core::ResolveLink('/theme/widgets'));
-		$view->assign('url_themestylesheets', Core::ResolveLink('/theme/selectstylesheets'));
+		$view->assign('url_themeeditor', \Core\resolve_link('/theme/editor'));
+		$view->assign('url_themewidgets', \Core\resolve_link('/theme/widgets'));
+		$view->assign('url_themestylesheets', \Core\resolve_link('/theme/selectstylesheets'));
 		$view->assign('site_skins_form', $siteskinform);
 		$view->assign('cssform', $cssform);
 		$view->assign('cssprintform', $cssprintform);

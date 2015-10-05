@@ -982,6 +982,7 @@ class SQL_Parser
                             }
                             $fields[$name]['decimals'] = $values[1];
                         }
+                        break;
                     case 'float':
                         if ($types[0] != 'int_val') {
                             $this->raiseError('Expected an integer');

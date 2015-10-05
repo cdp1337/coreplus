@@ -372,7 +372,7 @@ class GPGAuthController extends Controller_2_1 {
 			// yay...
 			$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 			$user->save();
-			\Session::SetUser($user);
+			\Core\Session::SetUser($user);
 		}
 
 		return '/user/me';
@@ -524,7 +524,7 @@ class GPGAuthController extends Controller_2_1 {
 		}
 		else{
 			// If the user came from the registration page, get the page before that.
-			$url = \Core::GetHistory(2);
+			$url = $form->referrer;
 		}
 
 		// Well, record this too!
@@ -533,7 +533,7 @@ class GPGAuthController extends Controller_2_1 {
 		// yay...
 		$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 		$user->save();
-		\Session::SetUser($user);
+		\Core\Session::SetUser($user);
 
 		// Allow an external script to override the redirecting URL.
 		$overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl');

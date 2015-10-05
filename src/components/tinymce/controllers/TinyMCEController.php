@@ -23,7 +23,7 @@ class TinyMCEController extends Controller_2_1 {
 		// resolution after it goes through tinyMCE's logic.
 		$pagesresolved = array();
 		foreach($pages as $url => $title){
-			$pagesresolved[Core::ResolveLink($url)] = $title;
+			$pagesresolved[\Core\resolve_link($url)] = $title;
 		}
 
 		$tplname = Template::ResolveFile('pages/tinymce/link.phtml');
@@ -434,7 +434,7 @@ class TinyMCEController extends Controller_2_1 {
 		// Only certain people are allowed the rights to upload here.
 		if(\Core\user()->checkAccess($uploadpermission)){
 			$uploadform = new Form();
-			$uploadform->set('action', Core::ResolveLink('/tinymce/' . $type . '/upload'));
+			$uploadform->set('action', \Core\resolve_link('/tinymce/' . $type . '/upload'));
 			$uploadform->addElement(
 				'multifile',
 				array(

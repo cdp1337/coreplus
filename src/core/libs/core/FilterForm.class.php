@@ -122,7 +122,7 @@ class FilterForm {
 	 * Create a new filter form object
 	 */
 	public function __construct(){
-		if(!isset($_SESSION['filters'])) $_SESSION['filters'] = array();
+		//if(!isset($_SESSION['filters'])) $_SESSION['filters'] = array();
 	}
 
 	/**
@@ -228,13 +228,13 @@ class FilterForm {
 
 
 		if(sizeof($a)){
-			$_SESSION['filters'][$this->_name] = $a;
+			\Core\Session::Set('filters/' . $this->_name, $a);
 		}
 		if(sizeof($s)){
-			$_SESSION['filtersort'][$this->_name] = $s;
+			\Core\Session::Set('filtersort/' . $this->_name, $s);
 		}
 		if(sizeof($p)){
-			$_SESSION['filterpage'][$this->_name] = $p;
+			\Core\Session::Set('filterpage/' . $this->_name, $p);
 		}
 	}
 
@@ -248,8 +248,7 @@ class FilterForm {
 			// Ok, no name.. no loading.
 			return;
 		}
-		if(isset($_SESSION['filters'][$this->_name])){
-			$filters = $_SESSION['filters'][$this->_name];
+		if(($filters = \Core\Session::Get('filters/' . $this->_name)) !== null){
 			foreach($filters as $f => $v){
 				if(!isset($this->_elementindexes['filter[' . $f . ']'])) continue;
 				/** @var $el FormElement */
@@ -258,13 +257,13 @@ class FilterForm {
 			}
 		}
 
-		if(isset($_SESSION['filtersort'][$this->_name])){
-			$this->_sortkey = $_SESSION['filtersort'][$this->_name]['sortkey'];
-			$this->_sortdir = $_SESSION['filtersort'][$this->_name]['sortdir'];
+		if(\Core\Session::Get('filtersort/' . $this->_name) !== null){
+			$this->_sortkey = \Core\Session::Get('filtersort/' . $this->_name)['sortkey'];
+			$this->_sortdir = \Core\Session::Get('filtersort/' . $this->_name)['sortdir'];
 		}
 
-		if(isset($_SESSION['filterpage'][$this->_name])){
-			$this->_currentpage = $_SESSION['filterpage'][$this->_name]['page'];
+		if(\Core\Session::Get('filterpage/' . $this->_name) !== null){
+			$this->_currentpage = \Core\Session::Get('filterpage/' . $this->_name)['page'];
 		}
 	}
 

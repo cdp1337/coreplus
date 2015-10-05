@@ -17,7 +17,7 @@ abstract class CronHelper {
 			return;
 		}
 
-		$suffixtext = 'This could be a problem if you have scripts relying on it!  <a href="' . Core::ResolveLink('/cron/howto') . '">Read how to resolve this issue</a>.';
+		$suffixtext = 'This could be a problem if you have scripts relying on it!  <a href="' . \Core\resolve_link('/cron/howto') . '">Read how to resolve this issue</a>.';
 
 		// Lookup and make sure that the cron hooks have ran recently enough!
 		$checks = [

@@ -3,9 +3,9 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<title>WordPress.com &rsaquo; Log In</title>
-	<link rel='stylesheet' id='all-css-0' href='<?php echo Core::ResolveAsset("wp-admin/css/wp-admin.min.css"); ?>' type='text/css' media='all' />
-	<link rel='stylesheet' id='all-css-0' href='<?php echo Core::ResolveAsset("wp-includes/css/buttons.min.css"); ?>' type='text/css' media='all' />
-	<link rel='stylesheet' href='<?php echo Core::ResolveAsset("wp-admin/css/wpcom.css"); ?>' type='text/css' />
+	<link rel='stylesheet' id='all-css-0' href='<?php echo \Core\resolve_asset("wp-admin/css/wp-admin.min.css"); ?>' type='text/css' media='all' />
+	<link rel='stylesheet' id='all-css-0' href='<?php echo \Core\resolve_asset("wp-includes/css/buttons.min.css"); ?>' type='text/css' media='all' />
+	<link rel='stylesheet' href='<?php echo \Core\resolve_asset("wp-admin/css/wpcom.css"); ?>' type='text/css' />
 	<script type="text/javascript">
 		if ( window.top !== window.self ) {
 			if ( window.top.location.hostname !== window.self.location.hostname || window.top.location.protocol !== window.top.location.protocol ) {
@@ -135,7 +135,7 @@
 	<meta name='robots' content='noindex,nofollow' />
 </head>
 <body class="login login-action-login wp-core-ui">
-	<div style="border:1px solid red; background: #f9cad1; padding:1em; text-align:center; font-weight:bold;">If you are a real person, DO NOT USE THIS FORM!  <a href="<?php echo Core::ResolveLink('/admin'); ?>">Use this instead.</a></div>
+	<div style="border:1px solid red; background: #f9cad1; padding:1em; text-align:center; font-weight:bold;">If you are a real person, DO NOT USE THIS FORM!  <a href="<?php echo \Core\resolve_link('/admin'); ?>">Use this instead.</a></div>
 	<div id="login">
 		<h1><a href="http://wordpress.com/" title="WordPress.com">WordPress.com</a></h1>
 

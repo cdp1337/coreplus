@@ -1,21 +1,21 @@
 body { 
 	text-align:center;
-	padding:0pt;
-	margin:0pt;
-	background:#EEE;
+	padding:0;
+	margin:0;
+	background:white;
 	text-shadow:1px 1px 4px rgba(28, 43, 13, 0.3);
 	font-size:10pt;
 }
 #wrapper {
 	width:75%;
-	margin:0pt auto;
+	margin:0 auto;
 	text-align:left;
-	background:#DFE4E6;
+	background: #f5fafc;
 	padding:10px;
 	border-radius: 0 0 10px 10px;
-	box-shadow:0px 1px 10px rgba(3,3,3,0.5);
-	-moz-box-shadow:0px 1px 10px rgba(3,3,3,0.5);
-	-webkit-box-shadow:0px 1px 10px rgba(3,3,3,0.5);
+	box-shadow:0 1px 10px rgba(3,3,3,0.5);
+	-moz-box-shadow:0 1px 10px rgba(3,3,3,0.5);
+	-webkit-box-shadow:0 1px 10px rgba(3,3,3,0.5);
 }
 #header, #footer { 
 	height:20px;
@@ -38,12 +38,12 @@ header, h1 {
 	font-size: 17pt;
 	text-align: center;
 	font-weight: bold;
-	margin: 0pt 0pt 0.75em;
+	margin: 0 0 0.75em;
 }
 h2 {
 	font-size: 14pt;
 	font-weight:bold;
-	margin: 0pt 0pt 0.5em;
+	margin: 0 0 0.5em;
 }
 footer {
 	min-height: 25px;
@@ -60,10 +60,10 @@ footer {
 .rounded-large { border-radius:10px; -moz-border-radius:10px; -webkit-border-radius:10px; }
 .rounded { border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; }
 p.formhelp {
-	margin: 0.15em 0pt 1em;
+	margin: 0.15em 0 1em;
 	font-size: 90%;
 	color: #777;
-	text-shadow: 0px 0px 0px; 
+	text-shadow: 0 0 0;
 }
 
 pre.install-log { height: 400px; overflow: scroll; }

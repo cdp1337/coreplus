@@ -83,7 +83,7 @@ class SessionModel extends Model {
 
 	public function set($k, $v) {
 		if ($k == 'data') {
-			return $this->setData($v);
+			$this->setData($v);
 		} else {
 			parent::set($k, $v);
 		}
@@ -129,7 +129,7 @@ class SessionModel extends Model {
 	/**
 	 * Set the data for this session.  This will automatically compress the contents.
 	 *
-	 * @param $data Uncompressed data
+	 * @param $data mixed Uncompressed data
 	 */
 	public function setData($data) {
 		$zipped              = gzcompress($data);

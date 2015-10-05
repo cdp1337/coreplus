@@ -83,7 +83,7 @@ class FileFTP implements Filestore\File{
 			$this->_ftp = $ftpobject;
 		}
 		else{
-			$this->_ftp = \Core\FTP();
+			$this->_ftp = \Core\ftp();
 		}
 
 		if($filename){

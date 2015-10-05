@@ -90,7 +90,7 @@ function smarty_block_a($params, $content, $smarty, &$repeat){
 	// This has the cool ability of not requiring jquery to run, since it is all handled with PHP logic.
 	if(isset($params['confirm'])){
 		$params['onclick'] = 'return Core.ConfirmEvent(this);';
-		$params['data-href'] = Core::ResolveLink($params['href']);
+		$params['data-href'] = \Core\resolve_link($params['href']);
 		$params['data-confirm'] = $params['confirm'];
 		$params['href'] = '#false';
 	}
@@ -100,10 +100,11 @@ function smarty_block_a($params, $content, $smarty, &$repeat){
 		$k = strtolower($k);
 		switch($k){
 			case 'href':
-				$newcontent .= ' href="' . Core::ResolveLink ($v) . '"';
+				$newcontent .= ' href="' . \Core\resolve_link($v) . '"';
 				break;
 			case 'history':
-				$newcontent .= ' href="' . Core::GetHistory($v) . '"';
+			case 'back':
+				$newcontent .= ' href="' . \Core\page_request()->getReferrer() . '"';
 				break;
 			case 'assign':
 				$assign = $v;

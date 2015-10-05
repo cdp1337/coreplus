@@ -21,8 +21,8 @@ abstract class TinyMCE {
 		$browsable           = ( \Core::IsComponentAvailable('media-manager') && \Core\user()->checkAccess('p:/mediamanager/browse') );
 		$filebrowsercallback = $browsable ? "Core.TinyMCE.FileBrowserCallback" : 'null';
 
-		$loc = \Core::ResolveAsset('js/tinymce/tinymce.min.js');
-		$content = \Core::ResolveAsset('css/tinymce/content.css');
+		$loc = \Core\resolve_asset('js/tinymce/tinymce.min.js');
+		$content = \Core\resolve_asset('css/tinymce/content.css');
 
 		$pages = \PageModel::GetPagesAsOptions();
 		$links = [];
@@ -31,7 +31,7 @@ abstract class TinyMCE {
 			// Core adds that as a benefit for knowing
 			$links[] = [
 				'title' => html_entity_decode(preg_replace('/(.*) \([^\)]*\)/', '$1', $title)),
-			    'value' => \Core::ResolveLink($url),
+			    'value' => \Core\resolve_link($url),
 			];
 		}
 		// And json the data.

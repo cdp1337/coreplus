@@ -203,7 +203,7 @@ class FormGroup {
 		if (!$file) return $out;
 
 		// There is a form on the page, do not allow caching.
-		\Core\view()->cacheable = false;
+		\Core\view()->disableCache();
 		$tpl = \Core\Templates\Template::Factory($file);
 		$tpl->assign('group', $this);
 		$tpl->assign('elements', $out);
@@ -312,6 +312,47 @@ class FormGroup {
 			if ($recursively && $e instanceof FormGroup) $els = array_merge($els, $e->getElements($recursively));
 		}
 		return $els;
+	}
+
+	/**
+	 * Get all elements by *regex* name.
+	 *
+	 * Useful for checkboxes, multi inputs, and other groups of input elements.
+	 *
+	 * <h3>Example Usage</h3>
+	 * <code class="php"><pre>
+	 * The HTML form:
+	 * &lt;input name="values[123]"/&gt;
+	 * &lt;input name="values[124]"/&gt;
+	 * &lt;input name="values[125]"/&gt;
+	 *
+	 * The PHP code:
+	 * $form->getElementsByName('values\[.*\]');
+	 * </pre></code>
+	 *
+	 * @param $nameRegex string The regex-friendly name of the elements to return.
+	 *
+	 * @return array
+	 */
+	public function getElementsByName($nameRegex){
+		$ret = [];
+		$els = $this->getElements(true, true);
+
+		// Determine which delimiter to use based on what's NOT present.
+		if(strpos($nameRegex, '#') === false){
+			$nameRegex = '#' . $nameRegex . '#';
+		}
+		else{
+			$nameRegex = '#' . str_replace('#', '\#', $nameRegex) . '#';
+		}
+
+		foreach ($els as $el) {
+			if(preg_match($nameRegex, $el->get('name')) === 1){
+				$ret[] = $el;
+			}
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -435,6 +476,7 @@ class FormElement {
 				break;
 			case 'label': // This is an alias for title.
 				$this->_attributes['title'] = $value;
+				break;
 			case 'options':
 				// This will require a little bit more attention, as if only the title
 				// is given, use that for the value as well.
@@ -963,8 +1005,8 @@ class Form extends FormGroup {
 			// I need the hash at present, regardless if all elements have been rendered to the screen or not.
 			$hash = ($this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash());
 
-			if (isset($_SESSION['FormData'][$hash])) {
-				if (($savedform = unserialize($_SESSION['FormData'][$hash]))) {
+			if (($savedform = \Core\Session::Get('FormData/' . $hash)) !== null) {
+				if (($savedform = unserialize($savedform))) {
 
 					/** @var Form $savedform */
 					// If this form is not set as persistent, then don't restore the values!
@@ -1109,8 +1151,8 @@ class Form extends FormGroup {
 		//	foreach ($this->get('___' . $prefix . 'pks') as $k => $v) {
 		//		$model->set($k, $v);
 		//	}
-//
-			// It should now be loadable.
+		//
+		// It should now be loadable.
 		//	$model->load();
 		//}
 
@@ -1436,9 +1478,9 @@ class Form extends FormGroup {
 
 		if (!$this->get('callsmethod')) return; // Don't save anything if there's no method to call.
 
-		$this->set('expires', Time::GetCurrent() + 1800); // 30 minutes
+		$this->set('expires', (int)Time::GetCurrent() + 1800); // 30 minutes
 
-		$_SESSION['FormData'][$this->get('uniqueid')] = serialize($this);
+		\Core\Session::Set('FormData/' . $this->get('uniqueid'), serialize($this));
 	}
 
 	public function clearFromSession(){
@@ -1446,7 +1488,7 @@ class Form extends FormGroup {
 		// otherwise, generate it from the set elements.
 		$hash = $this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash();
 
-		if(isset($_SESSION['FormData'][$hash])) unset($_SESSION['FormData'][$hash]);
+		\Core\Session::UnsetKey('FormData/' . $hash);
 	}
 
 
@@ -1462,21 +1504,21 @@ class Form extends FormGroup {
 		if(preg_match('#^/form/(.*)\.ajax$#', REL_REQUEST_PATH)) return;
 
 		// There has to be data in the session.
-		if (!(isset($_SESSION['FormData']) && is_array($_SESSION['FormData']))) return;
+		$forms = \Core\Session::Get('FormData/*');
 
 		$formid = (isset($_REQUEST['___formid'])) ? $_REQUEST['___formid'] : false;
 		$form   = false;
 
-		foreach ($_SESSION['FormData'] as $k => $v) {
+		foreach ($forms as $k => $v) {
 			// If the object isn't a valid object after unserializing...
 			if (!($el = unserialize($v))) {
-				unset($_SESSION['FormData'][$k]);
+				\Core\Session::UnsetKey('FormData/' . $k);
 				continue;
 			}
 
 			// Check the expires time
 			if ($el->get('expires') <= Time::GetCurrent()) {
-				unset($_SESSION['FormData'][$k]);
+				\Core\Session::UnsetKey('FormData/' . $k);
 				continue;
 			}
 
@@ -1500,8 +1542,14 @@ class Form extends FormGroup {
 
 		// Ensure the REFERRER and original URL match up.
 		if($_SERVER['HTTP_REFERER'] != $form->originalurl){
-			Core::SetMessage('Form submission referrer does not match, please try your submission again.', 'error');
-			return;
+			// @todo This is reported to be causing issues with production sites.
+			//       If found true, this check may need to be removed / refactored.
+			//Core::SetMessage('Form submission referrer does not match, please try your submission again.', 'error');
+			SystemLogModel::LogInfoEvent(
+				'Form Referrer Mismatch',
+				'Form referrer does not match!  Submitted: [' . $_SERVER['HTTP_REFERER'] . '] Expected: [' . $form->originalurl . ']'
+			);
+			//return;
 		}
 
 		// Run though each element submitted and try to validate it.
@@ -1544,7 +1592,7 @@ class Form extends FormGroup {
 		$form->persistent = true;
 
 		// Regardless, bundle this form back into the session so the controller can use it if needed.
-		$_SESSION['FormData'][$formid] = serialize($form);
+		\Core\Session::Set('FormData/' . $formid, serialize($form));
 
 		// Fail statuses.
 		if ($status === false) return;
@@ -1555,7 +1603,7 @@ class Form extends FormGroup {
 		// @todo Handle an internal save procedure for "special" groups such as pageinsertables and what not.
 
 		// Cleanup
-		unset($_SESSION['FormData'][$formid]);
+		\Core\Session::UnsetKey('FormData/' . $formid);
 
 
 		if ($status === 'die'){
@@ -1569,7 +1617,7 @@ class Form extends FormGroup {
 			}
 			else{
 				// Use Core to guess which page to redirect back to, (not as reliable).
-				\Core\go_back(2);
+				\Core\go_back();
 			}
 		}
 		elseif ($status === true){

@@ -81,7 +81,7 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		if(!$user->exists()){
 			Core::SetMessage('Unable to locate requested user', 'error');
-			\Core\go_back(1);
+			\Core\go_back();
 		}
 
 		/** @var \Core\User\AuthDrivers\datastore $auth */
@@ -296,7 +296,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			$e = new Email();
 			$e->setSubject('Forgot Password Request');
 			$e->to($u->get('email'));
-			$e->assign('link', Core::ResolveLink($link));
+			$e->assign('link', \Core\resolve_link($link));
 			$e->assign('ip', REMOTE_IP);
 			$e->templatename = 'emails/user/datastoreauth_forgotpassword.tpl';
 			try{
@@ -378,7 +378,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Reset password successfully!', null, $u->get('id'));
 				Core::SetMessage('Reset password successfully', 'success');
 				if($u->get('active')){
-					Session::SetUser($u);
+					\Core\Session::SetUser($u);
 				}
 				\core\redirect('/');
 			}
@@ -527,7 +527,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			}
 		}
 		catch(Exception $e){
-			Core::SetMessage('Your account does not have password logins enabled!<br/>If you wish to enable them, please <a href="' . Core::ResolveLink('/datastoreauth/forgotpassword') . '">use the password reset tool</a> to create one.', 'error');
+			Core::SetMessage('Your account does not have password logins enabled!<br/>If you wish to enable them, please <a href="' . \Core\resolve_link('/datastoreauth/forgotpassword') . '">use the password reset tool</a> to create one.', 'error');
 			return false;
 		}
 
@@ -546,7 +546,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			$email = new \Email();
 			$email->setSubject('Initial Password Request');
 			$email->to($u->get('email'));
-			$email->assign('link', \Core::ResolveLink($link));
+			$email->assign('link', \Core\resolve_link($link));
 			$email->assign('ip', REMOTE_IP);
 			$email->templatename = 'emails/user/initialpassword.tpl';
 			try{
@@ -609,7 +609,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		}
 		elseif(REL_REQUEST_PATH == '/user/login'){
 			// If the user came from the registration page, get the page before that.
-			$url = \Core::GetHistory(2);
+			$url = $form->referrer;
 		}
 		else{
 			// else the registration link is now on the same page as the 403 handler.
@@ -622,7 +622,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		// yay...
 		$u->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 		$u->save();
-		\Session::SetUser($u);
+		\Core\Session::SetUser($u);
 
 		// Allow an external script to override the redirecting URL.
 		$overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl');

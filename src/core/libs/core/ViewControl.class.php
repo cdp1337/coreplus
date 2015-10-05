@@ -460,7 +460,7 @@ class ViewControl implements ArrayAccess {
 
 		if($this->confirm !== null){
 			$dat['onclick'] = 'return Core.ConfirmEvent(this);';
-			$dat['data-href'] = Core::ResolveLink($this->link);
+			$dat['data-href'] = \Core\resolve_link($this->link);
 			$dat['data-confirm'] = $this->confirm;
 			$dat['href'] = '#false';
 		}
@@ -494,7 +494,7 @@ class ViewControl implements ArrayAccess {
 			case 'link':
 			case 'url':
 			case 'href': // Just for an alias of the link.
-				$this->link = Core::ResolveLink($value);
+				$this->link = \Core\resolve_link($value);
 				break;
 			case 'title':
 				$this->title = $value;

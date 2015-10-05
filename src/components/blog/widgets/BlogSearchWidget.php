@@ -99,7 +99,7 @@ class BlogSearchWidget extends Widget_2_1 {
 		else{
 			$urlbase = '/blog';
 		}
-		$url = Core::ResolveLink($urlbase);
+		$url = \Core\resolve_link($urlbase);
 
 		if(PageRequest::GetSystemRequest()->getBaseURL() == $urlbase && PageRequest::GetSystemRequest()->getParameter('q')){
 			$query = PageRequest::GetSystemRequest()->getParameter('q');

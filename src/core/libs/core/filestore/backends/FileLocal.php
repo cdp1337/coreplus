@@ -304,7 +304,7 @@ class FileLocal implements Filestore\File {
 	}
 
 	public function delete() {
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 
@@ -415,7 +415,7 @@ class FileLocal implements Filestore\File {
 		// I also want to know when this file was modified so I can set the new version to have the same datestamp.
 		$modifiedtime = $src->getMTime();
 
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 
@@ -468,7 +468,7 @@ class FileLocal implements Filestore\File {
 
 			// Re-acquire the FTP connection.  Core will reset the cwd back to root upon doing this.
 			// This is required because mkdir may change directories.
-			$ftp = \Core\FTP();
+			$ftp = \Core\ftp();
 			// FTP requires a filename, not data...
 			// WELL how bout that!  I happen to have a local filename ;)
 			if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
@@ -727,6 +727,11 @@ class FileLocal implements Filestore\File {
 		return (strpos($this->_filename, $path) !== false);
 	}
 
+	/**
+	 * @param Filestore\File|string $otherfile
+	 *
+	 * @return bool
+	 */
 	public function identicalTo($otherfile) {
 		if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
 			if($otherfile instanceof FileLocal){
@@ -743,8 +748,12 @@ class FileLocal implements Filestore\File {
 		}
 		else {
 			// Can't be the same if it doesn't exist!
-			if (!file_exists($otherfile)) return false;
-			if (!file_exists($this->_filename)) return false;
+			if (!file_exists($otherfile)){
+				return false;
+			}
+			if (!file_exists($this->_filename)){
+				return false;
+			}
 			$result = exec('diff -q "' . $this->_filename . '" "' . $otherfile . '"', $array, $return);
 			return ($return == 0);
 		}
@@ -860,7 +869,7 @@ class FileLocal implements Filestore\File {
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public static function _Mkdir($pathname, $mode = null, $recursive = false) {
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 
@@ -907,7 +916,7 @@ class FileLocal implements Filestore\File {
 	}
 
 	public static function _Rename($oldpath, $newpath){
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 
 		if(!$ftp){
 			// Traditional FTP
@@ -948,7 +957,7 @@ class FileLocal implements Filestore\File {
 	 * @return bool Returns true on success or false on failure.
 	 */
 	public static function _PutContents($filename, $data) {
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 

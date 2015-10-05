@@ -209,7 +209,7 @@ function smarty_function_img($params, $smarty){
 		}
 		elseif(!$previewfile->exists()){
 			// Ok, it doesn't exist... return a link to the controller to render this file.
-			$attributes['src'] = Core::ResolveLink('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
+			$attributes['src'] = \Core\resolve_link('/file/preview') . '?f=' . $f->getFilenameHash() . '&d=' . $d;
 		}
 		else{
 			$attributes['src'] = $previewfile->getURL();

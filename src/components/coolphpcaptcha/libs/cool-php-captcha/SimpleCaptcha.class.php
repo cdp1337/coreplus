@@ -193,7 +193,7 @@ class SimpleCaptcha {
 		$fontcfg  = $this->fonts[array_rand($this->fonts)];
 		$this->writeText($text, $fontcfg);
 
-		$_SESSION[$this->sessionVar] = $text;
+		\Core\Session::Set($this->sessionVar, $text);
 
 		/** Transformations */
 		if (!empty($this->lineWidth)) {

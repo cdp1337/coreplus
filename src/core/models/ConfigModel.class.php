@@ -222,7 +222,7 @@ class ConfigModel extends Model {
 		}
 
 		// SELECT
-		if($opts['type'] == 'select' || $opts['type'] == 'checkboxes'){
+		if(($opts['type'] == 'select' || $opts['type'] == 'checkboxes') && trim($this->get('options'))){
 			// This is set from the main option set.
 			$opts['options'] =  array_map('trim', explode('|', $this->get('options')));
 		}

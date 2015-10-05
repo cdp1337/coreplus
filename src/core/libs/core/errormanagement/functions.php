@@ -9,6 +9,7 @@
 
 namespace Core\ErrorManagement;
 use Core\Utilities\Logger;
+use Core\Utilities\Logger\LogFile;
 
 /**
  * Handle an exception and report it to the Core system log.
@@ -63,7 +64,7 @@ function exception_handler(\Exception $e, $fatal = false){
 		// meh, try a traditional log.
 		try{
 			if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-				$log = new \Core\Utilities\Logger\LogFile($type);
+				$log = new LogFile($type);
 				$log->write($details . $errstr, $code);
 			}
 			else{
@@ -192,7 +193,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 		// meh, try a traditional log.
 		try{
 			if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-				$log = new \Core\Utilities\Logger\LogFile($type);
+				$log = new LogFile($type);
 				$log->write($details . $errstr, $code);
 			}
 			else{

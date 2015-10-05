@@ -32,7 +32,7 @@ class JQueryFileUploadController extends Controller_2_1 {
 		$view->contenttype = View::CTYPE_JSON;
 		$view->mode = View::MODE_AJAX;
 
-		if(!(isset($_SESSION['multifileinputobjects']) && is_array($_SESSION['multifileinputobjects']))){
+		if(!is_array(\Core\Session::Get('multifileinputobjects'))){
 			return View::ERROR_BADREQUEST;
 		}
 
@@ -48,11 +48,11 @@ class JQueryFileUploadController extends Controller_2_1 {
 
 
 		// The key also must exist!
-		if(!isset($_SESSION['multifileinputobjects'][$key])){
+		if(!isset(\Core\Session::Get('multifileinputobjects')[$key])){
 			return View::ERROR_BADREQUEST;
 		}
 
-		$this->_formelement = unserialize($_SESSION['multifileinputobjects'][$key]['obj']);
+		$this->_formelement = unserialize(\Core\Session::Get('multifileinputobjects')[$key]['obj']);
 
 		if($request->method == View::METHOD_POST){
 

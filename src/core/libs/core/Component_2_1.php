@@ -1825,8 +1825,8 @@ class Component_2_1 {
 				$m->set('value', $confignode->getAttribute('default'));
 			}
 			// Allow configurations to overwrite any value.  This is useful on the initial installation.
-			if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
-				$m->set('value', $_SESSION['configs'][$key]);
+			if(\Core\Session::Get('configs/' . $key) !== null){
+				$m->set('value', \Core\Session::Get('configs/' . $key));
 			}
 
 			if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';

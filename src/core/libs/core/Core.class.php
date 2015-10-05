@@ -1,4 +1,6 @@
 <?php
+use Core\Session;
+
 /**
  * Core class of this entire system.
  *
@@ -668,14 +670,14 @@ class Core implements ISingleton {
 	 * @return resource | false
 	 */
 	public static function FTP() {
-		return \Core\FTP();
+		return \Core\ftp();
 	}
 
 	/**
 	 * Get the current user model that is logged in.
 	 *
 	 * @deprecated 2011.11
-	 * @return User
+	 * @return \UserModel
 	 */
 	public static function User() {
 		return \Core\user();
@@ -1030,6 +1032,7 @@ class Core implements ISingleton {
 	 * @return string The full url of the asset, including the http://...
 	 */
 	public static function ResolveAsset($asset) {
+		trigger_error('Core::ResolveAsset is deprecated, please use \\Core\\resolve_asset() instead.', E_USER_DEPRECATED);
 		return \Core\resolve_asset($asset);
 	}
 
@@ -1047,20 +1050,8 @@ class Core implements ISingleton {
 	 * @return string The full url of the link, including the http://...
 	 */
 	public static function ResolveLink($url) {
+		trigger_error('Core::ResolveLink is deprecated, please use \\Core\\resolve_link() instead.', E_USER_DEPRECATED);
 		return \Core\resolve_link($url);
-	}
-
-	/**
-	 * Resolve filename to ... script.
-	 * Useful for converting a physical filename to an accessable URL.
-	 * @deprecated
-	 */
-	public static function ResolveFilenameTo($filename, $base = ROOT_URL) {
-		// If it starts with a '/', figure out if that's the ROOT_PDIR or ROOT_DIR.
-		$file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
-		// swap the requested base onto that.
-		return $base . $file;
-		//return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $base, $filename);
 	}
 
 	/**
@@ -1077,7 +1068,7 @@ class Core implements ISingleton {
 	 * @return bool|null False on failure, success will halt the script.
 	 */
 	static public function Redirect($page, $code = 302) {
-		error_log('Core::Redirect is deprecated, please use \\Core\\redirect() instead.', E_USER_DEPRECATED);
+		trigger_error('Core::Redirect is deprecated, please use \\Core\\redirect() instead.', E_USER_DEPRECATED);
 		\Core\redirect($page, $code);
 	}
 
@@ -1085,7 +1076,7 @@ class Core implements ISingleton {
 	 * @deprecated 2013.06.11 Please use the namespaced versions.
 	 */
 	static public function Reload() {
-		error_log('Core::Reload is deprecated, please use \\Core\\reload() instead.', E_USER_DEPRECATED);
+		trigger_error('Core::Reload is deprecated, please use \\Core\\reload() instead.', E_USER_DEPRECATED);
 		\Core\reload();
 	}
 
@@ -1097,9 +1088,8 @@ class Core implements ISingleton {
 	 * @param int $depth The amount of pages back to go
 	 */
 	static public function GoBack($depth=1) {
-		error_log('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
-
-		\Core\go_back($depth);
+		trigger_error('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
+		\Core\go_back();
 	}
 
 	/**
@@ -1109,49 +1099,8 @@ class Core implements ISingleton {
 	 * @return string
 	 */
 	public static function GetHistory($depth = 2){
-		if(!isset($_SESSION['nav'])){
-			//navigation isn't set, HOME PAGE!
-			return ROOT_WDIR;
-		}
-
-		$s = sizeof($_SESSION['nav']);
-		if($depth > $s){
-			// Requested depth greater than the amount of data saved?  HOME PAGE!
-			return ROOT_WDIR;
-		}
-
-		if($depth <= 0){
-			return ROOT_WDIR;
-		}
-		//var_dump($_SESSION['nav'], $depth, $_SESSION['nav'][$s - $depth]); die();
-		// I now have the total size of the array and the requested depth of it.
-		// Since the depth will be a One-Index base and the array itself is Zero-Index based,
-		// this will work perfectly to take the sizeof (one-index base) and subtract the requested depth to get the actual key!
-
-		// If the array is 3 keys deep and a depth of 1 was requested (last element),
-		// it'll be 3 - 1, or 2, the last key in a zero-base array!
-		return $_SESSION['nav'][$s - $depth]['uri'];
-	}
-
-	/**
-	 * If this is called from any page, the user is forced to redirect to the SSL version if available.
-	 * @return void
-	 */
-	static public function RequireSSL() {
-		// No ssl, nothing much to do about nothing.
-		if (!ENABLE_SSL) return;
-
-		if (!isset($_SERVER['HTTPS'])) {
-			$page = ViewClass::ResolveURL($_SERVER['REQUEST_URI'], true);
-			//$page = ROOT_URL_SSL . $_SERVER['REQUEST_URI'];
-
-			header("Location:" . $page);
-
-			// Just before the page stops execution...
-			HookHandler::DispatchHook('/core/page/postrender');
-
-			die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
-		}
+		trigger_error('Core::GetHistory is deprecated and will be removed shortly.', E_USER_DEPRECATED);
+		return \Core\page_request()->getReferrer();
 	}
 
 	/**
@@ -1162,22 +1111,8 @@ class Core implements ISingleton {
 	 * @return string
 	 */
 	static public function GetNavigation($base) {
-		//var_dump($_SESSION); die();
-		// NO nav history, guess I can't do much of anything...
-		if (!isset($_SESSION['nav'])) return $base;
-
-		if (!isset($_SESSION['nav'][$base])) return $base;
-
-		// Else, it must have been found!
-		$coreparams  = array();
-		$extraparams = array();
-		foreach ($_SESSION['nav'][$base]['parameters'] as $k => $v) {
-			if (is_numeric($k)) $coreparams[] = $v;
-			else $extraparams[] = $k . '=' . $v;
-		}
-		return $base .
-		(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
-		(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
+		trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
+		return \Core\page_request()->getReferrer();
 	}
 
 	/**
@@ -1187,47 +1122,7 @@ class Core implements ISingleton {
 	 *
 	 */
 	static public function _RecordNavigation() {
-		$request = PageRequest::GetSystemRequest();
-		$view = $request->getView();
-
-		// If the page is set to be ignored, do not record it.
-		if(!$view->record) return true;
-
-		// Also do not record anything other than a GET request.
-		if(!$request->isGet()) return true;
-
-		// If it's an ajax or json request, don't record that either!
-		if($request->isAjax()) return true;
-		if($request->isJSON()) return true;
-
-		// If it's an error... don't record either.
-		if($view->error != View::ERROR_NOERROR) return true;
-
-
-		if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
-
-		// I can record the base URI here because it's easier to record the actual inbound string than to parse the request afterwards.
-		// (it's just going to get put back into the useragent request to be re-parsed anyway)
-		$rel = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
-		if($rel === false) $rel = '';
-
-		$dat = array(
-			'uri' => ROOT_URL . $rel,
-			'title' => $view->title,
-		);
-
-		// Skip duplicate requests
-		$s = sizeof($_SESSION['nav']);
-		if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return true;
-
-		// Otherwise, YAY!
-		// But keep it neatly trimmed at 5 entries.
-		if($s >= 5){
-			array_shift($_SESSION['nav']);
-			$_SESSION['nav'] = array_values($_SESSION['nav']);
-		}
-		$_SESSION['nav'][] = $dat;
-		return true;
+		trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 	}
 
 	/**
@@ -1240,26 +1135,23 @@ class Core implements ISingleton {
 	 * @return void
 	 */
 	static public function SetMessage($messageText, $messageType = 'info') {
-
-		if (trim($messageText) == '') return;
+		if(trim($messageText) == '') return;
 
 		$messageType = strtolower($messageType);
 
 		// CLI doesn't use sessions.
-		if (EXEC_MODE == 'CLI') {
+		if(EXEC_MODE == 'CLI'){
 			$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
 			echo "[" . $messageType . "] - " . $messageText . "\n";
 		}
-		else {
-			if (!isset($_SESSION['message_stack'])) $_SESSION['message_stack'] = array();
+		else{
+			$stack = Session::Get('message_stack', []);
 
-			// Look for this message in the stack.  This helps prevent duplicate messages.
-			$key = md5($messageType . '-' . $messageText);
-
-			$_SESSION['message_stack'][$key] = array(
+			$stack[] = array(
 				'mtext' => $messageText,
 				'mtype' => $messageType,
 			);
+			Session::Set('message_stack', $stack);
 		}
 	}
 
@@ -1276,27 +1168,16 @@ class Core implements ISingleton {
 	 * @return array
 	 */
 	static public function GetMessages($returnSorted = false, $clearStack = true) {
-		/*
-		global $_DB;
-		global $_SESS;
+		$stack = Session::Get('message_stack', []);
 
-		$fetches = $_DB->Execute(
-			"SELECT `mtext`, `mtype` FROM `" . DB_PREFIX . "messages` WHERE `sid` = '{$_SESS->sid}'"
-		);
-
-		if($fetches->fields === FALSE) return array(); //Return a blank array, there are no messages.
-
-		foreach($fetches as $fetch){
-			$return[] = $fetch;
+		if($returnSorted){
+			$stack = \Core::SortByKey($stack, 'mtype');
 		}
-		*/
-		if (!isset($_SESSION['message_stack'])) return array();
 
-		$return = $_SESSION['message_stack'];
-		if ($returnSorted) $return = Core::SortByKey($return, 'mtype');
-
-		if ($clearStack) unset($_SESSION['message_stack']);
-		return $return;
+		if($clearStack){
+			Session::UnsetKey('message_stack');
+		}
+		return $stack;
 	}
 
 	static public function SortByKey($named_recs, $order_by, $rev = false, $flags = 0) {

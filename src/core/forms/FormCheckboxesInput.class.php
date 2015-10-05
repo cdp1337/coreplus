@@ -70,7 +70,7 @@ class FormCheckboxesInput extends FormElement {
 			//return parent::set($key, $value);
 		}
 		else {
-			return parent::set($key, $value);
+			parent::set($key, $value);
 		}
 	}
 

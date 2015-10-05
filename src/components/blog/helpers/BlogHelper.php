@@ -177,7 +177,7 @@ abstract class BlogHelper {
 				$args = array(
 					'access_token' => $token,
 					'from' => $from,
-					'link' => Core::ResolveLink($article->get('rewriteurl')),
+					'link' => \Core\resolve_link($article->get('rewriteurl')),
 					'name' => $article->get('title'),
 					'caption' => '',
 					'description' => $article->getTeaser(),

@@ -595,15 +595,15 @@ class BlogController extends Controller_2_1 {
 		$view->assign('articles', $articles);
 		$view->assign('page', $page);
 		$view->assign('filters', $filters);
-		$view->assign('canonical_url', Core::ResolveLink($blog->get('baseurl')));
+		$view->assign('canonical_url', \Core\resolve_link($blog->get('baseurl')));
 		$view->assign('last_updated', ($latest ? $latest['updated'] : 0));
 		$view->assign('servername', SERVERNAME_NOSSL);
 		$view->assign('editor', $editor);
 		$view->assign('add_article_link', '/content/create?page_template=blog-article.tpl&parenturl=' . $blog->get('baseurl'));
 
 		// Add the extra view types for this page
-		$view->addHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.atom"/>');
-		$view->addHead('<link rel="alternate" type="application/rss+xml" title="' . $page->get('title') . ' RSS Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.rss"/>');
+		$view->addHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . \Core\resolve_link($blog->get('baseurl')) . '.atom"/>');
+		$view->addHead('<link rel="alternate" type="application/rss+xml" title="' . $page->get('title') . ' RSS Feed" href="' . \Core\resolve_link($blog->get('baseurl')) . '.rss"/>');
 
 		if ($editor){
 			if($blog->get('type') == 'remote') {
@@ -617,8 +617,8 @@ class BlogController extends Controller_2_1 {
 			$view->addControl('Edit Blog', '/blog/update/' . $blog->get('id'), 'edit');
 			$view->addControl('All Articles', '/admin/pages/?filter[parenturl]=' . $blog->get('baseurl'), 'tasks');
 		}
-		$view->addControl('RSS Feed', Core::ResolveLink($blog->get('baseurl')) . '.rss', 'rss');
-		//$view->addControl('Atom Feed', Core::ResolveLink($blog->get('baseurl')) . '.atom', 'rss');
+		$view->addControl('RSS Feed', \Core\resolve_link($blog->get('baseurl')) . '.rss', 'rss');
+		//$view->addControl('Atom Feed', \Core\resolve_link($blog->get('baseurl')) . '.atom', 'rss');
 	}
 
 	private function _viewBlogArticle(BlogModel $blog, BlogArticleModel $article) {
@@ -651,7 +651,7 @@ class BlogController extends Controller_2_1 {
 		$view->title         = $article->get('title');
 		$view->meta['title'] = $article->get('title');
 		$view->updated       = $article->get('updated');
-		$view->canonicalurl  = Core::ResolveLink($article->get('rewriteurl'));
+		$view->canonicalurl  = \Core\resolve_link($article->get('rewriteurl'));
 		$view->meta['og:type'] = 'article';
 		if ($article->get('image')) {
 			$image                  = \Core\Filestore\Factory::File($article->get('image'));
@@ -688,8 +688,8 @@ class BlogController extends Controller_2_1 {
 		}
 
 		// Add the extra view types for this page
-		$view->addHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.atom"/>');
-		$view->addHead('<link rel="alternate" type="application/rss+xml" title="' . $page->get('title') . ' RSS Feed" href="' . Core::ResolveLink($blog->get('baseurl')) . '.rss"/>');
-		$view->addControl('RSS Feed', Core::ResolveLink($blog->get('baseurl')) . '.rss', 'rss');
+		$view->addHead('<link rel="alternate" type="application/atom+xml" title="' . $page->get('title') . ' Atom Feed" href="' . \Core\resolve_link($blog->get('baseurl')) . '.atom"/>');
+		$view->addHead('<link rel="alternate" type="application/rss+xml" title="' . $page->get('title') . ' RSS Feed" href="' . \Core\resolve_link($blog->get('baseurl')) . '.rss"/>');
+		$view->addControl('RSS Feed', \Core\resolve_link($blog->get('baseurl')) . '.rss', 'rss');
 	}
 }

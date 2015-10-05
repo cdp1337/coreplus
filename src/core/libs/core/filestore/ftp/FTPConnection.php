@@ -22,6 +22,7 @@
  */
 
 namespace Core\Filestore\FTP;
+use Core\Date\DateTime;
 
 
 /**
@@ -136,7 +137,7 @@ class FTPConnection {
 		}
 
 		$this->connected = true;
-		$this->lastSave = \Core\Date\DateTime::NowGMT();
+		$this->lastSave = DateTime::NowGMT();
 
 		self::$_OpenConnections[] = $this;
 		if(sizeof(self::$_OpenConnections) == 1){
@@ -265,11 +266,11 @@ class FTPConnection {
 	}
 
 	private function _syncMetas(){
-		if($this->lastSave + 25 >= \Core\Date\DateTime::NowGMT()){
+		if($this->lastSave + 25 >= DateTime::NowGMT()){
 			return;
 		}
 
-		$this->lastSave = \Core\Date\DateTime::NowGMT();
+		$this->lastSave = DateTime::NowGMT();
 		foreach($this->metaFiles as $file){
 			/** @var FTPMetaFile $file */
 			$file->saveMetas();

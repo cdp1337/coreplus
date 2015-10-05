@@ -171,7 +171,7 @@ class ContentController extends Controller_2_1 {
 
 		// w00t
 		$msg = ($isnew ? 'Added' : 'Updated');
-		$link = Core::ResolveLink($page->get('baseurl'));
+		$link = \Core\resolve_link($page->get('baseurl'));
 		Core::SetMessage('<a href="' . $link . '">' . $msg . ' page successfully!</a>', 'success');
 		return 'back';
 	}
@@ -189,21 +189,22 @@ class ContentController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$m = new ContentModel($request->getParameter(0));
+		$m    = new ContentModel($request->getParameter(0));
+		$link = \Core\resolve_link($m->get('baseurl'));
 
-		$link = Core::ResolveLink($m->get('baseurl'));
-
-		if (!$m->exists()) return View::ERROR_NOTFOUND;
+		if (!$m->exists()){
+			return View::ERROR_NOTFOUND;
+		}
 		$m->delete();
 
 		Core::SetMessage('Removed ' . $m->get('nickname') . ' successfully!', 'success');
 
-		$hist = \Core::GetHistory(1);
+		$hist = $request->getReferrer();
 		if($hist == $link){
-			\Core\go_back(2);
+			\Core\redirect('/admin/pages');
 		}
 		else{
-			\Core\go_back(1);
+			\Core\go_back();
 		}
 	}
 }

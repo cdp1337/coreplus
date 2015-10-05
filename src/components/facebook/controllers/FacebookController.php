@@ -136,7 +136,7 @@ class FacebookController extends Controller_2_1{
 				$auth = $user->getAuthDriver('facebook');
 			}
 			catch(Exception $e){
-				Core::SetMessage('Your account does not have Facebook logins enabled!  <a href="' . Core::ResolveLink('/facebook/enable') . '">Do you want to enable Facebook?</a>', 'error');
+				Core::SetMessage('Your account does not have Facebook logins enabled!  <a href="' . \Core\resolve_link('/facebook/enable') . '">Do you want to enable Facebook?</a>', 'error');
 				\Core\go_back();
 				return null;
 			}
@@ -158,7 +158,7 @@ class FacebookController extends Controller_2_1{
 			}
 			elseif(REL_REQUEST_PATH == '/facebook/login'){
 				// If the user came from the registration page, get the page before that.
-				$url = \Core::GetHistory(2);
+				$url = '/';
 			}
 			else{
 				// else the registration link is now on the same page as the 403 handler.
@@ -171,7 +171,7 @@ class FacebookController extends Controller_2_1{
 			// yay...
 			$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 			$user->save();
-			\Session::SetUser($user);
+			\Core\Session::SetUser($user);
 
 			// Allow an external script to override the redirecting URL.
 			$overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl');
@@ -253,7 +253,7 @@ class FacebookController extends Controller_2_1{
 					$user = UserModel::Find(['email' => $user_profile['email']], 1);
 
 					if(!$user){
-						Core::SetMessage('No local account found with the email ' . $user_profile['email'] . ', please <a href="' . Core::ResolveLink('/user/register') . '"create an account</a> instead.', 'error');
+						Core::SetMessage('No local account found with the email ' . $user_profile['email'] . ', please <a href="' . \Core\resolve_link('/user/register') . '"create an account</a> instead.', 'error');
 						\Core\go_back();
 						return null;
 					}
@@ -275,7 +275,7 @@ class FacebookController extends Controller_2_1{
 				$email->to($user->get('email'));
 				$email->setSubject('Facebook Activation Request');
 				$email->templatename = 'emails/facebook/enable_confirmation.tpl';
-				$email->assign('link', Core::ResolveLink('/facebook/enable/' . $nonce));
+				$email->assign('link', \Core\resolve_link('/facebook/enable/' . $nonce));
 				if($email->send()){
 					Core::SetMessage('An email has been sent to your account with a link enclosed.  Please click on that to complete activation within twenty minutes.', 'success');
 					\Core\go_back();
@@ -333,7 +333,7 @@ class FacebookController extends Controller_2_1{
 			if(!\Core\user()->exists()){
 				$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 				$user->save();
-				\Session::SetUser($user);
+				\Core\Session::SetUser($user);
 			}
 
 			\Core\redirect('/');

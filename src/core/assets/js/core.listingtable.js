@@ -29,7 +29,7 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 				$('.' + i).hide();
 			}
 		}
-	}
+	};
 
 
 
@@ -89,7 +89,7 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 		var html = '', current, $dialog;
 
 		// What values are currently set as display/hidden?
-		current = JSON.parse(localStorage.getItem(self.storagename))
+		current = JSON.parse(localStorage.getItem(self.storagename));
 
 		if(!current){
 			current = {};

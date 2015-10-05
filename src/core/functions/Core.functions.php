@@ -38,11 +38,13 @@ function db(){
 /**
  * Get the global FTP connection.
  *
+ * This is used for local assets and public files by some sites.
+ *
  * Returns the FTP resource or false on failure.
  *
  * @return FTPConnection | false
  */
-function FTP(){
+function ftp(){
 	static $ftp = null;
 
 	if($ftp === null){
@@ -110,60 +112,68 @@ function FTP(){
  *
  * If no user systems are currently available, null is returned.
  *
- * @return \UserModel|\User|null
+ * @return \UserModel|null
  */
 function user(){
 
+	static $_CurrentUserAccount = null;
+
 	if(!class_exists('\\UserModel')){
 		return null;
+	}
+
+	if($_CurrentUserAccount !== null){
+		// Cache this for the page load.
+		return $_CurrentUserAccount;
 	}
 
 	if(isset($_SERVER['HTTP_X_CORE_AUTH_KEY'])){
 		// Allow an auth key to be used to authentication the requested user instead!
 		$user = \UserModel::Find(['apikey = ' . $_SERVER['HTTP_X_CORE_AUTH_KEY']], 1);
 		if($user){
-			$_SESSION['user'] = $user;
+			$_CurrentUserAccount = $user;
 		}
 	}
-	elseif(!isset($_SESSION['user'])){
-		$_SESSION['user'] = new \UserModel();
+	elseif(Session::Get('user') instanceof \UserModel){
+		// There is a valid user account in the session!
+		// But check if this user is forced to be resynced first.
+		if(isset(Session::$Externals['user_forcesync'])){
+			// A force sync was requested by something that modified the original UserModel object.
+			// Keep the user logged in, but reload the data from the database.
+			$_CurrentUserAccount = \UserModel::Construct(Session::Get('user')->get('id'));
+			// And cache this updated user model back to the session.
+			Session::Set('user', $_CurrentUserAccount);
+			unset(Session::$Externals['user_forcesync']);
+		}
+		else{
+			$_CurrentUserAccount = Session::Get('user');
+		}
 	}
-	elseif(!$_SESSION['user'] instanceof \UserModel){
-		// Clear out this user too!
-		// This may happen with pre-2.8.x systems.
-		$_SESSION['user'] = new \UserModel();
-	}
-	elseif(isset(\Session::$Externals['user_forcesync'])){
-		// A force sync was requested by something that modified the original UserModel object.
-		// Keep the user logged in, but reload the data from the database.
-		$tmpuser = $_SESSION['user'];
 
-		$_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
-		unset(\Session::$Externals['user_forcesync']);
+	if($_CurrentUserAccount === null){
+		// No valid user found.
+		$_CurrentUserAccount = new \UserModel();
 	}
-
-	/** @var $user \UserModel */
-	$user = $_SESSION['user'];
 
 	// If this is in multisite mode, blank out the access string cache too!
 	// This is because siteA may have some groups, while siteB may have another.
 	// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
 	if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
-		$user->clearAccessStringCache();
+		$_CurrentUserAccount->clearAccessStringCache();
 	}
 
 	// Did this user request sudo access for another user?
-	if(isset($_SESSION['user_sudo'])){
-		$sudo = $_SESSION['user_sudo'];
+	if(Session::Get('user_sudo') !== null){
+		$sudo = Session::Get('user_sudo');
 
 		if($sudo instanceof \UserModel){
 			// It's a valid user!
 
-			if($user->checkAccess('p:/user/users/sudo')){
+			if($_CurrentUserAccount->checkAccess('p:/user/users/sudo')){
 				// This user can SUDO!
 				// (only if the other user is < SA or current == SA).
-				if($sudo->checkAccess('g:admin') && !$user->checkAccess('g:admin')){
-					unset($_SESSION['user_sudo']);
+				if($sudo->checkAccess('g:admin') && !$_CurrentUserAccount->checkAccess('g:admin')){
+					Session::UnsetKey('user_sudo');
 					\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 				}
 				else{
@@ -173,16 +183,16 @@ function user(){
 			}
 			else{
 				// This user can NOT sudo!!!
-				unset($_SESSION['user_sudo']);
+				Session::UnsetKey('user_sudo');
 				\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
 			}
 		}
 		else{
-			unset($_SESSION['user_sudo']);
+			Session::UnsetKey('user_sudo');
 		}
 	}
 
-	return $_SESSION['user'];
+	return $_CurrentUserAccount;
 }
 
 
@@ -255,8 +265,6 @@ function get_standard_http_headers($forcurl = false, $autoclose = false){
 
 /**
  * Resolve an asset to a fully-resolved URL.
- *
- * @todo Add support for external assets.
  *
  * @param string $asset
  *
@@ -370,20 +378,6 @@ function resolve_link($url) {
 	return $a['fullurl'];
 }
 
-
-/**
- * Resolve filename to ... script.
- * Useful for converting a physical filename to an accessable URL.
- * @deprecated
- */
-function ResolveFilenameTo($filename, $base = ROOT_URL){
-	// If it starts with a '/', figure out if that's the ROOT_PDIR or ROOT_DIR.
-	$file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
-	// swap the requested base onto that.
-	return $base . $file;
-	//return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $base, $filename);
-}
-
 /**
  * Redirect the user to another page via sending the Location header.
  *    Prevents any POST data from being reloaded.
@@ -405,7 +399,7 @@ function redirect($page, $code = 302){
 	// despite many systems redirecting back to "/" when there is an unexpected error or behaviour.
 	$hp = ($page == '/');
 
-	$page = \Core::ResolveLink($page);
+	$page = resolve_link($page);
 
 	if(!$page && $hp) $page = ROOT_URL;
 
@@ -466,22 +460,17 @@ function reload(){
 
 /**
  * Utility function to just go back to a page before this one.
- *
- * @param int $depth The amount of pages back to go
  */
-function go_back($depth=1) {
-	$hist = \Core::GetHistory($depth);
+function go_back() {
+	$request = page_request();
+	$history = $request->getReferrer();
 
-	if($depth == 1 && CUR_CALL == $hist){
-		// If the user requested the last page, but the last page is this page...
-		// go back to the page before that!
-		// This can happen commonly on form submissions.
-		// You display a form on page X, submit it, and request to go back,
-		// but simply displaying the same page should be done with reload.
-		$hist = \Core::GetHistory(2);
+	if($history != CUR_CALL){
+		redirect($history);
 	}
-
-	redirect($hist);
+	else{
+		reload();
+	}
 }
 
 /**
@@ -587,45 +576,14 @@ function parse_html($html){
 }
 
 /**
- * If this is called from any page, the user is forced to redirect to the SSL version if available.
- * @return void
- */
-function RequireSSL(){
-	// No ssl, nothing much to do about nothing.
-	if(!ENABLE_SSL) return;
-
-	if(!isset($_SERVER['HTTPS'])){
-		$page = ViewClass::ResolveURL($_SERVER['REQUEST_URI'], true);
-		//$page = ROOT_URL_SSL . $_SERVER['REQUEST_URI'];
-
-		header("Location:" . $page);
-		die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
-	}
-}
-
-/**
  * Return the page the user viewed x amount of pages ago based on the navigation stack.
  *
  * @param string $base The base URL to lookup history for
  * @return string
  */
 function GetNavigation($base){
-	//var_dump($_SESSION); die();
-	// NO nav history, guess I can't do much of anything...
-	if(!isset($_SESSION['nav'])) return $base;
-
-	if(!isset($_SESSION['nav'][$base])) return $base;
-
-	// Else, it must have been found!
-	$coreparams = array();
-	$extraparams = array();
-	foreach($_SESSION['nav'][$base]['parameters'] as $k => $v){
-		if(is_numeric($k)) $coreparams[] = $v;
-		else $extraparams[] = $k . '=' . $v;
-	}
-	return $base .
-		( sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
-		( sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
+	trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
+	return page_request()->getReferrer();
 }
 
 /**
@@ -633,23 +591,8 @@ function GetNavigation($base){
  *
  * @param string $page
  */
-function RecordNavigation(PageModel $page){
-	//echo "Setting navRecord.";
-	if(!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
-
-	// Get just the application base, this will contain the parameters for it.
-	// So example, if /App/SomeView/myparam?something=foo is the URL, 
-	// /App/SomeView will be able to be used to lookup the parameters.
-	$c = $page->getControllerClass();
-	// I don't need the 'Controller' part of it.
-	if(strpos($c, 'Controller') == strlen($c) - 10) $c = substr($c, 0, -10);
-
-	$base = '/' . $c . '/' . $page->getControllerMethod();
-
-	$_SESSION['nav'][$base] = array(
-		'parameters' => $page->getParameters(),
-		'time' => Time::GetCurrent(),
-	);
+function RecordNavigation(\PageModel $page){
+	trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 
 /**
@@ -661,57 +604,23 @@ function RecordNavigation(PageModel $page){
  * @return boolean (on success)
  */
 function SetMessage($messageText, $messageType = 'info'){
-
-	if(trim($messageText) == '') return;
-
-	$messageType = strtolower($messageType);
-
-	// CLI doesn't use sessions.
-	if(EXEC_MODE == 'CLI'){
-		$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
-		echo "[" . $messageType . "] - " . $messageText . "\n";
-	}
-	else{
-		if(!isset($_SESSION['message_stack'])) $_SESSION['message_stack'] = array();
-		$_SESSION['message_stack'][] = array(
-			'mtext' => $messageText,
-			'mtype' => $messageType,
-		);
-	}
+	\Core::SetMessage($messageText, $messageType);
 }
 
 function AddMessage($messageText, $messageType = 'info'){
-	Core::SetMessage($messageText, $messageType);
+	\Core::SetMessage($messageText, $messageType);
 }
 
 /**
  * Retrieve the messages and optionally clear the message stack.
  *
- * @param unknown_type $return_type
- * @return unknown
+ * @param bool $returnSorted Set to true to sort the message by message type
+ * @param bool $clearStack   Set to false to NOT clear the message stack
+ *
+ * @return array
  */
 function GetMessages($returnSorted = FALSE, $clearStack = TRUE){
-	/*
-	global $_DB;
-	global $_SESS;
-
-	$fetches = $_DB->Execute(
-		"SELECT `mtext`, `mtype` FROM `" . DB_PREFIX . "messages` WHERE `sid` = '{$_SESS->sid}'"
-	);
-
-	if($fetches->fields === FALSE) return array(); //Return a blank array, there are no messages.
-
-	foreach($fetches as $fetch){
-		$return[] = $fetch;
-	}
-	*/
-	if(!isset($_SESSION['message_stack'])) return array();
-
-	$return = $_SESSION['message_stack'];
-	if($returnSorted) $return = Core::SortByKey($return, 'mtype');
-
-	if($clearStack) unset($_SESSION['message_stack']);
-	return $return;
+	return \Core::GetMessages($returnSorted, $clearStack);
 }
 
 function SortByKey($named_recs, $order_by, $rev=false, $flags=0){

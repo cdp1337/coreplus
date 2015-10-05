@@ -42,10 +42,10 @@ class UserSocialHelper {
 	 */
 	public static function ResolveProfileLink(UserModel $user){
 		if($user->get('username')){
-			return Core::ResolveLink('/userprofile/view/' . $user->get('username'));
+			return \Core\resolve_link('/userprofile/view/' . $user->get('username'));
 		}
 		else{
-			return Core::ResolveLink('/userprofile/view/' . $user->get('id'));
+			return \Core\resolve_link('/userprofile/view/' . $user->get('id'));
 		}
 	}
 

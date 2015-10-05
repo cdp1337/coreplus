@@ -274,7 +274,37 @@ else {
 	$curcall             = $servername . $_SERVER['REQUEST_URI'];
 	$relativerequestpath = strtolower('/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR)));
 	if (strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
-	$ssl = (isset($_SERVER['HTTPS']));
+
+
+	/*
+
+	X-Forwarded-For
+	a de facto standard for identifying the originating IP address of a client connecting to a web server through an HTTP proxy or load balancer
+
+	X-Forwarded-For: client1, proxy1, proxy2
+	X-Forwarded-For: 129.78.138.66, 129.78.64.103
+
+	X-Forwarded-Host
+	a de facto standard for identifying the original host requested by the client in the Host HTTP request header,
+	since the host name and/or port of the reverse proxy (load balancer) may differ from the origin server handling the request.
+
+	X-Forwarded-Host: en.wikipedia.org:80
+	X-Forwarded-Host: en.wikipedia.org
+	*/
+
+	// @todo Implement support for trusted proxy IP addresses!
+	$ssl = (
+		// Standard header provided 99% of the time.
+		(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
+
+		// a de facto standard for identifying the originating protocol of an HTTP request,
+		// since a reverse proxy (load balancer) may communicate with a web server using HTTP even if the request to the reverse proxy is HTTPS.
+		(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ||
+
+		// Non-standard header field used by Microsoft applications and load-balancers
+		(isset($_SERVER['FRONT_END_HTTPS']) && $_SERVER['FRONT_END_HTTPS'] == 'on') ||
+		(isset($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on')
+	);
 
 	$tmpdir = $core_settings['tmp_dir_web'];
 
@@ -559,20 +589,6 @@ if (EXEC_MODE == 'WEB') {
 	try {
 		// Start loading the session.
 		// If this fails, I can always drop back to the installer, (since it probably isn't installed correctly).
-
-		ini_set('session.hash_bits_per_character', 5);
-		ini_set('session.hash_function', 1);
-		// Allow a config-set cookie domain.  This is required for xsite sessions in multimode.
-		if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
-			// A valid session name is required for xsite sessions to work. (not sure why)
-			session_name('CorePlusSession');
-			session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
-		}
-		$session = new Session();
-		// (PhpStorm 7.0 still complains about this function even though it's allowed as of PHP 5.4)
-		/** @noinspection PhpParamsInspection */
-		session_set_save_handler($session, true);
-		session_start();
 	}
 	catch (DMI_Exception $e) {
 		// There was a DMI exception... it may not have been installed.

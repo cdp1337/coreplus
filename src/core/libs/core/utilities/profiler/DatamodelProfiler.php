@@ -22,6 +22,7 @@
  */
 
 namespace Core\Utilities\Profiler;
+use Core\Session;
 
 
 /**
@@ -96,7 +97,8 @@ class DatamodelProfiler {
 	 * @return int
 	 */
 	public function readCount(){
-		return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['reads'] : 0;
+		return $this->_reads;
+		//return Session::Get('datamodel_profiler_events/reads', 0);
 	}
 
 	/**
@@ -105,7 +107,8 @@ class DatamodelProfiler {
 	 * @return int
 	 */
 	public function writeCount(){
-		return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['writes'] : 0;
+		return $this->_writes;
+		//return Session::Get('datamodel_profiler_events/writes', 0);
 	}
 
 	/**
@@ -170,30 +173,33 @@ class DatamodelProfiler {
 		$time = microtime(true) - $last['start'];
 		$timeFormatted = $this->getTimeFormatted($time);
 
-		if(!isset($_SESSION['datamodel_profiler_events'])){
-			// Record this event in the SESSION so that POST pages that redirect can still display the full query log
-			// on the next page load.  This buffer is purged on rendering the event times formatted.
-			$_SESSION['datamodel_profiler_events'] = [
-				'events' => [],
-				'reads' => 0,
-				'writes' => 0,
-			];
-		}
-		$_SESSION['datamodel_profiler_events']['events'][] = array(
-			'query'  => $last['query'],
-			'type'   => $last['type'],
-			'time'   => $timeFormatted,
-			'errno'  => null,
-			'error'  => '',
-			'caller' => $last['caller'],
-			'rows'   => $count
-		);
-
 		if($last['type'] == 'read'){
-			++$_SESSION['datamodel_profiler_events']['reads'];
+			++$this->_reads;
 		}
 		else{
-			++$_SESSION['datamodel_profiler_events']['writes'];
+			++$this->_writes;
+		}
+
+		if(DEVELOPMENT_MODE){
+			// Add this data to the SESSION if the site is currently in DEV mode.
+			$events = Session::Get('datamodel_profiler_events/events', []);
+			$events[] = array(
+				'query'  => $last['query'],
+				'type'   => $last['type'],
+				'time'   => $timeFormatted,
+				'errno'  => null,
+				'error'  => '',
+				'caller' => $last['caller'],
+				'rows'   => $count
+			);
+			Session::Set('datamodel_profiler_events/events', $events);
+
+			if($last['type'] == 'read'){
+				Session::Set('datamodel_profiler_events/reads', Session::Get('datamodel_profiler_events/reads') + 1);
+			}
+			else{
+				Session::Set('datamodel_profiler_events/writes', Session::Get('datamodel_profiler_events/writes') + 1);
+			}
 		}
 
 		if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
@@ -214,30 +220,33 @@ class DatamodelProfiler {
 		$time = microtime(true) - $last['start'];
 		$timeFormatted = $this->getTimeFormatted($time);
 
-		if(!isset($_SESSION['datamodel_profiler_events'])){
-			// Record this event in the SESSION so that POST pages that redirect can still display the full query log
-			// on the next page load.  This buffer is purged on rendering the event times formatted.
-			$_SESSION['datamodel_profiler_events'] = [
-				'events' => [],
-				'reads' => 0,
-				'writes' => 0,
-			];
-		}
-		$_SESSION['datamodel_profiler_events']['events'][] = array(
-			'query'  => $last['query'],
-			'type'   => $last['type'],
-			'time'   => $timeFormatted,
-			'errno'  => $code,
-			'error'  => $error,
-			'caller' => $last['caller'],
-			'rows'   => 0
-		);
-
 		if($last['type'] == 'read'){
-			++$_SESSION['datamodel_profiler_events']['reads'];
+			++$this->_reads;
 		}
 		else{
-			++$_SESSION['datamodel_profiler_events']['writes'];
+			++$this->_writes;
+		}
+
+		if(DEVELOPMENT_MODE) {
+			// Add this data to the SESSION if the site is currently in DEV mode.
+			$events   = Session::Get('datamodel_profiler_events/events', []);
+			$events[] = [
+				'query'  => $last['query'],
+				'type'   => $last['type'],
+				'time'   => $timeFormatted,
+				'errno'  => $code,
+				'error'  => $error,
+				'caller' => $last['caller'],
+				'rows'   => 0
+			];
+			Session::Set('datamodel_profiler_events/events', $events);
+
+			if($last['type'] == 'read') {
+				Session::Set('datamodel_profiler_events/reads', Session::Get('datamodel_profiler_events/reads') + 1);
+			}
+			else {
+				Session::Set('datamodel_profiler_events/writes', Session::Get('datamodel_profiler_events/writes') + 1);
+			}
 		}
 
 		if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
@@ -253,7 +262,7 @@ class DatamodelProfiler {
 	 * @return array
 	 */
 	public function getEvents(){
-		return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['events'] : [];
+		return Session::Get('datamodel_profiler_events/events', []);
 	}
 
 	/**
@@ -332,11 +341,7 @@ class DatamodelProfiler {
 		}
 
 		// Purge the output.
-		$_SESSION['datamodel_profiler_events'] = [
-			'events' => [],
-			'reads' => 0,
-			'writes' => 0,
-		];
+		Session::UnsetKey('datamodel_profiler_events/*');
 
 		return $out;
 	}

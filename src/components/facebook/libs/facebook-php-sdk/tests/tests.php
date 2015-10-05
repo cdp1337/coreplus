@@ -1575,7 +1575,7 @@ class PHPSDKTestCase extends PHPUnit_Framework_TestCase {
     $key = '--invalid--';
     $val = 'foo';
     $session_var_name = sprintf('fb_%s_%s', self::APP_ID, $key);
-    $_SESSION[$session_var_name] = $val;
+    \Core\Session::Set($session_var_name, $val);
     $fb->publicClearPersistentData($key);
     $this->assertTrue(array_key_exists($session_var_name, $_SESSION));
     $this->assertFalse($fb->publicGetPersistentData($key));
@@ -1675,7 +1675,7 @@ class PHPSDKTestCase extends PHPUnit_Framework_TestCase {
       self::APP_ID,
       $key
     );
-    $_SESSION[$session_var_name] = $val;
+    \Core\Session::Set($session_var_name, $val);
     $fb->publicClearPersistentData($key);
     $this->assertTrue(array_key_exists($session_var_name, $_SESSION));
     $this->assertFalse($fb->publicGetPersistentData($key));

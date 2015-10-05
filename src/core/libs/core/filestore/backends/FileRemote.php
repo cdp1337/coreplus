@@ -25,6 +25,7 @@
 
 namespace Core\Filestore\Backends;
 
+use Core\Cache;
 use Core\Filestore;
 
 
@@ -329,12 +330,12 @@ class FileRemote implements Filestore\File {
 
 			// Return a 404 image.
 			$file = Filestore\Factory::File('asset/images/mimetypes/notfound.png');
-			return $file->displayPreview($dimensions, $includeHeader);
+			$file->displayPreview($dimensions, $includeHeader);
 		}
 		else{
 			// Yay, just use the local copy to get the preview url :p
 			$file = $this->_getTmpLocal();
-			return $file->displayPreview($dimensions, $includeHeader);
+			$file->displayPreview($dimensions, $includeHeader);
 		}
 	}
 
@@ -366,6 +367,11 @@ class FileRemote implements Filestore\File {
 		return (strpos($this->_url, $path) !== false);
 	}
 
+	/**
+	 * @param Filestore\File|string $otherfile
+	 *
+	 * @return bool
+	 */
 	public function identicalTo($otherfile) {
 
 		if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
@@ -375,7 +381,9 @@ class FileRemote implements Filestore\File {
 		}
 		else {
 			// Can't be the same if it doesn't exist!
-			if (!file_exists($otherfile)) return false;
+			if (!file_exists($otherfile)){
+				return false;
+			}
 
 			$result = exec('diff -q "' . $this->_getTmpLocal()->getFilename() . '" "' . $otherfile . '"', $array, $return);
 			return ($return == 0);
@@ -684,7 +692,7 @@ class FileRemote implements Filestore\File {
 			// File exists already!  Check and see if it needs to be redownloaded.
 			if ($this->cacheable && $this->_tmplocal->exists()) {
 				// Lookup this file in the system cache.
-				$systemcachedata = \Core\Cache::Get('remotefile-cache-header-' . $f);
+				$systemcachedata = Cache::Get('remotefile-cache-header-' . $f);
 				if ($systemcachedata && isset($systemcachedata['headers'])) {
 					// I can only look them up if the cache is available.
 
@@ -750,7 +758,7 @@ class FileRemote implements Filestore\File {
 				}
 
 				// And remember this header data for nexttime.
-				\Core\Cache::Set(
+				Cache::Set(
 					'remotefile-cache-header-' . $f,
 					[
 						'headers'  => $this->_getHeaders(),

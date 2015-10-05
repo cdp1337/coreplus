@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.1.2" name="core" execmode="both">
+<component version="4.1.2" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -43,13 +43,11 @@
 		<hookregister name="/core/shutdown" description="Hooks onto the PHP shutdown_register function to be called very very last after any page execution."/>
 		<hookregister name="/core/page/search/results" description="Hook on the page search results with the search object, useful for integration with analytical libraries"/>
 		<hook name="/core/components/loaded" call="\Core\i18n\Loader::Init"/>
-		<hook name="/core/components/loaded" call="CurrentPage::Singleton"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/preexecute" call="Core::_AttachCoreJavascript"/>
 		<hook name="/core/page/error-403" call="UserController::_HookHandler403"/>
 		<hook name="/core/page/error-404" call="GettingStartedController::_HookCatch404"/>
 		<hook name="/core/page/error-404" call="RewriteMapHelper::Catch404Hook"/>
-		<hook name="/core/page/postrender" call="Core::_RecordNavigation"/>
 		<hook name="/core/page/postexecute" call="Widget_2_1::HookPageRender"/>
 		<hook name="/core/page/postrender" call="Core\User\Helper::RecordActivity"/>
 		<hook name="/cron/hourly" call="Session::CleanupExpired"/>
@@ -419,9 +417,6 @@
 		</file>
 		<file filename="core/libs/core/CoreDateTime.php" md5="3213bb356fb936d95d1411d922ff7859">
 			<class name="CoreDateTime"/>
-		</file>
-		<file filename="core/libs/core/CurrentPage.class.php" md5="6987bead76a0c21568cc2403650d0dde">
-			<class name="CurrentPage"/>
 		</file>
 		<file filename="core/libs/core/DB.class.php" md5="c1a36183ff718a8e7d4c26e92d3fff6a">
 			<class name="DB"/>

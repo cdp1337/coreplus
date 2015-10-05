@@ -15,7 +15,6 @@ require_once(ROOT_PDIR . 'core/libs/smarty/Smarty.class.php');
 //require_once(ROOT_PDIR . 'core/libs/smarty/sysplugins/smarty_internal_resource_file.php');
 //require_once(ROOT_PDIR . 'core/libs/smarty/sysplugins/smarty_cacheresource.php');
 //require_once(ROOT_PDIR . 'core/libs/smarty/sysplugins/smarty_internal_cacheresource_file.php');
-require_once(ROOT_PDIR . 'core/libs/core/CurrentPage.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/Template.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/Exception.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/TemplateInterface.php');

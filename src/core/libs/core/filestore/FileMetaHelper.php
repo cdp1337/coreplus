@@ -22,6 +22,7 @@
  */
 
 namespace Core\Filestore;
+use Core\Licenses\Factory;
 
 
 /**
@@ -135,7 +136,7 @@ class FileMetaHelper implements \ArrayAccess {
 		}
 		elseif($key == 'license'){
 			// Match this up to the value if it's available.
-			$all = \Core\Licenses\Factory::GetLicenses();
+			$all = Factory::GetLicenses();
 			if(isset($all[$value])){
 				$valuetitle = $all[$value]['title'];
 			}
@@ -443,8 +444,8 @@ class FileMetaHelper implements \ArrayAccess {
 					'</span>';
 			}
 			if($metalicense){
-				$lic = \Core\Licenses\Factory::GetLicense($metalicense->get('meta_value'));
-				$licimg = \Core::ResolveAsset('assets/images/licenses/' . $metalicense->get('meta_value') . '-sm.png');
+				$lic = Factory::GetLicense($metalicense->get('meta_value'));
+				$licimg = \Core\resolve_asset('assets/images/licenses/' . $metalicense->get('meta_value') . '-sm.png');
 
 				if($lic){
 					$metacredithtml .= ($metacredithtml ? ' ' : '') . '<a href="' . $lic['url'] . '" target="_BLANK"><img src="' . $licimg . '" alt="' . $lic['title'] . '" title="' . $lic['title'] . '"/></a>';

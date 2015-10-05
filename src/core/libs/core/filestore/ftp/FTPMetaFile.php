@@ -22,6 +22,7 @@
  */
 
 namespace Core\Filestore\FTP;
+use Core\Date\DateTime;
 use Core\Filestore\Backends\FileLocal;
 use Core\Filestore\Factory;
 
@@ -95,7 +96,7 @@ class FTPMetaFile {
 
 			if(
 				(!$this->_local->exists()) ||
-				($this->_local->exists() && $this->_local->getMTime() + 1800 < \Core\Date\DateTime::NowGMT())
+				($this->_local->exists() && $this->_local->getMTime() + 1800 < DateTime::NowGMT())
 			){
 				// Only try to open the remote file if it exists.
 				if(ftp_size($this->_ftp->getConn(), $remotefile) != -1){

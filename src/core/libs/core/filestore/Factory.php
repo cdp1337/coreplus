@@ -169,7 +169,7 @@ abstract class Factory {
 			// tmp fully resolved?
 			$file = new Backends\FileLocal($uri);
 		}
-		elseif(\Core\FTP() && EXEC_MODE == 'WEB'){
+		elseif(\Core\ftp() && EXEC_MODE == 'WEB'){
 			// Umm.... ok
 			// Still, try to use the FTP proxy files if it's enabled.
 			$file = new Backends\FileFTP($uri);

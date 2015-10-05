@@ -20,7 +20,7 @@ class FileFTPTest extends PHPUnit_Framework_TestCase {
 	protected $_ftp;
 
 	protected function setUp(){
-		$this->_ftp = \Core\FTP();
+		$this->_ftp = \Core\ftp();
 	}
 
 	/**

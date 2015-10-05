@@ -105,7 +105,7 @@ class DirectoryLocal implements Filestore\Directory {
 	}
 
 	public function isWritable() {
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 
@@ -227,7 +227,7 @@ class DirectoryLocal implements Filestore\Directory {
 	 * Delete a directory and recursively any file inside it.
 	 */
 	public function delete() {
-		$ftp    = \Core\FTP();
+		$ftp    = \Core\ftp();
 		$tmpdir = TMP_DIR;
 		if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 

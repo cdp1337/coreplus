@@ -26,7 +26,7 @@
 			else{
 				$('#formradioinput-model-default').slideUp();
 			}
-		}
+		};
 
 		$('#formselectinput-model-context').click(contextupdatefn);
 

@@ -235,7 +235,7 @@ class BlogArticleModel extends Model {
 			return $this->get('link');
 		}
 		else{
-			return Core::ResolveLink($this->get('baseurl'));
+			return \Core\resolve_link($this->get('baseurl'));
 		}
 	}
 

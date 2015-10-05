@@ -105,7 +105,7 @@ function smarty_function_file_thumbnail($params, $smarty){
 		else{
 			// Larger files should be rendered independently.
 			// This causes each image to be longer, but should not cause a script timeout.
-			$attributes['src'] = Core::ResolveLink('/File/Preview/' . $file->getFilenameHash() . '?size=' . $d);
+			$attributes['src'] = \Core\resolve_link('/file/preview/' . $file->getFilenameHash() . '?size=' . $d);
 		}
 	}
 	else{

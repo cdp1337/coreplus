@@ -208,7 +208,7 @@ class UpdaterController extends Controller_2_1 {
 		$site = new UpdateSiteModel();
 
 		$form = Form::BuildFromModel($site);
-		$form->set('action', Core::ResolveLink('/updater/repos/add'));
+		$form->set('action', \Core\resolve_link('/updater/repos/add'));
 		$form->addElement('submit', array('value' => 'Next'));
 
 		$view->title = 'Add Repo';
@@ -263,7 +263,7 @@ class UpdaterController extends Controller_2_1 {
 
 			// From here on out, populate the previous form with this new model.
 			$form = Form::BuildFromModel($model);
-			$form->set('action', Core::ResolveLink('/updater/repos/add'));
+			$form->set('action', \Core\resolve_link('/updater/repos/add'));
 			$form->addElement('submit', array('value' => 'Next'));
 			$view->assign('form', $form);
 

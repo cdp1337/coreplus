@@ -47,12 +47,12 @@ class FormController extends Controller_2_1 {
 		}
 
 		// Lookup that form!
-		if(!isset($_SESSION['FormData'][ $formid ])){
+		if(\Core\Session::Get('FormData/' . $formid) === null){
 			return View::ERROR_NOTFOUND;
 		}
 
 		/** @var $form Form */
-		$form = unserialize($_SESSION['FormData'][ $formid ]);
+		$form = unserialize(\Core\Session::Get('FormData/' . $formid));
 
 		if(!$form){
 			return View::ERROR_NOTFOUND;
@@ -93,12 +93,12 @@ class FormController extends Controller_2_1 {
 		}
 
 		// Lookup that form!
-		if(!isset($_SESSION['FormData'][ $formid ])){
+		if(\Core\Session::Get('FormData/' . $formid) === null){
 			return View::ERROR_NOTFOUND;
 		}
 
 		/** @var $form Form */
-		$form = unserialize($_SESSION['FormData'][ $formid ]);
+		$form = unserialize(\Core\Session::Get('FormData/' . $formid));
 
 		if(!$form){
 			return View::ERROR_NOTFOUND;

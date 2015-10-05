@@ -37,13 +37,13 @@ class MultiFileInput extends FormElement {
 		// This is a slightly different element than the traditional form system, as it must be able to be called without
 		// the rest of the form system on submit.
 		// This is because this system will do an ajax submit to do the actual upload.
-		if(!(isset($_SESSION['multifileinputobjects']) && is_array($_SESSION['multifileinputobjects']))){
-			$_SESSION['multifileinputobjects'] = array();
+		if(!is_array(\Core\Session::Get('multifileinputobjects'))){
+			\Core\Session::Set('multifileinputobjects', []);
 		}
 
 		// I don't need this key to be cryptographically secure, just generally unique.
 		$key = md5(serialize($this->_attributes));
-		foreach($_SESSION['multifileinputobjects'] as $obj){
+		foreach(\Core\Session::Get('multifileinputobjects') as $obj){
 			if(!isset($obj['key'])) continue;
 			if($obj['key'] == $key){
 				$this->set('id', $obj['id']);
@@ -74,6 +74,7 @@ class MultiFileInput extends FormElement {
 		}
 		$this->set('maxsize', $size);
 
+		// Now that the session variable has been initialized, the traditional session variable is reliable.
 		$_SESSION['multifileinputobjects'][$key] = array(
 			//'expire' => (Time::GetCurrent() + 3600),
 			'obj' => serialize($this),

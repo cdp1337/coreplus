@@ -264,14 +264,6 @@ class PageRequest {
 			$view->error = View::ERROR_NOTFOUND;
 			return;
 		}
-		elseif (is_a($component, 'Component')) {
-			// It's a 1.0 style component...
-			CurrentPage::Render();
-			die();
-		}
-		//elseif (is_a($component, 'Component_2_1')) {
-		//	$this->_pageview = $view = $request->execute();
-		//}
 		elseif(!is_a($component, 'Component_2_1')) {
 			$view->error = View::ERROR_NOTFOUND;
 			return;
@@ -315,16 +307,7 @@ class PageRequest {
 		}
 
 		if($page->get('password_protected')) {
-			if(!isset($_SESSION['page-password-protected'])) {
-				$_SESSION['page-password-protected'] = [];
-			}
-
-			if (!isset($_SESSION['page-password-protected'][$page->get('baseurl')])) {
-				$_SESSION['page-password-protected'][$page->get('baseurl')] = '';
-			}
-
-			if ($_SESSION['page-password-protected'][$page->get('baseurl')] !== $page->get('password_protected')) {
-
+			if(\Core\Session::Get('page-password-protected/' . $page->get('baseurl')) !== $page->get('password_protected')){
 				$view->templatename = '/pages/page/passwordprotected.tpl';
 
 				$form = new Form();
@@ -780,7 +763,7 @@ class PageRequest {
 			// Only cache and provide caching for GET requests.
 			$cacheable = 'Request is not a GET';
 		}
-		elseif(!$this->getView()->cacheable){
+		elseif(!$this->getView()->isCacheable()){
 			// If the view is explicitly set as not cacheable, then don't cache the view!
 			$cacheable = 'Page explicitly set as not cacheable';
 		}
@@ -1004,6 +987,21 @@ class PageRequest {
 		return new \Core\UserAgent($this->useragent);
 	}
 
+	/**
+	 * Get the referrer of this request, based on $_SERVER information.
+	 *
+	 * @return string
+	 */
+	public function getReferrer(){
+		if(isset($_SERVER['HTTP_REFERER'])){
+			return $_SERVER['HTTP_REFERER'];
+		}
+		else{
+			// Not available?.. Just return the root URL.
+			return ROOT_URL;
+		}
+	}
+
 
 	private function _resolveMethod() {
 		// Make sure it's a valid METHOD... don't know what else it could be, but...
@@ -1139,10 +1137,7 @@ class PageRequest {
 			return false;
 		}
 		else {
-			if(!isset($_SESSION['page-password-protected'])){
-				$_SESSION['page-password-protected'] = [];
-			}
-			$_SESSION['page-password-protected'][ $page->get('baseurl') ] = $val;
+			\Core\Session::Set('page-password-protected/' . $page->get('baseurl'), $val);
 			return true;
 		}
 

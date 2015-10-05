@@ -22,6 +22,8 @@
  */
 
 namespace Core\User;
+use Core\Filestore\Factory;
+use Core\Session;
 
 
 /**
@@ -69,10 +71,10 @@ abstract class ImportHelper {
 		$el = $form->getElement('file');
 		$file = $el->getFile();
 
-		$_SESSION['user-import'] = array(
+		Session::Set('user-import', [
 			'file' => $file->getFilename(),
 			'key' => \Core\random_hex(10),
-		);
+		]);
 		return true;
 	}
 
@@ -83,8 +85,8 @@ abstract class ImportHelper {
 	 * @return bool
 	 */
 	public static function FormHandler2(\Form $form) {
-		$filename = $_SESSION['user-import']['file'];
-		$file = \Core\Filestore\Factory::File($filename);
+		$filename = Session::Get('user-import/file');
+		$file = Factory::File($filename);
 		/** @var $contents \Core\Filestore\Contents\ContentCSV */
 		$contents = $file->getContentsObject();
 
@@ -107,8 +109,8 @@ abstract class ImportHelper {
 		$groups = $form->getElement('groups[]')->get('value');
 
 		// And keep a log of the bad transfers and some other data.
-		$_SESSION['user-import']['counts'] = ['created' => 0, 'updated' => 0, 'failed' => 0, 'skipped' => 0];
-		$_SESSION['user-import']['fails'] = array();
+		$counts = ['created' => 0, 'updated' => 0, 'failed' => 0, 'skipped' => 0];
+		Session::Set('user-import/fails', []);
 
 		$incoming = $contents->parse();
 		foreach($incoming as $record){
@@ -121,7 +123,7 @@ abstract class ImportHelper {
 
 				// No email, NO IMPORT!
 				if(!$dat['email']){
-					$_SESSION['user-import']['counts']['skipped']++;
+					$counts['skipped']++;
 					continue;
 				}
 
@@ -129,7 +131,7 @@ abstract class ImportHelper {
 				$existing = \UserModel::Find(['email = ' . $dat['email'] ], 1);
 				if($existing && !$merge){
 					// Skip existing records.
-					$_SESSION['user-import']['counts']['skipped']++;
+					$counts['skipped']++;
 				}
 				elseif($existing){
 					// Update!
@@ -137,10 +139,10 @@ abstract class ImportHelper {
 					$existing->setGroups($groups);
 
 					if($existing->save()){
-						$_SESSION['user-import']['counts']['updated']++;
+						$counts['updated']++;
 					}
 					else{
-						$_SESSION['user-import']['counts']['skipped']++;
+						$counts['skipped']++;
 					}
 				}
 				else{
@@ -148,7 +150,7 @@ abstract class ImportHelper {
 					$new->setFromArray($dat);
 					$new->setGroups($groups);
 					$new->save();
-					$_SESSION['user-import']['counts']['created']++;
+					$counts['created']++;
 				}
 			}
 			catch(\Exception $e){
@@ -157,6 +159,8 @@ abstract class ImportHelper {
 			}
 			//
 		}
+
+		Session::Set('user-import/counts', $counts);
 
 		return true;
 	}

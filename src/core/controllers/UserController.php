@@ -500,7 +500,7 @@ class UserController extends Controller_2_1{
 	public function logout(){
 		$view = $this->getView();
 
-		Session::DestroySession();
+		\Core\Session::DestroySession();
 		\core\redirect('/');
 	}
 
@@ -552,7 +552,7 @@ class UserController extends Controller_2_1{
 						'1 week',
 						['type' => 'password-reset', 'user' => $user->get('id')]
 					);
-					$setpasswordlink = Core::ResolveLink('/datastoreauth/forgotpassword?e=' . urlencode($user->get('email')) . '&n=' . $nonce);
+					$setpasswordlink = \Core\resolve_link('/datastoreauth/forgotpassword?e=' . urlencode($user->get('email')) . '&n=' . $nonce);
 				}
 				else{
 					$setpasswordlink = null;
@@ -561,7 +561,7 @@ class UserController extends Controller_2_1{
 				$email->assign('user', $user);
 				$email->assign('sitename', SITENAME);
 				$email->assign('rooturl', ROOT_URL);
-				$email->assign('loginurl', Core::ResolveLink('/user/login'));
+				$email->assign('loginurl', \Core\resolve_link('/user/login'));
 				$email->assign('setpasswordlink', $setpasswordlink);
 				$email->setSubject('Welcome to ' . SITENAME);
 				$email->templatename = 'emails/user/activation.tpl';
@@ -639,10 +639,10 @@ class UserController extends Controller_2_1{
 				return View::ERROR_NOTFOUND;
 			}
 
-			$_SESSION['user_sudo'] = $model;
+			\Core\Session::Set('user_sudo', $model);
 		}
-		elseif(isset($_SESSION['user_sudo'])){
-			unset($_SESSION['user_sudo']);
+		elseif(\Core\Session::Get('user_sudo') !== null){
+			\Core\Session::UnsetKey('user_sudo');
 		}
 
 		\Core\redirect('/');
@@ -661,13 +661,11 @@ class UserController extends Controller_2_1{
 		$view->addBreadcrumb('User Administration', '/user/admin');
 		$view->title = 'Import Users';
 
-		if(!isset($_SESSION['user-import'])) $_SESSION['user-import'] = array();
-
-		if(isset($_SESSION['user-import']['counts'])){
+		if(\Core\Session::Get('user-import/counts') !== null){
 			// Counts array is present... show the results page.
 			$this->_import3();
 		}
-		elseif(isset($_SESSION['user-import']['file']) && file_exists($_SESSION['user-import']['file'])){
+		elseif(\Core\Session::Get('user-import/file') !== null && file_exists(\Core\Session::Get('user-import/file'))){
 			// The file is set, that's step two.
 			$this->_import2();
 		}
@@ -680,7 +678,7 @@ class UserController extends Controller_2_1{
 	 * Link to abort the import process.
 	 */
 	public function import_cancel(){
-		unset($_SESSION['user-import']);
+		\Core\Session::UnsetKey('user-import/*');
 		\core\redirect('/user/import');
 	}
 
@@ -717,13 +715,13 @@ class UserController extends Controller_2_1{
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		$filename = $_SESSION['user-import']['file'];
+		$filename = \Core\Session::Get('user-import/file');
 		$file = \Core\Filestore\Factory::File($filename);
 		$contents = $file->getContentsObject();
 
 		if(!$contents instanceof \Core\Filestore\Contents\ContentCSV){
 			Core::SetMessage($file->getBaseFilename() . ' does not appear to be a valid CSV file!', 'error');
-			unset($_SESSION['user-import']['file']);
+			\Core\Session::UnsetKey('user-import/file');
 			\Core\reload();
 		}
 
@@ -754,7 +752,7 @@ class UserController extends Controller_2_1{
 
 		$form = new Form();
 		$form->set('callsmethod', 'User\\ImportHelper::FormHandler2');
-		$form->addElement('system', ['name' => 'key', 'value' => $_SESSION['user-import']['key']]);
+		$form->addElement('system', ['name' => 'key', 'value' => \Core\Session::Get('user-import/key')]);
 		$form->addElement(
 			'checkbox',
 			[
@@ -838,10 +836,10 @@ class UserController extends Controller_2_1{
 		$request = $this->getPageRequest();
 
 		$view->templatename = 'pages/user/import3.tpl';
-		$view->assign('count', $_SESSION['user-import']['counts']);
-		$view->assign('fails', $_SESSION['user-import']['fails']); // @todo Implement this
+		$view->assign('count', \Core\Session::Get('user-import/counts', 0));
+		$view->assign('fails', \Core\Session::Get('user-import/fails', 0)); // @todo Implement this
 
-		unset($_SESSION['user-import']);
+		\Core\Session::UnsetKey('user-import/*');
 	}
 
 

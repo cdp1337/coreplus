@@ -47,10 +47,13 @@ class PackageRepositoryController extends Controller_2_1 {
 		}
 		else{
 			$view->error = $error['status'];
+			$view->allowerrors = true;
 		}
 
 		$view->title = 'Package Repository';
+		$view->templatename = 'pages/packagerepository/index.tpl';
 		$view->assign('error', $error);
+		$view->assign('is_admin', \Core\user()->checkAccess('g:admin'));
 	}
 
 	public function download(){
@@ -98,7 +101,36 @@ class PackageRepositoryController extends Controller_2_1 {
 	}
 
 	public function config(){
-		// @todo Config options for repos
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view = $this->getView();
+
+		$keys = [
+				'/package_repository/base_directory',
+				'/package_repository/is_private',
+				'/package_repository/description',
+				'/package_repository/auto_ip_restrict',
+		];
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
+
+		foreach($keys as $k){
+			$c = ConfigHandler::GetConfig($k);
+			$f = $c->asFormElement();
+			// Don't need them grouped
+			$f->set('group', '');
+			$form->addElement($f);
+		}
+
+		$form->addElement('submit', ['value' => 'Save Options']);
+
+		$view->title = 'Package Repository Configuration';
+		$view->mastertemplate = 'admin';
+		$view->assign('form', $form);
 	}
 
 	/**
@@ -255,7 +287,7 @@ class PackageRepositoryController extends Controller_2_1 {
 			$fullpath = $file->getFilename();
 			// Used in the XML file.
 			if($private){
-				$relpath = Core::ResolveLink('/packagerepository/download?file=' . substr($file->getFilename(), strlen($dir->getPath())));
+				$relpath = \Core\resolve_link('/packagerepository/download?file=' . substr($file->getFilename(), strlen($dir->getPath())));
 			}
 			else{
 				$relpath = $file->getFilename(ROOT_PDIR);

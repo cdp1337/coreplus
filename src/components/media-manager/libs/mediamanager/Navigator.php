@@ -199,7 +199,7 @@ class Navigator {
 			return \View::ERROR_ACCESSDENIED;
 		}
 
-		$resolved = \Core::ResolveLink($this->_baseurl);
+		$resolved = \Core\resolve_link($this->_baseurl);
 		// Tack on the system-defined uri-based options.
 		$resolved .= (strpos($resolved, '?') === false ? '?' : '&') . 'controls=' . ($this->usecontrols ? '1' : '0') . '&uploader=' . ($this->useuploader ? '1' : '0');
 		// This is meant to be called from most of the change directory methods, so it needs to drop that argument.
@@ -313,7 +313,7 @@ class Navigator {
 		// Only certain people are allowed the rights to upload here.
 		if($this->canupload && $this->useuploader){
 			$uploadform = new \Form();
-			//$uploadform->set('action', \Core::ResolveLink('/mediamanagernavigator/upload'));
+			//$uploadform->set('action', \Core\resolve_link('/mediamanagernavigator/upload'));
 			$uploadform->addElement(
 				'multifile',
 				array(

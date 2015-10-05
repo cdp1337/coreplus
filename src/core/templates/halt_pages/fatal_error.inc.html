@@ -4,11 +4,52 @@
 		<title>Error with the site</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<style>
+			body {
+				max-width: 800px;
+				margin: 0 auto;
+				-webkit-font-feature-settings: "kern", "liga", "frac", "pnum";
+				-moz-font-feature-settings: "kern", "liga", "frac", "pnum";
+				-ms-font-feature-settings: "kern", "liga", "frac", "pnum";
+				font-feature-settings: "kern", "liga", "frac", "pnum";
+				-webkit-font-smoothing: antialiased;
+				background-color: white;
+				color: #333;
+				font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+				font-size: 1em;
+				line-height: 1.5;
+			}
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6 {
+				font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
+				line-height: 1.25;
+				margin: 0;
+			}
+			/* line 50, ../scss/vendor/bitters/_typography.scss */
+			a {
+				-webkit-transition: color 0.1s linear;
+				-moz-transition: color 0.1s linear;
+				transition: color 0.1s linear;
+				color: #477DCA;
+				text-decoration: none;
+			}
+			/* line 55, ../scss/vendor/bitters/_typography.scss */
+			a:hover {
+				color: #2c5999;
+			}
+			/* line 59, ../scss/vendor/bitters/_typography.scss */
+			a:active, a:focus {
+				color: #2c5999;
+				outline: none;
+			}
 			.message-error {
-				background:#FCe5ed;
+				background: #fff0f5;
 				border:1px solid #BC606D;
-				color:#DF101D;
-				padding: 0.5em;
+				color: #a20c15;
+				padding: 0.75em;
 			}
 
 			table.stacktrace {
@@ -36,14 +77,18 @@
 		</style>
 	</head>
 	<body>
-		<p>There seems to be a problem with this site.  Please check back in a few minutes.</p>
+		<h1>Oops! Please Pardon The Hiccup.</h1>
+		<p class="message-error">There seems to be a problem with the site at the moment.  Please check back in a few minutes.</p>
 
+
+		<p>
+			While we get this sorted out, care for a game of Tic Tac Toe or maybe some <a href="https://duckduckgo.com/?q=pictures+of+kittens&amp;t=canonical&amp;ia=images&amp;iax=1" target="_blank">kittens</a>?
+		</p>
 		<fieldset id="ox-wrapper">
-			<legend> In the meanwhile... </legend>
 			<div id="ox"></div>
 		</fieldset>
 
-
+		<br/><br/>
 		<em>If you are the administrator for this site, there should be a report of this issue located in logs/error.log</em>
 
 

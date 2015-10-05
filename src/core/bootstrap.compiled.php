@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 18 Sep 2015 20:59:29 -0400
+ * @compiled Mon, 05 Oct 2015 02:30:26 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -165,6 +165,7 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/utilities/profiler/DatamodelProfiler.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Utilities\Profiler {
+use Core\Session;
 class DatamodelProfiler {
 private $_name;
 private $_events = [];
@@ -179,10 +180,10 @@ self::$_DefaultProfiler = $this;
 }
 }
 public function readCount(){
-return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['reads'] : 0;
+return $this->_reads;
 }
 public function writeCount(){
-return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['writes'] : 0;
+return $this->_writes;
 }
 public function start($type, $query){
 if(FULL_DEBUG || (DEVELOPMENT_MODE && sizeof($this->_events) < 40)){
@@ -225,14 +226,15 @@ return;
 $last = array_pop($this->_last);
 $time = microtime(true) - $last['start'];
 $timeFormatted = $this->getTimeFormatted($time);
-if(!isset($_SESSION['datamodel_profiler_events'])){
-$_SESSION['datamodel_profiler_events'] = [
-'events' => [],
-'reads' => 0,
-'writes' => 0,
-];
+if($last['type'] == 'read'){
+++$this->_reads;
 }
-$_SESSION['datamodel_profiler_events']['events'][] = array(
+else{
+++$this->_writes;
+}
+if(DEVELOPMENT_MODE){
+$events = Session::Get('datamodel_profiler_events/events', []);
+$events[] = array(
 'query'  => $last['query'],
 'type'   => $last['type'],
 'time'   => $timeFormatted,
@@ -241,11 +243,13 @@ $_SESSION['datamodel_profiler_events']['events'][] = array(
 'caller' => $last['caller'],
 'rows'   => $count
 );
+Session::Set('datamodel_profiler_events/events', $events);
 if($last['type'] == 'read'){
-++$_SESSION['datamodel_profiler_events']['reads'];
+Session::Set('datamodel_profiler_events/reads', Session::Get('datamodel_profiler_events/reads') + 1);
 }
 else{
-++$_SESSION['datamodel_profiler_events']['writes'];
+Session::Set('datamodel_profiler_events/writes', Session::Get('datamodel_profiler_events/writes') + 1);
+}
 }
 if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
@@ -260,14 +264,15 @@ return;
 $last = array_pop($this->_last);
 $time = microtime(true) - $last['start'];
 $timeFormatted = $this->getTimeFormatted($time);
-if(!isset($_SESSION['datamodel_profiler_events'])){
-$_SESSION['datamodel_profiler_events'] = [
-'events' => [],
-'reads' => 0,
-'writes' => 0,
-];
+if($last['type'] == 'read'){
+++$this->_reads;
 }
-$_SESSION['datamodel_profiler_events']['events'][] = array(
+else{
+++$this->_writes;
+}
+if(DEVELOPMENT_MODE) {
+$events   = Session::Get('datamodel_profiler_events/events', []);
+$events[] = [
 'query'  => $last['query'],
 'type'   => $last['type'],
 'time'   => $timeFormatted,
@@ -275,12 +280,14 @@ $_SESSION['datamodel_profiler_events']['events'][] = array(
 'error'  => $error,
 'caller' => $last['caller'],
 'rows'   => 0
-);
-if($last['type'] == 'read'){
-++$_SESSION['datamodel_profiler_events']['reads'];
+];
+Session::Set('datamodel_profiler_events/events', $events);
+if($last['type'] == 'read') {
+Session::Set('datamodel_profiler_events/reads', Session::Get('datamodel_profiler_events/reads') + 1);
 }
-else{
-++$_SESSION['datamodel_profiler_events']['writes'];
+else {
+Session::Set('datamodel_profiler_events/writes', Session::Get('datamodel_profiler_events/writes') + 1);
+}
 }
 if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
@@ -289,7 +296,7 @@ if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
 }
 }
 public function getEvents(){
-return isset($_SESSION['datamodel_profiler_events']) ? $_SESSION['datamodel_profiler_events']['events'] : [];
+return Session::Get('datamodel_profiler_events/events', []);
 }
 public function getTimeFormatted($time){
 if($time < 0.001){
@@ -340,11 +347,7 @@ $time,
 htmlentities($query, ENT_QUOTES | ENT_HTML5)
 );
 }
-$_SESSION['datamodel_profiler_events'] = [
-'events' => [],
-'reads' => 0,
-'writes' => 0,
-];
+Session::UnsetKey('datamodel_profiler_events/*');
 return $out;
 }
 public static function GetDefaultProfiler(){
@@ -1935,8 +1938,8 @@ self::$_Interface = new DMI();
 if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 $cs = ConfigHandler::LoadConfigFile("configuration");
 }
-elseif(isset($_SESSION['configs'])){
-$cs = $_SESSION['configs'];
+elseif(\Core\Session::Get('configs/*') !== null){
+$cs = \Core\Session::Get('configs/*');
 }
 else{
 throw new DMI_Exception('No database settings defined for the DMI');
@@ -3615,29 +3618,31 @@ return $date->format($format);
 
 
 ### REQUIRE_ONCE FROM core/libs/core/Session.class.php
-class Session implements SessionHandlerInterface {
+} // ENDING GLOBAL NAMESPACE
+namespace Core {
+class Session implements \SessionHandlerInterface {
 public static $Instance;
 public static $Externals = [];
+private static $_IsReady = false;
 public function __construct(){
-if(self::$Instance === null){
-self::$Instance = $this;
-}
 }
 public function close() {
 return true;
 }
 public function open($save_path, $session_id) {
-HookHandler::DispatchHook('/core/session/ready');
+\HookHandler::DispatchHook('/core/session/ready');
+self::$_IsReady = true;
 return true;
 }
 public function destroy($session_id) {
-$dataset = new Core\Datamodel\Dataset();
+$dataset = new Datamodel\Dataset();
 $dataset->table('session');
 $dataset->where('session_id = ' . $session_id);
 $dataset->where('ip_addr = ' . REMOTE_IP);
 $dataset->delete();
 $dataset->execute();
 $_SESSION = null;
+self::$_IsReady = false;
 return true;
 }
 public function read($session_id) {
@@ -3659,10 +3664,10 @@ $model = self::_GetModel(session_id());
 $model->set('user_id', $u->get('id'));
 $model->save();
 if(isset($_SESSION['user_sudo'])){
-$_SESSION['user_sudo'] = $u;
+Session::Set('user_sudo', $u);
 }
 else{
-$_SESSION['user'] = $u;
+Session::Set('user', $u);
 }
 }
 public static function DestroySession(){
@@ -3674,25 +3679,96 @@ public static function ForceSave(){
 }
 public static function CleanupExpired(){
 static $lastexecuted = 0;
-$ttl = ConfigHandler::Get('/core/session/ttl');
-$datetime = (Time::GetCurrentGMT() - $ttl);
+$ttl = \ConfigHandler::Get('/core/session/ttl');
+$datetime = (\Time::GetCurrentGMT() - $ttl);
 if($lastexecuted == $datetime){
 return true;
 }
-$dataset = new Core\Datamodel\Dataset();
+$dataset = new Datamodel\Dataset();
 $dataset->table('session');
 $dataset->where('updated < ' . $datetime);
 $dataset->delete()->execute();
 $lastexecuted = $datetime;
 return true;
 }
+public static function Get($key, $default = null){
+if(strpos($key, '/*') !== false){
+$default = [];
+}
+if(sizeof($_COOKIE) == 0){
+return $default;
+}
+self::_GetInstance();
+if(strpos($key, '/*') !== false){
+$sub = substr($key, 0, strpos($key, '/*'));
+foreach($_SESSION as $k => $v){
+if($k == $sub){
+return $_SESSION[$k];
+}
+}
+}
+return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
+}
+public static function Set($key, $value){
+self::_GetInstance();
+if(strpos($key, '/') !== false){
+$sub = substr($key, 0, strpos($key, '/'));
+$spr = substr($key, strlen($sub) + 1);
+if(!isset($_SESSION[$sub])){
+$_SESSION[$sub] = [];
+}
+$_SESSION[$sub][$spr] = $value;
+}
+else{
+$_SESSION[$key] = $value;
+}
+}
+public static function UnsetKey($key){
+if(sizeof($_COOKIE) == 0){
+return;
+}
+self::_GetInstance();
+if($key === '*'){
+$_SESSION = [];
+}
+elseif(strpos($key, '/*') !== false){
+$sub = substr($key, 0, strpos($key, '/*'));
+foreach($_SESSION as $k => $v){
+if($k == $sub){
+unset($_SESSION[$k]);
+}
+}
+}
+elseif(isset($_SESSION[$key])){
+unset($_SESSION[$key]);
+}
+}
+private static function _GetInstance(){
+if(self::$Instance === null){
+ini_set('session.hash_bits_per_character', 5);
+ini_set('session.hash_function', 1);
+if(!defined('SESSION_COOKIE_NAME')){
+define('SESSION_COOKIE_NAME', 'CorePlusSession');
+}
+session_name(SESSION_COOKIE_NAME);
+if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
+session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
+}
+self::$Instance = new Session();
+session_set_save_handler(self::$Instance, true);
+session_start();
+}
+return self::$Instance;
+}
 private static function _GetModel($session_id) {
-$model = new SessionModel($session_id);
+$model = new \SessionModel($session_id);
 $model->set('ip_addr', REMOTE_IP);
 return $model;
 }
 }
+} // ENDING NAMESPACE Core
 
+namespace  {
 
 ### REQUIRE_ONCE FROM core/models/ComponentModel.class.php
 class ComponentModel extends Model {
@@ -4844,12 +4920,9 @@ return null;
 }
 }
 elseif (class_exists($controller)) {
-switch (true) {
-case is_subclass_of($controller, 'Controller_2_1'):
-case is_subclass_of($controller, 'Controller'):
-$controller = $controller;
-break;
-default:
+if(!
+(is_subclass_of($controller, 'Controller_2_1') || is_subclass_of($controller, 'Controller'))
+){
 return null;
 }
 }
@@ -5122,7 +5195,7 @@ return parent::get($k);
 }
 public function set($k, $v) {
 if ($k == 'data') {
-return $this->setData($v);
+$this->setData($v);
 } else {
 parent::set($k, $v);
 }
@@ -6438,7 +6511,7 @@ $opts['type'] = 'text';
 break;
 }
 }
-if($opts['type'] == 'select' || $opts['type'] == 'checkboxes'){
+if(($opts['type'] == 'select' || $opts['type'] == 'checkboxes') && trim($this->get('options'))){
 $opts['options'] =  array_map('trim', explode('|', $this->get('options')));
 }
 if($opts['type'] == 'radio'){
@@ -6653,12 +6726,9 @@ return null;
 }
 }
 elseif (class_exists($controller)) {
-switch (true) {
-case is_subclass_of($controller, 'Widget_2_1'):
-case is_subclass_of($controller, 'Widget'):
-$controller = $controller;
-break;
-default:
+if(!
+(is_subclass_of($controller, 'Widget_2_1') || is_subclass_of($controller, 'Widget'))
+){
 return null;
 }
 }
@@ -7778,8 +7848,12 @@ SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $thi
 }
 return $changes;
 }
-public function upgrade($next = false) {
-if (!$this->isInstalled()) return false;
+public function upgrade($next = false, $verbose = false) {
+if (!$this->isInstalled()){
+if($verbose) CLI::PrintDebug('Skipping ' . $this->getName() . ' as it is marked as uninstalled.');
+return false;
+}
+if($verbose) CLI::PrintHeader('Beginning upgrade for ' . $this->getName());
 $changes = array();
 $otherchanges = $this->_performInstall();
 if ($otherchanges !== false) $changes = array_merge($changes, $otherchanges);
@@ -7791,21 +7865,24 @@ $from = $u->getAttribute('from');
 $to   = $u->getAttribute('to') ? $u->getAttribute('to') : 'next';
 if (($this->_versionDB == $from) || ($next && $from == 'next')) {
 $canBeUpgraded = true;
+if($verbose){
+CLI::PrintLine('Processing upgrade from ' . $from . ' to ' . $to);
+}
 $children = $u->childNodes;
 foreach($children as $child){
 switch($child->nodeName){
 case 'dataset':
-$datachanges = $this->_parseDatasetNode($child);
+$datachanges = $this->_parseDatasetNode($child, $verbose);
 if($datachanges !== false) $changes = array_merge($changes, $datachanges);
 break;
 case 'phpfileinclude':
-$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue));
+$this->_includeFileForUpgrade(ROOT_PDIR . trim($child->nodeValue), $verbose);
 $changes[] = 'Included custom php file ' . basename($child->nodeValue);
 break;
 case 'php':
 $file = $child->getAttribute('file');
 if($file){
-$this->_includeFileForUpgrade($this->getBaseDir() . $file);
+$this->_includeFileForUpgrade($this->getBaseDir() . $file, $verbose);
 $changes[] = 'Included custom php file ' . $file;
 }
 else{
@@ -7815,6 +7892,9 @@ break;
 case 'sql':
 $file = $child->getAttribute('file');
 if($file){
+if($verbose){
+CLI::PrintActionStart('Executing SQL statements from ' . $file);
+}
 $contents = file_get_contents($this->getBaseDir() . $file);
 $execs = 0;
 $parser = new SQL_Parser_Dataset($contents, SQL_Parser::DIALECT_MYSQL);
@@ -7822,6 +7902,9 @@ $datasets = $parser->parse();
 foreach($datasets as $ds){
 $ds->execute();
 $execs++;
+}
+if($verbose){
+CLI::PrintActionStatus(true);
 }
 $changes[] = 'Executed custom sql file ' . $file . ' and ran ' . $execs . ($execs == 1 ? ' query' : ' queries');
 }
@@ -7848,6 +7931,9 @@ $c->save();
 }
 }
 }
+}
+if(sizeof($changes) == 0 && $verbose){
+CLI::PrintLine('No changes performed.');
 }
 return (sizeof($changes)) ? $changes : false;
 }
@@ -8025,8 +8111,8 @@ $m->set('form_attributes', $formAtts);
 if ($m->get('value') === null || !$m->exists()){
 $m->set('value', $confignode->getAttribute('default'));
 }
-if (isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
-$m->set('value', $_SESSION['configs'][$key]);
+if(\Core\Session::Get('configs/' . $key) !== null){
+$m->set('value', \Core\Session::Get('configs/' . $key));
 }
 if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
 ConfigHandler::CacheConfig($m);
@@ -8223,7 +8309,7 @@ throw $e;
 }
 return sizeof($changes) ? $changes : false;
 } // private function _parseDBSchema()
-private function _parseDatasetNode(DOMElement $node){
+private function _parseDatasetNode(DOMElement $node, $verbose = false){
 $action   = $node->getAttribute('action');
 $table    = $node->getAttribute('table');
 $haswhere = false;
@@ -8267,15 +8353,23 @@ break;
 default:
 throw new InstallerException('Invalid action type, '. $action);
 }
+if($verbose){
+CLI::PrintActionStart('Executing dataset ' . $action . ' command on ' . $table);
+}
 $ds->execute();
 if($ds->num_rows){
+CLI::PrintActionStatus(true);
 return array($action . ' on table ' . $table . ' affected ' . $ds->num_rows . ' records.');
 }
 else{
+CLI::PrintActionStatus(false);
 return false;
 }
 }
-private function _includeFileForUpgrade($filename){
+private function _includeFileForUpgrade($filename, $verbose = false){
+if($verbose){
+CLI::PrintLine('Loading custom PHP file ' . $filename);
+}
 include($filename);
 }
 private function _installAssets($verbose = 0) {
@@ -8404,7 +8498,7 @@ use Cache;
 function db(){
 return DMI::GetSystemDMI()->connection();
 }
-function FTP(){
+function ftp(){
 static $ftp = null;
 if($ftp === null){
 if(!defined('FTP_USERNAME')){
@@ -8451,36 +8545,41 @@ return false;
 return $ftp;
 }
 function user(){
+static $_CurrentUserAccount = null;
 if(!class_exists('\\UserModel')){
 return null;
+}
+if($_CurrentUserAccount !== null){
+return $_CurrentUserAccount;
 }
 if(isset($_SERVER['HTTP_X_CORE_AUTH_KEY'])){
 $user = \UserModel::Find(['apikey = ' . $_SERVER['HTTP_X_CORE_AUTH_KEY']], 1);
 if($user){
-$_SESSION['user'] = $user;
+$_CurrentUserAccount = $user;
 }
 }
-elseif(!isset($_SESSION['user'])){
-$_SESSION['user'] = new \UserModel();
+elseif(Session::Get('user') instanceof \UserModel){
+if(isset(Session::$Externals['user_forcesync'])){
+$_CurrentUserAccount = \UserModel::Construct(Session::Get('user')->get('id'));
+Session::Set('user', $_CurrentUserAccount);
+unset(Session::$Externals['user_forcesync']);
 }
-elseif(!$_SESSION['user'] instanceof \UserModel){
-$_SESSION['user'] = new \UserModel();
+else{
+$_CurrentUserAccount = Session::Get('user');
 }
-elseif(isset(\Session::$Externals['user_forcesync'])){
-$tmpuser = $_SESSION['user'];
-$_SESSION['user'] = \UserModel::Construct($tmpuser->get('id'));
-unset(\Session::$Externals['user_forcesync']);
 }
-$user = $_SESSION['user'];
+if($_CurrentUserAccount === null){
+$_CurrentUserAccount = new \UserModel();
+}
 if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
-$user->clearAccessStringCache();
+$_CurrentUserAccount->clearAccessStringCache();
 }
-if(isset($_SESSION['user_sudo'])){
-$sudo = $_SESSION['user_sudo'];
+if(Session::Get('user_sudo') !== null){
+$sudo = Session::Get('user_sudo');
 if($sudo instanceof \UserModel){
-if($user->checkAccess('p:/user/users/sudo')){
-if($sudo->checkAccess('g:admin') && !$user->checkAccess('g:admin')){
-unset($_SESSION['user_sudo']);
+if($_CurrentUserAccount->checkAccess('p:/user/users/sudo')){
+if($sudo->checkAccess('g:admin') && !$_CurrentUserAccount->checkAccess('g:admin')){
+Session::UnsetKey('user_sudo');
 \SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 }
 else{
@@ -8488,15 +8587,15 @@ return $sudo;
 }
 }
 else{
-unset($_SESSION['user_sudo']);
+Session::UnsetKey('user_sudo');
 \SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
 }
 }
 else{
-unset($_SESSION['user_sudo']);
+Session::UnsetKey('user_sudo');
 }
 }
-return $_SESSION['user'];
+return $_CurrentUserAccount;
 }
 function file($filename = null){
 return \Core\Filestore\Factory::File($filename);
@@ -8583,16 +8682,12 @@ return '';
 }
 return $a['fullurl'];
 }
-function ResolveFilenameTo($filename, $base = ROOT_URL){
-$file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
-return $base . $file;
-}
 function redirect($page, $code = 302){
 if(!($code == 301 || $code == 302)){
 throw new \Exception('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
 }
 $hp = ($page == '/');
-$page = \Core::ResolveLink($page);
+$page = resolve_link($page);
 if(!$page && $hp) $page = ROOT_URL;
 if ($page == CUR_CALL) return;
 switch($code){
@@ -8632,12 +8727,15 @@ header('Location:' . CUR_CALL);
 \HookHandler::DispatchHook('/core/page/postrender');
 die('If your browser does not refresh, please <a href="' . CUR_CALL . '">Click Here</a>');
 }
-function go_back($depth=1) {
-$hist = \Core::GetHistory($depth);
-if($depth == 1 && CUR_CALL == $hist){
-$hist = \Core::GetHistory(2);
+function go_back() {
+$request = page_request();
+$history = $request->getReferrer();
+if($history != CUR_CALL){
+redirect($history);
 }
-redirect($hist);
+else{
+reload();
+}
 }
 function parse_html($html){
 $x = 0;
@@ -8698,61 +8796,21 @@ $x++;
 }
 return $html;
 }
-function RequireSSL(){
-if(!ENABLE_SSL) return;
-if(!isset($_SERVER['HTTPS'])){
-$page = ViewClass::ResolveURL($_SERVER['REQUEST_URI'], true);
-header("Location:" . $page);
-die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
-}
-}
 function GetNavigation($base){
-if(!isset($_SESSION['nav'])) return $base;
-if(!isset($_SESSION['nav'][$base])) return $base;
-$coreparams = array();
-$extraparams = array();
-foreach($_SESSION['nav'][$base]['parameters'] as $k => $v){
-if(is_numeric($k)) $coreparams[] = $v;
-else $extraparams[] = $k . '=' . $v;
+trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
+return page_request()->getReferrer();
 }
-return $base .
-( sizeof($coreparams) ? '/' . implode('/', $coreparams) : '') .
-( sizeof($extraparams) ? '?' . implode('&', $extraparams) : '');
-}
-function RecordNavigation(PageModel $page){
-if(!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
-$c = $page->getControllerClass();
-if(strpos($c, 'Controller') == strlen($c) - 10) $c = substr($c, 0, -10);
-$base = '/' . $c . '/' . $page->getControllerMethod();
-$_SESSION['nav'][$base] = array(
-'parameters' => $page->getParameters(),
-'time' => Time::GetCurrent(),
-);
+function RecordNavigation(\PageModel $page){
+trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 function SetMessage($messageText, $messageType = 'info'){
-if(trim($messageText) == '') return;
-$messageType = strtolower($messageType);
-if(EXEC_MODE == 'CLI'){
-$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
-echo "[" . $messageType . "] - " . $messageText . "\n";
-}
-else{
-if(!isset($_SESSION['message_stack'])) $_SESSION['message_stack'] = array();
-$_SESSION['message_stack'][] = array(
-'mtext' => $messageText,
-'mtype' => $messageType,
-);
-}
+\Core::SetMessage($messageText, $messageType);
 }
 function AddMessage($messageText, $messageType = 'info'){
-Core::SetMessage($messageText, $messageType);
+\Core::SetMessage($messageText, $messageType);
 }
 function GetMessages($returnSorted = FALSE, $clearStack = TRUE){
-if(!isset($_SESSION['message_stack'])) return array();
-$return = $_SESSION['message_stack'];
-if($returnSorted) $return = Core::SortByKey($return, 'mtype');
-if($clearStack) unset($_SESSION['message_stack']);
-return $return;
+return \Core::GetMessages($returnSorted, $clearStack);
 }
 function SortByKey($named_recs, $order_by, $rev=false, $flags=0){
 $named_hash = array();
@@ -9734,7 +9792,7 @@ strpos($uri, '/tmp/') === 0
 ){
 $file = new Backends\FileLocal($uri);
 }
-elseif(\Core\FTP() && EXEC_MODE == 'WEB'){
+elseif(\Core\ftp() && EXEC_MODE == 'WEB'){
 $file = new Backends\FileFTP($uri);
 }
 else{
@@ -10015,7 +10073,7 @@ if (!file_exists($this->_filename)) return null;
 return md5_file($this->_filename);
 }
 public function delete() {
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 if(
@@ -10074,7 +10132,7 @@ $this->_filename = $f;
 }
 $localfilename = $src->getLocalFilename();
 $modifiedtime = $src->getMTime();
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
@@ -10108,7 +10166,7 @@ $filename = substr($this->_filename, strlen(ROOT_PDIR));
 else{
 $filename = $this->_filename;
 }
-$ftp = \Core\FTP();
+$ftp = \Core\ftp();
 if (!ftp_put($ftp, $filename, $localfilename, FTP_BINARY)) {
 throw new \Exception(error_get_last()['message']);
 }
@@ -10263,8 +10321,12 @@ return true;
 return ($this->getHash() == $otherfile->getHash());
 }
 else {
-if (!file_exists($otherfile)) return false;
-if (!file_exists($this->_filename)) return false;
+if (!file_exists($otherfile)){
+return false;
+}
+if (!file_exists($this->_filename)){
+return false;
+}
 $result = exec('diff -q "' . $this->_filename . '" "' . $otherfile . '"', $array, $return);
 return ($return == 0);
 }
@@ -10314,7 +10376,7 @@ echo $this->getContents();
 }
 }
 public static function _Mkdir($pathname, $mode = null, $recursive = false) {
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 if ($mode === null) {
@@ -10347,7 +10409,7 @@ return true;
 }
 }
 public static function _Rename($oldpath, $newpath){
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 if(!$ftp){
 return rename($oldpath, $newpath);
 }
@@ -10358,7 +10420,7 @@ return ftp_rename($ftp, $oldpath, $newpath);
 }
 }
 public static function _PutContents($filename, $data) {
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 $mode = (defined('DEFAULT_FILE_PERMS') ? DEFAULT_FILE_PERMS : 0644);
@@ -10516,6 +10578,7 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/filestore/ftp/FTPConnection.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore\FTP {
+use Core\Date\DateTime;
 class FTPConnection {
 private $conn;
 public $username;
@@ -10563,7 +10626,7 @@ if($this->host == '127.0.0.1'){
 $this->isLocal = true;
 }
 $this->connected = true;
-$this->lastSave = \Core\Date\DateTime::NowGMT();
+$this->lastSave = DateTime::NowGMT();
 self::$_OpenConnections[] = $this;
 if(sizeof(self::$_OpenConnections) == 1){
 \HookHandler::AttachToHook('/core/shutdown', '\\Core\\Filestore\\FTP\\FTPConnection::ShutdownHook');
@@ -10623,10 +10686,10 @@ $this->metaFiles[$directory] = new FTPMetaFile($directory, $this);
 return $this->metaFiles[$directory];
 }
 private function _syncMetas(){
-if($this->lastSave + 25 >= \Core\Date\DateTime::NowGMT()){
+if($this->lastSave + 25 >= DateTime::NowGMT()){
 return;
 }
-$this->lastSave = \Core\Date\DateTime::NowGMT();
+$this->lastSave = DateTime::NowGMT();
 foreach($this->metaFiles as $file){
 $file->saveMetas();
 }
@@ -10646,6 +10709,7 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/filestore/ftp/FTPMetaFile.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore\FTP {
+use Core\Date\DateTime;
 use Core\Filestore\Backends\FileLocal;
 use Core\Filestore\Factory;
 class FTPMetaFile {
@@ -10667,7 +10731,7 @@ $f = md5($remotefile);
 $this->_local = Factory::File('tmp/remotefile-cache/' . $f);
 if(
 (!$this->_local->exists()) ||
-($this->_local->exists() && $this->_local->getMTime() + 1800 < \Core\Date\DateTime::NowGMT())
+($this->_local->exists() && $this->_local->getMTime() + 1800 < DateTime::NowGMT())
 ){
 if(ftp_size($this->_ftp->getConn(), $remotefile) != -1){
 $this->_local->putContents('');
@@ -10775,7 +10839,7 @@ if($ftpobject !== null){
 $this->_ftp = $ftpobject;
 }
 else{
-$this->_ftp = \Core\FTP();
+$this->_ftp = \Core\ftp();
 }
 if($filename){
 $this->setFilename($filename);
@@ -11203,6 +11267,7 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/filestore/backends/FileRemote.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Filestore\Backends {
+use Core\Cache;
 use Core\Filestore;
 class FileRemote implements Filestore\File {
 public $username = null;
@@ -11326,11 +11391,11 @@ public function displayPreview($dimensions = "300x300", $includeHeader = true) {
 if (!$this->exists()) {
 error_log('File not found [ ' . $this->_url . ' ]', E_USER_NOTICE);
 $file = Filestore\Factory::File('asset/images/mimetypes/notfound.png');
-return $file->displayPreview($dimensions, $includeHeader);
+$file->displayPreview($dimensions, $includeHeader);
 }
 else{
 $file = $this->_getTmpLocal();
-return $file->displayPreview($dimensions, $includeHeader);
+$file->displayPreview($dimensions, $includeHeader);
 }
 }
 public function getPreviewURL($dimensions = "300x300") {
@@ -11352,7 +11417,9 @@ if (is_a($otherfile, 'File') || $otherfile instanceof Filestore\File) {
 return ($this->_getTmpLocal()->getHash() == $otherfile->getHash());
 }
 else {
-if (!file_exists($otherfile)) return false;
+if (!file_exists($otherfile)){
+return false;
+}
 $result = exec('diff -q "' . $this->_getTmpLocal()->getFilename() . '" "' . $otherfile . '"', $array, $return);
 return ($return == 0);
 }
@@ -11509,7 +11576,7 @@ $f = md5($this->getFilename());
 $needtodownload = true;
 $this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
 if ($this->cacheable && $this->_tmplocal->exists()) {
-$systemcachedata = \Core\Cache::Get('remotefile-cache-header-' . $f);
+$systemcachedata = Cache::Get('remotefile-cache-header-' . $f);
 if ($systemcachedata && isset($systemcachedata['headers'])) {
 if(isset($systemcachedata['headers']['Expires']) && strtotime($systemcachedata['headers']['Expires']) > time()){
 $needtodownload = false;
@@ -11558,7 +11625,7 @@ break;
 curl_close($curl);
 $this->_tmplocal->putContents($result);
 }
-\Core\Cache::Set(
+Cache::Set(
 'remotefile-cache-header-' . $f,
 [
 'headers'  => $this->_getHeaders(),
@@ -11635,7 +11702,7 @@ public function isReadable() {
 return is_readable($this->_path);
 }
 public function isWritable() {
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 if (!$ftp) {
@@ -11696,7 +11763,7 @@ public function getBasename() {
 return basename($this->_path);
 }
 public function delete() {
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 if(
@@ -11801,9 +11868,9 @@ if($ftpobject !== null){
 $this->_ftp = $ftpobject;
 }
 else{
-$this->_ftp = \Core\FTP();
+$this->_ftp = \Core\ftp();
 }
-if($this->_ftp == \Core\FTP()){
+if($this->_ftp == \Core\ftp()){
 $this->_islocal = true;
 }
 if (!is_null($directory)) {
@@ -11916,7 +11983,7 @@ public function getBasename() {
 return basename($this->_path);
 }
 public function delete() {
-$ftp    = \Core\FTP();
+$ftp    = \Core\ftp();
 $tmpdir = TMP_DIR;
 if ($tmpdir{0} != '/') $tmpdir = ROOT_PDIR . $tmpdir; // Needs to be fully resolved
 if(
@@ -12618,7 +12685,7 @@ if(!$this->link) return null;
 $dat = $this->otherattributes;
 if($this->confirm !== null){
 $dat['onclick'] = 'return Core.ConfirmEvent(this);';
-$dat['data-href'] = Core::ResolveLink($this->link);
+$dat['data-href'] = \Core\resolve_link($this->link);
 $dat['data-confirm'] = $this->confirm;
 $dat['href'] = '#false';
 }
@@ -12648,7 +12715,7 @@ break;
 case 'link':
 case 'url':
 case 'href': // Just for an alias of the link.
-$this->link = Core::ResolveLink($value);
+$this->link = \Core\resolve_link($value);
 break;
 case 'title':
 $this->title = $value;
@@ -12923,6 +12990,7 @@ return $data;
 } // ENDING GLOBAL NAMESPACE
 namespace Core\ErrorManagement {
 use Core\Utilities\Logger;
+use Core\Utilities\Logger\LogFile;
 function exception_handler(\Exception $e, $fatal = false){
 $type  = 'error';
 $class = $fatal ? 'error' : 'warning';
@@ -12957,7 +13025,7 @@ $log->save();
 catch(\Exception $e){
 try{
 if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-$log = new \Core\Utilities\Logger\LogFile($type);
+$log = new LogFile($type);
 $log->write($details . $errstr, $code);
 }
 else{
@@ -13056,7 +13124,7 @@ $log->save();
 catch(\Exception $e){
 try{
 if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-$log = new \Core\Utilities\Logger\LogFile($type);
+$log = new LogFile($type);
 $log->write($details . $errstr, $code);
 }
 else{
@@ -13393,6 +13461,7 @@ HookHandler::singleton();
 $preincludes_time = microtime(true);
 Core\Utilities\Logger\write_debug('Loading core system');
 ### REQUIRE_ONCE FROM core/libs/core/Core.class.php
+use Core\Session;
 class Core implements ISingleton {
 private static $instance;
 private static $_LoadedComponents = false;
@@ -13690,7 +13759,7 @@ public static function DB() {
 return \Core\DB();
 }
 public static function FTP() {
-return \Core\FTP();
+return \Core\ftp();
 }
 public static function User() {
 return \Core\user();
@@ -13865,111 +13934,64 @@ public static function GetVersion() {
 return Core::GetComponent()->getVersionInstalled();
 }
 public static function ResolveAsset($asset) {
+trigger_error('Core::ResolveAsset is deprecated, please use \\Core\\resolve_asset() instead.', E_USER_DEPRECATED);
 return \Core\resolve_asset($asset);
 }
 public static function ResolveLink($url) {
+trigger_error('Core::ResolveLink is deprecated, please use \\Core\\resolve_link() instead.', E_USER_DEPRECATED);
 return \Core\resolve_link($url);
 }
-public static function ResolveFilenameTo($filename, $base = ROOT_URL) {
-$file = preg_replace('/^(' . str_replace('/', '\\/', ROOT_PDIR . '|' . ROOT_URL) . ')/', '', $filename);
-return $base . $file;
-}
 static public function Redirect($page, $code = 302) {
-error_log('Core::Redirect is deprecated, please use \\Core\\redirect() instead.', E_USER_DEPRECATED);
+trigger_error('Core::Redirect is deprecated, please use \\Core\\redirect() instead.', E_USER_DEPRECATED);
 \Core\redirect($page, $code);
 }
 static public function Reload() {
-error_log('Core::Reload is deprecated, please use \\Core\\reload() instead.', E_USER_DEPRECATED);
+trigger_error('Core::Reload is deprecated, please use \\Core\\reload() instead.', E_USER_DEPRECATED);
 \Core\reload();
 }
 static public function GoBack($depth=1) {
-error_log('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
-\Core\go_back($depth);
+trigger_error('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
+\Core\go_back();
 }
 public static function GetHistory($depth = 2){
-if(!isset($_SESSION['nav'])){
-return ROOT_WDIR;
-}
-$s = sizeof($_SESSION['nav']);
-if($depth > $s){
-return ROOT_WDIR;
-}
-if($depth <= 0){
-return ROOT_WDIR;
-}
-return $_SESSION['nav'][$s - $depth]['uri'];
-}
-static public function RequireSSL() {
-if (!ENABLE_SSL) return;
-if (!isset($_SERVER['HTTPS'])) {
-$page = ViewClass::ResolveURL($_SERVER['REQUEST_URI'], true);
-header("Location:" . $page);
-HookHandler::DispatchHook('/core/page/postrender');
-die("If your browser does not refresh, please <a href=\"{$page}\">Click Here</a>");
-}
+trigger_error('Core::GetHistory is deprecated and will be removed shortly.', E_USER_DEPRECATED);
+return \Core\page_request()->getReferrer();
 }
 static public function GetNavigation($base) {
-if (!isset($_SESSION['nav'])) return $base;
-if (!isset($_SESSION['nav'][$base])) return $base;
-$coreparams  = array();
-$extraparams = array();
-foreach ($_SESSION['nav'][$base]['parameters'] as $k => $v) {
-if (is_numeric($k)) $coreparams[] = $v;
-else $extraparams[] = $k . '=' . $v;
-}
-return $base .
-(sizeof($coreparams) > 0 ? '/' . implode('/', $coreparams) : '') .
-(sizeof($extraparams) > 0 ? '?' . implode('&', $extraparams) : '');
+trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
+return \Core\page_request()->getReferrer();
 }
 static public function _RecordNavigation() {
-$request = PageRequest::GetSystemRequest();
-$view = $request->getView();
-if(!$view->record) return true;
-if(!$request->isGet()) return true;
-if($request->isAjax()) return true;
-if($request->isJSON()) return true;
-if($view->error != View::ERROR_NOERROR) return true;
-if (!isset($_SESSION['nav'])) $_SESSION['nav'] = array();
-$rel = substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR));
-if($rel === false) $rel = '';
-$dat = array(
-'uri' => ROOT_URL . $rel,
-'title' => $view->title,
-);
-$s = sizeof($_SESSION['nav']);
-if($s && $_SESSION['nav'][$s-1]['uri'] == $dat['uri']) return true;
-if($s >= 5){
-array_shift($_SESSION['nav']);
-$_SESSION['nav'] = array_values($_SESSION['nav']);
-}
-$_SESSION['nav'][] = $dat;
-return true;
+trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 static public function SetMessage($messageText, $messageType = 'info') {
-if (trim($messageText) == '') return;
+if(trim($messageText) == '') return;
 $messageType = strtolower($messageType);
-if (EXEC_MODE == 'CLI') {
+if(EXEC_MODE == 'CLI'){
 $messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
 echo "[" . $messageType . "] - " . $messageText . "\n";
 }
-else {
-if (!isset($_SESSION['message_stack'])) $_SESSION['message_stack'] = array();
-$key = md5($messageType . '-' . $messageText);
-$_SESSION['message_stack'][$key] = array(
+else{
+$stack = Session::Get('message_stack', []);
+$stack[] = array(
 'mtext' => $messageText,
 'mtype' => $messageType,
 );
+Session::Set('message_stack', $stack);
 }
 }
 static public function AddMessage($messageText, $messageType = 'info') {
 Core::SetMessage($messageText, $messageType);
 }
 static public function GetMessages($returnSorted = false, $clearStack = true) {
-if (!isset($_SESSION['message_stack'])) return array();
-$return = $_SESSION['message_stack'];
-if ($returnSorted) $return = Core::SortByKey($return, 'mtype');
-if ($clearStack) unset($_SESSION['message_stack']);
-return $return;
+$stack = Session::Get('message_stack', []);
+if($returnSorted){
+$stack = \Core::SortByKey($stack, 'mtype');
+}
+if($clearStack){
+Session::UnsetKey('message_stack');
+}
+return $stack;
 }
 static public function SortByKey($named_recs, $order_by, $rev = false, $flags = 0) {
 $named_hash = array();
@@ -14187,6 +14209,7 @@ $value = (int)$value;
 break;
 case 'octal':
 $value = octdec($value);
+break;
 case 'boolean':
 $value = (($value == 'true' || $value == '1' || $value == 'yes') ? true : false);
 break;
@@ -14208,8 +14231,8 @@ else{
 return $this->_cacheFromDB[$key]->getValue();
 }
 }
-elseif(isset($_SESSION) && isset($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
-return $_SESSION['configs'][$key];
+elseif(\Core\Session::Get('configs/' . $key) !== null){
+return \Core\Session::Get('configs/' . $key);
 }
 else{
 return null;
@@ -14410,7 +14433,12 @@ $rooturlSSL          = $servernameSSL . ROOT_WDIR;
 $curcall             = $servername . $_SERVER['REQUEST_URI'];
 $relativerequestpath = strtolower('/' . substr($_SERVER['REQUEST_URI'], strlen(ROOT_WDIR)));
 if (strpos($relativerequestpath, '?') !== false) $relativerequestpath = substr($relativerequestpath, 0, strpos($relativerequestpath, '?'));
-$ssl = (isset($_SERVER['HTTPS']));
+$ssl = (
+(isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') ||
+(isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') ||
+(isset($_SERVER['FRONT_END_HTTPS']) && $_SERVER['FRONT_END_HTTPS'] == 'on') ||
+(isset($_SERVER['HTTP_HTTPS']) && $_SERVER['HTTP_HTTPS'] == 'on')
+);
 $tmpdir = $core_settings['tmp_dir_web'];
 $gnupgdir = false;
 }
@@ -14526,15 +14554,6 @@ date_default_timezone_set(TIME_DEFAULT_TIMEZONE);
 Core::LoadComponents();
 if (EXEC_MODE == 'WEB') {
 try {
-ini_set('session.hash_bits_per_character', 5);
-ini_set('session.hash_function', 1);
-if(defined('SESSION_COOKIE_DOMAIN') && SESSION_COOKIE_DOMAIN){
-session_name('CorePlusSession');
-session_set_cookie_params(0, '/', SESSION_COOKIE_DOMAIN);
-}
-$session = new Session();
-session_set_save_handler($session, true);
-session_start();
 }
 catch (DMI_Exception $e) {
 if (DEVELOPMENT_MODE) {
@@ -16502,175 +16521,6 @@ restore_error_handler();
 }
 
 
-### REQUIRE_ONCE FROM core/libs/core/CurrentPage.class.php
-class CurrentPage {
-private static $_instance = null;
-private $_headscripts = array();
-private $_footscripts = array();
-private $_headstylesheets = array();
-private $_prebody = array();
-private $_postbody = array();
-private $_htmlattributes = array('xmlns' => "http://www.w3.org/1999/xhtml");
-private $_page;
-private function __construct() {
-$uri = $_SERVER['REQUEST_URI'];
-if (!$uri) $uri = ROOT_WDIR;
-$uri = substr($uri, strlen(ROOT_WDIR));
-if ($uri{0} != '/') $uri = '/' . $uri;
-$pagedat = PageModel::SplitBaseURL($uri);
-if($pagedat){
-$this->_page = PageModel::Construct($pagedat['baseurl']);
-}
-else{
-return false;
-}
-if ($pagedat && $pagedat['parameters']) {
-foreach ($pagedat['parameters'] as $k => $v) {
-$this->_page->setParameter($k, $v);
-}
-}
-if (is_array($_GET)) {
-foreach ($_GET as $k => $v) {
-if (is_numeric($k)) continue;
-$this->_page->setParameter($k, $v);
-}
-}
-$view                          = $this->_page->getView();
-$view->request['contenttype']  = $pagedat['ctype'];
-$view->response['contenttype'] = $pagedat['ctype']; // By default, this can be the same.
-$view->request['method']       = $_SERVER['REQUEST_METHOD'];
-$view->request['useragent']    = $_SERVER['HTTP_USER_AGENT'];
-$view->request['uri']          = $_SERVER['REQUEST_URI'];
-$view->request['uriresolved']  = $pagedat['rewriteurl'];
-$view->request['protocol']     = $_SERVER['SERVER_PROTOCOL'];
-}
-public static function Singleton() {
-if (EXEC_MODE != 'WEB') return null;
-if (!self::$_instance) {
-self::$_instance = new self();
-}
-return self::$_instance;
-}
-public static function Render() {
-return self::Singleton()->_render();
-}
-public static function AddScript($script, $location = 'head') {
-trigger_error('CurrentPage::AddScript is deprecated, please use \\Core\\view()->addScript instead.', E_USER_DEPRECATED);
-\Core\view()->addScript($script, $location);
-}
-public static function GetScripts() {
-return \Core\view()->scripts;
-}
-public static function AddBodyContent($content, $location = 'pre') {
-$obj = self::Singleton();
-if (in_array($content, $obj->_prebody)) return;
-if (in_array($content, $obj->_postbody)) return;
-if ($location == 'pre') $obj->_prebody[] = $content;
-else $obj->_postbody[] = $content;
-}
-public static function AddStylesheet($link, $media = "all") {
-trigger_error('CurrentPage::AddStylesheet is deprecated, please use \\Core\\view()->addStylesheet instead.', E_USER_DEPRECATED);
-\Core\view()->addStylesheet($link, $media);
-}
-public static function AddStyle($style) {
-trigger_error('CurrentPage::AddStyle is deprecated, please use \\Core\\view()->addStyle instead.', E_USER_DEPRECATED);
-\Core\view()->addStyle($style);
-}
-public static function SetHTMLAttribute($attribute, $value) {
-trigger_error('CurrentPage::SetHTMLAttribute is deprecated, please use \\Core\\view()->setHTMLAttribute instead.', E_USER_DEPRECATED);
-\Core\view()->setHTMLAttribute($attribute, $value);
-}
-public static function GetHead() {
-trigger_error('CurrentPage::GetHead is deprecated, please use \\Core\\view()->getHead instead.', E_USER_DEPRECATED);
-return View::GetHead();
-}
-public static function GetFoot() {
-trigger_error('CurrentPage::GetFoot is deprecated, please use \\Core\\view()->getFoot instead.', E_USER_DEPRECATED);
-return View::GetFoot();
-}
-public static function GetBodyPre() {
-return trim(implode("\n", self::Singleton()->_prebody));
-}
-public static function GetBodyPost() {
-return trim(implode("\n", self::Singleton()->_postbody));
-}
-public static function GetHTMLAttributes($asarray = false) {
-trigger_error('CurrentPage::GetHTMLAttributes is deprecated, please use \\Core\\view()->getHTMLAttributes instead.', E_USER_DEPRECATED);
-return \Core\view()->getHTMLAttributes($asarray);
-}
-private function _render() {
-if ($this->_page) {
-$view = $this->_page->execute();
-Core::RecordNavigation($this->_page);
-}
-else {
-$view        = new View();
-$view->error = View::ERROR_NOTFOUND;
-}
-if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND) {
-HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
-}
-if ($view->error != View::ERROR_NOERROR) {
-$view->baseurl = '/Error/Error' . $view->error;
-$view->setParameters(array());
-$view->templatename   = '/pages/error/error' . $view->error . '.tpl';
-$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
-}
-try {
-$data = $view->fetch();
-}
-catch (Exception $e) {
-$view->error   = View::ERROR_SERVERERROR;
-$view->baseurl = '/Error/Error' . $view->error;
-$view->setParameters(array());
-$view->templatename   = '/pages/error/error' . $view->error . '.tpl';
-$view->mastertemplate = ConfigHandler::Get('/theme/default_template');
-$view->assignVariable('exception', $e);
-$data = $view->fetch();
-}
-switch ($view->error) {
-case View::ERROR_NOERROR:
-header('Status: 200 OK', true, $view->error);
-break;
-case View::ERROR_ACCESSDENIED:
-header('Status: 403 Forbidden', true, $view->error);
-break;
-case View::ERROR_NOTFOUND:
-header('Status: 404 Not Found', true, $view->error);
-break;
-case View::ERROR_SERVERERROR:
-header('Status: 500 Internal Server Error', true, $view->error);
-break;
-default:
-header('Status: 500 Internal Server Error', true, $view->error);
-break; // I don't know WTF happened...
-}
-if ($view->response['contenttype']) header('Content-Type: ' . $view->response['contenttype']);
-if (DEVELOPMENT_MODE) header('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
-echo $data;
-if (DEVELOPMENT_MODE && $view->mode == View::MODE_PAGE && $view->response['contenttype'] == View::CTYPE_HTML) {
-echo '<pre class="xdebug-var-dump">';
-echo "Database Reads: " . Core::DB()->readCount() . "\n";
-echo "Database Writes: " . Core::DB()->writeCount() . "\n";
-echo "Amount of memory used by PHP: " . Core::FormatSize(memory_get_usage()) . "\n";
-echo "Total processing time: " . round(Core::GetProfileTimeTotal(), 4) * 1000 . ' ms' . "\n";
-if (FULL_DEBUG) {
-foreach (Core::GetProfileTimes() as $t) {
-echo "[" . Core::FormatProfileTime($t['timetotal']) . "] - " . $t['event'] . "\n";
-}
-}
-echo '<b>Available Components</b>' . "\n";
-foreach (Core::GetComponents() as $l => $v) {
-echo $v->getName() . ' ' . $v->getVersion() . "\n";
-}
-echo '<b>Query Log</b>' . "\n";
-var_dump(Core::DB()->queryLog());
-echo '</pre>';
-}
-}
-}
-
-
 ### REQUIRE_ONCE FROM core/libs/core/templates/Template.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Templates {
@@ -16810,7 +16660,7 @@ try{
 return $this->getSmarty()->fetch($file, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 }
 catch(\SmartyException $e){
-throw new Templates\Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+throw $e;
 }
 }
 public function render($template = null){
@@ -16836,8 +16686,11 @@ throw new Templates\Exception($e->getMessage(), $e->getCode(), $e->getPrevious()
 public function getSmarty(){
 if($this->_smarty === null){
 $this->_smarty = new \Smarty();
+$this->_smarty->caching = \Smarty::CACHING_OFF;
 $this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
 $this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+$this->_smarty->force_compile = DEVELOPMENT_MODE ? true : false;
+$this->_smarty->compile_check = DEVELOPMENT_MODE ? true : false;
 $this->_smarty->assign('__core_template', $this);
 }
 return $this->_smarty;
@@ -17317,7 +17170,7 @@ return strtolower(implode(';', $a));
 private static function _LoadData() {
 $cachekey = 'useragent-browsecap-data';
 $cachetime = 86400;
-$cache = \Core\Cache::Get($cachekey, $cachetime);
+$cache = Cache::Get($cachekey, $cachetime);
 if($cache === false){
 $file   = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
 $remote = \Core\Filestore\Factory::File(self::$_ini_url);
@@ -17374,7 +17227,7 @@ $browsers[] = $browser;
 unset($browser);
 }
 unset($user_agents_keys, $properties_keys, $_browsers);
-\Core\Cache::Set(
+Cache::Set(
 $cachekey,
 [
 'browsers'   => $browsers,
@@ -17385,15 +17238,15 @@ $cachekey,
 $cachetime
 );
 }
-return \Core\Cache::Get($cachekey, $cachetime);
+return Cache::Get($cachekey, $cachetime);
 }
 public static function Construct($useragent = null){
 if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
 $cachekey = 'useragent-constructor-' . md5($useragent);
-$cache = \Core\Cache::Get($cachekey);
+$cache = Cache::Get($cachekey);
 if(!$cache){
 $cache = new UserAgent($useragent);
-\Core\Cache::Set($cachekey, $cache, 3600);
+Cache::Set($cachekey, $cache, 3600);
 }
 return $cache;
 }
@@ -17468,7 +17321,7 @@ private $_fetchCache = null;
 public $bodyclasses = [];
 public $htmlAttributes = [];
 public $headers = [];
-public $cacheable = true;
+protected $cacheable = true;
 public $parent = null;
 public function __construct() {
 $this->error = View::ERROR_NOERROR;
@@ -17590,6 +17443,9 @@ case View::MODE_AJAX:
 case View::MODE_PAGEORAJAX:
 $t = $this->getTemplate();
 $html = $t->fetch($tmpl);
+if($this->parent){
+$this->parent->_syncFromView($this);
+}
 break;
 case View::MODE_WIDGET:
 $tn = Core\Templates\Template::ResolveFile(preg_replace(':^[/]{0,1}pages/:', '/widgets/', $tmpl));
@@ -17934,9 +17790,13 @@ die('This page does not require SSL, if it does not redirect you automatically, 
 echo $data;
 }
 public function addBreadcrumb($title, $link = null) {
-if ($link !== null && strpos($link, '://') === false) $link = Core::ResolveLink($link);
-$this->breadcrumbs[] = array('title' => $title,
-'link'  => $link);
+if ($link !== null && strpos($link, '://') === false){
+$link = \Core\resolve_link($link);
+}
+$this->breadcrumbs[] = array(
+'title' => $title,
+'link'  => $link
+);
 }
 public function setBreadcrumbs($array) {
 $this->breadcrumbs = array();
@@ -17986,9 +17846,9 @@ else{
 $control->class = $class;
 }
 $control->title = $title;
-$control->link = Core::ResolveLink($link);
+$control->link = \Core\resolve_link($link);
 }
-if($control->link != Core::ResolveLink($this->baseurl)){
+if($control->link != \Core\resolve_link($this->baseurl)){
 $this->controls[] = $control;
 }
 }
@@ -18014,6 +17874,9 @@ else {
 $this->error = View::ERROR_ACCESSDENIED;
 return false;
 }
+}
+public function isCacheable(){
+return $this->cacheable;
 }
 public function getHeadContent(){
 $minified = ConfigHandler::Get('/core/markup/minified');
@@ -18042,7 +17905,7 @@ if(!isset($this->meta['og:title'])){
 $this->meta['og:title'] = $this->title;
 }
 if($this->canonicalurl === null){
-$this->canonicalurl = Core::ResolveLink($this->baseurl);
+$this->canonicalurl = \Core\resolve_link($this->baseurl);
 }
 if($this->canonicalurl !== false){
 $this->meta['canonical'] = $this->canonicalurl;
@@ -18080,7 +17943,7 @@ return trim($out);
 }
 public function addScript($script, $location = 'head') {
 if (strpos($script, '<script') === false) {
-$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
+$script = '<script type="text/javascript" src="' . \Core\resolve_asset($script) . '"></script>';
 }
 if(isset($this)){
 $scripts =& $this->scripts;
@@ -18090,8 +17953,12 @@ $scripts =& \Core\view()->scripts;
 }
 if (in_array($script, $scripts['head'])) return;
 if (in_array($script, $scripts['foot'])) return;
-if ($location == 'head') $scripts['head'][] = $script;
-else $scripts['foot'][] = $script;
+if ($location == 'head'){
+$scripts['head'][] = $script;
+}
+else{
+$scripts['foot'][] = $script;
+}
 }
 public function appendBodyContent($content){
 if(isset($this)){
@@ -18189,6 +18056,12 @@ else{
 }
 public function addHeader($key, $value){
 $this->headers[$key] = $value;
+}
+public function disableCache(){
+$this->cacheable = false;
+if($this->parent){
+$this->parent->disableCache();
+}
 }
 protected function _syncFromView(View $view){
 if($view === $this){
@@ -18435,7 +18308,7 @@ $out .= $e->render();
 }
 $file = $this->getTemplateName();
 if (!$file) return $out;
-\Core\view()->cacheable = false;
+\Core\view()->disableCache();
 $tpl = \Core\Templates\Template::Factory($file);
 $tpl->assign('group', $this);
 $tpl->assign('elements', $out);
@@ -18493,6 +18366,22 @@ if ($recursively && $e instanceof FormGroup) $els = array_merge($els, $e->getEle
 }
 return $els;
 }
+public function getElementsByName($nameRegex){
+$ret = [];
+$els = $this->getElements(true, true);
+if(strpos($nameRegex, '#') === false){
+$nameRegex = '#' . $nameRegex . '#';
+}
+else{
+$nameRegex = '#' . str_replace('#', '\#', $nameRegex) . '#';
+}
+foreach ($els as $el) {
+if(preg_match($nameRegex, $el->get('name')) === 1){
+$ret[] = $el;
+}
+}
+return $ret;
+}
 public function getElement($name) {
 return $this->getElementByName($name);
 }
@@ -18534,6 +18423,7 @@ $this->setValue($value);
 break;
 case 'label': // This is an alias for title.
 $this->_attributes['title'] = $value;
+break;
 case 'options':
 if (!is_array($value)) {
 $this->_attributes[$key] = $value;
@@ -18826,8 +18716,8 @@ break;
 $ignoreerrors = false;
 if (($part === null || $part == 'body') && $this->get('callsmethod')) {
 $hash = ($this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash());
-if (isset($_SESSION['FormData'][$hash])) {
-if (($savedform = unserialize($_SESSION['FormData'][$hash]))) {
+if (($savedform = \Core\Session::Get('FormData/' . $hash)) !== null) {
+if (($savedform = unserialize($savedform))) {
 if($savedform->persistent){
 foreach($this->_elements as $k => $element){
 if($element->persistent){
@@ -19079,25 +18969,25 @@ return true;
 }
 public function saveToSession() {
 if (!$this->get('callsmethod')) return; // Don't save anything if there's no method to call.
-$this->set('expires', Time::GetCurrent() + 1800); // 30 minutes
-$_SESSION['FormData'][$this->get('uniqueid')] = serialize($this);
+$this->set('expires', (int)Time::GetCurrent() + 1800); // 30 minutes
+\Core\Session::Set('FormData/' . $this->get('uniqueid'), serialize($this));
 }
 public function clearFromSession(){
 $hash = $this->get('uniqueid') ? $this->get('uniqueid') : $this->generateUniqueHash();
-if(isset($_SESSION['FormData'][$hash])) unset($_SESSION['FormData'][$hash]);
+\Core\Session::UnsetKey('FormData/' . $hash);
 }
 public static function CheckSavedSessionData() {
 if(preg_match('#^/form/(.*)\.ajax$#', REL_REQUEST_PATH)) return;
-if (!(isset($_SESSION['FormData']) && is_array($_SESSION['FormData']))) return;
+$forms = \Core\Session::Get('FormData/*');
 $formid = (isset($_REQUEST['___formid'])) ? $_REQUEST['___formid'] : false;
 $form   = false;
-foreach ($_SESSION['FormData'] as $k => $v) {
+foreach ($forms as $k => $v) {
 if (!($el = unserialize($v))) {
-unset($_SESSION['FormData'][$k]);
+\Core\Session::UnsetKey('FormData/' . $k);
 continue;
 }
 if ($el->get('expires') <= Time::GetCurrent()) {
-unset($_SESSION['FormData'][$k]);
+\Core\Session::UnsetKey('FormData/' . $k);
 continue;
 }
 if ($k == $formid) {
@@ -19110,8 +19000,10 @@ Core::SetMessage('Form submission type does not match', 'error');
 return;
 }
 if($_SERVER['HTTP_REFERER'] != $form->originalurl){
-Core::SetMessage('Form submission referrer does not match, please try your submission again.', 'error');
-return;
+SystemLogModel::LogInfoEvent(
+'Form Referrer Mismatch',
+'Form referrer does not match!  Submitted: [' . $_SERVER['HTTP_REFERER'] . '] Expected: [' . $form->originalurl . ']'
+);
 }
 if (strtoupper($form->get('method')) == 'POST') $src =& $_POST;
 else $src =& $_GET;
@@ -19140,10 +19032,10 @@ Core\ErrorManagement\exception_handler($e);
 $status = false;
 }
 $form->persistent = true;
-$_SESSION['FormData'][$formid] = serialize($form);
+\Core\Session::Set('FormData/' . $formid, serialize($form));
 if ($status === false) return;
 if ($status === null) return;
-unset($_SESSION['FormData'][$formid]);
+\Core\Session::UnsetKey('FormData/' . $formid);
 if ($status === 'die'){
 exit;
 }
@@ -19152,7 +19044,7 @@ if($form->referrer && $form->referrer != REL_REQUEST_PATH){
 \Core\redirect($form->referrer);
 }
 else{
-\Core\go_back(2);
+\Core\go_back();
 }
 }
 elseif ($status === true){
@@ -19268,10 +19160,6 @@ if (!$component) {
 $view->error = View::ERROR_NOTFOUND;
 return;
 }
-elseif (is_a($component, 'Component')) {
-CurrentPage::Render();
-die();
-}
 elseif(!is_a($component, 'Component_2_1')) {
 $view->error = View::ERROR_NOTFOUND;
 return;
@@ -19297,13 +19185,7 @@ return;
 }
 }
 if($page->get('password_protected')) {
-if(!isset($_SESSION['page-password-protected'])) {
-$_SESSION['page-password-protected'] = [];
-}
-if (!isset($_SESSION['page-password-protected'][$page->get('baseurl')])) {
-$_SESSION['page-password-protected'][$page->get('baseurl')] = '';
-}
-if ($_SESSION['page-password-protected'][$page->get('baseurl')] !== $page->get('password_protected')) {
+if(\Core\Session::Get('page-password-protected/' . $page->get('baseurl')) !== $page->get('password_protected')){
 $view->templatename = '/pages/page/passwordprotected.tpl';
 $form = new Form();
 $form->set('callsmethod', 'PageRequest::PasswordProtectHandler');
@@ -19602,7 +19484,7 @@ $cacheable = 'Logged in users do not get cached pages';
 elseif($this->method != PageRequest::METHOD_GET){
 $cacheable = 'Request is not a GET';
 }
-elseif(!$this->getView()->cacheable){
+elseif(!$this->getView()->isCacheable()){
 $cacheable = 'Page explicitly set as not cacheable';
 }
 elseif($this->getPageModel()->get('expires') == 0){
@@ -19708,6 +19590,14 @@ return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_
 public function getUserAgent(){
 return new \Core\UserAgent($this->useragent);
 }
+public function getReferrer(){
+if(isset($_SERVER['HTTP_REFERER'])){
+return $_SERVER['HTTP_REFERER'];
+}
+else{
+return ROOT_URL;
+}
+}
 private function _resolveMethod() {
 switch ($_SERVER['REQUEST_METHOD']) {
 case self::METHOD_DELETE:
@@ -19796,10 +19686,7 @@ Core::SetMessage('Wrong password! Try again.','error');
 return false;
 }
 else {
-if(!isset($_SESSION['page-password-protected'])){
-$_SESSION['page-password-protected'] = [];
-}
-$_SESSION['page-password-protected'][ $page->get('baseurl') ] = $val;
+\Core\Session::Set('page-password-protected/' . $page->get('baseurl'), $val);
 return true;
 }
 }

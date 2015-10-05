@@ -629,7 +629,7 @@ class GalleryController extends Controller_2_1 {
 		$view->assign('exif', $exif);
 		$view->assign('metas', $metas);
 		$view->updated = $image->get('updated');
-		$view->canonicalurl = Core::ResolveLink($link);
+		$view->canonicalurl = \Core\resolve_link($link);
 		if(is_array($metas->getMetaTitle('keywords'))){
 			$view->meta['keywords'] = implode(', ', $metas->getMetaTitle('keywords'));
 		}
@@ -695,7 +695,7 @@ class GalleryController extends Controller_2_1 {
 
 		if($uploader){
 			$uploadform = new Form();
-			$uploadform->set('action', Core::ResolveLink('/gallery/images_update/' . $album->get('id')));
+			$uploadform->set('action', \Core\resolve_link('/gallery/images_update/' . $album->get('id')));
 			$uploadform->addElement(
 				'multifile',
 				array(

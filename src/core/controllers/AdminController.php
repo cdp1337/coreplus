@@ -184,8 +184,8 @@ class AdminController extends Controller_2_1 {
 				CLI::PrintHeader('DONE!');
 			}
 
-			foreach($changes as $c){
-				echo $c;
+			foreach($changes as $str){
+				echo $str;
 			}
 
 			// Flush the system cache, just in case
@@ -279,7 +279,7 @@ class AdminController extends Controller_2_1 {
 		$changes = [];
 		$outoftime = false;
 		$counter = 0;
-		$resume = isset($_SESSION['syncsearchresume']) ? $_SESSION['syncsearchresume'] : 1;
+		$resume = \Core\Session::Get('syncsearchresume', 1);
 		$timeout = ini_get('max_execution_time');
 		// Dunno why this is returning 0, but if it is, reset it to 30 seconds!
 		if(!$timeout) $timeout = 30;
@@ -337,7 +337,7 @@ class AdminController extends Controller_2_1 {
 					if(\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime() + 5 >= $timeout){
 						// OUT OF TIME!
 						// Remember where this process left off and exit.
-						$_SESSION['syncsearchresume'] = $counter;
+						\Core\Session::Set('syncsearchresume', $counter);
 						$outoftime = true;
 						break;
 					}
@@ -345,7 +345,7 @@ class AdminController extends Controller_2_1 {
 					if(memory_get_usage(true) + 40485760 >= $memorylimit){
 						// OUT OF MEMORY!
 						// Remember where this process left off and exit.
-						$_SESSION['syncsearchresume'] = $counter;
+						\Core\Session::Set('syncsearchresume', $counter);
 						$outoftime = true;
 						break;
 					}
@@ -360,9 +360,9 @@ class AdminController extends Controller_2_1 {
 			}
 		}
 
-		if(!$outoftime && isset($_SESSION['syncsearchresume'])){
+		if(!$outoftime){
 			// It finished!  Unset the resume counter.
-			unset($_SESSION['syncsearchresume']);
+			\Core\Session::UnsetKey('syncsearchresume');
 		}
 
 

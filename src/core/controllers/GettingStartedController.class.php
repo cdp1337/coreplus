@@ -51,5 +51,3 @@ class GettingStartedController extends Controller_2_1 {
 		}
 	}
 }
-
-?>

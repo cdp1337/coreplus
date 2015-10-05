@@ -131,9 +131,9 @@ class DMI {
 			// This will only be done if the configuration file exists.
 			$cs = ConfigHandler::LoadConfigFile("configuration");
 		}
-		elseif(isset($_SESSION['configs'])){
+		elseif(\Core\Session::Get('configs/*') !== null){
 			// If the file doesn't exist, (ie: during installation), I need to check the session data.
-			$cs = $_SESSION['configs'];
+			$cs = \Core\Session::Get('configs/*');
 		}
 		else{
 			throw new DMI_Exception('No database settings defined for the DMI');

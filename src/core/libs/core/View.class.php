@@ -292,7 +292,7 @@ class View {
 	/**
 	 * @var bool Set to false to prevent this page from being cacheable by Core.
 	 */
-	public $cacheable = true;
+	protected $cacheable = true;
 
 	/**
 	 * For widget and sub-page based views, they need to have a parent to render specific elements to,
@@ -492,6 +492,12 @@ class View {
 			case View::MODE_PAGEORAJAX:
 				$t = $this->getTemplate();
 				$html = $t->fetch($tmpl);
+				// Retrieve any/all JS, CSS, and Meta elements from that widget's View and transpose them here!
+				// This is because now that View operations now correctly manipulate the View directly attached to the template,
+				// the top-level page view no longer gets these directives.
+				if($this->parent){
+					$this->parent->_syncFromView($this);
+				}
 				break;
 			case View::MODE_WIDGET:
 				// This template can be a couple things.
@@ -1000,10 +1006,14 @@ class View {
 	public function addBreadcrumb($title, $link = null) {
 
 		// Allow a non-resolved link to be passed in.
-		if ($link !== null && strpos($link, '://') === false) $link = Core::ResolveLink($link);
+		if ($link !== null && strpos($link, '://') === false){
+			$link = \Core\resolve_link($link);
+		}
 
-		$this->breadcrumbs[] = array('title' => $title,
-		                             'link'  => $link);
+		$this->breadcrumbs[] = array(
+			'title' => $title,
+			'link'  => $link
+		);
 	}
 
 	/**
@@ -1096,11 +1106,11 @@ class View {
 			}
 
 			$control->title = $title;
-			$control->link = Core::ResolveLink($link);
+			$control->link = \Core\resolve_link($link);
 		}
 
 		// Is this control the current page?  If so don't display it.
-		if($control->link != Core::ResolveLink($this->baseurl)){
+		if($control->link != \Core\resolve_link($this->baseurl)){
 			$this->controls[] = $control;
 		}
 	}
@@ -1167,6 +1177,15 @@ class View {
 		}
 	}
 
+	/**
+	 * Get if this View is cacheable
+	 *
+	 * @return bool
+	 */
+	public function isCacheable(){
+		return $this->cacheable;
+	}
+
 
 	/**
 	 * Get the content to be inserted into the <head> tag for this view.
@@ -1215,7 +1234,7 @@ class View {
 
 			// Set the canonical url if not set.
 			if($this->canonicalurl === null){
-				$this->canonicalurl = Core::ResolveLink($this->baseurl);
+				$this->canonicalurl = \Core\resolve_link($this->baseurl);
 			}
 
 			// Set the canonical URL in the necessary spots (if it's not in error)
@@ -1283,7 +1302,7 @@ class View {
 	public function addScript($script, $location = 'head') {
 		if (strpos($script, '<script') === false) {
 			// Resolve the script and wrap it with a script block.
-			$script = '<script type="text/javascript" src="' . Core::ResolveAsset($script) . '"></script>';
+			$script = '<script type="text/javascript" src="' . \Core\resolve_asset($script) . '"></script>';
 		}
 
 		// This snippet is to allow AddScript to be called statically.
@@ -1303,8 +1322,12 @@ class View {
 		if (in_array($script, $scripts['foot'])) return;
 
 		// No? alright, add it to the requested location!
-		if ($location == 'head') $scripts['head'][] = $script;
-		else $scripts['foot'][] = $script;
+		if ($location == 'head'){
+			$scripts['head'][] = $script;
+		}
+		else{
+			$scripts['foot'][] = $script;
+		}
 	}
 
 	public function appendBodyContent($content){
@@ -1508,6 +1531,16 @@ class View {
 	 */
 	public function addHeader($key, $value){
 		$this->headers[$key] = $value;
+	}
+
+	/**
+	 * Disable the View cache on this object and any/all parents
+	 */
+	public function disableCache(){
+		$this->cacheable = false;
+		if($this->parent){
+			$this->parent->disableCache();
+		}
 	}
 
 	/**

@@ -22,6 +22,7 @@
  */
 
 namespace Core\i18n;
+use Core\Cache;
 
 
 /**
@@ -67,7 +68,7 @@ class Loader {
 		self::$IsLoaded = true;
 
 		$cachekey = 'core-i18n-strings';
-		$cached = \Core\Cache::Get($cachekey, 604800); // Cache here is good for one week.
+		$cached = Cache::Get($cachekey, 604800); // Cache here is good for one week.
 		if(!DEVELOPMENT_MODE && $cached){
 			self::$Strings = $cached;
 			return;
@@ -139,7 +140,7 @@ class Loader {
 			}
 		}
 
-		\Core\Cache::Set($cachekey, self::$Strings, 604800); // Cache here is good for one week.
+		Cache::Set($cachekey, self::$Strings, 604800); // Cache here is good for one week.
 	}
 
 	/**

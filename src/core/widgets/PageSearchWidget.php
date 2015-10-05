@@ -68,7 +68,7 @@ class PageSearchWidget extends Widget_2_1 {
 		$view = $this->getView();
 
 		$urlbase = '/page/search';
-		$url = Core::ResolveLink($urlbase);
+		$url = \Core\resolve_link($urlbase);
 
 		if(PageRequest::GetSystemRequest()->getBaseURL() == $urlbase && PageRequest::GetSystemRequest()->getParameter('q')){
 			$query = PageRequest::GetSystemRequest()->getParameter('q');

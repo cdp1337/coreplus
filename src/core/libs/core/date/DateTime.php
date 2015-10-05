@@ -21,6 +21,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 namespace Core\Date;
+use Core\i18n\Loader;
 
 /**
  * Class DateTime extends the default DateTime object with Core-specific functionality
@@ -144,19 +145,19 @@ class DateTime extends \DateTime{
 			return $this->getRelative();
 		}
 		elseif($format == DateTime::FULLDATE){
-			$format = \Core\i18n\Loader::Get('FORMAT_FULLDATE');
+			$format = Loader::Get('FORMAT_FULLDATE');
 		}
 		elseif($format == DateTime::SHORTDATE){
-			$format = \Core\i18n\Loader::Get('FORMAT_SHORTDATE');
+			$format = Loader::Get('FORMAT_SHORTDATE');
 		}
 		elseif($format == DateTime::FULLDATETIME){
-			$format = \Core\i18n\Loader::Get('FORMAT_FULLDATETIME');
+			$format = Loader::Get('FORMAT_FULLDATETIME');
 		}
 		elseif($format == DateTime::SHORTDATETIME){
-			$format = \Core\i18n\Loader::Get('FORMAT_SHORTDATETIME');
+			$format = Loader::Get('FORMAT_SHORTDATETIME');
 		}
 		elseif($format == DateTIme::TIME){
-			$format = \Core\i18n\Loader::Get('FORMAT_TIME');
+			$format = Loader::Get('FORMAT_TIME');
 		}
 
 

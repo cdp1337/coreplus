@@ -149,17 +149,14 @@ class StopForumSpam {
 		// Submissions listed, but not exceedingly high?
 		$warnlevel = 5;
 		if($record->get('submissions') > $warnlevel){
-			if(isset($_SESSION['security_antispam_allowed'])){
-				// Ok, they're allowed in.
-			}
-			else{
+			if(\Core\Session::Get('security_antispam_allowed') === null){
 				$html = '<html><body>';
 				$html .= '<!-- You smell of spam.... are you sure you didn\'t come from a can?-->';
-				if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['happyfuntime']) && isset($_SESSION['happyfuntimecheck'])){
+				if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['happyfuntime']) && \Core\Session::Get('happyfuntimecheck')){
 					// It's an attempt!
-					if($_POST['happyfuntime'] == $_SESSION['happyfuntimecheck']){
+					if($_POST['happyfuntime'] == \Core\Session::Get('happyfuntimecheck') ){
 						\SystemLogModel::LogSecurityEvent('/security/unblocked', 'User successfully answered an anti-bot math question, unblocking.');
-						$_SESSION['security_antispam_allowed'] = true;
+						\Core\Session::Set('security_antispam_allowed', true);
 					}
 					else{
 						\SystemLogModel::LogSecurityEvent('/security/captchafailed', 'User attempted, but failed in answering an anti-bot math question.');
@@ -183,7 +180,7 @@ class StopForumSpam {
 						break;
 				}
 
-				$_SESSION['happyfuntimecheck'] = $result;
+				\Core\Session::Set('happyfuntimecheck', $result);
 				switch($random2){
 					case 1: $random2 = 'oNe'; break;
 					case 2: $random2 = 'Tw0'; break;

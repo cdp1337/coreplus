@@ -107,7 +107,7 @@ class Smarty implements Templates\TemplateInterface {
 			return $this->getSmarty()->fetch($file, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
 		}
 		catch(\SmartyException $e){
-			throw new Templates\Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+			throw $e;
 		}
 	}
 
@@ -148,8 +148,40 @@ class Smarty implements Templates\TemplateInterface {
 	public function getSmarty(){
 		if($this->_smarty === null){
 			$this->_smarty = new \Smarty();
+
+			/**
+			 * @var $caching int
+			 *
+			 * Leave this off!  Smarty doesn't seem to cache the output of our {css} blocks when this is enabled as of 3.1.27
+			 */
+			$this->_smarty->caching = \Smarty::CACHING_OFF;
+			//$this->_smarty->caching = DEVELOPMENT_MODE ? \Smarty::CACHING_OFF : \Smarty::CACHING_LIFETIME_SAVED;
+
 			$this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
 			$this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+
+			/**
+			 * @var $force_compile boolean
+			 *
+			 * This forces Smarty to (re)compile templates on every invocation.
+			 * This setting overrides $compile_check. By default this is FALSE.
+			 * This is handy for development and debugging.
+			 * It should never be used in a production environment.
+			 * If $caching is enabled, the cache file(s) will be regenerated every time.
+			 */
+			$this->_smarty->force_compile = DEVELOPMENT_MODE ? true : false;
+
+			/**
+			 * @var $compile_check boolean
+			 *
+			 * Upon each invocation of the PHP application,
+			 * Smarty tests to see if the current template has changed (different timestamp) since the last time it was compiled.
+			 * If it has changed, it recompiles that template.
+			 * If the template has yet not been compiled at all, it will compile regardless of this setting.
+			 * By default this variable is set to TRUE.
+			 */
+			$this->_smarty->compile_check = DEVELOPMENT_MODE ? true : false;
+
 			$this->_smarty->assign('__core_template', $this);
 		}
 		return $this->_smarty;

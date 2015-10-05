@@ -329,7 +329,7 @@ class Table implements \Iterator {
 			}
 
 			$control->title = $title;
-			$control->link = \Core::ResolveLink($link);
+			$control->link = \Core\resolve_link($link);
 		}
 
 		$this->getControls()->addLink($control);
