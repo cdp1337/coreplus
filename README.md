@@ -46,6 +46,21 @@ To get the best performance, a dedicated environment with APC and Memcache runni
 Installation and running inside a WAMP environment is unsupported at present and may not work.  
 If you need this, proceed at your own risk. 
 
+## CentOS 7 (SELinux Permissions)
+
+CentOS 7 ships with SELinux in enforcing mode.  It is always best to leave security features running whenever possible.
+
+Use the following commands if you are having issues with Apache being able to write to the appropriate directories.
+
+	# This will set the context for apache to execute code in the application codebase
+	chcon -Rv --type=httpd_sys_content_t /path/to/src
+	
+	# This will allow apache to write files in the files directory for public and tmp.
+	chcon -Rv --type=httpd_sys_script_rw_t /path/to/src/files/
+
+Then, ensure that TMP_DIR in config/configuration.xml points to a directory within the files directory, eg: "files/tmp/"
+Sometimes SELinux prevents apache from writing to /tmp, as it's outside the security context for that policy.
+
 ## MariaDB Backend
 
 When running with MariaDB, the php5-mysqlnd driver is required instead of php5-mysql!  To fix this on Ubuntu 15.04 and
