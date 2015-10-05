@@ -35,7 +35,7 @@ define('ROOT_WDIR', '/cli-installer/');
 define('ROOT_URL', ROOT_WDIR);
 define('ROOT_URL_SSL', ROOT_WDIR);
 define('ROOT_URL_NOSSL', ROOT_WDIR);
-define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
+//define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
 define('CUR_CALL', ROOT_WDIR . 'install/');
 
 // Make this page load appear as a standard web request instead of a CLI one.
@@ -47,12 +47,6 @@ $_SERVER['HTTP_HOST'] = 'localhost';
 $_SERVER['REQUEST_METHOD'] = 'GET';
 $_SERVER['HTTP_USER_AGENT'] = 'Core Plus cli-installer Script';
 
-
-// Since this can act as part of the installer, I cannot simply require the bootstrap.
-
-if(!is_dir(TMP_DIR)){
-	mkdir(TMP_DIR, 0755, true);
-}
 
 // Initial system defines
 require_once(ROOT_PDIR . 'core/bootstrap_predefines.php');
@@ -77,12 +71,32 @@ if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 	require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
 	try {
 		HookHandler::singleton();
-		ConfigHandler::LoadConfigFile('configuration');
+		$core_settings = ConfigHandler::LoadConfigFile('configuration');
+
+		$tmpdir = $core_settings['tmp_dir_web'];
+		if(!defined('TMP_DIR')) {
+			/**
+			 * Temporary directory
+			 */
+			define('TMP_DIR', $tmpdir);
+		}
 	}
 	catch (Exception $e) {
 		// Yeah... I probably don't care at this stage... but maybe I do...
 		\Core\ErrorManagement\exception_handler($e);
 	}
+}
+
+
+if(!defined('TMP_DIR')) {
+	/**
+	 * Temporary directory
+	 */
+	define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
+}
+// Since this can act as part of the installer, I cannot simply require the bootstrap.
+if(!is_dir(TMP_DIR)){
+	mkdir(TMP_DIR, 0755, true);
 }
 
 if(!defined('CDN_TYPE')){
@@ -239,6 +253,9 @@ foreach(\Core::GetComponents() as $c){
 		$changes[] = "Synced searchable model " . $class;
 	}
 }
+
+// Flush the system cache, just in case
+\Core\Cache::Flush();
 
 
 CLI::PrintHeader('DONE!');
