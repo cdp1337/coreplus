@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 06 Oct 2015 18:18:37 -0400
+ * @compiled Tue, 06 Oct 2015 18:43:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -9067,6 +9067,18 @@ return str_replace(array_keys($internationalmappings), array_values($internation
 }
 function str_to_url($string, $keepdots = false){
 $string = str_to_latin($string);
+if(\ConfigHandler::Get('/core/page/url_remove_stop_words')){
+$stopwords = get_stop_words();
+$exploded = explode(' ', $string);
+$nt = '';
+foreach($exploded as $w){
+$lw = strtolower($w);
+if(!in_array($lw, $stopwords)){
+$nt .= ' ' . $w;
+}
+}
+$string = trim($string);
+}
 $string = str_replace(' ', '-', $string);
 if($keepdots){
 $string = preg_replace('/[^a-z0-9\-\.]/i', '', $string);
@@ -14091,25 +14103,42 @@ $uastring .= "\t\t\t$k: \"$v\",\n";
 }
 $uastring .= "\t\t\tis_mobile: " . ($ua->isMobile() ? 'true' : 'false') . "\n";
 $url = htmlentities(\Core\page_request()->uriresolved);
-$script = '<script type="text/javascript">
-var Core = {
-Version: "' . (DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '') . '",
-ROOT_WDIR: "' . ROOT_WDIR . '",
-ROOT_URL: "' . ROOT_URL . '",
-ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
-ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
-SSL: ' . (SSL ? 'true' : 'false') . ',
-SSL_MODE: "' . SSL_MODE . '",
-User: {
-id: "' . $userid . '",
-authenticated: ' . $userauth . '
-},
-Url: "' . $url . '",
-Browser: {
-' . $uastring . '
+if(ConfigHandler::Get('/core/page/url_remove_stop_words')){
+$stopwords = json_encode(\Core\get_stop_words());
+$removeStopWords = 'true';
 }
+else{
+$stopwords = '""';
+$removeStopWords = 'false';
+}
+$version = DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '';
+$rootWDIR = ROOT_WDIR;
+$rootURL = ROOT_URL;
+$rootURLSSL = ROOT_URL_SSL;
+$rootURLnoSSL = ROOT_URL_NOSSL;
+$ssl = SSL ? 'true' : 'false';
+$sslMode = SSL_MODE;
+$script = <<<EOD
+<script type="text/javascript">
+var Core = {
+Version: "$version",
+ROOT_WDIR: "$rootWDIR",
+ROOT_URL: "$rootURL",
+ROOT_URL_SSL: "$rootURLSSL",
+ROOT_URL_NOSSL: "$rootURLnoSSL",
+SSL: $ssl,
+SSL_MODE: "$sslMode",
+User: {
+id: "$userid",
+authenticated: $userauth
+},
+Url: "$url",
+Browser: { $uastring },
+URLRemoveStopWords: $removeStopWords,
+StopWords: $stopwords
 };
-</script>';
+</script>
+EOD;
 $minified = \ConfigHandler::Get('/core/javascript/minified');
 if($minified){
 $script = str_replace(["\t", "\n"], ['', ''], $script);
