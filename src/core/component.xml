@@ -1433,9 +1433,10 @@
 		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="Logout"/>
 		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="User Administration" group="User"/>
 		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="User Group Administration" group="User"/>
-		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity" group="Reporting"/>
+		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="User Activity Overview" group="Reporting"/>
+		<page baseurl="/useractivity/details" admin="1" access="p:/user/activity/view" title="User Activity Details" group="Reporting"/>
 		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="User Options" group="Configure"/>
-		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Admin"/>
+		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="System Log" group="Reporting"/>
 		<page baseurl="/form/testui" admin="1" access="g:admin" title="Test Form Element UI/UX" group="Theme and Layouts"/>
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="All Pages" group="Content"/>
 		<page baseurl="/widget/admin" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="All Widgets" group="Content"/>

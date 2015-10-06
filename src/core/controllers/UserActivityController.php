@@ -35,7 +35,7 @@ class UserActivityController extends Controller_2_1 {
 	public function index(){
 		$view = $this->getView();
 
-		$view->title = 'User Activity';
+		$view->title = 'User Activity Overview';
 
 		$view->addControl(
 			[
@@ -308,7 +308,7 @@ class UserActivityController extends Controller_2_1 {
 
 		$filters->applyToFactory($factory);
 
-		$view->title = 'Detailed Activity';
+		$view->title = 'User Activity Details';
 		$view->assign('filters', $filters);
 		$view->assign('listings', $factory->get());
 	}
