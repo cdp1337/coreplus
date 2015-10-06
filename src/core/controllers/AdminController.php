@@ -494,6 +494,15 @@ class AdminController extends Controller_2_1 {
 				//'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
+		$listings->addFilter(
+			'text',
+			[
+				'title' => 'IP Address',
+			    'name' => 'ip_addr',
+			    'link' => FilterForm::LINK_TYPE_STARTSWITH,
+			]
+		);
+
 		$listings->addColumn('Date Time', 'datetime');
 		$listings->addColumn('Session', 'session_id');
 		$listings->addColumn('User', 'user_id');
