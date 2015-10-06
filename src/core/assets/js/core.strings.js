@@ -104,8 +104,20 @@
 		 * @return string
 		 */
 		toURL: function(string){
+			var ns, i;
 			// URLs should only be in latin.
 			string = Core.Strings.toLatin(string);
+
+			if(Core.URLRemoveStopWords){
+				string = string.split(' ');
+				ns = '';
+				for(i in string){
+					if(Core.StopWords.indexOf(string[i]) === -1){
+						ns += ' ' + string[i];
+					}
+				}
+				string = ns.trim();
+			}
 
 			// Spaces get replaced with a separator
 			string = string.replace(/[ ]/g, '-');

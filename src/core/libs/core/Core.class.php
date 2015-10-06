@@ -1382,25 +1382,43 @@ class Core implements ISingleton {
 
 		$url = htmlentities(\Core\page_request()->uriresolved);
 
-		$script = '<script type="text/javascript">
-	var Core = {
-		Version: "' . (DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '') . '",
-		ROOT_WDIR: "' . ROOT_WDIR . '",
-		ROOT_URL: "' . ROOT_URL . '",
-		ROOT_URL_SSL: "' . ROOT_URL_SSL . '",
-		ROOT_URL_NOSSL: "' . ROOT_URL_NOSSL . '",
-		SSL: ' . (SSL ? 'true' : 'false') . ',
-		SSL_MODE: "' . SSL_MODE . '",
-		User: {
-			id: "' . $userid . '",
-			authenticated: ' . $userauth . '
-		},
-		Url: "' . $url . '",
-		Browser: {
-' . $uastring . '
+		if(ConfigHandler::Get('/core/page/url_remove_stop_words')){
+			$stopwords = json_encode(\Core\get_stop_words());
+			$removeStopWords = 'true';
 		}
+		else{
+			$stopwords = '""';
+			$removeStopWords = 'false';
+		}
+		$version = DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '';
+		$rootWDIR = ROOT_WDIR;
+		$rootURL = ROOT_URL;
+		$rootURLSSL = ROOT_URL_SSL;
+		$rootURLnoSSL = ROOT_URL_NOSSL;
+		$ssl = SSL ? 'true' : 'false';
+		$sslMode = SSL_MODE;
+
+		$script = <<<EOD
+<script type="text/javascript">
+	var Core = {
+		Version: "$version",
+		ROOT_WDIR: "$rootWDIR",
+		ROOT_URL: "$rootURL",
+		ROOT_URL_SSL: "$rootURLSSL",
+		ROOT_URL_NOSSL: "$rootURLnoSSL",
+		SSL: $ssl,
+		SSL_MODE: "$sslMode",
+		User: {
+			id: "$userid",
+			authenticated: $userauth
+		},
+		Url: "$url",
+		Browser: { $uastring },
+		URLRemoveStopWords: $removeStopWords,
+		StopWords: $stopwords
 	};
-</script>';
+</script>
+EOD;
 
 		$minified = \ConfigHandler::Get('/core/javascript/minified');
 		if($minified){

@@ -946,6 +946,7 @@ class AdminController extends Controller_2_1 {
 			'/core/page/title_remove_stop_words',
 			'/core/page/title_template',
 			'/core/page/teaser_template',
+			'/core/page/url_remove_stop_words',
 		];
 
 		$form = new Form();

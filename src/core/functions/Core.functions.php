@@ -1070,6 +1070,20 @@ function str_to_url($string, $keepdots = false){
 	// URLs should only be in latin.
 	$string = str_to_latin($string);
 
+	if(\ConfigHandler::Get('/core/page/url_remove_stop_words')){
+		$stopwords = get_stop_words();
+
+		$exploded = explode(' ', $string);
+		$nt = '';
+		foreach($exploded as $w){
+			$lw = strtolower($w);
+			if(!in_array($lw, $stopwords)){
+				$nt .= ' ' . $w;
+			}
+		}
+		$string = trim($string);
+	}
+
 	// Spaces get replaced with a separator
 	$string = str_replace(' ', '-', $string);
 
