@@ -300,6 +300,22 @@ class UserActivityController extends Controller_2_1 {
 			['name' => 'session_id', 'title' => 'Session ID', 'link' => FilterForm::LINK_TYPE_STANDARD]
 		);
 
+		$pages = PageModel::Find(null, null, 'baseurl');
+		$allPages = ['' => '-- All Pages --'];
+		foreach($pages as $p){
+			/** @var PageModel $p */
+			$allPages[$p->get('baseurl')] = $p->get('baseurl');
+		}
+		$filters->addElement(
+			'select',
+			[
+				'name' => 'baseurl',
+			    'title' => 'Page',
+			    'options' => $allPages,
+			    'link' => FilterForm::LINK_TYPE_STANDARD,
+			]
+		);
+
 		$filters->load($request);
 
 

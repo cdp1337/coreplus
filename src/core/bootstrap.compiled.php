@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 05 Oct 2015 02:30:26 -0400
+ * @compiled Tue, 06 Oct 2015 18:18:37 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19421,6 +19421,13 @@ if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTF
 HookHandler::DispatchHook('/core/page/error-' . $view->error, $view);
 }
 try {
+if(\Core\user()->checkAccess('p:user_activity_list') && $page && $page->exists()){
+$view->addControl(
+'User Activity Details',
+'/useractivity/details?filter[baseurl]=' . $page->get('baseurl'),
+'eye'
+);
+}
 $view->fetch();
 }
 catch (Exception $e) {

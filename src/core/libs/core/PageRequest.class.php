@@ -667,6 +667,16 @@ class PageRequest {
 		try {
 			// This will pre-fetch the contents of the entire page and store it into memory.
 			// If it is cacheable, then it will be cached and used for the next execution.
+
+			// If the user has the view user activity permission, add the link to that page!
+			if(\Core\user()->checkAccess('p:user_activity_list') && $page && $page->exists()){
+				$view->addControl(
+					'User Activity Details',
+					'/useractivity/details?filter[baseurl]=' . $page->get('baseurl'),
+					'eye'
+				);
+			}
+
 			$view->fetch();
 		}
 		catch (Exception $e) {
