@@ -34,6 +34,7 @@
 
 		{foreach $drivers as $name => $d}
 			<div class="user-login-include user-authdriver-{$name}">
+				<div class="user-authdriver-title">{$d->getAuthTitle()}</div>
 				{$d->renderLogin(['orientation' => {$form_orientation}])}
 			</div>
 		{/foreach}

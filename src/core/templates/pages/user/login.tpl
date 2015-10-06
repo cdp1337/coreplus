@@ -9,7 +9,7 @@
 
 	<fieldset id="user-login-existing" class="user-login-existing clearfix {$column_count}">
 		<div class="user-login-section-heading clearfix">
-			Login to your existing account.
+			Existing Account
 		</div>
 
 		{**
@@ -24,6 +24,7 @@
 
 		{foreach $drivers as $name => $d}
 			<div class="user-login-include user-authdriver-{$name}">
+				<div class="user-authdriver-title">{$d->getAuthTitle()}</div>
 				{$d->renderLogin(['orientation' => {$form_orientation}])}
 			</div>
 		{/foreach}

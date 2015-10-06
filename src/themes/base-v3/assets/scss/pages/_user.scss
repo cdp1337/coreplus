@@ -1,0 +1,21 @@
+
+.user-login-existing.col-1 {
+	.user-authdriver-title {
+		display: none;
+	}
+}
+.user-login-existing.col-2 {
+	// The block for each authdriver
+	.user-login-include {
+		border: 1px solid #CCC;
+		display: inline-block;
+		margin: 1%;
+		padding: 1%;
+		width: 47%;
+		vertical-align: top;
+	}
+
+	.user-authdriver-title {
+		color: #AAA;
+	}
+}
