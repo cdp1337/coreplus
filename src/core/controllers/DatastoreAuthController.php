@@ -648,8 +648,13 @@ class DatastoreAuthController extends Controller_2_1 {
 			return [];
 		}
 
-		/** @var UserModel $user */
-		$user = UserModel::Construct($userid);
+		if($userid instanceof UserModel){
+			$user = $userid;
+		}
+		else{
+			/** @var UserModel $user */
+			$user = UserModel::Construct($userid);
+		}
 
 		if(!$user->exists()){
 			// Invalid user.
