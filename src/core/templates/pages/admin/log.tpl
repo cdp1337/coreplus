@@ -8,11 +8,6 @@
 	.systemlog-entry-type-security .systemlog-entry-code {
 		color: red;
 	}
-
-	table.listing .systemlog-metarow td {
-		color: #666;
-		padding-bottom: 0.75em;
-	}
 </style>{/css}
 
 {$listings->render('head')}
