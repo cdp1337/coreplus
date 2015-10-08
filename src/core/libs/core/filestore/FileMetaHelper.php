@@ -22,7 +22,6 @@
  */
 
 namespace Core\Filestore;
-use Core\Licenses\Factory;
 
 
 /**
@@ -136,7 +135,7 @@ class FileMetaHelper implements \ArrayAccess {
 		}
 		elseif($key == 'license'){
 			// Match this up to the value if it's available.
-			$all = Factory::GetLicenses();
+			$all = \Core\Licenses\Factory::GetLicenses();
 			if(isset($all[$value])){
 				$valuetitle = $all[$value]['title'];
 			}
