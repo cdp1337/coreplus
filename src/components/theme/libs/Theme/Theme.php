@@ -14,6 +14,7 @@
 
 namespace Theme;
 use Core\CLI\CLI;
+use Core\Filestore\File;
 
 /**
  * Theme object.
@@ -995,6 +996,52 @@ class Theme{
 			}
 			elseif($verbose == 2){
 				CLI::PrintActionStatus('ok');
+			}
+		}
+
+		// If there are custom assets not registered by any application, install them too!
+		// This will allow an admin to upload additional css resources and images easily.
+		$directory = \Core\Filestore\Factory::Directory('themes/custom/assets');
+		$ls = $directory->ls(null, true);
+		$baseStrLen = strlen(ROOT_PDIR . '/themes/custom/assets');
+		foreach($ls as $fileOrDir){
+			if($fileOrDir instanceof File){
+				$newfilename = substr($fileOrDir->getFilename(),$baseStrLen);
+				$nf = \Core\Filestore\Factory::File('asset/' . $newfilename);
+				if($nf->exists() && $nf->identicalTo($fileOrDir)){
+					//echo "Skipping file, it's identical.<br/>";
+
+					if($verbose == 2){
+						CLI::PrintActionStatus('skip');
+					}
+
+					continue;
+				}
+				// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
+				elseif($nf->exists()){
+					$action = 'Replaced';
+				}
+				// Otherwise otherwise, it's a new file.
+				else{
+					$action = 'Installed';
+				}
+
+				try{
+					$fileOrDir->copyTo($nf, true);
+				}
+				catch(\Exception $e){
+					throw new \InstallerException('Unable to copy [' . $fileOrDir->getFilename() . '] to [' . $nf->getFilename() . ']');
+				}
+
+				$change = $action . ' ' . $nf->getFilename();
+				$changes[] = $change;
+
+				if($verbose == 1){
+					CLI::PrintLine($change);
+				}
+				elseif($verbose == 2){
+					CLI::PrintActionStatus('ok');
+				}
 			}
 		}
 
