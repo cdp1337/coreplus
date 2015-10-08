@@ -1390,13 +1390,13 @@ class Core implements ISingleton {
 			$stopwords = '""';
 			$removeStopWords = 'false';
 		}
-		$version = DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '';
-		$rootWDIR = ROOT_WDIR;
-		$rootURL = ROOT_URL;
-		$rootURLSSL = ROOT_URL_SSL;
+		$version      = DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '';
+		$rootWDIR     = ROOT_WDIR;
+		$rootURL      = ROOT_URL;
+		$rootURLSSL   = ROOT_URL_SSL;
 		$rootURLnoSSL = ROOT_URL_NOSSL;
-		$ssl = SSL ? 'true' : 'false';
-		$sslMode = SSL_MODE;
+		$ssl          = SSL ? 'true' : 'false';
+		$sslMode      = SSL_MODE;
 
 		$script = <<<EOD
 <script type="text/javascript">

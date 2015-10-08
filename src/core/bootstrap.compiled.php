@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 06 Oct 2015 18:43:34 -0400
+ * @compiled Wed, 07 Oct 2015 20:50:32 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14111,13 +14111,13 @@ else{
 $stopwords = '""';
 $removeStopWords = 'false';
 }
-$version = DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '';
-$rootWDIR = ROOT_WDIR;
-$rootURL = ROOT_URL;
-$rootURLSSL = ROOT_URL_SSL;
+$version      = DEVELOPMENT_MODE ? self::GetComponent()->getVersion() : '';
+$rootWDIR     = ROOT_WDIR;
+$rootURL      = ROOT_URL;
+$rootURLSSL   = ROOT_URL_SSL;
 $rootURLnoSSL = ROOT_URL_NOSSL;
-$ssl = SSL ? 'true' : 'false';
-$sslMode = SSL_MODE;
+$ssl          = SSL ? 'true' : 'false';
+$sslMode      = SSL_MODE;
 $script = <<<EOD
 <script type="text/javascript">
 var Core = {
@@ -18512,6 +18512,11 @@ $this->set($k, $v);
 }
 }
 public function setValue($value) {
+if(isset($this->_attributes['validation']) && $this->_attributes['validation'] == Model::VALIDATION_URL_WEB){
+if(trim($value) != '' && strpos($value, '://') === false){
+$value = 'http://' . $value;
+}
+}
 $valid = $this->validate($value);
 if($valid !== true){
 $this->_error = $valid;
