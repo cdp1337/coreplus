@@ -557,6 +557,16 @@ class FormElement {
 	 */
 	public function setValue($value) {
 
+		// A hot-patch to add better support for user-submitted URLs.
+		// This poses an issue because a user may enter "google.com" when asked to enter a URL.
+		// This script should translate any non-prefixed value with a generic http:// prefix.
+		// @todo If more use cases like this are needed, it would make sense to implement a translateValue hook!
+		if(isset($this->_attributes['validation']) && $this->_attributes['validation'] == Model::VALIDATION_URL_WEB){
+			if(trim($value) != '' && strpos($value, '://') === false){
+				$value = 'http://' . $value;
+			}
+		}
+
 		$valid = $this->validate($value);
 		if($valid !== true){
 			$this->_error = $valid;
