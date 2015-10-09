@@ -1973,6 +1973,7 @@
 		<upgrade from="3.2.2" to="3.4.0"/>
 		<upgrade from="3.4.0" to="3.5.0"/>
 		<upgrade from="3.5.0" to="4.0.0"/>
+		<upgrade from="3.5.1" to="4.0.0"/>
 		<upgrade from="4.0.0" to="4.0.1"/>
 		<upgrade from="4.0.1" to="4.0.2"/>
 		<upgrade from="4.0.2" to="4.0.3"/>
