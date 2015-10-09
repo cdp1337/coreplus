@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JS Cookie" version="2.0.3-1">
+	<provides>
+		<provide version="2.0.3" name="js.cookie" type="library"/>
+		<scriptlibrary name="js.cookie" call="\JSCookie\JSCookie::IncludeJS"/>
+	</provides>
+	<files>
+		<file filename="CHANGELOG" md5="d94517c7f01f9929e7f46e09b69e555f"/>
+		<file filename="MIT-LICENSE.txt" md5="962f4f746673a8b7bb2c26d1800de5cb"/>
+		<file filename="README.md" md5="24690bc71e38173a017ad96af81799b6"/>
+		<file filename="libs/jscookie/JSCookie.php" md5="64630ecadcaabbc673b4af042f8c6191">
+			<class name="JSCookie\JSCookie"/>
+		</file>
+	</files>
+	<view/>
+	<assets>
+		<file filename="assets/js/js-cookie/js.cookie.js" md5="e25babeb8470a438aa42b01b96745555"/>
+		<file filename="assets/js/js-cookie/js.cookie.min.js" md5="947f7b51e39a367442f3b264975cedb3"/>
+	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license>Released under the MIT license</license>
+	</licenses>
+</component>
+
