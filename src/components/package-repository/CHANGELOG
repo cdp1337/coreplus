@@ -1,3 +1,8 @@
+Package Repository 1.0.4
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:46:24 -0400
+
 Package Repository 1.0.3
 
 	* Include some information in the system log when the repo site is not setup properly.

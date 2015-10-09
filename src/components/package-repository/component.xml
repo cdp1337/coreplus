@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.3">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.4">
 	<configs>
 		<config key="/package_repository/base_directory" description="Base directory of the package files.  This should be the full physical path of the directory on the filesystem, ending with a trailing slash." type="string"/>
 		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
@@ -16,9 +16,9 @@
 		<page baseurl="/packagerepository/config" title="Package Repository Configuration" admin="1" access="g:admin" group="Configure"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="831aea1a68b87df5fec23716fcdb0ec0"/>
+		<file filename="CHANGELOG" md5="89b46c11f42aa4031d59131d9a5aa2df"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="c8a790823feda82bf3b1859e564a0977">
+		<file filename="controllers/PackageRepositoryController.php" md5="28203430b5bff487a4bea6965a516de1">
 			<controller name="PackageRepositoryController"/>
 		</file>
 		<file filename="controllers/PackageRepositoryLicenseController.php" md5="181fa2ec1c74406f03b5238d8503629f">
@@ -29,7 +29,8 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/pages/packagerepository/index.tpl" md5="d3aa9c13d349b126b87c0e2ccbf9401e"/>
+		<file filename="templates/pages/packagerepository/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/packagerepository/index.tpl" md5="6de5afe57770779ad5165c095a049e39"/>
 		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="0bfc0cac42ab230d9d2d319f63dd8ca3"/>
 		<file filename="templates/pages/packagerepositorylicense/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -38,6 +39,7 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
+		<upgrade from="1.0.3" to="1.0.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
