@@ -34,7 +34,6 @@
 
 	{if Core::IsLibraryAvailable('jqueryui') && Core::IsLibraryAvailable('jquery.hoverintent')}
 		{script library="jqueryui"}{/script}
-		{script library="jquery.cookie"}{/script}
 		{script library="jquery.hoverintent"}{/script}
 
 		{script}<script>
