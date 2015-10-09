@@ -1,3 +1,8 @@
+JQuery-cycle 3.2.0-1
+
+	* Add the newest jquery.cycle plugin version from MAlsup.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:44:46 -0400
+
 JQuery-cycle 3.0.1~core3
 
 	* Make use of the namespace versions of View instead of static.
