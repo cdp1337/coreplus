@@ -1,3 +1,21 @@
+Theme/Base V3 2.0.0
+
+	* [Feature] #1074 New support for theme-based configuration options and all the supplemental code for
+	  them!
+	* Some minor cleanups on the user login pages.
+	* Compiler.
+	* Display listing address as a block element, prevents it from being on the same line as
+	  city/state/zip.
+	* Switch the admin view widget to the 2.x calling API.
+	* Add a bit of padding around the outer wrapper on the wide skin.
+	* Tweak the wide skin to better match basic.
+	* Improvements to the base-v3 theme, featuring email option and print stylesheets and skins!
+	* Add custom print styles for overriding print-only styles from the theme editor!
+	* Stray "ex" in the code... ???
+	* Add screenshot for the Base-V3 theme.
+	* Add support for the custom.css file in Base-V3.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:48:49 -0400
+
 Theme/Base V3 1.3.0
 
 	* Add some styling for pre code, markdown TOC's, and a new file '_content.scss' to house any little
