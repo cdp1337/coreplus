@@ -114,7 +114,8 @@
 		<file filename="assets/js/jquery/jquery.icheck.min.js" md5="972fdab9e362cb40e66631ee8d312e4e"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.js" md5="916c946e972ec0315db82ebaacbcf111"/>
 		<file filename="assets/js/jquery/jquery.json-2.4.min.js" md5="4353dbe52eb325ec766a1520f450638d"/>
-		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="a6b726ee7fce43453a6eb25e8a1cb819"/>
+		<file filename="assets/js/jquery/jquery.masonry.js" md5="0614355673792d74caff4f1dcf417fb7"/>
+		<file filename="assets/js/jquery/jquery.masonry.min.js" md5="c54e75edf5cbaf412bc16ba4145f6032"/>
 		<file filename="assets/js/jquery/jquery.minimalect.js" md5="1e544516b82f596d8ff5d6a81e514ecc"/>
 		<file filename="assets/js/jquery/jquery.minimalect.min.js" md5="0b12dade9546bde491ad57507dd70199"/>
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
