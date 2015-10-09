@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.01~core3" name="JQuery-contextMenu" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.01-4" name="JQuery-contextMenu" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.3" operation="ge"/>
 		<require name="jquery" type="library" version="1.9.1" operation="ge"/>
@@ -14,7 +14,7 @@
 		menu functionality easy and requires minimal effort to configure.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="d0f1af1554c262c5c18493b366f772ef"/>
+		<file filename="CHANGELOG" md5="7deb9178a9d25bbfcaa5d259ba79eb02"/>
 		<file filename="JQueryContextMenu.lib.php" md5="c22288599d3e6e7af5357ee797ebc9a7">
 			<class name="JQueryContextMenu"/>
 		</file>
@@ -23,11 +23,14 @@
 	<assets>
 		<file filename="assets/css/jquery.contextMenu.css" md5="5a5105ece2e31a65fbb2db0ca4829bf0"/>
 		<file filename="assets/js/jquery/jquery.browser.js" md5="8ea91c18165204eed9fc4af04cf5128d"/>
-		<file filename="assets/js/jquery/jquery.contextMenu.js" md5="ad9bde179c78452fdab8e4274560712a"/>
+		<file filename="assets/js/jquery/jquery.browser.min.js" md5="c043324014ccccd9d3d711cae3d59704"/>
+		<file filename="assets/js/jquery/jquery.contextMenu.js" md5="f169e3f37d9e95cdbd1060411f0d6640"/>
+		<file filename="assets/js/jquery/jquery.contextMenu.min.js" md5="b07e6fb258a26ba2317a6e45b59cef55"/>
 	</assets>
 	<upgrades>
 		<upgrade from="1.01~core1" to="1.01~core2"/>
 		<upgrade from="1.01~core2" to="1.01~core3"/>
+		<upgrade from="1.01~core3" to="1.01-4"/>
 	</upgrades>
 </component>
 

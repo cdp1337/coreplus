@@ -1,3 +1,16 @@
+JQuery-contextMenu 1.01-4
+
+	* Update the copyright to 2015 and my email address throughout the project.
+	* ALL THE MINIFIED JS FILES!
+	* Make use of the namespace versions of View instead of static.
+	* Set many components as released.
+	* Converted this file from CRLF to LF.  No actual code change.
+	* JQuery-contextMenu 1.01~core2
+	* Updated jquery file upload to latest version, adjusted the controller to account for the new headers
+	  used by the latest version of jqueryFileUpload.
+	* Rearranging the project directory structure...
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:41:59 -0400
+
 JQuery-contextMenu 1.01
 
 	* original version
