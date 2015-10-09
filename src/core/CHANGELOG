@@ -1,3 +1,57 @@
+Core Plus 4.2.0
+
+	* [Security] FIX strip out HTML characters from the URL when rendering the Javascript helper object.
+	* [Bug] Fix the call for License factories on the FileMetaHelper class.
+	* [Bug] Support displayformat and saveformat for DateInputs.
+	* [Bug] Add another primary key to UserActivity, now that session IDs are generally blank for
+	  anonymous users.
+	* [Bug] Remove styles from inline, they prevent the custom override from taking effect.
+	* [Bug] The Factory namespace was being cross-used by other methods.  Take out the use directive to
+	  allow both Factories to run in the same script.
+	* [Bug] Fix the password reset link not displaying.
+	* [Bug] Some minor cleanups on the user login pages.
+	* [Bug] Fix smarty suppressed warning when the smarty file doesn't exist yet.
+	* [Bug] Fix form element IDs rendering with a "/" in the ID.
+	* [Bug] Allow getWidgetAreas to be called on a file that doesn't exist, (happens from time to time).
+	* [Feature] Provide better support for URL_WEB validation where the user doesn't enter the http://
+	  prefix.  Addresses Feature #1413
+	* [Feature] New feature for removing stop words from URLs, addresses Feature #1072
+	* [Feature] Add support for pages on user activity details, addresses Feature #1515
+	* [Feature] Add IP filter support to the system log, addresses Feature #1433
+	* [Feature] Move systemlog to reporting, addressed Feature #1514
+	* [Feature] Try to use the web's TMP directory so that utilities/reinstall can accurately purge the
+	  site cache.
+	* [Feature] More verbose output options for upgrades.
+	* [Feature] Add CLI::PrintDebug method as another output option.
+	* [Feature] Add support for nested Views.
+	* [Feature] Add support for specifc Views on templates.
+	* [Feature] Include content-disposition for file downloads and return images as-is for non-resized
+	  images.
+	* [Feature] Upgrade smarty to 3.1.27
+	* [Feature] Switch system log to use the filters and add an email config/test system.
+	* [Feature] Add support for sub-where clauses in Filters.
+	* [Feature] Include print and blank as Core-level skins as they are now used across all themes.
+	* [Feature] Add custom print styles for overriding print-only styles from the theme editor!
+	* [Feature] Switch file uploads to use the data prefix for custom attributes and add support for
+	  recognizing the basedir when browsing files inline.
+	* [Feature] Simple smarty modifier, "to_url".
+	* [Feature] Add support for inline base64 encoded images via the {img} smarty tag.
+	* [Feature] #1074 New support for theme-based configuration options and all the supplemental code for
+	  them!
+	* [Feature] Add User Agent into the admin user view page and better support for viewing specific users
+	  on the log.
+	* [Feature] #556 Add support for tracking site search in Piwik!
+	* [Feature] Add support for passing the query for search results, (required for analytical tracking
+	  support).
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	* Ensure that the model name is set appropriately!  (Forgot this from a prior commit.)
+	* "Return" instead of go back two spaces for system configuration submissions.
+	* Call getAsFormElement instead of the shortcut version, (seeing as this is a shortcut function as it
+	  is).
+	* Correctly pass a fully resolved / external baseurl on the sitemap.
+	* Correctly pass a fully resolved / external baseurl on the PageModel.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:34:53 -0400
+
 Core Plus 4.1.2
 
 	* [Bug] Add the patch for <4.1.2 code bases being able to pull a filename without relying on
