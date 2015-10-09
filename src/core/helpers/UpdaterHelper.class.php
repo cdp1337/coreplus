@@ -47,6 +47,11 @@ class UpdaterHelper {
 		// If Core isn't installed yet, GetComponents will yield null.
 		if($current === null) $current = array();
 
+		/** @var string $backportVersion Add support for "~bpoXYZ" version strings for backported packages. */
+		$coreVersion      = Core::GetVersion();
+		$coreVersionParts = Core::VersionSplit($coreVersion);
+		$backportVersion  = '~bpo' . $coreVersionParts['major'] . $coreVersionParts['minor'] . $coreVersionParts['point'];
+
 		foreach($current as $c){
 			/** @var $c Component_2_1 */
 			$n = $c->getKeyName();
@@ -210,11 +215,27 @@ class UpdaterHelper {
 					case 'component':
 						$vers  = $pkg->getVersion();
 						$parts = Core::VersionSplit($pkg->getVersion());
+						$packagedWithVersion = $pkg->getRootDOM()->getAttribute('packager');
+
+						if($packagedWithVersion && Core::VersionCompare($packagedWithVersion, $coreVersion, '>')){
+							// Skip any package created with a newer version of Core than what is currently installed!
+							continue;
+						}
 
 						// Is it already loaded in the list?
 						if(isset($components[$n])){
+
+							if(strpos($vers, '~bpo') !== false && strpos($vers, $backportVersion) === false){
+								// Skip back ported versions not specifically for this version of Core.
+								// This will check and see if the string ~bpo is present,
+								// and when it is, enforce that it matches exactly this version of Core.
+								continue;
+							}
+
 							// I only want the newest version.
-							if(!Core::VersionCompare($vers, $components[$n]['version'], 'gt')) continue;
+							if(!Core::VersionCompare($vers, $components[$n]['version'], 'gt')){
+								continue;
+							}
 
 							// Only display new feature versions if it's not frozen.
 							if(
