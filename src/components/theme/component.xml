@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.4.4" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,12 +10,14 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="521d8932de18c54ff8c1d6a63169ca69"/>
-		<file filename="controllers/ThemeController.class.php" md5="39b9f4686be70fc025f2d444ef2baf94">
+		<file filename="CHANGELOG" md5="243d93ad57b41021551ac71dba75c4cd"/>
+		<file filename="assets/scss/theme/admin.scss" md5="96790afec6f515911a7e9ffa915262d0"/>
+		<file filename="assets/scss/theme/widgets.scss" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
+		<file filename="controllers/ThemeController.class.php" md5="8ac530c62ba5b3a74d940959fef95a55">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="b522e869c9b3c6d3d8f4e637ecba96bc">
+		<file filename="libs/Theme/Theme.php" md5="40c28609cb4db4044a452e25875370c2">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="4360132aa1f405d144f9330cb1083176">
@@ -27,7 +29,7 @@
 	</files>
 	<view>
 		<file filename="templates/pages/theme/editor.tpl" md5="533b2423a66182e692136eefa142f081"/>
-		<file filename="templates/pages/theme/index.tpl" md5="bacb86ad000baf6c53b4a525abd455f1"/>
+		<file filename="templates/pages/theme/index.tpl" md5="a77fe053fe2a4ecbd275f288de9bb7f0"/>
 		<file filename="templates/pages/theme/selectstylesheets.tpl" md5="47956fc42e0954353264ab3d2f5c0e59"/>
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
 	</view>
@@ -41,8 +43,12 @@
 		<config key="/theme/selected" type="string" default="base-v3" description=""/>
 	</configs>
 	<assets>
-		<file filename="assets/css/theme/admin.css" md5="de1b2508bc649081b8e58fc4d8df2243"/>
-		<file filename="assets/css/theme/widgets.css" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
+		<file filename="assets/css/theme/admin.css" md5="a0b12c8eb9645f4c99167d46b1b3e922"/>
+		<file filename="assets/css/theme/admin.css.map" md5="41278af3064854eddeec8fd9757981c1"/>
+		<file filename="assets/css/theme/admin.min.css" md5="f75d25a984067562d8a1c480e7d21573"/>
+		<file filename="assets/css/theme/widgets.css" md5="a07651085263d3492feba785baac9ab4"/>
+		<file filename="assets/css/theme/widgets.css.map" md5="ad5729a7b8d68928daaa9c9c5e28f2b6"/>
+		<file filename="assets/css/theme/widgets.min.css" md5="7b52addf36341f40288f1adcdd2334a4"/>
 		<file filename="assets/js/theme/widgets.js" md5="0ac5f62b8fb3bddc6c918379a01ed36f"/>
 		<file filename="assets/js/theme/widgets.min.js" md5="434ba7ab0e7ada349d4d3f2a62a055b0"/>
 	</assets>
@@ -72,6 +78,7 @@
 		<upgrade from="2.4.1" to="2.4.2"/>
 		<upgrade from="2.4.2" to="2.4.3"/>
 		<upgrade from="2.4.3" to="2.4.4"/>
+		<upgrade from="2.4.4" to="3.0.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

@@ -1,3 +1,15 @@
+Theme 3.0.0
+
+	* [Bug] Install all custom assets, not just registered ones.  Fixes Bug #1520
+	* [Feature] #1074 New support for theme-based configuration options and all the supplemental code for
+	  them!
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	* Move the custom css tutorial so it makes sense if the directory doesn't exist yet.
+	* Add custom print styles for overriding print-only styles from the theme editor!
+	* Cleaned up the interface for managing custom styles on the theme and made the interface more
+	  user-friendly.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:48:04 -0400
+
 Theme 2.4.4
 
 	* Update the copyright to 2015 and my email address throughout the project.
