@@ -1,3 +1,8 @@
+Cron 1.2.4
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:39:29 -0400
+
 Cron 1.2.3
 
 	* Update the copyright to 2015 and my email address throughout the project.
