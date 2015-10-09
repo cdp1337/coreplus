@@ -1,3 +1,8 @@
+Content 2.5.1
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:38:51 -0400
+
 Content 2.5.0
 
 	* [Feature] Add markdown support for insertables.
