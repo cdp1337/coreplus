@@ -163,22 +163,21 @@
 {/if}
 
 <script>
-	var $container = $('#gallery-images');
+	$(function() {
+		var $container = $('#gallery-images');
 
-	$container.imagesLoaded( function(){
 		$container.masonry({
 			itemSelector : '.gallery-image-wrapper',
 			isAnimated: true,
 			columnWidth: 50
 		});
+
+		$('.gallery-image-wrapper')
+			.mouseover(function(){
+				$(this).addClass('hover');
+			})
+			.mouseout(function(){
+				$(this).removeClass('hover');
+			});
 	});
-
-	$('.gallery-image-wrapper')
-		.mouseover(function(){
-			$(this).addClass('hover');
-		})
-		.mouseout(function(){
-			$(this).removeClass('hover');
-		});
-
 </script>
