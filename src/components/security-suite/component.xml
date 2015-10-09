@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.3" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.0" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
@@ -29,7 +29,7 @@
 		<permission key="/security/viewlog" description="View Security Log"/>
 	</permissions>
 	<view searchdir="templates">
-		<file filename="templates/pages/security/blacklistip.tpl" md5="b6f9b7a4d23c7d7f025c645a9e0bfa31"/>
+		<file filename="templates/pages/security/blacklistip.tpl" md5="4b6c59eaa6f0fed5578af32b0c5b4ba9"/>
 		<file filename="templates/pages/security/blacklistip_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/blacklistip_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/log.tpl" md5="a1b15c4ff3c1937fbf9916c1e6a44f72"/>
@@ -38,16 +38,16 @@
 		<file filename="templates/pages/security/spam_train_1.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/spam_train_2.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
-		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="b22f2d01e716682b27599c19a76b44e2"/>
-		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="748f545b5796b0ef78a77e38ee232417"/>
+		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="0982690d45c188345c5a9537305d7ace"/>
+		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="f2a77ed2fd85a8daceaf2111ef044278"/>
 	</view>
 	<description>
 		Collection of security utilities for your site.
 		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="0fc60fbce2d9488da79fe010d05b540d"/>
-		<file filename="controllers/SecurityController.php" md5="5bc1156c8a55c785d803e93fe17b290b">
+		<file filename="CHANGELOG" md5="d65be7ffdf71b5d16e5edc20c32530ed"/>
+		<file filename="controllers/SecurityController.php" md5="077603ed38cfdb0f418830df85f7ceb3">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="controllers/WPHoneypotController.php" md5="9f2e5ed12f20ab21b9c4b4560d56044c">
@@ -59,7 +59,7 @@
 		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="3e803d2b2987abf4f77d79fe0071ba24">
 			<class name="SecuritySuite\SimpleSitePassword"/>
 		</file>
-		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="6c4cb431b8910911245d0f7ddbec456d">
+		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="d154f3aa3019a678e14bba22e4cb7747">
 			<class name="SecuritySuite\StopForumSpam"/>
 		</file>
 		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="fec292d78da18f69a712647e34b9dce9">
@@ -68,7 +68,7 @@
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
-		<file filename="models/IpBlacklistModel.php" md5="783f6301bb5079f028e69ad8f9ac6759">
+		<file filename="models/IpBlacklistModel.php" md5="9a4a99eb17ca02a8018f7c3879b4a0cd">
 			<class name="IpBlacklistModel"/>
 		</file>
 		<file filename="models/SecurityLogModel.php" md5="a2f1c71c47ee33fff7de2e57447cb056">
@@ -99,6 +99,7 @@
 		<upgrade from="1.5.0" to="1.5.1"/>
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
+		<upgrade from="1.5.3" to="1.6.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>

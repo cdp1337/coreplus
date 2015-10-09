@@ -1,3 +1,9 @@
+Security-Suite 1.6.0
+
+	* [Bug] Fix the display of IP blacklists.
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:47:42 -0400
+
 Security-Suite 1.5.3
 
 	* Update the copyright to 2015 and my email address throughout the project.
