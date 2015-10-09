@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.5" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.6" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="tags" type="component"/>
@@ -13,15 +13,16 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="e3e338933bc1fb8c6dd4fe15358a1fb7"/>
-		<file filename="controllers/BlogController.php" md5="38ccca8e11a807a48816c0fe5472e3f9">
+		<file filename="CHANGELOG" md5="85fdae9ed3aacdcf8128c1f743a91b26"/>
+		<file filename="assets/scss/blog.scss" md5="633b1b43c66a5bdd53ca9b26da8c7f7c"/>
+		<file filename="controllers/BlogController.php" md5="5c60b86388673e04f82757a926c83d8d">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="193cbfea1cf0e3c838923053a702a24d">
+		<file filename="helpers/BlogHelper.php" md5="d1635a44109c2934e6380bb79ad0ef8c">
 			<class name="BlogHelper"/>
 		</file>
 		<file filename="i18n/en.ini" md5="2abf945862c240ef2978d4f97ef99d45"/>
-		<file filename="models/BlogArticleModel.php" md5="c1321472e45bf57340de0a9fd34b83d5">
+		<file filename="models/BlogArticleModel.php" md5="23596463d537a11705010ff36c706e02">
 			<class name="BlogArticleModel"/>
 		</file>
 		<file filename="models/BlogModel.php" md5="076d5995d59b01910e8e478aafe0a1e2">
@@ -35,7 +36,7 @@
 		<file filename="widgets/BlogArticleWidget.php" md5="f83188287aded92bab593a4564272edb">
 			<class name="BlogArticleWidget"/>
 		</file>
-		<file filename="widgets/BlogSearchWidget.php" md5="330296744e3e58eee511694a57a2113a">
+		<file filename="widgets/BlogSearchWidget.php" md5="111b820dbf5ccdfa85c3b371dc13b321">
 			<class name="BlogSearchWidget"/>
 		</file>
 		<file filename="widgets/BlogWidget.php" md5="f8080992f3d5f02d8e2c4b76f6bb16c8">
@@ -58,7 +59,7 @@
 		<file filename="templates/pages/blog/article_create_update.tpl" md5="782384ef977b501e5b80dabf783ecd2d"/>
 		<file filename="templates/pages/blog/article_view.tpl" md5="03e79d65af8e9865f31b2ac1f05facee"/>
 		<file filename="templates/pages/blog/article_view/review-post.tpl" md5="bf28ec2ea5c0caf7e1a2f0fb55ab969f"/>
-		<file filename="templates/pages/blog/create.tpl" md5="88a92a02a91699df3f24063112502867"/>
+		<file filename="templates/pages/blog/create.tpl" md5="4e5945ed8995a0fa036463a6a7c22987"/>
 		<file filename="templates/pages/blog/editindex.tpl" md5="54228dc0b3f751f9d587a1469b361d46"/>
 		<file filename="templates/pages/blog/import.tpl" md5="a0bc654a8b64bbaa8b12aa33f5e998ae"/>
 		<file filename="templates/pages/blog/index.tpl" md5="9120c170876d70ef3ab4a89e45404e68"/>
@@ -125,11 +126,12 @@
 		<upgrade from="1.6.2" to="1.6.3"/>
 		<upgrade from="1.6.3" to="1.6.4"/>
 		<upgrade from="1.6.4" to="1.6.5"/>
+		<upgrade from="1.6.5" to="1.6.6"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/blog.css" md5="057d4488d69c927125d516cde602edb1"/>
-		<file filename="assets/css/blog.css.map" md5="a8ffec0ddb8ed844f1c88fa3dbe9a2e1"/>
-		<file filename="assets/css/blog.min.css" md5="9a06df1537392f830267903f5fb7232a"/>
+		<file filename="assets/css/blog.css" md5="8279a7ad097c30ae289799bd49761f13"/>
+		<file filename="assets/css/blog.css.map" md5="d30c043ff849da43fc6c59e82a7697a6"/>
+		<file filename="assets/css/blog.min.css" md5="b8b393a570532078d6f516e329d4583e"/>
 		<file filename="assets/images/previews/templates/widgets/blog/blog-listing-01.png" md5="9d3e042eae34b7c1e0a79f8b357ba3e7"/>
 		<file filename="assets/images/previews/templates/widgets/blog/blog-listing-140.png" md5="23f0262e8cd4a60220bc58365700f2e3"/>
 		<file filename="assets/images/previews/templates/widgets/blog/blog-listing-210.png" md5="94e8fdacd5ea8f0b85299b870596f5eb"/>
