@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Livefyre" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Livefyre" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.6" operation="ge"/>
 	</requires>
@@ -23,11 +23,11 @@
 		<file filename="templates/widgets/livefyre/view.tpl" md5="296d59df8c74a3a5ea5d4ad4061e3fb2"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="a124336f34a8863e825540d133bb5e4f"/>
-		<file filename="controllers/LivefyreController.php" md5="99efa5503af17be2c446330a62b82877">
+		<file filename="CHANGELOG" md5="e6680cf417775b61aa18d7aa9c0a75f2"/>
+		<file filename="controllers/LivefyreController.php" md5="e80cbc6549c5b0b9fd9766ad8f6faed6">
 			<controller name="LivefyreController"/>
 		</file>
-		<file filename="widgets/LivefyreWidget.php" md5="bddfbae8842fed434d526f17139f8994">
+		<file filename="widgets/LivefyreWidget.php" md5="2f60c95bba5ed00a2c0e2586aaf0fa0e">
 			<class name="LivefyreWidget"/>
 		</file>
 	</files>
@@ -40,6 +40,7 @@
 	</assets>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
