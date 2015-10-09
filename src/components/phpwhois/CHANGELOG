@@ -1,3 +1,43 @@
+PHPWhois 5.0.0-3
+
+	* Some more fixes for the damned phpwhois library.  (Can someone please replace this damn thing
+	  already?!?)
+	* Switch the component versioning scheme slightly to allow for backported versions.
+	* Update the copyright to 2015 and my email address throughout the project.
+	* ALL THE MINIFIED JS FILES!
+	* More code styling fixes.
+	* chmod a-x on a few files
+	* Minor code cleanups and removing some legacy code.
+	* Update PHPWhois to 5.0.0~core2
+	* Accidentally moved the JSHelper outside of the phpwhois/lib directory...
+	* Update PHPWhois to 5.0.0~core1
+	* Forgot a couple files from upstream phpwhois.
+	* Import newest version of phpwhois from the new eVAL library
+	* Re-architect the entire structure of phpWhois to make it more manageable and compliant with PHP 5.5
+	  standards.
+	* Documentation standardization
+	* Repackage a number of components to fix a minor packaging bug.
+	* Update PHPWhois to 4.2.2~core6
+	* Newest version of phpwhois from github.
+	* Documentation cleanup.
+	* Release PHPWhois 4.2.2~core5
+	* Switch to the new interface for accessing Core cache.
+	* Documentation change, @copyright.
+	* Release PHPWhois 4.2.2~core4
+	* Make use of the namespace versions of View instead of static.
+	* Just had to fix the template.  Since it was a .php file, the syntax checker was still trying to
+	  perform lint testing on it.
+	* Set many components as released.
+	* Updates to a lot of the components to reflect recent changes.
+	* PHPWhois 4.2.2~core2
+	* Minor error in the require directive of phpwhois.
+	* Quick addition of the ip lookup now supporting ip network lookups.
+	* Initial commit of the phpwhois application.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:47:08 -0400
+
+PHPWhois 5.0.0-2
+
+
 PHPWhois 5.0.0~core2
 
 	* Accidentally moved the JSHelper outside of the phpwhois/lib directory...
