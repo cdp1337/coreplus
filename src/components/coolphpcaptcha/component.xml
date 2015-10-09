@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.2" name="CoolPHPCaptcha" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
@@ -31,15 +31,15 @@
 		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="e7cf6dac14296ca8c68fd1c6f660c13c"/>
-		<file filename="FormCaptchaInput.class.php" md5="fe1f0d6eeac4c682e2fe930116b45a70">
+		<file filename="CHANGELOG" md5="aa83f82a45abe041379aa329b742fa13"/>
+		<file filename="FormCaptchaInput.class.php" md5="61d73848c647af73814d2ef9a4659e76">
 			<class name="FormCaptchaInput"/>
 		</file>
 		<file filename="SimpleCaptchaController.class.php" md5="221653938d59f69c4d3ae911d1f7d000">
 			<controller name="SimpleCaptchaController"/>
 		</file>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
-		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="ecec40b905db3df8a207ce248ab82351">
+		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="f86b5a1558a2087eee5e4a9b2dfd749f">
 			<class name="SimpleCaptcha"/>
 		</file>
 		<file filename="libs/cool-php-captcha/example.jpg" md5="c43a4ccb03c2ab8d5daaad15e0c93192"/>
@@ -68,6 +68,7 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
+		<upgrade from="1.1.1" to="1.1.2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
