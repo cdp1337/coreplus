@@ -443,7 +443,7 @@ class FileMetaHelper implements \ArrayAccess {
 					'</span>';
 			}
 			if($metalicense){
-				$lic = Factory::GetLicense($metalicense->get('meta_value'));
+				$lic = \Core\Licenses\Factory::GetLicense($metalicense->get('meta_value'));
 				$licimg = \Core\resolve_asset('assets/images/licenses/' . $metalicense->get('meta_value') . '-sm.png');
 
 				if($lic){
