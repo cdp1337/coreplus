@@ -1627,7 +1627,7 @@
 		-->
 		<config key="/core/security/x-frame-options" type="string" description="Value for the X-Frame-Options header." default="SAMEORIGIN"/>
 		<config key="/core/security/csp-frame-ancestors" type="string" description="Additional values for the Content-Security-Policy header, frame-ancestors directive. Includes 'self'" default=""/>
-		<config key="/core/updater/versionfreeze" type="boolean" default="1" description="Lock this version of Core and its libraries at the feature version it is currently at, (Recommended for enterprise sites)."/>
+		<config key="/core/updater/versionfreeze" type="boolean" default="0" description="Lock this version of Core and its libraries at the feature version it is currently at, (Recommended for enterprise sites)."/>
 		<config key="/user/register/requirecaptcha" type="boolean" default="0" description="If a captcha system is available, set to true to require it to be completed on the registration page."/>
 		<config key="/user/password/minlength" type="int" default="8" description="Minimum password length for users."/>
 		<config key="/user/password/requiresymbols" type="int" default="0" description="Minimum number of symbols in the password, ($@#*, etc)."/>
