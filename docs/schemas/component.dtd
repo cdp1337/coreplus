@@ -42,7 +42,7 @@
 <!ATTLIST provide
 version CDATA #REQUIRED
 name CDATA #REQUIRED
-type CDATA #IMPLIED
+type (component|library) "library"
 >
 <!ELEMENT scriptlibrary EMPTY>
 <!ATTLIST scriptlibrary
