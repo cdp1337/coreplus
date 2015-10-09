@@ -74,7 +74,7 @@ class UserActivityModel extends Model{
 	);
 
 	public static $Indexes = array(
-		'primary' => array('datetime', 'session_id'),
+		'primary' => array('datetime', 'session_id', 'ip_addr'),
 		'datetime' => array('datetime'),
 		'user' => array('user_id')
 	);
