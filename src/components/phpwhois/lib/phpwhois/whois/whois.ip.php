@@ -164,9 +164,9 @@ class ip_handler extends WhoisQuery {
 			if(!is_array($result['regrinfo']['network']['nserver'])) {
 				unset($result['regrinfo']['network']['nserver']);
 			}
-			else
+			/*else
 				$result['regrinfo']['network']['nserver'] =
-					$this->FixNameServer($result['regrinfo']['network']['nserver']);
+					$this->FixNameServer($result['regrinfo']['network']['nserver']);*/
 		}
 
 		return $result;
