@@ -193,7 +193,15 @@ class SecurityController extends Controller_2_1 {
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		$factory = new ModelFactory('IpBlacklistModel');
+		$listing = new Core\ListingTable\Table();
+		$listing->setModelName('IpBlacklistModel');
+		$listing->addColumn('IP or Network', 'ip_addr');
+		$listing->addColumn('Comment');
+		$listing->addColumn('Expires', 'expires');
+		$listing->addColumn('Created', 'created');
+		$listing->setDefaultSort('created', 'DESC');
+
+		$listing->loadFiltersFromRequest($request);
 
 		$view->addControl([
 			'title' => 'Ban IP...',
@@ -201,7 +209,7 @@ class SecurityController extends Controller_2_1 {
 			'link' => '/security/blacklistip/add'
 		]);
 		$view->title = 'Blacklisted IP addresses';
-		$view->assign('listings', $factory->get());
+		$view->assign('listings', $listing);
 	}
 
 	/**

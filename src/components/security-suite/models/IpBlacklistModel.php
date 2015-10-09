@@ -67,6 +67,8 @@ class IpBlacklistModel extends Model{
 			'comment' => 'Expire date, set to "0" to never expire',
 			'form' => array(
 				'type' => 'date',
+				'displayformat' => 'n/j/Y',
+				'saveformat' => 'U',
 				'description' => 'The date that this ban expires, leave blank or set to 0 to permaban.'
 			)
 		),
