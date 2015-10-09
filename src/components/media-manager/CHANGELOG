@@ -1,3 +1,9 @@
+Media Manager 1.0.6
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	* Provide better styling for narrow pages.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:46:02 -0400
+
 Media Manager 1.0.5
 
 	* Update the copyright to 2015 and my email address throughout the project.
