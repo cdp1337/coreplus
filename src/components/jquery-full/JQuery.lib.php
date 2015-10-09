@@ -40,7 +40,7 @@ abstract class JQuery {
 
 		if($use2x == '1'){
 			// The site is setup to use 2.x, (default as of Core 4.0).
-			\Core\view()->addScript ('js/jquery/jquery-2.1.3.js');
+			\Core\view()->addScript ('js/jquery/jquery-2.1.4.js');
 		}
 		else{
 			// The admin requested not to use the new version of jQuery.  Stick with 1.11 then.
