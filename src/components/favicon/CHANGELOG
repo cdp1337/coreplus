@@ -1,3 +1,10 @@
+Favicon 1.2.3
+
+	* Add a hint to the template that shows that the preview pane can be expanded.
+	* Switch to the Core-provided config saving page instead of a duplicate, now that it can be used that
+	  way!
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:39:50 -0400
+
 Favicon 1.2.2
 
 	* Update the copyright to 2015 and my email address throughout the project.
