@@ -1,3 +1,8 @@
+User-Social 1.2.2
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:48:29 -0400
+
 User-Social 1.2.1
 
 	* Todo #1305 Switch from /user/view/# to /usermodel for the Control Links hook.
