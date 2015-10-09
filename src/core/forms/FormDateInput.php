@@ -106,8 +106,37 @@ class FormDateInput extends FormTextInput {
 				}
 			}
 		}
+
 		$this->_javascriptconstructorstring = json_encode($opts);
 
+		// Does the value need to be transposed to a specific display format?
+		if(isset($this->_attributes['displayformat'])){
+			if(is_numeric($this->get('value'))){
+				$dt = new CoreDateTime($this->get('value'));
+				$formattedvalue = $dt->getFormatted($this->_attributes['displayformat']);
+				$this->_attributes['value'] = $formattedvalue;
+			}
+		}
+
 		return parent::render();
+	}
+
+	public function setValue($value){
+
+		if($value === '' || $value === NULL){
+			// Allow empty values to be entered without manipulation.
+			// This is to prevent an empty value from tripping up the !is_numeric check below and
+			// getting set to an empty date string, which evaluates to the current date/time.
+			return parent::setValue($value);
+		}
+		elseif(isset($this->_attributes['saveformat']) && !is_numeric($value)){
+			// Set value succeeded, now I can convert the string to an int, (if requested).
+			$dt = new CoreDateTime($value);
+			$value = $dt->getFormatted($this->_attributes['saveformat'], \Core\Date\Timezone::TIMEZONE_DEFAULT);
+			return parent::setValue($value);
+		}
+		else{
+			return parent::setValue($value);
+		}
 	}
 }
