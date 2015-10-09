@@ -68,23 +68,7 @@
 }
 
 #gallery-images .gallery-image-wrapper .gallery-admin-image-utils {
-	display: none;
-	position: absolute;
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.8);
-	border-radius: 0 0 5px 5px;
-	left: 20px;
-	padding-top: 5px;
-	top: 0;
 	text-align: left;
-}
-
-#gallery-images .gallery-image-wrapper .controls-hover-wrapper {
-	position: absolute !important; /* Important is required to override the usual behaviour of hover controls. */
-	top: 0;
-	min-width: 100px;
-}
-#gallery-images .gallery-image-wrapper.hover .gallery-admin-image-utils {
-	display: block;
 }
 
 

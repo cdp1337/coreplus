@@ -43,6 +43,39 @@
 
 		<div class="gallery-image-wrapper gallery-image-wrapper-{$i.previewsize}">
 			<div class="gallery-image">
+				{if $editor || $userid == $i.uploaderid}
+					<div class="gallery-admin-image-utils">
+						<ul class="controls" data-proxy-text="Image Controls">
+							<li class="control-edit">
+								{a href="gallery/images/update/`$album.id`?image=`$i.id`" title="Edit {$i->getFileType()}" class="ajax-link" image="`$i.id`"}
+									<i class="icon-edit"></i>
+									<span>Edit {$i->getFileType()}</span>
+								{/a}
+							</li>
+							{if ($i->getFileType() == 'image')}
+								<li class="control-rotate-ccw">
+									<a href="#" title="Rotate Image CCW" class="rotate-link" image="{$i.id}" rotate="ccw">
+										<i class="icon-undo"></i>
+										<span>Rotate Image CCW</span>
+									</a>
+								</li>
+
+								<li class="control-rotate-cw">
+									<a href="#" title="Rotate Image CW" class="rotate-link" image="{$i.id}" rotate="cw">
+										<i class="icon-repeat"></i>
+										<span>Rotate Image CW</span>
+									</a>
+								</li>
+							{/if}
+							<li class="control-remove">
+								{a href="gallery/images/delete/`$album.id`?image=`$i.id`" title="Remove `$i->getFileType()`" confirm="Confirm deleting `$i->getFileType()`?"}
+									<i class="icon-remove"></i>
+									<span>Remove {$i->getFileType()}</span>
+								{/a}
+							</li>
+						</ul>
+					</div>
+				{/if}
 				{a href="`$i.rewriteurl`"}
 					{img alt="`$i.title|escape`" file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title|escape`"}
 				{/a}
@@ -51,37 +84,7 @@
 				{$i.title}
 			</div>
 
-			{if $editor || $userid == $i.uploaderid}
-				<ul class="gallery-admin-image-utils controls">
-					<li class="control-edit">
-						{a href="gallery/images/update/`$album.id`?image=`$i.id`" title="Edit {$i->getFileType()}" class="ajax-link" image="`$i.id`"}
-							<i class="icon-edit"></i>
-							<span>Edit {$i->getFileType()}</span>
-						{/a}
-					</li>
-					{if ($i->getFileType() == 'image')}
-						<li class="control-rotate-ccw">
-							<a href="#" title="Rotate Image CCW" class="rotate-link" image="{$i.id}" rotate="ccw">
-								<i class="icon-undo"></i>
-								<span>Rotate Image CCW</span>
-							</a>
-						</li>
 
-						<li class="control-rotate-cw">
-							<a href="#" title="Rotate Image CW" class="rotate-link" image="{$i.id}" rotate="cw">
-								<i class="icon-repeat"></i>
-								<span>Rotate Image CW</span>
-							</a>
-						</li>
-					{/if}
-					<li class="control-remove">
-						{a href="gallery/images/delete/`$album.id`?image=`$i.id`" title="Remove `$i->getFileType()`" confirm="Confirm deleting `$i->getFileType()`?"}
-							<i class="icon-remove"></i>
-							<span>Remove {$i->getFileType()}</span>
-						{/a}
-					</li>
-				</ul>
-			{/if}
 		</div>
 	{/foreach}
 </div>
