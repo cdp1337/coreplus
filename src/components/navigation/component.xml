@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.0" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.1" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
@@ -8,14 +8,14 @@
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="Content" access="g:admin" admin="1"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="994f6a47fc4f49623a546ab87acbb450"/>
+		<file filename="CHANGELOG" md5="e4160f7fd891444d0ef6a36315c5ff32"/>
 		<file filename="controllers/NavigationController.php" md5="eed9c06e18c80fbf59536fc3b93cbcc3">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="models/Navigation.model.php" md5="3f004ebde2cae91ebd2c15793ca817cd">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="4b6179cfa06d5bd0f073b32d28824a20">
+		<file filename="models/NavigationEntry.model.php" md5="96d186d2e391106d2a53d0cd48fc7505">
 			<class name="NavigationEntryModel"/>
 		</file>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="d7b466a521859a4670ce8e0d98b7fa5c"/>
@@ -80,6 +80,7 @@
 		</upgrade>
 		<upgrade from="2.4.0" to="2.4.1"/>
 		<upgrade from="2.4.1" to="2.5.0"/>
+		<upgrade from="2.5.0" to="2.5.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

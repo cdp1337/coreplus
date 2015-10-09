@@ -1,3 +1,8 @@
+Navigation 2.5.1
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:46:14 -0400
+
 Navigation 2.5.0
 
 	* [Bug] Fix bug #1080 - the navigation administration styling not being intuitive when creating and
