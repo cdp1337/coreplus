@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.5" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.6" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -31,14 +31,14 @@
 		<file filename="templates/pages/gallery/view-file.tpl" md5="3a50e3ea955d4086c354169afb1c55cd"/>
 		<file filename="templates/pages/gallery/view-image.tpl" md5="ed6a73c03584b8536951616f8d9ca71e"/>
 		<file filename="templates/pages/gallery/view-video.tpl" md5="f5d62cac8985b8a9432600f8277ea1f0"/>
-		<file filename="templates/pages/gallery/view.tpl" md5="eeb3eaf5cffb73f1c113c88e7c6a2ad9"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="c7b18b33d739700c7ac05eb4ea6807b8"/>
 		<file filename="templates/pages/gallerywidget/admin.tpl" md5="9e3ce12b55f81d1643903ab35411c9f3"/>
 		<file filename="templates/pages/gallerywidget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="c3eccd69b84d6a9cb0285d92d0de7880"/>
-		<file filename="controllers/GalleryController.php" md5="c3c1abb96658092c7c559186bc1b901b">
+		<file filename="CHANGELOG" md5="8dad5af49faf6ac7fb90b777a154ef1f"/>
+		<file filename="controllers/GalleryController.php" md5="b2ee6aac08a7b3bfd5208dd931f547bd">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="controllers/GalleryWidgetController.php" md5="77960ded4999bb05560f105c53d6ebf7">
@@ -60,7 +60,7 @@
 		</file>
 	</files>
 	<assets>
-		<file filename="assets/css/gallery.css" md5="e067bf7c123c06eda156cba4c5f1ea06"/>
+		<file filename="assets/css/gallery.css" md5="9d25741fa7d4c19808f4d2527eaa4b97"/>
 		<file filename="assets/gallery-arrow.png" md5="16bc541d24d9c8d5a124369eb51a4f8e"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-140.png" md5="0d6f5d18020961db2d13f3f39940bcc1"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-210.png" md5="ba153cf5bb8065ea1b472fca35a6189b"/>
@@ -99,6 +99,7 @@
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.5.4"/>
 		<upgrade from="1.5.4" to="1.5.5"/>
+		<upgrade from="1.5.5" to="1.5.6"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

@@ -1,3 +1,12 @@
+Gallery 1.5.6
+
+	* [Bug] Fix the positioning of the Next and Prev links for photo galleries.
+	* Remove the styling from image controls; this was just making a mess of the new dynamic control menu
+	  anyway.
+	* Drop the pointless imagesloaded check!
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:40:06 -0400
+
 Gallery 1.5.5
 
 	* Update the copyright to 2015 and my email address throughout the project.
