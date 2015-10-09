@@ -26,6 +26,9 @@
         <JSCodeStyleSettings>
           <option name="ALIGN_OBJECT_PROPERTIES" value="1" />
         </JSCodeStyleSettings>
+        <JSCodeStyleSettings>
+          <option name="ALIGN_OBJECT_PROPERTIES" value="1" />
+        </JSCodeStyleSettings>
         <PHPCodeStyleSettings>
           <option name="ALIGN_KEY_VALUE_PAIRS" value="true" />
           <option name="ALIGN_PHPDOC_PARAM_NAMES" value="true" />
@@ -123,4 +126,3 @@
     <option name="USE_PER_PROJECT_SETTINGS" value="true" />
   </component>
 </project>
-
