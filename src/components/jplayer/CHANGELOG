@@ -1,3 +1,8 @@
+jPlayer 2.2.0-4
+
+	* ALL THE MINIFIED JS FILES!
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:41:23 -0400
+
 jPlayer 2.2.0~core3
 
 	* Make use of the namespace versions of View instead of static.
