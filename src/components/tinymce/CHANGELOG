@@ -1,3 +1,8 @@
+TinyMCE 4.2.4-2
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:48:18 -0400
+
 TinyMCE 4.2.4~core1
 
 	* Upgrade TinyMCE to newest upstream version.

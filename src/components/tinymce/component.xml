@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.4~core1" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.2.4-2" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -17,19 +17,19 @@
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="feb3be1d78680691f20449d716935242"/>
 		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="e9e783cbc75b5dbe1d7618e5e4e41ebe"/>
-		<file filename="templates/pages/tinymce/link.phtml" md5="524d952e87774b2bafd2324e7c15274b"/>
+		<file filename="templates/pages/tinymce/link.phtml" md5="16f8682d627e691a9e9839a426d042b4"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="64ee6fb3c1cd877ecd9bc2e93d29e0c0"/>
+		<file filename="CHANGELOG" md5="431023a6e2ec6926ea759857364da92b"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
 		<file filename="TinyMCEFormElement.class.php" md5="6c34bac6e75b958403c34d264b09f813">
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="4d7505646c4aa7e07037ad0b773dd681"/>
-		<file filename="controllers/TinyMCEController.php" md5="8eb7247078c961fdc790f3976844fff5">
+		<file filename="controllers/TinyMCEController.php" md5="ac0e0b64e01f965c92d6cd779b23000e">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="libs/tinymce/TinyMCE.php" md5="fc9de7a9db5f834fd601e75b25c7c928">
+		<file filename="libs/tinymce/TinyMCE.php" md5="a56ba870614f4d2d38f2734381e1c865">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
@@ -243,6 +243,7 @@
 		<upgrade from="4.0.1~core4" to="4.0.1~core5"/>
 		<upgrade from="4.0.1~core5" to="4.0.1~core6"/>
 		<upgrade from="4.0.1~core6" to="4.2.4~core1"/>
+		<upgrade from="4.2.4~core1" to="4.2.4-2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
