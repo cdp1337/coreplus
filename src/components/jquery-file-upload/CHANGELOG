@@ -1,3 +1,9 @@
+jQuery-File-Upload 8.5.0-4
+
+	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
+	* ALL THE MINIFIED JS FILES!
+	-- Charlie Powell <charlie@evalagency.com>  Thu, 08 Oct 2015 23:45:02 -0400
+
 jQuery-File-Upload 8.5.0~core3
 
 	* Log a message to the system logger when a jquery-file-upload fails due to incorrect directory
