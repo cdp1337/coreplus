@@ -704,11 +704,11 @@ class Theme{
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
-	public function reinstall($verbose = 0){
+	public function reinstall($verbosity = 0){
 		// @todo I need actual error checking here.
 		//if(!$this->isInstalled()) return false;
 
-		$changes =  $this->_performInstall($verbose);
+		$changes =  $this->_performInstall($verbosity);
 
 		if(is_array($changes) && sizeof($changes)){
 			\SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
@@ -738,67 +738,6 @@ class Theme{
 	}
 
 	/**
-	 * Get if this theme is currently set as the site default.
-	 *
-	 * @return bool
-	 */
-	public function isDefault(){
-		return \ConfigHandler::Get('/theme/selected') == $this->getKeyName();
-	}
-
-	/**
-	 * Get the primary, (first), screenshot of this theme.
-	 *
-	 * @return array
-	 */
-	public function getScreenshot(){
-		$s = $this->_xmlloader->getElement('//screenshots/screenshot', false);
-
-		if(!$s){
-			return [
-				'file' => '',
-				'title' => $this->getName()
-			];
-		}
-		else{
-
-			$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
-
-			return [
-				'file' => $f,
-				'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
-			];
-		}
-	}
-
-	/**
-	 * Because install, upgrade and remove all are actually the exact same logic for themes.
-	 *
-	 * Returns false if nothing changed, else will return an array containing all changes.
-	 *
-	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
-	 *
-	 * @return false | array
-	 * @throws \InstallerException
-	 */
-	private function _performInstall($verbose = 0){
-		$changed = [];
-
-		$change = $this->_installAssets($verbose);
-		if($change !== false) $changed = array_merge($changed, $change);
-
-		$change = $this->_parseConfigs(true);
-		if($change !== false) $changed = array_merge($changed, $change);
-
-		// Make sure the version is correct in the database.
-		$c = new \ComponentModel('theme/' . $this->_name);
-		$c->set('version', $this->_version);
-		$c->save();
-
-		return (sizeof($changed)) ? $changed : false;
-	}
-
-	/**
 	 * Internal function to parse and handle the configs in the theme.xml file.
 	 * This is used for installations and upgrades.
 	 *
@@ -810,7 +749,7 @@ class Theme{
 	 *
 	 * @throws \InstallerException
 	 */
-	private function _parseConfigs($install = true){
+	public function _parseConfigs($install = true){
 		// Keep track of if this changed anything.
 		$changes = array();
 
@@ -884,12 +823,13 @@ class Theme{
 	 *
 	 * Returns false if nothing changed, else will return an array of all the changes that occured.
 	 *
-	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 * @param bool $install   Set to false to uninstall the assets instead of installing.
+	 * @param int  $verbosity 0 for standard output, 1 for real-time, 2 for real-time verbose output.
 	 *
 	 * @return false | array
 	 * @throws \InstallerException
 	 */
-	private function _installAssets($verbose = 0){
+	public function _parseAssets($install = true, $verbosity = 0){
 		$assetbase = \Core\Filestore\get_asset_path();
 
 		$coretheme = \ConfigHandler::Get('/theme/selected');
@@ -921,14 +861,16 @@ class Theme{
 			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
 				// If so, then copy that asset to the custom directory too!
 				$f = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/' . $newfilename);
+				$srcname = '!CUSTOM!';
 			}
 			else{
 				// Otherwise, the local file is guaranteed to be a local file.
 				$f = new \Core\Filestore\Backends\FileLocal($b . $filename);
+				$srcname = '-theme- ';
 			}
 
-			if($verbose == 2){
-				CLI::PrintActionStart('Installing asset ' . $f->getBasename());
+			if($verbosity == 2){
+				CLI::PrintActionStart('Installing ' . $srcname . ' asset ' . $f->getBasename());
 			}
 
 			$nf = \Core\Filestore\Factory::File($newfilename);
@@ -961,7 +903,7 @@ class Theme{
 			if($nf->exists() && $nf->identicalTo($f)){
 				//echo "Skipping file, it's identical.<br/>";
 
-				if($verbose == 2){
+				if($verbosity == 2){
 					CLI::PrintActionStatus('skip');
 				}
 
@@ -991,10 +933,10 @@ class Theme{
 			$change = $action . ' ' . $nf->getFilename();
 			$changes[] = $change;
 
-			if($verbose == 1){
+			if($verbosity == 1){
 				CLI::PrintLine($change);
 			}
-			elseif($verbose == 2){
+			elseif($verbosity == 2){
 				CLI::PrintActionStatus('ok');
 			}
 		}
@@ -1007,11 +949,14 @@ class Theme{
 		foreach($ls as $fileOrDir){
 			if($fileOrDir instanceof File){
 				$newfilename = substr($fileOrDir->getFilename(),$baseStrLen);
+				if($verbosity == 2){
+					CLI::PrintActionStart('Installing CUSTOM   asset ' . $newfilename);
+				}
 				$nf = \Core\Filestore\Factory::File('asset/' . $newfilename);
 				if($nf->exists() && $nf->identicalTo($fileOrDir)){
 					//echo "Skipping file, it's identical.<br/>";
 
-					if($verbose == 2){
+					if($verbosity == 2){
 						CLI::PrintActionStatus('skip');
 					}
 
@@ -1036,17 +981,17 @@ class Theme{
 				$change = $action . ' ' . $nf->getFilename();
 				$changes[] = $change;
 
-				if($verbose == 1){
+				if($verbosity == 1){
 					CLI::PrintLine($change);
 				}
-				elseif($verbose == 2){
+				elseif($verbosity == 2){
 					CLI::PrintActionStatus('ok');
 				}
 			}
 		}
 
 		if(!sizeof($changes)){
-			if($verbose > 0){
+			if($verbosity > 0){
 				CLI::PrintLine('No changes required');
 			}
 			return false;
@@ -1056,5 +1001,66 @@ class Theme{
 		\Core\Cache::Delete('asset-resolveurl');
 
 		return $changes;
+	}
+
+	/**
+	 * Get if this theme is currently set as the site default.
+	 *
+	 * @return bool
+	 */
+	public function isDefault(){
+		return \ConfigHandler::Get('/theme/selected') == $this->getKeyName();
+	}
+
+	/**
+	 * Get the primary, (first), screenshot of this theme.
+	 *
+	 * @return array
+	 */
+	public function getScreenshot(){
+		$s = $this->_xmlloader->getElement('//screenshots/screenshot', false);
+
+		if(!$s){
+			return [
+				'file' => '',
+				'title' => $this->getName()
+			];
+		}
+		else{
+
+			$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
+
+			return [
+				'file' => $f,
+				'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
+			];
+		}
+	}
+
+	/**
+	 * Because install, upgrade and remove all are actually the exact same logic for themes.
+	 *
+	 * Returns false if nothing changed, else will return an array containing all changes.
+	 *
+	 * @param int $verbosity 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 *
+	 * @return false | array
+	 * @throws \InstallerException
+	 */
+	private function _performInstall($verbosity = 0){
+		$changed = [];
+
+		$change = $this->_parseAssets(true, $verbosity);
+		if($change !== false) $changed = array_merge($changed, $change);
+
+		$change = $this->_parseConfigs(true, $verbosity);
+		if($change !== false) $changed = array_merge($changed, $change);
+
+		// Make sure the version is correct in the database.
+		$c = new \ComponentModel('theme/' . $this->_name);
+		$c->set('version', $this->_version);
+		$c->save();
+
+		return (sizeof($changed)) ? $changed : false;
 	}
 }

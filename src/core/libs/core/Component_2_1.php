@@ -541,7 +541,7 @@ class Component_2_1 {
 
 		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
 			Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
-			$this->_installAssets();
+			$this->_parseAssets();
 		}
 
 		$this->_filesloaded = true;
@@ -1337,16 +1337,16 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
-	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 * @param int $verbosity 0 for standard output, 1 for real-time, 2 for real-time verbose output.
 	 *
 	 * @return boolean | array
 	 * @throws InstallerException
 	 */
-	public function reinstall($verbose = 0) {
+	public function reinstall($verbosity = 0) {
 		// @todo I need actual error checking here.
 		if (!$this->isInstalled()) return false;
 
-		$changes = $this->_performInstall($verbose);
+		$changes = $this->_performInstall($verbosity);
 
 		if(is_array($changes) && sizeof($changes) > 0){
 			SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $this->getName() . ' reinstalled successfully!', implode("\n", $changes));
@@ -1481,6 +1481,639 @@ class Component_2_1 {
 		}
 
 		return (sizeof($changes)) ? $changes : false;
+	}
+
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 *
+	 * @param boolean $install   Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @return boolean | int
+	 * @throws InstallerException
+	 */
+	public function _parseWidgets($install = true, $verbosity = 0) {
+		$overallChanges  = [];
+		$overallAction   = $install ? 'Installing' : 'Uninstalling';
+		$overallActioned = $install ? 'Installed' : 'Uninstalled';
+		$overallSet      = $install ? 'Set' : 'Remove';
+
+		Core\Utilities\Logger\write_debug($overallAction . ' Widgets for ' . $this->getName());
+
+		if(!$install){
+			die('@todo Support uninstalling widgets via _parseWidgets!');
+		}
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('widgets');
+		//$prefix = $node->getAttribute('prefix');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('widget') as $subnode) {
+			$baseurl     = $subnode->getAttribute('baseurl');
+			$installable = $subnode->getAttribute('installable');
+			$title       = $subnode->getAttribute('title');
+
+			if($verbosity == 2){
+				CLI::PrintActionStart($overallAction . ' widget ' . $baseurl . ' ("' . $title . '")');
+			}
+
+			// Insert/Update the defaults for an entry in the database.
+			$m = new WidgetModel($baseurl);
+			$action = ($m->exists()) ? 'Updated' : 'Added';
+
+			if (!$m->get('title')){
+				// Only set the title if it was previously unset
+				$m->set('title', $title);
+			}
+
+			$m->set('installable', $installable);
+			$saved = $m->save();
+
+			if ($saved){
+				if($verbosity == 2){
+					CLI::PrintActionStatus(true);
+				}
+				$changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
+
+				// Is this a new widget and it's an admin installable one?
+				// If so install it to the admin widgetarea!
+				if($action == 'Added' && $installable == '/admin'){
+					$weight = WidgetInstanceModel::Count(
+						[
+							'widgetarea' => 'Admin Dashboard',
+							'page_baseurl' => '/admin',
+						]
+					) + 1;
+
+					$wi = new WidgetInstanceModel();
+					$wi->setFromArray(
+						[
+							'baseurl' => $m->get('baseurl'),
+							'page_baseurl' => '/admin',
+							'widgetarea' => 'Admin Dashboard',
+							'weight' => $weight
+						]
+					);
+					$wi->save();
+
+					$overallChanges[] = $overallActioned . ' widget ' . $m->get('baseurl') . ' into the admin dashboard!';
+				}
+			}
+			else{
+				if($verbosity == 2){
+					CLI::PrintActionStatus('skip');
+				}
+			}
+		}
+
+		return (sizeof($overallChanges) > 0) ? $overallChanges : false;
+	}
+
+
+	/**
+	 * Internal function to parse and handle the DBSchema in the component.xml file.
+	 * This is used for installations and upgrades.
+	 *
+	 * @param boolean $install   Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @throws DMI_Query_Exception
+	 * @throws Exception
+	 * @return boolean | int
+	 */
+	public function _parseDBSchema($install = true, $verbosity = 0) {
+		// I need to get the schema definitions first.
+		$node   = $this->_xmlloader->getElement('dbschema');
+		$prefix = $node->getAttribute('prefix');
+
+		$changes = array();
+
+		Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
+
+		// Get the table structure as it exists in the database first, this will be the comparison point.
+		$classes = $this->getModelList();
+
+		// Do the actual processing of every Model.
+		foreach ($classes as $m => $file) {
+			if(!class_exists($m)) require_once($file);
+
+			$schema = ModelFactory::GetSchema($m);
+			$tablename = $m::GetTableName();
+
+			if($verbosity == 2){
+				CLI::PrintActionStart('Processing database table ' . $tablename);
+			}
+
+			try{
+				if (\Core\db()->tableExists($tablename)) {
+
+					// Get a list of the changes for reporting reasons.
+					/** @var \Core\Datamodel\SchemaColumn $old_schema */
+					$old_schema = \Core\db()->describeTable($tablename);
+					$tablediffs = $old_schema->getDiff($schema);
+
+					if(sizeof($tablediffs)){
+						\Core\db()->modifyTable($tablename, $schema);
+						$changes[] = 'Modified table ' . $tablename;
+						foreach($tablediffs as $d){
+							$changes[] = '[' . $d['type'] . '] ' . $d['title'];
+						}
+						if($verbosity == 2){
+							CLI::PrintActionStatus('ok');
+						}
+					}
+					else{
+						if($verbosity == 2){
+							CLI::PrintActionStatus('skip');
+						}
+					}
+				}
+				else {
+					// Pass this schema into the DMI processor for create table.
+					\Core\db()->createTable($tablename, $schema);
+					$changes[] = 'Created table ' . $tablename;
+					if($verbosity == 2){
+						CLI::PrintActionStatus('ok');
+					}
+				}
+			}
+			catch(DMI_Query_Exception $e){
+				error_log($e->query . "\n<br/>(original table " . $tablename . ")");
+				// Append the table name since otherwise it may be "_tmptable"... which does not provide any useful information!
+				$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
+				//echo '<pre>' . $e->getTraceAsString() . '</pre>'; // DEBUG //
+				throw $e;
+			}
+		}
+
+		return sizeof($changes) ? $changes : false;
+	} // public function _parseDBSchema()
+
+	/**
+	 * Copy in all the assets for this component into the assets location.
+	 *
+	 * Returns false if nothing changed, else will return an array of all the changes that occured.
+	 *
+	 * @param boolean $install   Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @return false | array
+	 * @throws InstallerException
+	 */
+	public function _parseAssets($install = true, $verbosity = 0) {
+		$assetbase = CDN_LOCAL_ASSETDIR;
+		$theme     = ConfigHandler::Get('/theme/selected');
+		$change    = '';
+		$changes   = array();
+
+		Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
+
+		foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
+			/** @var DOMElement $node */
+			$b = $this->getBaseDir();
+
+			// The new file should have a filename identical to the original, with the exception of
+			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
+			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+
+			// Before anything, check and see if this file has a custom override file present.
+			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
+				// If so, then copy that asset to the custom directory too!
+				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
+				$srcname = '!CUSTOM!';
+			}
+			elseif(file_exists(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename)){
+				// Allow the currently enabled theme to override assets too.
+				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename);
+				$srcname = '-theme- ';
+			}
+			else{
+				// Otherwise, the local file is guaranteed to be a local file.
+				$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
+				$srcname = 'original';
+			}
+
+			if($verbosity == 2){
+				CLI::PrintActionStart('Installing ' . $srcname . ' asset ' . $f->getBasename());
+			}
+
+			$nf = \Core\Filestore\Factory::File($newfilename);
+			//var_dump($newfilename, $nf->getFilename(), $nf);
+
+			// If it's null, don't change the path any.
+			/*if ($theme === null) {
+				// Don't do anything.
+			}
+			// The new destination must be in the default directory, this is a
+			// bit of a hack from the usual behaviour of the filestore system.
+			elseif ($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false) {
+				$nf->setFilename(str_replace($assetbase . $theme, $assetbase . 'default', $nf->getFilename()));
+			}*/
+
+			// Check if this file even needs updated. (this is primarily used for reporting reasons)
+			$newfileexists    = $nf->exists();
+			$newfileidentical = $nf->identicalTo($f);
+
+
+			if(
+				$newfileexists &&
+				$newfileidentical &&
+				$f instanceof \Core\Filestore\Backends\FileLocal &&
+				$nf instanceof \Core\Filestore\Backends\FileLocal &&
+				$f->getMTime() != $nf->getMTime()
+			){
+				// This is a bit of a hack because in 2.6.0 and above, the mtime is duplicated along with the contents.
+				// This is to speed up file scans for local -> local disk changes.
+				touch($nf->getFilename(), $f->getMTime());
+				$change = 'Modified timestamp on ' . $nf->getFilename();
+				$changes[] = $change;
+
+				if($verbosity == 1){
+					CLI::PrintLine($change);
+				}
+				elseif($verbosity == 2){
+					CLI::PrintActionStatus('ok');
+				}
+
+				continue;
+			}
+			elseif($newfileexists && $newfileidentical){
+				// The new file and old file are identical, just continue.
+
+				if($verbosity == 2){
+					CLI::PrintActionStatus('skip');
+				}
+
+				continue;
+			}
+			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
+			elseif ($newfileexists) {
+				$action = 'Replaced';
+			}
+			// Otherwise otherwise, it's a new file.
+			else {
+				$action = 'Installed';
+			}
+
+
+			try {
+				$f->copyTo($nf, true);
+			}
+			catch (Exception $e) {
+				throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
+			}
+
+			$change = $action . ' ' . $nf->getFilename();
+			$changes[] = $change;
+
+			if($verbosity == 1){
+				CLI::PrintLine($change);
+			}
+			elseif($verbosity == 2){
+				CLI::PrintActionStatus('ok');
+			}
+		}
+
+		if (!sizeof($changes)){
+			if($verbosity > 0){
+				CLI::PrintLine('No changes required');
+			}
+			return false;
+		}
+
+		// Make sure the asset cache is purged!
+		\Core\Cache::Delete('core-components');
+
+		return $changes;
+	}
+
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 *
+	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
+	 *
+	 * @param boolean $install   Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @return boolean | int
+	 * @throws InstallerException
+	 */
+	public function _parseConfigs($install = true, $verbosity = 0) {
+		// Keep track of if this changed anything.
+		$changes = array();
+
+		$action = $install ? 'Installing' : 'Uninstalling';
+		$set    = $install ? 'Set' : 'Removed';
+
+		Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('configs');
+		//$prefix = $node->getAttribute('prefix');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('config') as $confignode) {
+			/** @var DOMElement $confignode */
+			$key         = $confignode->getAttribute('key');
+			$options     = $confignode->getAttribute('options');
+			$type        = $confignode->getAttribute('type');
+			$default     = $confignode->getAttribute('default');
+			$title       = $confignode->getAttribute('title');
+			$description = $confignode->getAttribute('description');
+			$mapto       = $confignode->getAttribute('mapto');
+			$encrypted   = $confignode->getAttribute('encrypted');
+			$formAtts    = $confignode->getAttribute('form-attributes');
+
+			if($encrypted === null || $encrypted === '') $encrypted = '0';
+
+			// Default if omitted.
+			if(!$type) $type = 'string';
+
+			if($verbosity == 2){
+				CLI::PrintActionStart($action . ' config ' . $key);
+			}
+
+			$m   = ConfigHandler::GetConfig($key);
+			if($install){
+				// Installation/Upgrade Logic
+				$m->set('options', $options);
+				$m->set('type', $type);
+				$m->set('default_value', $default);
+				$m->set('title', $title);
+				$m->set('description', $description);
+				$m->set('mapto', $mapto);
+				$m->set('encrypted', $encrypted);
+				$m->set('form_attributes', $formAtts);
+
+				// Default from the xml, only if it's not already set.
+				if ($m->get('value') === null || !$m->exists()){
+					$m->set('value', $confignode->getAttribute('default'));
+				}
+				// Allow configurations to overwrite any value.  This is useful on the initial installation.
+				if(\Core\Session::Get('configs/' . $key) !== null){
+					$m->set('value', \Core\Session::Get('configs/' . $key));
+				}
+
+				if ($m->save()){
+					$changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+					if($verbosity == 2){
+						CLI::PrintActionStatus(true);
+					}
+				}
+				else{
+					if($verbosity == 2){
+						CLI::PrintActionStatus('skip');
+					}
+				}
+
+				// Make it available immediately
+				ConfigHandler::CacheConfig($m);
+			}
+			else{
+				// Uninstallation Logic
+				$m->delete();
+
+				$changes[] = $set . ' configuration [' . $key . ']';
+				if($verbosity == 2){
+					CLI::PrintActionStatus(true);
+				}
+			}
+		}
+
+		return (sizeof($changes)) ? $changes : false;
+
+	} // private function _parseConfigs
+
+	/**
+	 * Internal function to parse and handle the user configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 *
+	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
+	 *
+	 * @param boolean $install   Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @return boolean | int
+	 * @throws InstallerException
+	 */
+	public function _parseUserConfigs($install = true, $verbosity = 0) {
+		// If the class isn't available, don't do anything here.
+		// This is possible if I'm currently loading the user component!
+		if(!class_exists('UserConfigModel')) return false;
+
+		// Keep track of if this changed anything.
+		$changes = array();
+
+		$action = $install ? 'Installing' : 'Uninstalling';
+
+		Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('userconfigs', false);
+
+		if($node){
+			trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
+		}
+		else{
+			// Try the 2.8 version, <users/>.
+			$node = $this->_xmlloader->getElement('users');
+		}
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('userconfig') as $confignode) {
+			/** @var DOMElement $confignode */
+
+			//<userconfig key="first_name" name="First Name"/>
+			//<userconfig key="last_name" name="Last Name" default="" formtype="" onregistration="" options=""/>
+
+			$key        = $confignode->getAttribute('key');
+			$name       = $confignode->getAttribute('name');
+			$default    = $confignode->getAttribute('default');
+			$formtype   = $confignode->getAttribute('formtype');
+			$onreg      = $confignode->getAttribute('onregistration');
+			$onedit     = $confignode->getAttribute('onedit');
+			$hidden     = $confignode->getAttribute('hidden');
+			$options    = $confignode->getAttribute('options');
+			$searchable = $confignode->getAttribute('searchable');
+			$validation = $confignode->getAttribute('validation');
+			$required   = $confignode->getAttribute('required');
+			$weight     = $confignode->getAttribute('weight');
+
+			// Defaults
+			if($onreg === null)      $onreg = 1;
+			if($onedit === null)     $onedit = 1;
+			if($searchable === null) $searchable = 0;
+			if($required === null)   $required = 0;
+			if($weight === null)     $weight = 0;
+			if($weight == '')        $weight = 0;
+			if($hidden === null)     $hidden = 0;
+
+			// OVERRIDES!
+			// Any hidden config option must be set to not-onedit and not-onreg.
+			if($hidden){
+				$onedit = 0;
+				$onreg  = 0;
+			}
+
+			if($verbosity == 2){
+				CLI::PrintActionStart($action . ' userconfig ' . $key);
+			}
+
+			$model = UserConfigModel::Construct($key);
+			$isnew = !$model->exists();
+
+			if($install){
+				// Installations create/save it!
+
+				// First, all the default and non-editable fields.
+				$model->set('default_name', $name);
+				if($default)  $model->set('default_value', $default);
+				if($formtype) $model->set('formtype', $formtype);
+				$model->set('default_onregistration', $onreg);
+				$model->set('default_onedit', $onedit);
+				$model->set('searchable', $searchable);
+				$model->set('hidden', $hidden);
+				if($options)  $model->set('options', $options);
+				$model->set('validation', $validation);
+				$model->set('required', $required);
+				$model->set('default_weight', $weight);
+
+				// And now the admin-editable fields.
+				// These only get set if the configuration option does not exist prior.
+				if($isnew || $hidden){
+					$model->set('name', $name);
+					$model->set('onregistration', $onreg);
+					$model->set('onedit', $onedit);
+					$model->set('weight', $weight);
+				}
+
+				if($default)  $model->set('default_value', $default);
+				if($formtype) $model->set('formtype', $formtype);
+
+				if($model->save()){
+					if($isnew){
+						$changes[] = 'Created user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+					}
+					else{
+						$changes[] = 'Updated user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+					}
+					if($verbosity == 2){
+						CLI::PrintActionStatus(true);
+					}
+				}
+				else{
+					if($verbosity == 2){
+						CLI::PrintActionStatus('skip');
+					}
+				}
+			}
+			else{
+				// Uninstallations remove user configuration keys.
+				$model->delete();
+				$changes[] = 'Removed user config [' . $key . ']';
+				if($verbosity == 2){
+					CLI::PrintActionStatus(true);
+				}
+			}
+		}
+
+		return (sizeof($changes)) ? $changes : false;
+
+	} // private function _parseUserConfigs
+
+	/**
+	 * Internal function to parse and handle the configs in the component.xml file.
+	 * This is used for installations and upgrades.
+	 *
+	 * @param boolean $install   Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @return boolean | int
+	 * @throws InstallerException
+	 */
+	public function _parsePages($install = true, $verbosity = 0) {
+		$changes = array();
+
+		$overallAction = $install ? 'Installing' : 'Uninstalling';
+
+		Core\Utilities\Logger\write_debug($overallAction . ' pages for ' . $this->getName());
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('pages');
+		//$prefix = $node->getAttribute('prefix');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('page') as $subnode) {
+			/** @var DomElement $subnode */
+			$baseurl = $subnode->getAttribute('baseurl');
+			// Insert/Update the defaults for an entry in the database.
+			// These are always global pages.
+			$m = new PageModel(-1, $baseurl);
+
+			if($verbosity == 2){
+				CLI::PrintActionStart($overallAction . ' page ' . $baseurl);
+			}
+
+			// Hard-set pages get removed upon disabling.  They'll be recreated if re-enabled.
+			if($install){
+				// Just something to help the log.
+				$action     = ($m->exists()) ? 'Updated' : 'Added';
+				$admin      = $subnode->getAttribute('admin');
+				$selectable = ($admin ? '0' : '1'); // Defaults
+				$group      = ($admin ? $subnode->getAttribute('group') : '');
+				if($subnode->getAttribute('selectable') !== ''){
+					$selectable = $subnode->getAttribute('selectable');
+				}
+				$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
+				$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
+				$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
+
+				// Do not "update" value, keep whatever the user set previously.
+				if (!$m->get('rewriteurl')) {
+					if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
+					else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+				}
+				// Do not "update" value, keep whatever the user set previously.
+				if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
+
+				if($access !== null){
+					$m->set('access', $access);
+				}
+
+				// Do not update parent urls if the page already exists.
+				if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
+				//$m->set('widget', $subnode->getAttribute('widget'));
+				$m->set('admin', $admin);
+				$m->set('admin_group', $group);
+				$m->set('selectable', $selectable);
+				$m->set('indexable', $indexable);
+				$m->set('component', $this->getKeyName());
+				$m->set('editurl', $editurl);
+				if ($m->save()){
+					$changes[] = $action . ' page [' . $baseurl . ']';
+					if($verbosity == 2){
+						CLI::PrintActionStatus(true);
+					}
+				}
+				else{
+					if($verbosity == 2){
+						CLI::PrintActionStatus('skip');
+					}
+				}
+			}
+			else{
+				$m->delete();
+				$changes[] = 'Removed page [' . $subnode->getAttribute('baseurl') . ']';
+				if($verbosity == 2){
+					CLI::PrintActionStatus(true);
+				}
+			}
+		}
+
+		return ($changes > 0) ? $changes : false;
 	}
 
 	/**
@@ -1701,34 +2334,46 @@ class Component_2_1 {
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
 	 *
-	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
+	 * @param int $verbosity 0 for standard output, 1 for real-time, 2 for real-time verbose output.
 	 *
 	 * @return false | array
 	 * @throws InstallerException
 	 */
-	private function _performInstall($verbose = 0) {
+	private function _performInstall($verbosity = 0) {
 		// make sure that some of the installer elements are available!
 		require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
 
 		$changed = array();
 
-		$change = $this->_parseDBSchema($verbose);
-		if ($change !== false) $changed = array_merge($changed, $change);
+		$change = $this->_parseDBSchema(true, $verbosity);
+		if ($change !== false){
+			$changed = array_merge($changed, $change);
+		}
 
-		$change = $this->_parseConfigs(true, $verbose);
-		if ($change !== false) $changed = array_merge($changed, $change);
+		$change = $this->_parseConfigs(true, $verbosity);
+		if ($change !== false){
+			$changed = array_merge($changed, $change);
+		}
 
-		$change = $this->_parseUserConfigs(true, $verbose);
-		if ($change !== false) $changed = array_merge($changed, $change);
+		$change = $this->_parseUserConfigs(true, $verbosity);
+		if ($change !== false){
+			$changed = array_merge($changed, $change);
+		}
 
-		$change = $this->_parsePages(true, $verbose);
-		if ($change !== false) $changed = array_merge($changed, $change);
+		$change = $this->_parsePages(true, $verbosity);
+		if ($change !== false){
+			$changed = array_merge($changed, $change);
+		}
 
-		$change = $this->_parseWidgets($verbose);
-		if ($change !== false) $changed = array_merge($changed, $change);
+		$change = $this->_parseWidgets(true, $verbosity);
+		if ($change !== false){
+			$changed = array_merge($changed, $change);
+		}
 
-		$change = $this->_installAssets($verbose);
-		if ($change !== false) $changed = array_merge($changed, $change);
+		$change = $this->_parseAssets(true, $verbosity);
+		if ($change !== false){
+			$changed = array_merge($changed, $change);
+		}
 
 		// Core has some additional things that need to ran through.
 		if($this->getKeyName() == 'core'){
@@ -1767,403 +2412,6 @@ class Component_2_1 {
 
 		return (sizeof($changed)) ? $changed : false;
 	}
-
-
-	/**
-	 * Internal function to parse and handle the configs in the component.xml file.
-	 * This is used for installations and upgrades.
-	 *
-	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
-	 *
-	 * @param boolean $install Set to false to force uninstall/disable mode.
-	 * @return boolean | int
-	 * @throws InstallerException
-	 */
-	private function _parseConfigs($install = true) {
-		// Keep track of if this changed anything.
-		$changes = array();
-
-		$action = $install ? 'Installing' : 'Uninstalling';
-		$set    = $install ? 'Set' : 'Unset';
-
-		Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
-
-		// I need to get the schema definitions first.
-		$node = $this->_xmlloader->getElement('configs');
-		//$prefix = $node->getAttribute('prefix');
-
-		// Now, get every table under this node.
-		foreach ($node->getElementsByTagName('config') as $confignode) {
-			/** @var DOMElement $confignode */
-			$key         = $confignode->getAttribute('key');
-			$options     = $confignode->getAttribute('options');
-			$type        = $confignode->getAttribute('type');
-			$default     = $confignode->getAttribute('default');
-			$title       = $confignode->getAttribute('title');
-			$description = $confignode->getAttribute('description');
-			$mapto       = $confignode->getAttribute('mapto');
-			$encrypted   = $confignode->getAttribute('encrypted');
-			$formAtts    = $confignode->getAttribute('form-attributes');
-
-			if($encrypted === null || $encrypted === '') $encrypted = '0';
-
-			// Default if omitted.
-			if(!$type) $type = 'string';
-
-			$m   = ConfigHandler::GetConfig($key);
-			$m->set('options', $options);
-			$m->set('type', $type);
-			$m->set('default_value', $default);
-			$m->set('title', $title);
-			$m->set('description', $description);
-			$m->set('mapto', $mapto);
-			$m->set('encrypted', $encrypted);
-			$m->set('form_attributes', $formAtts);
-
-			// Default from the xml, only if it's not already set.
-			if ($m->get('value') === null || !$m->exists()){
-				$m->set('value', $confignode->getAttribute('default'));
-			}
-			// Allow configurations to overwrite any value.  This is useful on the initial installation.
-			if(\Core\Session::Get('configs/' . $key) !== null){
-				$m->set('value', \Core\Session::Get('configs/' . $key));
-			}
-
-			if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
-
-			// Make it available immediately
-			ConfigHandler::CacheConfig($m);
-		}
-
-		return (sizeof($changes)) ? $changes : false;
-
-	} // private function _parseConfigs
-
-	/**
-	 * Internal function to parse and handle the user configs in the component.xml file.
-	 * This is used for installations and upgrades.
-	 *
-	 * Returns false if nothing changed, else will return an int of the number of configuration options changed.
-	 *
-	 * @param boolean $install Set to false to force uninstall/disable mode.
-	 * @return boolean | int
-	 * @throws InstallerException
-	 */
-	private function _parseUserConfigs($install = true) {
-		// If the class isn't available, don't do anything here.
-		// This is possible if I'm currently loading the user component!
-		if(!class_exists('UserConfigModel')) return false;
-
-		// Keep track of if this changed anything.
-		$changes = array();
-
-		$action = $install ? 'Installing' : 'Uninstalling';
-
-		Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
-
-		// I need to get the schema definitions first.
-		$node = $this->_xmlloader->getElement('userconfigs', false);
-
-		if($node){
-			trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
-		}
-		else{
-			// Try the 2.8 version, <users/>.
-			$node = $this->_xmlloader->getElement('users');
-		}
-
-		// Now, get every table under this node.
-		foreach ($node->getElementsByTagName('userconfig') as $confignode) {
-			/** @var DOMElement $confignode */
-
-			//<userconfig key="first_name" name="First Name"/>
-			//<userconfig key="last_name" name="Last Name" default="" formtype="" onregistration="" options=""/>
-
-			$key        = $confignode->getAttribute('key');
-			$name       = $confignode->getAttribute('name');
-			$default    = $confignode->getAttribute('default');
-			$formtype   = $confignode->getAttribute('formtype');
-			$onreg      = $confignode->getAttribute('onregistration');
-			$onedit     = $confignode->getAttribute('onedit');
-			$hidden     = $confignode->getAttribute('hidden');
-			$options    = $confignode->getAttribute('options');
-			$searchable = $confignode->getAttribute('searchable');
-			$validation = $confignode->getAttribute('validation');
-			$required   = $confignode->getAttribute('required');
-			$weight     = $confignode->getAttribute('weight');
-
-			// Defaults
-			if($onreg === null)      $onreg = 1;
-			if($onedit === null)     $onedit = 1;
-			if($searchable === null) $searchable = 0;
-			if($required === null)   $required = 0;
-			if($weight === null)     $weight = 0;
-			if($weight == '')        $weight = 0;
-			if($hidden === null)     $hidden = 0;
-
-			// OVERRIDES!
-			// Any hidden config option must be set to not-onedit and not-onreg.
-			if($hidden){
-				$onedit = 0;
-				$onreg  = 0;
-			}
-
-			$model = UserConfigModel::Construct($key);
-			$isnew = !$model->exists();
-
-			if(!$install){
-				// Uninstallations remove user configuration keys.
-				$model->delete();
-				$changes[] = 'Removed user config [' . $key . ']';
-			}
-			else{
-				// Installations create/save it!
-
-				// First, all the default and non-editable fields.
-				$model->set('default_name', $name);
-				if($default)  $model->set('default_value', $default);
-				if($formtype) $model->set('formtype', $formtype);
-				$model->set('default_onregistration', $onreg);
-				$model->set('default_onedit', $onedit);
-				$model->set('searchable', $searchable);
-				$model->set('hidden', $hidden);
-				if($options)  $model->set('options', $options);
-				$model->set('validation', $validation);
-				$model->set('required', $required);
-				$model->set('default_weight', $weight);
-
-				// And now the admin-editable fields.
-				// These only get set if the configuration option does not exist prior.
-				if($isnew || $hidden){
-					$model->set('name', $name);
-					$model->set('onregistration', $onreg);
-					$model->set('onedit', $onedit);
-					$model->set('weight', $weight);
-				}
-
-				if($default)  $model->set('default_value', $default);
-				if($formtype) $model->set('formtype', $formtype);
-
-				if($model->save()){
-					if($isnew){
-						$changes[] = 'Created user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
-					}
-					else{
-						$changes[] = 'Updated user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
-					}
-				}
-			}
-		}
-
-		return (sizeof($changes)) ? $changes : false;
-
-	} // private function _parseUserConfigs
-
-	/**
-	 * Internal function to parse and handle the configs in the component.xml file.
-	 * This is used for installations and upgrades.
-	 *
-	 * @param boolean $install Set to false to force uninstall/disable mode.
-	 * @param int     $verbose
-	 * @return boolean | int
-	 * @throws InstallerException
-	 */
-	private function _parsePages($install = true, $verbose = 0) {
-		$changes = array();
-
-		$action = $install ? 'Installing' : 'Uninstalling';
-
-		Core\Utilities\Logger\write_debug($action . ' pages for ' . $this->getName());
-
-		// I need to get the schema definitions first.
-		$node = $this->_xmlloader->getElement('pages');
-		//$prefix = $node->getAttribute('prefix');
-
-		// Now, get every table under this node.
-		foreach ($node->getElementsByTagName('page') as $subnode) {
-			/** @var DomElement $subnode */
-			// Insert/Update the defaults for an entry in the database.
-			// These are always global pages.
-			$m = new PageModel(-1, $subnode->getAttribute('baseurl'));
-
-			// Hard-set pages get removed upon disabling.  They'll be recreated if re-enabled.
-			if(!$install){
-				$m->delete();
-				$changes[] = 'Removed page [' . $subnode->getAttribute('baseurl') . ']';
-			}
-			else{
-				// Just something to help the log.
-				$action     = ($m->exists()) ? 'Updated' : 'Added';
-				$admin      = $subnode->getAttribute('admin');
-				$selectable = ($admin ? '0' : '1'); // Defaults
-				$group      = ($admin ? $subnode->getAttribute('group') : '');
-				if($subnode->getAttribute('selectable') !== ''){
-					$selectable = $subnode->getAttribute('selectable');
-				}
-				$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
-				$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
-				$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
-
-				// Do not "update" value, keep whatever the user set previously.
-				if (!$m->get('rewriteurl')) {
-					if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
-					else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
-				}
-				// Do not "update" value, keep whatever the user set previously.
-				if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-
-				if($access !== null){
-					$m->set('access', $access);
-				}
-
-				// Do not update parent urls if the page already exists.
-				if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
-				//$m->set('widget', $subnode->getAttribute('widget'));
-				$m->set('admin', $admin);
-				$m->set('admin_group', $group);
-				$m->set('selectable', $selectable);
-				$m->set('indexable', $indexable);
-				$m->set('component', $this->getKeyName());
-				$m->set('editurl', $editurl);
-				if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
-			}
-		}
-
-		return ($changes > 0) ? $changes : false;
-	}
-
-	/**
-	 * Internal function to parse and handle the configs in the component.xml file.
-	 * This is used for installations and upgrades.
-	 *
-	 * @param boolean $install Set to false to force uninstall/disable mode.
-	 * @return boolean | int
-	 * @throws InstallerException
-	 */
-	private function _parseWidgets($install = true) {
-		$changes = array();
-
-		Core\Utilities\Logger\write_debug('Installing Widgets for ' . $this->getName());
-
-		// I need to get the schema definitions first.
-		$node = $this->_xmlloader->getElement('widgets');
-		//$prefix = $node->getAttribute('prefix');
-
-		// Now, get every table under this node.
-		foreach ($node->getElementsByTagName('widget') as $subnode) {
-			// Insert/Update the defaults for an entry in the database.
-			$m = new WidgetModel($subnode->getAttribute('baseurl'));
-
-			// Just something to help the log.
-			$action = ($m->exists()) ? 'Updated' : 'Added';
-			$installable = $subnode->getAttribute('installable');
-
-			// Do not "update" value, keep whatever the user set previously.
-			if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-
-			$m->set('installable', $installable);
-
-			if ($m->save()){
-				$changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
-
-				// Is this a new widget and it's an admin installable one?
-				// If so install it to the admin widgetarea!
-				if($action == 'Added' && $installable == '/admin'){
-					$weight = WidgetInstanceModel::Count([
-							'widgetarea' => 'Admin Dashboard',
-							'page_baseurl' => '/admin',
-						]) + 1;
-
-					$wi = new WidgetInstanceModel();
-					$wi->setFromArray([
-						'baseurl' => $m->get('baseurl'),
-						'page_baseurl' => '/admin',
-						'widgetarea' => 'Admin Dashboard',
-						'weight' => $weight
-					]);
-					$wi->save();
-
-					$changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashboard!';
-				}
-			}
-		}
-
-		return ($changes > 0) ? $changes : false;
-	}
-
-
-	/**
-	 * Internal function to parse and handle the DBSchema in the component.xml file.
-	 * This is used for installations and upgrades.
-	 *
-	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
-	 *
-	 * @throws DMI_Query_Exception
-	 * @throws Exception
-	 * @return boolean | int
-	 */
-	private function _parseDBSchema($verbose = 0) {
-		// I need to get the schema definitions first.
-		$node   = $this->_xmlloader->getElement('dbschema');
-		$prefix = $node->getAttribute('prefix');
-
-		$changes = array();
-
-		Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
-
-		// Get the table structure as it exists in the database first, this will be the comparison point.
-		$classes = $this->getModelList();
-
-		// Do the actual processing of every Model.
-		foreach ($classes as $m => $file) {
-			if(!class_exists($m)) require_once($file);
-
-			$schema = ModelFactory::GetSchema($m);
-			$tablename = $m::GetTableName();
-
-			if($verbose == 2){
-				CLI::PrintActionStart('Processing database table ' . $tablename);
-			}
-
-			try{
-				if (\Core\db()->tableExists($tablename)) {
-
-					// Get a list of the changes for reporting reasons.
-					/** @var \Core\Datamodel\SchemaColumn $old_schema */
-					$old_schema = \Core\db()->describeTable($tablename);
-					$tablediffs = $old_schema->getDiff($schema);
-
-					if(sizeof($tablediffs)){
-						\Core\db()->modifyTable($tablename, $schema);
-						$changes[] = 'Modified table ' . $tablename;
-						foreach($tablediffs as $d){
-							$changes[] = '[' . $d['type'] . '] ' . $d['title'];
-						}
-						if($verbose == 2) CLI::PrintActionStatus('ok');
-					}
-					else{
-						if($verbose == 2) CLI::PrintActionStatus('skip');
-					}
-				}
-				else {
-					// Pass this schema into the DMI processor for create table.
-					\Core\db()->createTable($tablename, $schema);
-					$changes[] = 'Created table ' . $tablename;
-					if($verbose == 2) CLI::PrintActionStatus('ok');
-				}
-			}
-			catch(DMI_Query_Exception $e){
-				error_log($e->query . "\n<br/>(original table " . $tablename . ")");
-				// Append the table name since otherwise it may be "_tmptable"... which does not provide any useful information!
-				$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
-				//echo '<pre>' . $e->getTraceAsString() . '</pre>'; // DEBUG //
-				throw $e;
-			}
-		}
-
-		return sizeof($changes) ? $changes : false;
-	} // private function _parseDBSchema()
-
 
 	/**
 	 * Internal function to parse and handle the dataset in the <upgrade> and <install> tasks.
@@ -2259,143 +2507,7 @@ class Component_2_1 {
 	}
 
 
-	/**
-	 * Copy in all the assets for this component into the assets location.
-	 *
-	 * Returns false if nothing changed, else will return an array of all the changes that occured.
-	 *
-	 * @param int $verbose 0 for standard output, 1 for real-time, 2 for real-time verbose output.
-	 *
-	 * @return false | array
-	 * @throws InstallerException
-	 */
-	private function _installAssets($verbose = 0) {
-		$assetbase = CDN_LOCAL_ASSETDIR;
-		$theme     = ConfigHandler::Get('/theme/selected');
-		$change    = '';
-		$changes   = array();
 
-		Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
-
-		foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
-			/** @var DOMElement $node */
-			$b = $this->getBaseDir();
-
-			// The new file should have a filename identical to the original, with the exception of
-			// everything before the filename.. ie: the ROOT_PDIR and the asset directory.
-			$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
-
-			// Before anything, check and see if this file has a custom override file present.
-			if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
-				// If so, then copy that asset to the custom directory too!
-				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
-				$srcname = 'custom override';
-			}
-			elseif(file_exists(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename)){
-				// Allow the currently enabled theme to override assets too.
-				$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename);
-				$srcname = 'enabled theme';
-			}
-			else{
-				// Otherwise, the local file is guaranteed to be a local file.
-				$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
-				$srcname = 'original';
-			}
-
-			if($verbose == 2){
-				CLI::PrintActionStart('Installing asset ' . $f->getBasename() . ' from ' . $srcname);
-			}
-
-			$nf = \Core\Filestore\Factory::File($newfilename);
-			//var_dump($newfilename, $nf->getFilename(), $nf);
-
-			// If it's null, don't change the path any.
-			/*if ($theme === null) {
-				// Don't do anything.
-			}
-			// The new destination must be in the default directory, this is a 
-			// bit of a hack from the usual behaviour of the filestore system.
-			elseif ($theme != 'default' && strpos($nf->getFilename(), $assetbase . $theme) !== false) {
-				$nf->setFilename(str_replace($assetbase . $theme, $assetbase . 'default', $nf->getFilename()));
-			}*/
-
-			// Check if this file even needs updated. (this is primarily used for reporting reasons)
-			$newfileexists    = $nf->exists();
-			$newfileidentical = $nf->identicalTo($f);
-
-
-			if(
-				$newfileexists &&
-				$newfileidentical &&
-				$f instanceof \Core\Filestore\Backends\FileLocal &&
-				$nf instanceof \Core\Filestore\Backends\FileLocal &&
-				$f->getMTime() != $nf->getMTime()
-			){
-				// This is a bit of a hack because in 2.6.0 and above, the mtime is duplicated along with the contents.
-				// This is to speed up file scans for local -> local disk changes.
-				touch($nf->getFilename(), $f->getMTime());
-				$change = 'Modified timestamp on ' . $nf->getFilename();
-				$changes[] = $change;
-
-				if($verbose == 1){
-					CLI::PrintLine($change);
-				}
-				elseif($verbose == 2){
-					CLI::PrintActionStatus('ok');
-				}
-
-				continue;
-			}
-			elseif($newfileexists && $newfileidentical){
-				// The new file and old file are identical, just continue.
-
-				if($verbose == 2){
-					CLI::PrintActionStatus('skip');
-				}
-
-				continue;
-			}
-			// Otherwise if it exists, I want to be able to inform the user that it was replaced and not just installed.
-			elseif ($newfileexists) {
-				$action = 'Replaced';
-			}
-			// Otherwise otherwise, it's a new file.
-			else {
-				$action = 'Installed';
-			}
-
-
-			try {
-				$f->copyTo($nf, true);
-			}
-			catch (Exception $e) {
-				throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
-			}
-
-			$change = $action . ' ' . $nf->getFilename();
-			$changes[] = $change;
-
-			if($verbose == 1){
-				CLI::PrintLine($change);
-			}
-			elseif($verbose == 2){
-				CLI::PrintActionStatus('ok');
-			}
-
-		}
-
-		if (!sizeof($changes)){
-			if($verbose > 0){
-				CLI::PrintLine('No changes required');
-			}
-			return false;
-		}
-
-		// Make sure the asset cache is purged!
-		\Core\Cache::Delete('core-components');
-
-		return $changes;
-	}
 
 	/**
 	 * Helper function to see if there is a valid upgrade path from the current version installed
