@@ -292,6 +292,11 @@ class UserAgent {
 		// This will also return the cached data.
 		$data = self::_LoadData();
 
+		if(!isset($data['patterns'])){
+			// Catch for failed loads
+			$data['patterns'] = [];
+		}
+
 		$browser = [];
 		foreach ($data['patterns'] as $key => $pattern) {
 			if (preg_match($pattern . 'i', $useragent)) {
@@ -333,7 +338,7 @@ class UserAgent {
 		}
 
 		// Try to guess if there are still empty slots!
-		if($this->platform == 'unknown'){
+		if($this->platform == 'unknown' || $this->platform === null){
 			if(stripos($this->useragent, 'Ubuntu') !== false){
 				// Ubuntu has a useragent of "Ubuntu; Linux x86_64"
 				$this->platform = 'Ubuntu';
@@ -461,7 +466,7 @@ class UserAgent {
 		}
 
 
-		if($this->browser == 'Default Browser'){
+		if($this->browser == 'Default Browser' || $this->browser === null){
 			if(stripos($this->useragent, 'firefox/') !== false){
 				$this->browser = 'Firefox';
 				$this->javascript = true;
