@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 08 Oct 2015 22:18:08 -0400
+ * @compiled Mon, 12 Oct 2015 21:29:03 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7357,7 +7357,7 @@ Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
 }
 if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
 Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
-$this->_installAssets();
+$this->_parseAssets();
 }
 $this->_filesloaded = true;
 return true;
@@ -7840,9 +7840,9 @@ $ch->_registerComponent($this);
 }
 return $changes;
 }
-public function reinstall($verbose = 0) {
+public function reinstall($verbosity = 0) {
 if (!$this->isInstalled()) return false;
-$changes = $this->_performInstall($verbose);
+$changes = $this->_performInstall($verbosity);
 if(is_array($changes) && sizeof($changes) > 0){
 SystemLogModel::LogInfoEvent('/updater/component/reinstall', 'Component ' . $this->getName() . ' reinstalled successfully!', implode("\n", $changes));
 }
@@ -7936,6 +7936,400 @@ if(sizeof($changes) == 0 && $verbose){
 CLI::PrintLine('No changes performed.');
 }
 return (sizeof($changes)) ? $changes : false;
+}
+public function _parseWidgets($install = true, $verbosity = 0) {
+$overallChanges  = [];
+$overallAction   = $install ? 'Installing' : 'Uninstalling';
+$overallActioned = $install ? 'Installed' : 'Uninstalled';
+$overallSet      = $install ? 'Set' : 'Remove';
+Core\Utilities\Logger\write_debug($overallAction . ' Widgets for ' . $this->getName());
+if(!$install){
+die('@todo Support uninstalling widgets via _parseWidgets!');
+}
+$node = $this->_xmlloader->getElement('widgets');
+foreach ($node->getElementsByTagName('widget') as $subnode) {
+$baseurl     = $subnode->getAttribute('baseurl');
+$installable = $subnode->getAttribute('installable');
+$title       = $subnode->getAttribute('title');
+if($verbosity == 2){
+CLI::PrintActionStart($overallAction . ' widget ' . $baseurl . ' ("' . $title . '")');
+}
+$m = new WidgetModel($baseurl);
+$action = ($m->exists()) ? 'Updated' : 'Added';
+if (!$m->get('title')){
+$m->set('title', $title);
+}
+$m->set('installable', $installable);
+$saved = $m->save();
+if ($saved){
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+$changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
+if($action == 'Added' && $installable == '/admin'){
+$weight = WidgetInstanceModel::Count(
+[
+'widgetarea' => 'Admin Dashboard',
+'page_baseurl' => '/admin',
+]
+) + 1;
+$wi = new WidgetInstanceModel();
+$wi->setFromArray(
+[
+'baseurl' => $m->get('baseurl'),
+'page_baseurl' => '/admin',
+'widgetarea' => 'Admin Dashboard',
+'weight' => $weight
+]
+);
+$wi->save();
+$overallChanges[] = $overallActioned . ' widget ' . $m->get('baseurl') . ' into the admin dashboard!';
+}
+}
+else{
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+}
+}
+return (sizeof($overallChanges) > 0) ? $overallChanges : false;
+}
+public function _parseDBSchema($install = true, $verbosity = 0) {
+$node   = $this->_xmlloader->getElement('dbschema');
+$prefix = $node->getAttribute('prefix');
+$changes = array();
+Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
+$classes = $this->getModelList();
+foreach ($classes as $m => $file) {
+if(!class_exists($m)) require_once($file);
+$schema = ModelFactory::GetSchema($m);
+$tablename = $m::GetTableName();
+if($verbosity == 2){
+CLI::PrintActionStart('Processing database table ' . $tablename);
+}
+try{
+if (\Core\db()->tableExists($tablename)) {
+$old_schema = \Core\db()->describeTable($tablename);
+$tablediffs = $old_schema->getDiff($schema);
+if(sizeof($tablediffs)){
+\Core\db()->modifyTable($tablename, $schema);
+$changes[] = 'Modified table ' . $tablename;
+foreach($tablediffs as $d){
+$changes[] = '[' . $d['type'] . '] ' . $d['title'];
+}
+if($verbosity == 2){
+CLI::PrintActionStatus('ok');
+}
+}
+else{
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+}
+}
+else {
+\Core\db()->createTable($tablename, $schema);
+$changes[] = 'Created table ' . $tablename;
+if($verbosity == 2){
+CLI::PrintActionStatus('ok');
+}
+}
+}
+catch(DMI_Query_Exception $e){
+error_log($e->query . "\n<br/>(original table " . $tablename . ")");
+$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
+throw $e;
+}
+}
+return sizeof($changes) ? $changes : false;
+} // public function _parseDBSchema()
+public function _parseAssets($install = true, $verbosity = 0) {
+$assetbase = CDN_LOCAL_ASSETDIR;
+$theme     = ConfigHandler::Get('/theme/selected');
+$change    = '';
+$changes   = array();
+Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
+foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
+$b = $this->getBaseDir();
+$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
+$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
+$srcname = '!CUSTOM!';
+}
+elseif(file_exists(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename)){
+$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename);
+$srcname = '-theme- ';
+}
+else{
+$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
+$srcname = 'original';
+}
+if($verbosity == 2){
+CLI::PrintActionStart('Installing ' . $srcname . ' asset ' . $f->getBasename());
+}
+$nf = \Core\Filestore\Factory::File($newfilename);
+$newfileexists    = $nf->exists();
+$newfileidentical = $nf->identicalTo($f);
+if(
+$newfileexists &&
+$newfileidentical &&
+$f instanceof \Core\Filestore\Backends\FileLocal &&
+$nf instanceof \Core\Filestore\Backends\FileLocal &&
+$f->getMTime() != $nf->getMTime()
+){
+touch($nf->getFilename(), $f->getMTime());
+$change = 'Modified timestamp on ' . $nf->getFilename();
+$changes[] = $change;
+if($verbosity == 1){
+CLI::PrintLine($change);
+}
+elseif($verbosity == 2){
+CLI::PrintActionStatus('ok');
+}
+continue;
+}
+elseif($newfileexists && $newfileidentical){
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+continue;
+}
+elseif ($newfileexists) {
+$action = 'Replaced';
+}
+else {
+$action = 'Installed';
+}
+try {
+$f->copyTo($nf, true);
+}
+catch (Exception $e) {
+throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
+}
+$change = $action . ' ' . $nf->getFilename();
+$changes[] = $change;
+if($verbosity == 1){
+CLI::PrintLine($change);
+}
+elseif($verbosity == 2){
+CLI::PrintActionStatus('ok');
+}
+}
+if (!sizeof($changes)){
+if($verbosity > 0){
+CLI::PrintLine('No changes required');
+}
+return false;
+}
+\Core\Cache::Delete('core-components');
+return $changes;
+}
+public function _parseConfigs($install = true, $verbosity = 0) {
+$changes = array();
+$action = $install ? 'Installing' : 'Uninstalling';
+$set    = $install ? 'Set' : 'Removed';
+Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
+$node = $this->_xmlloader->getElement('configs');
+foreach ($node->getElementsByTagName('config') as $confignode) {
+$key         = $confignode->getAttribute('key');
+$options     = $confignode->getAttribute('options');
+$type        = $confignode->getAttribute('type');
+$default     = $confignode->getAttribute('default');
+$title       = $confignode->getAttribute('title');
+$description = $confignode->getAttribute('description');
+$mapto       = $confignode->getAttribute('mapto');
+$encrypted   = $confignode->getAttribute('encrypted');
+$formAtts    = $confignode->getAttribute('form-attributes');
+if($encrypted === null || $encrypted === '') $encrypted = '0';
+if(!$type) $type = 'string';
+if($verbosity == 2){
+CLI::PrintActionStart($action . ' config ' . $key);
+}
+$m   = ConfigHandler::GetConfig($key);
+if($install){
+$m->set('options', $options);
+$m->set('type', $type);
+$m->set('default_value', $default);
+$m->set('title', $title);
+$m->set('description', $description);
+$m->set('mapto', $mapto);
+$m->set('encrypted', $encrypted);
+$m->set('form_attributes', $formAtts);
+if ($m->get('value') === null || !$m->exists()){
+$m->set('value', $confignode->getAttribute('default'));
+}
+if(\Core\Session::Get('configs/' . $key) !== null){
+$m->set('value', \Core\Session::Get('configs/' . $key));
+}
+if ($m->save()){
+$changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+else{
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+}
+ConfigHandler::CacheConfig($m);
+}
+else{
+$m->delete();
+$changes[] = $set . ' configuration [' . $key . ']';
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+}
+return (sizeof($changes)) ? $changes : false;
+} // private function _parseConfigs
+public function _parseUserConfigs($install = true, $verbosity = 0) {
+if(!class_exists('UserConfigModel')) return false;
+$changes = array();
+$action = $install ? 'Installing' : 'Uninstalling';
+Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
+$node = $this->_xmlloader->getElement('userconfigs', false);
+if($node){
+trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
+}
+else{
+$node = $this->_xmlloader->getElement('users');
+}
+foreach ($node->getElementsByTagName('userconfig') as $confignode) {
+$key        = $confignode->getAttribute('key');
+$name       = $confignode->getAttribute('name');
+$default    = $confignode->getAttribute('default');
+$formtype   = $confignode->getAttribute('formtype');
+$onreg      = $confignode->getAttribute('onregistration');
+$onedit     = $confignode->getAttribute('onedit');
+$hidden     = $confignode->getAttribute('hidden');
+$options    = $confignode->getAttribute('options');
+$searchable = $confignode->getAttribute('searchable');
+$validation = $confignode->getAttribute('validation');
+$required   = $confignode->getAttribute('required');
+$weight     = $confignode->getAttribute('weight');
+if($onreg === null)      $onreg = 1;
+if($onedit === null)     $onedit = 1;
+if($searchable === null) $searchable = 0;
+if($required === null)   $required = 0;
+if($weight === null)     $weight = 0;
+if($weight == '')        $weight = 0;
+if($hidden === null)     $hidden = 0;
+if($hidden){
+$onedit = 0;
+$onreg  = 0;
+}
+if($verbosity == 2){
+CLI::PrintActionStart($action . ' userconfig ' . $key);
+}
+$model = UserConfigModel::Construct($key);
+$isnew = !$model->exists();
+if($install){
+$model->set('default_name', $name);
+if($default)  $model->set('default_value', $default);
+if($formtype) $model->set('formtype', $formtype);
+$model->set('default_onregistration', $onreg);
+$model->set('default_onedit', $onedit);
+$model->set('searchable', $searchable);
+$model->set('hidden', $hidden);
+if($options)  $model->set('options', $options);
+$model->set('validation', $validation);
+$model->set('required', $required);
+$model->set('default_weight', $weight);
+if($isnew || $hidden){
+$model->set('name', $name);
+$model->set('onregistration', $onreg);
+$model->set('onedit', $onedit);
+$model->set('weight', $weight);
+}
+if($default)  $model->set('default_value', $default);
+if($formtype) $model->set('formtype', $formtype);
+if($model->save()){
+if($isnew){
+$changes[] = 'Created user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+}
+else{
+$changes[] = 'Updated user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
+}
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+else{
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+}
+}
+else{
+$model->delete();
+$changes[] = 'Removed user config [' . $key . ']';
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+}
+return (sizeof($changes)) ? $changes : false;
+} // private function _parseUserConfigs
+public function _parsePages($install = true, $verbosity = 0) {
+$changes = array();
+$overallAction = $install ? 'Installing' : 'Uninstalling';
+Core\Utilities\Logger\write_debug($overallAction . ' pages for ' . $this->getName());
+$node = $this->_xmlloader->getElement('pages');
+foreach ($node->getElementsByTagName('page') as $subnode) {
+$baseurl = $subnode->getAttribute('baseurl');
+$m = new PageModel(-1, $baseurl);
+if($verbosity == 2){
+CLI::PrintActionStart($overallAction . ' page ' . $baseurl);
+}
+if($install){
+$action     = ($m->exists()) ? 'Updated' : 'Added';
+$admin      = $subnode->getAttribute('admin');
+$selectable = ($admin ? '0' : '1'); // Defaults
+$group      = ($admin ? $subnode->getAttribute('group') : '');
+if($subnode->getAttribute('selectable') !== ''){
+$selectable = $subnode->getAttribute('selectable');
+}
+$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
+$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
+$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
+if (!$m->get('rewriteurl')) {
+if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
+else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
+}
+if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
+if($access !== null){
+$m->set('access', $access);
+}
+if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
+$m->set('admin', $admin);
+$m->set('admin_group', $group);
+$m->set('selectable', $selectable);
+$m->set('indexable', $indexable);
+$m->set('component', $this->getKeyName());
+$m->set('editurl', $editurl);
+if ($m->save()){
+$changes[] = $action . ' page [' . $baseurl . ']';
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+else{
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+}
+}
+else{
+$m->delete();
+$changes[] = 'Removed page [' . $subnode->getAttribute('baseurl') . ']';
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+}
+return ($changes > 0) ? $changes : false;
 }
 public function disable(){
 if(!$this->isInstalled()) return false;
@@ -8039,21 +8433,33 @@ $changes[] = $filename;
 }
 return $changes;
 }
-private function _performInstall($verbose = 0) {
+private function _performInstall($verbosity = 0) {
 require_once(ROOT_PDIR . 'core/libs/core/InstallerException.php'); #SKIPCOMPILER
 $changed = array();
-$change = $this->_parseDBSchema($verbose);
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseConfigs(true, $verbose);
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseUserConfigs(true, $verbose);
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parsePages(true, $verbose);
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_parseWidgets($verbose);
-if ($change !== false) $changed = array_merge($changed, $change);
-$change = $this->_installAssets($verbose);
-if ($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parseDBSchema(true, $verbosity);
+if ($change !== false){
+$changed = array_merge($changed, $change);
+}
+$change = $this->_parseConfigs(true, $verbosity);
+if ($change !== false){
+$changed = array_merge($changed, $change);
+}
+$change = $this->_parseUserConfigs(true, $verbosity);
+if ($change !== false){
+$changed = array_merge($changed, $change);
+}
+$change = $this->_parsePages(true, $verbosity);
+if ($change !== false){
+$changed = array_merge($changed, $change);
+}
+$change = $this->_parseWidgets(true, $verbosity);
+if ($change !== false){
+$changed = array_merge($changed, $change);
+}
+$change = $this->_parseAssets(true, $verbosity);
+if ($change !== false){
+$changed = array_merge($changed, $change);
+}
 if($this->getKeyName() == 'core'){
 $f = \Core\Filestore\Factory::File('private/.htaccess');
 if(!$f->exists() && $f->isWritable()){
@@ -8081,234 +8487,6 @@ $changed[] = 'Installed assets htaccess file into ' . $f->getFilename();
 \Core\Cache::Delete('core-components');
 return (sizeof($changed)) ? $changed : false;
 }
-private function _parseConfigs($install = true) {
-$changes = array();
-$action = $install ? 'Installing' : 'Uninstalling';
-$set    = $install ? 'Set' : 'Unset';
-Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
-$node = $this->_xmlloader->getElement('configs');
-foreach ($node->getElementsByTagName('config') as $confignode) {
-$key         = $confignode->getAttribute('key');
-$options     = $confignode->getAttribute('options');
-$type        = $confignode->getAttribute('type');
-$default     = $confignode->getAttribute('default');
-$title       = $confignode->getAttribute('title');
-$description = $confignode->getAttribute('description');
-$mapto       = $confignode->getAttribute('mapto');
-$encrypted   = $confignode->getAttribute('encrypted');
-$formAtts    = $confignode->getAttribute('form-attributes');
-if($encrypted === null || $encrypted === '') $encrypted = '0';
-if(!$type) $type = 'string';
-$m   = ConfigHandler::GetConfig($key);
-$m->set('options', $options);
-$m->set('type', $type);
-$m->set('default_value', $default);
-$m->set('title', $title);
-$m->set('description', $description);
-$m->set('mapto', $mapto);
-$m->set('encrypted', $encrypted);
-$m->set('form_attributes', $formAtts);
-if ($m->get('value') === null || !$m->exists()){
-$m->set('value', $confignode->getAttribute('default'));
-}
-if(\Core\Session::Get('configs/' . $key) !== null){
-$m->set('value', \Core\Session::Get('configs/' . $key));
-}
-if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
-ConfigHandler::CacheConfig($m);
-}
-return (sizeof($changes)) ? $changes : false;
-} // private function _parseConfigs
-private function _parseUserConfigs($install = true) {
-if(!class_exists('UserConfigModel')) return false;
-$changes = array();
-$action = $install ? 'Installing' : 'Uninstalling';
-Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
-$node = $this->_xmlloader->getElement('userconfigs', false);
-if($node){
-trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
-}
-else{
-$node = $this->_xmlloader->getElement('users');
-}
-foreach ($node->getElementsByTagName('userconfig') as $confignode) {
-$key        = $confignode->getAttribute('key');
-$name       = $confignode->getAttribute('name');
-$default    = $confignode->getAttribute('default');
-$formtype   = $confignode->getAttribute('formtype');
-$onreg      = $confignode->getAttribute('onregistration');
-$onedit     = $confignode->getAttribute('onedit');
-$hidden     = $confignode->getAttribute('hidden');
-$options    = $confignode->getAttribute('options');
-$searchable = $confignode->getAttribute('searchable');
-$validation = $confignode->getAttribute('validation');
-$required   = $confignode->getAttribute('required');
-$weight     = $confignode->getAttribute('weight');
-if($onreg === null)      $onreg = 1;
-if($onedit === null)     $onedit = 1;
-if($searchable === null) $searchable = 0;
-if($required === null)   $required = 0;
-if($weight === null)     $weight = 0;
-if($weight == '')        $weight = 0;
-if($hidden === null)     $hidden = 0;
-if($hidden){
-$onedit = 0;
-$onreg  = 0;
-}
-$model = UserConfigModel::Construct($key);
-$isnew = !$model->exists();
-if(!$install){
-$model->delete();
-$changes[] = 'Removed user config [' . $key . ']';
-}
-else{
-$model->set('default_name', $name);
-if($default)  $model->set('default_value', $default);
-if($formtype) $model->set('formtype', $formtype);
-$model->set('default_onregistration', $onreg);
-$model->set('default_onedit', $onedit);
-$model->set('searchable', $searchable);
-$model->set('hidden', $hidden);
-if($options)  $model->set('options', $options);
-$model->set('validation', $validation);
-$model->set('required', $required);
-$model->set('default_weight', $weight);
-if($isnew || $hidden){
-$model->set('name', $name);
-$model->set('onregistration', $onreg);
-$model->set('onedit', $onedit);
-$model->set('weight', $weight);
-}
-if($default)  $model->set('default_value', $default);
-if($formtype) $model->set('formtype', $formtype);
-if($model->save()){
-if($isnew){
-$changes[] = 'Created user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
-}
-else{
-$changes[] = 'Updated user config [' . $model->get('key') . '] as a [' . $model->get('formtype') . ' input]';
-}
-}
-}
-}
-return (sizeof($changes)) ? $changes : false;
-} // private function _parseUserConfigs
-private function _parsePages($install = true, $verbose = 0) {
-$changes = array();
-$action = $install ? 'Installing' : 'Uninstalling';
-Core\Utilities\Logger\write_debug($action . ' pages for ' . $this->getName());
-$node = $this->_xmlloader->getElement('pages');
-foreach ($node->getElementsByTagName('page') as $subnode) {
-$m = new PageModel(-1, $subnode->getAttribute('baseurl'));
-if(!$install){
-$m->delete();
-$changes[] = 'Removed page [' . $subnode->getAttribute('baseurl') . ']';
-}
-else{
-$action     = ($m->exists()) ? 'Updated' : 'Added';
-$admin      = $subnode->getAttribute('admin');
-$selectable = ($admin ? '0' : '1'); // Defaults
-$group      = ($admin ? $subnode->getAttribute('group') : '');
-if($subnode->getAttribute('selectable') !== ''){
-$selectable = $subnode->getAttribute('selectable');
-}
-$indexable = ($subnode->getAttribute('indexable') !== '') ? $subnode->getAttribute('indexable') : $selectable;
-$editurl = $subnode->getAttribute('editurl') ? $subnode->getAttribute('editurl') : '';
-$access = ($subnode->getAttribute('access')) ? $subnode->getAttribute('access') : null;
-if (!$m->get('rewriteurl')) {
-if ($subnode->getAttribute('rewriteurl')) $m->set('rewriteurl', $subnode->getAttribute('rewriteurl'));
-else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
-}
-if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-if($access !== null){
-$m->set('access', $access);
-}
-if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
-$m->set('admin', $admin);
-$m->set('admin_group', $group);
-$m->set('selectable', $selectable);
-$m->set('indexable', $indexable);
-$m->set('component', $this->getKeyName());
-$m->set('editurl', $editurl);
-if ($m->save()) $changes[] = $action . ' page [' . $m->get('baseurl') . ']';
-}
-}
-return ($changes > 0) ? $changes : false;
-}
-private function _parseWidgets($install = true) {
-$changes = array();
-Core\Utilities\Logger\write_debug('Installing Widgets for ' . $this->getName());
-$node = $this->_xmlloader->getElement('widgets');
-foreach ($node->getElementsByTagName('widget') as $subnode) {
-$m = new WidgetModel($subnode->getAttribute('baseurl'));
-$action = ($m->exists()) ? 'Updated' : 'Added';
-$installable = $subnode->getAttribute('installable');
-if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
-$m->set('installable', $installable);
-if ($m->save()){
-$changes[] = $action . ' widget [' . $m->get('baseurl') . ']';
-if($action == 'Added' && $installable == '/admin'){
-$weight = WidgetInstanceModel::Count([
-'widgetarea' => 'Admin Dashboard',
-'page_baseurl' => '/admin',
-]) + 1;
-$wi = new WidgetInstanceModel();
-$wi->setFromArray([
-'baseurl' => $m->get('baseurl'),
-'page_baseurl' => '/admin',
-'widgetarea' => 'Admin Dashboard',
-'weight' => $weight
-]);
-$wi->save();
-$changes[] = 'Installed  widget ' . $m->get('baseurl') . ' into the admin dashboard!';
-}
-}
-}
-return ($changes > 0) ? $changes : false;
-}
-private function _parseDBSchema($verbose = 0) {
-$node   = $this->_xmlloader->getElement('dbschema');
-$prefix = $node->getAttribute('prefix');
-$changes = array();
-Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
-$classes = $this->getModelList();
-foreach ($classes as $m => $file) {
-if(!class_exists($m)) require_once($file);
-$schema = ModelFactory::GetSchema($m);
-$tablename = $m::GetTableName();
-if($verbose == 2){
-CLI::PrintActionStart('Processing database table ' . $tablename);
-}
-try{
-if (\Core\db()->tableExists($tablename)) {
-$old_schema = \Core\db()->describeTable($tablename);
-$tablediffs = $old_schema->getDiff($schema);
-if(sizeof($tablediffs)){
-\Core\db()->modifyTable($tablename, $schema);
-$changes[] = 'Modified table ' . $tablename;
-foreach($tablediffs as $d){
-$changes[] = '[' . $d['type'] . '] ' . $d['title'];
-}
-if($verbose == 2) CLI::PrintActionStatus('ok');
-}
-else{
-if($verbose == 2) CLI::PrintActionStatus('skip');
-}
-}
-else {
-\Core\db()->createTable($tablename, $schema);
-$changes[] = 'Created table ' . $tablename;
-if($verbose == 2) CLI::PrintActionStatus('ok');
-}
-}
-catch(DMI_Query_Exception $e){
-error_log($e->query . "\n<br/>(original table " . $tablename . ")");
-$e->query = $e->query . "\n<br/>(original table " . $tablename . ")";
-throw $e;
-}
-}
-return sizeof($changes) ? $changes : false;
-} // private function _parseDBSchema()
 private function _parseDatasetNode(DOMElement $node, $verbose = false){
 $action   = $node->getAttribute('action');
 $table    = $node->getAttribute('table');
@@ -8371,87 +8549,6 @@ if($verbose){
 CLI::PrintLine('Loading custom PHP file ' . $filename);
 }
 include($filename);
-}
-private function _installAssets($verbose = 0) {
-$assetbase = CDN_LOCAL_ASSETDIR;
-$theme     = ConfigHandler::Get('/theme/selected');
-$change    = '';
-$changes   = array();
-Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
-foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
-$b = $this->getBaseDir();
-$newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
-if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
-$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/custom/' . $newfilename);
-$srcname = 'custom override';
-}
-elseif(file_exists(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename)){
-$f = new \Core\Filestore\Backends\FileLocal(ROOT_PDIR . 'themes/' . $theme . '/' . $newfilename);
-$srcname = 'enabled theme';
-}
-else{
-$f = new \Core\Filestore\Backends\FileLocal($b . $node->getAttribute('filename'));
-$srcname = 'original';
-}
-if($verbose == 2){
-CLI::PrintActionStart('Installing asset ' . $f->getBasename() . ' from ' . $srcname);
-}
-$nf = \Core\Filestore\Factory::File($newfilename);
-$newfileexists    = $nf->exists();
-$newfileidentical = $nf->identicalTo($f);
-if(
-$newfileexists &&
-$newfileidentical &&
-$f instanceof \Core\Filestore\Backends\FileLocal &&
-$nf instanceof \Core\Filestore\Backends\FileLocal &&
-$f->getMTime() != $nf->getMTime()
-){
-touch($nf->getFilename(), $f->getMTime());
-$change = 'Modified timestamp on ' . $nf->getFilename();
-$changes[] = $change;
-if($verbose == 1){
-CLI::PrintLine($change);
-}
-elseif($verbose == 2){
-CLI::PrintActionStatus('ok');
-}
-continue;
-}
-elseif($newfileexists && $newfileidentical){
-if($verbose == 2){
-CLI::PrintActionStatus('skip');
-}
-continue;
-}
-elseif ($newfileexists) {
-$action = 'Replaced';
-}
-else {
-$action = 'Installed';
-}
-try {
-$f->copyTo($nf, true);
-}
-catch (Exception $e) {
-throw new InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
-}
-$change = $action . ' ' . $nf->getFilename();
-$changes[] = $change;
-if($verbose == 1){
-CLI::PrintLine($change);
-}
-elseif($verbose == 2){
-CLI::PrintActionStatus('ok');
-}
-}
-if (!sizeof($changes)){
-if($verbose > 0){
-CLI::PrintLine('No changes required');
-}
-return false;
-}
-\Core\Cache::Delete('core-components');
-return $changes;
 }
 private function _checkUpgradePath(){
 if($this->_versionDB && $this->_version != $this->_versionDB){
@@ -16962,6 +17059,9 @@ protected static $_Cache = [];
 public function __construct($useragent = null) {
 if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
 $data = self::_LoadData();
+if(!isset($data['patterns'])){
+$data['patterns'] = [];
+}
 $browser = [];
 foreach ($data['patterns'] as $key => $pattern) {
 if (preg_match($pattern . 'i', $useragent)) {
@@ -16994,7 +17094,7 @@ $prop = self::$Map[$key];
 $this->$prop = $value;
 }
 }
-if($this->platform == 'unknown'){
+if($this->platform == 'unknown' || $this->platform === null){
 if(stripos($this->useragent, 'Ubuntu') !== false){
 $this->platform = 'Ubuntu';
 }
@@ -17112,7 +17212,7 @@ $this->platform_architecture = 'x86';
 }
 }
 }
-if($this->browser == 'Default Browser'){
+if($this->browser == 'Default Browser' || $this->browser === null){
 if(stripos($this->useragent, 'firefox/') !== false){
 $this->browser = 'Firefox';
 $this->javascript = true;
