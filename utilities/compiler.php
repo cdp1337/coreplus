@@ -39,131 +39,84 @@ require_once(ROOT_PDIR . 'core/libs/core/cli/Arguments.php');
 require_once(ROOT_PDIR . 'core/libs/core/cli/Argument.php');
 
 
+$compilePHP = $compileSCSSDev = $compileSCSSFull = $compileJS = $onlyCore = $onlyComponent = $onlyTheme = null;
+
 $arguments = new \Core\CLI\Arguments([
-	'help' => [
-		'description' => 'Display help and exit.',
-		'value' => false,
-		'shorthand' => ['?', 'h'],
-	],
 	'php' => [
 		'description' => 'Compile PHP files into the compiled bootstrap.',
 		'value' => false,
 		'shorthand' => [],
+	    'assign' => &$compilePHP,
 	],
 	'scss' => [
 		'description' => 'Compile SASS/SCSS files into corresponding css.',
 		'value' => false,
 		'shorthand' => [],
+	    'assign' => &$compileSCSSFull,
 	],
 	'sass' => [
 		'description' => 'Alias of --scss',
 		'value' => false,
 		'shorthand' => [],
+		'assign' => &$compileSCSSFull,
+	],
+	'scss-dev' => [
+		'description' => 'Compile SASS/SCSS files (only development versions).',
+	    'value' => false,
+		'assign' => &$compileSCSSDev,
+	],
+	'sass-dev' => [
+		'description' => 'Alias of --scss-dev',
+		'value' => false,
+		'assign' => &$compileSCSSDev,
 	],
 	'js' => [
 		'description' => 'Minify javascript assets',
 		'value' => false,
 		'shorthand' => [],
+	    'assign' => &$compileJS,
 	],
 	'javascript' => [
 		'description' => 'Alias of --js',
 		'value' => false,
 		'shorthand' => [],
+		'assign' => &$compileJS,
 	],
 	'core' => [
-		'description' => 'Minify Core assets.  (Overrides --component and --theme)',
+		'description' => 'Minify Core resources.',
 		'value' => false,
 		'shorthand' => [],
+	    'assign' => &$onlyCore,
 	],
 	'component' => [
-		'description' => 'Minify only a requested component. (Overrides --theme)',
+		'description' => 'Minify a requested component resources.',
 		'value' => true,
 		'shorthand' => ['c'],
+	    'assign' => &$onlyComponent,
 	],
 	'theme' => [
-		'description' => 'Minify only a requested theme.',
+		'description' => 'Minify a requested theme resources.',
 		'value' => true,
 		'shorthand' => ['t'],
+	    'assign' => &$onlyTheme,
 	],
 ]);
-$arguments->usageHeader = 'This utility will compile all resources into minified versions.
-
-Standard Usage:
-  Simply run it without any arguments to compile/minify everything.
-
-Advanced Options:';
+$arguments->usageHeader = 'This utility will compile all requested resources into minified versions.' . NL . NL .
+	$argv[0] . ' --(scss|js|php) --(core|component=[name]|theme=[name])' . NL . NL .
+	'To properly use this script, you must specify both the type of resource to compile ' . NL .
+	'and the source as either core, a component, or a theme.';
 $arguments->processArguments();
 
-
-// Allow for inline arguments.
-$opts = [
-	'compile_php'    => null,
-	'minify_scss'    => null,
-	'minify_js'      => null,
-	'only_core'      => null,
-    'only_component' => null,
-    'only_theme'     => null,
-];
-
-
-// Process and validate those arguments now.
-if($arguments->getArgumentValue('help')){
+if($onlyCore === null && $onlyComponent === null && $onlyTheme === null){
+	// If there are no arguments provided, then target Core.
 	$arguments->printUsage();
 	exit;
 }
 
-$set = false;
-if($arguments->getArgumentValue('php')){
-	$opts['compile_php'] = true;
-	$set = true;
-}
-if($arguments->getArgumentValue('scss')){
-	$opts['minify_scss'] = true;
-	$set = true;
-}
-if($arguments->getArgumentValue('sass')){
-	$opts['minify_scss'] = true;
-	$set = true;
-}
-if($arguments->getArgumentValue('js')){
-	$opts['minify_js'] = true;
-	$set = true;
-}
-if($arguments->getArgumentValue('javascript')){
-	$opts['minify_js'] = true;
-	$set = true;
-}
-
-if($set){
-	if($opts['compile_php'] === null){
-		$opts['compile_php'] = false;
-	}
-	if($opts['minify_scss'] === null){
-		$opts['minify_scss'] = false;
-	}
-	if($opts['minify_js'] === null){
-		$opts['minify_js'] = false;
-	}
-}
-else{
-	// Default, no arguments provided.
-	$opts['compile_php'] = true;
-	$opts['minify_scss'] = true;
-	$opts['minify_js'] = true;
-}
-unset($set);
-
-
-if($arguments->getArgumentValue('core')){
-	$opts['only_core'] = true;
-}
-elseif($arguments->getArgumentValue('component')){
-	$opts['only_component'] = $arguments->getArgumentValue('component');
-	$opts['compile_php'] = false;
-}
-elseif($arguments->getArgumentValue('theme')){
-	$opts['only_theme'] = $arguments->getArgumentValue('theme');
-	$opts['compile_php'] = false;
+if($compileJS === null && $compilePHP === null && $compileSCSSDev === null && $compileSCSSFull === null){
+	// And if no compile flags are provided, just compile PHP.
+	$arguments->printUsage();
+	exit;
 }
 
 
@@ -410,7 +363,7 @@ function compile_file($filename, $recursivelevel = 0, CompilerNamespace $parentn
 	return $contents;
 }
 
-if($opts['compile_php']){
+if($onlyCore && $compilePHP){
 	$globalnamespace = new CompilerNamespace();
 	// Start the namespace.
 	$contents = $globalnamespace->getOpeningTag();
@@ -494,12 +447,51 @@ EOD;
 	echo "\n\n";
 }
 
+// Resolve onlyComponent and onlyTheme to their appropriate theme, when applicable.
+if($onlyComponent){
+	if(Core::GetComponent($onlyComponent) === null){
+		// Run through and try to find it by keyname or regular name.
+		foreach(Core::GetComponents() as $c){
+			/** @var Component_2_1 $c */
+			if($c->getKeyName() == $onlyComponent || $c->getName() == $onlyComponent){
+				$onlyComponent = $c->getKeyName();
+				break;
+			}
+		}
+		unset($c);
+	}
+
+	if(Core::GetComponent($onlyComponent) === null){
+		\Core\CLI\CLI::PrintError('Unable to locate component ' . $onlyComponent);
+		exit;
+	}
+}
+
+if($onlyTheme){
+	if(ThemeHandler::GetTheme($onlyTheme) === false){
+		// Run through and try to find it by keyname or regular name.
+		foreach(ThemeHandler::GetAllThemes() as $t){
+			/** @var \Theme\Theme $t */
+			if($t->getKeyName() == $onlyTheme || $t->getName() == $onlyTheme){
+				$onlyTheme = $c->getKeyName();
+				break;
+			}
+		}
+		unset($t);
+	}
+
+	if(ThemeHandler::GetTheme($onlyTheme) === false){
+		\Core\CLI\CLI::PrintError('Unable to locate theme ' . $onlyTheme);
+		exit;
+	}
+}
+
 
 // Can we compile SCSS files too?
-if($opts['minify_scss'] && exec('which sass') == ''){
+if(($compileSCSSFull || $compileSCSSDev) && exec('which sass') == ''){
 	echo "Skipping compiling of SASS resources, you do not have the sass compiler installed!\n";
 }
-elseif($opts['minify_scss']){
+elseif(($compileSCSSFull || $compileSCSSDev)){
 	$sassversion = exec("sass --version | sed 's:^Sass \\([0-9\\.]*\\).*:\\1:'");
 	echo "Using SASS version " . $sassversion . "\n";
 
@@ -508,26 +500,21 @@ elseif($opts['minify_scss']){
 	echo 'FILENAME                                                                          DEV    MIN' . "\n";
 	echo '---------------------------------------------------------------------------------------------' . "\n";
 
-	$compresults  = [];
-	$coreresults  = [];
-	$themeresults = [];
+	$results = [];
 	// Allow specifying core, a component, or a theme.
-	if($opts['only_core'] === true){
-		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
+	if($onlyCore === true){
+		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $results);
 	}
-	elseif($opts['only_component'] !== null){
-		exec('find "' . ROOT_PDIR . 'components/' . $opts['only_component'] . '/" -name "[a-z]*.scss"', $compresults);
+	elseif($onlyComponent !== null){
+		exec('find "' . ROOT_PDIR . 'components/' . $onlyComponent . '/" -name "[a-z]*.scss"', $results);
 	}
-	elseif($opts['only_theme'] !== null){
-		exec('find "' . ROOT_PDIR . 'themes/' . $opts['only_theme'] . '/" -name "[a-z]*.scss"', $themeresults);
+	elseif($onlyTheme !== null){
+		exec('find "' . ROOT_PDIR . 'themes/' . $onlyTheme . '/" -name "[a-z]*.scss"', $results);
 	}
 	else{
-		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z]*.scss"', $coreresults);
-		exec('find "' . ROOT_PDIR . 'components/" -name "[a-z]*.scss"', $compresults);
-		exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z]*.scss"', $themeresults);
+		\Core\CLI\CLI::PrintError('You must specify at least one theme, component, or core!');
+		exit;
 	}
-
-	$results = array_merge($compresults, $themeresults, $coreresults);
 
 	foreach($results as $file){
 
@@ -574,9 +561,15 @@ elseif($opts['minify_scss']){
 			if($ret == 0) echo "[ OK ] ";
 			else echo "[ !! ]";
 
-			exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines --sourcemap=none', $null, $ret);
-			if($ret == 0) echo "[ OK ] ";
-			else echo "[ !! ]";
+			if($compileSCSSDev){
+				echo '[SKIP]';
+			}
+			else{
+				exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines --sourcemap=none', $null, $ret);
+				if($ret == 0) echo "[ OK ] ";
+				else echo "[ !! ]";
+			}
+
 		}
 		else{
 			// Provide backwards compatibility for developers using an older version of SASS.
@@ -584,9 +577,14 @@ elseif($opts['minify_scss']){
 			if($ret == 0) echo "[ OK ] ";
 			else echo "[ !! ]";
 
-			exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines', $null, $ret);
-			if($ret == 0) echo "[ OK ] ";
-			else echo "[ !! ]";
+			if($compileSCSSDev){
+				echo '[SKIP]';
+			}
+			else {
+				exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines', $null, $ret);
+				if($ret == 0) echo "[ OK ] ";
+				else echo "[ !! ]";
+			}
 		}
 
 
@@ -598,30 +596,25 @@ elseif($opts['minify_scss']){
 }
 
 
-if($opts['minify_js']) {
+if($compileJS) {
 	echo "Scanning for JS resources...\n";
 
-	$compresults  = [];
-	$coreresults  = [];
-	$themeresults = [];
+	$results  = [];
 
 	// Allow specifying core, a component, or a theme.
-	if($opts['only_core'] === true){
-		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
+	if($onlyCore === true){
+		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $results);
 	}
-	elseif($opts['only_component'] !== null){
-		exec('find "' . ROOT_PDIR . 'components/' . $opts['only_component'] . '/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
+	elseif($onlyComponent !== null){
+		exec('find "' . ROOT_PDIR . 'components/' . $onlyComponent . '/" -name "[a-z][a-z0-9_-]*.js"', $results);
 	}
-	elseif($opts['only_theme'] !== null){
-		exec('find "' . ROOT_PDIR . 'themes/' . $opts['only_theme'] . '/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
+	elseif($onlyTheme !== null){
+		exec('find "' . ROOT_PDIR . 'themes/' . $onlyTheme . '/" -name "[a-z][a-z0-9_-]*.js"', $results);
 	}
 	else{
-		exec('find "' . ROOT_PDIR . 'core/" -name "[a-z][a-z0-9_-]*.js"', $coreresults);
-		exec('find "' . ROOT_PDIR . 'components/" -name "[a-z][a-z0-9_-]*.js"', $compresults);
-		exec('find "' . ROOT_PDIR . 'themes/" -name "[a-z][a-z0-9_-]*.js"', $themeresults);
+		\Core\CLI\CLI::PrintError('You must specify at least one theme, component, or core!');
+		exit;
 	}
-
-	$results = array_merge($compresults, $coreresults, $themeresults);
 
 	foreach($results as $file) {
 
