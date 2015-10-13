@@ -82,6 +82,15 @@ class Arguments {
 	 * @param array $allowed_arguments Allowed arguments to send.
 	 */
 	public function __construct($allowed_arguments = []){
+		// Provide smart defaults
+		if(!isset($allowed_arguments['help'])){
+			$allowed_arguments['help'] = [
+				'description' => 'Display help and exit.',
+				'value' => false,
+				'shorthand' => ['?', 'h'],
+			];
+		}
+
 		foreach($allowed_arguments as $key => $arg){
 			if(!isset($arg['name'])) $arg['name'] = $key;
 
@@ -178,6 +187,11 @@ class Arguments {
 			}
 		}
 
+		// The new hint!
+		$out .= NL . 'HINT!' . NL . 'You can specify a short version of any "--" argument!' . NL .
+			'For example, if the arguments are --dofoo and --dobaz, you can use the shortest' . NL .
+			'unique version of them, in this case, --dof and --dob.' . NL;
+
 		echo $out;
 	}
 
@@ -260,7 +274,35 @@ class Arguments {
 						}
 					}
 					else{
-						$this->printError('Unknown argument provided: ' . $opt);
+						// Try to find this argument as a shortcut!
+						// This will allow a user to provide "--verb=2" instead of "verbose=2"
+						// Or even as low as "--v=2" if there are no other "v*" words!
+						$matches = [];
+						foreach($arguments as $k => $ka){
+							if(strpos($k, $opt) === 0){
+								$matches[] = $k;
+							}
+						}
+						if(sizeof($matches) == 0){
+							// Goldilox found the bed to be too small!
+							$this->printError('Unknown argument provided: ' . $opt);
+						}
+						elseif(sizeof($matches) > 1){
+							// Goldilox found this bed to be too effing big!
+							$this->printError('Ambiguous argument provided: ' . $opt . ' (Matches the following arguments: ' . implode(', ', $matches) . ')');
+						}
+						else{
+							// Just right for one Goldilox!
+							/** @var Argument $dest */
+							$dest = $arguments[$matches[0]];
+
+							if($dest->requireValue){
+								$dest->setValue( substr($arg, strpos($arg, '=')+1) );
+							}
+							else{
+								$this->printError($opt . ' does not support any values.');
+							}
+						}
 					}
 				}
 				elseif(strpos($arg, '--') === 0){
@@ -277,7 +319,35 @@ class Arguments {
 						}
 					}
 					else{
-						$this->printError('Unknown argument provided: ' . $opt);
+						// Try to find this argument as a shortcut!
+						// This will allow a user to provide "--verb=2" instead of "verbose=2"
+						// Or even as low as "--v=2" if there are no other "v*" words!
+						$matches = [];
+						foreach($arguments as $k => $ka){
+							if(strpos($k, $opt) === 0){
+								$matches[] = $k;
+							}
+						}
+						if(sizeof($matches) == 0){
+							// Goldilox found the bed to be too small!
+							$this->printError('Unknown argument provided: ' . $opt);
+						}
+						elseif(sizeof($matches) > 1){
+							// Goldilox found this bed to be too effing big!
+							$this->printError('Ambiguous argument provided: ' . $opt . ' (Matches the following arguments: ' . implode(', ', $matches) . ')');
+						}
+						else{
+							// Just right for one Goldilox!
+							/** @var Argument $dest */
+							$dest = $arguments[$matches[0]];
+
+							if($dest->requireValue){
+								$this->printError($matches[0] . ' requires a value.');
+							}
+							else{
+								$dest->setValue(true);
+							}
+						}
 					}
 				}
 				else{
@@ -291,6 +361,12 @@ class Arguments {
 					$unnamed_args++;
 				}
 			}
+		}
+
+		// Should the help be rendered out?
+		if($this->getArgumentValue('help')){
+			$this->printUsage();
+			exit;
 		}
 	}
 

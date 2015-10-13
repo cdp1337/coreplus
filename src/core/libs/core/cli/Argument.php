@@ -60,13 +60,30 @@ class Argument {
 	public $requireValue = false;
 	public $value = null;
 	public $multiple = false;
+	public $assign = null;
 
 	public function __construct($dat = array()){
-		if(isset($dat['name'])) $this->name = $dat['name'];
-		if(isset($dat['shorthand'])) $this->shorthands = $dat['shorthand'];
-		if(isset($dat['description'])) $this->description = $dat['description'];
-		if(isset($dat['value'])) $this->requireValue = $dat['value'];
-		if(isset($dat['multiple'])) $this->multiple = $dat['multiple'];
+		if(isset($dat['name'])){
+			$this->name = $dat['name'];
+		}
+		if(isset($dat['shorthand'])){
+			$this->shorthands = $dat['shorthand'];
+		}
+		if(isset($dat['description'])){
+			$this->description = $dat['description'];
+		}
+		if(isset($dat['value'])){
+			$this->requireValue = $dat['value'];
+		}
+		if(isset($dat['multiple'])){
+			$this->multiple = $dat['multiple'];
+		}
+		if(array_key_exists('assign', $dat)){
+			$this->assign =& $dat['assign'];
+		}
+		if(array_key_exists('default', $dat)){
+			$this->setValue($dat['default']);
+		}
 
 		// Allow shorthands to be sent as a single string.
 		if(!is_array($this->shorthands)){
@@ -83,5 +100,7 @@ class Argument {
 		else{
 			$this->value = $val;
 		}
+
+		$this->assign = $this->value;
 	}
 } 
