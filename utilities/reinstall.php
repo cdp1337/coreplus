@@ -113,12 +113,60 @@ if(!defined('CDN_LOCAL_PUBLICDIR')){
 require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
 require_once(ROOT_PDIR . 'core/helpers/UpdaterHelper.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/cli/CLI.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/cli/Arguments.php');
+require_once(ROOT_PDIR . 'core/libs/core/cli/Argument.php');
 
-// Is the system not installed yet?
-//if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
+$verbosity = $assets = $onlyCore = $onlyComponent = $onlyTheme = null;
 
+$arguments = new \Core\CLI\Arguments([
+	'verbosity' => [
+		'description' => "Verbosity level of output.\n\t0: Summary-Only Output\n\t1: (default) Real-Time Output\n\t2: Verbose Real-Time Output",
+		'value' => true,
+		'default' => 1,
+	    'assign' => &$verbosity,
+	],
+	'assets' => [
+		'description' => 'Only process assets',
+		'value' => false,
+		'shorthand' => [],
+	    'assign' => &$assets,
+	],
+	'core' => [
+		'description' => 'Reinstall only Core.  (Overrides --component and --theme)',
+		'value' => false,
+		'shorthand' => [],
+	    'assign' => &$onlyCore,
+	],
+	'component' => [
+		'description' => 'Reinstall only a requested component. (Overrides --theme)',
+		'value' => true,
+		'shorthand' => ['c'],
+	    'assign' => &$onlyComponent,
+	],
+	'theme' => [
+		'description' => 'Reinstall only a requested theme.',
+		'value' => true,
+		'shorthand' => ['t'],
+	    'assign' => &$onlyTheme,
+	],
+]);
+
+$arguments->usageHeader = 'This utility will perform a reinstallation of all assets and models on the site';
+
+$arguments->processArguments();
 
 \Core::LoadComponents();
+try {
+	DMI::GetSystemDMI();
+	ConfigHandler::_DBReadyHook();
+}
+	// This catch statement should be hit anytime the database is not available,
+	// core table doesn't exist, or the like.
+catch (Exception $e) {
+	echo $e->getMessage();
+	die();
+}
 
 $allpages = [];
 $changes = [];
@@ -130,40 +178,70 @@ foreach(\Core::GetComponents() as $c){
 	// Get the pages, (for the cleanup operation)
 	$allpages = array_merge($allpages, $c->getPagesDefined());
 
-	CLI::PrintHeader('Reinstalling Component ' . $c->getName());
-	$change = $c->reinstall(2);
+	if(
+		$onlyCore && $c->getKeyName() == 'core' ||
+		$onlyComponent && ($c->getKeyName() == $onlyComponent || $c->getName() == $onlyComponent) ||
+		($onlyTheme === null && $onlyComponent === null && $onlyCore === null)
+	){
+		if($verbosity == 1){
+			CLI::PrintLine('');
+			CLI::PrintLine('Reinstalling Component ' . $c->getName());
+		}
+		elseif($verbosity == 2){
+			CLI::PrintHeader('Reinstalling Component ' . $c->getName());
+		}
 
-	if($change !== false){
-		$changes = array_merge($changes, $change);
+		if($assets){
+			$change = $c->_parseAssets(true, $verbosity);
+		}
+		else{
+			$change = $c->reinstall($verbosity);
+		}
+
+		if($change !== false){
+			$changes = array_merge($changes, $change);
+		}
 	}
 }
-
-/*
-echo 'Installing default theme...';
-$change = \ThemeHandler::GetTheme('default')->install();
-if($change === false){
-	echo '   No changes' . "\n";
-}
-else{
-	echo "\n" . implode("\n", $change) . "\n";
-}
-*/
 
 
 // And the current theme if it's different.
 $theme    = ConfigHandler::Get('/theme/selected');
 if($theme != 'default'){
-	CLI::PrintHeader('Reinstalling Theme ' . $theme);
-	$change = \ThemeHandler::GetTheme($theme)->install(2);
-	if($change !== false){
-		$changes = array_merge($changes, $change);
+	$t = \ThemeHandler::GetTheme($theme);
+
+	if(
+		$onlyTheme && ($t->getKeyName() == $onlyTheme || $t->getName() == $onlyTheme) ||
+		($onlyTheme === null && $onlyComponent === null && $onlyCore === null)
+	){
+		if($verbosity == 1){
+			CLI::PrintLine('');
+			CLI::PrintLine('Reinstalling Theme ' . $theme);
+		}
+		elseif($verbosity == 2){
+			CLI::PrintHeader('Reinstalling Theme ' . $theme);
+		}
+
+		if($assets){
+			$change = $t->_parseAssets(true, $verbosity);
+		}
+		else{
+			$change = $t->reinstall($verbosity);
+		}
+
+		if($change !== false){
+			$changes = array_merge($changes, $change);
+		}
 	}
 }
 
 
 
 if(CDN_TYPE != 'local'){
-	CLI::PrintHeader('Synchronizing Public Files');
+	if($verbosity > 0){
+		CLI::PrintHeader('Synchronizing Public Files');
+	}
+
 	// Check to see if any public files need to be deployed to the CDN.
 	// This behaves the same as asset deployment, but is a utility-only function that is beyond the normal reinstallation procedure.
 	// However, seeing as this is a utility script... :)
@@ -193,64 +271,92 @@ if(CDN_TYPE != 'local'){
 }
 
 
+if($onlyTheme === null && $onlyComponent === null && $onlyCore === null && !$assets){
+	if($verbosity == 1){
+		CLI::PrintLine('');
+		CLI::PrintLine('Cleaning up non-existent pages');
+	}
+	elseif($verbosity == 2){
+		CLI::PrintHeader('Cleaning up non-existent pages');
+	}
+	$pageremovecount = 0;
+	foreach(\Core\Datamodel\Dataset::Init()->select('baseurl')->table('page')->where('admin = 1')->execute() as $row){
+		$baseurl = $row['baseurl'];
 
+		// This page existed already, no need to do anything :)
+		if(isset($allpages[$baseurl])) continue;
 
+		++$pageremovecount;
 
-CLI::PrintHeader('Cleaning up non-existent pages');
-$pageremovecount = 0;
-foreach(\Core\Datamodel\Dataset::Init()->select('baseurl')->table('page')->where('admin = 1')->execute() as $row){
-	$baseurl = $row['baseurl'];
-
-	// This page existed already, no need to do anything :)
-	if(isset($allpages[$baseurl])) continue;
-
-	++$pageremovecount;
-
-	// Otherwise, this page was deleted or for some reason doesn't exist in the component list.....
-	// BUH BAI
-	CLI::PrintActionStart('Deleting page ' . $baseurl);
-	$changes[] = "Deleted page " . $baseurl;
-	\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
-	\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
-	CLI::PrintActionStatus('ok');
-}
-if($pageremovecount == 0){
-	CLI::PrintLine('No pages flushed');
-}
-
-CLI::PrintHeader('Synchronizing Searchable Models');
-foreach(\Core::GetComponents() as $c){
-	/** @var Component_2_1 $c */
-
-	foreach($c->getClassList() as $class => $file){
-		if($class == 'model'){
-			continue;
-		}
-		if(strrpos($class, 'model') !== strlen($class) - 5){
-			// If the class doesn't explicitly end with "Model", it's also not a model.
-			continue;
-		}
-		if(strpos($class, '\\') !== false){
-			// If this "Model" class is namespaced, it's not a valid model!
-			// All Models MUST reside in the global namespace in order to be valid.
-			continue;
-		}
-
-		$ref = new ReflectionClass($class);
-		if(!$ref->getProperty('HasSearch')->getValue()){
-			// This model doesn't have the searchable flag, skip it.
-			continue;
-		}
-
-		CLI::PrintActionStart("Syncing searchable model $class");
-		$fac = new ModelFactory($class);
-		foreach($fac->get() as $m){
-			/** @var Model $m */
-			$m->set('search_index_pri', '!');
-			$m->save();
-		}
+		// Otherwise, this page was deleted or for some reason doesn't exist in the component list.....
+		// BUH BAI
+		CLI::PrintActionStart('Deleting page ' . $baseurl);
+		$changes[] = "Deleted page " . $baseurl;
+		\Core\Datamodel\Dataset::Init()->delete()->table('page')->where('baseurl = ' . $baseurl)->execute();
+		\Core\Datamodel\Dataset::Init()->delete()->table('page_meta')->where('baseurl = ' . $baseurl)->execute();
 		CLI::PrintActionStatus('ok');
-		$changes[] = "Synced searchable model " . $class;
+	}
+	if($pageremovecount == 0 && $verbosity > 0){
+		CLI::PrintLine('No pages flushed');
+	}
+}
+
+
+
+if($onlyTheme === null && $onlyComponent === null && $onlyCore === null && !$assets) {
+	if($verbosity == 1){
+		CLI::PrintLine('');
+		CLI::PrintLine('Synchronizing Searchable Models');
+	}
+	elseif($verbosity == 2) {
+		CLI::PrintHeader('Synchronizing Searchable Models');
+	}
+	foreach(\Core::GetComponents() as $c) {
+		/** @var Component_2_1 $c */
+
+		foreach($c->getClassList() as $class => $file) {
+			if($class == 'model') {
+				continue;
+			}
+			if(strrpos($class, 'model') !== strlen($class) - 5) {
+				// If the class doesn't explicitly end with "Model", it's also not a model.
+				continue;
+			}
+			if(strpos($class, '\\') !== false) {
+				// If this "Model" class is namespaced, it's not a valid model!
+				// All Models MUST reside in the global namespace in order to be valid.
+				continue;
+			}
+
+			$ref = new ReflectionClass($class);
+			if(!$ref->getProperty('HasSearch')->getValue()) {
+				// This model doesn't have the searchable flag, skip it.
+				continue;
+			}
+
+			if($verbosity > 0) {
+				CLI::PrintActionStart("Syncing searchable model $class");
+			}
+			$good = false;
+			$fac  = new ModelFactory($class);
+			foreach($fac->get() as $m) {
+				/** @var Model $m */
+				$m->set('search_index_pri', '!');
+				if($m->save()) {
+					// Set this for the entire group!
+					// eg: if 1 saves and 2 skips, I still want to display :OK!:
+					$good = true;
+				}
+			}
+
+			if($verbosity > 0) {
+				CLI::PrintActionStatus($good ? 'ok' : 'skip');
+			}
+
+			if($good) {
+				$changes[] = "Synced searchable model " . $class;
+			}
+		}
 	}
 }
 
@@ -258,7 +364,10 @@ foreach(\Core::GetComponents() as $c){
 \Core\Cache::Flush();
 
 
-CLI::PrintHeader('DONE!');
+if($verbosity > 0){
+	CLI::PrintHeader('DONE!');
+}
+
 foreach($changes as $line){
 	CLI::PrintLine($line);
 }
