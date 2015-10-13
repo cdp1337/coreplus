@@ -107,6 +107,11 @@ $arguments->usageHeader = 'This utility will compile all requested resources int
 	'and the source as either core, a component, or a theme.';
 $arguments->processArguments();
 
+if($compilePHP && $onlyCore === null){
+	// Allow Core to be auto-selected here, as it's the only resources with PHP resources.
+	$onlyCore = true;
+}
+
 if($onlyCore === null && $onlyComponent === null && $onlyTheme === null){
 	// If there are no arguments provided, then target Core.
 	$arguments->printUsage();
