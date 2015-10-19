@@ -14,11 +14,16 @@ abstract class TinyMCE {
 
 	public static function IncludeTinyMCE(){
 		\ComponentHandler::LoadScriptLibrary('jquery');
-		\Core\view()->addScript('js/tinymce/jquery.tinymce.min.js');
-		\Core\view()->addStylesheet('css/tinymce/overrides.css');
+		/** @var \View $view */
+		$view = \Core\view();
+		/** @var UserModel $user */
+		$user = \Core\user();
+
+		$view->addScript('js/tinymce/jquery.tinymce.min.js');
+		$view->addStylesheet('css/tinymce/overrides.css');
 
 		// Yes, the string needs quotes inside of quotes!  It's to be read by javascript after all.
-		$browsable           = ( \Core::IsComponentAvailable('media-manager') && \Core\user()->checkAccess('p:/mediamanager/browse') );
+		$browsable           = ( \Core::IsComponentAvailable('media-manager') && $user->checkAccess('p:/mediamanager/browse') );
 		$filebrowsercallback = $browsable ? "Core.TinyMCE.FileBrowserCallback" : 'null';
 
 		$loc = \Core\resolve_asset('js/tinymce/tinymce.min.js');
@@ -46,21 +51,31 @@ abstract class TinyMCE {
 
 		// General options
 
-		 plugins: [
-	        "advlist autolink lists link image charmap print preview anchor",
-	        "searchreplace visualblocks code fullscreen",
-	        "insertdatetime media table contextmenu paste",
-	        "wordcount"
+		plugins: [
+			"advlist anchor autolink",
+			"charmap code colorpicker contextmenu",
+			"fullscreen",
+			"hr",
+			"image imagetools insertdatetime",
+			"link lists",
+			"media",
+			"pagebreak paste preview",
+			"searchreplace",
+			"table textcolor",
+			"visualblocks visualchars",
+			"wordcount"
 	    ],
-	    toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
+	    toolbar: "undo redo | styleselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 
 		theme : "modern",
-		// advlinkcoreplus
 
 		// Required to not mungle links.
 		convert_urls: false,
 
-		// Enterprise features
+		// Requires to support <script/> tags.
+		extended_valid_elements : "script[language|type|src]",
+
+		// Core Media Manager integration
 		file_browser_callback: $filebrowsercallback,
 
 		// Example content CSS (should be your site CSS)
@@ -88,8 +103,8 @@ abstract class TinyMCE {
 </script>	
 EOD;
 		// Add the necessary script
-		\Core\view()->addScript('assets/js/tinymce/coreplus_functions.js', 'head');
-		\Core\view()->addScript($script, 'foot');
+		$view->addScript('assets/js/tinymce/coreplus_functions.js', 'head');
+		$view->addScript($script, 'foot');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
