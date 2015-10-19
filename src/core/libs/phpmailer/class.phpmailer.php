@@ -2634,25 +2634,32 @@ class PHPMailer {
 		preg_match_all("/(src|background)=[\"'](.*)[\"']/Ui", $message, $images);
 		if (isset($images[2])) {
 			foreach ($images[2] as $i => $url) {
-				// do not change urls for absolute images (thanks to corvuscorax)
-				if (!preg_match('#^[A-z]+://#', $url)) {
-					$filename  = basename($url);
-					$directory = dirname($url);
-					if ($directory == '.') {
-						$directory = '';
-					}
-					$cid      = 'cid:' . md5($url);
-					$ext      = pathinfo($filename, PATHINFO_EXTENSION);
-					$mimeType = self::_mime_types($ext);
-					if (strlen($basedir) > 1 && substr($basedir, -1) != '/') {
-						$basedir .= '/';
-					}
-					if (strlen($directory) > 1 && substr($directory, -1) != '/') {
-						$directory .= '/';
-					}
-					if ($this->AddEmbeddedImage($basedir . $directory . $filename, md5($url), $filename, 'base64', $mimeType)) {
-						$message = preg_replace("/" . $images[1][$i] . "=[\"']" . preg_quote($url, '/') . "[\"']/Ui", $images[1][$i] . "=\"" . $cid . "\"", $message);
-					}
+
+				if (preg_match('#^[A-z]+://#', $url)) {
+					// do not change urls for absolute images (thanks to corvuscorax)
+					continue;
+				}
+				if(strpos($url, 'base64') === 0 || strpos($url, 'data:') === 0) {
+					// Do not convert images that have already been converted
+					continue;
+				}
+
+				$filename  = basename($url);
+				$directory = dirname($url);
+				if ($directory == '.') {
+					$directory = '';
+				}
+				$cid      = 'cid:' . md5($url);
+				$ext      = pathinfo($filename, PATHINFO_EXTENSION);
+				$mimeType = self::_mime_types($ext);
+				if (strlen($basedir) > 1 && substr($basedir, -1) != '/') {
+					$basedir .= '/';
+				}
+				if (strlen($directory) > 1 && substr($directory, -1) != '/') {
+					$directory .= '/';
+				}
+				if ($this->AddEmbeddedImage($basedir . $directory . $filename, md5($url), $filename, 'base64', $mimeType)) {
+					$message = preg_replace("/" . $images[1][$i] . "=[\"']" . preg_quote($url, '/') . "[\"']/Ui", $images[1][$i] . "=\"" . $cid . "\"", $message);
 				}
 			}
 		}
