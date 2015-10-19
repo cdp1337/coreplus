@@ -167,13 +167,22 @@ class Helper {
 
 		// And add a where clause for each one.
 		foreach($indexes as $word){
-			$subwhere->addWhere('search_index_str LIKE %' . $word . '%');
+			if($word) {
+				// Required to skip spaces.
+				$subwhere->addWhere('search_index_str LIKE %' . $word . '%');
+			}
 		}
 		foreach($primaries as $word){
-			$subwhere->addWhere('search_index_pri LIKE %' . $word . '%');
+			if($word){
+				// Required to skip spaces.
+				$subwhere->addWhere('search_index_pri LIKE %' . $word . '%');
+			}
 		}
 		foreach($secondaries as $word){
-			$subwhere->addWhere('search_index_sec LIKE %' . $word . '%');
+			if($word){
+				// Required to skip spaces.
+				$subwhere->addWhere('search_index_sec LIKE %' . $word . '%');
+			}
 		}
 
 		return $subwhere;
