@@ -562,7 +562,16 @@ class UserModel extends Model {
 		foreach($opts as $uc) {
 			/** @var UserConfigModel $uc */
 			if($uc->get('searchable')) {
-				$strs[] = $this->get($uc->get('key'));
+				$val = $this->get($uc->get('key'));
+
+				if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
+					// If this is a numeric-based value, compress all the numbers without formatting.
+					// This is to support phone numbers that may have arbitrary formatting applied.
+					$val = preg_replace('/[ \-\.\(\)]/', '', $val);
+				}
+				if($val){
+					$strs[] = $val;
+				}
 			}
 		}
 
