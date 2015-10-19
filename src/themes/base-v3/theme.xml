@@ -9,7 +9,7 @@
 		<file filename="assets/css/styles.css.map" md5="4a14b3734a41b2c419475f2ee494c6b0"/>
 		<file filename="assets/css/styles.min.css" md5="93b369735436112fc06192df6757a8d8"/>
 	</assets>
-	<skins>
+	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="3d5d5550c662a68d794ba14d714bac9f" title=""/>
 		<file filename="blank.tpl" md5="e0fe07062c844b9a1353d71edf5cc025" title=""/>
 		<file filename="wide.tpl" md5="407f2124d6822de186dbaee248cb896b" title=""/>
@@ -45,10 +45,9 @@
 		<config key="/theme/social_link_generic" mapto="THEME_SOCIAL_GENERIC"/>
 		<!-- globe -->
 	</configs>
-	<emailskins>
+	<emailskins default="email_basic.tpl">
 		<file filename="email_basic.tpl"/>
 	</emailskins>
-	<view/>
 	<otherfiles>
 		<file filename="CHANGELOG" md5="984a0908983598e5f59710c7e3651f5a"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>

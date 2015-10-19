@@ -687,6 +687,13 @@ class Theme{
 
 		$changes = $this->_performInstall($verbose);
 
+		// Set the defalt skins too!
+		// This is ONLY on install, (so as to not override any user-set options).
+		$default = $this->_parseSkins(true, $verbose);
+		if(is_array($default)){
+			$changes += $default;
+		}
+
 		if(is_array($changes) && sizeof($changes)){
 			\SystemLogModel::LogInfoEvent('/updater/theme/install', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
 		}
@@ -744,12 +751,13 @@ class Theme{
 	 * Returns false if nothing changed, else will return the configuration options changed.
 	 *
 	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
 	 *
 	 * @return false | array
 	 *
 	 * @throws \InstallerException
 	 */
-	public function _parseConfigs($install = true){
+	public function _parseConfigs($install = true, $verbosity = 0){
 		// Keep track of if this changed anything.
 		$changes = array();
 
@@ -776,6 +784,10 @@ class Theme{
 			$formAtts    = $confignode->getAttribute('form-attributes');
 
 			if($encrypted === null || $encrypted === '') $encrypted = '0';
+
+			if($verbosity == 2){
+				CLI::PrintActionStart($action . ' config ' . $key);
+			}
 
 			// Themes only allow for keys starting with "/theme/"!
 			// This is to encourage that all themes share a common subset of configuration options.
@@ -809,7 +821,17 @@ class Theme{
 				$m->set('value', \Core\Session::Get('configs')[$key]);
 			}
 
-			if ($m->save()) $changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+			if ($m->save()){
+				$changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+				if($verbosity == 2){
+					CLI::PrintActionStatus(true);
+				}
+			}
+			else{
+				if($verbosity == 2){
+					CLI::PrintActionStatus('skip');
+				}
+			}
 
 			// Make it available immediately
 			\ConfigHandler::CacheConfig($m);
@@ -1002,6 +1024,53 @@ class Theme{
 
 		return $changes;
 	}
+
+	/**
+	 * Internal function to set the default skins based on this theme
+	 *
+	 * Returns false if nothing changed, else will return the configuration options changed.
+	 *
+	 * @param boolean $install Set to false to force uninstall/disable mode.
+	 * @param int     $verbosity (default 0) 0: standard output, 1: real-time, 2: real-time verbose output.
+	 *
+	 * @return false | array
+	 *
+	 * @throws \InstallerException
+	 */
+	public function _parseSkins($install = true, $verbosity = 0){
+		// Keep track of if this changed anything.
+		$changes = array();
+
+		$action = $install ? 'Installing' : 'Uninstalling';
+		$set    = $install ? 'Set' : 'Unset';
+
+		\Core\Utilities\Logger\write_debug($action . ' skins for ' . $this->getName());
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('skins');
+
+		// If requested, set those skins as the site default.
+		$defaultFrontend = $node->getAttribute('default');
+		$adminFrontend   = $node->getAttribute('admindefault');
+
+		$emailNode = $this->_xmlloader->getElement('emailskins');
+		$defaultEmail = $emailNode->getAttribute('default');
+
+		if($defaultFrontend){
+			\ConfigHandler::Set('/theme/default_template', $defaultFrontend);
+			$changes[] = 'Set default template';
+		}
+		if($adminFrontend){
+			\ConfigHandler::Set('/theme/default_admin_template', $adminFrontend);
+			$changes[] = 'Set default admin template';
+		}
+		if($defaultEmail){
+			\ConfigHandler::Set('/theme/default_email_template', $defaultEmail);
+			$changes[] = 'Set default email template';
+		}
+
+		return (sizeof($changes)) ? $changes : false;
+	} // private function _parseSkins
 
 	/**
 	 * Get if this theme is currently set as the site default.

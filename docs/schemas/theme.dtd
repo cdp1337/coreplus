@@ -35,7 +35,14 @@
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT assets (file)*>
 <!ELEMENT skins (file)*>
+<!ATTLIST skins
+	default CDATA #IMPLIED
+	admindefault CDATA #IMPLIED
+>
 <!ELEMENT emailskins (file)*>
+<!ATTLIST emailskins
+	default CDATA #IMPLIED
+>
 <!ELEMENT otherfiles (file)*>
 
 <!--- Put your DTDDoc comment here. -->
