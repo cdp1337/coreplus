@@ -140,7 +140,8 @@ class ModelResult extends Result {
 			$it = new DoubleMetaPhone($word);
 
 			if(in_array($word, $str)){
-				$rel += $wordweight;
+				// Exact matches here get an automatic boost!
+				$rel += ($wordweight * 3);
 			}
 			else{
 				foreach($str as $w){
@@ -156,6 +157,6 @@ class ModelResult extends Result {
 			if(in_array($it->secondary, $sec)) $rel += $wordweight;
 		}
 
-		$this->relevancy = $rel;
+		$this->relevancy = min($rel, 100);
 	}
 }
