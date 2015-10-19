@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 12 Oct 2015 21:29:03 -0400
+ * @compiled Sun, 18 Oct 2015 20:52:55 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2285,7 +2285,12 @@ switch($dat['type']){
 case Model::ATT_TYPE_TEXT:
 case Model::ATT_TYPE_STRING:
 $val = $this->get($k);
-if($val) $strs[] = $val;
+if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
+$val = preg_replace('/[ \-\.\(\)]/', '', $val);
+}
+if($val){
+$strs[] = $val;
+}
 break;
 }
 }
@@ -3169,6 +3174,9 @@ $sr->title = $m->getLabel();
 $sr->link  = $m->get('baseurl');
 $ret[] = $sr;
 }
+usort($ret, function($a, $b) {
+return $a->relevancy < $b->relevancy;
+});
 return $ret;
 }
 public static function GetTableName() {
@@ -3706,6 +3714,14 @@ if($k == $sub){
 return $_SESSION[$k];
 }
 }
+}
+elseif(strpos($key, '/') !== false){
+$sub = substr($key, 0, strpos($key, '/'));
+$key = substr($key, strlen($sub)+1);
+if(!isset($_SESSION[$sub])){
+return $default;
+}
+return isset($_SESSION[$sub][$key]) ? $_SESSION[$sub][$key] : $default;
 }
 return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
 }
@@ -5827,7 +5843,13 @@ $strs[] = $this->get('email');
 $opts = UserConfigModel::Find();
 foreach($opts as $uc) {
 if($uc->get('searchable')) {
-$strs[] = $this->get($uc->get('key'));
+$val = $this->get($uc->get('key'));
+if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
+$val = preg_replace('/[ \-\.\(\)]/', '', $val);
+}
+if($val){
+$strs[] = $val;
+}
 }
 }
 return implode(' ', $strs);
