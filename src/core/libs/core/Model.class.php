@@ -825,9 +825,18 @@ class Model implements ArrayAccess {
 			switch($dat['type']){
 				case Model::ATT_TYPE_TEXT:
 				case Model::ATT_TYPE_STRING:
-					$val = $this->get($k);
-					if($val) $strs[] = $val;
-					break;
+				$val = $this->get($k);
+
+				if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
+					// If this is a numeric-based value, compress all the numbers without formatting.
+					// This is to support phone numbers that may have arbitrary formatting applied.
+					$val = preg_replace('/[ \-\.\(\)]/', '', $val);
+				}
+
+				if($val){
+					$strs[] = $val;
+				}
+				break;
 			}
 		}
 
@@ -2466,6 +2475,15 @@ class Model implements ArrayAccess {
 
 			$ret[] = $sr;
 		}
+
+		// Sort the results before returning them.
+		// Because otherwise, what's the point of a search algorithm?!?
+		usort($ret, function($a, $b) {
+			/** @var $a Core\Search\ModelResult */
+			/** @var $b Core\Search\ModelResult */
+			return $a->relevancy < $b->relevancy;
+		});
+
 		return $ret;
 	}
 
