@@ -10,7 +10,7 @@
 		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="3" key="last_name" name="Last Name" onedit="1" onregistration="1" searchable="1"/>
 		<userconfig weight="4" key="phone" name="Phone Number" onedit="1" onregistration="0"/>
-		<userconfig weight="50" key="bio" name="Biography" formtype="wysiwyg" onedit="1" onregistration="0"/>
+		<userconfig weight="50" key="bio" name="Biography" formtype="markdown" onedit="1" onregistration="0"/>
 		<userconfig weight="1" key="username" name="Username" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
 	</users>
 	<hooks>
