@@ -23,16 +23,17 @@
 class Email {
 
 	/**
-	 * The template to render this email with.
-	 *
-	 * @var Template
+	 * @var Template The template to render this email with.
 	 */
 	private $_template = null;
 
 	/**
-	 * The mailer object to send this email with.
-	 *
-	 * @var PHPMailer
+	 * @var View The view response for this email, (only applicable with template-based emails)
+	 */
+	private $_view;
+
+	/**
+	 * @var PHPMailer The mailer object to send this email with.
 	 */
 	private $_mailer;
 
@@ -58,8 +59,17 @@ class Email {
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
-			$this->_template = \Core\Templates\Template::Factory($this->templatename);
-			//$this->_template->setBaseURL($this->baseurl);
+			$this->_view = new View();
+			$this->_view->templatename = $this->templatename;
+
+			if(ConfigHandler::Get('/theme/default_email_template')){
+				$this->_view->mastertemplate = ConfigHandler::Get('/theme/default_email_template');
+			}
+			else{
+				$this->_view->mastertemplate = false;
+			}
+
+			$this->_template = $this->_view->getTemplate();
 		}
 
 		return $this->_template;
@@ -89,7 +99,7 @@ class Email {
 				$this->_mailer->Password   = ConfigHandler::Get('/core/email/smtp_password');
 				$this->_mailer->SMTPSecure =
 					(ConfigHandler::Get('/core/email/smtp_security') == 'none') ?
-						'' : ConfigHandler::Get('/core/email/smtp_security');
+					'' : ConfigHandler::Get('/core/email/smtp_security');
 				if ($this->_mailer->Username != '') $this->_mailer->SMTPAuth = true;
 			}
 
@@ -141,8 +151,12 @@ class Email {
 	 * @return string (HTML or plain text)
 	 */
 	public function renderBody() {
-		if ($this->templatename) {
-			return $this->getTemplate()->fetch($this->templatename);
+		if ($this->templatename && $this->_view) {
+			$html = $this->_view->fetch();
+			if(strpos($html, '<html') === false){
+				$html = '<html>' . $html . '</html>';
+			}
+			return $html;
 		}
 		else {
 			// I can't render a template with no template....
@@ -186,6 +200,22 @@ class Email {
 	 */
 	public function addAddress($address, $name = '') {
 		$this->getMailer()->AddAddress($address, $name);
+	}
+
+	/**
+	 * Add a file as an attachment!
+	 *
+	 * @param \Core\Filestore\File $file
+	 *
+	 * @throws phpmailerException
+	 */
+	public function addAttachment(\Core\Filestore\File $file){
+		$this->getMailer()->AddAttachment(
+			$file->getFilename(), // Full Path
+			$file->getBasename(), // Base Filename (to be exposed in client)
+			'base64', // Yup, just do this
+			$file->getMimetype() // Mimetype, try to use correct hinting for client
+		);
 	}
 
 	/**
@@ -285,20 +315,23 @@ class Email {
 			$m->AddAddress(\ConfigHandler::Get('/core/email/sandbox_to'));
 		}
 
-		// Now, do some formatting to the body, ie: it NEEDS an alt body!
-		//if(!$this->AltBody && $this->ContentType == 'text/html'){
-		//	$this->MsgHTML($this->Body);
-		//}
-
-
 		// Render out the body.  Will be either HTML or text...
 		$body = $this->renderBody();
 
 		// Wrap this body with the main email template if it's set.
-		if(ConfigHandler::Get('/theme/default_email_template')){
-			$skintpl = \Core\Templates\Template::Factory('emailskins/' . ConfigHandler::Get('/theme/default_email_template'));
-			$skintpl->assign('body', $body);
-			$m->MsgHTML($skintpl->fetch());
+		if($this->templatename && $this->_view){
+			// This version includes HTML tags and all that.
+			$m->Body = $body;
+			$m->IsHTML(true);
+			// Use markdown for conversion.
+			// It produces better results that phpMailer's built-in system!
+			$converter = new \HTMLToMD\Converter();
+
+			// Manually strip out the head content.
+			// This was throwing the converters for a loop and injecting weird characters!
+			$body = preg_replace('#<head[^>]*?>.*</head>#ms', '', $body);
+
+			$m->AltBody = $converter->convert($body);
 		}
 		elseif (strpos($body, '<html>') === false) {
 			// Ensuring that the body is wrapped with <html> tags helps with spam checks with spamassassin.
