@@ -1088,12 +1088,11 @@ class AdminController extends Controller_2_1 {
 
 		CLI::PrintActionStart('Initializing Email System');
 		try{
-			$body = '<p>This is a test email!</p><ul><li>' . implode("</li><li>", $emailDebug) . '</li></ul>';
-
 			$email = new Email();
 			$email->addAddress($dest);
 			$email->setSubject('Test Email');
-			$email->setBody($body, true);
+			$email->templatename = 'emails/admin/test_email.tpl';
+			$email->assign('debugs', $emailDebug);
 			$email->getMailer()->SMTPDebug = 2;
 
 			CLI::PrintActionStatus(true);
