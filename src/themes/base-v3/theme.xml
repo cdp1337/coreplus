@@ -46,7 +46,7 @@
 		<!-- globe -->
 	</configs>
 	<emailskins>
-		<file filename="basic.tpl"/>
+		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<view/>
 	<otherfiles>
