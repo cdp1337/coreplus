@@ -288,6 +288,15 @@ class Session implements \SessionHandlerInterface {
 				}
 			}
 		}
+		elseif(strpos($key, '/') !== false){
+			// User requested a subkey, look for it!
+			$sub = substr($key, 0, strpos($key, '/'));
+			$key = substr($key, strlen($sub)+1);
+			if(!isset($_SESSION[$sub])){
+				return $default;
+			}
+			return isset($_SESSION[$sub][$key]) ? $_SESSION[$sub][$key] : $default;
+		}
 
 		return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
 	}
