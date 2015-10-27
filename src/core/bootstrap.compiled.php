@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 18 Oct 2015 20:52:55 -0400
+ * @compiled Mon, 26 Oct 2015 20:23:10 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1531,6 +1531,14 @@ else{
 return $this->_data[0];
 }
 }
+elseif($this->_limit == 1 && $this->num_rows == 0){
+if(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
+return null;
+}
+else{
+return [];
+}
+}
 elseif(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
 $ret = [];
 $k = $this->_selects[0];
@@ -2054,7 +2062,7 @@ $linkmodel .= 'Model';
 $this->_linked[] = [
 'key'   => $k,
 'model' => $linkmodel,
-'on'    => [$linkon => $k],
+'on'    => is_array($linkon) ? $linkon : [$linkon => $k],
 'link'  => $linktype,
 ];
 }
@@ -2210,7 +2218,13 @@ HookHandler::DispatchHook('/core/model/postsave', $this);
 return true;
 }
 public function get($k) {
-if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
+if($k === '__CLASS__'){
+return get_called_class();
+}
+elseif($k === '__PRIMARYKEY__'){
+return $this->getPrimaryKeyString();
+}
+elseif($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
 return $this->_datadecrypted[$k];
 }
 elseif (array_key_exists($k, $this->_data)) {
@@ -2594,11 +2608,25 @@ if($order === null && isset($this->_linked[$idx]['order'])){
 $order = $this->_linked[$idx]['order'];
 }
 if (!isset($this->_linked[$idx]['records'])) {
-$f = $this->getLinkFactory($linkname);
-$c = $this->_getLinkClassName($linkname);
-$wheres = $this->_getLinkWhereArray($linkname);
-if ($order) $f->order($order);
+$f       = $this->getLinkFactory($linkname);
+$c       = $this->_getLinkClassName($linkname);
+$wheres  = $this->_getLinkWhereArray($linkname);
+$isBlank = true;
+foreach($wheres as $val){
+if(trim($val) != ''){
+$isBlank = false;
+break;
+}
+}
+if($isBlank){
+$this->_linked[$idx]['records'] = ($f->getDataset()->_limit == 1) ? null : [];
+}
+else{
+if ($order){
+$f->order($order);
+}
 $this->_linked[$idx]['records'] = $f->get();
+}
 if ($this->_linked[$idx]['records'] === null) {
 $this->_linked[$idx]['records'] = new $c();
 foreach ($wheres as $k => $v) {
@@ -3753,6 +3781,13 @@ foreach($_SESSION as $k => $v){
 if($k == $sub){
 unset($_SESSION[$k]);
 }
+}
+}
+elseif(strpos($key, '/') !== false){
+$sub = substr($key, 0, strpos($key, '/'));
+$spr = substr($key, strlen($sub) + 1);
+if(isset($_SESSION[$sub]) && isset($_SESSION[$sub][$spr])){
+unset($_SESSION[$sub][$spr]);
 }
 }
 elseif(isset($_SESSION[$key])){
@@ -6358,14 +6393,30 @@ unset($new_profiles);
 unset($dat['profiles']);
 $dat['json:profiles'] = json_encode($profiles);
 }
+$save = $user->isnew();
+foreach($dat as $k => $v){
+if($k == 'created' || $k == 'updated'){
+continue;
+}
+if($user->get($k) != $v){
+$save = true;
+break;
+}
+}
+if($save){
 try {
 $user->setFromArray($dat);
 $user->setGroups($groups);
-$status = $user->save();
+$user->save();
+$status = true;
 }
 catch(Exception $e) {
 $log->error($e->getMessage());
 continue;
+}
+}
+else{
+$status = false;
 }
 if($status) {
 $log->success($status_type . ' user ' . $user->getLabel() . ' successfully!');
