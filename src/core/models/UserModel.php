@@ -1426,18 +1426,36 @@ class UserModel extends Model {
 				$dat['json:profiles'] = json_encode($profiles);
 			}
 
-			try {
-				$user->setFromArray($dat);
-
-				// Set the default groups loaded from the system.
-				$user->setGroups($groups);
-
-				$status = $user->save();
+			// Should this record be saved or skipped entirely?
+			$save = $user->isnew();
+			foreach($dat as $k => $v){
+				if($k == 'created' || $k == 'updated'){
+					continue;
+				}
+				if($user->get($k) != $v){
+					$save = true;
+					break;
+				}
 			}
-			catch(Exception $e) {
-				$log->error($e->getMessage());
-				// Skip to the next.
-				continue;
+
+			if($save){
+				try {
+					$user->setFromArray($dat);
+
+					// Set the default groups loaded from the system.
+					$user->setGroups($groups);
+
+					$user->save();
+					$status = true;
+				}
+				catch(Exception $e) {
+					$log->error($e->getMessage());
+					// Skip to the next.
+					continue;
+				}
+			}
+			else{
+				$status = false;
 			}
 
 			if($status) {
