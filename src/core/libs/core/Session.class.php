@@ -352,6 +352,14 @@ class Session implements \SessionHandlerInterface {
 				}
 			}
 		}
+		elseif(strpos($key, '/') !== false){
+			// User requested to retrieve a set of keys, retrieve anything contained in this subarray
+			$sub = substr($key, 0, strpos($key, '/'));
+			$spr = substr($key, strlen($sub) + 1);
+			if(isset($_SESSION[$sub]) && isset($_SESSION[$sub][$spr])){
+				unset($_SESSION[$sub][$spr]);
+			}
+		}
 		elseif(isset($_SESSION[$key])){
 			unset($_SESSION[$key]);
 		}
