@@ -367,7 +367,7 @@ class NonceModel extends Model {
 	 * Shorthand function to lookup a nonce from the database.
 	 *
 	 * @param $key
-	 * @return NonceModel
+	 * @return NonceModel|null
 	 */
 	public static function LookupKey($key){
 		$key = strtolower($key);
