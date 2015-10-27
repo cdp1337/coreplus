@@ -115,7 +115,8 @@ class GeoAddressModel extends Model {
 	 * @var array
 	 */
 	public static $Indexes = array(
-		'primary' => array('id'),
+		'primary' => ['id'],
+		'idx_record' => ['model', 'record_key'],
 	);
 
 	/**
