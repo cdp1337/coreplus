@@ -366,7 +366,7 @@ class Model implements ArrayAccess {
 				$this->_linked[] = [
 					'key'   => $k,
 					'model' => $linkmodel,
-					'on'    => [$linkon => $k],
+					'on'    => is_array($linkon) ? $linkon : [$linkon => $k],
 					'link'  => $linktype,
 				];
 			}
@@ -666,7 +666,15 @@ class Model implements ArrayAccess {
 	 * @return mixed
 	 */
 	public function get($k) {
-		if($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
+		if($k === '__CLASS__'){
+			// Magic key
+			return get_called_class();
+		}
+		elseif($k === '__PRIMARYKEY__'){
+			// Magic key
+			return $this->getPrimaryKeyString();
+		}
+		elseif($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
 			// Check if the data exists and was decrypted from the database.
 			return $this->_datadecrypted[$k];
 		}
@@ -1381,12 +1389,30 @@ class Model implements ArrayAccess {
 		// Try to keep these in cache, so when they change I'll be able to save them on the parent's save function.
 		if (!isset($this->_linked[$idx]['records'])) {
 
-			$f = $this->getLinkFactory($linkname);
-			$c = $this->_getLinkClassName($linkname);
-			$wheres = $this->_getLinkWhereArray($linkname);
+			$f       = $this->getLinkFactory($linkname);
+			$c       = $this->_getLinkClassName($linkname);
+			$wheres  = $this->_getLinkWhereArray($linkname);
+			$isBlank = true;
 
-			if ($order) $f->order($order);
-			$this->_linked[$idx]['records'] = $f->get();
+			// Check and see if there is even a local key to attach anything onto!
+			foreach($wheres as $val){
+				if(trim($val) != ''){
+					$isBlank = false;
+					break;
+				}
+			}
+
+			if($isBlank){
+				// Skip the lookup, it'll be blank anyway!
+				// This saves a few ms on bulk pages that check a lot of potentially empty records.
+				$this->_linked[$idx]['records'] = ($f->getDataset()->_limit == 1) ? null : [];
+			}
+			else{
+				if ($order){
+					$f->order($order);
+				}
+				$this->_linked[$idx]['records'] = $f->get();
+			}
 
 			// Ensure that it's a valid record and not null.  If it's a LINK_ONE, the factory will return null if it doesn't exist.
 			if ($this->_linked[$idx]['records'] === null) {
