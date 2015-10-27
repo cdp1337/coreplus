@@ -476,6 +476,18 @@ class Dataset implements \Iterator{
 				return $this->_data[0];
 			}
 		}
+		elseif($this->_limit == 1 && $this->num_rows == 0){
+			// Only one record was selected but no records found.
+			// Return as close to what was expected as possible.
+			if(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
+				// Single key requested, return a single value.
+				return null;
+			}
+			else{
+				// Multiple keys, blank array returned.
+				return [];
+			}
+		}
 		elseif(sizeof($this->_selects) == 1 && $this->_selects[0] != '*'){
 			// Only one column was selected, just return an array of that column instead of an indexed array containing a 1-record associative array.
 			$ret = [];
