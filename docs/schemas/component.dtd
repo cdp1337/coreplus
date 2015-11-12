@@ -30,6 +30,7 @@
 	name CDATA #REQUIRED
 	version CDATA #REQUIRED
 	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
+	isready CDATA #IMPLIED
 >
 
 <!--

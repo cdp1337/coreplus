@@ -1008,6 +1008,40 @@ class Core implements ISingleton {
 		}
 	}
 
+	/**
+	 * Utility check to see if a requested component is ready to use.
+	 *
+	 * This is different from isAvailable, as it will query the component to see if it's configured and ready for use!
+	 *
+	 * If it's not ready, either an error message or URL is to be returned.
+	 * Otherwise, TRUE is returned to indicate that it's ready.
+	 *
+	 * @param $name
+	 *
+	 * @return string|true
+	 */
+	public static function IsComponentReady($name){
+		if(!self::IsComponentAvailable($name)){
+			return 'Component ' . $name . ' is not available!';
+		}
+
+		$self = self::Singleton();
+
+		$name = strtolower($name);
+		/** @var Component_2_1 $c */
+		$c = $self->_components[$name];
+
+		$attr = $c->getRootDOM()->getAttribute('isready');
+
+		if($attr === null || $attr === ''){
+			// No check installed, OK!
+			return true;
+		}
+
+		// It should be a method, call that method and return the result.
+		return call_user_func($attr);
+	}
+
 
 	public static function IsInstalled() {
 		return Core::Singleton()->_isInstalled();
