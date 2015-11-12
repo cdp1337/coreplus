@@ -636,7 +636,11 @@ class PageRequest {
 
 		// Handle some of the new automatic meta data associated with Pages and the resulting View.
 
-		if(!$page->get('indexable')){
+		if(\ConfigHandler::Get('/core/page/indexable') == 'deny'){
+			// Administratively set to noindex on all pages.
+			$view->addMetaName('robots', 'noindex');
+		}
+		elseif(!$page->get('indexable')){
 			// Bots have no business indexing user-action pages.
 			$view->addMetaName('robots', 'noindex');
 		}

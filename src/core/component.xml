@@ -50,7 +50,7 @@
 		<hook name="/core/page/error-404" call="RewriteMapHelper::Catch404Hook"/>
 		<hook name="/core/page/postexecute" call="Widget_2_1::HookPageRender"/>
 		<hook name="/core/page/postrender" call="Core\User\Helper::RecordActivity"/>
-		<hook name="/cron/hourly" call="Session::CleanupExpired"/>
+		<hook name="/cron/hourly" call="Core\Session::CleanupExpired"/>
 		<hook name="/cron/hourly" call="PageModel::PopularityMassUpdateHook"/>
 		<hook name="/cron/hourly" call="\Core\Utilities\Logger\LogFile::RotateHourly"/>
 		<hook name="/cron/daily" call="Core\User\Helper::PurgeUserActivityCron"/>
@@ -1684,6 +1684,7 @@
 		<config key="/core/page/url_remove_stop_words" title="Remove &quot;stop&quot; words from generated URLs" type="boolean" default="0" description="&quot;Stop&quot; words are words that many search engines ignore such as &quot;a&quot;, &quot;an&quot;, &quot;the&quot;, etc.  Please note, this only applies to &lt;em&gt;new&lt;/em&gt; pages."/>
 		<config key="/core/page/title_template" type="string" default="" description="The title template for SEO titles on pages.  You can enter various keywords here to have them automatically replaced with the appropriate values.  Please note, this only applies to page that do not already have their SEO title explicitly set.  &lt;br/&gt;&lt;br/&gt;If this is blank, then the page title will be used as the SEO title as-is."/>
 		<config key="/core/page/teaser_template" type="text" default="" title="Meta Description Template" description="The meta description (aka teaser), template on pages.  You can enter various keywords here to have them automatically replaced with the appropriate values.  Please note, this only applies to page that contain a blank meta description/teaser value.&lt;br/&gt;&lt;br/&gt;  If this is blank, then &lt;em&gt;no&lt;/em&gt; automatic teaser is generated."/>
+		<config key="/core/page/indexable" type="enum" default="allow" options="allow|deny" description="Indexable status for pages, set to allow to allow pages to be indexable or not, set to deny to force all pages to be noindex."/>
 		<config key="/core/performance/anonymous_user_page_cache" type="boolean" default="1" title="Enable Anonymous-User Page Cache" description="Check to enable page-level caching for anonymous users.  This is highly effective for static sites, but strongly recommended against for web applications and dynamic sites."/>
 	</configs>
 	<permissions>
@@ -2087,4 +2088,3 @@
 		<license>Public Domain</license>
 	</licenses>
 </component>
-

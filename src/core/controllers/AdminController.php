@@ -487,10 +487,10 @@ class AdminController extends Controller_2_1 {
 			array(
 				'title' => 'User',
 				'name' => 'affected_user_id',
-			    'linkname' => [
-				    'affected_user_id',
-			        'user_id',
-			    ]
+				'linkname' => [
+					'affected_user_id',
+					'user_id',
+				]
 				//'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
@@ -498,8 +498,8 @@ class AdminController extends Controller_2_1 {
 			'text',
 			[
 				'title' => 'IP Address',
-			    'name' => 'ip_addr',
-			    'link' => FilterForm::LINK_TYPE_STARTSWITH,
+				'name' => 'ip_addr',
+				'link' => FilterForm::LINK_TYPE_STARTSWITH,
 			]
 		);
 
@@ -947,6 +947,7 @@ class AdminController extends Controller_2_1 {
 			'/core/page/title_template',
 			'/core/page/teaser_template',
 			'/core/page/url_remove_stop_words',
+			'/core/page/indexable',
 		];
 
 		$form = new Form();
