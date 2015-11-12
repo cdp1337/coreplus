@@ -33,14 +33,37 @@ source "/opt/eval/basescript.sh"
 
 
 # Install the necessary dependencies
-if [ "$OSFAMILY" == "debian" ]; then
-	if [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 15 ]; then
+if [ "$OS" == "ubuntu" ]; then
+	# Ubuntu-specific install instructions
+	if [ "$OSVERSIONMAJ" -ge 15 ]; then
 		# Ubuntu 15.04 requires the nd library for phpmysql.
-		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush php5-mysqlnb php5-mcrypt php5-curl php5-gd
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush php5-mysqlnd php5-mcrypt php5-curl php5-gd
 		a2enmod rewrite
-	elif [ "$OS" == "ubuntu" -a "$OSVERSIONMAJ" -ge 14 ]; then
+	elif [ "$OSVERSIONMAJ" -ge 14 ]; then
 		# Ubuntu 14.04 changed the name from rubygems to simply ruby, (all encompassing).
 		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush
+	else
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems pngcrush
+	fi
+elif [ "$OSFAMILY" == "debian" ]; then
+	if [ "$OSVERSIONMAJ" -ge 9 ]; then
+		# Use the native driver in stretch and above.
+		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush php5-mysqlnd php5-mcrypt php5-curl php5-gd \
+		    libapache2-mod-php5 mariadb-client-10.0 mariadb-server-10.0 php5-xdebug graphviz
+		a2enmod rewrite
+		a2enmod php5
+
+		if [ ! -e "/etc/php5/apache2/conf.d/20-xdebug.ini" ]; then
+			# Ensure that xdebug is linked to the correct directory, (it wasn't there by default)
+			cat > /etc/php5/mods-available/xdebug.ini << EOD
+zend_extension=xdebug.so
+xdebug.remote_enable=true
+xdebug.remote_port=9000
+xdebug.remote_autostart=1
+EOD
+			ln -s /etc/php5/mods-available/xdebug.ini /etc/php5/apache2/conf.d/20-xdebug.ini
+			ln -s /etc/php5/mods-available/xdebug.ini /etc/php5/cli/conf.d/20-xdebug.ini
+		fi
 	else
 		install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems pngcrush
 	fi
@@ -121,6 +144,44 @@ pear info pear.phpunit.de/phpcpd 1>/dev/null
 if [ "$?" == "0" ]; then
 	printline "PHPUnit migrated its distrubution channel to a PHAR as of Dec. 2014.  Uninstalling the legacy version now."
 	pear uninstall pear.phpunit.de/phpcpd
+fi
+
+# Check and see if xhprof is installed.
+# This is extremely useful in development!
+pecl info xhprof 1>/dev/null
+if [ "$?" == "1" ]; then
+	pecl install channel://pecl.php.net/xhprof-0.9.4
+	if [ ! -e "/etc/php5/mods-available/xhprof.ini" ]; then
+		cat > /etc/php5/mods-available/xhprof.ini << EOD
+[xhprof]
+extension=xhprof.so
+xhprof.output_dir="/var/tmp/xhprof"
+EOD
+		cat > /etc/apache2/conf-available/xhprof.conf << EOD
+Alias /xhprof /usr/share/php/xhprof_html
+
+<Directory /usr/share/php/xhprof_html>
+    DirectoryIndex index.php
+
+    <IfModule mod_php5.c>
+        <IfModule mod_mime.c>
+            AddType application/x-httpd-php .php
+        </IfModule>
+        <FilesMatch ".+\.php$">
+            SetHandler application/x-httpd-php
+        </FilesMatch>
+
+        php_flag magic_quotes_gpc Off
+        php_flag track_vars On
+        php_flag register_globals Off
+    </IfModule>
+
+</Directory>
+EOD
+		ln -s /etc/php5/mods-available/xhprof.ini /etc/php5/apache2/conf.d/20-xhprof.ini
+		ln -s /etc/php5/mods-available/xhprof.ini /etc/php5/cli/conf.d/20-xhprof.ini
+		ln -s /etc/apache2/conf-available/xhprof.conf /etc/apache2/conf-enabled/xhprof.conf
+	fi
 fi
 
 # Install the phpunit libraries.
@@ -207,3 +268,24 @@ fi
 
 printheader "Installing GEM packages"
 gem install sass
+
+
+if [ "$OSFAMILY" == "debian" -a -n "$(egrep '^[ ]*php_admin_flag' /etc/apache2/mods-enabled/php5.conf)" ]; then
+	printwarn "PHP rendering in ~user public_html is disabled!"
+	echo "Do you want to enable PHP in public_html? (useful for local development) (y/N)"
+	read TRASH
+	if [ "$TRASH" == "y" -o "$TRASH" == "Y" ]; then
+		# Enable PHP in user directories
+		cat /etc/apache2/mods-enabled/php5.conf | sed 's:^[ ]*php_admin_flag:#       php_admin_flag:' > /tmp/installer.php5.tmp
+		mv /tmp/installer.php5.tmp /etc/apache2/mods-enabled/php5.conf
+
+		# Enable AllowOverride All, (this is required by Core).
+		cat /etc/apache2/mods-enabled/userdir.conf | sed 's:AllowOverride.*:AllowOverride All:' > /tmp/installer.userdir.tmp
+		mv /tmp/installer.userdir.tmp /etc/apache2/mods-enabled/userdir.conf
+
+		a2enmod userdir
+		printsuccess "Enabled PHP in public_html"
+	fi
+fi
+
+systemctl restart apache2
