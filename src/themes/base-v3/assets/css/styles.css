@@ -1546,28 +1546,40 @@ pre code {
 }
 
 /* line 37, ../scss/_content.scss */
+ul {
+  list-style-type: disc;
+  margin-left: 1em;
+}
+
+/* line 42, ../scss/_content.scss */
+ol {
+  list-style-type: decimal;
+  margin-left: 1em;
+}
+
+/* line 47, ../scss/_content.scss */
 aside.markdown-toc {
   float: left;
   margin-right: 1em;
 }
-/* line 41, ../scss/_content.scss */
+/* line 51, ../scss/_content.scss */
 aside.markdown-toc ul {
   margin-left: 1em;
 }
 
-/* line 46, ../scss/_content.scss */
+/* line 56, ../scss/_content.scss */
 footer.page-footer {
   padding-top: 2em;
 }
-/* line 50, ../scss/_content.scss */
+/* line 60, ../scss/_content.scss */
 footer.page-footer .listing-schema-information {
   font-size: 75%;
 }
-/* line 53, ../scss/_content.scss */
+/* line 63, ../scss/_content.scss */
 footer.page-footer .listing-schema-information .listing-schema-address-address {
   display: block;
 }
-/* line 58, ../scss/_content.scss */
+/* line 68, ../scss/_content.scss */
 footer.page-footer .legal-notice {
   font-size: 75%;
 }

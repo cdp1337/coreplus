@@ -1491,7 +1491,7 @@ section.page-content {
   margin-top: 2em;
 }
 
-/* line 28, ../scss/_content.scss */
+/* line 27, ../scss/_content.scss */
 a.button {
   border: 1px solid #2459a6;
   border-radius: 3px;
@@ -1527,36 +1527,48 @@ a.button:disabled {
   cursor: not-allowed;
 }
 
-/* line 32, ../scss/_content.scss */
+/* line 31, ../scss/_content.scss */
 pre code {
   display: block;
   padding: 0.5em 1em;
   border: 1px solid;
 }
 
-/* line 38, ../scss/_content.scss */
-aside.markdown-toc {
-  float: left;
-  margin-right: 1em;
+/* line 37, ../scss/_content.scss */
+ul {
+  list-style-type: disc;
+  margin-left: 1em;
 }
+
 /* line 42, ../scss/_content.scss */
-aside.markdown-toc ul {
+ol {
+  list-style-type: decimal;
   margin-left: 1em;
 }
 
 /* line 47, ../scss/_content.scss */
+aside.markdown-toc {
+  float: left;
+  margin-right: 1em;
+}
+/* line 51, ../scss/_content.scss */
+aside.markdown-toc ul {
+  margin-left: 1em;
+}
+
+/* line 56, ../scss/_content.scss */
 footer.page-footer {
   padding-top: 2em;
 }
-/* line 51, ../scss/_content.scss */
+/* line 60, ../scss/_content.scss */
 footer.page-footer .listing-schema-information {
   font-size: 75%;
 }
-/* line 54, ../scss/_content.scss */
+/* line 63, ../scss/_content.scss */
 footer.page-footer .listing-schema-information .listing-schema-address-address {
   display: block;
 }
-/* line 59, ../scss/_content.scss */
+/* line 68, ../scss/_content.scss */
 footer.page-footer .legal-notice {
   font-size: 75%;
 }
