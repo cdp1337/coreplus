@@ -288,7 +288,7 @@ or from within the constructor if more complex.  Depending on where they are def
 * on
 	* Specify the local/foreign keys that define the relationship.
 	* If this is a single scalar value, then both Models MUST have the same key that relates them.
-	* If this is an array, each pair is used in the relationship.  `['local_key_name' => 'foreign_key_name']`.
+	* If this is an array, each pair is used in the relationship.  `['foreign_key_name' => 'local_key_name']`.
 
 * order
 	* Specify the default order clause for this link.
