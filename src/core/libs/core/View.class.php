@@ -73,6 +73,13 @@ class View {
 	 * otherwise, a standard page load will render with the master page template.
 	 */
 	const MODE_PAGEORAJAX = 'pageorajax';
+
+	/**
+	 * Allow the mode to be set to a streamlined version of PAGE.
+	 * This does not include debugging information and the like.
+	 */
+	const MODE_EMAILORPRINT = 'print';
+
 	//const MODE_JSON       = 'json';
 
 	/**
@@ -490,6 +497,7 @@ class View {
 			case View::MODE_PAGE:
 			case View::MODE_AJAX:
 			case View::MODE_PAGEORAJAX:
+			case View::MODE_EMAILORPRINT:
 				$t = $this->getTemplate();
 				$html = $t->fetch($tmpl);
 				// Retrieve any/all JS, CSS, and Meta elements from that widget's View and transpose them here!
@@ -577,6 +585,7 @@ class View {
 					$mastertpl = false;
 					break;
 				case View::MODE_PAGE:
+				case View::MODE_EMAILORPRINT:
 					$mastertpl = Core\Templates\Template::ResolveFile('skins/' . $this->mastertemplate);
 					//$mastertpl = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/skins/' . $this->mastertemplate;
 					break;
@@ -685,7 +694,21 @@ class View {
 			die();
 		}
 
-		if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
+		if($this->mode == View::MODE_EMAILORPRINT && $this->contenttype == View::CTYPE_HTML){
+			// Inform other elements that the page is just about to be rendered.
+			HookHandler::DispatchHook('/core/page/rendering', $this);
+
+			// Replace the </head> tag with the head data from the current page
+			// and the </body> with the foot data from the current page.
+			// This is needed to be done at this stage because some element in
+			// the template after rendering may add additional script to the head.
+			// Also tack on any attributes for the <html> tag.
+			if(preg_match('#</head>#i', $data)){
+				// I need to do preg_replace because I only want to replace the FIRST instance of </head>
+				$data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $data, 1);
+			}
+		}
+		elseif ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
 			// Inform other elements that the page is just about to be rendered.
 			HookHandler::DispatchHook('/core/page/rendering', $this);
 
@@ -883,7 +906,7 @@ class View {
 		// Be sure to send the content type and status to the browser, (if it's a page)
 		if (
 			!headers_sent() &&
-			($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT)
+			($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT || $this->mode == View::MODE_EMAILORPRINT)
 		) {
 			switch ($this->error) {
 				case View::ERROR_NOERROR:
