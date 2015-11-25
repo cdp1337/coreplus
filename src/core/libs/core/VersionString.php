@@ -290,12 +290,12 @@ class VersionString implements \ArrayAccess {
 		// distinguishing if maintainer Y or maintainer Z did the actual package creation.
 		// HOWEVER if versions 1.2.0~core3 and 1.2.0~core5 are compared, it'll use the user version.
 		if($check == 0 && $this->user && $other->user){
-			$check = version_compare($this->user, $other->user);
+			$check = version_compare('1.0' . $this->user, '1.0' . $other->user);
 		}
 
 		// Apply the same to stability
 		if($check == 0 && ($this->stability || $other->stability)){
-			$check = version_compare($this->stability, $other->stability);
+			$check = version_compare('1.0' . $this->stability, '1.0' . $other->stability);
 		}
 
 		// Will preserve PHP's -1, 0, 1 nature.
