@@ -624,7 +624,7 @@ if($compileJS) {
 	foreach($results as $file) {
 
 		// Is this already a minified file?
-		if(strpos($file, 'min.js') !== false) {
+		if(strpos($file, '.min.js') !== false) {
 			continue;
 		}
 
