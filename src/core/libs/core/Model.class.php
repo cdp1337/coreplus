@@ -1313,7 +1313,7 @@ class Model implements ArrayAccess {
 			if($keydat['encrypted']){
 				$this->decryptData();
 				$this->_datadecrypted[$k] = $v;
-				$this->_data[$k] = $this->encryptValue($v);
+				$this->_data[$k] = self::EncryptValue($v);
 			}
 			else{
 				$this->_data[$k] = $v;
@@ -1761,26 +1761,7 @@ class Model implements ArrayAccess {
 			foreach($this->getKeySchemas() as $k => $v){
 				// Since certain keys in a model may be encrypted.
 				if($v['encrypted']){
-					$payload = $this->_data[$k];
-					if($payload === null || $payload === '' || $payload === false){
-						$this->_datadecrypted[$k] = null;
-						continue;
-					}
-
-					preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $payload, $matches);
-
-					$cipher = $matches[1];
-					$passes = $matches[2];
-					$size = openssl_cipher_iv_length($cipher);
-					// Now I can trim off the beginning crap from the encrypted string.
-					$dec = substr($payload, strlen($cipher) + 5, 0-$size);
-					$iv = substr($payload, 0-$size);
-
-					for($i=0; $i<$passes; $i++){
-						$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-					}
-
-					$this->_datadecrypted[$k] = $dec;
+					$this->_datadecrypted[$k] = self::DecryptValue($this->_data[$k]);
 				}
 			}
 		}
@@ -2270,33 +2251,6 @@ class Model implements ArrayAccess {
 		return null;
 	}
 
-	/**
-	 * Method to encrypt a specific key for storage.
-	 *
-	 * Called internally by the set function.
-	 * Will return the encrypted data.
-	 *
-	 * @param mixed $value The plain-text value to encrypt
-	 * @return string Encrypted data
-	 */
-	protected function encryptValue($value){
-		$cipher = 'AES-256-CBC';
-		$passes = 10;
-		$size = openssl_cipher_iv_length($cipher);
-		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
-
-		if($value === '') return '';
-		elseif($value === null) return null;
-
-		$enc = $value;
-		for($i=0; $i<$passes; $i++){
-			$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-		}
-
-		$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
-		return $payload;
-	}
-
 	protected function _getCacheKey() {
 		if (!$this->_cacheable) return false;
 		$i = self::GetIndexes();
@@ -2516,6 +2470,61 @@ class Model implements ArrayAccess {
 	/*************************************************************************
 	 ****                    OTHER STATIC METHODS                         ****
 	 *************************************************************************/
+
+	/**
+	 * Method to encrypt a specific key for storage.
+	 *
+	 * Called internally by the set function.
+	 * Will return the encrypted data.
+	 *
+	 * @param mixed $value The plain-text value to encrypt
+	 * @return string Encrypted data
+	 */
+	public static function EncryptValue($value){
+		$cipher = 'AES-256-CBC';
+		$passes = 10;
+		$size = openssl_cipher_iv_length($cipher);
+		$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+
+		if($value === '') return '';
+		elseif($value === null) return null;
+
+		$enc = $value;
+		for($i=0; $i<$passes; $i++){
+			$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+		}
+
+		$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+		return $payload;
+	}
+
+	/**
+	 * Decrypt a given value, can be called internally or externally.
+	 *
+	 * @param $payload
+	 *
+	 * @return null|string
+	 */
+	public static function DecryptValue($payload) {
+		if($payload === null || $payload === '' || $payload === false){
+			return null;
+		}
+
+		preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $payload, $matches);
+
+		$cipher = $matches[1];
+		$passes = $matches[2];
+		$size = openssl_cipher_iv_length($cipher);
+		// Now I can trim off the beginning crap from the encrypted string.
+		$dec = substr($payload, strlen($cipher) + 5, 0-$size);
+		$iv = substr($payload, 0-$size);
+
+		for($i=0; $i<$passes; $i++){
+			$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+		}
+
+		return $dec;
+	}
 
 	/**
 	 * Get the table name for a given Model object
