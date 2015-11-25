@@ -283,7 +283,6 @@ class CronController extends Controller_2_1 {
 		$log->set('memory', memory_get_usage());
 		$log->set('ip', REMOTE_IP);
 		$log->save();
-//var_dump($log); die();
 		$start = microtime(true) * 1000;
 
 		$sep = '==========================================' . "\n";
@@ -354,18 +353,32 @@ class CronController extends Controller_2_1 {
 		$log->save();
 
 		// Make a copy of this in the system log too if applicable.
+		// This time is listed in ms
 		$time = ( (microtime(true) * 1000) - $start );
-		if($time < 0.1){
-			$time = round($time, 4) * 1000000 . ' ns';
+		// 0.01 = 10 ns
+		// 1    = 1 ms
+		// 1000 = 1 second
+		if($time < 1){
+			// TIME is less than 1, which means it executed faster than 1ms, display in nanoseconds.
+			$time = (round($time, 4) * 1000) . ' ns';
 		}
-		elseif($time < 2.0){
-			$time = round($time, 4) * 1000 . ' ms';
-		}
-		elseif($time < 60){
-			$time = round($time, 4) . ' seconds';
+		elseif($time < 1000){
+			// TIME is less than 1000, which means it executed faster than 1 second, display in milliseconds.
+			$time = round($time, 0) . ' ms';
 		}
 		else{
-			$time = round($time, 4) / 60 . ' minutes';
+			// TIME is at least 1 second or longer... Display in minutes:seconds, (no need to display 1.453 seconds!)
+			// First, convert the milliseconds to seconds; they are more manageable for what I need to do.
+			// This will change time from 12345(ms) to 13(seconds)
+			$time = ceil($time / 1000);
+			$minutes = floor($time / 60);
+			$seconds = $time - ($minutes * 60);
+			if($minutes > 0){
+				$time = $minutes . 'm ' . str_pad($seconds, 2, '0', STR_PAD_LEFT) . 's';
+			}
+			else{
+				$time = $seconds . ' seconds';
+			}
 		}
 
 		if($hookcount > 0){
