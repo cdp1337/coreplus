@@ -30,7 +30,7 @@ src/config/configuration.xml
 !.idea/codeStyleSettings.xml
 
 # Skip the GPG keys.
-src/gnupg/*.gpg
+src/gnupg/
 
 # These are used in development environments.
 exports
