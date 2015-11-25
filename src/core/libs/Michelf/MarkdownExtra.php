@@ -47,7 +47,7 @@ class MarkdownExtra extends Markdown {
 	# Class attribute for code blocks goes on the `code` tag;
 	# setting this to true will put attributes on the `pre` tag instead.
 	public $code_attr_on_pre = false;
-
+	
 	# Predefined abbreviations.
 	public $predef_abbr = array();
 

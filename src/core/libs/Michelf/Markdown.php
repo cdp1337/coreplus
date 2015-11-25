@@ -64,7 +64,7 @@ class Markdown implements MarkdownInterface {
 
 	# Optional header id="" generation callback function.
 	public $header_id_func = null;
-	
+
 	# Optional function for converting code block content to HTML
 	public $code_block_content_func = null;
 

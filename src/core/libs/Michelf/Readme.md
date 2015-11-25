@@ -25,7 +25,7 @@ software tool, originally written in Perl, that converts the plain text
 markup to HTML. PHP Markdown is a port to PHP of the original Markdown 
 program by John Gruber.
 
-*	[Full documentation of the Markdown syntax](<https://daringfireball.net/projects/markdown/>)  
+*	[Full documentation of the Markdown syntax](<https://daringfireball.net/projects/markdown/>)
 	— Daring Fireball (John Gruber)
 *	[Markdown Extra syntax additions](<https://michelf.ca/projects/php-markdown/extra/>)  
 	— Michel Fortin
@@ -176,25 +176,25 @@ Version History
 
 Current Version
 
-*	For fenced code blocks in Markdown Extra, can now set a class name for the 
-	code block's language before the special attribute block. Previously, this 
+*	For fenced code blocks in Markdown Extra, can now set a class name for the
+	code block's language before the special attribute block. Previously, this
 	class name was only allowed in the absence of the special attribute block.
 
-*	Added a `code_block_content_func` configuration variable which takes a 
-	function that will convert the content of the code block to HTML. This is 
-	most useful for syntax highlighting. For fenced code blocks in Markdown 
-	Extra, the function has access to the language class name (the one outside 
-	of the special attribute block). Credits to Mario Konrad for providing the 
+*	Added a `code_block_content_func` configuration variable which takes a
+	function that will convert the content of the code block to HTML. This is
+	most useful for syntax highlighting. For fenced code blocks in Markdown
+	Extra, the function has access to the language class name (the one outside
+	of the special attribute block). Credits to Mario Konrad for providing the
 	implementation.
 
 *	The curled arrow character for the backlink in footnotes is now followed
 	by a Unicode variant selector to prevent it from being displayed in emoji
 	form on iOS.
 
-	Note that in older browsers the variant selector is often interpreted as a 
-	separate character, making it visible after the arrow. So there is now a 
-	also a `fn_backlink_html` configuration variable that can be used to set 
-	the link text to something else. Credits to Dana for providing the 
+	Note that in older browsers the variant selector is often interpreted as a
+	separate character, making it visible after the arrow. So there is now a
+	also a `fn_backlink_html` configuration variable that can be used to set
+	the link text to something else. Credits to Dana for providing the
 	implementation.
 
 
@@ -319,7 +319,7 @@ All rights reserved.
 
 Based on Markdown  
 Copyright (c) 2003-2005 John Gruber   
-<https://daringfireball.net/>   
+<https://daringfireball.net/>
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
