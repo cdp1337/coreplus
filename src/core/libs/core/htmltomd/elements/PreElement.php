@@ -63,8 +63,14 @@ class PreElement extends DefaultElement implements ElementInterface {
 		if($this->_node->childNodes->length == 0){
 			return '';
 		}
-		var_dump($this->_node->childNodes->length);
-		var_dump($this->_parentConverter->getRootDOM()->saveHTML($this->_node)); die();
-		return "\n\n" . $this->_getContent() . "\n\n";
+		$content = $this->_node->nodeValue;
+
+		// Ensure that newlines in the pre tag are indented by 4 spaces.
+		$content = explode("\n", $content);
+		$output = '';
+		foreach($content as $line){
+			$output .= '    ' . trim($line);
+		}
+		return "\n\n" . $output . "\n\n";
 	}
 }
