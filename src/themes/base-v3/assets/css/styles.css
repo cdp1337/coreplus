@@ -584,7 +584,7 @@ cite {
 }
 /* line 90, ../scss/vendor/bitters/_typography.scss */
 cite:before {
-  content: "\2014 \00A0";
+  content: "- ";
 }
 
 /* line 1, ../scss/vendor/bitters/_forms.scss */
