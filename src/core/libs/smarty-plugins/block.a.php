@@ -122,5 +122,11 @@ function smarty_block_a($params, $content, $smarty, &$repeat){
 	// Close the set.
 	$newcontent .= '</a>';
 
-	return $assign ? $smarty->assign($assign, $newcontent) : $newcontent;
+	if($assign){
+		$smarty->assign($assign, $newcontent);
+		return '';
+	}
+	else{
+		return $newcontent;
+	}
 }
