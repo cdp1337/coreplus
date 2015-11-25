@@ -49,4 +49,18 @@ class FormTextInput extends FormElement {
 			'width',
 		];
 	}
+
+	public function getInputAttributes(){
+		if($this->get('autocomplete') && !($this->get('autocomplete') == 'off' || $this->get('autocomplete') == 'on')){
+			// These get handled by the smarty snippet.
+			if(($k = array_search('name', $this->_validattributes))){
+				unset($this->_validattributes[$k]);
+			}
+			if(($k = array_search('value', $this->_validattributes))){
+				unset($this->_validattributes[$k]);
+			}
+		}
+
+		return parent::getInputAttributes();
+	}
 }

@@ -496,11 +496,15 @@ class FormElement {
 				}
 				break;
 			case 'autocomplete':
-				if(!$value){
+				if($value === false || $value === '0' | $value === 0 || $value === 'off'){
 					$this->_attributes[$key] = 'off';
 				}
-				else{
+				elseif($value === true || $value === '1' || $value === 1 || $value === 'on' || $value === ''){
 					$this->_attributes[$key] = 'on';
+				}
+				else{
+					// Resolve this to an actual URL using Core's built-in resolution system.
+					$this->_attributes[$key] = \Core\resolve_link($value);
 				}
 				break;
 			case 'persistent':
