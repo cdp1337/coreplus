@@ -11,6 +11,20 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
 	RewriteBase @{rewritebase}@
+	
+	##
+	## HOT-LINKING PROTECTION
+	##
+	## If you want to enable hot-linking protection, uncomment this snippet out and set your site's variables.
+	##
+	#
+	#RewriteCond %{HTTP_REFERER} !^$
+	## On this line, @{siteurl} must contain your site URL, without the "www." prefix.
+    #RewriteCond %{HTTP_REFERER} !^http(s)?://(www\.)?@{siteurl} [NC]
+    ## On this line, @{replacementimage} must contain the full URL+path of a file to switch out instead.
+    #RewriteRule \.(jpg|jpeg|png|gif)$ http://@{replacementimage} [NC,R,L]
+    #
+    ## End hot-linking protection.
 
 	RewriteCond %{SCRIPT_FILENAME} -f [OR]
 	RewriteCond %{SCRIPT_FILENAME} -d
