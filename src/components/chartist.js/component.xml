@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.5-1">
+	<provides>
+		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
+	</provides>
+	<files>
+		<file filename="CHANGELOG" md5="fe2c27362e0d9135834beb51c1fb7093"/>
+		<file filename="CHANGELOG.md" md5="e13af389bde5daa8ceb3d1c0d4403264"/>
+		<file filename="CODINGSTYLE.md" md5="be72d83bc148e1ad9874d889a109307d"/>
+		<file filename="CONTRIBUTING.md" md5="d5ac0fe9972fbaa49c539e28f8c61487"/>
+		<file filename="LICENSE" md5="f312a7c4d02230e8f2b537295d375c69"/>
+		<file filename="README.md" md5="6695ece78f524617fe6459701c7489a2"/>
+		<file filename="libs/chartistjs/ChartistJS.php" md5="00432aeef7b47de937c52d9e20924dfa">
+			<class name="ChartistJS"/>
+		</file>
+	</files>
+	<view/>
+	<configs/>
+	<users/>
+	<pages/>
+	<widgets/>
+	<assets>
+		<file filename="assets/css/chartist.css" md5="b9a91a1e35ddaa5c9f333d725fdf91cf"/>
+		<file filename="assets/css/chartist.min.css" md5="b9a91a1e35ddaa5c9f333d725fdf91cf"/>
+		<file filename="assets/js/chartist.js" md5="4e688387f6663d5a4eea99bbfa1c3975"/>
+		<file filename="assets/js/chartist.min.js" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="assets/js/chartist.min.js.map" md5="8a475158f2f74c33a010c325263f19c4"/>
+	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="Sam Hocevar" email="sam@hocevar.net"/>
+	</authors>
+	<licenses>
+		<license url="http://www.wtfpl.net/">
+			DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+		</license>
+	</licenses>
+</component>
+
