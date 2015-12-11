@@ -599,17 +599,59 @@ function RecordNavigation(\PageModel $page){
  * Add a message to the user's stack.
  *	It will be displayed the next time the user (or session) renders the page.
  *
- * @param string $message_text
+ * @param string $message_text The message text or the MESSAGE_ string constant for i18n and automatic type detection!
  * @param string $message_type
+ *
  * @return boolean (on success)
  */
-function SetMessage($messageText, $messageType = 'info'){
-	\Core::SetMessage($messageText, $messageType);
+function set_message($messageText, $messageType = 'info'){
+	if(strpos($messageText, 'MESSAGE_') === 0){
+		// It's an i18n message!  Retrieve the locale version of text and the message type.
+
+		if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
+			$messageType = 'success';
+		}
+		elseif(strpos($messageText, 'MESSAGE_ERROR_') === 0){
+			$messageType = 'error';
+		}
+		elseif(strpos($messageText, 'MESSAGE_TUTORIAL_') === 0){
+			$messageType = 'tutorial';
+		}
+		elseif(strpos($messageText, 'MESSAGE_WARNING_') === 0){
+			$messageType = 'warning';
+		}
+		elseif(strpos($messageText, 'MESSAGE_INFO_') === 0){
+			$messageType = 'info';
+		}
+		else{
+			$messageType = 'info';
+		}
+
+		if(func_num_args() > 1){
+			// Use func_call to call 1, as I need to pass in the other options too!
+			$messageText = call_user_func_array('t', func_get_args());
+		}
+		else{
+			$messageText = t($messageText);
+		}
+	}
+
+	// CLI doesn't use sessions, echo directly to stdout instead.
+	if(EXEC_MODE == 'CLI'){
+		$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
+		echo "[" . $messageType . "] - " . $messageText . "\n";
+	}
+	else{
+		$stack = Session::Get('message_stack', []);
+
+		$stack[] = array(
+			'mtext' => $messageText,
+			'mtype' => $messageType,
+		);
+		Session::Set('message_stack', $stack);
+	}
 }
 
-function AddMessage($messageText, $messageType = 'info'){
-	\Core::SetMessage($messageText, $messageType);
-}
 
 /**
  * Retrieve the messages and optionally clear the message stack.
@@ -619,7 +661,7 @@ function AddMessage($messageText, $messageType = 'info'){
  *
  * @return array
  */
-function GetMessages($returnSorted = FALSE, $clearStack = TRUE){
+function get_messages($returnSorted = FALSE, $clearStack = TRUE){
 	return \Core::GetMessages($returnSorted, $clearStack);
 }
 

@@ -303,7 +303,13 @@ class PrimaryKey extends Key {
 			case 'pub':
 			case 'sec':
 				// Primary key, either public or secret.
-				$this->_parseKeyLine($parts, $this);
+				if(sizeof($parts) == 13){
+					self::_ParseKeyLine13($parts, $this);
+				}
+				else{
+					self::_ParseKeyLine7($parts, $this);
+				}
+
 				break;
 			case 'fpr':
 				// Fingerprint
@@ -311,14 +317,27 @@ class PrimaryKey extends Key {
 				break;
 			case 'uid':
 				// UID sub key
-				$this->_parseSubUIDLine($parts);
+				$uid = new UID();
+				if(sizeof($parts) == 11){
+					self::_ParseSubUIDLine11($parts, $uid);
+				}
+				else{
+					self::_ParseSubUIDLine5($parts, $uid);
+				}
+				$this->uids[] = $uid;
+
 				break;
 			case 'uat':
 				// Skip user attributes.
 				break;
 			case 'sub':
 				$sub = new Key();
-				$this->_parseKeyLine($parts, $sub);
+				if(sizeof($parts) == 13){
+					self::_ParseKeyLine13($parts, $sub);
+				}
+				else{
+					self::_ParseKeyLine7($parts, $sub);
+				}
 				$this->subkeys[] = $sub;
 				break;
 			/*
@@ -340,7 +359,7 @@ class PrimaryKey extends Key {
 		}
 	}
 
-	protected function _parseKeyLine($parts, Key $key){
+	protected static function _ParseKeyLine13($parts, Key $key){
 		/*
 		 * (0-index of keys)
 		 * 0.  Field:  Type of record
@@ -385,16 +404,76 @@ class PrimaryKey extends Key {
 		$key->expires = $parts[6];
 	}
 
-	protected function _parseSubUIDLine($parts){
-		$uid = new UID();
+	/**
+	 * Parse a colon-delimited string for a 7-part data field, (usually from remote sources).
+	 *
+	 * @param     $parts
+	 */
+	protected static function _ParseKeyLine7($parts, Key $key){
+		/*
+		 * (0-index of keys)
+		 * 0.  Field:  Type of record
+		 * 1.  Field:  KeyID
+		 * 2.  Field:  Algorithm:
+		 * 3.  Field:  length of key in bits.
+		 * 4.  Field:  Creation Date (in UTC).
+		 * 5.  Field:  ???
+		 * 6.  Field:  ???
+		 */
+		//$this->type = $parts[0];
+		$key->encryptionBits = $parts[3];
+
+		switch($parts[2]){
+			case '1':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_RSA;
+				break;
+			case '16':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_ELGAMAL;
+				break;
+			case '17':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_DSA;
+				break;
+			case '20':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_ELGAMAL;
+				break;
+		}
+
+		$key->id = $parts[1];
+		$key->fingerprint = $parts[1]; // On remote servers, they rarely give the fingerprint.
+		$key->id_short = substr($parts[1], -8);
+		$key->created = $parts[4];
+		//$key->expires = $parts[6];
+	}
+
+	protected static function _ParseSubUIDLine11($parts, UID $uid){
 		$uid->validity = $parts[1];
 		$uid->created = $parts[5];
 		$uid->expires = $parts[6];
 		$uid->serial = $parts[7];
-		$uid->fullname = substr($parts[9], 0, strpos($parts[9], '<')-1);
-		$uid->email = substr($parts[9], strlen($uid->fullname) + 2, -1);
 
-		$this->uids[] = $uid;
+		$split = GPG::ParseAuthorString($parts[9]);
+		$uid->fullname = $split['name'];
+		$uid->email    = $split['email'];
+		$uid->comment  = $split['comment'];
+	}
+
+	protected static function _ParseSubUIDLine5($parts, UID $uid){
+		/*
+		 * (0-index of keys)
+		 * 0.  Field:  Type of record
+		 * 1.  Field:  Key name and/or email
+		 * 2.  Field:  Creation Date (in UTC).
+		 * 3.  Field:  ???
+		 * 4.  Field:  ???
+		 */
+		//$uid->validity = $parts[1];
+		$uid->created = $parts[2];
+		//$uid->expires = $parts[6];
+		//$uid->serial = $parts[7];
+		$split = GPG::ParseAuthorString($parts[1]);
+		$uid->fullname = $split['name'];
+		$uid->email    = $split['email'];
+		$uid->comment  = $split['comment'];
 	}
 
 } 

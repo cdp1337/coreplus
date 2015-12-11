@@ -74,7 +74,6 @@ class DateTime extends \DateTime{
 	 *
 	 * @param string|null $datetime        String representation of the date to manipulate
 	 * @param \DateTimeZone|null $timezone String representation or DateTimeZone object of the timezone, null for automatic
-	 * @todo Support Locale on datetime objects.
 	 *
 	 * @return DateTime
 	 *
@@ -145,19 +144,19 @@ class DateTime extends \DateTime{
 			return $this->getRelative();
 		}
 		elseif($format == DateTime::FULLDATE){
-			$format = Loader::Get('FORMAT_FULLDATE');
+			$format = t('FORMAT_FULLDATE');
 		}
 		elseif($format == DateTime::SHORTDATE){
-			$format = Loader::Get('FORMAT_SHORTDATE');
+			$format = t('FORMAT_SHORTDATE');
 		}
 		elseif($format == DateTime::FULLDATETIME){
-			$format = Loader::Get('FORMAT_FULLDATETIME');
+			$format = t('FORMAT_FULLDATETIME');
 		}
 		elseif($format == DateTime::SHORTDATETIME){
-			$format = Loader::Get('FORMAT_SHORTDATETIME');
+			$format = t('FORMAT_SHORTDATETIME');
 		}
-		elseif($format == DateTIme::TIME){
-			$format = Loader::Get('FORMAT_TIME');
+		elseif($format == DateTime::TIME){
+			$format = t('FORMAT_TIME');
 		}
 
 
@@ -193,21 +192,30 @@ class DateTime extends \DateTime{
 
 		$now = new DateTime('now', $timezone);
 
-		$nowStamp = $now->format('Ymd');
-		$cStamp   = $this->format('Ymd', $timezone);
-
-		// @todo Locale Setting, g:i A needs to be the actual locale time instead.
+		$nowStamp   = $now->format('Ymd');
+		$cStamp     = $this->format('Ymd', $timezone);
+		$formatTime = t('FORMAT_TIME');
 
 		// The first couple days will always be converted, today and tomorrow/yesterday.
-		if ($nowStamp - $cStamp == 0) return 'Today at ' . $this->format('g:i A', $timezone);
-		elseif ($nowStamp - $cStamp == 1) return 'Yesterday at ' . $this->format('g:i A', $timezone);
-		elseif ($nowStamp - $cStamp == -1) return 'Tomorrow at ' . $this->format('g:i A', $timezone);
+		if ($nowStamp - $cStamp == 0){
+			return t('STRING_TODAY_AT_S', $this->format($formatTime, $timezone));
+		}
+		elseif ($nowStamp - $cStamp == 1){
+			return t('STRING_YESTERDAY_AT_S', $this->format($formatTime, $timezone));
+		}
+		elseif ($nowStamp - $cStamp == -1){
+			return t('STRING_TOMORROW_AT_S', $this->format($formatTime, $timezone));
+		}
 
 		// If accuracy is the minimum and neither today/tomorrow/yesterday, simply return the date.
-		if ($accuracy <= 2) return $this->format(DateTime::SHORTDATE, $timezone);
+		if ($accuracy <= 2){
+			return $this->format(DateTime::SHORTDATE, $timezone);
+		}
 
 		// If it's too high/low from a week, just return the date.
-		if (abs($nowStamp - $cStamp) > 6) return $this->format(DateTime::SHORTDATE, $timezone);
+		if (abs($nowStamp - $cStamp) > 6){
+			return $this->format(DateTime::SHORTDATE, $timezone);
+		}
 
 		// Else, return the day of the week, followed by the time.
 		return $this->format('l \a\t ' . 'g:i A', $timezone);

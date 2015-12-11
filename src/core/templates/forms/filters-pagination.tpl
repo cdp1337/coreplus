@@ -20,10 +20,10 @@
 			*}
 		{/if}
 
-		Page {$page_current}
+		{t 'STRING_PAGE_N' $page_current}
 
 		{if $page_current < $page_max}
-			<a href="?page={$page_current+1}" title="Page {$page_current+1}">
+			<a href="?page={$page_current+1}" title="{t 'STRING_PAGE_N' $page_current+1}">
 				<i class="icon-forward"></i>
 			</a>
 			<a href="?page={$page_max}" title="Last Page">
@@ -41,13 +41,11 @@
 	{/if}
 </div>
 
-{*if $records_total > $records_current*}
-		Displaying {$records_start}-{$records_end} of {$records_total} records.
-	{*/if*}
+	{t 'STRING_DISPLAYING_N_THROUGH_N_OF_N_RECORDS' $records_start $records_end $records_total}
 
 
 	<div class="pagination-list">
-		Page:
+		{t 'STRING_PAGE'}:
 		{assign var='prev' value=null}
 
 		{**

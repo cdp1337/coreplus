@@ -1337,10 +1337,8 @@ class PageModel extends Model {
 		$seconds = time() - $created;
 
 		// Convert the seconds age to months.  Each month that lapses is another magnitude required to remain popular.
-		// Estimating that each month is approximately 28.5 days long.
-		$secs_per_month = 86400 * 28.5;
 		// (scratch that, 57, [or two months], as a date basis is better.)
-		$months = $seconds / ($secs_per_month * 2);
+		$months = $seconds / SECONDS_TWO_MONTH;
 
 		// If the age is less than a week, then average the age up to a week to pad new pages a little.
 		// This helps prevent new pages from severely out-ranking actually-popular pages.
@@ -1482,7 +1480,7 @@ class PageModel extends Model {
 	 */
 	public function purgePageCache(){
 		$indexkey = $this->getIndexCacheKey();
-		$index = \Core\Cache::Get($indexkey, 86400);
+		$index = \Core\Cache::Get($indexkey);
 		if($index && is_array($index)){
 			foreach($index as $key){
 				\Core\Cache::Delete($key);

@@ -54,7 +54,7 @@ class UpdateSiteModel extends Model {
 			'required' => false,
 			'null'     => true,
 			'form' => array(
-				'description' => '[OPTIONAL] - If you require a username to access the repo, set it here.',
+				'description' => 'If provided with a username, enter the username for this repository.  This field may or may not be required based on the repository you are connecting to.',
 			),
 		),
 		'password' => array(
@@ -63,7 +63,7 @@ class UpdateSiteModel extends Model {
 			'null'     => true,
 			'form' => array(
 				'type' => 'password',
-				'description' => '[OPTIONAL] - If you require a password to access the repo, set it here.',
+				'description' => 'If provided with a password, enter the password for this repository.  This field may or may not be required based on the repository you are connecting to.',
 			),
 		),
 		'description' => array(

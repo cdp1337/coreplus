@@ -182,3 +182,14 @@ else{
 
 // Cleanup!
 unset($em, $rpdr, $rwdr, $rip);
+
+
+// A few little convenience options, particularly useful for the cache system.
+define('SECONDS_ONE_MINUTE', 60);
+define('SECONDS_ONE_HOUR',   3600);
+define('SECONDS_TWO_HOUR',   7200);
+define('SECONDS_ONE_DAY',    86400);
+define('SECONDS_ONE_WEEK',   604800);  // 7 days
+define('SECONDS_TWO_WEEK',   1209600); // 14 days
+define('SECONDS_ONE_MONTH',  2592000); // 30 days
+define('SECONDS_TWO_MONTH',  5184000); // 60 days

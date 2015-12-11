@@ -58,10 +58,11 @@ class AdminMenuWidget extends Widget_2_1 {
 
 				// Pages can define which sub-menu they get grouped under.
 				// The 'Admin' submenu is the default.
-				$group = $p->get('admin_group') ? $p->get('admin_group') : 'Admin';
-
-				// Some group tweaks ;)
-				$group = str_replace('and', '&', $group);
+				$group = $p->get('admin_group') ? $p->get('admin_group') : 't:STRING_ADMIN';
+				// Support i18n here!
+				if(strpos($group, 't:') === 0){
+					$group = t(substr($group, 2));
+				}
 
 				if(!isset($groups[$group])){
 					$groups[$group] = [
@@ -73,7 +74,7 @@ class AdminMenuWidget extends Widget_2_1 {
 
 				if($p->get('baseurl') == '/admin'){
 					// Admin gets special treatment.
-					$groups['Admin']['href'] = '/admin';
+					$groups[t('STRING_ADMIN')]['href'] = '/admin';
 					continue;
 				}
 
@@ -95,6 +96,11 @@ class AdminMenuWidget extends Widget_2_1 {
 				}
 
 				$title = $p->get('title');
+				// Support i18n here!
+				if(strpos($title, 't:') === 0){
+					$title = t(substr($title, 2));
+				}
+
 				if(isset($groups[$title])){
 					// Link the main group to this page instead of an empty link.
 					// This removes duplicate links such as the group "User" and page "User".
@@ -102,9 +108,9 @@ class AdminMenuWidget extends Widget_2_1 {
 				}
 				else{
 					// The new grouped pages
-					$groups[$group]['children'][ $p->get('title') ] = $p;
+					$groups[$group]['children'][ $title ] = $p;
 					// And the flattened list to support legacy templates.
-					$flatlist[ $p->get('title') ] = $p;
+					$flatlist[ $title ] = $p;
 				}
 			}
 
@@ -123,9 +129,45 @@ class AdminMenuWidget extends Widget_2_1 {
 			ksort($groups[$gname]['children']);
 		}
 
+		// Build a list of languages that can be set by the user.
+		$locales = \Core\i18n\I18NLoader::GetLocalesAvailable();
+		$selected = \Core\i18n\I18NLoader::GetUsersLanguage();
+		$languages = [];
+		if(sizeof($locales) > 1){
+			// There is at least 1 language available on the system, YAY!
+			foreach($locales as $localeKey => $localeDat){
+				if(($pos = strpos($localeKey, '_')) !== false){
+					// This locale contains an underscore, that means it has a corresponding country!
+					// These are what we want to display to the end user.
+					$country = substr($localeKey, $pos+1);
+
+					// Here I am retrieving the language and dialect in the native dialect if at all possible.
+					// This is because if you as a user only can read your native language and your browser renders something different,
+					// then you want to be able to read what you're switching it to.
+					$str1 = new \Core\i18n\I18NString($localeDat['lang']);
+					$str1->setLanguage($localeKey);
+					$localeTitle = $str1->getTranslation();
+					if($localeDat['dialect']){
+						$str2 = new \Core\i18n\I18NString($localeDat['dialect']);
+						$str2->setLanguage($localeKey);
+						$localeTitle .= ' (' . $str2->getTranslation() . ')';
+					}
+
+					$languages[] = [
+						'key'      => $localeKey,
+					    'title'    => $localeTitle,
+					    'country'  => $country,
+					    'image'    => 'assets/images/iso-country-flags/' . strtolower($country) . '.png',
+					    'selected' => $localeKey == $selected,
+					];
+				}
+			}
+		}
+
 		$v->templatename = 'widgets/adminmenu/view.tpl';
 		$v->assign('pages', $flatlist);
 		$v->assign('groups', $groups);
+		$v->assign('languages', $languages);
 
 		return $v;
 	}

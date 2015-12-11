@@ -138,9 +138,9 @@ class datastore implements AuthDriverInterface{
 		$form->set('callsMethod', 'DatastoreAuthController::LoginHandler');
 
 		$form->addElement('hidden', ['name' => 'redirect']);
-		$form->addElement('text', ['name' => 'email', 'title' => 'Email', 'required' => true]);
-		$form->addElement('password', ['name' => 'pass', 'title' => 'Password', 'required' => false]);
-		$form->addElement('submit', ['name' => 'submit', 'value' => 'Login']);
+		$form->addElement('text', ['name' => 'email', 'title' => t('STRING_EMAIL'), 'required' => true]);
+		$form->addElement('password', ['name' => 'pass', 'title' => t('STRING_PASSWORD'), 'required' => false]);
+		$form->addElement('submit', ['name' => 'submit', 'value' => t('STRING_LOGIN')]);
 
 		$tpl = Template::Factory('includes/user/datastore_login.tpl');
 		$tpl->assign('form', $form);
@@ -163,7 +163,7 @@ class datastore implements AuthDriverInterface{
 			$password_desc = 'Please set a secure password that <br/>' . $complexity;
 		}
 		else{
-			$password_desc = 'Please set a secure password.';
+			$password_desc = t('MESSAGE_PLEASE_SET_SECURE_PASSWORD');
 		}
 
 		// I can utilize this form, but tweak the necessary options as necessary.
@@ -176,7 +176,7 @@ class datastore implements AuthDriverInterface{
 			[
 				'required' => true,
 				'name' => 'email',
-				'title' => 'Email',
+				'title' => t('STRING_EMAIL'),
 				'description' => ($usermanager ? 'The email address of the user to create' : 'Your email address'),
 			]
 		);
@@ -185,8 +185,8 @@ class datastore implements AuthDriverInterface{
 				'checkbox', [
 					'name' => 'pwgen',
 					'value' => '1',
-					'title' => 'Automatically generate a secure password',
-					'description' => 'Check to generate a secure password to email to the user.',
+					'title' => t('STRING_GENERATE_SECURE_PASSWORD'),
+					'description' => t('MESSAGE_GENERATE_SECURE_PASSWORD'),
 				]
 			);
 		}
@@ -195,7 +195,7 @@ class datastore implements AuthDriverInterface{
 			[
 				'required' => ($usermanager ? false : true),
 				'name' => 'pass',
-				'title' => 'Password',
+				'title' => t('STRING_PASSWORD'),
 				'description' => $password_desc,
 			]
 		);
@@ -204,11 +204,11 @@ class datastore implements AuthDriverInterface{
 			[
 				'required' => ($usermanager ? false : true),
 				'name' => 'pass2',
-				'title' => 'Confirm Password',
-				'description' => 'Please re-type your password to confirm.',
+				'title' => t('STRING_CONFIRM_PASSWORD'),
+				'description' => t('MESSAGE_CONFIRM_PASSWORD'),
 			]
 		);
-		$form->addElement('submit', ['value' => 'Continue']);
+		$form->addElement('submit', ['value' => t('STRING_CONTINUE')]);
 
 		$tpl = Template::Factory('includes/user/datastore_register.tpl');
 		$tpl->assign('is_manager', $usermanager);
@@ -243,24 +243,23 @@ class datastore implements AuthDriverInterface{
 	public function getPasswordComplexityAsHTML(){
 		$strs = [];
 
-		// complexity check from the config
 		if(\ConfigHandler::Get('/user/password/minlength')){
-			$strs[] = 'Is at least ' . \ConfigHandler::Get('/user/password/minlength') . ' characters long.';
+			$strs[] = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_CHARACTER', \ConfigHandler::Get('/user/password/minlength'));
 		}
 
 		// complexity check from the config
 		if(\ConfigHandler::Get('/user/password/requiresymbols') > 0){
-			$strs[] = 'Has at least ' . \ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
+			$strs[] = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_SYMBOL', \ConfigHandler::Get('/user/password/requiresymbols'));
 		}
 
 		// complexity check from the config
 		if(\ConfigHandler::Get('/user/password/requirecapitals') > 0){
-			$strs[] = 'Has at least ' . \ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
+			$strs[] = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_CAPITAL', \ConfigHandler::Get('/user/password/requirecapitals'));
 		}
 
 		// complexity check from the config
 		if(\ConfigHandler::Get('/user/password/requirenumbers') > 0){
-			$strs[] = 'Has at least ' . \ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
+			$strs[] = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_NUMBER', \ConfigHandler::Get('/user/password/requirenumbers'));
 		}
 
 		return implode('<br/>', $strs);
@@ -277,14 +276,14 @@ class datastore implements AuthDriverInterface{
 		$valid = true;
 		// complexity check from the config
 		if(strlen($password) < \ConfigHandler::Get('/user/password/minlength')){
-			$valid = 'Please ensure that the password is at least ' . \ConfigHandler::Get('/user/password/minlength') . ' characters long.';
+			$valid = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_CHARACTER', \ConfigHandler::Get('/user/password/minlength'));
 		}
 
 		// complexity check from the config
 		if(\ConfigHandler::Get('/user/password/requiresymbols') > 0){
 			preg_match_all('/[^a-zA-Z0-9]/', $password, $matches);
 			if(sizeof($matches[0]) < \ConfigHandler::Get('/user/password/requiresymbols')){
-				$valid = 'Please ensure that the password has at least ' . \ConfigHandler::Get('/user/password/requiresymbols') . ' symbol(s).';
+				$valid = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_SYMBOL', \ConfigHandler::Get('/user/password/requiresymbols'));
 			}
 		}
 
@@ -292,7 +291,7 @@ class datastore implements AuthDriverInterface{
 		if(\ConfigHandler::Get('/user/password/requirecapitals') > 0){
 			preg_match_all('/[A-Z]/', $password, $matches);
 			if(sizeof($matches[0]) < \ConfigHandler::Get('/user/password/requirecapitals')){
-				$valid = 'Please ensure that the password has at least ' . \ConfigHandler::Get('/user/password/requirecapitals') . ' capital letter(s).';
+				$valid = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_CAPITAL', \ConfigHandler::Get('/user/password/requirecapitals'));
 			}
 		}
 
@@ -300,7 +299,7 @@ class datastore implements AuthDriverInterface{
 		if(\ConfigHandler::Get('/user/password/requirenumbers') > 0){
 			preg_match_all('/[0-9]/', $password, $matches);
 			if(sizeof($matches[0]) < \ConfigHandler::Get('/user/password/requirenumbers')){
-				$valid = 'Please ensure that the password has at least ' . \ConfigHandler::Get('/user/password/requirenumbers') . ' number(s).';
+				$valid = t('MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_NUMBER', \ConfigHandler::Get('/user/password/requirenumbers'));
 			}
 		}
 

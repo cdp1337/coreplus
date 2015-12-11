@@ -456,6 +456,17 @@ class ViewMeta_name extends ViewMeta {
 	}
 }
 
+class ViewMeta_title extends ViewMeta {
+	public function __toString(){
+		if(strpos($this->content, 't:') === 0){
+			return t(substr($this->content, 2));
+		}
+		else{
+			return $this->content;
+		}
+	}
+}
+
 class ViewMeta_author extends ViewMeta {
 	public function __toString(){
 		if(is_subclass_of($this->content, 'User')){

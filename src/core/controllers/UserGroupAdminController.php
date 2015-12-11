@@ -233,8 +233,6 @@ class UserGroupAdminController extends Controller_2_1{
 		// I want to split up the permission set into a set of groups, based on the first key.
 		$groups = [];
 		foreach(Core::GetPermissions() as $key => $data){
-			$description = $data['description'];
-
 			if($key{0} == '/'){
 				$group = substr($key, 1, strpos($key, '/', 1)-1);
 			}
@@ -246,7 +244,10 @@ class UserGroupAdminController extends Controller_2_1{
 				$groups[$group] = [];
 			}
 
-			$groups[$group][$key] = $description;
+			// NEW i18n support for config options!
+			$i18nKey = \Core\i18n\I18NLoader::KeyifyString($key);
+			//$opts['description'] = t('MESSAGE_PERM__' . $i18nKey);
+			$groups[$group][$key] = t('STRING_PERMISSION_' . $i18nKey);
 		}
 
 		// Now, I can add these groups to the form.

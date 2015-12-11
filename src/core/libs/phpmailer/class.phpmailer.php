@@ -1559,6 +1559,24 @@ class PHPMailer {
 	 */
 	public function GetMailMIME() {
 		$result = '';
+
+		if(strpos($this->Body, '-----BEGIN PGP MESSAGE-----') !== false){
+			//$this->message_type = 'octet-stream';
+			//$this->ContentType = 'multipart/encrypted';
+
+			$result .= $this->TextLine('Content-Type: multipart/encrypted;');
+			$result .= $this->TextLine("\tboundary=\"" . $this->boundary[1] . '";');
+			$result .= $this->TextLine("\tprotocol=\"application/pgp-encrypted\"");
+			$this->message_type = 'octet_stream';
+
+			if ($this->Mailer != 'mail') {
+				$result .= $this->LE;
+			}
+
+			return $result;
+		}
+
+
 		switch ($this->message_type) {
 			case 'inline':
 				$result .= $this->HeaderLine('Content-Type', 'multipart/related;');
@@ -1616,6 +1634,23 @@ class PHPMailer {
 		$this->SetWordWrap();
 
 		switch ($this->message_type) {
+			case 'octet_stream':
+				if(strpos($this->Body, '-----BEGIN PGP MESSAGE-----') !== false){
+					$body .= $this->TextLine("--" . $this->boundary[1]);
+					$body .= $this->HeaderLine('Content-Type', 'application/pgp-encrypted');
+					$body .= $this->HeaderLine('Content-Disposition', 'attachment');
+					$body .= $this->HeaderLine('Content-Transfer-Encoding', '7Bit');
+					$body .= $this->LE;
+					$body .= $this->TextLine('Version: 1');
+					$body .= $this->TextLine("--" . $this->boundary[1]);
+					$body .= $this->HeaderLine('Content-Type', 'application/octet-stream');
+					$body .= $this->HeaderLine('Content-Disposition', 'inline; filename="msg.asc"');
+					$body .= $this->HeaderLine('Content-Transfer-Encoding', '7Bit');
+					$body .= $this->LE;
+				}
+				$body .= $this->EncodeString($this->Body, $this->Encoding);
+				$body .= $this->LE;
+				break;
 			case 'inline':
 				$body .= $this->GetBoundary($this->boundary[1], '', '', '');
 				$body .= $this->EncodeString($this->Body, $this->Encoding);

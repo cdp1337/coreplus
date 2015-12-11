@@ -1,7 +1,7 @@
 {if sizeof($elements)}
 	<fieldset class="listing-filters collapsible {if !$filtersset}collapsed screen{/if}">
 		<div class="fieldset-title">
-			Filters
+			{t 'STRING_FILTERS'}
 			<i class="icon-chevron-down expandable-hint"></i>
 			<i class="icon-chevron-up collapsible-hint"></i>
 		</div>
@@ -23,13 +23,13 @@
 					<div class="clear"></div>
 					<a href="#" class="button reset-filters">
 						<i class="icon-remove"></i>
-						<span>Reset Filters</span>
+						<span>{t 'STRING_RESET_FILTERS'}</span>
 					</a>
 					<!-- Render a submit button so 'Enter' works... -->
 					<input type="submit" style="display:none;"/>
 					<a href="#" class="button apply-filters">
 						<i class="icon-ok"></i>
-						<span>Apply Filters</span>
+						<span>{t 'STRING_APPLY_FILTERS'}</span>
 					</a>
 				</form>
 			{/if}

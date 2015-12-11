@@ -99,7 +99,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				$status = $auth->setPassword($p1val);
 				if($status === false){
 					// No change
-					Core::SetMessage('No change detected');
+					\Core\set_message('MESSAGE_INFO_NO_CHANGES_PERFORMED');
 				}
 				elseif($status === true){
 					$user->save();
@@ -128,53 +128,27 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		$form = new Form();
 
-		$form->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));
-		$form->addElement('password', array('name' => 'pass2', 'title' => 'Confirm', 'required' => true));
+		$form->addElement('password', array('name' => 'pass', 'title' => t('STRING_PASSWORD'), 'required' => true));
+		$form->addElement('password', array('name' => 'pass2', 'title' => t('STRING_CONFIRM_PASSWORD'), 'required' => true));
 
-		$form->addElement('submit', array('value' => 'Update Password'));
+		$form->addElement('submit', array('value' => t('STRING_SAVE')));
 
-		// Pull some info about the complexity requirements.
-		$complexity = [
-			'enabled'  => false,
-			'length'   => 0,
-			'symbols'  => 0,
-			'capitals' => 0,
-			'numbers'  => 0,
-			'messages' => [],
-		];
-		if(ConfigHandler::Get('/user/password/minlength')){
-			$complexity['enabled'] = true;
-			$complexity['length'] = ConfigHandler::Get('/user/password/minlength');
-			$complexity['messages'][] = 'The password is at least ' . $complexity['length'] . ' characters long.';
-		}
-		if(ConfigHandler::Get('/user/password/requiresymbols')){
-			$complexity['enabled'] = true;
-			$complexity['symbols'] = ConfigHandler::Get('/user/password/requiresymbols');
-			$complexity['messages'][] = 'The password contains at least ' . $complexity['symbols'] . ' symbol(s).';
-		}
-		if(ConfigHandler::Get('/user/password/requirecapitals')){
-			$complexity['enabled'] = true;
-			$complexity['capitals'] = ConfigHandler::Get('/user/password/requirecapitals');
-			$complexity['messages'][] = 'The password contains at least ' . $complexity['capitals'] . ' capital(s).';
-		}
-		if(ConfigHandler::Get('/user/password/requirenumbers')){
-			$complexity['enabled'] = true;
-			$complexity['numbers'] = ConfigHandler::Get('/user/password/requirenumbers');
-			$complexity['messages'][] = 'The password contains at least ' . $complexity['numbers'] . ' number(s).';
+		$complexity = $auth->getPasswordComplexityAsHTML();
+		if($complexity){
+			\Core\set_message($complexity, 'tutorial');
 		}
 
 		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
-		$view->assign('complexity', $complexity);
 		$view->assign('form', $form);
-		$view->title = 'Password Management ';
+		$view->title = 't:STRING_PASSWORD_MANAGEMENT';
 
 		// Breadcrumbs! (based on access permissions)
 		if(!$ownpassword){
-			$view->addBreadcrumb('User Administration', '/user/admin');
+			$view->addBreadcrumb('t:STRING_USER_ADMIN', '/user/admin');
 			$view->addBreadcrumb($user->getDisplayName(), '/user/edit/' . $user->get('id'));
 		}
 		else{
-			$view->addBreadcrumb('My Profile', '/user/me');
+			$view->addBreadcrumb('t:STRING_MY_PROFILE', '/user/me');
 		}
 	}
 
@@ -227,7 +201,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		$user->disableAuthDriver('datastore');
 		$user->save();
 
-		Core::SetMessage('Disabled password logins!', 'success');
+		\Core\set_message('MESSAGE_SUCCESS_DISABLED_PASSWORD_AUTH');
 		\Core\go_back();
 	}
 
@@ -430,7 +404,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			if($p1->get('value') || $p2->get('value')){
 
 				if($p1->get('value') != $p2->get('value')){
-					$p1->setError('Passwords do not match!');
+					$p1->setError('MESSAGE_ERROR_USER_REGISTER_PASSWORD_MISMATCH');
 					$p2->set('value', '');
 					return false;
 				}
@@ -497,7 +471,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			// Log this as a login attempt!
 			$logmsg = 'Failed Login. Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
 			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg);
-			$e->setError('Requested email is not registered.');
+			$e->setError('MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND');
 			return false;
 		}
 
@@ -506,7 +480,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			// This is the control managed with in the admin.
 			$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
 			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
-			$e->setError('Your account is not active yet.');
+			$e->setError('MESSAGE_ERROR_USER_LOGIN_ACCOUNT_NOT_ACTIVE');
 			return false;
 		}
 		elseif($u->get('active') == -1){
@@ -514,20 +488,16 @@ class DatastoreAuthController extends Controller_2_1 {
 			// This is the control managed with in the admin.
 			$logmsg = 'Failed Login. User tried to login after account deactivation.' . "\n" . 'User: ' . $u->get('email') . "\n";
 			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
-			$e->setError('Your account has been deactivated.');
+			$e->setError('MESSAGE_ERROR_USER_LOGIN_ACCOUNT_DEACTIVATED');
 			return false;
 		}
 
 		try{
 			/** @var \Core\User\AuthDrivers\datastore $auth */
 			$auth = $u->getAuthDriver('datastore');
-			if(!$auth){
-				Core::SetMessage('This account does not have password logins enabled!', 'error');
-				return false;
-			}
 		}
 		catch(Exception $e){
-			Core::SetMessage('Your account does not have password logins enabled!<br/>If you wish to enable them, please <a href="' . \Core\resolve_link('/datastoreauth/forgotpassword') . '">use the password reset tool</a> to create one.', 'error');
+			$e->setError('MESSAGE_ERROR_USER_LOGIN_PASSWORD_AUTH_DISABLED');
 			return false;
 		}
 
@@ -553,12 +523,12 @@ class DatastoreAuthController extends Controller_2_1 {
 				$email->send();
 				\SystemLogModel::LogSecurityEvent('/user/initialpassword/send', 'Initial password request sent successfully', null, $u->get('id'));
 
-				\Core::SetMessage('You must set a new password.  An email has been sent to your inbox containing a link and instructions on setting a new password.', 'info');
+				\Core\set_message('MESSAGE_INFO_USER_LOGIN_MUST_SET_NEW_PASSWORD_INSTRUCTIONS_HAVE_BEEN_EMAILED');
 				return true;
 			}
 			catch(\Exception $ex){
 				\Core\ErrorManagement\exception_handler($e);
-				\Core::SetMessage('Unable to send new password link to your email, please contact the system administrator!', 'error');
+				\Core\set_message('MESSAGE_ERROR_USER_LOGIN_MUST_SET_NEW_PASSWORD_UNABLE_TO_SEND_EMAIL');
 				return false;
 			}
 		}
@@ -596,7 +566,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				// 12th attempt: 10.05
 			}
 
-			$p->setError('Invalid password');
+			$e->setError('MESSAGE_ERROR_USER_LOGIN_INCORRECT_PASSWORD');
 			$p->set('value', '');
 			return false;
 		}
@@ -678,7 +648,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				return [
 					[
 						'link' => '/datastoreauth/forgotpassword',
-						'title' => 'Enable Password Login',
+						'title' => t('STRING_ENABLE_PASSWORD_LOGIN'),
 						'icon' => 'key',
 					]
 				];
@@ -688,14 +658,14 @@ class DatastoreAuthController extends Controller_2_1 {
 		$ret = [];
 		$ret[] = [
 			'link' => '/datastoreauth/password/' . $user->get('id'),
-			'title' => 'Change Password',
+			'title' => t('STRING_CHANGE_PASSWORD'),
 			'icon' => 'key',
 		];
 
 		if(sizeof($user->getEnabledAuthDrivers()) > 1){
 			$ret[] = [
 				'link' => '/datastoreauth/disable/' . $user->get('id'),
-				'title' => 'Disable Password Login',
+				'title' => t('STRING_DISABLE_PASSWORD_LOGIN'),
 				'icon' => 'ban',
 				'confirm' => 'Are you sure you want to disable password-based logins?  (They can be re-enabled if requested.)',
 			];
@@ -705,4 +675,4 @@ class DatastoreAuthController extends Controller_2_1 {
 		return $ret;
 
 	}
-} 
+}

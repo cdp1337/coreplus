@@ -59,6 +59,9 @@ class UID extends Key {
 	 */
 	public $fullname;
 
+	/** @var string Comment of this UID */
+	public $comment;
+
 	/**
 	 * @var string The email attached to this UID
 	 */

@@ -52,7 +52,7 @@ class AdminController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$view->title = 'Admin Dashboard';
+		$view->title = 't:STRING_ADMIN';
 		$view->assign('links', $viewable);
 
 		// Dispatch the hook that other systems can hook into and perform checks or operations on the admin dashboard page.
@@ -255,7 +255,7 @@ class AdminController extends Controller_2_1 {
 			$form->addElement($g);
 		}
 
-		$form->addElement('submit', array('value' => 'Save'));
+		$form->addElement('submit', array('value' => t('STRING_SAVE')));
 
 		$this->setTemplate('/pages/admin/config.tpl');
 		$view->assign('form', $form);
@@ -530,7 +530,7 @@ class AdminController extends Controller_2_1 {
 		// Build a list of create pages for all registered components.
 		$components = Core::GetComponents();
 		$links = [];
-		$componentopts = ['' => '-- All Components --'];
+		$componentopts = ['' => '-- ' . t('STRING_VIEW_ALL_COMPONENTS') . ' --'];
 		foreach($components as $c){
 			/** @var Component_2_1 $c */
 			foreach($c->getXML()->getElements('/pages/pagecreate') as $node){
@@ -557,7 +557,7 @@ class AdminController extends Controller_2_1 {
 			'text',
 			[
 				'name' => 'title',
-				'title' => 'Page Title',
+				'title' => t('STRING_TITLE'),
 				'link' => FilterForm::LINK_TYPE_CONTAINS,
 			]
 		);
@@ -566,7 +566,7 @@ class AdminController extends Controller_2_1 {
 			'text',
 			[
 				'name' => 'rewriteurl',
-				'title' => 'URL',
+				'title' => t('STRING_URL'),
 				'link' => FilterForm::LINK_TYPE_CONTAINS,
 			]
 		);
@@ -575,7 +575,7 @@ class AdminController extends Controller_2_1 {
 			'text',
 			[
 				'name' => 'parenturl',
-				'title' => 'Parent URL',
+				'title' => t('STRING_PARENT_URL'),
 				'link' => FilterForm::LINK_TYPE_STARTSWITH,
 			]
 		);
@@ -584,7 +584,7 @@ class AdminController extends Controller_2_1 {
 			'select',
 			[
 				'name' => 'component',
-				'title' => 'Source Component',
+				'title' => t('STRING_COMPONENT'),
 				'options' => $componentopts,
 				'link' => FilterForm::LINK_TYPE_STANDARD,
 			]
@@ -594,8 +594,8 @@ class AdminController extends Controller_2_1 {
 			'select',
 			[
 				'name' => 'page_types',
-				'title' => 'Include Admin Pages',
-				'options' => ['all' => 'All Pages', 'no_admin' => 'Exclude Admin'],
+				'title' => t('STRING_INCLUDE_ADMIN_PAGES'),
+				'options' => ['all' => t('STRING_VIEW_ALL_PAGES'), 'no_admin' => t('STRING_EXCLUDE_ADMIN_PAGES')],
 				'value' => 'no_admin',
 			]
 		);
@@ -608,20 +608,20 @@ class AdminController extends Controller_2_1 {
 		else{
 			$ms = false;
 		}
-		$table->addColumn('Title', 'title');
-		$table->addColumn('URL', 'rewriteurl');
-		$table->addColumn('Views', 'pageviews', false);
-		$table->addColumn('Score', 'popularity');
-		$table->addColumn('Cache', 'expires');
-		$table->addColumn('Created', 'created', false);
-		$table->addColumn('Last Updated', 'updated', false);
-		$table->addColumn('Status');
-		$table->addColumn('Published', 'published');
-		$table->addColumn('Expires', 'published_expires');
-		$table->addColumn('SEO Title');
-		$table->addColumn('SEO Description / Teaser', null, false);
-		$table->addColumn('Access', 'access');
-		$table->addColumn('Component', 'component', false);
+		$table->addColumn(t('STRING_TITLE'), 'title');
+		$table->addColumn(t('STRING_URL'), 'rewriteurl');
+		$table->addColumn(t('STRING_VIEWS'), 'pageviews', false);
+		$table->addColumn(t('STRING_SCORE'), 'popularity');
+		$table->addColumn(t('STRING_CACHE'), 'expires');
+		$table->addColumn(t('STRING_CREATED'), 'created', false);
+		$table->addColumn(t('STRING_LAST_UPDATED'), 'updated', false);
+		$table->addColumn(t('STRING_STATUS'));
+		$table->addColumn(t('STRING_PUBLISHED'), 'published');
+		$table->addColumn(t('STRING_EXPIRES'), 'published_expires');
+		$table->addColumn(t('STRING_SEO_TITLE'));
+		$table->addColumn(t('STRING_SEO_DESCRIPTION'), null, false);
+		$table->addColumn(t('STRING_ACCESS'), 'access');
+		$table->addColumn(t('STRING_COMPONENT'), 'component', false);
 
 		// This page will also feature a quick-edit feature.
 		$table->setEditFormCaller('AdminController::PagesSave');
@@ -635,7 +635,7 @@ class AdminController extends Controller_2_1 {
 
 
 
-		$view->title = 'All Pages';
+		$view->title = 't:STRING_ALL_PAGES';
 		//$view->assign('filters', $filters);
 		//$view->assign('listings', $listings);
 		$view->assign('links', $links);
@@ -670,14 +670,14 @@ class AdminController extends Controller_2_1 {
 
 		// Is this page already published?
 		if($page->get('published_status') == 'published'){
-			Core::SetMessage('Article is already published!', 'error');
+			\Core\set_message('MESSAGE_ERROR_PAGE_ALREADY_PUBLISHED');
 			\Core\go_back();
 		}
 
 		$page->set('published_status', 'published');
 		$page->save();
 
-		Core::SetMessage('Published page successfully!', 'success');
+		\Core\set_message('MESSAGE_SUCCESS_PAGE_PUBLISHED');
 		\Core\go_back();
 	}
 
@@ -705,14 +705,14 @@ class AdminController extends Controller_2_1 {
 
 		// Is this page already un-published?
 		if($page->get('published_status') == 'draft'){
-			Core::SetMessage('Article is already unpublished!', 'error');
+			\Core\set_message('MESSAGE_ERROR_PAGE_ALREADY_UNPUBLISHED');
 			\Core\go_back();
 		}
 
 		$page->set('published_status', 'draft');
 		$page->save();
 
-		Core::SetMessage('Unpublished page successfully!', 'success');
+		\Core\set_message('MESSAGE_SUCCESS_PAGE_UNPUBLISHED');
 		\Core\go_back();
 	}
 
@@ -729,7 +729,7 @@ class AdminController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		Core::Redirect('/widget/admin');
+		\Core\redirect('/widget/admin');
 	}
 
 	/**
@@ -742,7 +742,7 @@ class AdminController extends Controller_2_1 {
 		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
-		Core::Redirect('/widget/create');
+		\Core\redirect('/widget/create');
 	}
 
 	/**
@@ -757,7 +757,7 @@ class AdminController extends Controller_2_1 {
 		}
 
 		$baseurl = $request->getParameter('baseurl');
-		Core::Redirect('/widget/update?baseurl=' . $baseurl);
+		\Core\redirect('/widget/update?baseurl=' . $baseurl);
 	}
 
 	/**
@@ -779,7 +779,7 @@ class AdminController extends Controller_2_1 {
 		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
 
 		if(!class_exists($class)){
-			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('MESSAGE_ERROR_CLASS_S_NOT_AVAILABLE', $class);
 			\Core\go_back();
 		}
 
@@ -787,19 +787,19 @@ class AdminController extends Controller_2_1 {
 		$obj = new $class();
 
 		if(!($obj instanceof Widget_2_1)){
-			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\set_message('MESSAGE_ERROR_CLASS_S_NOT_VALID_WIDGET', $class);
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\set_message('MESSAGE_ERROR_CLASS_S_NOT_SIMPLE_WIDGET', $class);
 			\Core\go_back();
 		}
 
 		$model = new WidgetModel($baseurl);
 
 		$model->delete();
-		Core::SetMessage('Deleted widget ' . $model->get('title') . ' successfully!', 'success');
+		\Core\set_message('MESSAGE_SUCCESS_DELETED_WIDGET_S', $baseurl);
 		\Core\go_back();
 	}
 
@@ -875,7 +875,7 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage(implode('<br/>', $changetext), 'success');
 		}
 		else{
-			Core::SetMessage('No changes performed', 'info');
+			\Core\set_message('MESSAGE_INFO_NO_CHANGES_PERFORMED');
 		}
 
 		if($baseurl){
@@ -929,6 +929,84 @@ class AdminController extends Controller_2_1 {
 		);
 		$view->assign('skins', $skins);
 		$view->assign('skin', $skin);
+	}
+
+	/**
+	 * Page to view and test the i18n settings and strings of this site.
+	 *
+	 * Also useful for viewing what strings are currently installed and where they came from!
+	 *
+	 * @return int
+	 */
+	public function i18n(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('g:admin')){
+			// This test page is an admin-only utility.
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$locales = Core\i18n\I18NLoader::GetLocalesAvailable();
+
+		$languages = [];
+
+		foreach($locales as $lang => $dat){
+			if(strpos($lang, '_') !== false){
+				$base = substr($lang, 0, strpos($lang, '_'));
+
+				if(!isset($languages[$base])){
+					// Add the base language, (useful here because the editor may want to edit only the base language and not specific dialects).
+					$languages[$base] = t($dat['lang']);
+				}
+			}
+
+			$languages[$lang] = t($dat['lang']) . (($dat['dialect']) ? ' (' . t($dat['dialect']) . ')' : '');
+		}
+
+		// Did the user request a specific language?
+		$requested = $request->getParameter('lang');
+		if($requested){
+			$showStrings = false;
+			$showForm = true;
+		}
+		else{
+			$showStrings = true;
+			$showForm = false;
+			$requested = \Core\i18n\I18NLoader::GetUsersLanguage();
+		}
+
+		$strings = \Core\i18n\I18NLoader::GetAllStrings($requested);
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_i18nSaveHandler');
+
+		$form->addElement('system', ['name' => 'lang', 'value' => $requested]);
+
+		foreach($strings as $dat){
+			$type = strpos($dat['key'], 'MESSAGE_') === 0 ? 'textarea' : 'text';
+
+			$form->addElement(
+				$type,
+				[
+					'name' => $dat['key'],
+				    'title' => $dat['key'],
+				    'value' => $dat['found'] ? $dat['match_str'] : '',
+				    'description' => $dat['results']['DEFAULT'] ? $dat['results']['DEFAULT'] : $dat['results']['FALLBACK'],
+				]
+			);
+		}
+
+		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
+
+		$view->addBreadcrumb('t:STRING_ADMIN', '/admin');
+		$view->title = 't:STRING_I18N_TRANSLATIONS';
+		$view->assign('languages', $languages);
+		$view->assign('form', $form);
+		$view->assign('strings', $strings);
+		$view->assign('show_strings', $showStrings);
+		$view->assign('show_form', $showForm);
+		$view->assign('requested', $requested);
 	}
 
 	/**
@@ -1034,7 +1112,7 @@ class AdminController extends Controller_2_1 {
 			$f->set('group', '');
 			$form->addElement($f);
 		}
-		$form->addElement('submit', ['value' => 'Save Options']);
+		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
 
 		$view->title = 'Email Options &amp; Diagnostics';
 		$view->assign('form', $form);
@@ -1196,15 +1274,7 @@ class AdminController extends Controller_2_1 {
 
 		}
 
-		if ($updatedcount == 0) {
-			Core::SetMessage('No configuration options changed', 'info');
-		}
-		elseif ($updatedcount == 1) {
-			Core::SetMessage('Updated ' . $updatedcount . ' configuration option', 'success');
-		}
-		else {
-			Core::SetMessage('Updated ' . $updatedcount . ' configuration options', 'success');
-		}
+		\Core\set_message('MESSAGE_SUCCESS_UPDATED_N_CONFIGURATION', $updatedcount);
 
 		return true;
 	}
@@ -1261,6 +1331,32 @@ class AdminController extends Controller_2_1 {
 			$p->save();
 		}
 
+		return true;
+	}
+
+	public static function _i18nSaveHandler(Form $form) {
+		// Create a custom ini for just these options.
+		// This will allow the site admin to change a string without worrying about it getting overridden from an update.
+
+		$lang = $form->getElementValue('lang');
+		$ini = "[$lang]\n; Custom locale strings set by the site manager!\n\n";
+
+		foreach($form->getElements() as $el){
+			/** @var FormElement $el */
+
+			$name = $el->get('name');
+			$val  = $el->get('value');
+
+			if(strpos($name, 'MESSAGE') === 0 || strpos($name, 'FORMAT') === 0 || strpos($name, 'STRING') === 0){
+				$ini .= $name . ' = "' . str_replace('"', '\\"', $val) . '";' . "\n";
+			}
+		}
+
+		// Save this ini out to a custom i18n file.
+		$fileout = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/i18n/' . $lang . '.ini');
+		$fileout->putContents($ini);
+
+		\Core\set_message('MESSAGE_SUCCESS_UPDATED_TRANSLATION_STRINGS');
 		return true;
 	}
 }

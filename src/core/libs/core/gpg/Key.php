@@ -99,7 +99,7 @@ class Key {
 	public $serial;
 
 	/**
-	 * @var string The finger print of this key
+	 * @var string The fingerprint of this key
 	 */
 	public $fingerprint;
 

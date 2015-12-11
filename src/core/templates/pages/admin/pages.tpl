@@ -2,7 +2,7 @@
 {foreach $links as $l}
 	{a href="`$l.baseurl`" class="button" title="Create New `$l.title` Page"}
 		<i class="icon-add"></i>
-		<span>{$l.title} Page</span>
+		<span>{$l.title}</span>
 	{/a}
 {/foreach}
 
@@ -54,7 +54,7 @@
 		<td>
 			<div class="view">
 				{if $entry.expires == 0}
-					Disabled
+					{t 'STRING_DISABLED'}
 				{elseif $entry.expires < 60}
 					{$entry.expires} secs
 				{elseif $entry.expires < 3600}
@@ -88,7 +88,7 @@
 				{if $entry.published}
 					{date format="SD" $entry.published}
 				{else}
-					Not Published
+					{t 'STRING_NOT_PUBLISHED'}
 				{/if}
 			</div>
 			<div class="edit">
@@ -100,7 +100,7 @@
 				{if $entry.published_expires}
 					{date format="SD" $entry.published_expires}
 				{else}
-					No Expiration
+					{t 'STRING_NO_EXPIRATION'}
 				{/if}
 			</div>
 			<div class="edit">
@@ -149,37 +149,37 @@
 				<li>
 					{a href="`$entry.baseurl`"}
 						<i class="icon-view"></i>
-						<span>View</span>
+						<span>{t 'STRING_VIEW'}</span>
 					{/a}
 				</li>
 				{if $entry.editurl}
 					<li>
 						{a href="`$entry.editurl`"}
 							<i class="icon-edit"></i>
-							<span>Edit</span>
+							<span>{t 'STRING_EDIT'}</span>
 						{/a}
 					</li>
 				{/if}
 
 				{if $entry.published_status == 'draft'}
 					<li>
-						{a href="/admin/page/publish?baseurl=`$entry.baseurl`" title="Publish Page" confirm="Publish Page?"}
-							<i class="icon-thumbs-up"></i><span>Publish Page</span>
+						{a href="/admin/page/publish?baseurl=`$entry.baseurl`" title="t:STRING_PUBLISH_PAGE" confirm=""}
+							<i class="icon-thumbs-up"></i><span>{t 'STRING_PUBLISH_PAGE'}</span>
 						{/a}
 					</li>
 				{else}
 					<li>
-						{a href="/admin/page/unpublish?baseurl=`$entry.baseurl`" title="Unpublish Page" confirm="Unpublish Page?"}
-							<i class="icon-thumbs-down"></i><span>Unpublish Page</span>
+						{a href="/admin/page/unpublish?baseurl=`$entry.baseurl`" title="t:STRING_UNPUBLISH_PAGE" confirm=""}
+							<i class="icon-thumbs-down"></i><span>{t 'STRING_UNPUBLISH_PAGE'}</span>
 						{/a}
 					</li>
 				{/if}
 
 				{if $entry.deleteurl}
 					<li>
-						{a href="`$entry.deleteurl`" confirm="Are you sure you want to completely delete this page?"}
+						{a href="`$entry.deleteurl`" confirm="t:MESSAGE_ASK_COMPLETEY_DELETE_PAGE"}
 							<i class="icon-remove"></i>
-							<span>Delete</span>
+							<span>{t 'STRING_DELETE'}</span>
 						{/a}
 					</li>
 				{/if}

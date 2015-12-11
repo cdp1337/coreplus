@@ -138,7 +138,7 @@ class PageRequest {
 		$this->uri = $uri;
 
 		$this->uriresolved = $pagedat['rewriteurl'];
-		$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
+		$this->protocol    = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
 		$this->ext         = $pagedat['extension'];
 		$this->ctype       = $pagedat['ctype'];
 		$this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
@@ -605,8 +605,7 @@ class PageRequest {
 			/** @var \Theme\Theme $theme */
 			$theme = ThemeHandler::GetTheme('base-v2');
 			$view->mastertemplate = 'basic.tpl';
-
-			Core::SetMessage('You have an invalid theme selected, please fix that!', 'error');
+			\Core\set_message('MESSAGE_ERROR_INVALID_THEME_SELECTED');
 		}
 
 		// Make sure the selected mastertemplate actually exists!
@@ -718,12 +717,12 @@ class PageRequest {
 
 			// And record the key onto an index cache record so there's a record of what to delete on updates.
 			$indexkey = $page->getIndexCacheKey();
-			$index = \Core\Cache::Get($indexkey, 86400);
+			$index = \Core\Cache::Get($indexkey, SECONDS_ONE_DAY);
 			if(!$index){
 				$index = [];
 			}
 			$index[] = $key;
-			\Core\Cache::Set($indexkey, $index, 86400);
+			\Core\Cache::Set($indexkey, $index, SECONDS_ONE_DAY);
 		}
 		elseif(($reason = $this->isNotCacheableReason()) !== null){
 			$view->headers['X-Core-NotCached-Reason'] = $reason;
@@ -1018,15 +1017,16 @@ class PageRequest {
 
 
 	private function _resolveMethod() {
+		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
 		// Make sure it's a valid METHOD... don't know what else it could be, but...
-		switch ($_SERVER['REQUEST_METHOD']) {
+		switch ($method) {
 			case self::METHOD_DELETE:
 			case self::METHOD_GET:
 			case self::METHOD_HEAD:
 			case self::METHOD_POST:
 			case self::METHOD_PUSH:
 			case self::METHOD_PUT:
-				$this->method = $_SERVER['REQUEST_METHOD'];
+				$this->method = $method;
 				break;
 			default:
 				$this->method = self::METHOD_GET;
@@ -1083,7 +1083,8 @@ class PageRequest {
 	}
 
 	private function _resolveLanguageHeader() {
-		// I need to ensure there's at least a default.
+		// I need to ensure there's at least a fallback.
+		// This will prefer the browser's language set, but fallback to en if not set.
 		$header = (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : 'en';
 
 		// As per the Accept HTTP 1.1 spec, all accepts MUST be separated with a comma.
@@ -1092,6 +1093,9 @@ class PageRequest {
 		// Clear the array
 		$this->acceptLanguages = array();
 		$langs = [];
+
+		// Set at least one default as a fallback!
+		$langs['en'] = 0.0;
 
 		// And set each one.
 		foreach ($header as $h) {
@@ -1110,10 +1114,21 @@ class PageRequest {
 			$langs[$content] = $weight;
 		}
 
+		// If there is a LANG cookie set for this site, then prefer that over the browser preference.
+		// This must be done after the header checks as it is meant to overwrite the headers with a higher precedence.
+		if(isset($_COOKIE['LANG'])){
+			$langs[ $_COOKIE['LANG'] ] = 2;
+		}
+
 		// Sort the languages by weight.
 		arsort($langs);
 		foreach($langs as $l => $w){
-			$this->acceptLanguages[] = $l;
+			// Ensure that it's a valid string before accepting the input!
+			// Remember, this value does come from the browser which is an untrusted source.
+			// This regex matches any two or three lower-case letters optionally followed by an underscore and two capital letters.
+			if(preg_match('/^[a-z]{2,3}(_[A-Z]{2})?$/', $l) === 1){
+				$this->acceptLanguages[] = $l;
+			}
 		}
 	}
 
@@ -1131,7 +1146,7 @@ class PageRequest {
 	public static function GetSystemRequest() {
 		static $instance = null;
 		if ($instance === null) {
-			$instance = new PageRequest($_SERVER['REQUEST_URI']);
+			$instance = new PageRequest(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null);
 		}
 		return $instance;
 	}
@@ -1147,7 +1162,7 @@ class PageRequest {
 		$page = $form->getElementValue('page');
 		$val  = $form->getElementValue('passinput');
 		if( $val !== $page->get('password_protected') ){
-			Core::SetMessage('Wrong password! Try again.','error');
+			\Core\set_message('MESSAGE_ERROR_INCORRECT_PASSWORD');
 			return false;
 		}
 		else {

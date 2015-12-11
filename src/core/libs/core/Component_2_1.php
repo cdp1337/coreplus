@@ -1813,6 +1813,7 @@ class Component_2_1 {
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
 		//$prefix = $node->getAttribute('prefix');
+		$componentName = $this->getKeyName();
 
 		// Now, get every table under this node.
 		foreach ($node->getElementsByTagName('config') as $confignode) {
@@ -1847,6 +1848,7 @@ class Component_2_1 {
 				$m->set('mapto', $mapto);
 				$m->set('encrypted', $encrypted);
 				$m->set('form_attributes', $formAtts);
+				$m->set('component', $componentName);
 
 				// Default from the xml, only if it's not already set.
 				if ($m->get('value') === null || !$m->exists()){

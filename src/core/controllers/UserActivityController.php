@@ -301,7 +301,7 @@ class UserActivityController extends Controller_2_1 {
 		);
 
 		$pages = PageModel::Find(null, null, 'baseurl');
-		$allPages = ['' => '-- All Pages --'];
+		$allPages = ['' => '-- ' . t('STRING_ALL_PAGES') . ' --'];
 		foreach($pages as $p){
 			/** @var PageModel $p */
 			$allPages[$p->get('baseurl')] = $p->get('baseurl');

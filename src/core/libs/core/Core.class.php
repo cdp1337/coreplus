@@ -831,13 +831,13 @@ class Core implements ISingleton {
 	public static function GetStandardHTTPHeaders($forcurl = false, $autoclose = false) {
 		$headers = array(
 			'User-Agent: Core Plus ' . self::GetComponent()->getVersion() . ' (http://corepl.us)',
-			'Servername: ' . SERVERNAME,
+			'Referer: ' . SERVERNAME,
 		);
 
 		if ($autoclose) {
 			$headers[] = 'Connection: close';
 		}
-
+		
 		if ($forcurl) {
 			return $headers;
 		}

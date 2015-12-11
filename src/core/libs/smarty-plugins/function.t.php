@@ -20,7 +20,7 @@
  */
 
 /**
- * @experimental
+ * @alpha
  *
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
  * @param Smarty $smarty  Parent Smarty template object
@@ -31,19 +31,34 @@
  */
 function smarty_function_t($params, $smarty){
 
-	$key = array_shift($params);
+	$key      = $params[0];
+	$result   = \Core\i18n\I18NLoader::Get($key);
+	$str      = $result['match_str'];
+	$modifier = null;
 
-	$ikey = \Core\i18n\Loader::Get($key);
-
-	if(!$ikey){
-		trigger_error('i18n key [' . $key . '] not located.', E_USER_NOTICE);
-		return $key;
+	if(isset($params['modifier'])){
+		$modifier = $params['modifier'];
+		unset($params['modifier']);
 	}
 
-	if(sizeof($params)){
-		return call_user_func_array('sprintf', array_merge([$ikey], $params));
+	if(!$result['found'] && DEVELOPMENT_MODE){
+		// Provide some feedback to developers if this key was not found.
+
+		$str = '[' . $result['lang'] . ':' . $key . ']';
 	}
 	else{
-		return $ikey;
+		// Replace "[%KEY%]" with the parameters, (if there are any).
+		foreach($params as $k => $v){
+			$str = str_replace('[%' . strtoupper($k) . '%]', $v, $str);
+		}
 	}
+
+	// Is there a modifier on this text?
+	$whitelist = ['strtolower', 'strtoupper', 'ucfirst', 'ucwords'];
+
+	if(in_array($modifier, $whitelist)){
+		$str = call_user_func($modifier, $str);
+	}
+
+	return $str;
 }

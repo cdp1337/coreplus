@@ -985,14 +985,14 @@ class UserModel extends Model {
 
 		if($usermanager){
 			$a[] = array(
-				'title' => 'View',
+				'title' => t('STRING_VIEW'),
 				'icon' => 'view',
 				'link' => '/user/view/' . $userid,
 			);
 		}
 		elseif($selfaccount){
 			$a[] = array(
-				'title' => 'View',
+				'title' => t('STRING_VIEW'),
 				'icon' => 'view',
 				'link' => '/user/me',
 			);
@@ -1000,7 +1000,7 @@ class UserModel extends Model {
 
 		if($usermanager || $selfaccount){
 			$a[] = array(
-				'title' => 'Edit',
+				'title' => t('STRING_EDIT'),
 				'icon' => 'edit',
 				'link' => '/user/edit/' . $userid,
 			);

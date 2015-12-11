@@ -119,6 +119,100 @@ class GPGAuthController extends Controller_2_1 {
 	}
 
 	/**
+	 * Method to be expected to be called from the command line to upload a key.
+	 */
+	public function rawUpload(){
+		$view = $this->getView();
+		$view->mode = View::MODE_NOOUTPUT;
+		$view->templatename = false;
+		$view->contenttype = 'text/plain';
+
+		$input = file_get_contents('php://input');
+
+		if(!$input){
+			echo "No key found!  Do you have one generated yet?\n";
+			return;
+		}
+
+		$user = \Core\user();
+
+		if(!$user->exists()){
+			echo "Invalid user requested!\n";
+			return;
+		}
+
+		try{
+			$gpg = new Core\GPG\GPG();
+			$key = $gpg->importKey($input);
+
+			if(\Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint)){
+				echo "Step 1 of 2 complete!  Please check your email for futher instructions to verify this key!\n";
+				return;
+			}
+		}
+		catch(\Exception $e){
+			echo "Invalid input provided :(\n";
+			return;
+		}
+	}
+
+	public function rawVerify(){
+		$view = $this->getView();
+		$view->mode = View::MODE_NOOUTPUT;
+		$view->templatename = false;
+		$view->contenttype = 'text/plain';
+
+		$input = file_get_contents('php://input');
+
+		$nonce = isset($_SERVER['HTTP_X_CORE_NONCE_KEY']) ? $_SERVER['HTTP_X_CORE_NONCE_KEY'] : null;
+
+		if(!$nonce){
+			echo "Invalid nonce provided!\n";
+			return;
+		}
+
+		/** @var \NonceModel $nonce */
+		$nonce = \NonceModel::Construct($nonce);
+
+		if(!$nonce->isValid()){
+			echo "Invalid nonce provided!\n";
+			return;
+		}
+
+		if(!$input){
+			echo "No key found!  Do you have one generated yet?\n";
+			return;
+		}
+
+		$user = \Core\user();
+
+		if(!$user->exists()){
+			echo "Invalid user requested!\n";
+			return;
+		}
+
+		// Verify that this user was the one provided by the nonce.
+		$nonce->decryptData();
+		$data = $nonce->get('data');
+
+		if($data['user'] != $user->get('id')){
+			echo "Invalid user requested!\n";
+			return;
+		}
+
+		$result = \Core\User\AuthDrivers\gpg::ValidateVerificationResponse($nonce, $input);
+
+		if($result !== true){
+			echo $result . "\n";
+			return;
+		}
+		else{
+			echo "Public key successfully registered!\n";
+			return;
+		}
+	}
+
+	/**
 	 * The public configure method for each user.
 	 *
 	 * This helps the user set his/her public key that the system will use to authenticate with.
@@ -132,55 +226,57 @@ class GPGAuthController extends Controller_2_1 {
 			$nonce = NonceModel::Construct($request->getParameter(0));
 			$nonce->decryptData();
 			$data = $nonce->get('data');
-			$userid = $data['user'];
+			/** @var UserModel $user */
+			$user = UserModel::Construct($data['user']);
+			$isManager = false;
+		}
+		elseif(\Core\user()->checkAccess('p:/user/users/manage') && $request->getParameter(0)){
+			/** @var UserModel $user */
+			$user = UserModel::Construct($request->getParameter(0));
+			$isManager = true;
 		}
 		else{
-			$userid = $request->getParameter(0);
+			$user = \Core\user();
+			$isManager = false;
 		}
 
-
-		/** @var UserModel $user */
-		$user = UserModel::Construct($userid);
-
-		if(!(
-			\Core\user()->checkAccess('p:/user/users/manage') ||
-			\Core\user()->get('id') == $user->get('id') ||
-			!\Core\user()->exists()
-		)){
+		if(!$user->exists()){
 			// Current user does not have access to manage the provided user's data.
 			return View::ERROR_ACCESSDENIED;
 		}
 
 		$currentkey = $user->get('/user/gpgauth/pubkey');
 
-		// Lookup the keys that match to this user.
-		$gpg = new \Core\GPG\GPG();
-		$keys = $gpg->searchRemoteKeys($user->get('email'));
-
-		// I'm going to throw in a few extra keys into the mix to require the user to choose.
-		$keys[] = Core::RandomHex(8);
-		$keys[] = Core::RandomHex(8);
-
-		// And shuffle them.
-		shuffle($keys);
-
+		$eml = $user->get('email');
+		$key = $user->get('apikey');
+		$url = \Core\resolve_link('/gpgauth/rawupload');
+		$cmd = <<<EOD
+gpg --export -a $eml 2>/dev/null | curl --data-binary @- \\
+--header "X-Core-Auth-Key: $key" \\
+$url
+EOD;
 		$form = new Form();
 		$form->set('callsmethod', 'GPGAuthController::ConfigureHandler');
 		$form->addElement('system', ['name' => 'userid', 'value' => $user->get('id')]);
 		$form->addElement(
-			'radio',
+			'textarea',
 			[
-				'required' => true,
 				'name' => 'key',
-				'title' => 'Your Public Key',
-				'options' => $keys
+				'title' => 'GPG Public Key',
 			]
 		);
-		$form->addElement('submit', ['name' => 'submit', 'value' => 'Next (email verification)']);
+		$form->addElement('submit', ['name' => 'submit', 'value' => 'Submit Public Key']);
 
-		$view->assign('current_key', $currentkey);
-		$view->assign('keys', $keys);
+		if($isManager){
+			$view->mastertemplate = 'admin';
+			$view->addBreadcrumb('Administration', '/admin');
+			$view->addBreadcrumb('User Administration', '/user/admin');
+			$view->addBreadcrumb($user->getDisplayName() . ' Profile', '/user/view/' . $user->get('id'));
+		}
+		$view->title = 'Configure GPG Public Key';
 		$view->assign('form', $form);
+		$view->assign('current_key', $currentkey);
+		$view->assign('cmd', $cmd);
 	}
 
 	/**
@@ -271,34 +367,21 @@ class GPGAuthController extends Controller_2_1 {
 	 * @return bool|string
 	 */
 	public static function ConfigureHandler(Form $form){
-		// Generate a random sentence to be decoded with the given nonce.
-		$sentence = trim(BaconIpsumGenerator::Make_a_Sentence());
-
-		$nonce = NonceModel::Generate(
-			'5 minutes',
-			null,
-			[
-				'sentence' => $sentence,
-				'key' => $form->getElement('key')->get('value'),
-				'user' => $form->getElement('userid')->get('value')
-			]
-		);
-
+		$key  = $form->getElementValue('key');
+		/** @var UserModel $user */
 		$user = UserModel::Construct($form->getElement('userid')->get('value'));
 
-		$email = new Email();
-		$email->setSubject('GPG Key Change Request');
-		$email->assign('key', $form->getElement('key')->get('value'));
-		$email->assign('sentence', $sentence);
-		$email->templatename = 'emails/user/gpgauth_key_verification.tpl';
-		$email->to($user->get('email'));
+		try{
+			$gpg = new Core\GPG\GPG();
+			$key = $gpg->importKey($key);
 
-		if($email->send()){
-			Core::SetMessage('Instructions have been sent to your email.  Please complete them within 5 minutes.', 'success');
-			return '/gpgauth/configure2/' . $nonce;
+			if(($nonce = \Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint, false))){
+				Core::SetMessage('Instructions have been sent to your email.', 'success');
+				return '/gpgauth/configure2/' . $nonce;
+			}
 		}
-		else{
-			Core::SetMessage('Unable to send verification email, please contact the administrator about this issue.', 'error');
+		catch(\Exception $e){
+			Core::SetMessage('Invalid key provided!', 'error');
 			return false;
 		}
 	}
@@ -314,11 +397,13 @@ class GPGAuthController extends Controller_2_1 {
 	 */
 	public static function Configure2Handler(Form $form){
 		/** @var NonceModel $nonce */
-		$nonce = NonceModel::Construct($form->getElement('nonce')->get('value'));
+		$nonceKey = NonceModel::Construct($form->getElement('nonce')->get('value'));
+		$sig      = $form->getElement('message')->get('value');
+
+		$nonce = \NonceModel::Construct($nonceKey);
 
 		if(!$nonce->isValid()){
-			Core::SetMessage('Invalid nonce provided!', 'error');
-			return false;
+			return 'Invalid nonce provided!';
 		}
 
 		// Now is where the real fun begins.
@@ -327,55 +412,28 @@ class GPGAuthController extends Controller_2_1 {
 
 		$data = $nonce->get('data');
 
-		/** @var UserModel $user */
-		$user = UserModel::Construct($data['user']);
+		$result = \Core\User\AuthDrivers\gpg::ValidateVerificationResponse($nonceKey, $sig);
 
-		//var_dump($data, $form->getElement('message')->get('value')); die();
-
-		$gpg = new \Core\GPG\GPG();
-		$key = $gpg->importKey($data['key']);
-
-		if(!$key){
-			Core::SetMessage('That key could not be loaded from the keyservers!', 'error');
+		if($result !== true){
+			Core::SetMessage($result, 'error');
 			return false;
 		}
+		else{
+			Core::SetMessage('Set/Updated GPG key successfully!', 'success');
 
-		if(!$key->isValid()){
-			Core::SetMessage('That key is not valid!  Is it expired or revoked?', 'error');
-			return false;
+			if(!\Core\user()->exists()){
+				$user = UserModel::Construct($data['user']);
+				// Not logged in yet, this process can log the user in.
+				\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via GPG Key)', null, $user->get('id'));
+
+				// yay...
+				$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
+				$user->save();
+				\Core\Session::SetUser($user);
+			}
+
+			return '/user/me';
 		}
-
-		if(!$key->isValid($user->get('email'))){
-			Core::SetMessage('That email subkey is not valid!  Is it expired or revoked?', 'error');
-			return false;
-		}
-
-		// Lastly, verify that the signature is correct.
-		if(!$gpg->verifyDetachedSignature($form->getElement('message')->get('value'), $data['sentence'], $data['key'])){
-			Core::SetMessage('Invalid signature!', 'error');
-			return false;
-		}
-
-		// Otherwise?
-		$user->enableAuthDriver('gpg');
-		$user->set('/user/gpgauth/pubkey', $data['key']);
-		$user->save();
-
-		$nonce->markUsed();
-
-		Core::SetMessage('Enabled/Updated GPG key successfully!', 'success');
-
-		if(!\Core\user()->exists()){
-			// Not logged in yet, this process can log the user in.
-			\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via GPG Key)', null, $user->get('id'));
-
-			// yay...
-			$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
-			$user->save();
-			\Core\Session::SetUser($user);
-		}
-
-		return '/user/me';
 	}
 
 	/**
@@ -634,13 +692,18 @@ class GPGAuthController extends Controller_2_1 {
 	public static function GetUserControlLinks($userid){
 
 		$enabled = User\Helper::GetEnabledAuthDrivers();
-		if(!isset($enabled['gpg'])){
-			// GPG isn't enabled at all, disable any control links from the system.
-			return [];
-		}
+		//if(!isset($enabled['gpg'])){
+		// GPG isn't enabled at all, disable any control links from the system.
+		//	return [];
+		//}
 
-		/** @var UserModel $user */
-		$user = UserModel::Construct($userid);
+		if($userid instanceof UserModel){
+			$user = $userid;
+		}
+		else{
+			/** @var UserModel $user */
+			$user = UserModel::Construct($userid);
+		}
 
 		if(!$user->exists()){
 			// Invalid user.
@@ -653,29 +716,38 @@ class GPGAuthController extends Controller_2_1 {
 			// Current user does not have access to manage the provided user's data.
 			return [];
 		}
-
-		try{
-			// If this throws an exception, then it's not enabled!
-			$user->getAuthDriver('gpg');
+		if($user->get('/user/gpgauth/pubkey')){
+			$text = 'Change GPG Key';
 		}
-		catch(Exception $e){
-			return [
-				[
-					'link' => '/gpgauth/configure/' . $user->get('id'),
-					'title' => 'Enable GPG Authentication',
-					'icon' => 'lock',
-				]
-			];
+		else{
+			$text = 'Upload GPG Key';
 		}
 
-		// Otherwise?
 		return [
 			[
 				'link' => '/gpgauth/configure/' . $user->get('id'),
-				'title' => 'Change GPG Key',
+				'title' => $text,
 				'icon' => 'lock',
 			]
 		];
+		/*
+				try{
+					// If this throws an exception, then it's not enabled!
+					$user->getAuthDriver('gpg');
+				}
+				catch(Exception $e){
+					return [
+						[
+							'link' => '/gpgauth/configure/' . $user->get('id'),
+							'title' => 'Enable GPG Authentication',
+							'icon' => 'lock',
+						]
+					];
+				}
+		*/
+
+		// Otherwise?
+
 
 	}
 } 

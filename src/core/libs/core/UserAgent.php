@@ -287,53 +287,301 @@ class UserAgent {
 	 */
 	public function __construct($useragent = null) {
 		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
-
-		// if we haven't loaded the data yet, do it now
-		// This will also return the cached data.
-		$data = self::_LoadData();
-
-		if(!isset($data['patterns'])){
-			// Catch for failed loads
-			$data['patterns'] = [];
+		
+		if(class_exists('DeviceDetector\\DeviceDetector')){
+			// Piwik's DeviceDetector is available, use that instead! :)
+			$dd = new \DeviceDetector\DeviceDetector($useragent);
+			$dd->parse();
+			
+			$this->useragent = $useragent;
+			$c = $dd->getClient();
+			if($c !== null){
+				$this->browser = $c['name'];
+				$this->version = $c['version'];
+				$this->rendering_engine_name = isset($c['engine']) ? $c['engine'] : null;
+				if($this->rendering_engine_name == 'Text-based' && $this->browser == 'Lynx'){
+					$this->rendering_engine_name = 'libwww-FM';
+				}
+			}
+			elseif(($bot = $dd->getBot()) !== null){
+				$this->browser = $bot['name'];
+			}
+			elseif(strpos($this->useragent, 'Core Plus') !== false){
+				$this->browser = 'Core Plus';
+				$this->version = preg_replace('#.*Core Plus ([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			
+			if($this->browser == 'MJ12 Bot'){
+				$this->version = preg_replace('#.*MJ12bot/v([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			if($this->browser == 'BingBot'){
+				$this->version = preg_replace('#.*bingbot/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			if($this->browser == 'Baidu Spider'){
+				$this->version = preg_replace('#.*Baiduspider/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			
+			$os = $dd->getOs();
+			if($os !== null && sizeof($os)){
+				$this->platform = $os['name'];
+				$this->platform_architecture = $os['platform'];
+				$this->platform_version = $os['version'];
+			}
+			
+			// Expand OSX versions to the full version string.
+			if($this->platform == 'Mac'){
+				$this->platform = 'MacOSX';
+				$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
+				$this->platform_version = str_replace('_', '.', $this->platform_version);
+			}
+			
+			// Also expand iOS to the full version string.
+			if($this->platform == 'iOS'){
+				$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
+				$this->platform_version = str_replace('_', '.', $this->platform_version);
+			}
+			
+			// That library really doesn't like to expand OS versions to their correct version :/
+			// Same for Android!
+			if($this->platform == 'Android'){
+				$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+			}
+			
+			if($this->platform_architecture == 'x64'){
+				$this->platform_architecture = 'x86';
+				$this->platform_bits = 64;
+			}
+			elseif($this->platform_architecture == 'x86'){
+				$this->platform_bits = 32;
+			}
+			
+			$this->crawler = $dd->isBot();
+			$this->is_mobile_device = $dd->isMobile();
+			$this->device_maker = $dd->getBrandName();
+			$this->device_name = $dd->getModel();
+			
+			$this->_fixVersion();
 		}
+		else{
+			// if we haven't loaded the data yet, do it now
+			// This will also return the cached data.
+			$data = self::_LoadData();
 
-		$browser = [];
-		foreach ($data['patterns'] as $key => $pattern) {
-			if (preg_match($pattern . 'i', $useragent)) {
-				$browser = [
-					$useragent, // Original useragent
-					trim(strtolower($pattern), self::REGEX_DELIMITER),
-					$data['useragents'][$key]
-				];
+			if(!isset($data['patterns'])){
+				// Catch for failed loads
+				$data['patterns'] = [];
+			}
 
-				$browser = $value = $browser + $data['browsers'][$key];
+			$browser = [];
+			foreach ($data['patterns'] as $key => $pattern) {
+				if (preg_match($pattern . 'i', $useragent)) {
+					$browser = [
+						$useragent, // Original useragent
+						trim(strtolower($pattern), self::REGEX_DELIMITER),
+						$data['useragents'][$key]
+					];
 
-				while (array_key_exists(3, $value) && $value[3]) {
-					$value = $data['browsers'][$value[3]];
-					$browser += $value;
+					$browser = $value = $browser + $data['browsers'][$key];
+
+					while (array_key_exists(3, $value) && $value[3]) {
+						$value = $data['browsers'][$value[3]];
+						$browser += $value;
+					}
+
+					if (!empty($browser[3])) {
+						$browser[3] = $data['useragents'][$browser[3]];
+					}
+
+					break;
+				}
+			}
+
+			// Add the keys for each property
+			$this->useragent = $useragent;
+			foreach ($browser as $key => $value) {
+				if ($value === 'true') {
+					$value = true;
+				} elseif ($value === 'false') {
+					$value = false;
 				}
 
-				if (!empty($browser[3])) {
-					$browser[3] = $data['useragents'][$browser[3]];
+				$key = $data['properties'][$key];
+				if(isset(self::$Map[$key])){
+					$prop = self::$Map[$key];
+					$this->$prop = $value;
 				}
-
-				break;
-			}
-		}
-
-		// Add the keys for each property
-		$this->useragent = $useragent;
-		foreach ($browser as $key => $value) {
-			if ($value === 'true') {
-				$value = true;
-			} elseif ($value === 'false') {
-				$value = false;
 			}
 
-			$key = $data['properties'][$key];
-			if(isset(self::$Map[$key])){
-				$prop = self::$Map[$key];
-				$this->$prop = $value;
+			if($this->browser == 'Default Browser' || $this->browser === null){
+				if(stripos($this->useragent, 'iceweasel/') !== false){
+					$this->browser = 'Iceweasel';
+					$this->javascript = true;
+					$this->cookies = true;
+					$this->tables = true;
+					$this->frames = true;
+					$this->iframes = true;
+				}
+				elseif(stripos($this->useragent, 'firefox/') !== false){
+					$this->browser = 'Firefox';
+					$this->javascript = true;
+					$this->cookies = true;
+					$this->tables = true;
+					$this->frames = true;
+					$this->iframes = true;
+				}
+				elseif(stripos($this->useragent, 'googlebot/') !== false){
+					$this->browser = 'Googlebot';
+					$this->rendering_engine_name = '';
+					$this->javascript = true;
+					$this->cookies = true;
+					$this->tables = true;
+					$this->frames = true;
+					$this->iframes = true;
+					$this->crawler = true;
+				}
+				elseif(stripos($this->useragent, 'msie ') !== false){
+					$this->browser = 'IE';
+					$this->javascript = true;
+					$this->cookies = true;
+					$this->tables = true;
+					$this->frames = true;
+					$this->iframes = true;
+
+					$this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
+				}
+				elseif(stripos($this->useragent, 'lynx/') !== false){
+					$this->browser = 'Lynx';
+					$this->javascript = false;
+					$this->cookies = true;
+					$this->tables = true;
+					$this->frames = true;
+					$this->iframes = true;
+					$this->crawler = false;
+				}
+				elseif(stripos($this->useragent, 'wget/') !== false){
+					$this->browser = 'Wget';
+					$this->javascript = false;
+					$this->cookies = false;
+				}
+				elseif(stripos($this->useragent, 'MJ12bot/') !== false){
+					$this->browser = 'MJ12 Bot';
+					$this->javascript = false;
+					$this->cookies = false;
+					$this->crawler = true;
+				}
+				elseif(stripos($this->useragent, 'bingbot/') !== false){
+					$this->browser = 'BingBot';
+					$this->javascript = false;
+					$this->cookies = false;
+					$this->crawler = true;
+				}
+				elseif(stripos($this->useragent, 'Baiduspider/') !== false){
+					$this->browser = 'Baidu Spider';
+					$this->javascript = false;
+					$this->cookies = false;
+					$this->crawler = true;
+				}
+				elseif(strpos($this->useragent, 'Core Plus') !== false){
+					$this->browser = 'Core Plus';
+					$this->version = preg_replace('#.*Core Plus ([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+				}
+			}
+
+			// Remap some platform options around to make them more usable.
+			switch($this->platform){
+				case 'WinXP':
+				case 'Win32':
+					$this->platform = 'Windows';
+					$this->platform_version = 'XP';
+					break;
+				case 'WinVista':
+					$this->platform = 'Windows';
+					$this->platform_version = 'Vista';
+					break;
+				case 'Win7':
+					$this->platform = 'Windows';
+					$this->platform_version = '7';
+					break;
+				case 'Win8':
+					$this->platform = 'Windows';
+					$this->platform_version = '8';
+					break;
+				case 'Win8.1':
+					$this->platform = 'Windows';
+					$this->platform_version = '8.1';
+					break;
+				case 'Win10':
+					$this->platform = 'Windows';
+					$this->platform_version = '10';
+					break;
+				case 'Linux':
+					if(strpos($this->useragent, 'Ubuntu') !== false){
+						$this->platform = 'Ubuntu';
+					}
+					else{
+						$this->platform = 'GNU/Linux';
+					}
+					break;
+				case 'GNU/Linux':
+					if(strpos($this->useragent, 'Ubuntu') !== false){
+						$this->platform = 'Ubuntu';
+					}
+					break;
+				case 'MacOSX':
+					$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
+					$this->platform_version = str_replace('_', '.', $this->platform_version);
+					break;
+				case 'Android':
+					$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+					$this->is_mobile_device = true;
+					break;
+				case 'iOS':
+					$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
+					$this->platform_version = str_replace('_', '.', $this->platform_version);
+					$this->is_mobile_device = true;
+					break;
+			}
+
+			
+			if($this->browser == 'Firefox' && stripos($this->useragent, 'iceweasel/') !== false){
+				// Iceweasel is incorrectly picked up as Firefox
+				$this->browser = 'Iceweasel';
+				$this->version = preg_replace('#.*Iceweasel/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+
+			if($this->browser == 'MJ12 Bot'){
+				$this->version = preg_replace('#.*MJ12bot/v([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			if($this->browser == 'BingBot'){
+				$this->version = preg_replace('#.*bingbot/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			if($this->browser == 'Baidu Spider'){
+				$this->version = preg_replace('#.*Baiduspider/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+			}
+			if($this->browser == 'IE'){
+				$this->browser = 'Internet Explorer';
+			}
+			
+			$this->_fixVersion();
+
+			// Chrome switched from Webkit to Blink after version 28!
+			if($this->browser == 'Chrome'){
+				$this->rendering_engine_name = $this->version >= 28 ? 'Blink' : 'WebKit';
+			}
+			
+			// Safari is based on Chrome, so same thing as Chrome
+			if($this->browser == 'Safari' && $this->rendering_engine_name == 'WebKit' && $this->version >= 28){
+				$this->rendering_engine_name = 'Blink';
+			}
+
+			// Safari on mobile platforms is actually Mobile Safari.
+			if($this->is_mobile_device && $this->browser == 'Safari'){
+				$this->browser = 'Mobile Safari';
+			}
+
+			// Android on mobile is actually called Android Browser.
+			if($this->is_mobile_device && $this->browser == 'Android'){
+				$this->browser = 'Android Browser';
 			}
 		}
 
@@ -345,7 +593,7 @@ class UserAgent {
 			}
 			elseif(stripos($this->useragent, 'linux') !== false){
 				// Generic Linux OS
-				$this->platform = 'Linux';
+				$this->platform = 'GNU/Linux';
 			}
 			elseif(stripos($this->useragent, 'windows nt 5.0') !== false){
 				$this->platform = 'Windows';
@@ -385,131 +633,8 @@ class UserAgent {
 				$this->is_mobile_device = true;
 			}
 			elseif(stripos($this->useragent, 'mozilla/5.0 (mobile;') !== false){
-				$this->platform = 'FirefoxOS';
+				$this->platform = 'Firefox OS';
 				$this->is_mobile_device = true;
-			}
-		}
-
-
-		// Remap some platform options around to make them more usable.
-		switch($this->platform){
-			case 'WinXP':
-				$this->platform = 'Windows';
-				$this->platform_version = 'XP';
-				break;
-			case 'WinVista':
-				$this->platform = 'Windows';
-				$this->platform_version = 'Vista';
-				break;
-			case 'Win7':
-				$this->platform = 'Windows';
-				$this->platform_version = '7';
-				break;
-			case 'Win8':
-				$this->platform = 'Windows';
-				$this->platform_version = '8';
-				break;
-			case 'Win8.1':
-				$this->platform = 'Windows';
-				$this->platform_version = '8.1';
-				break;
-			case 'Win10':
-				$this->platform = 'Windows';
-				$this->platform_version = '10';
-				break;
-			case 'Linux':
-				if(strpos($this->useragent, 'Ubuntu') !== false){
-					$this->platform = 'Ubuntu';
-				}
-				break;
-			case 'MacOSX':
-				$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
-				$this->platform_version = str_replace('_', '.', $this->platform_version);
-				break;
-			case 'Android':
-				$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
-				$this->is_mobile_device = true;
-				break;
-			case 'iOS':
-				$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
-				$this->platform_version = str_replace('_', '.', $this->platform_version);
-				$this->is_mobile_device = true;
-				break;
-		}
-
-
-		// Architecture bits?
-		if($this->platform_bits === null){
-			if($this->platform == 'Windows'){
-				if(strpos($this->useragent, 'WOW64') !== false){
-					$this->platform_bits = '64';
-				}
-				else{
-					$this->platform_bits = '32';
-				}
-			}
-			elseif($this->platform == 'Linux' || $this->platform == 'Ubuntu'){
-				if(strpos($this->useragent, 'x86_64') !== false){
-					$this->platform_bits = '64';
-					$this->platform_architecture = 'x86';
-				}
-				elseif(strpos($this->useragent, 'x86') !== false){
-					$this->platform_bits = '32';
-					$this->platform_architecture = 'x86';
-				}
-			}
-			elseif($this->platform == 'MacOSX'){
-				if(strpos($this->useragent, 'Intel Mac') !== false){
-					$this->platform_architecture = 'x86';
-				}
-			}
-		}
-
-
-		if($this->browser == 'Default Browser' || $this->browser === null){
-			if(stripos($this->useragent, 'firefox/') !== false){
-				$this->browser = 'Firefox';
-				$this->javascript = true;
-				$this->cookies = true;
-				$this->tables = true;
-				$this->frames = true;
-				$this->iframes = true;
-			}
-			elseif(stripos($this->useragent, 'googlebot/') !== false){
-				$this->browser = 'Googlebot';
-				$this->rendering_engine_name = 'WebKit';
-				$this->javascript = true;
-				$this->cookies = true;
-				$this->tables = true;
-				$this->frames = true;
-				$this->iframes = true;
-				$this->crawler = true;
-			}
-			elseif(stripos($this->useragent, 'msie ') !== false){
-				$this->browser = 'IE';
-				$this->javascript = true;
-				$this->cookies = true;
-				$this->tables = true;
-				$this->frames = true;
-				$this->iframes = true;
-
-				$this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
-			}
-		}
-
-		if($this->version == 0.0){
-			if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
-				$this->version = preg_replace('#.*' . $this->browser . '/([0-9]+)\.([0-9]+).*#', '$1.$2', $this->useragent);
-			}
-		}
-
-		if($this->major_ver == 0){
-			$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
-			$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
-
-			// Remove extra version strings from Chrome, (ex: 18.0.1025.166)
-			if(strpos($this->minor_ver, '.') !== false){
-				$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
 			}
 		}
 
@@ -526,6 +651,47 @@ class UserAgent {
 				$this->rendering_engine_name = 'Trident';
 				$this->rendering_engine_version = preg_replace('#.*trident/([0-9\.]+).*#i', '$1', $this->useragent);
 			}
+			elseif(strpos($this->useragent, 'MSIE') !== false){
+				$this->rendering_engine_name = 'Trident';
+			}
+			elseif(stripos($this->useragent, 'libwww-fm/') !== false){
+				$this->rendering_engine_name = 'libwww-FM';
+				$this->rendering_engine_version = preg_replace('#.*libwww-fm/([0-9\.]+).*#i', '$1', $this->useragent);
+			}
+		}
+
+
+		// Architecture bits?
+		if($this->platform_bits === null){
+			if($this->platform == 'Windows'){
+				if(strpos($this->useragent, 'WOW64') !== false){
+					$this->platform_bits = '64';
+					$this->platform_architecture = 'x86';
+				}
+				else{
+					$this->platform_bits = '32';
+					$this->platform_architecture = 'x86';
+				}
+			}
+			elseif($this->platform == 'GNU/Linux' || $this->platform == 'Ubuntu'){
+				if(strpos($this->useragent, 'x86_64') !== false){
+					$this->platform_bits = '64';
+					$this->platform_architecture = 'x86';
+				}
+				elseif(strpos($this->useragent, 'x86') !== false){
+					$this->platform_bits = '32';
+					$this->platform_architecture = 'x86';
+				}
+			}
+			elseif($this->platform == 'MacOSX'){
+				if(strpos($this->useragent, 'Intel Mac') !== false){
+					$this->platform_architecture = 'x86';
+				}
+			}
+		}
+		
+		if($this->platform === null){
+			$this->platform = 'unknown';
 		}
 	}
 
@@ -586,6 +752,27 @@ class UserAgent {
 			return strtolower(implode(';', $a));
 		}
 	}
+	
+	private function _fixVersion(){
+		if($this->version == 0.0){
+			if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
+				$this->version = preg_replace('#.*' . $this->browser . '/([0-9]+)\.([0-9]+).*#', '$1.$2', $this->useragent);
+			}
+			elseif(strpos($this->useragent, ' Version/') !== false){
+				$this->version = preg_replace('#.* Version/([0-9\.]+).*#i', '$1', $this->useragent);
+			}
+		}
+
+		if($this->major_ver == 0){
+			$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
+			$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
+
+			// Remove extra version strings from Chrome, (ex: 18.0.1025.166)
+			if(strpos($this->minor_ver, '.') !== false){
+				$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
+			}
+		}
+	}
 
 	/**
 	 *  Load the data from the files
@@ -595,7 +782,7 @@ class UserAgent {
 		// The key for this data, must be unique on the system.
 		$cachekey = 'useragent-browsecap-data';
 		// The number of seconds to have Core cache the records.
-		$cachetime = 86400;
+		$cachetime = SECONDS_ONE_WEEK;
 
 		$cache = Cache::Get($cachekey, $cachetime);
 
@@ -708,7 +895,7 @@ class UserAgent {
 		$cache = Cache::Get($cachekey);
 		if(!$cache){
 			$cache = new UserAgent($useragent);
-			Cache::Set($cachekey, $cache, 3600);
+			Cache::Set($cachekey, $cache, SECONDS_ONE_WEEK);
 		}
 
 		return $cache;

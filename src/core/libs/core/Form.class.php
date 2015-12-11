@@ -1235,6 +1235,7 @@ class Form extends FormGroup {
 		$s = $model->getKeySchemas();
 		$i = $model->GetIndexes();
 		if (!isset($i['primary'])) $i['primary'] = array();
+		$i18nKey = '_MODEL_' . strtoupper(get_class($model)) . '_';
 
 		$new = $model->isnew();
 
@@ -1259,12 +1260,26 @@ class Form extends FormGroup {
 			if (!$new && in_array($k, $i['primary'])) continue;
 			*/
 
+			// NEW i18n support for Models!
+			$title       = t('STRING' . $i18nKey . strtoupper($k));
+			$description = t('MESSAGE' . $i18nKey . strtoupper($k));
+
+			if(!$title && isset($dat['formtitle'])){
+				// Allow pulling from inline to support legacy models.
+				$title = $dat['formtitle'];
+			}
+
+			if(!$description && isset($dat['formdescription'])){
+				// Allow pulling from inline to support legacy models.
+				$description = $dat['formdescription'];
+			}
+
 			// Base required keys for all form elements.
 			// These get mapped by the necessary fields.
 			$formatts = array(
 				'type' => null,
-				'title' => ucwords(str_replace('_', ' ', $k)),
-				'description' => null,
+				'title' => $title,
+				'description' => $description,
 				'required' => false,
 				'value' => $model->get($k),
 				'name' => $prefix . '[' . $k . ']',
@@ -1277,8 +1292,6 @@ class Form extends FormGroup {
 
 			// Default values from the standard (outside the form set), attributes.
 			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
-			if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
-			if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
 			if(isset($v['required']))        $formatts['required'] = $v['required'];
 			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
 
@@ -1335,12 +1348,12 @@ class Form extends FormGroup {
 
 			elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
 				$el = FormElement::Factory('radio');
-				$el->set('options', array('Yes', 'No'));
+				$el->set('options', ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')]);
 
-				if ($formatts['value']) $formatts['value'] = 'Yes';
-				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
-				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
-				else $formatts['value'] = 'No';
+				if ($formatts['value']) $formatts['value'] = 'yes';
+				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'yes';
+				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'no';
+				else $formatts['value'] = 'no';
 			}
 			elseif ($v['type'] == Model::ATT_TYPE_SITE) {
 				$el = FormElement::Factory('system');
@@ -1550,7 +1563,7 @@ class Form extends FormGroup {
 
 		// Ensure the submission types match up.
 		if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {
-			Core::SetMessage('Form submission type does not match', 'error');
+			\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH');
 			return;
 		}
 
@@ -1596,7 +1609,7 @@ class Form extends FormGroup {
 			}
 			else{
 				// While users of production-enabled sites get a friendlier message.
-				Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
+				\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
 			}
 			Core\ErrorManagement\exception_handler($e);
 			$status = false;

@@ -4,8 +4,6 @@
 
 	<div id="admin-bar" class="screen clearfix">
 		<ul>
-
-
 			{foreach $groups as $gdat}
 				<li class="has-sub">
 					{if $gdat.href}
@@ -17,15 +15,38 @@
 					{/if}
 
 					<ul class="sub-menu">
-						{foreach from=$gdat.children item=page}
+						{foreach $gdat.children as $title => $page}
 							<li>
-								{a href=$page->get('baseurl')}{$page->get('title')}{/a}
+								{a href=$page->get('baseurl') title="`$title|escape`"}{$title}{/a}
 							</li>
 						{/foreach}
 					</ul>
 				</li>
 			{/foreach}
 
+			{**
+			 * @var $languages =  array (size=5)
+			 *      'key'      => string 'de_DE' (length=5)
+			 *      'title'    => string 'German (Germany)' (length=16)
+			 *      'country'  => string 'DE' (length=2)
+			 *      'image'    => string 'assets/images/iso-country-flags/de.png' (length=38)
+			 *      'selected' => boolean false
+			 *}
+			{if sizeof($languages)}
+				<li class="has-sub">
+					<span>{t 'STRING_CHANGE_LANGUAGE'}</span>
+					<ul class="admin-bar-language-selection sub-menu">
+						{foreach $languages as $lang}
+							<li>
+								<a href="#" title="{t 'STRING_SET_LANGUAGE_TO_S' $lang.title}" class="set-lang-target" data-lang="{$lang.key}">
+									{img src="`$lang.image`" dimensions="28x28" alt="`$lang.country`"}
+									<span>{$lang.title}</span>
+								</a>
+							</li>
+						{/foreach}
+					</ul>
+				</li>
+			{/if}
 		</ul>
 
 		{widget baseurl="/user/login"}
@@ -67,11 +88,24 @@
 	{/if}
 
 	{if Core::IsLibraryAvailable("jquery")}
+		{script library="jquery"}{/script}
+		{script library="js.cookie"}{/script}
+
 		{script location="foot"}<script>
-		// Fail safe on mobile platforms where hoverintent won't work or if it's not available.
-		$('#admin-bar').find('span').click(function(){
-			$(this).closest('li').find('ul').toggle();
-		});
+			var $bar = $('#admin-bar');
+			// Fail safe on mobile platforms where hoverintent won't work or if it's not available.
+			$bar.find('span').click(function(){
+				$(this).closest('li').find('ul').toggle();
+			});
+
+			// Make the language selection do something!
+			$bar.find('.set-lang-target').click(function() {
+				Cookies.remove('LANG')
+				Cookies.set('LANG', $(this).data('lang'));
+				//$.cookie('LANG', $(this).data('lang'));
+				Core.Reload();
+				return false;
+			});
 		</script>{/script}
 	{/if}
 

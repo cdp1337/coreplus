@@ -15,6 +15,4 @@
 	If you did request this change, then execute the following command in a terminal window and paste in the results in the textarea.
 </p>
 
-<pre>
-	echo -n "{$sentence}" | gpg -b -a
-</pre>
+<pre>{$cmd}</pre>

@@ -116,9 +116,9 @@ class gpg implements AuthDriverInterface{
 		}
 
 		$gpg = new \Core\GPG\GPG();
-		$key = $gpg->importKey($keyid);
+		$key = $gpg->getKey($keyid);
 		if(!$key){
-			return 'Your GPG key was not found on the remote servers, please upload it to ' . $gpg->keyserver . ' first.';
+			return 'Your GPG key was not found on the remote servers, please upload it first.';
 		}
 
 		if(!$key->isValid()){
@@ -227,5 +227,119 @@ class gpg implements AuthDriverInterface{
 	 */
 	public function getAuthIcon(){
 		return 'lock';
+	}
+
+	/**
+	 * Send the commands to a user to verify they have access to the provided GPG key.
+	 *
+	 * @param \UserModel $user
+	 * @param string     $fingerprint
+	 * @param boolean    $cli         Set to false to send non-CLI instructions.
+	 *
+	 * @return false|string
+	 */
+	public static function SendVerificationEmail(\UserModel $user, $fingerprint, $cli = true){
+		$sentence = trim(\BaconIpsumGenerator::Make_a_Sentence());
+
+		$nonce = \NonceModel::Generate(
+			'30 minutes',
+			null,
+			[
+				'sentence' => $sentence,
+				'key' => $fingerprint,
+				'user' => $user->get('id'),
+			]
+		);
+
+		$key = $user->get('apikey');
+		$url = \Core\resolve_link('/gpgauth/rawverify');
+		if($cli){
+			$cmd = <<<EOD
+echo -n "{$sentence}" | gpg -b -a | curl --data-binary @- \\
+--header "X-Core-Auth-Key: $key" \\
+--header "X-Core-Nonce-Key: $nonce" \\
+$url
+EOD;
+		}
+		else{
+			$cmd = <<<EOD
+echo -n "{$sentence}" | gpg -b -a
+EOD;
+		}
+
+
+		$email = new \Email();
+		$email->templatename = 'emails/user/gpgauth_key_verification.tpl';
+		$email->setSubject('GPG Key Change Request');
+		$email->assign('key', $fingerprint);
+		$email->assign('sentence', $sentence);
+		$email->assign('user', $user);
+		$email->assign('cmd', $cmd);
+		$email->to($user->get('email'));
+		$email->setEncryption($fingerprint);
+
+		\SystemLogModel::LogSecurityEvent('/user/gpg/submit', 'Verification requested for key ' . $fingerprint, null, $user->get('id'));
+
+		if(!$email->send()){
+			return false;
+		}
+		else{
+			return $nonce;
+		}
+	}
+
+	/**
+	 * Validate the verification email, part 2 of confirmation.
+	 *
+	 * @param string $nonce
+	 * @param string $signature
+	 *
+	 * @return bool|string
+	 */
+	public static function ValidateVerificationResponse($nonce, $signature) {
+		/** @var \NonceModel $nonce */
+		$nonce = \NonceModel::Construct($nonce);
+
+		if(!$nonce->isValid()){
+			\SystemLogModel::LogSecurityEvent('/user/gpg/verified', 'FAILED to verify key (Invalid NONCE)', null);
+			return 'Invalid nonce provided!';
+		}
+
+		// Now is where the real fun begins.
+
+		$nonce->decryptData();
+
+		$data = $nonce->get('data');
+
+		/** @var \UserModel $user */
+		$user = \UserModel::Construct($data['user']);
+		$gpg  = new \Core\GPG\GPG();
+		$key  = $data['key'];
+
+		try{
+			$sig = $gpg->verifyDataSignature($signature, $data['sentence']);
+		}
+		catch(\Exception $e){
+			\SystemLogModel::LogSecurityEvent('/user/gpg/verified', 'FAILED to verify key ' . $key, null, $user->get('id'));
+			return 'Invalid signature';
+		}
+
+		$fpr = str_replace(' ', '', $sig->fingerprint); // Trim spaces.
+		if($key != $fpr && $key != $sig->keyID){
+			// They must match!
+			\SystemLogModel::LogSecurityEvent('/user/gpg/verified', 'FAILED to verify key ' . $key, null, $user->get('id'));
+			return 'Invalid signature';
+		}
+
+		// Otherwise?
+		$user->enableAuthDriver('gpg');
+		$user->set('/user/gpgauth/pubkey', $fpr);
+		$user->save();
+
+		$nonce->markUsed();
+
+		\SystemLogModel::LogSecurityEvent('/user/gpg/verified', 'Verified key ' . $fpr, null, $user->get('id'));
+
+		return true;
 	}
 }

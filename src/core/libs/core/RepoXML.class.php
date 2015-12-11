@@ -30,12 +30,8 @@ class RepoXML extends XMLLoader {
 	 */
 	public $apiversion;
 
-	/**
-	 * An associative array of the keys available in this repo.
-	 *
-	 * @var array
-	 */
-	public $keys = array();
+	/** @var array|null Cache of keys on this repo */
+	private $_keys = null;
 
 	public function __construct($filename = null) {
 		$this->setRootName('repo');
@@ -105,15 +101,63 @@ class RepoXML extends XMLLoader {
 	 * @return array
 	 */
 	public function getKeys(){
-		$keys = array();
-		foreach($this->getElements('keys/key') as $k){
-			$keys[] = array(
-				'id' => $k->getAttribute('id'),
-				'name' => $k->getAttribute('name'),
-				'email' => $k->getAttribute('email'),
-			);
+		if($this->_keys !== null){
+			// Cache!
+			return $this->_keys;
 		}
-		return $keys;
+
+		$gpg         = new \Core\GPG\GPG();
+		$this->_keys = [];
+
+		foreach($this->getElements('keys/key') as $k){
+			$id    = $k->getAttribute('id');
+			$key   = null;
+			$local = true;
+
+			// Try to find more info about this key!
+			// First step is to assign the key from local data.
+			// If that fails, gracefully search remote servers for it.
+			if(($key = $gpg->getKey($id)) === null){
+				$remoteKeys = $gpg->searchRemoteKeys($id);
+				foreach($remoteKeys as $k){
+					/** @var \Core\GPG\PublicKey $k */
+					if($k->id == $id || $k->id_short == $id){
+						$key = $k;
+						$local = false;
+						break;
+					}
+				}
+			}
+
+			if($key !== null){
+				$dat = [
+					'key'        => $id,
+					'available'  => true,
+					'installed'  => $local,
+					'fingerprint' => \Core\GPG\GPG::FormatFingerprint($key->fingerprint, false, true),
+					'uids'        => [],
+				];
+
+				foreach($key->uids as $uid){
+					/** @var \Core\GPG\UID $uid */
+					if($uid->isValid()){
+						$dat['uids'][] = ['name' => $uid->fullname, 'email' => $uid->email];
+					}
+				}
+			}
+			else{
+				$dat = [
+					'key'        => $id,
+					'available'  => false,
+					'installed'  => false,
+					'fingerprint' => '',
+					'uids'        => [],
+				];
+			}
+
+			$this->_keys[] = $dat;
+		}
+		return $this->_keys;
 	}
 
 	/**
@@ -136,26 +180,13 @@ class RepoXML extends XMLLoader {
 	 * @return bool
 	 */
 	public function validateKeys(){
-		foreach($this->getKeys() as $key){
-			// Lookup this key at the registered keyserver.  This is to validate that it's available and everything matches.
-			$output = array();
-			// Because this will be sent to the command line..... I want to do a bit of cleaning.
-			$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $key['id']));
+		$gpg = new Core\GPG\GPG();
 
-			exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -q --batch --keyserver hkp://pool.sks-keyservers.net --dry-run --recv-keys ' . $id, $output, $result);
-			//exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -q --batch --keyserver hkp://pool.sks-keyservers.net --search-key ' . $id, $output, $result);
-
-			// If a key fails lookup, gpg will exit with a status of 0.
-			if($result != 0){
-				error_log('Key lookup failed!' . "\n" . implode("\n", $output));
+		foreach($this->getKeys() as $keyData){
+			// The key is not available locally nor on the keyservers.
+			if(!$keyData['available']){
 				return false;
 			}
-
-			// I also need to check that the email registered is present!
-			//if(strpos(implode("", $output), $key['email']) === false){
-			//	error_log('Key lookup failed because email address set [' . $key['email'] . '] was not associated with key' . "\n" . implode("\n", $output));
-			//	return false;
-			//}
 		}
 
 		// Did all the keys pass validation?

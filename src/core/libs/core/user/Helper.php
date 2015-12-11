@@ -125,8 +125,12 @@ abstract class Helper{
 			// Make a note of this!
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
-			if(DEVELOPMENT_MODE) \Core::SetMessage($e->getMessage(), 'error');
-			else \Core::SetMessage('An unknown error occured', 'error');
+			if(DEVELOPMENT_MODE){
+				\Core::SetMessage($e->getMessage(), 'error');
+			}
+			else{
+				\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
+			}
 
 			return false;
 		}
@@ -192,10 +196,8 @@ abstract class Helper{
 		}
 		catch(\Exception $e){
 			\Core\ErrorManagement\exception_handler($e);
-			\Core::SetMessage('Unable to send welcome email', 'error');
+			\Core\set_message('MESSAGE_ERROR_CANNOT_SEND_WELCOME_EMAIL');
 		}
-
-
 
 		// "login" this user if not already logged in.
 		if(!\Core\user()->exists()){
@@ -211,9 +213,7 @@ abstract class Helper{
 				$user->save();
 				Session::SetUser($user);
 			}
-			//var_dump($url); echo '<pre>'; debug_print_backtrace();
-			\Core::SetMessage('Registered account successfully!', 'success');
-
+			\Core\set_message('MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
 
 			if(($overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl'))){
 				// Allow an external script to override the redirecting URL.
@@ -237,10 +237,9 @@ abstract class Helper{
 		}
 		// It was created administratively; redirect there instead.
 		else{
-			\Core::SetMessage('Created user successfully', 'success');
+			\Core\set_message('MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
 			return '/user/admin';
 		}
-
 	}
 
 	public static function UpdateHandler(\Form $form){
@@ -252,30 +251,18 @@ abstract class Helper{
 
 		// Only allow this if the user is either the same user or has the user manage permission.
 		if(!($userid == \Core\user()->get('id') || $usermanager)){
-			\Core::SetMessage('Insufficient Permissions', 'error');
+			\Core\set_message('MESSAGE_ERROR_INSUFFICIENT_ACCESS_PERMISSIONS');
 			return false;
 		}
 
 		if(!$user->exists()){
-			\Core::SetMessage('User not found', 'error');
+			\Core\set_message('MESSAGE_ERROR_REQUESTED_RESOURCE_NOT_FOUND');
 			return false;
 		}
 
 		$userisactive = $user->get('active');
 
-		try{
-			$user->setFromForm($form);
-		}
-		catch(\ModelValidationException $e){
-			\Core::SetMessage($e->getMessage(), 'error');
-			return false;
-		}
-		catch(\Exception $e){
-			if(DEVELOPMENT_MODE) \Core::SetMessage($e->getMessage(), 'error');
-			else \Core::SetMessage('An unknown error occured', 'error');
-
-			return false;
-		}
+		$user->setFromForm($form);
 
 		if($userisactive == 1 && $user->get('active') == 0){
 			// User was set from active to inactive.
@@ -319,14 +306,14 @@ abstract class Helper{
 			Session::SetUser($user);
 
 			if(\ConfigHandler::Get('/user/profileedits/requireapproval') && \Core::IsComponentAvailable('model-audit')){
-				\Core::SetMessage('Updated your account successfully, but an administrator will need to approve all changes.', 'success');
+				\Core\set_message('MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT_PENDING_APPROVAL');
 			}
 			else{
-				\Core::SetMessage('Updated your account successfully', 'success');
+				\Core\set_message('MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT');
 			}
 		}
 		else{
-			\Core::SetMessage('Updated user successfully', 'success');
+			\Core\set_message('MESSAGE_SUCCESS_UPDATED_USER_ACCOUNT');
 		}
 
 

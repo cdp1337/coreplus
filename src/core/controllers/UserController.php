@@ -133,7 +133,7 @@ class UserController extends Controller_2_1{
 		$view->controls = ViewControls::DispatchModel($user);
 
 		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
-		$view->title = 'My Profile';
+		$view->title = 't:STRING_MY_PROFILE';
 		$view->assign('user', $user);
 		$view->assign('form', $form);
 		$view->assign('logins', $logins);
@@ -201,6 +201,8 @@ class UserController extends Controller_2_1{
 		$view->controls = ViewControls::DispatchModel($user);
 
 		$view->mastertemplate = 'admin';
+		$view->addBreadcrumb('Administration', '/admin');
+		$view->addBreadcrumb('User Administration', '/user/admin');
 		$view->title = $user->getLabel() . ' Profile';
 		$view->assign('user', $user);
 		$view->assign('logins', $logins);

@@ -116,46 +116,33 @@ class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * Test that a basic INSERT statement with multiple inserts parses
+	 * Test that a BULK_INSERT statement with multiple inserts parses
 	 */
 	public function testInsertMultiple(){
 		$query = "INSERT INTO states (id, state, code) VALUES (33, 'Oregon', 'OR'), (34, 'Blah', 'BL'), (35, 'Foo', 'FO');";
 
 		$dss = SQL_Parser_Dataset::ConstructAndParse($query, SQL_Parser::DIALECT_MYSQL);
-		$this->assertEquals(3, sizeof($dss));
+		$this->assertEquals(1, sizeof($dss));
 
 		$ds = $dss[0];
 		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
 		/** @var Core\Datamodel\Dataset $ds */
 
 		$this->assertEquals('states', $ds->_table);
-		$this->assertEquals('insert', $ds->_mode);
+		$this->assertEquals('bulk_insert', $ds->_mode);
 		$this->assertEquals(3, sizeof($ds->_sets));
-		$this->assertEquals(33, $ds->_sets['id']);
-		$this->assertEquals('Oregon', $ds->_sets['state']);
-		$this->assertEquals('OR', $ds->_sets['code']);
 
-		$ds = $dss[1];
-		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
-		/** @var Core\Datamodel\Dataset $ds */
+		$this->assertEquals(33, $ds->_sets[0]['id']);
+		$this->assertEquals('Oregon', $ds->_sets[0]['state']);
+		$this->assertEquals('OR', $ds->_sets[0]['code']);
 
-		$this->assertEquals('states', $ds->_table);
-		$this->assertEquals('insert', $ds->_mode);
-		$this->assertEquals(3, sizeof($ds->_sets));
-		$this->assertEquals(34, $ds->_sets['id']);
-		$this->assertEquals('Blah', $ds->_sets['state']);
-		$this->assertEquals('BL', $ds->_sets['code']);
+		$this->assertEquals(34, $ds->_sets[1]['id']);
+		$this->assertEquals('Blah', $ds->_sets[1]['state']);
+		$this->assertEquals('BL', $ds->_sets[1]['code']);
 
-		$ds = $dss[2];
-		$this->assertInstanceOf('Core\\Datamodel\\Dataset', $ds);
-		/** @var Core\Datamodel\Dataset $ds */
-
-		$this->assertEquals('states', $ds->_table);
-		$this->assertEquals('insert', $ds->_mode);
-		$this->assertEquals(3, sizeof($ds->_sets));
-		$this->assertEquals(35, $ds->_sets['id']);
-		$this->assertEquals('Foo', $ds->_sets['state']);
-		$this->assertEquals('FO', $ds->_sets['code']);
+		$this->assertEquals(35, $ds->_sets[2]['id']);
+		$this->assertEquals('Foo', $ds->_sets[2]['state']);
+		$this->assertEquals('FO', $ds->_sets[2]['code']);
 	}
 
 	public function testTruncateBasic(){

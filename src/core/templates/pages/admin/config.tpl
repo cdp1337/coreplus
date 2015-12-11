@@ -90,14 +90,11 @@
 	</script>{/script}
 
 	<p class="message-tutorial">
-		The system config is a low-level utility for managing any and all configuration options of your site.
-		If there is a component-provided utility available, it is recommended to use that, as you can break your site
-		if you improperly configure this page.
-		<br/><br/>You've been warned, tread with caution ;)
+		{t 'MESSAGE_SITE_CONFIGURATION_TUTORIAL'}
 	</p>
 
 	<div id="system-config-quicksearch">
-		<input type="text" id="quicksearch" placeholder="Quick Search"/>
+		<input type="text" id="quicksearch" placeholder="{t 'STRING_QUICK_SEARCH'}"/>
 	</div>
 
 	<div id="system-config-form">
@@ -106,6 +103,6 @@
 	</div>
 {else}
 	<p class="message-info">
-		There are no configurable options for your site.
+		{t 'MESSAGE_NO_CONFIGURABLE_OPTIONS_ON_SITE'}
 	</p>
 {/if}

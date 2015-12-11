@@ -48,6 +48,19 @@ class ConfigModel extends Model {
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => 0,
 		],
+		// Added on 2015.11 to keep track of which config options need to be cleaned up on component removal.
+		// Do not enforce this until all components support it.
+		'component'    => [
+			'type'      => Model::ATT_TYPE_STRING,
+			'maxlength' => 48,
+			'required'  => false,
+			'default'   => '',
+			'null'      => false,
+			'form' => array(
+				'type' => 'disabled',
+			),
+			'comment'   => 'The component that registered this config, useful for uninstalling and cleanups',
+		],
 		'default_value' => [
 			'type'    => Model::ATT_TYPE_TEXT,
 			'default' => null,
@@ -229,13 +242,18 @@ class ConfigModel extends Model {
 
 		// RADIO
 		if($opts['type'] == 'radio'){
-			$opts['options'] = ['false' => 'No/False', 'true'  => 'Yes/True'];
+			$opts['options'] = ['false' => t('STRING_NO'), 'true'  => t('STRING_YES')];
 		}
 
 		$key = $this->get('key');
 
 		$gname = substr($key, 1);
 		$gname = ucwords(substr($gname, 0, strpos($gname, '/')));
+
+		// NEW i18n support for config options!
+		$i18nKey = \Core\i18n\I18NLoader::KeyifyString($key);
+		$opts['title'] = t('STRING_CONFIG_' . $i18nKey);
+		$opts['description'] = t('MESSAGE_CONFIG_' . $i18nKey);
 
 		// Generate the title dynamically from either the title attribute or the key attribute.
 		if(!isset($opts['title'])){
@@ -258,9 +276,12 @@ class ConfigModel extends Model {
 		// Description can be set dynamically or pulled from the attributes.
 		if(!isset($opts['description'])){
 			$desc = $this->get('description');
-			if ($this->get('default_value') && $desc) $desc .= ' (default value is ' . $this->get('default_value') . ')';
-			elseif ($this->get('default_value')) $desc = 'Default value is ' . $this->get('default_value');
-
+			if ($this->get('default_value') && $desc){
+				$desc .= ' (' . t('MESSAGE_DEFAULT_VALUE_IS_S_', $this->get('default_value')) . ')';
+			}
+			elseif($this->get('default_value')) {
+				$desc = t('MESSAGE_DEFAULT_VALUE_IS_S_', $this->get('default_value'));
+			}
 			$opts['description'] = $desc;
 		}
 

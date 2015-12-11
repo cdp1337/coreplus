@@ -22,6 +22,7 @@
  */
 
 namespace Core\Utilities\Profiler;
+use Core\i18n\I18NLoader;
 
 
 /**
@@ -179,15 +180,16 @@ class Profiler {
 		$out = '';
 		foreach ($this->getEvents() as $t) {
 			$in = round($t['timetotal'], 5) * 1000;
+			$dcm = I18NLoader::GetLocaleConv('decimal_point');
 
 			if ($in == 0){
-				$time = '0000.00 ms';
+				$time = '0000' . $dcm . '00 ms';
 			}
 			else{
-				$parts = explode('.', $in);
+				$parts = explode($dcm, $in);
 				$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
 				$dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
-				$time = $whole . '.' . $dec . ' ms';
+				$time = $whole . $dcm . $dec . ' ms';
 			}
 
 			$mem = '[mem: ' . \Core\Filestore\format_size($t['memory']) . '] ';

@@ -37,6 +37,8 @@ class Email {
 	 */
 	private $_mailer;
 
+	private $_encryption;
+
 	/**
 	 * The template to render this view with.
 	 * Should be the partial path of the template, including emails/
@@ -60,6 +62,7 @@ class Email {
 	public function getTemplate() {
 		if (!$this->_template) {
 			$this->_view = new View();
+			$this->_view->mode = View::MODE_EMAILORPRINT;
 			$this->_view->templatename = $this->templatename;
 
 			if(ConfigHandler::Get('/theme/default_email_template')){
@@ -270,6 +273,15 @@ class Email {
 	}
 
 	/**
+	 * Enable encryption on this email.
+	 *
+	 * @param string $fingerprint
+	 */
+	public function setEncryption($fingerprint){
+		$this->_encryption = $fingerprint;
+	}
+
+	/**
 	 * Send the message
 	 *
 	 * @throws phpmailerException
@@ -341,6 +353,57 @@ class Email {
 			$m->MsgHTML($body);
 		}
 
+		if($this->_encryption){
+			// Encrypt this message, (both HTML and Alt), and all attachments.
+			// I need to request the full EML from phpMailer so I can encrypt everything.
+			// Then, the body will be recreated after Send is called.
+			$m->PreSend();
+			$header = $m->CreateHeader();
+			$body   = $m->CreateBody();
+			$gpg    = new \Core\GPG\GPG();
+
+			if($this->_encryption === true){
+				// This is allowed for mutliple recipients!
+				// This requires a little more overhead, as I need to lookup each recipient's user account
+				// to retrieve their GPG key.
+				$recipients = $m->getToAddresses();
+
+				foreach($recipients as $dat){
+					$email = $dat[0];
+					$user = UserModel::Find(['email = ' . $email], 1);
+					if(!$user){
+						SystemLogModel::LogErrorEvent('/core/email/failed', 'Unable to locate GPG key for ' . $email . ', cannot send encrypted email to recipient!');
+					}
+					else{
+						$key = $user->get('/user/gpgauth/pubkey');
+						if(!$key){
+							SystemLogModel::LogErrorEvent('/core/email/failed', 'No GPG key uploaded for ' . $email . ', cannot send encrypted email to recipient!');
+						}
+						else{
+							$enc = $gpg->encryptData($header . $body, $key);
+
+							// Create a clone of the email object to send this data.
+							/** @var PHPMailer $clone */
+							$clone = clone $m;
+							$clone->ClearAddresses();
+							$clone->AddAddress($email);
+							$clone->Body = $enc;
+							$clone->AltBody = '';
+							$clone->Send();
+						}
+					}
+				}
+				return true;
+			}
+			else{
+				// Single recipient!
+				$enc = $gpg->encryptData($header . $body, $this->_encryption);
+
+				$m->Body = $enc;
+				$m->AltBody = '';
+				return $m->Send();
+			}
+		}
 
 		return $m->Send();
 	}

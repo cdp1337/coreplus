@@ -1,11 +1,11 @@
 <div class="user-loginfull-widget">
 	{if $user}
-		<h2>WELCOME {$user->getDisplayName()}</h2>
+		<h2>{t 'STRING_WELCOME'} {$user->getDisplayName()}</h2>
 		{a href="/user/me"}
 			{img src="`$user.avatar`" placeholder="person" width="100" height="200"}
 		{/a}<br/>
 
-		{a href="/User/Logout"}Logout{/a}
+		{a href="/user/logout"}{t 'STRING_LOGOUT'}{/a}
 	{else}
 		{**
 		 * An alternative to this if you so please is to do:

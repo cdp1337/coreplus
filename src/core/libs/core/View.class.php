@@ -351,6 +351,20 @@ class View {
 	}
 
 	/**
+	 * Get the title of this page, (with automatic i18n translation)
+	 *
+	 * @return string
+	 */
+	public function getTitle(){
+		if(strpos($this->title, 't:') === 0){
+			return t(substr($this->title, 2));
+		}
+		else{
+			return $this->title;
+		}
+	}
+
+	/**
 	 * Override a template, useful for forcing a different template type for this view.
 	 *
 	 * @param $template Core\Templates\TemplateInterface
@@ -625,9 +639,9 @@ class View {
 			$template->assign('seotitle', $this->meta['title']);
 		}
 		else{
-			$template->assign('seotitle', $this->title);
+			$template->assign('seotitle', $this->getTitle());
 		}
-		$template->assign('title', $this->title);
+		$template->assign('title', $this->getTitle());
 		$template->assign('body', $body);
 
 		// The body needs some custom classes for assisting the designers.
@@ -1033,6 +1047,11 @@ class View {
 			$link = \Core\resolve_link($link);
 		}
 
+		// New support for i18n strings!
+		if(strpos($title, 't:') === 0){
+			$title = t(substr($title, 2));
+		}
+
 		$this->breadcrumbs[] = array(
 			'title' => $title,
 			'link'  => $link
@@ -1067,7 +1086,7 @@ class View {
 		$crumbs = $this->breadcrumbs;
 		if ($this->title){
 			$crumbs[] = [
-				'title' => $this->title,
+				'title' => $this->getTitle(),
 				'link'  => null
 			];
 		}

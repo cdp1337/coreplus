@@ -25,6 +25,7 @@ namespace Core\Filestore;
 
 use Core\Filestore\CDN;
 use Core\Filestore\FTP\FTPConnection;
+use Core\i18n\I18NLoader;
 
 
 /**
@@ -42,7 +43,8 @@ function format_size($filesize, $round = 2) {
 		$c++;
 		$filesize = $filesize / 1024;
 	}
-	return (round($filesize, $round) . ' ' . $suf[$c]);
+
+	return I18NLoader::FormatNumber($filesize, $round) . ' ' . $suf[$c];
 }
 
 /**

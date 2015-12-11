@@ -6,6 +6,11 @@
 		<li>User Name: {$user->getDisplayName()}</li>
 		<li>Email: {$user.email}</li>
 		<li>Member Since: {date format="FD" $user.created}</li>
+		{if $user->get('/user/gpgauth/pubkey')}
+			<li>
+				GPG Public Key: {$user->get('/user/gpgauth/pubkey')}
+			</li>
+		{/if}
 		{foreach $user->getConfigObjects() as $c}
 			{if $c.value && !$c.UserConfig.hidden}
 				<li>{$c.UserConfig.name}: {$c.value}</li>

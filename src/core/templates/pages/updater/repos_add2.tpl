@@ -8,11 +8,16 @@
 <h3>Embedded Keys: </h3>
 <div class="repo-keys">
 	{if sizeof($keys)}
-		<p>The following keys will be imported automatically!</p>
+		<p>The following keys will be installed automatically!</p>
 		<ul>
 			{foreach $keys as $key}
 				<li>
-					Public key {$key.id} Registered to {$key.name} &lt;{$key.email}&gt;
+					<p>
+						{$key.fingerprint}
+						{foreach $key.uids as $u}
+							<br/>{$u.name} &lt;{$u.email}&gt;
+						{/foreach}
+					</p>
 				</li>
 			{/foreach}
 		</ul>

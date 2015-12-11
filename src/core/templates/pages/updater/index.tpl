@@ -5,7 +5,7 @@
 
 {if $sitecount == 0}
 	<p class="message-info">
-		There are no update repositories available! {a href='updater/repos/add'}Add One?{/a}
+		There are no update repositories available! {a href='updater/repos/add' class="button"}Add Repository{/a}
 	</p>
 {else}
 	<p>

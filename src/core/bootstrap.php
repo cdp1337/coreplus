@@ -460,6 +460,8 @@ if(!is_dir(TMP_DIR)){
 if (!defined('GPG_HOMEDIR')) {
 	define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
+// PECL expects this variable to be set, so set it!
+putenv('GNUPGHOME=' . GPG_HOMEDIR);
 
 if(!defined('XHPROF')){
 	define('XHPROF', 0);
@@ -503,8 +505,8 @@ try {
 	$dbconn = DMI::GetSystemDMI();
 	ConfigHandler::_DBReadyHook();
 }
-// This catch statement should be hit anytime the database is not available,
-// core table doesn't exist, or the like.
+	// This catch statement should be hit anytime the database is not available,
+	// core table doesn't exist, or the like.
 catch (Exception $e) {
 	error_log($e->getMessage());
 	// Couldn't establish connection... do something fun!
@@ -599,7 +601,7 @@ if (EXEC_MODE == 'WEB') {
 			die("Please <a href=\"{$newURL}\">install Core Plus.</a>");
 		}
 		else {
-            require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
+			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 			die();
 		}
 	}

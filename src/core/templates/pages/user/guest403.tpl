@@ -1,5 +1,9 @@
 <p class="message-info">
-	Please login {if $registerform}or create an account {/if} to view this page.
+	{if $registerform}
+		{t 'MESSAGE_PLEASE_LOG_IN_OR_REGISTER_TO_VIEW'}
+	{else}
+		{t 'MESSAGE_PLEASE_LOG_IN_TO_VIEW'}
+	{/if}
 </p>
 
 <!--
@@ -19,7 +23,7 @@
 
 	<fieldset id="user-login-existing" class="user-login-existing clearfix {$column_count}">
 		<div class="user-login-section-heading clearfix">
-			Login to your existing account.
+			{t 'MESSAGE_LOG_IN_TO_EXISTING_ACCOUNT'}
 		</div>
 
 		{**
@@ -44,7 +48,7 @@
 		<fieldset id="user-login-register" class="user-login-register">
 
 			<div class="user-login-section-heading clearfix">
-				Sign up for an account!
+				{t 'MESSAGE_REGISTER_A_NEW_ACCOUNT'}
 			</div>
 
 			<br/>

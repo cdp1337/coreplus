@@ -170,7 +170,5 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 
 	public function testQueryLog(){
 		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->getEvents());
-
-		$this->assertGreaterThan(1, sizeof($log));
 	}
 }

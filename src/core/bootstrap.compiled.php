@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 26 Oct 2015 20:23:10 -0400
+ * @compiled Thu, 10 Dec 2015 21:33:28 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -75,6 +75,7 @@ umask(0);
 ### REQUIRE_ONCE FROM core/libs/core/utilities/profiler/Profiler.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Utilities\Profiler {
+use Core\i18n\I18NLoader;
 class Profiler {
 private $_name;
 private $_events = array();
@@ -130,14 +131,15 @@ public function getEventTimesFormatted(){
 $out = '';
 foreach ($this->getEvents() as $t) {
 $in = round($t['timetotal'], 5) * 1000;
+$dcm = I18NLoader::GetLocaleConv('decimal_point');
 if ($in == 0){
-$time = '0000.00 ms';
+$time = '0000' . $dcm . '00 ms';
 }
 else{
-$parts = explode('.', $in);
+$parts = explode($dcm, $in);
 $whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
 $dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
-$time = $whole . '.' . $dec . ' ms';
+$time = $whole . $dcm . $dec . ' ms';
 }
 $mem = '[mem: ' . \Core\Filestore\format_size($t['memory']) . '] ';
 $event = $t['event'];
@@ -461,6 +463,14 @@ define('COLOR_RESET', "</span>");
 define('NBSP', '&nbsp;');
 }
 unset($em, $rpdr, $rwdr, $rip);
+define('SECONDS_ONE_MINUTE', 60);
+define('SECONDS_ONE_HOUR',   3600);
+define('SECONDS_TWO_HOUR',   7200);
+define('SECONDS_ONE_DAY',    86400);
+define('SECONDS_ONE_WEEK',   604800);  // 7 days
+define('SECONDS_TWO_WEEK',   1209600); // 14 days
+define('SECONDS_ONE_MONTH',  2592000); // 30 days
+define('SECONDS_TWO_MONTH',  5184000); // 60 days
 
 
 Core\Utilities\Logger\write_debug('Starting Application');
@@ -2567,7 +2577,7 @@ $this->_setLinkKeyPropagation($k, $v);
 if($keydat['encrypted']){
 $this->decryptData();
 $this->_datadecrypted[$k] = $v;
-$this->_data[$k] = $this->encryptValue($v);
+$this->_data[$k] = self::EncryptValue($v);
 }
 else{
 $this->_data[$k] = $v;
@@ -2806,21 +2816,7 @@ if($this->_datadecrypted === null){
 $this->_datadecrypted = [];
 foreach($this->getKeySchemas() as $k => $v){
 if($v['encrypted']){
-$payload = $this->_data[$k];
-if($payload === null || $payload === '' || $payload === false){
-$this->_datadecrypted[$k] = null;
-continue;
-}
-preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $payload, $matches);
-$cipher = $matches[1];
-$passes = $matches[2];
-$size = openssl_cipher_iv_length($cipher);
-$dec = substr($payload, strlen($cipher) + 5, 0-$size);
-$iv = substr($payload, 0-$size);
-for($i=0; $i<$passes; $i++){
-$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-}
-$this->_datadecrypted[$k] = $dec;
+$this->_datadecrypted[$k] = self::DecryptValue($this->_data[$k]);
 }
 }
 }
@@ -3095,20 +3091,6 @@ return $idx;
 $this->_linkIndexCache[$name] = null;
 return null;
 }
-protected function encryptValue($value){
-$cipher = 'AES-256-CBC';
-$passes = 10;
-$size = openssl_cipher_iv_length($cipher);
-$iv = mcrypt_create_iv($size, MCRYPT_RAND);
-if($value === '') return '';
-elseif($value === null) return null;
-$enc = $value;
-for($i=0; $i<$passes; $i++){
-$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
-}
-$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
-return $payload;
-}
 protected function _getCacheKey() {
 if (!$this->_cacheable) return false;
 $i = self::GetIndexes();
@@ -3206,6 +3188,35 @@ usort($ret, function($a, $b) {
 return $a->relevancy < $b->relevancy;
 });
 return $ret;
+}
+public static function EncryptValue($value){
+$cipher = 'AES-256-CBC';
+$passes = 10;
+$size = openssl_cipher_iv_length($cipher);
+$iv = mcrypt_create_iv($size, MCRYPT_RAND);
+if($value === '') return '';
+elseif($value === null) return null;
+$enc = $value;
+for($i=0; $i<$passes; $i++){
+$enc = openssl_encrypt($enc, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+}
+$payload = '$' . $cipher . '$' . str_pad($passes, 2, '0', STR_PAD_LEFT) . '$' . $enc . $iv;
+return $payload;
+}
+public static function DecryptValue($payload) {
+if($payload === null || $payload === '' || $payload === false){
+return null;
+}
+preg_match('/^\$([^$]*)\$([0-9]*)\$(.*)$/m', $payload, $matches);
+$cipher = $matches[1];
+$passes = $matches[2];
+$size = openssl_cipher_iv_length($cipher);
+$dec = substr($payload, strlen($cipher) + 5, 0-$size);
+$iv = substr($payload, 0-$size);
+for($i=0; $i<$passes; $i++){
+$dec = openssl_decrypt($dec, $cipher, SECRET_ENCRYPTION_PASSPHRASE, true, $iv);
+}
+return $dec;
 }
 public static function GetTableName() {
 static $_tablenames = [];
@@ -4720,8 +4731,7 @@ return 0.000;
 }
 $order = log10($score);
 $seconds = time() - $created;
-$secs_per_month = 86400 * 28.5;
-$months = $seconds / ($secs_per_month * 2);
+$months = $seconds / SECONDS_TWO_MONTH;
 $months = max($months, 0.5);
 $long_number = $order - $months;
 $long_number += 10;
@@ -4795,7 +4805,7 @@ return 'page-cache-index-' . $this->get('site') . '-' . md5($this->get('baseurl'
 }
 public function purgePageCache(){
 $indexkey = $this->getIndexCacheKey();
-$index = \Core\Cache::Get($indexkey, 86400);
+$index = \Core\Cache::Get($indexkey);
 if($index && is_array($index)){
 foreach($index as $key){
 \Core\Cache::Delete($key);
@@ -6109,21 +6119,21 @@ $a[] = array(
 }
 if($usermanager){
 $a[] = array(
-'title' => 'View',
+'title' => t('STRING_VIEW'),
 'icon' => 'view',
 'link' => '/user/view/' . $userid,
 );
 }
 elseif($selfaccount){
 $a[] = array(
-'title' => 'View',
+'title' => t('STRING_VIEW'),
 'icon' => 'view',
 'link' => '/user/me',
 );
 }
 if($usermanager || $selfaccount){
 $a[] = array(
-'title' => 'Edit',
+'title' => t('STRING_EDIT'),
 'icon' => 'edit',
 'link' => '/user/edit/' . $userid,
 );
@@ -6450,6 +6460,17 @@ public static $Schema = array(
 'type' => Model::ATT_TYPE_BOOL,
 'default' => 0,
 ],
+'component'    => [
+'type'      => Model::ATT_TYPE_STRING,
+'maxlength' => 48,
+'required'  => false,
+'default'   => '',
+'null'      => false,
+'form' => array(
+'type' => 'disabled',
+),
+'comment'   => 'The component that registered this config, useful for uninstalling and cleanups',
+],
 'default_value' => [
 'type'    => Model::ATT_TYPE_TEXT,
 'default' => null,
@@ -6588,11 +6609,14 @@ if(($opts['type'] == 'select' || $opts['type'] == 'checkboxes') && trim($this->g
 $opts['options'] =  array_map('trim', explode('|', $this->get('options')));
 }
 if($opts['type'] == 'radio'){
-$opts['options'] = ['false' => 'No/False', 'true'  => 'Yes/True'];
+$opts['options'] = ['false' => t('STRING_NO'), 'true'  => t('STRING_YES')];
 }
 $key = $this->get('key');
 $gname = substr($key, 1);
 $gname = ucwords(substr($gname, 0, strpos($gname, '/')));
+$i18nKey = \Core\i18n\I18NLoader::KeyifyString($key);
+$opts['title'] = t('STRING_CONFIG_' . $i18nKey);
+$opts['description'] = t('MESSAGE_CONFIG_' . $i18nKey);
 if(!isset($opts['title'])){
 if($this->get('title')){
 $opts['title'] = $this->get('title');
@@ -6607,8 +6631,12 @@ $opts['title'] = $title;
 }
 if(!isset($opts['description'])){
 $desc = $this->get('description');
-if ($this->get('default_value') && $desc) $desc .= ' (default value is ' . $this->get('default_value') . ')';
-elseif ($this->get('default_value')) $desc = 'Default value is ' . $this->get('default_value');
+if ($this->get('default_value') && $desc){
+$desc .= ' (' . t('MESSAGE_DEFAULT_VALUE_IS_S_', $this->get('default_value')) . ')';
+}
+elseif($this->get('default_value')) {
+$desc = t('MESSAGE_DEFAULT_VALUE_IS_S_', $this->get('default_value'));
+}
 $opts['description'] = $desc;
 }
 if(!isset($opts['group'])){
@@ -7173,10 +7201,10 @@ $v1    = $this->major . '.' . $this->minor . '.' . $this->point;
 $v2    = $other->major . '.' . $other->minor . '.' . $other->point;
 $check = version_compare($v1, $v2);
 if($check == 0 && $this->user && $other->user){
-$check = version_compare($this->user, $other->user);
+$check = version_compare('1.0' . $this->user, '1.0' . $other->user);
 }
 if($check == 0 && ($this->stability || $other->stability)){
-$check = version_compare($this->stability, $other->stability);
+$check = version_compare('1.0' . $this->stability, '1.0' . $other->stability);
 }
 if ($operation === null){
 return $check;
@@ -8203,6 +8231,7 @@ $action = $install ? 'Installing' : 'Uninstalling';
 $set    = $install ? 'Set' : 'Removed';
 Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
 $node = $this->_xmlloader->getElement('configs');
+$componentName = $this->getKeyName();
 foreach ($node->getElementsByTagName('config') as $confignode) {
 $key         = $confignode->getAttribute('key');
 $options     = $confignode->getAttribute('options');
@@ -8228,6 +8257,7 @@ $m->set('description', $description);
 $m->set('mapto', $mapto);
 $m->set('encrypted', $encrypted);
 $m->set('form_attributes', $formAtts);
+$m->set('component', $componentName);
 if ($m->get('value') === null || !$m->exists()){
 $m->set('value', $confignode->getAttribute('default'));
 }
@@ -8973,13 +9003,47 @@ return page_request()->getReferrer();
 function RecordNavigation(\PageModel $page){
 trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
-function SetMessage($messageText, $messageType = 'info'){
-\Core::SetMessage($messageText, $messageType);
+function set_message($messageText, $messageType = 'info'){
+if(strpos($messageText, 'MESSAGE_') === 0){
+if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
+$messageType = 'success';
 }
-function AddMessage($messageText, $messageType = 'info'){
-\Core::SetMessage($messageText, $messageType);
+elseif(strpos($messageText, 'MESSAGE_ERROR_') === 0){
+$messageType = 'error';
 }
-function GetMessages($returnSorted = FALSE, $clearStack = TRUE){
+elseif(strpos($messageText, 'MESSAGE_TUTORIAL_') === 0){
+$messageType = 'tutorial';
+}
+elseif(strpos($messageText, 'MESSAGE_WARNING_') === 0){
+$messageType = 'warning';
+}
+elseif(strpos($messageText, 'MESSAGE_INFO_') === 0){
+$messageType = 'info';
+}
+else{
+$messageType = 'info';
+}
+if(func_num_args() > 1){
+$messageText = call_user_func_array('t', func_get_args());
+}
+else{
+$messageText = t($messageText);
+}
+}
+if(EXEC_MODE == 'CLI'){
+$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
+echo "[" . $messageType . "] - " . $messageText . "\n";
+}
+else{
+$stack = Session::Get('message_stack', []);
+$stack[] = array(
+'mtext' => $messageText,
+'mtype' => $messageType,
+);
+Session::Set('message_stack', $stack);
+}
+}
+function get_messages($returnSorted = FALSE, $clearStack = TRUE){
 return \Core::GetMessages($returnSorted, $clearStack);
 }
 function SortByKey($named_recs, $order_by, $rev=false, $flags=0){
@@ -9292,6 +9356,7 @@ namespace  {
 namespace Core\Filestore {
 use Core\Filestore\CDN;
 use Core\Filestore\FTP\FTPConnection;
+use Core\i18n\I18NLoader;
 function format_size($filesize, $round = 2) {
 $suf = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
 $c   = 0;
@@ -9299,7 +9364,7 @@ while ($filesize >= 1024) {
 $c++;
 $filesize = $filesize / 1024;
 }
-return (round($filesize, $round) . ' ' . $suf[$c]);
+return I18NLoader::FormatNumber($filesize, $round) . ' ' . $suf[$c];
 }
 function get_asset_path(){
 static $_path;
@@ -13099,6 +13164,16 @@ if(!$this->content) return array();
 return array('name' => '<meta name="name" content="' . str_replace('"', '&quot;', $this->content) . '"/>');
 }
 }
+class ViewMeta_title extends ViewMeta {
+public function __toString(){
+if(strpos($this->content, 't:') === 0){
+return t(substr($this->content, 2));
+}
+else{
+return $this->content;
+}
+}
+}
 class ViewMeta_author extends ViewMeta {
 public function __toString(){
 if(is_subclass_of($this->content, 'User')){
@@ -13469,6 +13544,16 @@ echo $borderinner . "\n";
 } // ENDING NAMESPACE Core\ErrorManagement
 
 namespace  {
+
+### REQUIRE_ONCE FROM core/functions/global.php
+function t(){
+$params   = func_get_args();
+$key      = $params[0];
+$string = new \Core\i18n\I18NString($key);
+$string->setParameters($params);
+return $string->getTranslation();
+}
+
 
 
 
@@ -14008,7 +14093,7 @@ return null;
 public static function GetStandardHTTPHeaders($forcurl = false, $autoclose = false) {
 $headers = array(
 'User-Agent: Core Plus ' . self::GetComponent()->getVersion() . ' (http://corepl.us)',
-'Servername: ' . SERVERNAME,
+'Referer: ' . SERVERNAME,
 );
 if ($autoclose) {
 $headers[] = 'Connection: close';
@@ -14105,6 +14190,19 @@ return Core::VersionCompare($self->_components[$name]->getVersionInstalled(), $v
 else{
 return true;
 }
+}
+public static function IsComponentReady($name){
+if(!self::IsComponentAvailable($name)){
+return 'Component ' . $name . ' is not available!';
+}
+$self = self::Singleton();
+$name = strtolower($name);
+$c = $self->_components[$name];
+$attr = $c->getRootDOM()->getAttribute('isready');
+if($attr === null || $attr === ''){
+return true;
+}
+return call_user_func($attr);
 }
 public static function IsInstalled() {
 return Core::Singleton()->_isInstalled();
@@ -14685,6 +14783,7 @@ die($contents);
 if (!defined('GPG_HOMEDIR')) {
 define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
 }
+putenv('GNUPGHOME=' . GPG_HOMEDIR);
 if(!defined('XHPROF')){
 define('XHPROF', 0);
 }
@@ -17131,6 +17230,67 @@ public $aol_version                  = null;
 protected static $_Cache = [];
 public function __construct($useragent = null) {
 if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+if(class_exists('DeviceDetector\\DeviceDetector')){
+$dd = new \DeviceDetector\DeviceDetector($useragent);
+$dd->parse();
+$this->useragent = $useragent;
+$c = $dd->getClient();
+if($c !== null){
+$this->browser = $c['name'];
+$this->version = $c['version'];
+$this->rendering_engine_name = isset($c['engine']) ? $c['engine'] : null;
+if($this->rendering_engine_name == 'Text-based' && $this->browser == 'Lynx'){
+$this->rendering_engine_name = 'libwww-FM';
+}
+}
+elseif(($bot = $dd->getBot()) !== null){
+$this->browser = $bot['name'];
+}
+elseif(strpos($this->useragent, 'Core Plus') !== false){
+$this->browser = 'Core Plus';
+$this->version = preg_replace('#.*Core Plus ([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'MJ12 Bot'){
+$this->version = preg_replace('#.*MJ12bot/v([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'BingBot'){
+$this->version = preg_replace('#.*bingbot/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'Baidu Spider'){
+$this->version = preg_replace('#.*Baiduspider/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+$os = $dd->getOs();
+if($os !== null && sizeof($os)){
+$this->platform = $os['name'];
+$this->platform_architecture = $os['platform'];
+$this->platform_version = $os['version'];
+}
+if($this->platform == 'Mac'){
+$this->platform = 'MacOSX';
+$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
+$this->platform_version = str_replace('_', '.', $this->platform_version);
+}
+if($this->platform == 'iOS'){
+$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
+$this->platform_version = str_replace('_', '.', $this->platform_version);
+}
+if($this->platform == 'Android'){
+$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+}
+if($this->platform_architecture == 'x64'){
+$this->platform_architecture = 'x86';
+$this->platform_bits = 64;
+}
+elseif($this->platform_architecture == 'x86'){
+$this->platform_bits = 32;
+}
+$this->crawler = $dd->isBot();
+$this->is_mobile_device = $dd->isMobile();
+$this->device_maker = $dd->getBrandName();
+$this->device_name = $dd->getModel();
+$this->_fixVersion();
+}
+else{
 $data = self::_LoadData();
 if(!isset($data['patterns'])){
 $data['patterns'] = [];
@@ -17167,12 +17327,168 @@ $prop = self::$Map[$key];
 $this->$prop = $value;
 }
 }
+if($this->browser == 'Default Browser' || $this->browser === null){
+if(stripos($this->useragent, 'iceweasel/') !== false){
+$this->browser = 'Iceweasel';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+}
+elseif(stripos($this->useragent, 'firefox/') !== false){
+$this->browser = 'Firefox';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+}
+elseif(stripos($this->useragent, 'googlebot/') !== false){
+$this->browser = 'Googlebot';
+$this->rendering_engine_name = '';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+$this->crawler = true;
+}
+elseif(stripos($this->useragent, 'msie ') !== false){
+$this->browser = 'IE';
+$this->javascript = true;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+$this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
+}
+elseif(stripos($this->useragent, 'lynx/') !== false){
+$this->browser = 'Lynx';
+$this->javascript = false;
+$this->cookies = true;
+$this->tables = true;
+$this->frames = true;
+$this->iframes = true;
+$this->crawler = false;
+}
+elseif(stripos($this->useragent, 'wget/') !== false){
+$this->browser = 'Wget';
+$this->javascript = false;
+$this->cookies = false;
+}
+elseif(stripos($this->useragent, 'MJ12bot/') !== false){
+$this->browser = 'MJ12 Bot';
+$this->javascript = false;
+$this->cookies = false;
+$this->crawler = true;
+}
+elseif(stripos($this->useragent, 'bingbot/') !== false){
+$this->browser = 'BingBot';
+$this->javascript = false;
+$this->cookies = false;
+$this->crawler = true;
+}
+elseif(stripos($this->useragent, 'Baiduspider/') !== false){
+$this->browser = 'Baidu Spider';
+$this->javascript = false;
+$this->cookies = false;
+$this->crawler = true;
+}
+elseif(strpos($this->useragent, 'Core Plus') !== false){
+$this->browser = 'Core Plus';
+$this->version = preg_replace('#.*Core Plus ([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+}
+switch($this->platform){
+case 'WinXP':
+case 'Win32':
+$this->platform = 'Windows';
+$this->platform_version = 'XP';
+break;
+case 'WinVista':
+$this->platform = 'Windows';
+$this->platform_version = 'Vista';
+break;
+case 'Win7':
+$this->platform = 'Windows';
+$this->platform_version = '7';
+break;
+case 'Win8':
+$this->platform = 'Windows';
+$this->platform_version = '8';
+break;
+case 'Win8.1':
+$this->platform = 'Windows';
+$this->platform_version = '8.1';
+break;
+case 'Win10':
+$this->platform = 'Windows';
+$this->platform_version = '10';
+break;
+case 'Linux':
+if(strpos($this->useragent, 'Ubuntu') !== false){
+$this->platform = 'Ubuntu';
+}
+else{
+$this->platform = 'GNU/Linux';
+}
+break;
+case 'GNU/Linux':
+if(strpos($this->useragent, 'Ubuntu') !== false){
+$this->platform = 'Ubuntu';
+}
+break;
+case 'MacOSX':
+$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
+$this->platform_version = str_replace('_', '.', $this->platform_version);
+break;
+case 'Android':
+$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
+$this->is_mobile_device = true;
+break;
+case 'iOS':
+$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
+$this->platform_version = str_replace('_', '.', $this->platform_version);
+$this->is_mobile_device = true;
+break;
+}
+if($this->browser == 'Firefox' && stripos($this->useragent, 'iceweasel/') !== false){
+$this->browser = 'Iceweasel';
+$this->version = preg_replace('#.*Iceweasel/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'MJ12 Bot'){
+$this->version = preg_replace('#.*MJ12bot/v([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'BingBot'){
+$this->version = preg_replace('#.*bingbot/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'Baidu Spider'){
+$this->version = preg_replace('#.*Baiduspider/([0-9]+\.[0-9]+).*#', '$1', $this->useragent);
+}
+if($this->browser == 'IE'){
+$this->browser = 'Internet Explorer';
+}
+$this->_fixVersion();
+if($this->browser == 'Chrome'){
+$this->rendering_engine_name = $this->version >= 28 ? 'Blink' : 'WebKit';
+}
+if($this->browser == 'Safari' && $this->rendering_engine_name == 'WebKit' && $this->version >= 28){
+$this->rendering_engine_name = 'Blink';
+}
+if($this->is_mobile_device && $this->browser == 'Safari'){
+$this->browser = 'Mobile Safari';
+}
+if($this->is_mobile_device && $this->browser == 'Android'){
+$this->browser = 'Android Browser';
+}
+}
 if($this->platform == 'unknown' || $this->platform === null){
 if(stripos($this->useragent, 'Ubuntu') !== false){
 $this->platform = 'Ubuntu';
 }
 elseif(stripos($this->useragent, 'linux') !== false){
-$this->platform = 'Linux';
+$this->platform = 'GNU/Linux';
 }
 elseif(stripos($this->useragent, 'windows nt 5.0') !== false){
 $this->platform = 'Windows';
@@ -17212,118 +17528,8 @@ $this->platform_version = '8.0';
 $this->is_mobile_device = true;
 }
 elseif(stripos($this->useragent, 'mozilla/5.0 (mobile;') !== false){
-$this->platform = 'FirefoxOS';
+$this->platform = 'Firefox OS';
 $this->is_mobile_device = true;
-}
-}
-switch($this->platform){
-case 'WinXP':
-$this->platform = 'Windows';
-$this->platform_version = 'XP';
-break;
-case 'WinVista':
-$this->platform = 'Windows';
-$this->platform_version = 'Vista';
-break;
-case 'Win7':
-$this->platform = 'Windows';
-$this->platform_version = '7';
-break;
-case 'Win8':
-$this->platform = 'Windows';
-$this->platform_version = '8';
-break;
-case 'Win8.1':
-$this->platform = 'Windows';
-$this->platform_version = '8.1';
-break;
-case 'Win10':
-$this->platform = 'Windows';
-$this->platform_version = '10';
-break;
-case 'Linux':
-if(strpos($this->useragent, 'Ubuntu') !== false){
-$this->platform = 'Ubuntu';
-}
-break;
-case 'MacOSX':
-$this->platform_version = preg_replace('#.*Mac OS X ([0-9\._]+).*#', '$1', $this->useragent);
-$this->platform_version = str_replace('_', '.', $this->platform_version);
-break;
-case 'Android':
-$this->platform_version = preg_replace('#.*Android ([0-9\.]+);.*#', '$1', $this->useragent);
-$this->is_mobile_device = true;
-break;
-case 'iOS':
-$this->platform_version = preg_replace('#.*OS ([0-9\._]+).*#', '$1', $this->useragent);
-$this->platform_version = str_replace('_', '.', $this->platform_version);
-$this->is_mobile_device = true;
-break;
-}
-if($this->platform_bits === null){
-if($this->platform == 'Windows'){
-if(strpos($this->useragent, 'WOW64') !== false){
-$this->platform_bits = '64';
-}
-else{
-$this->platform_bits = '32';
-}
-}
-elseif($this->platform == 'Linux' || $this->platform == 'Ubuntu'){
-if(strpos($this->useragent, 'x86_64') !== false){
-$this->platform_bits = '64';
-$this->platform_architecture = 'x86';
-}
-elseif(strpos($this->useragent, 'x86') !== false){
-$this->platform_bits = '32';
-$this->platform_architecture = 'x86';
-}
-}
-elseif($this->platform == 'MacOSX'){
-if(strpos($this->useragent, 'Intel Mac') !== false){
-$this->platform_architecture = 'x86';
-}
-}
-}
-if($this->browser == 'Default Browser' || $this->browser === null){
-if(stripos($this->useragent, 'firefox/') !== false){
-$this->browser = 'Firefox';
-$this->javascript = true;
-$this->cookies = true;
-$this->tables = true;
-$this->frames = true;
-$this->iframes = true;
-}
-elseif(stripos($this->useragent, 'googlebot/') !== false){
-$this->browser = 'Googlebot';
-$this->rendering_engine_name = 'WebKit';
-$this->javascript = true;
-$this->cookies = true;
-$this->tables = true;
-$this->frames = true;
-$this->iframes = true;
-$this->crawler = true;
-}
-elseif(stripos($this->useragent, 'msie ') !== false){
-$this->browser = 'IE';
-$this->javascript = true;
-$this->cookies = true;
-$this->tables = true;
-$this->frames = true;
-$this->iframes = true;
-$this->version = preg_replace('#.*MSIE ([0-9\.]+);.*#', '$1', $this->useragent);
-}
-}
-if($this->version == 0.0){
-if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
-$this->version = preg_replace('#.*' . $this->browser . '/([0-9]+)\.([0-9]+).*#', '$1.$2', $this->useragent);
-}
-}
-if($this->major_ver == 0){
-$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
-$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
-if(strpos($this->minor_ver, '.') !== false){
-$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
 }
 }
 if($this->rendering_engine_name == 'unknown' || $this->rendering_engine_name == null){
@@ -17339,6 +17545,43 @@ elseif(stripos($this->useragent, 'trident/') !== false){
 $this->rendering_engine_name = 'Trident';
 $this->rendering_engine_version = preg_replace('#.*trident/([0-9\.]+).*#i', '$1', $this->useragent);
 }
+elseif(strpos($this->useragent, 'MSIE') !== false){
+$this->rendering_engine_name = 'Trident';
+}
+elseif(stripos($this->useragent, 'libwww-fm/') !== false){
+$this->rendering_engine_name = 'libwww-FM';
+$this->rendering_engine_version = preg_replace('#.*libwww-fm/([0-9\.]+).*#i', '$1', $this->useragent);
+}
+}
+if($this->platform_bits === null){
+if($this->platform == 'Windows'){
+if(strpos($this->useragent, 'WOW64') !== false){
+$this->platform_bits = '64';
+$this->platform_architecture = 'x86';
+}
+else{
+$this->platform_bits = '32';
+$this->platform_architecture = 'x86';
+}
+}
+elseif($this->platform == 'GNU/Linux' || $this->platform == 'Ubuntu'){
+if(strpos($this->useragent, 'x86_64') !== false){
+$this->platform_bits = '64';
+$this->platform_architecture = 'x86';
+}
+elseif(strpos($this->useragent, 'x86') !== false){
+$this->platform_bits = '32';
+$this->platform_architecture = 'x86';
+}
+}
+elseif($this->platform == 'MacOSX'){
+if(strpos($this->useragent, 'Intel Mac') !== false){
+$this->platform_architecture = 'x86';
+}
+}
+}
+if($this->platform === null){
+$this->platform = 'unknown';
 }
 }
 public function isBot(){
@@ -17369,9 +17612,26 @@ else{
 return strtolower(implode(';', $a));
 }
 }
+private function _fixVersion(){
+if($this->version == 0.0){
+if(preg_match('#' . $this->browser . '/[0-9\.]+#', $this->useragent) !== 0){
+$this->version = preg_replace('#.*' . $this->browser . '/([0-9]+)\.([0-9]+).*#', '$1.$2', $this->useragent);
+}
+elseif(strpos($this->useragent, ' Version/') !== false){
+$this->version = preg_replace('#.* Version/([0-9\.]+).*#i', '$1', $this->useragent);
+}
+}
+if($this->major_ver == 0){
+$this->major_ver = substr($this->version, 0, strpos($this->version, '.'));
+$this->minor_ver = substr($this->version, strpos($this->version, '.')+1);
+if(strpos($this->minor_ver, '.') !== false){
+$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
+}
+}
+}
 private static function _LoadData() {
 $cachekey = 'useragent-browsecap-data';
-$cachetime = 86400;
+$cachetime = SECONDS_ONE_WEEK;
 $cache = Cache::Get($cachekey, $cachetime);
 if($cache === false){
 $file   = \Core\Filestore\Factory::File('tmp/php_browscap.ini');
@@ -17448,7 +17708,7 @@ $cachekey = 'useragent-constructor-' . md5($useragent);
 $cache = Cache::Get($cachekey);
 if(!$cache){
 $cache = new UserAgent($useragent);
-Cache::Set($cachekey, $cache, 3600);
+Cache::Set($cachekey, $cache, SECONDS_ONE_WEEK);
 }
 return $cache;
 }
@@ -17485,6 +17745,7 @@ const MODE_WIDGET = 'widget';
 const MODE_NOOUTPUT = 'nooutput';
 const MODE_AJAX = 'ajax';
 const MODE_PAGEORAJAX = 'pageorajax';
+const MODE_EMAILORPRINT = 'print';
 const METHOD_GET = 'GET';
 const METHOD_POST = 'POST';
 const METHOD_PUT = 'PUT';
@@ -17550,6 +17811,14 @@ $this->_template = \Core\Templates\Template::Factory($this->templatename);
 $this->_template->setView($this);
 }
 return $this->_template;
+}
+public function getTitle(){
+if(strpos($this->title, 't:') === 0){
+return t(substr($this->title, 2));
+}
+else{
+return $this->title;
+}
 }
 public function overrideTemplate($template){
 if(!is_a($template, 'TemplateInterface')){
@@ -17643,6 +17912,7 @@ switch ($this->mode) {
 case View::MODE_PAGE:
 case View::MODE_AJAX:
 case View::MODE_PAGEORAJAX:
+case View::MODE_EMAILORPRINT:
 $t = $this->getTemplate();
 $html = $t->fetch($tmpl);
 if($this->parent){
@@ -17700,6 +17970,7 @@ case View::MODE_AJAX:
 $mastertpl = false;
 break;
 case View::MODE_PAGE:
+case View::MODE_EMAILORPRINT:
 $mastertpl = Core\Templates\Template::ResolveFile('skins/' . $this->mastertemplate);
 break;
 case View::MODE_WIDGET:
@@ -17719,9 +17990,9 @@ if(isset($this->meta['title']) && $this->meta['title']){
 $template->assign('seotitle', $this->meta['title']);
 }
 else{
-$template->assign('seotitle', $this->title);
+$template->assign('seotitle', $this->getTitle());
 }
-$template->assign('title', $this->title);
+$template->assign('title', $this->getTitle());
 $template->assign('body', $body);
 $ua = \Core\UserAgent::Construct();
 $this->bodyclasses = array_merge($this->bodyclasses, $ua->getPseudoIdentifier(true));
@@ -17777,7 +18048,13 @@ error_log('Template name: [' . $mastertpl . ']');
 require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
-if ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
+if($this->mode == View::MODE_EMAILORPRINT && $this->contenttype == View::CTYPE_HTML){
+HookHandler::DispatchHook('/core/page/rendering', $this);
+if(preg_match('#</head>#i', $data)){
+$data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $data, 1);
+}
+}
+elseif ($this->mode == View::MODE_PAGE && $this->contenttype == View::CTYPE_HTML) {
 HookHandler::DispatchHook('/core/page/rendering', $this);
 if(preg_match('#</head>#i', $data)){
 $data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $data, 1);
@@ -17894,7 +18171,7 @@ View::AddMeta('http-equiv="Content-Type" content="text/html;charset=UTF-8"');
 $data = $this->fetch();
 if (
 !headers_sent() &&
-($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT)
+($this->mode == View::MODE_PAGE || $this->mode == View::MODE_PAGEORAJAX || $this->mode == View::MODE_AJAX || $this->mode == View::MODE_NOOUTPUT || $this->mode == View::MODE_EMAILORPRINT)
 ) {
 switch ($this->error) {
 case View::ERROR_NOERROR:
@@ -17995,6 +18272,9 @@ public function addBreadcrumb($title, $link = null) {
 if ($link !== null && strpos($link, '://') === false){
 $link = \Core\resolve_link($link);
 }
+if(strpos($title, 't:') === 0){
+$title = t(substr($title, 2));
+}
 $this->breadcrumbs[] = array(
 'title' => $title,
 'link'  => $link
@@ -18012,7 +18292,7 @@ public function getBreadcrumbs() {
 $crumbs = $this->breadcrumbs;
 if ($this->title){
 $crumbs[] = [
-'title' => $this->title,
+'title' => $this->getTitle(),
 'link'  => null
 ];
 }
@@ -18642,11 +18922,14 @@ $this->_attributes[$key] = $value;
 }
 break;
 case 'autocomplete':
-if(!$value){
+if($value === false || $value === '0' | $value === 0 || $value === 'off'){
 $this->_attributes[$key] = 'off';
 }
-else{
+elseif($value === true || $value === '1' || $value === 1 || $value === 'on' || $value === ''){
 $this->_attributes[$key] = 'on';
+}
+else{
+$this->_attributes[$key] = \Core\resolve_link($value);
 }
 break;
 case 'persistent':
@@ -19031,12 +19314,21 @@ $this->_models[$prefix] = $model;
 $s = $model->getKeySchemas();
 $i = $model->GetIndexes();
 if (!isset($i['primary'])) $i['primary'] = array();
+$i18nKey = '_MODEL_' . strtoupper(get_class($model)) . '_';
 $new = $model->isnew();
 foreach ($s as $k => $v) {
+$title       = t('STRING' . $i18nKey . strtoupper($k));
+$description = t('MESSAGE' . $i18nKey . strtoupper($k));
+if(!$title && isset($dat['formtitle'])){
+$title = $dat['formtitle'];
+}
+if(!$description && isset($dat['formdescription'])){
+$description = $dat['formdescription'];
+}
 $formatts = array(
 'type' => null,
-'title' => ucwords(str_replace('_', ' ', $k)),
-'description' => null,
+'title' => $title,
+'description' => $description,
 'required' => false,
 'value' => $model->get($k),
 'name' => $prefix . '[' . $k . ']',
@@ -19044,8 +19336,6 @@ $formatts = array(
 $defaults = [];
 if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
 if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
-if(isset($v['formtitle']))       $formatts['title'] = $v['formtitle'];
-if(isset($v['formdescription'])) $formatts['description'] = $v['formdescription'];
 if(isset($v['required']))        $formatts['required'] = $v['required'];
 if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
 if(isset($v['form'])){
@@ -19082,11 +19372,11 @@ $el = FormElement::Factory($formatts['type']);
 }
 elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
 $el = FormElement::Factory('radio');
-$el->set('options', array('Yes', 'No'));
-if ($formatts['value']) $formatts['value'] = 'Yes';
-elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'Yes';
-elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'No';
-else $formatts['value'] = 'No';
+$el->set('options', ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')]);
+if ($formatts['value']) $formatts['value'] = 'yes';
+elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'yes';
+elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'no';
+else $formatts['value'] = 'no';
 }
 elseif ($v['type'] == Model::ATT_TYPE_SITE) {
 $el = FormElement::Factory('system');
@@ -19203,7 +19493,7 @@ $form = $el;
 }
 if (!$form) return;
 if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {
-Core::SetMessage('Form submission type does not match', 'error');
+\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH');
 return;
 }
 if($_SERVER['HTTP_REFERER'] != $form->originalurl){
@@ -19233,7 +19523,7 @@ if(DEVELOPMENT_MODE){
 Core::SetMessage($e->getMessage(), 'error');
 }
 else{
-Core::SetMessage('Oops, something went wrong while submitting the form.  The administrator has been notified of this issue, please try again later.', 'error');
+\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
 }
 Core\ErrorManagement\exception_handler($e);
 $status = false;
@@ -19302,7 +19592,7 @@ $pagedat = PageModel::SplitBaseURL($uri);
 $this->host = SERVERNAME;
 $this->uri = $uri;
 $this->uriresolved = $pagedat['rewriteurl'];
-$this->protocol    = $_SERVER['SERVER_PROTOCOL'];
+$this->protocol    = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
 $this->ext         = $pagedat['extension'];
 $this->ctype       = $pagedat['ctype'];
 $this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
@@ -19592,7 +19882,7 @@ $view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 if(!($theme = ThemeHandler::GetTheme())){
 $theme = ThemeHandler::GetTheme('base-v2');
 $view->mastertemplate = 'basic.tpl';
-Core::SetMessage('You have an invalid theme selected, please fix that!', 'error');
+\Core\set_message('MESSAGE_ERROR_INVALID_THEME_SELECTED');
 }
 if($view->mastertemplate !== false){
 $themeskins = $theme->getSkins();
@@ -19611,7 +19901,10 @@ trigger_error('Invalid skin [' . $view->mastertemplate . '] selected for this pa
 $view->mastertemplate = $themeskins[0]['file'];
 }
 }
-if(!$page->get('indexable')){
+if(\ConfigHandler::Get('/core/page/indexable') == 'deny'){
+$view->addMetaName('robots', 'noindex');
+}
+elseif(!$page->get('indexable')){
 $view->addMetaName('robots', 'noindex');
 }
 if(!isset($view->meta['title'])){
@@ -19662,12 +19955,12 @@ $view->headers['X-Core-Cached-Server'] = 1; // @todo Implement multi-server supp
 $view->headers['X-Core-Cached-Render-Time'] = \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTimeFormatted();
 \Core\Cache::Set($key, $view, $expires);
 $indexkey = $page->getIndexCacheKey();
-$index = \Core\Cache::Get($indexkey, 86400);
+$index = \Core\Cache::Get($indexkey, SECONDS_ONE_DAY);
 if(!$index){
 $index = [];
 }
 $index[] = $key;
-\Core\Cache::Set($indexkey, $index, 86400);
+\Core\Cache::Set($indexkey, $index, SECONDS_ONE_DAY);
 }
 elseif(($reason = $this->isNotCacheableReason()) !== null){
 $view->headers['X-Core-NotCached-Reason'] = $reason;
@@ -19813,14 +20106,15 @@ return ROOT_URL;
 }
 }
 private function _resolveMethod() {
-switch ($_SERVER['REQUEST_METHOD']) {
+$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+switch ($method) {
 case self::METHOD_DELETE:
 case self::METHOD_GET:
 case self::METHOD_HEAD:
 case self::METHOD_POST:
 case self::METHOD_PUSH:
 case self::METHOD_PUT:
-$this->method = $_SERVER['REQUEST_METHOD'];
+$this->method = $method;
 break;
 default:
 $this->method = self::METHOD_GET;
@@ -19864,6 +20158,7 @@ $header = (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) ? $_SERVER['HTTP_ACCEPT_LANG
 $header = explode(',', $header);
 $this->acceptLanguages = array();
 $langs = [];
+$langs['en'] = 0.0;
 foreach ($header as $h) {
 if (strpos($h, ';') === false) {
 $weight  = 1.0; // Do 1.0 to ensure it's parsed as a float and not an int.
@@ -19876,9 +20171,14 @@ $weight = floatval(substr($weight, 3));
 $content = str_replace('-', '_', $content);
 $langs[$content] = $weight;
 }
+if(isset($_COOKIE['LANG'])){
+$langs[ $_COOKIE['LANG'] ] = 2;
+}
 arsort($langs);
 foreach($langs as $l => $w){
+if(preg_match('/^[a-z]{2,3}(_[A-Z]{2})?$/', $l) === 1){
 $this->acceptLanguages[] = $l;
+}
 }
 }
 private function _resolveUAHeader() {
@@ -19888,7 +20188,7 @@ $this->useragent = $ua;
 public static function GetSystemRequest() {
 static $instance = null;
 if ($instance === null) {
-$instance = new PageRequest($_SERVER['REQUEST_URI']);
+$instance = new PageRequest(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null);
 }
 return $instance;
 }
@@ -19896,7 +20196,7 @@ public static function PasswordProtectHandler(Form $form){
 $page = $form->getElementValue('page');
 $val  = $form->getElementValue('passinput');
 if( $val !== $page->get('password_protected') ){
-Core::SetMessage('Wrong password! Try again.','error');
+\Core\set_message('MESSAGE_ERROR_INCORRECT_PASSWORD');
 return false;
 }
 else {

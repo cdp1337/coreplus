@@ -109,7 +109,19 @@ function smarty_block_a($params, $content, $smarty, &$repeat){
 			case 'assign':
 				$assign = $v;
 				break;
+			case 'alt':
+			case 'title':
+			case 'data-confirm':
+				// These all support translation via the "t:" prefix!
+				if(strpos($v, 't:') === 0){
+					$newcontent .= " $k=\"" . str_replace('"', '&quot;', t(substr($v, 2))) . "\"";
+				}
+				else{
+					$newcontent .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
+				}
+			break;
 			default:
+				// Standard non-fun values :p
 				$newcontent .= " $k=\"" . str_replace('"', '&quot;', $v) . "\"";
 		}
 	}

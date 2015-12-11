@@ -1,5 +1,5 @@
 <p class="message-success">
-	Core Plus framework has been successfully installed!
+	{t 'MESSAGE_CORE_PLUS_SUCCESSFULLY_INSTALLED'}
 </p>
 
 {if $isadmin}

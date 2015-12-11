@@ -6,6 +6,11 @@
 		<li>User Name: {$user->getDisplayName()}</li>
 		<li>Email: {$user.email}</li>
 		<li>Member Since: {date format="FD" $user.created}</li>
+		{if $user->get('/user/gpgauth/pubkey')}
+			<li>
+				GPG Public Key: {$user->get('/user/gpgauth/pubkey')}
+			</li>
+		{/if}
 		<li>
 			API Key:
 			<a href="#" class="reveal-hidden-value" data-target="user-apikey">

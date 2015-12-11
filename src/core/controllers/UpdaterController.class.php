@@ -301,17 +301,16 @@ class UpdaterController extends Controller_2_1 {
 				$model->set('description', $repo->getDescription());
 				$model->save();
 				$keysimported = 0;
-				$keycount = sizeof($repo->getKeys());
+				$keycount     = sizeof($repo->getKeys());
+				$gpg          = new \Core\GPG\GPG();
 
-				foreach($repo->getKeys() as $key){
-					$id = strtoupper(preg_replace('/[^a-zA-Z0-9]*/', '', $key['id']));
-					$output = array();
-					exec('gpg --keyserver-options timeout=6 --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --keyserver "hkp://pool.sks-keyservers.net" --recv-keys "' . $id . '"', $output, $result);
-					if($result != 0){
-						Core::SetMessage('Unable to import key [' . $id . '] from keyserver!', 'error');
-					}
-					else{
+				foreach($repo->getKeys() as $keyData){
+					try{
+						$gpg->importKey($keyData['key']);
 						++$keysimported;
+					}
+					catch(Exception $e){
+						Core::SetMessage('Unable to import key [' . $keyData['key'] . '] from keyserver!', 'error');
 					}
 				}
 
