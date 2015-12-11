@@ -38,10 +38,6 @@
 	@include clearfix;
 }
 
-a.button {
-	@include button();
-}
-
 @import "_print";
 
 a.agplv3-tag {

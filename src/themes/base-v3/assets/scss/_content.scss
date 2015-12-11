@@ -24,10 +24,6 @@ section.page-content {
 	margin-top: 2em;
 }
 
-a.button {
-	@include button();
-}
-
 pre code {
 	display: block;
 	padding: 0.5em 1em;
@@ -42,6 +38,30 @@ ul {
 ol {
 	list-style-type: decimal;
 	margin-left: 1em;
+}
+
+h1 {
+	font-size: $h1-font-size;
+}
+
+h2 {
+	font-size: $h2-font-size;
+}
+
+h3 {
+	font-size: $h3-font-size;
+}
+
+h4 {
+	font-size: $h4-font-size;
+}
+
+h5 {
+	font-size: $h5-font-size;
+}
+
+h6 {
+	font-size: $h6-font-size;
 }
 
 aside.markdown-toc {
