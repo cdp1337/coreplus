@@ -190,6 +190,7 @@ class AdminController extends Controller_2_1 {
 
 			// Flush the system cache, just in case
 			\Core\Cache::Flush();
+			\Core\Templates\Backends\Smarty::FlushCache();
 
 			// Increment the version counter.
 			$version = ConfigHandler::Get('/core/filestore/assetversion');

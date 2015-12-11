@@ -157,8 +157,8 @@ class Smarty implements Templates\TemplateInterface {
 			$this->_smarty->caching = \Smarty::CACHING_OFF;
 			//$this->_smarty->caching = DEVELOPMENT_MODE ? \Smarty::CACHING_OFF : \Smarty::CACHING_LIFETIME_SAVED;
 
-			$this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
-			$this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+			$this->_smarty->setCompileDir(TMP_DIR . 'smarty_templates_c');
+			$this->_smarty->setCacheDir(TMP_DIR . 'smarty_cache');
 
 			/**
 			 * @var $force_compile boolean
@@ -492,5 +492,20 @@ class Smarty implements Templates\TemplateInterface {
 	 */
 	public function setView(\View $view) {
 		$this->_view = $view;
+	}
+	
+	public static function FlushCache(){
+		
+		$dir = \Core\Filestore\Factory::Directory(TMP_DIR . 'smarty_templates_c');
+		foreach($dir->ls('php') as $file){
+			/** @var \Core\Filestore\File $file */
+			$file->delete();
+		}
+
+		$dir = \Core\Filestore\Factory::Directory(TMP_DIR . 'smarty_cache');
+		foreach($dir->ls('php') as $file){
+			/** @var \Core\Filestore\File $file */
+			$file->delete();
+		}
 	}
 }

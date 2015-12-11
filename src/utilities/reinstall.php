@@ -256,6 +256,7 @@ foreach(\Core::GetComponents() as $c){
 
 // Flush the system cache, just in case
 \Core\Cache::Flush();
+\Core\Templates\Backends\Smarty::FlushCache();
 
 
 CLI::PrintHeader('DONE!');

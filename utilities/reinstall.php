@@ -362,6 +362,7 @@ if($onlyTheme === null && $onlyComponent === null && $onlyCore === null && !$ass
 
 // Flush the system cache, just in case
 \Core\Cache::Flush();
+\Core\Templates\Backends\Smarty::FlushCache();
 
 
 if($verbosity > 0){

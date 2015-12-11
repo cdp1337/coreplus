@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 11 Dec 2015 12:22:47 -0500
+ * @compiled Fri, 11 Dec 2015 13:52:12 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -16986,8 +16986,8 @@ public function getSmarty(){
 if($this->_smarty === null){
 $this->_smarty = new \Smarty();
 $this->_smarty->caching = \Smarty::CACHING_OFF;
-$this->_smarty->compile_dir = TMP_DIR . 'smarty_templates_c';
-$this->_smarty->cache_dir   = TMP_DIR . 'smarty_cache';
+$this->_smarty->setCompileDir(TMP_DIR . 'smarty_templates_c');
+$this->_smarty->setCacheDir(TMP_DIR . 'smarty_cache');
 $this->_smarty->force_compile = DEVELOPMENT_MODE ? true : false;
 $this->_smarty->compile_check = DEVELOPMENT_MODE ? true : false;
 $this->_smarty->assign('__core_template', $this);
@@ -17139,6 +17139,16 @@ return $this->_view === null ? \Core\view() : $this->_view;
 }
 public function setView(\View $view) {
 $this->_view = $view;
+}
+public static function FlushCache(){
+$dir = \Core\Filestore\Factory::Directory(TMP_DIR . 'smarty_templates_c');
+foreach($dir->ls('php') as $file){
+$file->delete();
+}
+$dir = \Core\Filestore\Factory::Directory(TMP_DIR . 'smarty_cache');
+foreach($dir->ls('php') as $file){
+$file->delete();
+}
 }
 }
 } // ENDING NAMESPACE Core\Templates\Backends
