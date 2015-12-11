@@ -31,7 +31,7 @@ docs LICENSES utilities vendor .gitignore ant.properties.ex build.xml README.md 
 src/components/codemirror src/components/content src/components/coolphpcaptcha src/components/cron \
 src/components/facebook src/components/fontawesome \
 src/components/geographic-codes src/components/google \
-src/components/jquery-full src/components/jquery-file-upload src/components/jquery-hoverintent src/components/jsonjs \
+src/components/jquery-full src/components/jquery-file-upload src/components/jquery-hoverintent \
 src/components/navigation src/components/nonce \
 src/components/phpwhois \
 src/components/security-suite \
