@@ -32,12 +32,10 @@
 				{include file='includes/site_schema_information.tpl'}
 
 				<p class="legal-notice">
-					Licensed under the
+					{t 'STRING_LICENSED_UNDER'}
 					<a href="https://www.gnu.org/licenses/agpl" target="_blank" title="Licensed Under AGPLv3" class="agplv3-tag">AGPLv3</a>.
-
 					&nbsp;&nbsp;
-
-					Powered by the <a href="http://corepl.us" target="_blank">Secure PHP Framework and CMS, Core Plus</a>.
+					{t 'STRING_POWERED_BY'} <a href="http://corepl.us" target="_blank">Secure PHP Framework and CMS, Core Plus</a>.
 				</p>
 			</footer>
 		</div>
