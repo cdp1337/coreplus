@@ -1,0 +1,131 @@
+// Bourbon base styles.
+@import "../../../../themes/base-v3/assets/scss/vendor/bourbon/bourbon";
+
+$colorOutdated2: #ff615d;
+$colorOutdated1: #ffbb77;
+$colorOutdated0: #89d98a;
+$colorCurrent:   #a1abff;
+$colorOther:     #aaa;
+$colorOutline:   #fff;
+
+
+.time-wrapper {
+	
+	.time-graph {
+		height: 300px;
+	}
+	
+	.ct-line {
+		stroke-width: 4px;
+		fill: transparent;
+	}
+	
+	.ct-point {
+		stroke-width: 12px;
+		stroke-linecap: round;
+	}
+
+	.series-other {
+		.ct-line, .ct-point {
+			stroke: $colorOther;
+		}
+		&:hover {
+			.ct-line, .ct-point {
+				stroke: darken($colorOther, 33%);
+			}
+		}
+	}
+	.series-outdated-2 {
+		.ct-line, .ct-point {
+			stroke: $colorOutdated2;
+		}
+		&:hover {
+			.ct-line, .ct-point {
+				stroke: darken($colorOutdated2, 33%);
+			}
+		}
+	}
+	.series-outdated-1 {
+		.ct-line, .ct-point {
+			stroke: $colorOutdated1;
+		}
+		&:hover {
+			.ct-line, .ct-point {
+				stroke: darken($colorOutdated1, 33%);
+			}
+		}
+	}
+	.series-outdated-0{
+		.ct-line, .ct-point {
+			stroke: $colorOutdated0;
+		}
+		&:hover {
+			.ct-line, .ct-point {
+				stroke: darken($colorOutdated0, 33%);
+			}
+		}
+	}
+	.series-current {
+		.ct-line, .ct-point {
+			stroke: $colorCurrent;
+		}
+		&:hover {
+			.ct-line, .ct-point {
+				stroke: darken($colorCurrent, 33%);
+			}
+		}
+	}
+}
+
+
+.versions-wrapper {
+	vertical-align: top;
+	
+	.ct-slice-pie {
+		stroke: $colorOutline;
+		stroke-width: 2px;
+	}
+
+	.series-other .ct-slice-pie {
+		fill: $colorOther;
+	}
+	.series-other .ct-slice-pie:hover {
+		fill: darken($colorOther, 33%);
+	}
+	.series-outdated-2 .ct-slice-pie {
+		fill: $colorOutdated2;
+	}
+	.series-outdated-2 .ct-slice-pie:hover {
+		fill: #ff3631;
+	}
+	.series-outdated-1 .ct-slice-pie {
+		fill: $colorOutdated1;
+	}
+	.series-outdated-1 .ct-slice-pie:hover {
+		fill: #ffa52f;
+	}
+	.series-outdated-0 .ct-slice-pie {
+		fill: $colorOutdated0;
+	}
+	.series-outdated-0 .ct-slice-pie:hover {
+		fill: #44d94a;
+	}
+	.series-current .ct-slice-pie {
+		fill: $colorCurrent;
+	}
+	.series-current .ct-slice-pie:hover {
+		fill: #7383ff;
+	}
+
+	.versions-graph {
+		height:400px;
+		width:400px;
+		display:inline-block;
+		vertical-align: top;
+	}
+	.versions-text {
+		display:inline-block;
+		padding-top: 35px;
+		vertical-align: top;
+	}
+}

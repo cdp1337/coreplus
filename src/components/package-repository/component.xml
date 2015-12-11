@@ -2,33 +2,41 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.4">
 	<configs>
-		<config key="/package_repository/base_directory" description="Base directory of the package files.  This should be the full physical path of the directory on the filesystem, ending with a trailing slash." type="string"/>
-		<config key="/package_repository/is_private" description="Set to true if this is a private repository, (behind a license/password)." default="0" type="boolean"/>
-		<config key="/package_repository/description" description="Description for this repository, (visible publicly)." type="text"/>
-		<config key="/package_repository/auto_ip_restrict" description="Set to true to restrict the IP of the connecting server on first connect. (Only useful for private repositories.)" default="1" type="boolean"/>
+		<config key="/package_repository/base_directory" type="string"/>
+		<config key="/package_repository/is_private" default="0" type="boolean"/>
+		<config key="/package_repository/description" type="text"/>
+		<config key="/package_repository/auto_ip_restrict" default="0" type="boolean"/>
 	</configs>
 	<permissions>
-		<permission key="/package_repository/licenses/manager" description="Manage licenses in the repo"/>
+		<permission key="/package_repository/licenses/manager"/>
+		<permission key="/package_repository/view_analytics"/>
 	</permissions>
 	<pages>
 		<page baseurl="/packagerepository" title="Package Repository" rewriteurl="/repo" indexable="1" admin="0" access="*"/>
-		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="Admin" access="p:/package_repository/licenses/manager"/>
-		<page baseurl="/packagerepository/config" title="Package Repository Configuration" admin="1" access="g:admin" group="Configure"/>
+		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="t:STRING_ADMIN" access="p:/package_repository/licenses/manager"/>
+		<page baseurl="/packagerepository/config" title="Package Repository Configuration" admin="1" access="g:admin" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/packagerepository/analytics" title="t:STRING_PACKAGE_REPOSITORY_ANALYTICS" admin="1" access="p:/package_repository/view_analytics" group="t:STRING_REPORTING"/>
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="89b46c11f42aa4031d59131d9a5aa2df"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="28203430b5bff487a4bea6965a516de1">
+		<file filename="assets/scss/package-repository.scss" md5="f1386c9db81b75b581af931c10ac48fe"/>
+		<file filename="controllers/PackageRepositoryController.php" md5="fdc1c194b0853d49e3d4bfceccad4203">
 			<controller name="PackageRepositoryController"/>
 		</file>
 		<file filename="controllers/PackageRepositoryLicenseController.php" md5="181fa2ec1c74406f03b5238d8503629f">
 			<controller name="PackageRepositoryLicenseController"/>
 		</file>
+		<file filename="i18n/ar.ini" md5="a8b41ec7ee76f305ca4b3372cbf25f6d"/>
+		<file filename="i18n/de.ini" md5="992527fd785e95a33a94bc426b9dc94c"/>
+		<file filename="i18n/en.ini" md5="268b07bba4b3a0fb3202cb569164c2a6"/>
+		<file filename="i18n/fr.ini" md5="2e54ae729dd18fc82a460f349834a5e8"/>
 		<file filename="models/PackageRepositoryLicenseModel.php" md5="e836cd516352361b1ba5ce06138ea1d5">
 			<class name="PackageRepositoryLicenseModel"/>
 		</file>
 	</files>
 	<view>
+		<file filename="templates/pages/packagerepository/analytics.tpl" md5="4b75bd884d0e5095ed62e526df7a29c7"/>
 		<file filename="templates/pages/packagerepository/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/packagerepository/index.tpl" md5="6de5afe57770779ad5165c095a049e39"/>
 		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -44,5 +52,10 @@
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
+	<assets>
+		<file filename="assets/css/package-repository.css" md5="affaed13cc449437ff76f21518160c3d"/>
+		<file filename="assets/css/package-repository.css.map" md5="579dbe0b0860c5436195f12d84adc4bb"/>
+		<file filename="assets/css/package-repository.min.css" md5="50792fffaef0b0023b392ced664cadd6"/>
+	</assets>
 </component>
 

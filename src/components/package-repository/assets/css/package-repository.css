@@ -1,0 +1,119 @@
+/* line 14, ../scss/package-repository.scss */
+.time-wrapper .time-graph {
+  height: 300px;
+}
+/* line 18, ../scss/package-repository.scss */
+.time-wrapper .ct-line {
+  stroke-width: 4px;
+  fill: transparent;
+}
+/* line 23, ../scss/package-repository.scss */
+.time-wrapper .ct-point {
+  stroke-width: 12px;
+  stroke-linecap: round;
+}
+/* line 29, ../scss/package-repository.scss */
+.time-wrapper .series-other .ct-line, .time-wrapper .series-other .ct-point {
+  stroke: #aaa;
+}
+/* line 33, ../scss/package-repository.scss */
+.time-wrapper .series-other:hover .ct-line, .time-wrapper .series-other:hover .ct-point {
+  stroke: #565656;
+}
+/* line 39, ../scss/package-repository.scss */
+.time-wrapper .series-outdated-2 .ct-line, .time-wrapper .series-outdated-2 .ct-point {
+  stroke: #ff615d;
+}
+/* line 43, ../scss/package-repository.scss */
+.time-wrapper .series-outdated-2:hover .ct-line, .time-wrapper .series-outdated-2:hover .ct-point {
+  stroke: #b40400;
+}
+/* line 49, ../scss/package-repository.scss */
+.time-wrapper .series-outdated-1 .ct-line, .time-wrapper .series-outdated-1 .ct-point {
+  stroke: #ffbb77;
+}
+/* line 53, ../scss/package-repository.scss */
+.time-wrapper .series-outdated-1:hover .ct-line, .time-wrapper .series-outdated-1:hover .ct-point {
+  stroke: #ce6700;
+}
+/* line 59, ../scss/package-repository.scss */
+.time-wrapper .series-outdated-0 .ct-line, .time-wrapper .series-outdated-0 .ct-point {
+  stroke: #89d98a;
+}
+/* line 63, ../scss/package-repository.scss */
+.time-wrapper .series-outdated-0:hover .ct-line, .time-wrapper .series-outdated-0:hover .ct-point {
+  stroke: #2d8c2e;
+}
+/* line 69, ../scss/package-repository.scss */
+.time-wrapper .series-current .ct-line, .time-wrapper .series-current .ct-point {
+  stroke: #a1abff;
+}
+/* line 73, ../scss/package-repository.scss */
+.time-wrapper .series-current:hover .ct-line, .time-wrapper .series-current:hover .ct-point {
+  stroke: #001af8;
+}
+
+/* line 81, ../scss/package-repository.scss */
+.versions-wrapper {
+  vertical-align: top;
+}
+/* line 84, ../scss/package-repository.scss */
+.versions-wrapper .ct-slice-pie {
+  stroke: #fff;
+  stroke-width: 2px;
+}
+/* line 89, ../scss/package-repository.scss */
+.versions-wrapper .series-other .ct-slice-pie {
+  fill: #aaa;
+}
+/* line 92, ../scss/package-repository.scss */
+.versions-wrapper .series-other .ct-slice-pie:hover {
+  fill: #565656;
+}
+/* line 95, ../scss/package-repository.scss */
+.versions-wrapper .series-outdated-2 .ct-slice-pie {
+  fill: #ff615d;
+}
+/* line 98, ../scss/package-repository.scss */
+.versions-wrapper .series-outdated-2 .ct-slice-pie:hover {
+  fill: #ff3631;
+}
+/* line 101, ../scss/package-repository.scss */
+.versions-wrapper .series-outdated-1 .ct-slice-pie {
+  fill: #ffbb77;
+}
+/* line 104, ../scss/package-repository.scss */
+.versions-wrapper .series-outdated-1 .ct-slice-pie:hover {
+  fill: #ffa52f;
+}
+/* line 107, ../scss/package-repository.scss */
+.versions-wrapper .series-outdated-0 .ct-slice-pie {
+  fill: #89d98a;
+}
+/* line 110, ../scss/package-repository.scss */
+.versions-wrapper .series-outdated-0 .ct-slice-pie:hover {
+  fill: #44d94a;
+}
+/* line 113, ../scss/package-repository.scss */
+.versions-wrapper .series-current .ct-slice-pie {
+  fill: #a1abff;
+}
+/* line 116, ../scss/package-repository.scss */
+.versions-wrapper .series-current .ct-slice-pie:hover {
+  fill: #7383ff;
+}
+/* line 120, ../scss/package-repository.scss */
+.versions-wrapper .versions-graph {
+  height: 400px;
+  width: 400px;
+  display: inline-block;
+  vertical-align: top;
+}
+/* line 126, ../scss/package-repository.scss */
+.versions-wrapper .versions-text {
+  display: inline-block;
+  padding-top: 35px;
+  vertical-align: top;
+}
+
+/*# sourceMappingURL=package-repository.css.map */

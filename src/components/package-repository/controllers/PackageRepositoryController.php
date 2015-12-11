@@ -132,6 +132,227 @@ class PackageRepositoryController extends Controller_2_1 {
 		$view->mastertemplate = 'admin';
 		$view->assign('form', $form);
 	}
+	
+	public function analytics(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+
+		$manager = \Core\user()->checkAccess('p:/package_repository/view_analytics');
+
+		if(!$manager){
+			return View::ERROR_ACCESSDENIED;
+		}
+		
+		// Retrieve a list of connections to this repo for both downloading and checks!
+		$where = new DatasetWhereClause();
+		$where->addWhereSub('OR', ['baseurl = /packagerepository', 'baseurl = /packagerepository/download']);
+		
+		// Default to a 3-month window for now just to have a relatively useful sample of data.
+		// This will be expanded to include a filter at some point in time.
+		$window = new \Core\Date\DateTime();
+		$window->modify('-3 months');
+		$window = $window->format('U');
+		
+		// Generate a boilerplate dataset for the all-history view.
+		// This is required because the graphing software expects all data to be in the same columns,
+		// and these columns are simply indexed arrays.
+		// As we're pulling the data potentially out-of-order and across different versions,
+		// this array will provide a consistent scaffold for unset versions.
+		$allboilerplate = []; // Series Boilerplate
+		$allmonths = [];      // Labels
+		// This goes back 12 months.
+		$date = new \Core\Date\DateTime();
+		$date->modify('-12 months');
+		for($i = 1; $i <= 12; $i++){
+			$allboilerplate[ $date->format('Ym') ] = null;
+			$allmonths[] = $date->format('M');
+			$date->nextMonth();
+		}
+		
+		$raw = UserActivityModel::FindRaw($where);
+		
+		// Will contain a list of useragents along with the count of how many access.
+		$useragents     = [];
+		// Will contain how many times a given IP has requested the site.
+		// This is for a metric that currently is not enabled.
+		$ipaddresses    = [];
+		// A rich list of hosts along with the latest version, the IP connecting from, and the date of the last check.
+		$hosts          = [];
+		// All series for the bar graph at the top of the page, Keyed by version and contains the total number of hits.
+		$allseries      = [];
+		$allseries['Total'] = [
+			'class'     => 'series-other',
+			'name'      => 'Total',
+			'title'     => 'Total',
+			'useragent' => '',
+			'values'    => $allboilerplate,
+		];
+		// Used so I can compare the version of the connecting useragent against the current version of Core.
+		// This of course does noothing to ensure that this site is updated, but it at least should give some perspective.
+		$currentVersion = Core::VersionSplit(Core::GetComponent('core')->getVersion());
+		
+		foreach($raw as $dat){
+			if(strpos($dat['useragent'], '(http://corepl.us)') !== false){
+				/** @var string $ua ex: "Core Plus 1.2.3" */
+				$ua = str_replace(' (http://corepl.us)', '', $dat['useragent']);
+				/** @var string $version Just the version, ex: "1.2.3" */
+				$version = str_replace('Core Plus ', '', $ua);
+				/** @var string $referrer Original Site/Server, ex: "http://corepl.us" */
+				$referrer = $dat['referrer'] ? $dat['referrer'] : $dat['ip_addr'];
+				
+				// The set of logic to compare the current version of Core against the version connecting.
+				// This is used primarily to set a class name onto the graphs so that they can be coloured specifically.
+				$v = Core::VersionSplit($version);
+
+				if($v['major'] == $currentVersion['major'] && $v['minor'] == $currentVersion['minor']){
+					// Check is same version as current (or newer), blue!
+					$class = 'series-current';
+				}
+				elseif($v['major'] + 2 <= $currentVersion['major']){
+					// Check is at least 2 major versions out of date, red.
+					$class = 'series-outdated-2';
+				}
+				elseif($v['major'] + 1 <= $currentVersion['major']){
+					// Check is at least 1 major version out of date, green.
+					$class = 'series-outdated-1';
+				}
+				else{
+					// Same major version, close enough.
+					$class = 'series-outdated-0';
+				}
+				
+				$month = date('Ym', $dat['datetime']);
+			}
+			else{
+				$ua      = 'Other';
+				$version = null;
+				$referrer = null;
+				$class    = 'series-other';
+				$month    = null;
+			}
+			
+			// All Data!
+			if($month && array_key_exists($month, $allboilerplate)){
+				if(!isset($allseries[$ua])){
+					$allseries[$ua] = [
+						'class'     => $class,
+						'name'      => $version,
+						'title'     => $ua,
+						'useragent' => $ua,
+					    'values'    => $allboilerplate,
+					];
+				}
+				
+				$allseries[$ua]['values'][$month]++;
+				//$allseries['Total']['values'][$month]++;
+			}
+			
+			// Is this data new enough to display on the graph?
+			// This is required because the "all" graph at the top needs all-time, (or at least the past 12 months).
+			if($dat['datetime'] >= $window){
+				
+				// USER AGENT DATA
+				if(!isset($useragents[$ua])){
+					$useragents[$ua] = [
+						'value'     => 0,
+						'class'     => $class,
+						'name'      => $version,
+						'title'     => $ua,
+						'useragent' => $ua,
+					];
+				}
+				$useragents[$ua]['value']++;
+
+				// IP ADDRESS DATA
+				if(!isset($ipaddresses[ $dat['ip_addr'] ])){
+					$ipaddresses[ $dat['ip_addr'] ] = [
+						'ip_addr' => $dat['ip_addr'],
+						'count'   => 0,
+					];
+				}
+				$ipaddresses[ $dat['ip_addr'] ]['count']++;
+				
+				// HOSTS DATA
+				if($version && $referrer){
+					$k = $referrer . '-' . $dat['ip_addr'];
+
+					if(!isset($hosts[ $k ])){
+						$hosts[ $k ] = [
+							'servername' => $referrer,
+							'ip_addr'    => $dat['ip_addr'],
+							'version'    => '0.0',
+							'datetime'   => 1,
+						];
+					}
+
+					if(Core::VersionCompare($hosts[ $k ]['version'], $version, 'lt')){
+						$hosts[ $k ]['version'] = $version;
+					}
+					if($hosts[ $k ]['datetime'] < $dat['datetime']){
+						$hosts[ $k ]['datetime'] = $dat['datetime'];
+					}
+				}
+			}
+			
+		}
+		
+		ksort($useragents);
+		ksort($hosts, SORT_NATURAL);
+		ksort($allseries, SORT_NATURAL);
+		ksort($ipaddresses, SORT_NATURAL);
+		
+		// Update the title of the values now that the totals have been created.
+		// Also, take this opportunity to set the chart data as necessary, (as its format will be slightly different).
+		$chart = [
+			'versions' => ['labels' => [], 'series' => []],
+			'all'      => ['labels' => array_values($allmonths), 'series' => []], 
+			'ips'      => [],
+		];
+		
+		foreach($useragents as &$dat){
+			$dat['title'] .= ' (' . $dat['value'] . ' Total Hits)';
+			
+			$chart['versions']['labels'][] = $dat['name'];
+			$chart['versions']['series'][] = [
+				'value'     => $dat['value'],
+				'className' => $dat['class'],
+				'name'      => $dat['name'],
+				'title'     => $dat['title'],
+			];
+		}
+		
+		foreach($allseries as &$dat){
+			$data = [];
+			foreach($dat['values'] as $v){
+				$data[] = [
+					'value' => $v,
+				    'title' => $dat['title'] . ' (' . $v . ' Monthly Hits)',
+				];
+				//$data[] = $v;
+			}
+			$chart['all']['series'][] = [
+				'data'      => $data,
+				'className' => $dat['class'],
+				'name'      => $dat['name'],
+				'title'     => $dat['title'],
+			];
+		}
+		
+		// Convert these to JSON data!
+		$chart['versions'] = json_encode($chart['versions']);
+		$chart['all'] = json_encode($chart['all']);
+		//$chart['ips'] = json_encode($chart['ips']);
+		
+		$view->title = 't:STRING_PACKAGE_REPOSITORY_ANALYTICS';
+		$view->assign('chart', $chart);
+		$view->assign('raw', $raw);
+		$view->assign('ip_addresses', $ipaddresses);
+		$view->assign('useragents', $useragents);
+		$view->assign('hosts', $hosts);
+		
+		
+		//var_dump($chart, $useragents, $ipaddresses, $ipversion, $raw); die();
+	}
 
 	/**
 	 * Check permissions on the user and system and return either blank or a string containing the error.
@@ -259,6 +480,7 @@ class PackageRepositoryController extends Controller_2_1 {
 		$componentdir = $dir->getPath() . 'components/';
 		$themedir     = $dir->getPath() . 'themes/';
 		$tmpdir       = Factory::Directory('tmp/exports/');
+		$gpg          = new Core\GPG\GPG();
 		$keysfound    = [];
 
 		$private = (ConfigHandler::Get('/package_repository/is_private') || (strpos($dir->getPath(), ROOT_PDIR) !== 0));
@@ -301,21 +523,17 @@ class PackageRepositoryController extends Controller_2_1 {
 
 			$output = [];
 			// I need to 1) retrieve and 2) verify the key for this package.
-			exec(
-				'gpg --homedir "' . GPG_HOMEDIR . '" --verify "' . $fullpath . '" 2>&1 | grep "key ID" | sed \'s:.*key ID \([A-Z0-9]*\)$:\1:\'',
-				$output,
-				$ret
-			);
-			if($ret){
+			try{
+				$signature = $gpg->verifyFileSignature($fullpath);
+				if(!in_array($signature->keyID, $keysfound)){
+					$repo->addKey($signature->keyID, null, null);
+					$keysfound[] = $signature->keyID;
+				}
+			}
+			catch(\Exception $e){
 				trigger_error($fullpath . ' was not able to be verified as authentic, (probably because the GPG public key was not available)');
 				$failedpackages++;
 				continue;
-			}
-			$key = $output[0];
-
-			if(!in_array($key, $keysfound)){
-				$repo->addKey($key, null, null);
-				$keysfound[] = $key;
 			}
 
 			// decode and untar it in a temp directory to get the package.xml file.
@@ -338,7 +556,7 @@ class PackageRepositoryController extends Controller_2_1 {
 
 			// Read in that package file and append it to the repo xml.
 			$package = new PackageXML($tmpdir->getPath() . 'package.xml');
-			$package->getRootDOM()->setAttribute('key', $key);
+			$package->getRootDOM()->setAttribute('key', $signature->keyID);
 			$package->setFileLocation($relpath);
 			$repo->addPackage($package);
 			$addedpackages++;
