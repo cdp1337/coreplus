@@ -18,15 +18,15 @@
 		<hook name="/cron/daily" call="SecuritySuite\IpBlacklistHelper::CleanupHook"/>
 	</hooks>
 	<pages>
-		<page baseurl="/security/sitepassword" title="Simple Site Password" access="g:admin" group="Configure" admin="1"/>
-		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="Security Log" group="Security"/>
-		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="Blacklisted IP addresses" group="Security"/>
+		<page baseurl="/security/sitepassword" title="t:STRING_SIMPLE_SITE_PASSWORD" access="g:admin" group="t:STRING_CONFIGURE" admin="1"/>
+		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="t:STRING_SECURITY_LOG" group="t:STRING_SECURITY"/>
+		<page access="g:admin" admin="1" baseurl="/security/blacklistip" title="t:STRING_BLACKLISTED_IP_ADDRESSES" group="t:STRING_SECURITY"/>
 		<page access="*" admin="0" baseurl="/wphoneypot/wplogin" rewriteurl="/wp-login" selectable="0" title="WP Login" indexable="0"/>
 		<page access="*" admin="0" baseurl="/wphoneypot/wpadmin" rewriteurl="/wp-admin" selectable="0" title="WP Admin" indexable="0"/>
-		<page baseurl="/security/spam/keywords" title="Spam Keywords" group="Configure" access="g:admin" admin="1"/>
+		<page baseurl="/security/spam/keywords" title="t:STRING_SPAM_KEYWORDS" group="t:STRING_CONFIGURE" access="g:admin" admin="1"/>
 	</pages>
 	<permissions>
-		<permission key="/security/viewlog" description="View Security Log"/>
+		<permission key="/security/viewlog"/>
 	</permissions>
 	<view searchdir="templates">
 		<file filename="templates/pages/security/blacklistip.tpl" md5="4b6c59eaa6f0fed5578af32b0c5b4ba9"/>

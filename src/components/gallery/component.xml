@@ -10,8 +10,8 @@
 	</permissions>
 	<pages>
 		<page baseurl="/gallery" admin="0" access="*" title="Gallery Listings"/>
-		<page baseurl="/gallery/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Albums Administration" group="Content"/>
-		<page baseurl="/gallerywidget/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Widgets Administration" group="Content" parenturl="/admin"/>
+		<page baseurl="/gallery/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Albums Administration" group="t:STRING_CONTENT"/>
+		<page baseurl="/gallerywidget/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Widgets Administration" group="t:STRING_CONTENT" parenturl="/admin"/>
 		<pagecreate title="Gallery" baseurl="/gallery/create"/>
 	</pages>
 	<widgets>

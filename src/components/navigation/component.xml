@@ -5,7 +5,7 @@
 		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
 	<pages>
-		<page baseurl="/navigation/create" title="Create Navigation Menu" group="Content" access="g:admin" admin="1"/>
+		<page baseurl="/navigation/create" title="Create Navigation Menu" group="t:STRING_CONTENT" access="g:admin" admin="1"/>
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="e4160f7fd891444d0ef6a36315c5ff32"/>

@@ -8,7 +8,7 @@
 		<config key="/livefyre/siteid" type="string" description="Your LiveFyre SiteID"/>
 	</configs>
 	<pages>
-		<page baseurl="/livefyre" title="LiveFyre Administration" admin="1" access="g:admin" selectable="0" group="Configure"/>
+		<page baseurl="/livefyre" title="LiveFyre Administration" admin="1" access="g:admin" selectable="0" group="t:STRING_CONFIGURE"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/livefyre/view" title="LiveFyre Comments"/>

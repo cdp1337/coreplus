@@ -34,7 +34,7 @@
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
 	</view>
 	<pages>
-		<page baseurl="/theme" admin="1" access="g:admin" title="Theme Manager" group="Theme and Layouts"/>
+		<page baseurl="/theme" admin="1" access="g:admin" title="t:STRING_THEME_MANAGER" group="t:STRING_THEME_AND_LAYOUTS"/>
 	</pages>
 	<configs>
 		<config key="/theme/default_template" type="string" default="basic.tpl" description=""/>

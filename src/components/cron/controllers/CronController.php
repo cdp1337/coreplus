@@ -180,7 +180,7 @@ class CronController extends Controller_2_1 {
 		$listings = $cronfac->get();
 
 		$view->mastertemplate = 'admin';
-		$view->title = 'Cron Results';
+		$view->title = 't:STRING_CRON_RESULTS';
 		$view->assign('filters', $filters);
 		$view->assign('listings', $listings);
 		$view->assign('sortkey', $filters->getSortKey());
@@ -208,7 +208,7 @@ class CronController extends Controller_2_1 {
 		}
 
 		$view->mastertemplate = 'admin';
-		$view->addBreadcrumb('Cron Results', '/cron/admin');
+		$view->addBreadcrumb('t:STRING_CRON_RESULTS', '/cron/admin');
 		$view->title = 'Log Execution Details';
 		$view->assign('entry', $log);
 	}

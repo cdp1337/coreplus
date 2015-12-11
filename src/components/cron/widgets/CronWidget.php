@@ -40,7 +40,7 @@ class CronWidget extends Widget_2_1{
 			}
 		}
 
-		$view->title = 'Latest Cron Results';
+		$view->title = 't:STRING_LATEST_CRON_RESULTS';
 		$view->assign('crons', $crons);
 	}
 }

@@ -44,9 +44,9 @@
 		</file>
 	</files>
 	<pages>
-		<page baseurl="/blog/create" admin="1" access="p:/blog/manage_all" title="Create Blog" group="Content"/>
+		<page baseurl="/blog/create" admin="1" access="p:/blog/manage_all" title="Create Blog" group="t:STRING_CONTENT"/>
 		<page baseurl="/blog" title="Blogs" editurl="/blog/editindex"/>
-		<page baseurl="/blog/editindex" title="Blog Listing" access="p:/blog/manage_all" admin="1" group="Content"/>
+		<page baseurl="/blog/editindex" title="Blog Listing" access="p:/blog/manage_all" admin="1" group="t:STRING_CONTENT"/>
 		<pagecreate title="Blog Listing" baseurl="/blog/create"/>
 	</pages>
 	<widgets>

@@ -13,7 +13,7 @@
 		<config key="/mediamanager/sandbox" type="enum" options="user-sandboxed|shared-user-sandbox|completely-open" default="completely-open" description="The browse mode for mediamanager.  By default, media uploads are constrained to the public/media directory.  If user-sandboxed is selected, then each user gets their own directory for uploads.  Setting to completely-open will enable all of /public to be browseable."/>
 	</configs>
 	<pages>
-		<page baseurl="/mediamanagernavigator" title="File Media Navigator" group="Content" access="p:/mediamanager/browse" admin="1"/>
+		<page baseurl="/mediamanagernavigator" title="File Media Navigator" group="t:STRING_CONTENT" access="p:/mediamanager/browse" admin="1"/>
 	</pages>
 	<view>
 		<file filename="templates/pages/mediamanagernavigator/file_metadata.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>

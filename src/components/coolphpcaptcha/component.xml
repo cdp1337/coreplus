@@ -28,7 +28,7 @@
 		<config key="/captcha/formtext" description="Form text for the captcha label" type="string" default="Are you a Human?"/>
 	</configs>
 	<pages>
-		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="Configure"/>
+		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="t:STRING_CONFIGURE"/>
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="aa83f82a45abe041379aa329b742fa13"/>

@@ -435,7 +435,7 @@ class GalleryController extends Controller_2_1 {
 			}
 
 			$form->set('callsmethod', 'GalleryController::ImagesUpdateSaveHandler');
-			$form->addElement('submit', ['name' => 'submit', 'value' => 'Save']);
+			$form->addElement('submit', ['name' => 'submit', 'value' => t('STRING_SAVE')]);
 
 			$view->title = 'Editing image ' . $image->get('title');
 			$view->assign('image', $image);

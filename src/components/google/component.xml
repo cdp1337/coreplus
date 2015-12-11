@@ -26,7 +26,7 @@
 		<config key="/google/services/public_api_key" type="string" description="The Simple/Public API Access key defined in https://console.developers.google.com"/>
 	</configs>
 	<pages>
-		<page baseurl="/google/configure" title="Google Keys and Apps" group="Configure" access="g:admin" admin="1" selectable="0"/>
+		<page baseurl="/google/configure" title="Google Keys and Apps" group="t:STRING_CONFIGURE" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="21ecf38d58a420de449991f2eeb890a4"/>

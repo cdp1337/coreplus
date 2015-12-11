@@ -8,7 +8,7 @@
 		<config key="/favicon/image" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
 	</configs>
 	<pages>
-		<page baseurl="/favicon/admin" title="Site Favicon" access="g:admin" admin="1" group="Configure"/>
+		<page baseurl="/favicon/admin" title="Site Favicon" access="g:admin" admin="1" group="t:STRING_CONFIGURE"/>
 	</pages>
 	<hooks>
 		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>

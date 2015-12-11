@@ -349,7 +349,7 @@ class SecurityController extends Controller_2_1 {
 				[
 					'name' => 'content',
 					'value' => '',
-					'title' => 'Content',
+					'title' => t('STRING_CONTENT'),
 					'description' => 'Paste in the content to parse for keywords.  You will have the ability to fine-tune specific keywords on the next page.',
 					'rows' => 6,
 				]

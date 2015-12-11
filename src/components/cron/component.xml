@@ -18,7 +18,7 @@
 		<config key="/cron/enabled" default="1" description="Cron system is disabled or enabled globally" type="boolean"/>
 	</configs>
 	<pages>
-		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="Cron Results"/>
+		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="t:STRING_CRON_RESULTS"/>
 	</pages>
 	<view searchdir="templates">
 		<file filename="templates/pages/cron/admin.tpl" md5="b46c7df494d30a0f3daa43a2ba24cc33"/>

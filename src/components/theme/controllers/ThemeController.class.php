@@ -182,7 +182,7 @@ class ThemeController extends Controller_2_1{
 			);
 		}
 
-		$siteskinform->addElement('submit', ['value' => 'Save']);
+		$siteskinform->addElement('submit', ['value' => t('STRING_SAVE')]);
 
 
 		$customdest = \Core\directory('themes/custom');

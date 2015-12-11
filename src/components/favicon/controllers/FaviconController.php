@@ -24,7 +24,7 @@ class FaviconController extends Controller_2_1 {
 		$form = new Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 		$form->addElement(ConfigHandler::GetConfig('/favicon/image')->getAsFormElement());
-		$form->addElement('submit', ['value' => 'Save']);
+		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
 
 		$view->title = 'Site Favicon';
 		$view->assign('current', $image);
