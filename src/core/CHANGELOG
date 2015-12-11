@@ -1,3 +1,21 @@
+Core Plus 5.0.0
+
+	* New GPG library for handling encryption and logins; no longer relies on the gnupg_php library.
+    * New i18n support across the platform, (still need to write the rest of the i18n strings and string replacements).
+    * New support for uploading a GPG public key instead of searching for public keyservers.
+    * New support for i18n strings within the \Core\set_message system.
+    * Add component names to the Config table for quick lookups on which component has which config options.
+    * Switch from the request header 'SERVERNAME' to 'REFERER' for standard RFC compatibility.
+    * New support for email encryption natively.
+    * New support for the Piwik DeviceDetector library when available.
+    * Pages now support i18n strings natively.
+    * Smarty {a} tags now support i18n strings.
+    * Add the Spyc library for YAML file processing.
+    * Add convenience defines for number of seconds in X timeframe, (1 day, 1 week, 1 month, etc).  Useful for Cache systems.
+    * New tests for GPG
+    * New tests for UserAgents
+    * Updated tests for SQL Parser.
+
 Core Plus 4.2.0
 
 	* [Security] FIX strip out HTML characters from the URL when rendering the Javascript helper object.
