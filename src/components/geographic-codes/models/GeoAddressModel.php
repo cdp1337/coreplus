@@ -18,11 +18,13 @@ class GeoAddressModel extends Model {
 		),
 		'model' => array(
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 96,
 			'required' => false,
 			'comment' => 'The model name this address represents (optional)',
 		),
 		'record_key' => array(
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 128,
 			'required' => false,
 			'default' => '',
 			'comment' => 'The record primary key this address represents (optional)',
