@@ -22,7 +22,7 @@
 		<config key="/piwik/tracking/domain_title" type="boolean" default="0" description="if someone visits the 'About' page on blog.corepl.us it will be recorded as 'blog / About'. This is the easiest way to get an overview of your traffic by sub-domain."/>
 	</configs>
 	<pages>
-		<page baseurl="/piwik/configure" title="Piwik Analytics" access="g:admin" selectable="0" admin="1" group="Configure"/>
+		<page baseurl="/piwik/configure" title="Piwik Analytics" access="g:admin" selectable="0" admin="1" group="t:STRING_CONFIGURE"/>
 	</pages>
 	<view>
 		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
@@ -32,6 +32,169 @@
 		<file filename="controllers/PiwikController.php" md5="d2ab6e1f0b9384beb4cd5d189540bb6c">
 			<controller name="PiwikController"/>
 		</file>
+		<file filename="libs/devicedetector/Cache/Cache.php" md5="eec9f30425cf26ba1d8041f6809abf9f">
+			<interface name="DeviceDetector\Cache\Cache"/>
+		</file>
+		<file filename="libs/devicedetector/Cache/StaticCache.php" md5="ff8384ab56487fc7f0fc437ecbaf999a">
+			<class name="DeviceDetector\Cache\StaticCache"/>
+		</file>
+		<file filename="libs/devicedetector/DeviceDetector.php" md5="51522a169736ce916fb2274fad071c44">
+			<class name="DeviceDetector\DeviceDetector"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Bot.php" md5="f247ddac0519f237b153f238511692cb">
+			<class name="DeviceDetector\Parser\Bot"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/Browser.php" md5="75e84da088d9d46bbb8833d27d77f0b5">
+			<class name="DeviceDetector\Parser\Client\Browser"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/Browser/Engine.php" md5="71ac08bbe06236c1d6243ab3ddf8f491">
+			<class name="DeviceDetector\Parser\Client\Browser\Engine"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/ClientParserAbstract.php" md5="7c3b7230ea579204c3198fc87a811a46">
+			<class name="DeviceDetector\Parser\Client\ClientParserAbstract"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/FeedReader.php" md5="23cdf73457e711c0715c88b3495f0c89">
+			<class name="DeviceDetector\Parser\Client\FeedReader"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/Library.php" md5="01fea395b442c264240bce59c4e5e052">
+			<class name="DeviceDetector\Parser\Client\Library"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/MediaPlayer.php" md5="8f18f6ba20b9bc0277d20caf0c378e2b">
+			<class name="DeviceDetector\Parser\Client\MediaPlayer"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/MobileApp.php" md5="ce24881b79f45cd29b8cd8d19eb25a39">
+			<class name="DeviceDetector\Parser\Client\MobileApp"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Client/PIM.php" md5="624de8fdf2d3651f625d97d371a781fa">
+			<class name="DeviceDetector\Parser\Client\PIM"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/Camera.php" md5="2d75efc730ad7b1dbdfa526abb26a50d">
+			<class name="DeviceDetector\Parser\Device\Camera"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/CarBrowser.php" md5="19c0a0f23049caee76ec6702b1b6fe21">
+			<class name="DeviceDetector\Parser\Device\CarBrowser"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/Console.php" md5="a1f0f07e4c4e907406bad5e66e6d9d4e">
+			<class name="DeviceDetector\Parser\Device\Console"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/DeviceParserAbstract.php" md5="3c761b46406a36599e89fc26393d9917">
+			<class name="DeviceDetector\Parser\Device\DeviceParserAbstract"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/HbbTv.php" md5="f6deedef0e099c1087d809afa5c44fa5">
+			<class name="DeviceDetector\Parser\Device\HbbTv"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/Mobile.php" md5="b786e48000d4181635a8f37c5ae99977">
+			<class name="DeviceDetector\Parser\Device\Mobile"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/Device/PortableMediaPlayer.php" md5="fab6e15110c98f4be460d5d648a9b431">
+			<class name="DeviceDetector\Parser\Device\PortableMediaPlayer"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/OperatingSystem.php" md5="c84ba83c516f9371469ed9619cd10dac">
+			<class name="DeviceDetector\Parser\OperatingSystem"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/ParserAbstract.php" md5="0d9449011522ef41658fd64a8d1c1d5a">
+			<class name="DeviceDetector\Parser\ParserAbstract"/>
+		</file>
+		<file filename="libs/devicedetector/Parser/VendorFragment.php" md5="339d091036b4b79ee78f10b5506cf1c2">
+			<class name="DeviceDetector\Parser\VendorFragment"/>
+		</file>
+		<file filename="libs/devicedetector/README.md" md5="94c0725b2328fd7c5735a4bb0da4cc12"/>
+		<file filename="libs/devicedetector/Tests/Cache/StaticCacheTest.php" md5="c601474df092c93ccd0cd48a648a1908">
+			<class name="DeviceDetector\Tests\Cache\StaticCacheTests"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/DeviceDetectorTest.php" md5="1f3e5b3abc1c06ee99a8f4fa28724ae7">
+			<class name="DeviceDetector\Tests\DeviceDetectorTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/BotTest.php" md5="36e66f0e03944d002074ccca4128dba2">
+			<class name="DeviceDetector\Tests\Parser\BotTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/BrowserTest.php" md5="ca55f27b7f45ba15898b6c65c1603dbd">
+			<class name="DeviceDetector\Tests\Parser\Client\BrowserTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/FeedReaderTest.php" md5="d697e8e5e1ad5a3f51e39890448313c8">
+			<class name="DeviceDetector\Tests\Parser\Client\FeedReaderTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/LibraryTest.php" md5="a2d21118cd1e59f6c48add6a46ba6dfa">
+			<class name="DeviceDetector\Tests\Parser\Client\ToolTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/MediaPlayerTest.php" md5="dc25ec0d5f1b94e1161ad63567c0b31f">
+			<class name="DeviceDetector\Tests\Parser\Client\MediaPlayerTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/MobileAppTest.php" md5="e3949b3ee545073ddab3bf1d7af5af82">
+			<class name="DeviceDetector\Tests\Parser\Client\MobileAppTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/PIMTest.php" md5="99944c05c5ca6a6733ab2a1c05298332">
+			<class name="DeviceDetector\Tests\Parser\Client\PIMTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Client/fixtures/browser.yml" md5="b1db5724979fbaaa46c86b6be1d852d4"/>
+		<file filename="libs/devicedetector/Tests/Parser/Client/fixtures/feed_reader.yml" md5="8f8a11a3165c022baf74410b78ddb765"/>
+		<file filename="libs/devicedetector/Tests/Parser/Client/fixtures/library.yml" md5="cc21afc90dfc557823e34ce4529ea744"/>
+		<file filename="libs/devicedetector/Tests/Parser/Client/fixtures/mediaplayer.yml" md5="708b7c9e0e3dbb6dfdfb6782c85dc437"/>
+		<file filename="libs/devicedetector/Tests/Parser/Client/fixtures/mobile_app.yml" md5="e6298790ac80d042c3d93e7ce6724996"/>
+		<file filename="libs/devicedetector/Tests/Parser/Client/fixtures/pim.yml" md5="951614963e63182d046cc6bbac995757"/>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/CameraTest.php" md5="871f6760a594c6c75ac9c8ecb5624c40">
+			<class name="DeviceDetector\Tests\Parser\Device\CameraTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/CarBrowserTest.php" md5="1f302bcabe1dd489fffac23395708d21">
+			<class name="DeviceDetector\Tests\Parser\Device\CarBrowserTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/ConsoleTest.php" md5="481fec96cb727b6c454cbb548774a2b0">
+			<class name="DeviceDetector\Tests\Parser\Device\ConsoleTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/DeviceParserAbstractTest.php" md5="33d2ab9fbfa93ba578eb3cf1d25d762d">
+			<class name="DeviceDetector\Tests\Parser\Device\DeviceParserAbstractTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/HbbTvTest.php" md5="1b3f601b35deb8eea034c3ebbff32fbc">
+			<class name="DeviceDetector\Tests\Parser\Device\HbbTvTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/fixtures/camera.yml" md5="44a8262a2d1c68ec77e00c92f64ba7e7"/>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/fixtures/car_browser.yml" md5="4639fd735ee1c13bbc3fb53a32fb538a"/>
+		<file filename="libs/devicedetector/Tests/Parser/Devices/fixtures/console.yml" md5="3bc488aaa5541b58b7be73f60f18df04"/>
+		<file filename="libs/devicedetector/Tests/Parser/OperatingSystemTest.php" md5="e6a252c4c603ee767488094c77832e43">
+			<class name="DeviceDetector\Tests\Parser\OperatingSystemTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/VendorFragmentTest.php" md5="43cd7187f492511f87c7f6ba00f86f3c">
+			<class name="DeviceDetector\Tests\Parser\VendorFragmentTest"/>
+		</file>
+		<file filename="libs/devicedetector/Tests/Parser/fixtures/bots.yml" md5="52731f43d966ba25524c8908957fe0b8"/>
+		<file filename="libs/devicedetector/Tests/Parser/fixtures/oss.yml" md5="cc86d570f4078333d6600675d1bf8649"/>
+		<file filename="libs/devicedetector/Tests/Parser/fixtures/vendorfragments.yml" md5="a693ab7a7c716c626b776312ecc6ba34"/>
+		<file filename="libs/devicedetector/Tests/fixtures/bots.yml" md5="25e57c26bbee94a4a171fb8377da88dd"/>
+		<file filename="libs/devicedetector/Tests/fixtures/camera.yml" md5="3b77d300bb33b4650e607e2e4baf521a"/>
+		<file filename="libs/devicedetector/Tests/fixtures/car_browser.yml" md5="7cbadbbced8bfbb3f92b355bb63e94d3"/>
+		<file filename="libs/devicedetector/Tests/fixtures/console.yml" md5="3aa7c611427554e53aa4e30ec00c53b0"/>
+		<file filename="libs/devicedetector/Tests/fixtures/desktop.yml" md5="e89f5840a715938d62091622a4f9c44d"/>
+		<file filename="libs/devicedetector/Tests/fixtures/feature_phone.yml" md5="1a2c0d724a1f7e4c7e402a28f0cb6b45"/>
+		<file filename="libs/devicedetector/Tests/fixtures/feed_reader.yml" md5="39d074c776f2c65db5ee445427b43962"/>
+		<file filename="libs/devicedetector/Tests/fixtures/mediaplayer.yml" md5="605ffa6b30074c5c24267832a898fc1f"/>
+		<file filename="libs/devicedetector/Tests/fixtures/mobile_apps.yml" md5="e17429d197c3c14e4ef52e785e59a803"/>
+		<file filename="libs/devicedetector/Tests/fixtures/phablet.yml" md5="27d3d7774528cd364a0c4d12285232bc"/>
+		<file filename="libs/devicedetector/Tests/fixtures/portable_media_player.yml" md5="4cffe634fc98dcd56ffdd260b6d05dd5"/>
+		<file filename="libs/devicedetector/Tests/fixtures/smart_display.yml" md5="db806fd84ac3a8e3e260f085924e17e1"/>
+		<file filename="libs/devicedetector/Tests/fixtures/smartphone.yml" md5="aa2ebd856db34a71097594f89d955561"/>
+		<file filename="libs/devicedetector/Tests/fixtures/tablet.yml" md5="ba76f26c545b36e6f62171947a72cd83"/>
+		<file filename="libs/devicedetector/Tests/fixtures/tv.yml" md5="d1146c6f62e59985c5f6c1aa92971e4b"/>
+		<file filename="libs/devicedetector/Tests/fixtures/unknown.yml" md5="56f365a38108e3d890b46ee527462e8a"/>
+		<file filename="libs/devicedetector/composer.json" md5="ebdbab53b79d86e3324bf9dee6dc97c0"/>
+		<file filename="libs/devicedetector/misc/readme-report.php" md5="6bb3d39b23320dbac1b2814e116dc596"/>
+		<file filename="libs/devicedetector/misc/test.php" md5="81d707a2a640a3e9176e943b56f7f6ce"/>
+		<file filename="libs/devicedetector/phpunit.xml.dist" md5="9c6420efb25979651b93b82083e57884"/>
+		<file filename="libs/devicedetector/regexes/bots.yml" md5="165cadd7663f19b563d216984df201bc"/>
+		<file filename="libs/devicedetector/regexes/client/browser_engine.yml" md5="0ec16431362040744f39b37acff85514"/>
+		<file filename="libs/devicedetector/regexes/client/browsers.yml" md5="ce5fcfff4037cca07649010fd3ca8d86"/>
+		<file filename="libs/devicedetector/regexes/client/feed_readers.yml" md5="538eadcf87556fa24ec5c4452a5f1f00"/>
+		<file filename="libs/devicedetector/regexes/client/libraries.yml" md5="b453f519f3c00edcc991b57d6128b232"/>
+		<file filename="libs/devicedetector/regexes/client/mediaplayers.yml" md5="fadb1da67c146d6ab9829163fa73c4f1"/>
+		<file filename="libs/devicedetector/regexes/client/mobile_apps.yml" md5="14229579b2655fcd20f8dd7e2731175d"/>
+		<file filename="libs/devicedetector/regexes/client/pim.yml" md5="64677339838f0c66a4aaacf662987aaa"/>
+		<file filename="libs/devicedetector/regexes/device/cameras.yml" md5="9be6bf6a9a52a23d4ceed4910ff8de22"/>
+		<file filename="libs/devicedetector/regexes/device/car_browsers.yml" md5="5e1268cea5085840117e29791ee533c3"/>
+		<file filename="libs/devicedetector/regexes/device/consoles.yml" md5="8df4d3b748f9c08fdc807c029082c48f"/>
+		<file filename="libs/devicedetector/regexes/device/mobiles.yml" md5="104b34e3b81c4944a9af38e584ad3734"/>
+		<file filename="libs/devicedetector/regexes/device/portable_media_player.yml" md5="b8c2bf3e673d81c057959f344b52c255"/>
+		<file filename="libs/devicedetector/regexes/device/televisions.yml" md5="4e3d1a147e43702004022db1d24174e9"/>
+		<file filename="libs/devicedetector/regexes/oss.yml" md5="fe4ac9986e1febe3bd166758510eec1d"/>
+		<file filename="libs/devicedetector/regexes/vendorfragments.yml" md5="c0c55dce0e8b49145dc8b4df89aac9cc"/>
 		<file filename="libs/piwik/PiwikHelper.php" md5="7d873a874386ca34fb910a8134b6d4bb">
 			<class name="Piwik\PiwikHelper"/>
 		</file>
