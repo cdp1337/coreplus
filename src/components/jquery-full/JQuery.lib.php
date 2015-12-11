@@ -104,6 +104,15 @@ abstract class JQuery {
 	}
 
 	public static function Include_cookie(){
+		if(Core::IsLibraryAvailable('js.cookie')){
+			// No longer maintained, superseded by JS Cookie
+			if(DEVELOPMENT_MODE){
+				Core::SetMessage('Please use js.cookie instead, as jquery.cookie is no longer maintained!');
+			}
+			
+			//return \JSCookie\JSCookie::IncludeJS();	
+		}
+		
 		// I need jquery first.
 		self::IncludeJQuery();
 
