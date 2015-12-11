@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 10 Dec 2015 21:33:28 -0500
+ * @compiled Fri, 11 Dec 2015 12:22:47 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -9004,7 +9004,8 @@ function RecordNavigation(\PageModel $page){
 trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 function set_message($messageText, $messageType = 'info'){
-if(strpos($messageText, 'MESSAGE_') === 0){
+if(strpos($messageText, 't:MESSAGE_') === 0){
+$messageText = substr($messageText, 2);
 if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
 $messageType = 'success';
 }
@@ -19016,7 +19017,9 @@ return $this->_error;
 }
 public function setError($err, $displayMessage = true) {
 $this->_error = $err;
-if ($err && $displayMessage) Core::SetMessage($err, 'error');
+if ($err && $displayMessage){
+\Core\set_message($err, 'error');
+}
 }
 public function clearError() {
 $this->setError(false);
@@ -19493,7 +19496,7 @@ $form = $el;
 }
 if (!$form) return;
 if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {
-\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH');
+\Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH');
 return;
 }
 if($_SERVER['HTTP_REFERER'] != $form->originalurl){
@@ -19523,7 +19526,7 @@ if(DEVELOPMENT_MODE){
 Core::SetMessage($e->getMessage(), 'error');
 }
 else{
-\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
+\Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
 }
 Core\ErrorManagement\exception_handler($e);
 $status = false;
@@ -19547,7 +19550,7 @@ else{
 elseif ($status === true){
 \Core\reload();
 }
-elseif($status === REL_REQUEST_PATH){
+elseif($status === REL_REQUEST_PATH || $status === CUR_CALL){
 \Core\reload();
 }
 else{
@@ -19882,7 +19885,7 @@ $view->mastertemplate = ConfigHandler::Get('/theme/default_template');
 if(!($theme = ThemeHandler::GetTheme())){
 $theme = ThemeHandler::GetTheme('base-v2');
 $view->mastertemplate = 'basic.tpl';
-\Core\set_message('MESSAGE_ERROR_INVALID_THEME_SELECTED');
+\Core\set_message('t:MESSAGE_ERROR_INVALID_THEME_SELECTED');
 }
 if($view->mastertemplate !== false){
 $themeskins = $theme->getSkins();
@@ -20196,7 +20199,7 @@ public static function PasswordProtectHandler(Form $form){
 $page = $form->getElementValue('page');
 $val  = $form->getElementValue('passinput');
 if( $val !== $page->get('password_protected') ){
-\Core\set_message('MESSAGE_ERROR_INCORRECT_PASSWORD');
+\Core\set_message('t:MESSAGE_ERROR_INCORRECT_PASSWORD');
 return false;
 }
 else {

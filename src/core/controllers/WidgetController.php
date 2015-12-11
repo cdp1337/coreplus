@@ -532,7 +532,7 @@ class WidgetController extends Controller_2_1 {
 			Core::SetMessage(implode('<br/>', $changetext), 'success');
 		}
 		else{
-			\Core\set_message('MESSAGE_INFO_NO_CHANGES_PERFORMED');
+			\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
 		}
 
 		if($baseurl){

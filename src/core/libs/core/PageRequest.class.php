@@ -605,7 +605,7 @@ class PageRequest {
 			/** @var \Theme\Theme $theme */
 			$theme = ThemeHandler::GetTheme('base-v2');
 			$view->mastertemplate = 'basic.tpl';
-			\Core\set_message('MESSAGE_ERROR_INVALID_THEME_SELECTED');
+			\Core\set_message('t:MESSAGE_ERROR_INVALID_THEME_SELECTED');
 		}
 
 		// Make sure the selected mastertemplate actually exists!
@@ -1162,7 +1162,7 @@ class PageRequest {
 		$page = $form->getElementValue('page');
 		$val  = $form->getElementValue('passinput');
 		if( $val !== $page->get('password_protected') ){
-			\Core\set_message('MESSAGE_ERROR_INCORRECT_PASSWORD');
+			\Core\set_message('t:MESSAGE_ERROR_INCORRECT_PASSWORD');
 			return false;
 		}
 		else {

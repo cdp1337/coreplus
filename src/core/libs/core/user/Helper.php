@@ -129,7 +129,7 @@ abstract class Helper{
 				\Core::SetMessage($e->getMessage(), 'error');
 			}
 			else{
-				\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
+				\Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
 			}
 
 			return false;
@@ -196,7 +196,7 @@ abstract class Helper{
 		}
 		catch(\Exception $e){
 			\Core\ErrorManagement\exception_handler($e);
-			\Core\set_message('MESSAGE_ERROR_CANNOT_SEND_WELCOME_EMAIL');
+			\Core\set_message('t:MESSAGE_ERROR_CANNOT_SEND_WELCOME_EMAIL');
 		}
 
 		// "login" this user if not already logged in.
@@ -213,7 +213,7 @@ abstract class Helper{
 				$user->save();
 				Session::SetUser($user);
 			}
-			\Core\set_message('MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
+			\Core\set_message('t:MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
 
 			if(($overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl'))){
 				// Allow an external script to override the redirecting URL.
@@ -237,7 +237,7 @@ abstract class Helper{
 		}
 		// It was created administratively; redirect there instead.
 		else{
-			\Core\set_message('MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
+			\Core\set_message('t:MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
 			return '/user/admin';
 		}
 	}
@@ -251,12 +251,12 @@ abstract class Helper{
 
 		// Only allow this if the user is either the same user or has the user manage permission.
 		if(!($userid == \Core\user()->get('id') || $usermanager)){
-			\Core\set_message('MESSAGE_ERROR_INSUFFICIENT_ACCESS_PERMISSIONS');
+			\Core\set_message('t:MESSAGE_ERROR_INSUFFICIENT_ACCESS_PERMISSIONS');
 			return false;
 		}
 
 		if(!$user->exists()){
-			\Core\set_message('MESSAGE_ERROR_REQUESTED_RESOURCE_NOT_FOUND');
+			\Core\set_message('t:MESSAGE_ERROR_REQUESTED_RESOURCE_NOT_FOUND');
 			return false;
 		}
 
@@ -306,14 +306,14 @@ abstract class Helper{
 			Session::SetUser($user);
 
 			if(\ConfigHandler::Get('/user/profileedits/requireapproval') && \Core::IsComponentAvailable('model-audit')){
-				\Core\set_message('MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT_PENDING_APPROVAL');
+				\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT_PENDING_APPROVAL');
 			}
 			else{
-				\Core\set_message('MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT');
+				\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT');
 			}
 		}
 		else{
-			\Core\set_message('MESSAGE_SUCCESS_UPDATED_USER_ACCOUNT');
+			\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_USER_ACCOUNT');
 		}
 
 

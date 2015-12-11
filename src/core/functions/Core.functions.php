@@ -605,8 +605,9 @@ function RecordNavigation(\PageModel $page){
  * @return boolean (on success)
  */
 function set_message($messageText, $messageType = 'info'){
-	if(strpos($messageText, 'MESSAGE_') === 0){
+	if(strpos($messageText, 't:MESSAGE_') === 0){
 		// It's an i18n message!  Retrieve the locale version of text and the message type.
+		$messageText = substr($messageText, 2);
 
 		if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
 			$messageType = 'success';

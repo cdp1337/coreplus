@@ -645,7 +645,9 @@ class FormElement {
 
 	public function setError($err, $displayMessage = true) {
 		$this->_error = $err;
-		if ($err && $displayMessage) Core::SetMessage($err, 'error');
+		if ($err && $displayMessage){
+			\Core\set_message($err, 'error');
+		}
 	}
 
 	public function clearError() {
@@ -1563,7 +1565,7 @@ class Form extends FormGroup {
 
 		// Ensure the submission types match up.
 		if (strtoupper($form->get('method')) != $_SERVER['REQUEST_METHOD']) {
-			\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH');
+			\Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH');
 			return;
 		}
 
@@ -1609,7 +1611,7 @@ class Form extends FormGroup {
 			}
 			else{
 				// While users of production-enabled sites get a friendlier message.
-				\Core\set_message('MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
+				\Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
 			}
 			Core\ErrorManagement\exception_handler($e);
 			$status = false;
@@ -1651,7 +1653,7 @@ class Form extends FormGroup {
 			// If the return code is boolean true, it's a reload.
 			\Core\reload();
 		}
-		elseif($status === REL_REQUEST_PATH){
+		elseif($status === REL_REQUEST_PATH || $status === CUR_CALL){
 			// If the page returned the same page as the current url, force a reload, (as redirect will ignore it)
 			\Core\reload();
 		}

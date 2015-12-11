@@ -670,14 +670,14 @@ class AdminController extends Controller_2_1 {
 
 		// Is this page already published?
 		if($page->get('published_status') == 'published'){
-			\Core\set_message('MESSAGE_ERROR_PAGE_ALREADY_PUBLISHED');
+			\Core\set_message('t:MESSAGE_ERROR_PAGE_ALREADY_PUBLISHED');
 			\Core\go_back();
 		}
 
 		$page->set('published_status', 'published');
 		$page->save();
 
-		\Core\set_message('MESSAGE_SUCCESS_PAGE_PUBLISHED');
+		\Core\set_message('t:MESSAGE_SUCCESS_PAGE_PUBLISHED');
 		\Core\go_back();
 	}
 
@@ -705,14 +705,14 @@ class AdminController extends Controller_2_1 {
 
 		// Is this page already un-published?
 		if($page->get('published_status') == 'draft'){
-			\Core\set_message('MESSAGE_ERROR_PAGE_ALREADY_UNPUBLISHED');
+			\Core\set_message('t:MESSAGE_ERROR_PAGE_ALREADY_UNPUBLISHED');
 			\Core\go_back();
 		}
 
 		$page->set('published_status', 'draft');
 		$page->save();
 
-		\Core\set_message('MESSAGE_SUCCESS_PAGE_UNPUBLISHED');
+		\Core\set_message('t:MESSAGE_SUCCESS_PAGE_UNPUBLISHED');
 		\Core\go_back();
 	}
 
@@ -779,7 +779,7 @@ class AdminController extends Controller_2_1 {
 		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
 
 		if(!class_exists($class)){
-			\Core\set_message('MESSAGE_ERROR_CLASS_S_NOT_AVAILABLE', $class);
+			\Core\set_message('t:MESSAGE_ERROR_CLASS_S_NOT_AVAILABLE', $class);
 			\Core\go_back();
 		}
 
@@ -787,19 +787,19 @@ class AdminController extends Controller_2_1 {
 		$obj = new $class();
 
 		if(!($obj instanceof Widget_2_1)){
-			\Core\set_message('MESSAGE_ERROR_CLASS_S_NOT_VALID_WIDGET', $class);
+			\Core\set_message('t:MESSAGE_ERROR_CLASS_S_NOT_VALID_WIDGET', $class);
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			\Core\set_message('MESSAGE_ERROR_CLASS_S_NOT_SIMPLE_WIDGET', $class);
+			\Core\set_message('t:MESSAGE_ERROR_CLASS_S_NOT_SIMPLE_WIDGET', $class);
 			\Core\go_back();
 		}
 
 		$model = new WidgetModel($baseurl);
 
 		$model->delete();
-		\Core\set_message('MESSAGE_SUCCESS_DELETED_WIDGET_S', $baseurl);
+		\Core\set_message('t:MESSAGE_SUCCESS_DELETED_WIDGET_S', $baseurl);
 		\Core\go_back();
 	}
 
@@ -875,7 +875,7 @@ class AdminController extends Controller_2_1 {
 			Core::SetMessage(implode('<br/>', $changetext), 'success');
 		}
 		else{
-			\Core\set_message('MESSAGE_INFO_NO_CHANGES_PERFORMED');
+			\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
 		}
 
 		if($baseurl){
@@ -1274,7 +1274,7 @@ class AdminController extends Controller_2_1 {
 
 		}
 
-		\Core\set_message('MESSAGE_SUCCESS_UPDATED_N_CONFIGURATION', $updatedcount);
+		\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_N_CONFIGURATION', $updatedcount);
 
 		return true;
 	}
@@ -1356,7 +1356,7 @@ class AdminController extends Controller_2_1 {
 		$fileout = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/i18n/' . $lang . '.ini');
 		$fileout->putContents($ini);
 
-		\Core\set_message('MESSAGE_SUCCESS_UPDATED_TRANSLATION_STRINGS');
+		\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_TRANSLATION_STRINGS');
 		return true;
 	}
 }

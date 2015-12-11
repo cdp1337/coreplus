@@ -99,7 +99,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				$status = $auth->setPassword($p1val);
 				if($status === false){
 					// No change
-					\Core\set_message('MESSAGE_INFO_NO_CHANGES_PERFORMED');
+					\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
 				}
 				elseif($status === true){
 					$user->save();
@@ -201,7 +201,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		$user->disableAuthDriver('datastore');
 		$user->save();
 
-		\Core\set_message('MESSAGE_SUCCESS_DISABLED_PASSWORD_AUTH');
+		\Core\set_message('t:MESSAGE_SUCCESS_DISABLED_PASSWORD_AUTH');
 		\Core\go_back();
 	}
 
@@ -404,7 +404,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			if($p1->get('value') || $p2->get('value')){
 
 				if($p1->get('value') != $p2->get('value')){
-					$p1->setError('MESSAGE_ERROR_USER_REGISTER_PASSWORD_MISMATCH');
+					$p1->setError('t:MESSAGE_ERROR_USER_REGISTER_PASSWORD_MISMATCH');
 					$p2->set('value', '');
 					return false;
 				}
@@ -471,7 +471,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			// Log this as a login attempt!
 			$logmsg = 'Failed Login. Email not registered' . "\n" . 'Email: ' . $e->get('value') . "\n";
 			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg);
-			$e->setError('MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND');
+			$e->setError('t:MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND');
 			return false;
 		}
 
@@ -480,7 +480,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			// This is the control managed with in the admin.
 			$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $u->get('email') . "\n";
 			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
-			$e->setError('MESSAGE_ERROR_USER_LOGIN_ACCOUNT_NOT_ACTIVE');
+			$e->setError('t:MESSAGE_ERROR_USER_LOGIN_ACCOUNT_NOT_ACTIVE');
 			return false;
 		}
 		elseif($u->get('active') == -1){
@@ -488,7 +488,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			// This is the control managed with in the admin.
 			$logmsg = 'Failed Login. User tried to login after account deactivation.' . "\n" . 'User: ' . $u->get('email') . "\n";
 			\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $u->get('id'));
-			$e->setError('MESSAGE_ERROR_USER_LOGIN_ACCOUNT_DEACTIVATED');
+			$e->setError('t:MESSAGE_ERROR_USER_LOGIN_ACCOUNT_DEACTIVATED');
 			return false;
 		}
 
@@ -497,7 +497,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			$auth = $u->getAuthDriver('datastore');
 		}
 		catch(Exception $e){
-			$e->setError('MESSAGE_ERROR_USER_LOGIN_PASSWORD_AUTH_DISABLED');
+			$e->setError('t:MESSAGE_ERROR_USER_LOGIN_PASSWORD_AUTH_DISABLED');
 			return false;
 		}
 
@@ -523,12 +523,12 @@ class DatastoreAuthController extends Controller_2_1 {
 				$email->send();
 				\SystemLogModel::LogSecurityEvent('/user/initialpassword/send', 'Initial password request sent successfully', null, $u->get('id'));
 
-				\Core\set_message('MESSAGE_INFO_USER_LOGIN_MUST_SET_NEW_PASSWORD_INSTRUCTIONS_HAVE_BEEN_EMAILED');
+				\Core\set_message('t:MESSAGE_INFO_USER_LOGIN_MUST_SET_NEW_PASSWORD_INSTRUCTIONS_HAVE_BEEN_EMAILED');
 				return true;
 			}
-			catch(\Exception $ex){
+			catch(\Exception $e){
 				\Core\ErrorManagement\exception_handler($e);
-				\Core\set_message('MESSAGE_ERROR_USER_LOGIN_MUST_SET_NEW_PASSWORD_UNABLE_TO_SEND_EMAIL');
+				\Core\set_message('t:MESSAGE_ERROR_USER_LOGIN_MUST_SET_NEW_PASSWORD_UNABLE_TO_SEND_EMAIL');
 				return false;
 			}
 		}
@@ -566,7 +566,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				// 12th attempt: 10.05
 			}
 
-			$e->setError('MESSAGE_ERROR_USER_LOGIN_INCORRECT_PASSWORD');
+			$e->setError('t:MESSAGE_ERROR_USER_LOGIN_INCORRECT_PASSWORD');
 			$p->set('value', '');
 			return false;
 		}
