@@ -87,7 +87,7 @@
 		</script>{/script}
 	{/if}
 
-	{if Core::IsLibraryAvailable("jquery")}
+	{if Core::IsLibraryAvailable("jquery") && Core::IsLibraryAvailable("js.cookie")}
 		{script library="jquery"}{/script}
 		{script library="js.cookie"}{/script}
 
@@ -100,7 +100,7 @@
 
 			// Make the language selection do something!
 			$bar.find('.set-lang-target').click(function() {
-				Cookies.remove('LANG')
+				Cookies.remove('LANG');
 				Cookies.set('LANG', $(this).data('lang'));
 				//$.cookie('LANG', $(this).data('lang'));
 				Core.Reload();
