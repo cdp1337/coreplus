@@ -68,7 +68,7 @@ rsync $OPTIONS "$UPSTREAM/src/utilities" "$BASEDIR/src/"
 
 echo "Syncing core themes..."
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/default/" "$BASEDIR/src/themes/default"
-rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/base-v2"
+#rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/base-v2"
 rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v3/" "$BASEDIR/src/themes/base-v3"
 
 echo "Syncing core components..."
@@ -77,6 +77,7 @@ sync_component "geographic-codes"
 sync_component "jquery-full"
 sync_component "jquery-hoverintent"
 sync_component "nonce"
+sync_component "js-cookie"
 
 for i in $COMPONENTS; do
 	if [ -e "$UPSTREAM/src/components/$i" ]; then
