@@ -525,6 +525,10 @@ class mysqli_backend implements BackendInterface {
 		// And the actual string itself
 		$string = array_shift($arguments);
 
+		// This is meant to write to a log file and the screen when debug mode is enabled.
+		// As such, remove non-printable characters to a single dot.
+		$debugString = preg_replace('/[\x00-\x1F\x80-\xFF]/', '.', $string);
+
 		// If there are additional arguments and a placeholder in the query.... sanitize and parse it.
 		if(count($arguments) > 0 && strpos($string, '?') !== false){
 			$offset = 0;
@@ -532,8 +536,12 @@ class mysqli_backend implements BackendInterface {
 				// Find the next recurrence, (after the last offset if applicable)
 				$pos = strpos($string, '?', $offset);
 
-				if($k === null) $sanitizedk = 'NULL';
-				else $sanitizedk = "'" . $this->_conn->escape_string($k) . "'";
+				if($k === null){
+					$sanitizedk = 'NULL';
+				}
+				else{
+					$sanitizedk = "'" . $this->_conn->escape_string($k) . "'";
+				}
 
 				// Replace it with the sanitized version.
 				$string = substr($string, 0, $pos) . $sanitizedk . substr($string, $pos+1);
@@ -543,7 +551,7 @@ class mysqli_backend implements BackendInterface {
 		}
 
 		$profiler = DatamodelProfiler::GetDefaultProfiler();
-		$profiler->start($type, $string);
+		$profiler->start($type, $debugString);
 
 		$res = $this->_conn->query($string);
 
@@ -656,10 +664,11 @@ class mysqli_backend implements BackendInterface {
 	 */
 	private function _executeInsert(Dataset $dataset){
 		// Generate a query to run.
-		$q = "INSERT INTO `" . $dataset->_table . "`";
 
 		if($dataset->_mode == Dataset::MODE_BULK_INSERT){
 			// New support for inserting multiple records at once.
+			// INSERT IGNORE is needed to skip duplicate records.
+			$q = "INSERT IGNORE INTO `" . $dataset->_table . "`";
 			$keys  = [];
 			$qvals = [];
 			$i     = 0;
@@ -695,6 +704,7 @@ class mysqli_backend implements BackendInterface {
 			$q .= implode(', ', $qvals);
 		}
 		else{
+			$q = "INSERT INTO `" . $dataset->_table . "`";
 			$keys = [];
 			$vals = [];
 			foreach($dataset->_sets as $k => $v){
