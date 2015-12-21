@@ -508,7 +508,10 @@ class I18NLoader {
 				// ex: .UTF-8 or .UTF-16.
 				$line = substr($line, 0, $dotpos);
 			}
-			$locales[$line] = self::$Languages[$line];
+			
+			if(isset(self::$Languages[$line])){
+				$locales[$line] = self::$Languages[$line];
+			}
 		}
 
 		// Cache this so I don't have to execute the command and lookup the values all over again!
