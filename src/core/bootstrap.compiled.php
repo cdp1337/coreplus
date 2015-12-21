@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 11 Dec 2015 13:52:12 -0500
+ * @compiled Mon, 21 Dec 2015 15:29:36 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2036,6 +2036,8 @@ public static $HasDeleted = false;
 public static $_ModelCache = [];
 public static $_ModelFindCache = [];
 protected static $_ModelSchemaCache = [];
+protected static $_DeferInserts = [];
+protected static $_ModelSupplementals = [];
 public function __construct($key = null) {
 if(sizeof($this->_linked)){
 $clone = $this->_linked;
@@ -2131,7 +2133,7 @@ $this->_exists = false;
 }
 return;
 }
-public function save() {
+public function save($defer = false) {
 $save = false;
 if(!$this->_exists){
 $save = true;
@@ -2153,6 +2155,17 @@ break;
 }
 if(!$save){
 return false;
+}
+$classname = get_called_class();
+if(isset(self::$_ModelSupplementals[$classname])){
+foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+if(class_exists($supplemental)){
+$ref = new ReflectionClass($supplemental);
+if($ref->hasMethod('PreSaveHook')){
+$ref->getMethod('PreSaveHook')->invoke(null, $this);
+}
+}
+}
 }
 HookHandler::DispatchHook('/core/model/presave', $this);
 foreach($this->_linked as $l){
@@ -2179,8 +2192,13 @@ $model->save();
 $this->set($localk, $model->get($remotek));
 }
 }
-if ($this->_exists) $this->_saveExisting();
-else $this->_saveNew();
+if ($this->_exists){
+$changed = $this->_saveExisting();
+}
+else{
+$this->_saveNew($defer);
+$changed = true;
+}
 foreach($this->_linked as $k => $l){
 switch($l['link']){
 case Model::LINK_HASONE:
@@ -2199,17 +2217,20 @@ break;
 if($deletes){
 foreach($deletes as $model){
 $model->delete();
+$changed = true;
 }
 unset($l['purged']);
 }
 if($models){
 foreach($models as $model){
 $model->setFromArray($this->_getLinkWhereArray($k));
-$model->save();
+if($model->save()){
+$changed = true;
 }
 }
 }
-$this->_exists     = true;
+}
+$this->_exists   = true;
 $this->_datainit = $this->_data;
 if(($class = get_parent_class($this)) != 'Model'){
 $idx = self::GetIndexes();
@@ -2220,12 +2241,30 @@ $refp = new ReflectionClass($class);
 $refm = $refp->getMethod('Construct');
 $parent = $refm->invoke(null, $this->get($idx['primary'][0]));
 $parent->setFromArray($this->getAsArray());
-$parent->save();
+if($parent->save()){
+$changed = true;
+}
+}
+}
+}
+if($changed){
+$classname = get_called_class();
+if(isset(self::$_ModelSupplementals[$classname])){
+foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+if(class_exists($supplemental)){
+$ref = new ReflectionClass($supplemental);
+if($ref->hasMethod('PostSaveHook')){
+$ref->getMethod('PostSaveHook')->invoke(null, $this);
+}
 }
 }
 }
 HookHandler::DispatchHook('/core/model/postsave', $this);
 return true;
+}
+else{
+return false;
+}
 }
 public function get($k) {
 if($k === '__CLASS__'){
@@ -2351,6 +2390,17 @@ $this->_datainit = $this->_data;
 $this->_exists   = true;
 }
 public function delete() {
+$classname = get_called_class();
+if(isset(self::$_ModelSupplementals[$classname])){
+foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+if(class_exists($supplemental)){
+$ref = new ReflectionClass($supplemental);
+if($ref->hasMethod('PreDeleteHook')){
+$ref->getMethod('PreDeleteHook')->invoke(null, $this);
+}
+}
+}
+}
 $s = self::GetSchema();
 foreach ($this->_data as $k => $v) {
 if(!isset($s[$k])){
@@ -2900,13 +2950,30 @@ return null; // @todo Error Handling
 }
 return $c;
 }
-protected function _saveNew() {
+protected function _saveNew($defer = false) {
 $i = self::GetIndexes();
 $s = self::GetSchema();
 $n = $this->_getTableName();
 if (!isset($i['primary'])) $i['primary'] = []; // No primary schema defined... just don't make the in_array bail out.
+if($defer){
+$inserts = []; // key => value map for this model
+if(!isset(self::$_DeferInserts[$n])){
 $dat = new Core\Datamodel\Dataset();
 $dat->table($n);
+$dat->_mode = \Core\Datamodel\Dataset::MODE_BULK_INSERT;
+self::$_DeferInserts[$n] = [
+'dataset' => $dat,
+'interface' => $this->interface,
+];
+}
+else{
+$dat = self::$_DeferInserts[$n]['dataset'];
+}
+}
+else{
+$dat = new Core\Datamodel\Dataset();
+$dat->table($n);
+}
 $idcol = false;
 foreach ($this->_data as $k => $v) {
 $keyschema = $s[$k];
@@ -2914,37 +2981,69 @@ switch ($keyschema['type']) {
 case Model::ATT_TYPE_CREATED:
 case Model::ATT_TYPE_UPDATED:
 if($v){
+if($defer){
+$inserts[$k] = $v;
+}
+else{
 $dat->insert($k, $v);
+}
 }
 else{
 $nv = Time::GetCurrentGMT();
+if($defer){
+$inserts[$k] = $nv;
+}
+else{
 $dat->insert($k, $nv);
+}
 $this->_data[$k] = $nv;
 }
 break;
 case Model::ATT_TYPE_ID:
 $nv = $this->_data[$k];
 if($this->_data[$k]){
+if($defer){
+$inserts[$k] = $nv;
+}
+else{
 $dat->insert($k, $nv);
 }
+}
+if(!$defer){
 $dat->setID($k, $nv);
 $idcol = $k; // Remember this for after the save.
+}
 break;
 case Model::ATT_TYPE_UUID:
 if($this->_data[$k] && isset($this->_datainit[$k]) && $this->_datainit[$k]){
 $nv = $this->_data[$k];
+if($defer){
+$inserts[$k] = $nv;
+}
+else{
 $dat->setID($k, $nv);
+}
 }
 elseif($this->_data[$k]){
 $nv = $this->_data[$k];
+if($defer){
+$inserts[$k] = $nv;
+}
+else{
 $dat->insert($k, $nv);
 $dat->setID($k, $nv);
 }
+}
 else{
 $nv = Core::GenerateUUID();
+if($defer){
+$inserts[$k] = $nv;
+}
+else{
 $dat->insert($k, $nv);
-$this->_data[$k] = $nv;
 $dat->setID($k, $nv);
+}
+$this->_data[$k] = $nv;
 }
 $idcol = $k;
 break;
@@ -2955,25 +3054,52 @@ MultiSiteHelper::IsEnabled() &&
 ($v === null || $v === false)
 ){
 $site = MultiSiteHelper::GetCurrentSiteID();
+if($defer){
+$inserts['site'] = $site;
+}
+else{
 $dat->insert('site', $site);
+}
 $this->_data[$k] = $site;
 }
 elseif($v === null || $v === false){
+if($defer){
+$inserts['site'] = 0;
+}
+else{
 $dat->insert('site', 0);
+}
 $this->_data[$k] = 0;
+}
+else{
+if($defer){
+$inserts[$k] = $v;
+}
+else{
+$dat->insert($k, $v);
+}
+}
+break;
+default:
+$v = $this->translateKey($k, $v, true);
+if($defer){
+$inserts[$k] = $v;
 }
 else{
 $dat->insert($k, $v);
 }
 break;
-default:
-$v = $this->translateKey($k, $v, true);
-$dat->insert($k, $v);
-break;
 }
 }
+if($defer) {
+$dat->_sets[] = $inserts;
+}
+else{
 $dat->execute($this->interface);
-if ($idcol) $this->_data[$idcol] = $dat->getID();
+if ($idcol){
+$this->_data[$idcol] = $dat->getID();
+}
+}
 }
 protected function _saveExisting($useset = false) {
 if(!$this->changed()) return false;
@@ -3039,6 +3165,7 @@ if(!sizeof($dat->_sets)){
 return false;
 }
 $dat->execute($this->interface);
+return true;
 }
 protected function _getLinkWhereArray($linkname) {
 $idx = $this->_getLinkIndex($linkname);
@@ -3306,13 +3433,6 @@ $schema['search_index_sec'] = [
 ];
 }
 foreach ($schema as $k => $v) {
-if (!isset($v['type']))               $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
-if (!isset($v['maxlength']))          $schema[$k]['maxlength'] = false;
-if (!isset($v['null']))               $schema[$k]['null']      = false;
-if (!isset($v['comment']))            $schema[$k]['comment']   = '';
-if (!array_key_exists('default', $v)) $schema[$k]['default']   = false;
-if (!isset($v['encrypted']))          $schema[$k]['encrypted'] = false;
-if (!isset($v['required']))           $schema[$k]['required']  = false;
 if($v['type'] == Model::ATT_TYPE_ALIAS){
 if(!isset($v['alias'])){
 throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that does not have an "alias" attribute.  Every ATT_TYPE_ALIAS key MUST have exactly one "alias"');
@@ -3324,32 +3444,30 @@ if($schema[ $v['alias'] ]['type'] == Model::ATT_TYPE_ALIAS){
 throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
 }
 }
-if($schema[$k]['default'] === false && !$schema[$k]['null']){
-if($schema[$k]['type'] == Model::ATT_TYPE_TEXT){
-$schema[$k]['default'] = '';
+$schema[$k] = self::_StandardizeSchemaDefinition($schema[$k]);
+}
+if(isset(self::$_ModelSupplementals[$classname])){
+foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+if(class_exists($supplemental)){
+$ref = new ReflectionClass($supplemental);
+if($ref->hasProperty('Schema')) {
+$s = $ref->getProperty('Schema')->getValue();
+foreach($s as $k => $dat){
+$schema[$k] = self::_StandardizeSchemaDefinition($dat);
 }
 }
-if($v['type'] == Model::ATT_TYPE_ENUM){
-$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : [];
 }
-else{
-$schema[$k]['options'] = null;
-}
-if(isset($v['title'])){
-$schema[$k]['title'] = $v['title'];
-}
-elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
-$schema[$k]['title'] = $v['form']['title'];
-}
-elseif(isset($v['formtitle'])){
-$schema[$k]['title'] = $v['formtitle'];
-}
-else{
-$schema[$k]['title'] = ucwords(str_replace('_', ' ', $k));
 }
 }
 }
 return self::$_ModelSchemaCache[$classname];
+}
+public static function AddSupplemental($class){
+$classname = get_called_class();
+if(!isset(self::$_ModelSupplementals[$classname])){
+self::$_ModelSupplementals[$classname] = [];
+}
+self::$_ModelSupplementals[$classname][] = $class;
 }
 public static function GetIndexes() {
 $classname = get_called_class();
@@ -3366,6 +3484,38 @@ else{
 $ref = new ReflectionClass($classname);
 return $ref->getProperty('Indexes')->getValue();
 }
+}
+public static function CommitSaves(){
+$classname = get_called_class();
+$tableName = self::GetTableName();
+if(!isset(self::$_DeferInserts[$tableName])){
+return;
+}
+$dat = self::$_DeferInserts[$tableName]['dataset'];
+$interface = self::$_DeferInserts[$tableName]['interface'];
+$dat->execute($interface);
+unset(self::$_DeferInserts[$tableName]);
+}
+private static function _StandardizeSchemaDefinition($schema){
+if (!isset($schema['type']))               $schema['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
+if (!isset($schema['maxlength']))          $schema['maxlength'] = false;
+if (!isset($schema['null']))               $schema['null']      = false;
+if (!isset($schema['comment']))            $schema['comment']   = '';
+if (!array_key_exists('default', $schema)) $schema['default']   = false;
+if (!isset($schema['encrypted']))          $schema['encrypted'] = false;
+if (!isset($schema['required']))           $schema['required']  = false;
+if($schema['default'] === false && !$schema['null']){
+if($schema['type'] == Model::ATT_TYPE_TEXT){
+$schema['default'] = '';
+}
+}
+if($schema['type'] == Model::ATT_TYPE_ENUM){
+$schema['options'] = isset($schema['options']) ? $schema['options'] : [];
+}
+else{
+$schema['options'] = null;
+}
+return $schema;
 }
 }
 class ModelFactory {
@@ -6332,7 +6482,6 @@ $log->log('Found ' . sizeof($groups) . ' default groups for new users: ' . implo
 else {
 $log->log('No groups set as default, new users will not belong to any groups.');
 }
-$users = [];
 foreach($data as $dat) {
 if($pk == 'email' || $pk == 'id') {
 $user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
@@ -6367,7 +6516,8 @@ $dat['registration_invitee'] = \Core\user()->get('id');
 }
 $user = new UserModel();
 }
-if(isset($dat['avatar']) && strpos($dat['avatar'], '://') !== false) {
+foreach($dat as $key => $val){
+if($key == 'avatar' && strpos($val, '://') !== false){
 $log->actionStart('Downloading ' . $dat['avatar']);
 $f    = new \Core\Filestore\Backends\FileRemote($dat['avatar']);
 $dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
@@ -6376,12 +6526,12 @@ $log->actionSkipped();
 }
 else {
 $f->copyTo($dest);
-$dat['avatar'] = 'public/user/avatar/' . $dest->getBaseFilename();
+$user->set('avatar', 'public/user/avatar/' . $dest->getBaseFilename());
 $log->actionSuccess();
 }
 }
-if(isset($dat['profiles']) && is_array($dat['profiles'])) {
-$new_profiles = $dat['profiles'];
+elseif($key == 'profiles' && is_array($val)) {
+$new_profiles = $val;
 $profiles = $user->get('json:profiles');
 if($profiles) {
 $current_flat = [];
@@ -6400,33 +6550,27 @@ else {
 $profiles = $new_profiles;
 unset($new_profiles);
 }
-unset($dat['profiles']);
-$dat['json:profiles'] = json_encode($profiles);
+$user->set('json:profiles', json_encode($profiles));
 }
-$save = $user->isnew();
-foreach($dat as $k => $v){
-if($k == 'created' || $k == 'updated'){
-continue;
+elseif($key == 'backend'){
+$user->enableAuthDriver($val);
 }
-if($user->get($k) != $v){
-$save = true;
-break;
+elseif($key == 'groups'){
+$user->setGroups($val);
+}
+else{
+$user->set($key, $val);
 }
 }
-if($save){
 try {
-$user->setFromArray($dat);
+if(!$user->exists()){
 $user->setGroups($groups);
-$user->save();
-$status = true;
+}
+$status = $user->save();
 }
 catch(Exception $e) {
 $log->error($e->getMessage());
 continue;
-}
-}
-else{
-$status = false;
 }
 if($status) {
 $log->success($status_type . ' user ' . $user->getLabel() . ' successfully!');
@@ -7324,6 +7468,14 @@ $this->_permissions[$el->getAttribute('key')] = [
 ];
 }
 }
+public function loadSupplementalModels(){
+$supplementals = $this->getSupplementalModelList();
+foreach($supplementals as $supplemental => $filename){
+$classname = substr($supplemental, strpos($supplemental, '_') + 1, -12);
+$original = new ReflectionClass($classname);
+$original->getMethod('AddSupplemental')->invoke(null, $supplemental);
+}
+}
 public function save($minified = false) {
 $this->_xmlloader->setSchema('http://corepl.us/api/2_4/component.dtd');
 $this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
@@ -7514,6 +7666,21 @@ if($k == 'model'){
 unset($classes[$k]);
 }
 elseif(strrpos($k, 'model') !== strlen($k) - 5){
+unset($classes[$k]);
+}
+elseif(strpos($k, '\\') !== false){
+unset($classes[$k]);
+}
+}
+return $classes;
+}
+public function getSupplementalModelList(){
+$classes = $this->getClassList();
+foreach ($classes as $k => $v) {
+if($k == 'model'){
+unset($classes[$k]);
+}
+elseif(strrpos($k, 'modelsupplemental') !== strlen($k) - 17){
 unset($classes[$k]);
 }
 elseif(strpos($k, '\\') !== false){
@@ -13923,6 +14090,7 @@ continue;
 try{
 $this->_components[$n] = $c;
 $this->_registerComponent($c);
+$c->loadSupplementalModels();
 }
 catch(Exception $e){
 SystemLogModel::LogErrorEvent('/core/component/failedregister', 'Ignoring component [' . $n . '] due to an error during registration!', $e->getMessage());
@@ -14448,6 +14616,23 @@ return \Core\compare_strings($val1, $val2);
 public static function GenerateUUID(){
 $serverid = 1;
 return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
+}
+public static function GetSupplementalModels($modelname){
+if(!Core::$_LoadedComponents){
+return [];
+}
+$ret              = [];
+$supplementalName = strtolower($modelname . 'supplemental');
+$supplementalLen  = strlen($supplementalName);
+foreach(Core::GetComponents() as $c){
+$list = $c->getSupplementalModelList();
+foreach($list as $key => $location){
+if(strpos($key, $supplementalName) == strlen($key) - $supplementalLen){
+$ret[] = $key;
+}
+}
+}
+return $ret;
 }
 }
 spl_autoload_register('Core::CheckClass');
@@ -18163,7 +18348,16 @@ $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
 $debug .= sprintf($legend, 'Query Log');
 $profiler = \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler();
-$debug .= $profiler->getEventTimesFormatted();
+$debug .= '<div>' . $profiler->getEventTimesFormatted() . '</div>';
+$debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-i18nstrings-information">';
+$debug .= sprintf($legend, 'I18N Strings Available');
+$strings = \Core\i18n\I18NLoader::GetAllStrings();
+$debug .= '<ul>';
+foreach($strings as &$s){
+$debug .= '<li>' . $s['key'] . '</li>';
+}
+$debug .= '</ul>';
 $debug .= '</fieldset>';
 $debug .= '</pre>';
 $foot .= "\n" . $debug;
