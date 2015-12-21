@@ -853,7 +853,18 @@ class View {
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-query-information">';
 					$debug .= sprintf($legend, 'Query Log');
 					$profiler = \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler();
-					$debug .= $profiler->getEventTimesFormatted();
+					$debug .= '<div>' . $profiler->getEventTimesFormatted() . '</div>';
+					$debug .= '</fieldset>';
+
+					// Display all the i18n strings available on the system.
+					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-i18nstrings-information">';
+					$debug .= sprintf($legend, 'I18N Strings Available');
+					$strings = \Core\i18n\I18NLoader::GetAllStrings();
+					$debug .= '<ul>';
+					foreach($strings as &$s){
+						$debug .= '<li>' . $s['key'] . '</li>';
+					}
+					$debug .= '</ul>';
 					$debug .= '</fieldset>';
 					$debug .= '</pre>';
 

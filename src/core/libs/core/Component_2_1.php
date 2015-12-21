@@ -252,6 +252,21 @@ class Component_2_1 {
 			];
 		}
 	}
+	
+	public function loadSupplementalModels(){
+		// Load all the ModelSupplementals for this Component.
+		// This is allowed because if a given Component extends another Component,
+		// that first component will already have been loaded via Core's require dependency management.
+		// It must be here because it can't be loaded inline, as Core may not have been ready at that stage.
+		$supplementals = $this->getSupplementalModelList();
+		foreach($supplementals as $supplemental => $filename){
+			$classname = substr($supplemental, strpos($supplemental, '_') + 1, -12);
+
+			// Grab the original class so I can override it.
+			$original = new ReflectionClass($classname);
+			$original->getMethod('AddSupplemental')->invoke(null, $supplemental);
+		}
+	}
 
 
 	/**
@@ -634,6 +649,31 @@ class Component_2_1 {
 				unset($classes[$k]);
 			}
 			elseif(strrpos($k, 'model') !== strlen($k) - 5){
+				// If the class doesn't explicitly end with "Model", it's also not a model.
+				unset($classes[$k]);
+			}
+			elseif(strpos($k, '\\') !== false){
+				// If this "Model" class is namespaced, it's not a valid model!
+				// All Models MUST reside in the global namespace in order to be valid.
+				unset($classes[$k]);
+			}
+		}
+		return $classes;
+	}
+
+	/**
+	 * Similar to getModelList, only it returns any supplemental model in this Component.
+	 * 
+	 * @return array
+	 */
+	public function getSupplementalModelList(){
+		$classes = $this->getClassList();
+		foreach ($classes as $k => $v) {
+			if($k == 'model'){
+				// Anything named "Model" is the actual Model object... the base object doesn't have an associated table!
+				unset($classes[$k]);
+			}
+			elseif(strrpos($k, 'modelsupplemental') !== strlen($k) - 17){
 				// If the class doesn't explicitly end with "Model", it's also not a model.
 				unset($classes[$k]);
 			}

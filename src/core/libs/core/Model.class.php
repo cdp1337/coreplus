@@ -301,6 +301,23 @@ class Model implements ArrayAccess {
 	 */
 	protected static $_ModelSchemaCache = [];
 
+	/**
+	 * Used with the defer save option to bulk-insert commands when possible.
+	 * This is used to speed up bulk INSERT statements.
+	 *
+	 * @var array
+	 */
+	protected static $_DeferInserts = [];
+
+	/**
+	 * List of models that provide supplemental functionality on the base model.
+	 * 
+	 * Used for GetSchema, GetIndexes, and the various Model-based hooks.
+	 * 
+	 * @var array
+	 */
+	protected static $_ModelSupplementals = [];
+
 
 	/*************************************************************************
 	 ****                   STANDARD PUBLIC METHODS                       ****
@@ -473,7 +490,7 @@ class Model implements ArrayAccess {
 	 * @return boolean
 	 * @throws DMI_Exception
 	 */
-	public function save() {
+	public function save($defer = false) {
 
 		// Only do the same operation if it's been changed.
 		// This is actually a little more in depth than simply seeing if it's been modified, as I also
@@ -528,6 +545,18 @@ class Model implements ArrayAccess {
 
 		// Dispatch the pre-save hook for models.
 		// This allows utilities to hook in and modify the model or perform some other action.
+		$classname = get_called_class();
+		// Allow all supplemental models to tap into this too!
+		if(isset(self::$_ModelSupplementals[$classname])){
+			foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+				if(class_exists($supplemental)){
+					$ref = new ReflectionClass($supplemental);
+					if($ref->hasMethod('PreSaveHook')){
+						$ref->getMethod('PreSaveHook')->invoke(null, $this);
+					}
+				}
+			}
+		}
 		HookHandler::DispatchHook('/core/model/presave', $this);
 
 		// NEW in 2.8, I need to run through the linked models and see if any local key is a foreign key of a linked model.
@@ -574,8 +603,14 @@ class Model implements ArrayAccess {
 		}
 
 
-		if ($this->_exists) $this->_saveExisting();
-		else $this->_saveNew();
+		if ($this->_exists){
+			$changed = $this->_saveExisting();
+		}
+		else{
+			// Inserts can be deferred!
+			$this->_saveNew($defer);
+			$changed = true;
+		}
 
 
 		// Go through any linked tables and ensure that they're saved as well.
@@ -613,6 +648,7 @@ class Model implements ArrayAccess {
 			if($deletes){
 				foreach($deletes as $model){
 					$model->delete();
+					$changed = true;
 				}
 
 				unset($l['purged']);
@@ -624,12 +660,14 @@ class Model implements ArrayAccess {
 					/** @var $model Model */
 					// Ensure all linked fields still match up.  Something may have been changed in the parent.
 					$model->setFromArray($this->_getLinkWhereArray($k));
-					$model->save();
+					if($model->save()){
+						$changed = true;
+					}
 				}
 			}
 		}
 
-		$this->_exists     = true;
+		$this->_exists   = true;
 		$this->_datainit = $this->_data;
 
 		// Check and see if this model extends another model.
@@ -647,15 +685,34 @@ class Model implements ArrayAccess {
 					// Populate the parent with this child's data.
 					// Any non-existent field will simply be ignored.
 					$parent->setFromArray($this->getAsArray());
-					$parent->save();
+					if($parent->save()){
+						$changed = true;
+					}
 				}
 			}
 		}
 
-		HookHandler::DispatchHook('/core/model/postsave', $this);
-
-		// Indicate that something happened.
-		return true;
+		if($changed){
+			$classname = get_called_class();
+			// Allow all supplemental models to tap into this too!
+			if(isset(self::$_ModelSupplementals[$classname])){
+				foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+					if(class_exists($supplemental)){
+						$ref = new ReflectionClass($supplemental);
+						if($ref->hasMethod('PostSaveHook')){
+							$ref->getMethod('PostSaveHook')->invoke(null, $this);
+						}
+					}
+				}
+			}
+			HookHandler::DispatchHook('/core/model/postsave', $this);
+			// Indicate that something happened.
+			return true;
+		}
+		else{
+			// Nothing happened!
+			return false;
+		}
 	}
 
 	/**
@@ -833,18 +890,18 @@ class Model implements ArrayAccess {
 			switch($dat['type']){
 				case Model::ATT_TYPE_TEXT:
 				case Model::ATT_TYPE_STRING:
-				$val = $this->get($k);
+					$val = $this->get($k);
 
-				if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
-					// If this is a numeric-based value, compress all the numbers without formatting.
-					// This is to support phone numbers that may have arbitrary formatting applied.
-					$val = preg_replace('/[ \-\.\(\)]/', '', $val);
-				}
+					if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
+						// If this is a numeric-based value, compress all the numbers without formatting.
+						// This is to support phone numbers that may have arbitrary formatting applied.
+						$val = preg_replace('/[ \-\.\(\)]/', '', $val);
+					}
 
-				if($val){
-					$strs[] = $val;
-				}
-				break;
+					if($val){
+						$strs[] = $val;
+					}
+					break;
 			}
 		}
 
@@ -936,6 +993,19 @@ class Model implements ArrayAccess {
 	 * @throws Exception
 	 */
 	public function delete() {
+
+		$classname = get_called_class();
+		// Allow all supplemental models to tap into this too!
+		if(isset(self::$_ModelSupplementals[$classname])){
+			foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+				if(class_exists($supplemental)){
+					$ref = new ReflectionClass($supplemental);
+					if($ref->hasMethod('PreDeleteHook')){
+						$ref->getMethod('PreDeleteHook')->invoke(null, $this);
+					}
+				}
+			}
+		}
 
 		$s = self::GetSchema();
 
@@ -1956,15 +2026,32 @@ class Model implements ArrayAccess {
 	/**
 	 * Called internally by the save() method for new records.
 	 */
-	protected function _saveNew() {
+	protected function _saveNew($defer = false) {
 		$i = self::GetIndexes();
 		$s = self::GetSchema();
 		$n = $this->_getTableName();
 
 		if (!isset($i['primary'])) $i['primary'] = []; // No primary schema defined... just don't make the in_array bail out.
 
-		$dat = new Core\Datamodel\Dataset();
-		$dat->table($n);
+		if($defer){
+			$inserts = []; // key => value map for this model
+			if(!isset(self::$_DeferInserts[$n])){
+				$dat = new Core\Datamodel\Dataset();
+				$dat->table($n);
+				$dat->_mode = \Core\Datamodel\Dataset::MODE_BULK_INSERT;
+				self::$_DeferInserts[$n] = [
+					'dataset' => $dat,
+					'interface' => $this->interface,
+				];
+			}
+			else{
+				$dat = self::$_DeferInserts[$n]['dataset'];
+			}
+		}
+		else{
+			$dat = new Core\Datamodel\Dataset();
+			$dat->table($n);
+		}
 
 		$idcol = false;
 		foreach ($this->_data as $k => $v) {
@@ -1976,11 +2063,21 @@ class Model implements ArrayAccess {
 					// If this value has already been set, (some advanced utilities may want to specify a different updated or created time),
 					// then allow that value to stick.
 					if($v){
-						$dat->insert($k, $v);
+						if($defer){
+							$inserts[$k] = $v;
+						}
+						else{
+							$dat->insert($k, $v);
+						}
 					}
 					else{
 						$nv = Time::GetCurrentGMT();
-						$dat->insert($k, $nv);
+						if($defer){
+							$inserts[$k] = $nv;
+						}
+						else{
+							$dat->insert($k, $nv);
+						}
 						$this->_data[$k] = $nv;
 					}
 					break;
@@ -1991,10 +2088,18 @@ class Model implements ArrayAccess {
 						// An ID is already set on this key, even though it's an auto-increment ID.
 						// Allow this as you may be syncing a model from another system and want their IDs to match up.
 						// NOTE, this can be a dangerous operation.
-						$dat->insert($k, $nv);
+						if($defer){
+							$inserts[$k] = $nv;
+						}
+						else{
+							$dat->insert($k, $nv);
+						}
 					}
-					$dat->setID($k, $nv);
-					$idcol = $k; // Remember this for after the save.
+					if(!$defer){
+						$dat->setID($k, $nv);
+						$idcol = $k; // Remember this for after the save.
+					}
+
 					break;
 
 				case Model::ATT_TYPE_UUID:
@@ -2003,7 +2108,12 @@ class Model implements ArrayAccess {
 						$nv = $this->_data[$k];
 						// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
 						// although there shouldn't be any update statements here.... but ya never know
-						$dat->setID($k, $nv);
+						if($defer){
+							$inserts[$k] = $nv;
+						}
+						else{
+							$dat->setID($k, $nv);
+						}
 					}
 					elseif($this->_data[$k]){
 						// a UUID is already set, but it doesn't exist yet still.
@@ -2011,18 +2121,29 @@ class Model implements ArrayAccess {
 						// THIS IS ALLOWED!
 						// Insert it as typical key.
 						$nv = $this->_data[$k];
-						$dat->insert($k, $nv);
-						$dat->setID($k, $nv);
+						if($defer){
+							$inserts[$k] = $nv;
+						}
+						else{
+							$dat->insert($k, $nv);
+							$dat->setID($k, $nv);
+						}
 					}
 					else{
 						// I need to generate a new key and set that.
 						$nv = Core::GenerateUUID();
 						// In this case, the database isn't going to care what the column is, other than the fact it's unique.
 						// It will be :)
-						$dat->insert($k, $nv);
+						if($defer){
+							$inserts[$k] = $nv;
+						}
+						else{
+							$dat->insert($k, $nv);
+							$dat->setID($k, $nv);
+						}
+
 						// And I need to set this on the data so it's available next time.
 						$this->_data[$k] = $nv;
-						$dat->setID($k, $nv);
 					}
 					// Remember this for after the save.
 					$idcol = $k;
@@ -2035,15 +2156,31 @@ class Model implements ArrayAccess {
 						($v === null || $v === false)
 					){
 						$site = MultiSiteHelper::GetCurrentSiteID();
-						$dat->insert('site', $site);
+						if($defer){
+							$inserts['site'] = $site;
+						}
+						else{
+							$dat->insert('site', $site);
+						}
+
 						$this->_data[$k] = $site;
 					}
 					elseif($v === null || $v === false){
-						$dat->insert('site', 0);
+						if($defer){
+							$inserts['site'] = 0;
+						}
+						else{
+							$dat->insert('site', 0);
+						}
 						$this->_data[$k] = 0;
 					}
 					else{
-						$dat->insert($k, $v);
+						if($defer){
+							$inserts[$k] = $v;
+						}
+						else{
+							$dat->insert($k, $v);
+						}
 					}
 					break;
 
@@ -2052,15 +2189,25 @@ class Model implements ArrayAccess {
 					// This is because the underlying data layer will throw kinipshits if (for example),
 					// NULL is passed in on a non-null column.
 					$v = $this->translateKey($k, $v, true);
-
-					$dat->insert($k, $v);
+					if($defer){
+						$inserts[$k] = $v;
+					}
+					else{
+						$dat->insert($k, $v);
+					}
 					break;
 			}
 		}
 
-		$dat->execute($this->interface);
-
-		if ($idcol) $this->_data[$idcol] = $dat->getID();
+		if($defer) {
+			$dat->_sets[] = $inserts;
+		}
+		else{
+			$dat->execute($this->interface);
+			if ($idcol){
+				$this->_data[$idcol] = $dat->getID();
+			}
+		}
 	}
 
 	/**
@@ -2168,6 +2315,7 @@ class Model implements ArrayAccess {
 		//var_dump($dat); die('mep'); // DEBUG
 		$dat->execute($this->interface);
 		// IDs don't change in updates, else they wouldn't be the id.
+		return true;
 	}
 
 	/**
@@ -2670,16 +2818,6 @@ class Model implements ArrayAccess {
 
 			// Now handle the optional fields that are expected by the logic regardless.
 			foreach ($schema as $k => $v) {
-				// These are all defaults for schemas.
-				// Setting them to the default if they're not set will ensure that
-				// 'undefined index' notices are not incurred.
-				if (!isset($v['type']))               $schema[$k]['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
-				if (!isset($v['maxlength']))          $schema[$k]['maxlength'] = false;
-				if (!isset($v['null']))               $schema[$k]['null']      = false;
-				if (!isset($v['comment']))            $schema[$k]['comment']   = '';
-				if (!array_key_exists('default', $v)) $schema[$k]['default']   = false;
-				if (!isset($v['encrypted']))          $schema[$k]['encrypted'] = false;
-				if (!isset($v['required']))           $schema[$k]['required']  = false;
 
 				// Aliases reference other columns.  The other column must exist.
 				if($v['type'] == Model::ATT_TYPE_ALIAS){
@@ -2695,48 +2833,47 @@ class Model implements ArrayAccess {
 						throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
 					}
 				}
-
-				// Ensure that the default value is appropriate.
-				if($schema[$k]['default'] === false && !$schema[$k]['null']){
-					if($schema[$k]['type'] == Model::ATT_TYPE_TEXT){
-						// Strings that do not have a default but cannot be null are defaulted to "".
-						$schema[$k]['default'] = '';
+				
+				$schema[$k] = self::_StandardizeSchemaDefinition($schema[$k]);
+			}
+			
+			// Allow all supplemental models to tap into the schema too!
+			if(isset(self::$_ModelSupplementals[$classname])){
+				foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+					if(class_exists($supplemental)){
+						$ref = new ReflectionClass($supplemental);
+						if($ref->hasProperty('Schema')) {
+							// Retrieve the supplemental Schema from this new component
+							$s = $ref->getProperty('Schema')->getValue();
+							
+							foreach($s as $k => $dat){
+								$schema[$k] = self::_StandardizeSchemaDefinition($dat);
+							}
+						}
 					}
-				}
-
-
-				if($v['type'] == Model::ATT_TYPE_ENUM){
-					// Enums have an options array!
-					$schema[$k]['options'] = isset($schema[$k]['options']) ? $schema[$k]['options'] : [];
-				}
-				else{
-					// Other fields don't.
-					$schema[$k]['options'] = null;
-				}
-
-				// Generate a title for this key from the form data.
-				// This can be useful for Model utilities that want to display the
-				// human-friendly name instead of the machine name.
-				if(isset($v['title'])){
-					// For the schema data, the "title" attribute is the highest priority.
-					$schema[$k]['title'] = $v['title'];
-				}
-				elseif(isset($v['form']) && is_array($v['form']) && isset($v['form']['title'])){
-					// Next, form.title is the preferred default.
-					$schema[$k]['title'] = $v['form']['title'];
-				}
-				elseif(isset($v['formtitle'])){
-					// This is an older shorthand format that's supported too.
-					$schema[$k]['title'] = $v['formtitle'];
-				}
-				else{
-					// Guess I need to calculate this manually then....
-					$schema[$k]['title'] = ucwords(str_replace('_', ' ', $k));
 				}
 			}
 		}
 
 		return self::$_ModelSchemaCache[$classname];
+	}
+
+	/**
+	 * Internally used method to add a supplemental model to the base model.
+	 * 
+	 * Used to allow components to append the database of another component!
+	 * 
+	 * @param string $class
+	 */
+	public static function AddSupplemental($class){
+		/** @var string $classname The class name of the extending class. */
+		$classname = get_called_class();
+		
+		if(!isset(self::$_ModelSupplementals[$classname])){
+			self::$_ModelSupplementals[$classname] = [];
+		}
+
+		self::$_ModelSupplementals[$classname][] = $class;
 	}
 
 	public static function GetIndexes() {
@@ -2759,6 +2896,62 @@ class Model implements ArrayAccess {
 			$ref = new ReflectionClass($classname);
 			return $ref->getProperty('Indexes')->getValue();
 		}
+	}
+
+	public static function CommitSaves(){
+		/** @var string $classname The class name of the extending class. */
+		$classname = get_called_class();
+
+		$tableName = self::GetTableName();
+
+		if(!isset(self::$_DeferInserts[$tableName])){
+			return;
+		}
+
+		/** @var \Core\Datamodel\Dataset $dat */
+		$dat = self::$_DeferInserts[$tableName]['dataset'];
+		$interface = self::$_DeferInserts[$tableName]['interface'];
+		$dat->execute($interface);
+
+		unset(self::$_DeferInserts[$tableName]);
+	}
+
+	/**
+	 * @param array $schema
+	 *
+	 * @return array
+	 */
+	private static function _StandardizeSchemaDefinition($schema){
+		// These are all defaults for schemas.
+		// Setting them to the default if they're not set will ensure that
+		// 'undefined index' notices are not incurred.
+		if (!isset($schema['type']))               $schema['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
+		if (!isset($schema['maxlength']))          $schema['maxlength'] = false;
+		if (!isset($schema['null']))               $schema['null']      = false;
+		if (!isset($schema['comment']))            $schema['comment']   = '';
+		if (!array_key_exists('default', $schema)) $schema['default']   = false;
+		if (!isset($schema['encrypted']))          $schema['encrypted'] = false;
+		if (!isset($schema['required']))           $schema['required']  = false;
+
+		// Ensure that the default value is appropriate.
+		if($schema['default'] === false && !$schema['null']){
+			if($schema['type'] == Model::ATT_TYPE_TEXT){
+				// Strings that do not have a default but cannot be null are defaulted to "".
+				$schema['default'] = '';
+			}
+		}
+
+
+		if($schema['type'] == Model::ATT_TYPE_ENUM){
+			// Enums have an options array!
+			$schema['options'] = isset($schema['options']) ? $schema['options'] : [];
+		}
+		else{
+			// Other fields don't.
+			$schema['options'] = null;
+		}
+		
+		return $schema;
 	}
 }
 

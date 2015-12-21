@@ -367,6 +367,7 @@ class Core implements ISingleton {
 			// Now I probably could actually load the components!
 
 			foreach ($tempcomponents as $c) {
+				/** @var Component_2_1 $c */
 				try {
 					// Load some of the data in the class so that it's available in the cached version.
 					// This is because the component 2.1 has built-in caching for many of the XML requests.
@@ -452,6 +453,7 @@ class Core implements ISingleton {
 					try{
 						$this->_components[$n] = $c;
 						$this->_registerComponent($c);
+						$c->loadSupplementalModels();
 					}
 					catch(Exception $e){
 						SystemLogModel::LogErrorEvent('/core/component/failedregister', 'Ignoring component [' . $n . '] due to an error during registration!', $e->getMessage());
@@ -1589,6 +1591,30 @@ EOD;
 		// @todo Make this dynamic based on the server ID assigned by the administrator.
 		$serverid = 1;
 		return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
+	}
+	
+	public static function GetSupplementalModels($modelname){
+		// Not ready yet?
+		if(!Core::$_LoadedComponents){
+			return [];
+		}
+		$ret              = [];
+		$supplementalName = strtolower($modelname . 'supplemental');
+		$supplementalLen  = strlen($supplementalName);
+		foreach(Core::GetComponents() as $c){
+			/** @var Component_2_1 $c */
+			$list = $c->getSupplementalModelList();
+			foreach($list as $key => $location){
+				// Disregard $location, I just need the keys.
+				if(strpos($key, $supplementalName) == strlen($key) - $supplementalLen){
+					// A match was found!
+					// This means that an external component is extending this Model.
+					$ret[] = $key;
+				}
+			}
+		}
+		
+		return $ret;
 	}
 
 }
