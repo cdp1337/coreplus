@@ -557,9 +557,3 @@ class Dataset implements \Iterator{
 		return new self();
 	}
 }
-
-
-
-
-
-
