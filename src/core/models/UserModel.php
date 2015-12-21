@@ -1324,7 +1324,6 @@ class UserModel extends Model {
 			$log->log('No groups set as default, new users will not belong to any groups.');
 		}
 
-		$users = [];
 		foreach($data as $dat) {
 
 			if($pk == 'email' || $pk == 'id') {
@@ -1378,86 +1377,82 @@ class UserModel extends Model {
 			}
 			// No else needed, else is there IS a valid $user object and it's setup ready to go.
 
-
-			// Resolve any remote avatar to a local file.
-			if(isset($dat['avatar']) && strpos($dat['avatar'], '://') !== false) {
-				// Sync the user avatar.
-				$log->actionStart('Downloading ' . $dat['avatar']);
-				$f    = new \Core\Filestore\Backends\FileRemote($dat['avatar']);
-				$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
-				if($dest->identicalTo($f)) {
-					$log->actionSkipped();
-				}
-				else {
-					$f->copyTo($dest);
-					$dat['avatar'] = 'public/user/avatar/' . $dest->getBaseFilename();
-					$log->actionSuccess();
-				}
-			}
-
-			if(isset($dat['profiles']) && is_array($dat['profiles'])) {
-				$new_profiles = $dat['profiles'];
-
-				// Pull the current profiles from the account
-				$profiles = $user->get('json:profiles');
-				if($profiles) {
-					$current_flat = [];
-					$profiles     = json_decode($profiles, true);
-					foreach($profiles as $current_profile) {
-						$current_flat[] = $current_profile['url'];
+			
+			// Handle all the properties for this user!
+			foreach($dat as $key => $val){
+				
+				if($key == 'avatar' && strpos($val, '://') !== false){
+					// Sync the user avatar.
+					$log->actionStart('Downloading ' . $dat['avatar']);
+					$f    = new \Core\Filestore\Backends\FileRemote($dat['avatar']);
+					$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
+					if($dest->identicalTo($f)) {
+						$log->actionSkipped();
 					}
+					else {
+						$f->copyTo($dest);
+						$user->set('avatar', 'public/user/avatar/' . $dest->getBaseFilename());
+						$log->actionSuccess();
+					}
+				}
+				elseif($key == 'profiles' && is_array($val)) {
+					$new_profiles = $val;
 
-					// Merge in any *actual* new profile
-					foreach($new_profiles as $new_profile) {
-						if(!in_array($new_profile['url'], $current_flat)) {
-							$profiles[] = $new_profile;
+					// Pull the current profiles from the account
+					$profiles = $user->get('json:profiles');
+					if($profiles) {
+						$current_flat = [];
+						$profiles     = json_decode($profiles, true);
+						foreach($profiles as $current_profile) {
+							$current_flat[] = $current_profile['url'];
 						}
+
+						// Merge in any *actual* new profile
+						foreach($new_profiles as $new_profile) {
+							if(!in_array($new_profile['url'], $current_flat)) {
+								$profiles[] = $new_profile;
+							}
+						}
+
+						unset($new_profile, $new_profiles, $current_flat, $current_profile);
+					}
+					else {
+						$profiles = $new_profiles;
+						unset($new_profiles);
 					}
 
-					unset($new_profile, $new_profiles, $current_flat, $current_profile);
+					// Convert this to a JSON array and remap the field.
+					$user->set('json:profiles', json_encode($profiles));
 				}
-				else {
-					$profiles = $new_profiles;
-					unset($new_profiles);
+				elseif($key == 'backend'){
+					// Was a backend requested?
+					// This gets merged instead of replaced entirely.
+					$user->enableAuthDriver($val);
 				}
-
-				// Convert this to a JSON array and remap the field.
-				unset($dat['profiles']);
-				$dat['json:profiles'] = json_encode($profiles);
-			}
-
-			// Should this record be saved or skipped entirely?
-			$save = $user->isnew();
-			foreach($dat as $k => $v){
-				if($k == 'created' || $k == 'updated'){
-					continue;
+				elseif($key == 'groups'){
+					$user->setGroups($val);
 				}
-				if($user->get($k) != $v){
-					$save = true;
-					break;
+				else{
+					// Default Behaviour,
+					// save the key into whatever field it was set to go to.
+					$user->set($key, $val);
 				}
 			}
 
-			if($save){
-				try {
-					$user->setFromArray($dat);
-
-					// Set the default groups loaded from the system.
-					$user->setGroups($groups);
-
-					$user->save();
-					$status = true;
+			try {
+				// Set the default groups loaded from the system.
+				if(!$user->exists()){
+					$user->setGroups($groups);	
 				}
-				catch(Exception $e) {
-					$log->error($e->getMessage());
-					// Skip to the next.
-					continue;
-				}
-			}
-			else{
-				$status = false;
-			}
 
+				$status = $user->save();
+			}
+			catch(Exception $e) {
+				$log->error($e->getMessage());
+				// Skip to the next.
+				continue;
+			}
+			
 			if($status) {
 				$log->success($status_type . ' user ' . $user->getLabel() . ' successfully!');
 			}
