@@ -81,30 +81,6 @@ class gpg implements AuthDriverInterface{
 	}
 
 	/**
-	 * Set the user's password using the necessary hashing
-	 *
-	 * @param $password
-	 *
-	 * @return bool|string True/False on success or failure, a string if on error.
-	 */
-	public function setPassword($password) {
-		// Use Core's built-in validation.
-		$isvalid = $this->_usermodel->validatePassword($password);
-
-		if($isvalid !== true){
-			// Core validation returned a string.... it's INVALID!
-			return $isvalid;
-		}
-
-		// hash the password.
-		$hasher = new \PasswordHash(datastore::HASH_ITERATIONS);
-		$password = $hasher->hashPassword($password);
-
-		// Still here?  Then try to set it.
-		return $this->_usermodel->set('password', $password);
-	}
-
-	/**
 	 * Check if this user is active and can login.
 	 *
 	 * @return boolean|string
