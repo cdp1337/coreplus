@@ -142,5 +142,89 @@ class UserGroupModel extends Model {
 				return true;
 		}
 	}
+
+	/**
+	 * Import the given data into the destination Model.
+	 *
+	 * @param array   $data            Indexed array of records to import/merge from the external source.
+	 * @param array   $options         Any options required for the import, such as merge, key, etc.
+	 * @param boolean $output_realtime Set to true to output the log in real time as the import happens.
+	 *
+	 * @throws Exception
+	 *
+	 * @return \Core\ModelImportLogger
+	 */
+	public static function Import($data, $options, $output_realtime = false) {
+		$log = new \Core\ModelImportLogger('User Group Importer', $output_realtime);
+
+		$merge = isset($options['merge']) ? $options['merge'] : true;
+		$pk    = isset($options['key']) ? $options['key'] : null;
+
+		if(!$pk) {
+			throw new Exception(
+				'Import requires a "key" field on options containing the primary key to compare against locally.'
+			);
+		}
+
+		foreach($data as $dat) {
+
+			if($pk == 'name' || $pk == 'id' || $pk == 'ldap_dn') {
+				// These are the only two fields on the User object itself.
+				$group = UserGroupModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
+			}
+			else {
+				$group = UserGroupModel::Find(['name = ' . $dat['name']], 1);
+			}
+
+			$status_type = $group ? 'Updated' : 'Created';
+
+			if($group && !$merge) {
+				$log->duplicate('Skipped group ' . $group->getLabel() . ', already exists and merge not requested');
+				// Skip to the next record.
+				continue;
+			}
+
+			if(!$group) {
+				// All incoming groups must have a name!
+				if(!isset($dat['name'])) {
+					$log->error('Unable to import groups without a name!');
+					// Skip to the next record.
+					continue;
+				}
+
+				// New user!
+				$group = new UserGroupModel();
+			}
+			// No else needed, else is there IS a valid $user object and it's setup ready to go.
+
+
+			// Handle all the properties for this user!
+			foreach($dat as $key => $val){
+				// Default Behaviour,
+				// save the key into whatever field it was set to go to.
+				$group->set($key, $val);
+			}
+
+			try {
+				$status = $group->save();
+			}
+			catch(Exception $e) {
+				$log->error($e->getMessage());
+				// Skip to the next.
+				continue;
+			}
+
+			if($status) {
+				$log->success($status_type . ' group ' . $group->getLabel() . ' successfully!');
+			}
+			else {
+				$log->skip('Skipped group ' . $group->getLabel() . ', no changes detected.');
+			}
+		}
+
+		$log->finalize();
+
+		return $log;
+	}
 	
 } // END class UserGroupModel extends Model
