@@ -103,7 +103,8 @@ class DatastoreAuthController extends Controller_2_1 {
 				}
 				elseif($status === true){
 					$user->save();
-					Core::SetMessage('Updated Password Successfully', 'success');
+					\SystemLogModel::LogSecurityEvent('/user/password', 'Password changed', null, $user->get('id'));
+					\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_PASSWORD');
 				}
 				else{
 					throw new ModelValidationException($status);
