@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Markdown Browser" execmode="web">
+	<requires>
+		<require name="core" type="component" version="4.9" operation="ge"/>
+	</requires>
+	<description>
+		Provides an inline browser experience for raw markdown files on the server disk.
+		This is expected to be used in conjunction with manually SFTP'ing files to the production server
+		and having them automatically viewable on the live site as HTML pages.
+		
+		This DOES NOT provide functionality for editing those markdown files,
+		as that is expected to be done via an external editor!
+	</description>
+	<configs>
+		<config key="/markdownbrowser/basedir" type="string" default=""/>
+		<config key="/markdownbrowser/source" type="boolean" default="1"/>
+		<config key="/markdownbrowser/autoregister" type="boolean" default="0"/>
+	</configs>
+	<pages>
+		<page baseurl="/markdownbrowser/admin" title="t:STRING_MARKDOWNBROWSER_ADMIN" admin="1" access="g:admin" group="Content"/>
+	</pages>
+	<hooks>
+		<hook name="/cron/hourly" call="MarkdownBrowserController::_AutoRegisterFiles"/>
+	</hooks>
+	<files>
+		<file filename="CHANGELOG" md5="8fb3b39e5768e85135eb3daa1582c5f3"/>
+		<file filename="controllers/MarkdownBrowserController.php" md5="05815991b8837c0064065a7419f38f25">
+			<controller name="MarkdownBrowserController"/>
+			<class name="MarkdownBrowserUrlHelper"/>
+		</file>
+		<file filename="i18n/ar.ini" md5="ac804f50184b3da1cfa2a3e63e386ffd"/>
+		<file filename="i18n/de.ini" md5="7ee24fe19d3916db8b649a176fba537b"/>
+		<file filename="i18n/en.ini" md5="567a45f02dbef4435a852a8b4c58739a"/>
+		<file filename="i18n/fr.ini" md5="a9a71c151f3671cb0a7299c68194eaa0"/>
+	</files>
+	<view searchdir="templates">
+		<file filename="templates/pages/markdownbrowser/admin.tpl" md5="d13aab0a07c041db8dcec507e69990fa"/>
+		<file filename="templates/pages/markdownbrowser/index.tpl" md5="2dfc8f64c4fe06140d998bc39464bbcf"/>
+		<file filename="templates/pages/markdownbrowser/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/markdownbrowser/view-file.tpl" md5="35d194b1b49f068ad8df448098ed7f7c"/>
+	</view>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="2.0.0"/>
+	</upgrades>
+	<users/>
+	<widgets/>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
+			GNU Affero General Public License v3
+		</license>
+	</licenses>
+</component>
+
