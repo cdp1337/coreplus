@@ -10,58 +10,90 @@
 
 /*** Controls that can be implemented throughout the site ***/
 ul.controls {
-	margin: 0;
-	padding: 0;
-	max-width: 200px;
-	border: 1px solid;
-
-	li {
-		float:left;
-		margin-right:0.5em;
-		list-style:none;
-
-		a {
-			text-decoration: none;
-			font-size: 14px;
-			padding: 0.05em;
-			line-height: 18px;
-		}
-
-		a:hover {
-			text-shadow: none;
-			font-size: 18px;
-			padding: 0;
-		}
-
-		span {
-			display: none;
-		}
-	}
-
-	li:last-child {
-		// Remove the float on the last LI to prevent the UL box from collapsing.
-		float: none;
-	}
-
-	/* icon animations ftw! */
-	&.controls-animated {
-		.controls-proxy-icon {
-			opacity: 1;
-			transition: opacity 0.3s ease-in-out 0s;
-		}
-
-		.icon-spin {
-			opacity: 0.5;
-		}
-	}
-
-	&.controls-proxy {
-		color: #477DCA;
-		padding: 0.25em;
+	&.proxy {
+		margin: 0;
+		padding: 0;
+		max-width: 200px;
+		border: 1px solid;
 
 		li {
+			float:left;
+			margin-right:0.5em;
+			list-style:none;
+
+			a {
+				text-decoration: none;
+				font-size: 14px;
+				padding: 0.05em;
+				line-height: 18px;
+			}
+
+			a:hover {
+				text-shadow: none;
+				font-size: 18px;
+				padding: 0;
+			}
+
+			span {
+				display: none;
+			}
+		}
+
+		li:last-child {
+			// Remove the float on the last LI to prevent the UL box from collapsing.
 			float: none;
 		}
+
+		/* icon animations ftw! */
+		&.controls-animated {
+			.controls-proxy-icon {
+				opacity: 1;
+				transition: opacity 0.3s ease-in-out 0s;
+			}
+
+			.icon-spin {
+				opacity: 0.5;
+			}
+		}
+
+		&.controls-proxy {
+			color: #477DCA;
+			padding: 0.25em;
+
+			li {
+				float: none;
+			}
+		}
+	}
+
+	&.no-proxy {
+		margin: 0;
+		border: 0 none;
+
+		li {
+			float:left;
+			margin-right:0.5em;
+			list-style:none;
+			&:after {
+				content: ' |';
+			}
+		}
+
+		li:last-child {
+			// Remove the float on the last LI to prevent the UL box from collapsing.
+			float: none;
+			&:after {
+				content: '';
+			}
+		}
+		
+		i {
+			display: none;
+		}
+		span {
+			display: inline;
+		}
+		
 	}
 }
 

@@ -49,33 +49,6 @@ $(function(){
 		// Transpose the appropriate defaults to the object.
 		$original.data('position', options.position);
 
-
-
-		// Append the clone to the end of the original's parent.
-		// This should be in the same spot, if it isn't for some reason,
-		// wrap your <ul class="controls"/> with an empty <div/>.
-		$original.parent().append($clone);
-
-		// And move the original to the end of the body.
-		$body.append($original);
-
-		// I'm going to do modifications to the original, since that may have events already bound to it.
-		$original.addClass('context-menu').addClass('controls-hover');
-
-		// This helps fine-tune the styles a little.
-		if(controlcount == 1){
-			$original.addClass('context-menu-one-link');
-		}
-		else{
-			$original.addClass('context-menu-many-links');
-		}
-
-		// Ensure the clone width is correct.
-		$original.css('min-width', $clone.width());
-
-		// And hide it!  (it'll be shown on hover)
-		$original.hide();
-
 		// If there are more than 3 options, hide the rest.
 		if (
 			(options.proxyForce === null && controlcount > 3) ||
@@ -91,13 +64,41 @@ $(function(){
 
 		if(useProxy){
 
+			// Append the clone to the end of the original's parent.
+			// This should be in the same spot, if it isn't for some reason,
+			// wrap your <ul class="controls"/> with an empty <div/>.
+			$original.parent().append($clone);
+
+			// And move the original to the end of the body.
+			$body.append($original);
+
+			// I'm going to do modifications to the original, since that may have events already bound to it.
+			$original.addClass('context-menu').addClass('controls-hover');
+
+			// This helps fine-tune the styles a little.
+			if(controlcount === 1){
+				$original.addClass('context-menu-one-link');
+			}
+			else{
+				$original.addClass('context-menu-many-links');
+			}
+
+			// Ensure the clone width is correct.
+			$original.css('min-width', $clone.width());
+
+			// And hide it!  (it'll be shown on hover)
+			$original.hide();
+
 			proxyclass = 'controls-proxy-icon icon-' + options.proxyIcon;
 			if(options.proxyIconAnimation){
 				proxyclass += ' icon-' + options.proxyIconAnimation;
 				$clone.addClass('controls-animated');
 			}
 
-			$clone.addClass('controls-proxy').html('<li><i class="' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
+			$clone.addClass('controls-proxy proxy').html('<li><i class="' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
+		}
+		else{
+			$original.addClass('no-proxy');
 		}
 
 		if(options.proxyIconAnimation){
