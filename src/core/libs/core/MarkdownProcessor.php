@@ -243,11 +243,19 @@ class MarkdownProcessor extends MarkdownExtra {
 	public function doTOC($text){
 		$toc = '';
 		if (preg_match ('/\[TOC\]/m', $text, $i, PREG_OFFSET_CAPTURE)) {
+			// $i contains an array with 0 => '[TOC]' and 1 => the position of the character in the main text.
 			preg_match_all ('/<h([2-6]) id="([0-9a-z_-]+)">(.*?)<\/h\1>/i', $text, $h, PREG_SET_ORDER, $i[0][1]);
 			foreach ($h as &$m){
 				$toc .= str_repeat ("\t", (int) $m[1]-2)."*\t [${m[3]}](#${m[2]})\n";
 			}
-			$text = preg_replace('/\[TOC\]/m', '<aside class="markdown-toc">' . Markdown::defaultTransform($toc) . '</aside>', $text);
+			
+			// We use this method instead of preg_replace so that only the first instance is replaced!
+			$textPre = substr($text, 0, $i[0][1]);
+			$textPost = substr($text, $i[0][1] + 5);
+			
+			$text = $textPre . '<aside class="markdown-toc">' . Markdown::defaultTransform($toc) . '</aside>' . $textPost;
+			//var_dump($textPre, $textPost); die();
+			//$text = preg_replace('/\[TOC\]/m', '<aside class="markdown-toc">' . Markdown::defaultTransform($toc) . '</aside>', $text);
 			//$text = preg_replace ('/\[TOC\]/m', Markdown($toc), $text);
 		}
 		return trim ($text, "\n");
