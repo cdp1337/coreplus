@@ -8,3 +8,4 @@
     * How to use filters and their embedded functionality
 * [Component XML](component-xml.md)
 	* @todo
+* [Markdown Instructions](markdown.md)
