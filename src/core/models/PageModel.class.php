@@ -1476,17 +1476,39 @@ class PageModel extends Model {
 	}
 
 	/**
-	 * Purge the entire page cache for this given page.
+	 * Get a textual representation of this Model as a flat string.
+	 *
+	 * Used by the search systems to index the model, (or multiple models into one).
+	 * 
+	 * This is the PageModel specific version as Pages behave differently than most other systems.
+	 *
+	 * @return string
 	 */
-	public function purgePageCache(){
-		$indexkey = $this->getIndexCacheKey();
-		$index = \Core\Cache::Get($indexkey);
-		if($index && is_array($index)){
-			foreach($index as $key){
-				\Core\Cache::Delete($key);
-			}
-		}
-		\Core\Cache::Delete($indexkey);
+	public function getSearchIndexString(){
+		// The default behaviour is to sift through the records on this model itself.
+		$strs = [];
+		
+		// First string to pull in are the various URLs!
+		$strs[] = $this->getResolvedURL();
+		$strs[] = $this->getRewriteURLs();
+		
+		// Title is important.
+		$strs[] = $this->get('title');
+		// As is the SEO title
+		$strs[] = $this->getSEOTitle();
+		
+		// Gimme some metadata.
+		$strs[] = $this->getTeaser(true);
+		
+		// Lastly the body!
+		// This is probably going to be HTML, (one would hope at least!)
+		// So convert it to text before saving.
+		// Otherwise there would be a million "p" entries in the string!
+		$body = $this->get('body');
+		$converter = new HTMLToMD\Converter();
+		$strs[] = $converter->convert($body);
+
+		return implode(' ', $strs);
 	}
 
 	/**
@@ -1522,6 +1544,20 @@ class PageModel extends Model {
 	 */
 	public function isPublished(){
 		return ($this->getPublishedStatus() == 'published');
+	}
+
+	/**
+	 * Purge the entire page cache for this given page.
+	 */
+	public function purgePageCache(){
+		$indexkey = $this->getIndexCacheKey();
+		$index = \Core\Cache::Get($indexkey);
+		if($index && is_array($index)){
+			foreach($index as $key){
+				\Core\Cache::Delete($key);
+			}
+		}
+		\Core\Cache::Delete($indexkey);
 	}
 
 	private function _getParentTree($antiinfiniteloopcounter = 5) {
