@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 21 Dec 2015 15:29:36 -0500
+ * @compiled Sun, 27 Dec 2015 22:20:53 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -4953,15 +4953,17 @@ return $u;
 public function getIndexCacheKey(){
 return 'page-cache-index-' . $this->get('site') . '-' . md5($this->get('baseurl'));
 }
-public function purgePageCache(){
-$indexkey = $this->getIndexCacheKey();
-$index = \Core\Cache::Get($indexkey);
-if($index && is_array($index)){
-foreach($index as $key){
-\Core\Cache::Delete($key);
-}
-}
-\Core\Cache::Delete($indexkey);
+public function getSearchIndexString(){
+$strs = [];
+$strs[] = $this->getResolvedURL();
+$strs[] = $this->getRewriteURLs();
+$strs[] = $this->get('title');
+$strs[] = $this->getSEOTitle();
+$strs[] = $this->getTeaser(true);
+$body = $this->get('body');
+$converter = new HTMLToMD\Converter();
+$strs[] = $converter->convert($body);
+return implode(' ', $strs);
 }
 public function getPublishedStatus(){
 if($this->get('published_status') == 'draft'){
@@ -4977,6 +4979,16 @@ return 'published';
 }
 public function isPublished(){
 return ($this->getPublishedStatus() == 'published');
+}
+public function purgePageCache(){
+$indexkey = $this->getIndexCacheKey();
+$index = \Core\Cache::Get($indexkey);
+if($index && is_array($index)){
+foreach($index as $key){
+\Core\Cache::Delete($key);
+}
+}
+\Core\Cache::Delete($indexkey);
 }
 private function _getParentTree($antiinfiniteloopcounter = 5) {
 if ($antiinfiniteloopcounter <= 0) return array();

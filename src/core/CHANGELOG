@@ -1,20 +1,85 @@
 Core Plus 5.0.0
 
 	* New GPG library for handling encryption and logins; no longer relies on the gnupg_php library.
-    * New i18n support across the platform, (still need to write the rest of the i18n strings and string replacements).
-    * New support for uploading a GPG public key instead of searching for public keyservers.
-    * New support for i18n strings within the \Core\set_message system.
-    * Add component names to the Config table for quick lookups on which component has which config options.
-    * Switch from the request header 'SERVERNAME' to 'REFERER' for standard RFC compatibility.
-    * New support for email encryption natively.
-    * New support for the Piwik DeviceDetector library when available.
-    * Pages now support i18n strings natively.
-    * Smarty {a} tags now support i18n strings.
-    * Add the Spyc library for YAML file processing.
-    * Add convenience defines for number of seconds in X timeframe, (1 day, 1 week, 1 month, etc).  Useful for Cache systems.
-    * New tests for GPG
-    * New tests for UserAgents
-    * Updated tests for SQL Parser.
+	* New i18n support across the platform, (still need to write the rest of the i18n strings and string
+	  replacements).
+	* New support for uploading a GPG public key instead of searching for public keyservers.
+	* New support for i18n strings within the \Core\set_message system.
+	* Add component names to the Config table for quick lookups on which component has which config
+	  options.
+	* Switch from the request header 'SERVERNAME' to 'REFERER' for standard RFC compatibility.
+	* New support for email encryption natively.
+	* New support for the Piwik DeviceDetector library when available.
+	* Pages now support i18n strings natively.
+	* Smarty {a} tags now support i18n strings.
+	* Add the Spyc library for YAML file processing.
+	* Add convenience defines for number of seconds in X timeframe, (1 day, 1 week, 1 month, etc).  Useful
+	  for Cache systems.
+	* New tests for GPG
+	* New tests for UserAgents
+	* Updated tests for SQL Parser.
+	* [Security] Record password changes to the local security log.
+	* [Bug] Fix the [TOC] markdown checker to only replace the first instance of `[TOC]`!
+	* [Bug] Fix the VersionString library when comparing stability and user versions.
+	* [Bug] Fix Session::Get when a subkey is requested.
+	* [Bug] Fix support for querying the Session for a nested key.
+	* Change the behaviour of control links to return the text of links when proxy is not used.
+	* Translate all pages to markdown before returning the indexable string version.
+	* New support for metafields in Markdown files!
+	* Compiler
+	* Expand the User importer to allow passing in any arbituary argument.
+	* Add a UserGroup import method, similar to the User importer.
+	* Initial support for supplemental models!
+	* Remove the setPassword method for GPG auths backends, (the inherit nature of key-based sign ins is
+	  that they don't use a password).
+	* Character reorder, (no functional change).
+	* Whitespace trim
+	* Sanitize out non-printable characters from the SQL logger and debugger.  Also use 'INSERT IGNORE'
+	  for bulk inserts to handle duplicate content.
+	* Minor check for if languages provided by the system are not defined.
+	* Minor fix to allow JS.Cookie not being present for the admin bar.
+	* Flush the smarty cache on reinstallation, (correctly this time...)
+	* Use a 't:' prefix on messages to be consistent and fix the user login redirect issue when browsing
+	  to /admin.
+	* Update the changelog to reflect upcoming changes.
+	* MASSIVE changes in prep for the 5.0 release!
+	* Move the ISO-country flags image repository in Core upstream to make it useable without the
+	  GeographicCodes component.
+	* Do not return an object when the assign property is used on smarty {a} blocks.
+	* Whitespace removals
+	* Add a new View type, View::MODE_EMAILORPRINT for print-dedicated, PDF, and email templates.
+	* Extract out the encrypt and decrypt values in the Model system.
+	* Add logic to support <pre> tags in the HTML to MD converter.
+	* New native support for server-side JSON autocomplete resolution on input elements.
+	* New md_to_html modifier for Smarty and the updated version of Michelf's Markdown Transformer.
+	* New option for an entire site to be marked as not-indexable by crawlers.
+	* New support for checking if a component is ready (as in configured and available).
+	* Compiler.
+	* Switch reinstallall to use the smarty function progress_log_iframe now that the function is
+	  available.
+	* Skip UserModel saving when there are no changes in either local or linked children.
+	* Add support for linked records to provide a single value as the linking attribute, (when the foreign
+	  and local keys are the same name).
+	* Better support for expected return values from the Dataset::ExecuteAndGet method.
+	* New support for setting the default skins to use throughout the site.
+	* More debugging output on email tests, useful for UX developers.
+	* Include numbers in search results (UserModels).
+	* Do not re-encode images that have already been encoded.
+	* Include numbers in search results and sort them automatically by relevency.
+	* Overhaul the Email system to provide better support for HTML to Text (MD), and other tweaks.
+	* Exact string searches warrant a match across all versions.
+	* Skip blank words for searches.
+	* New support for HTML to MD!
+	* Improvements in streamlining how to use the CLI arguments a bit.
+	* Add a few failsafes to UserAgent for if the upstream useragent ini file fails to load.
+	* Standardize many of the theme/component reinstallation utilities and expose them as public
+	  functions.
+	* Remove unnecessary call to jquery.cookie on the adminmenu page.
+	* Include an upgrade path for 3.5.1
+	* Add support for ~bpo version detection and packager versions.
+	* Minify core.strings, (must have forgotten to do this before).
+	* Set version freeze to 0 by default.  This is an enterprise feature that's not useful for standard
+	  community sites.
 
 Core Plus 4.2.0
 
