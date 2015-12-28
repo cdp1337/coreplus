@@ -56,10 +56,26 @@ use Michelf\MarkdownExtra;
  *
  */
 class MarkdownProcessor extends MarkdownExtra {
+	
+	public $urlCallback = null;
+	
+	/** @var array Contains all the metafields in this document */
+	private $meta = [];
+	
 	private $_headerCount = 0;
+	
+	/** @var array Array of any field that's allowed to return multiple values */
+	private $_metasPlural = [
+		'author', 'keywords'
+	];
+	
+	private $_metasSynonyms = [
+		'summary' => 'description',
+		'subject' => 'title',
+	    'authors' => 'author',
+	];
 
 	public function __construct(){
-		parent::__construct();
 
 		// Add a few features to the default Markdown formatter.
 
@@ -68,6 +84,38 @@ class MarkdownProcessor extends MarkdownExtra {
 
 		// This will add the [TOC] tag to MD.
 		$this->document_gamut += ['doTOC' => 55];
+		
+		// Process all metadata on this document
+		$this->document_gamut += ['doMeta' => 1];
+		$this->document_gamut += ['doMetaPost' => 99];
+		
+		$this->url_filter_func = [$this, 'doLink'];
+		
+		parent::__construct();
+	}
+
+	/**
+	 * Get a requested metafield for this document.
+	 * 
+	 * @param $key string The meta field to retrieve
+	 *
+	 * @return null|string|array
+	 */
+	public function getMeta($key){
+		$key = strtolower($key);
+		
+		// Allow for aliases
+		if(isset($this->_metasSynonyms[$key])){
+			$key = $this->_metasSynonyms[$key];
+		}
+		
+		if(isset($this->meta[$key])){
+			return $this->meta[$key];
+		}
+		else{
+			// Else?  The field isn't set, just return null.
+			return null;	
+		}
 	}
 
 	/**
@@ -82,6 +130,100 @@ class MarkdownProcessor extends MarkdownExtra {
 
 		$id = 'md' . $this->_headerCount . '_' . \Core\str_to_url($text);
 		return $id;
+	}
+
+	/**
+	 * Process any metafields in this document
+	 * 
+	 * @param $text string The original document
+	 *
+	 * @return string The rest of the document minus any metafields
+	 */
+	public function doMeta($text){
+		// If the first line is text with colon-separated tags,
+		// read the document until a hard break is found.
+		$lines = explode("\n", $text);
+		
+		$previous = null;
+		$fields   = [];
+		$x        = 0;
+		foreach($lines as $l){
+			$lineWidth = strlen($l) + 1;
+			if(($pos = strpos($l, ':')) !== false){
+				$type     = strtolower(substr($l, 0, $pos));
+				$content  = substr($l, $pos+1);
+				
+				// Is this field an alias?
+				if(isset($this->_metasSynonyms[$type])){
+					$type = $this->_metasSynonyms[$type];
+				}
+				
+				if($previous !== null){
+					// There was a previous header, save that before continuing on.
+					$this->meta[ $previous ] = (in_array($previous, $this->_metasPlural)) ? $fields : $fields[0];
+					// Clear out those previous values.
+					$fields = [];
+				}
+				$previous = $type;
+				$fields[] = trim($content);
+				$x += $lineWidth;
+			}
+			elseif(trim($l) == ''){
+				// It's a blank line, this indicates the end of the headers.
+				if($previous !== null){
+					// There was a previous header, save that before continuing on.
+					$this->meta[ $previous ] = (in_array($previous, $this->_metasPlural)) ? $fields : $fields[0];
+				}
+				return substr($text, $x);
+			}
+			elseif($previous){
+				$fields[] = trim($l);
+				$x += $lineWidth;
+			}
+		}
+	}
+
+	/**
+	 * Final checks for any meta fields that may be derived from the data.
+	 * 
+	 * @param $text string
+	 * 
+	 * @return string
+	 */
+	public function doMetaPost($text){
+		
+		// If the title is not set yet, pull it from the content.
+		if(!isset($this->meta['title'])){
+			preg_match('/<h1[^>]*>(.*)<\/h1>/isU', $text, $h);
+			if(isset($h[1])){
+				$this->meta['title'] = $h[1];
+			}
+		}
+		
+		return $text;
+	}
+	
+	public function doLink($url){
+		if(isset($this->urls[$url])){
+			return $this->urls[$url];
+		}
+		elseif(strpos($url, '://') !== false){
+			// Skip translation for fully resolved links.
+			return $url;
+		}
+		else{
+			// Try to use Core to resolve this URL.
+			$resolved = \Core\resolve_link($url);
+			if($resolved !== null){
+				return $resolved;
+			}
+			
+			// Is there a supplemental method to handle these?
+			if ($this->urlCallback)
+				$url = call_user_func($this->urlCallback, $url);
+			
+			return $url;
+		}
 	}
 
 	/**
