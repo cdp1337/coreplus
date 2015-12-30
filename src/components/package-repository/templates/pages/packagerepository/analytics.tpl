@@ -1,4 +1,5 @@
 {script library="chartist.js"}{/script}
+{script library="jquery"}{/script}
 {css src="css/package-repository.css"}{/css}
 
 
@@ -49,58 +50,60 @@
 
 
 {script location="foot"}<script>
-	new Chartist.Pie(
-		// Target
-		'#versions',
-		// Data
-		{$chart.versions},
-		// Options
-		{
-			/*labelInterpolationFnc: function(value) {
-				return value[0]
-			}*/
-		},
-		// Responsive Options
-		[
+	$(function() {
+		new Chartist.Pie(
+			// Target
+			'#versions',
+			// Data
+			{$chart.versions},
+			// Options
+			{
+				/*labelInterpolationFnc: function(value) {
+				 return value[0]
+				 }*/
+			},
+			// Responsive Options
 			[
-				'screen and (min-width: 640px)',
-				{
-					chartPadding: 60,
-					labelOffset: 100,
-					labelDirection: 'explode'
-				}
-			],
-			[
-				'screen and (min-width: 1024px)',
-				{
-					chartPadding: 60,
-					labelOffset: 80,
-					labelDirection: 'explode'
-				}
+				[
+					'screen and (min-width: 640px)',
+					{
+						chartPadding:   60,
+						labelOffset:    100,
+						labelDirection: 'explode'
+					}
+				],
+				[
+					'screen and (min-width: 1024px)',
+					{
+						chartPadding:   60,
+						labelOffset:    80,
+						labelDirection: 'explode'
+					}
+				]
 			]
-		]
-	);
+		);
 
-	new Chartist.Line(
-		// Target
-		'#time-graph',
-		// Data
-		{$chart.all},
-		// Options
-		{
-			fullWidth: true,
-			chartPadding: {
-				right: 40,
-				top: 40
+		new Chartist.Line(
+			// Target
+			'#time-graph',
+			// Data
+			{$chart.all},
+			// Options
+			{
+				fullWidth:    true,
+				chartPadding: {
+					right: 40,
+					top:   40
+				}
 			}
-		}
-	);
+		);
 
-	$('#versions').tooltip();
-	$('#time-graph').tooltip();
-	
-	// Add a title 
-	/*$('#versions').on('mouseover', 'g.ct-series', function() {
-		console.log($(this));
-	});*/
+		$('#versions').tooltip();
+		$('#time-graph').tooltip();
+
+		// Add a title 
+		/*$('#versions').on('mouseover', 'g.ct-series', function() {
+		 console.log($(this));
+		 });*/
+	});
 </script>{/script}

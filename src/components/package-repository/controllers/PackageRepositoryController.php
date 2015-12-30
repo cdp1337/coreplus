@@ -162,7 +162,7 @@ class PackageRepositoryController extends Controller_2_1 {
 		$allmonths = [];      // Labels
 		// This goes back 12 months.
 		$date = new \Core\Date\DateTime();
-		$date->modify('-12 months');
+		$date->modify('-11 months');
 		for($i = 1; $i <= 12; $i++){
 			$allboilerplate[ $date->format('Ym') ] = null;
 			$allmonths[] = $date->format('M');
@@ -203,6 +203,10 @@ class PackageRepositoryController extends Controller_2_1 {
 				// The set of logic to compare the current version of Core against the version connecting.
 				// This is used primarily to set a class name onto the graphs so that they can be coloured specifically.
 				$v = Core::VersionSplit($version);
+				
+				// These two values are used in the historical map, (as revision may be a bit useless at this scale).
+				$briefVersion = $v['major'] . '.' . $v['minor'] . '.x';
+				$briefUA      = 'Core Plus ' . $briefVersion;
 
 				if($v['major'] == $currentVersion['major'] && $v['minor'] == $currentVersion['minor']){
 					// Check is same version as current (or newer), blue!
@@ -224,26 +228,28 @@ class PackageRepositoryController extends Controller_2_1 {
 				$month = date('Ym', $dat['datetime']);
 			}
 			else{
-				$ua      = 'Other';
-				$version = null;
-				$referrer = null;
-				$class    = 'series-other';
-				$month    = null;
+				$ua           = 'Other';
+				$briefUA      = 'Other';
+				$version      = null;
+				$briefVersion = null;
+				$referrer     = null;
+				$class        = 'series-other';
+				$month        = null;
 			}
 			
 			// All Data!
 			if($month && array_key_exists($month, $allboilerplate)){
-				if(!isset($allseries[$ua])){
-					$allseries[$ua] = [
+				if(!isset($allseries[$briefUA])){
+					$allseries[$briefUA] = [
 						'class'     => $class,
-						'name'      => $version,
-						'title'     => $ua,
-						'useragent' => $ua,
+						'name'      => $briefVersion,
+						'title'     => $briefUA,
+						'useragent' => $briefUA,
 					    'values'    => $allboilerplate,
 					];
 				}
 				
-				$allseries[$ua]['values'][$month]++;
+				$allseries[$briefUA]['values'][$month]++;
 				//$allseries['Total']['values'][$month]++;
 			}
 			
