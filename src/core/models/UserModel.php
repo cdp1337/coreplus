@@ -1022,7 +1022,8 @@ class UserModel extends Model {
 			}
 		}
 
-		return $a;
+		// Merge any parent links.
+		return array_merge($a, parent::getControlLinks());
 	}
 
 	/**

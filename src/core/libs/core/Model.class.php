@@ -311,9 +311,9 @@ class Model implements ArrayAccess {
 
 	/**
 	 * List of models that provide supplemental functionality on the base model.
-	 * 
+	 *
 	 * Used for GetSchema, GetIndexes, and the various Model-based hooks.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected static $_ModelSupplementals = [];
@@ -951,8 +951,9 @@ class Model implements ArrayAccess {
 
 	/**
 	 * Get an array of control links for this model.
-	 *
-	 * In order to use this method, you MUST extend it on your own model!
+	 * 
+	 * Please call array_merge($results, parent::getControlLinks())
+	 * in any extending method to retain the supplemental model functionality.
 	 *
 	 * The returned data MUST be either an empty array or an index array of arrays.
 	 * Each internal array should have link, title, icon, and any other parameter supported by the ViewControl
@@ -962,7 +963,23 @@ class Model implements ArrayAccess {
 	 * @return array
 	 */
 	public function getControlLinks(){
-		return [];
+		$ret = [];
+
+		$classname = get_class($this);
+
+		// Allow all supplemental models to tap into the schema too!
+		if(isset(self::$_ModelSupplementals[$classname])){
+			foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+				if(class_exists($supplemental)){
+					$ref = new ReflectionClass($supplemental);
+					if($ref->hasMethod('GetControlLinks')){
+						$ret = array_merge($ret, $ref->getMethod('GetControlLinks')->invoke(null, $this));
+					}
+				}
+			}
+		}
+
+		return $ret;
 	}
 
 	/**
@@ -2833,10 +2850,10 @@ class Model implements ArrayAccess {
 						throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that points to another alias.  Aliases MUST NOT point to another alias... bad things could happen.');
 					}
 				}
-				
+
 				$schema[$k] = self::_StandardizeSchemaDefinition($schema[$k]);
 			}
-			
+
 			// Allow all supplemental models to tap into the schema too!
 			if(isset(self::$_ModelSupplementals[$classname])){
 				foreach(self::$_ModelSupplementals[$classname] as $supplemental){
@@ -2845,7 +2862,7 @@ class Model implements ArrayAccess {
 						if($ref->hasProperty('Schema')) {
 							// Retrieve the supplemental Schema from this new component
 							$s = $ref->getProperty('Schema')->getValue();
-							
+
 							foreach($s as $k => $dat){
 								$schema[$k] = self::_StandardizeSchemaDefinition($dat);
 							}
@@ -2860,15 +2877,15 @@ class Model implements ArrayAccess {
 
 	/**
 	 * Internally used method to add a supplemental model to the base model.
-	 * 
+	 *
 	 * Used to allow components to append the database of another component!
-	 * 
+	 *
 	 * @param string $class
 	 */
 	public static function AddSupplemental($class){
 		/** @var string $classname The class name of the extending class. */
 		$classname = get_called_class();
-		
+
 		if(!isset(self::$_ModelSupplementals[$classname])){
 			self::$_ModelSupplementals[$classname] = [];
 		}
@@ -2950,7 +2967,7 @@ class Model implements ArrayAccess {
 			// Other fields don't.
 			$schema['options'] = null;
 		}
-		
+
 		return $schema;
 	}
 }
