@@ -71,7 +71,7 @@ class PreflightCheckStep extends InstallerStep {
 			];
 		}
 
-		if(version_compare($version, '5.4.6', '<')){
+		if(version_compare($version, '5.5.0', '<')){
 			return [
 				'title' => 'PHP Version',
 				'status' => 'warning',
