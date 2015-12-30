@@ -79,9 +79,15 @@ class I18NString {
 		$this->_resultMatchedString = $result['match_str'];
 		$this->_resultAllResults    = $result['results'];
 
-		if(!$this->_resultIsFound && DEVELOPMENT_MODE){
-			// Provide some feedback to developers if this key was not found.
-			$str = '[' . $this->_resultMatchedLang . ':' . $key . ']';
+		if(!$this->_resultIsFound){
+			if(DEVELOPMENT_MODE){
+				// Provide some feedback to developers if this key was not found.
+				$opts = implode(', ', $this->_params);
+				$str = '[' . $this->_resultMatchedLang . ':' . $opts . ']';
+			}
+			else{
+				$str = $this->_key;
+			}
 		}
 		else{
 			// Replace "[%KEY%]" with the parameters, (if there are any).
