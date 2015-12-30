@@ -4,8 +4,8 @@
 {css src="css/updater.css"}{/css}
 
 {if $sitecount == 0}
-	<p class="message-info">
-		There are no update repositories available! {a href='updater/repos/add' class="button"}Add Repository{/a}
+	<p class="message-warning">
+		{t 'MESSAGE_WARNING_UPDATER_NO_UPDATE_SITES'} {a href='updater/repos/add' class="button"}Add Repository{/a}
 	</p>
 {else}
 	<p>

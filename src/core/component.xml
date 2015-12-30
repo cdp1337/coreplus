@@ -42,6 +42,7 @@
 		<hookregister name="/sitemap/getlisting" return="array" description="Called during the listing retrieval of the links to display in the sitemap.  Useful for injecting links into the sitemap and sitemap.xml."/>
 		<hookregister name="/core/shutdown" description="Hooks onto the PHP shutdown_register function to be called very very last after any page execution."/>
 		<hookregister name="/core/page/search/results" description="Hook on the page search results with the search object, useful for integration with analytical libraries"/>
+		<hookregister name="/core/healthcheck" description="Hook that is dispatched to retrieve all the health checks registered on the site." return="array"/>
 		<hook name="/core/components/loaded" call="\Core\i18n\I18NLoader::Init"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/preexecute" call="Core::_AttachCoreJavascript"/>
@@ -57,26 +58,55 @@
 		<hook name="/cron/daily" call="\Core\Utilities\Logger\LogFile::RotateDaily"/>
 		<hook name="/cron/weekly" call="UpdaterHelper::CheckWeekly"/>
 		<hook name="/cron/weekly" call="\Core\Utilities\Logger\LogFile::RotateWeekly"/>
+		<hook name="/cron/weekly" call="AdminController::_HealthCheckReport"/>
 		<hook name="/cron/monthly" call="\Core\Utilities\Logger\LogFile::RotateMonthly"/>
 		<hook name="/core/model/presave" call="Core\Search\Helper::ModelPreSaveHandler"/>
 		<hook name="/core/controllinks/usermodel" call="DatastoreAuthController::GetUserControlLinks"/>
 		<hook name="/core/controllinks/usermodel" call="GPGAuthController::GetUserControlLinks"/>
 		<hook name="/user/postsave" call="Core\User\Helper::ForceSessionSync"/>
+		<hook name="/core/healthcheck" call="UpdaterController::_HealthCheckHook"/>
+		<hook name="/core/healthcheck" call="AdminController::_HealthCheckHook"/>
 	</hooks>
 	<smartyplugins directory="core/libs/smarty-plugins/"/>
 	<includes>
 		<!--<include filename="core/functions/Core.functions.php"/>
 		-->
 	</includes>
+	<pages>
+		<page baseurl="/admin" admin="1" access="g:admin" title="t:STRING_ADMIN"/>
+		<page baseurl="/admin/reinstallall" admin="1" access="g:admin" title="t:STRING_REINSTALL_ALL_COMPONENTS"/>
+		<page baseurl="/admin/config" admin="1" access="g:admin" title="t:STRING_SYSTEM_CONFIGURATION" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/updater" admin="1" access="g:admin" title="t:STRING_SYSTEM_UPDATER"/>
+		<page baseurl="/admin/syncsearchindex" admin="1" access="g:admin" title="t:STRING_SYNC_SEARCHABLE_INDEX"/>
+		<page baseurl="/user/login" admin="0" access="!g:authenticated" selectable="0" title="t:STRING_LOGIN"/>
+		<page baseurl="/user/register" admin="0" access="!g:authenticated" selectable="0" title="t:STRING_REGISTER"/>
+		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="t:STRING_LOGOUT"/>
+		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="t:STRING_USER_ADMIN" group="t:STRING_USER"/>
+		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="t:STRING_USER_GROUP_ADMIN" group="t:STRING_USER"/>
+		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_OVERVIEW" group="t:STRING_REPORTING"/>
+		<page baseurl="/useractivity/details" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_DETAILS" group="t:STRING_REPORTING"/>
+		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="t:STRING_USER_OPTIONS" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="t:STRING_SYSTEM_LOG" group="t:STRING_REPORTING"/>
+		<page baseurl="/form/testui" admin="1" access="g:admin" title="t:STRING_TEST_FORM_ELEMENT_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
+		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="t:STRING_ALL_PAGES" group="t:STRING_CONTENT"/>
+		<page baseurl="/widget/admin" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="t:STRING_ALL_WIDGETS" group="t:STRING_CONTENT"/>
+		<page baseurl="/admin/testui" admin="1" access="g:admin" title="t:STRING_TEST_GENERAL_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
+		<page baseurl="/page/sitemap" admin="0" access="*" title="t:STRING_SITEMAP" rewriteurl="/sitemap" selectable="1" indexable="1"/>
+		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="t:STRING_SEO_OPTIONS" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/admin/performance/config" admin="1" access="g:admin" title="t:STRING_PERFORMANCE_OPTIONS" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/admin/email/config" admin="1" access="g:admin" title="t:STRING_EMAIL_OPTIONS_AND_DIAGNOSTICS" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/admin/i18n" admin="1" access="g:admin" title="t:STRING_I18N_TRANSLATIONS" group="t:STRING_THEME_AND_LAYOUTS"/>
+		<page baseurl="/admin/health" admin="1" access="g:admin" title="t:STRING_SYSTEM_HEALTH" group="t:STRING_ADMIN"/>
+	</pages>
 	<files>
-		<file filename="config/configuration.example.xml" md5="04a0ed3fdf116d2454775b81223e19b3"/>
-		<file filename="core/CHANGELOG" md5="e2ef93d5adc091962377a1820907fc9f"/>
+		<file filename="config/configuration.example.xml" md5="49e602a106f3b09318833b32760d12c2"/>
+		<file filename="core/CHANGELOG" md5="51e7959d1623a11e501497df80dd5c1c"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="22eab66bb2eb7de23d074d1f27bf60ae"/>
 		<file filename="core/bootstrap_postincludes.php" md5="ad5edc4ca5372e9245fa6c4af1b5db7a"/>
 		<file filename="core/bootstrap_predefines.php" md5="c8101cbac8a3243c5888d1ae73bede4c"/>
 		<file filename="core/bootstrap_preincludes.php" md5="5e1631050b47769b946d55b6ac0d5779"/>
-		<file filename="core/controllers/AdminController.php" md5="6a825093f7a42386a336e44b76da01b8">
+		<file filename="core/controllers/AdminController.php" md5="8502f1554ee111e13da9d1c8b6e6a926">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="7d6a0c9b2aae5793e9427204f81ccff0">
@@ -100,7 +130,7 @@
 		<file filename="core/controllers/PageController.php" md5="6f4212e1bf1bda7d0d8e1f4888d224df">
 			<controller name="PageController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="f66dbce7519b87248df28eb32f444c63">
+		<file filename="core/controllers/UpdaterController.class.php" md5="ad4ab99145a03094971a46590bbf947b">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/UserActivityController.php" md5="4cad8ec3fd15bdddc8225f924bb30df8">
@@ -118,554 +148,6 @@
 		<file filename="core/controllers/WidgetController.php" md5="be79ef72e55f1087bdcf37c51af5edb8">
 			<controller name="WidgetController"/>
 		</file>
-		<file filename="core/dev/iso-country-flags-svg-collection/Makefile" md5="222361f3234ac013bb6727d3a09698c3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/Makefile.local" md5="a711c98dc9a014c7d4c02a18fd3c405f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/README.md" md5="364baa36ade9d49e150fc36809e3c217"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build-iso-country-flags-svg-collection.sh" md5="6c45d36d41bf933ecd3438682221f2d6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/RESOLUTIONS.md" md5="89cd956c6b941ae1b3f649c17a0e15d8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/common/4x2-back-empty.png" md5="a4950c68f6648f487566409d1201b9a4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/common/4x2-back-shadow.png" md5="1dfab7a14b2d59d5ce6de9cf1f3ef5ec"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/common/squared-back-empty.png" md5="2d6ad0f4514d236beca63e51a8266916"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/common/squared-back-shadow.png" md5="d1ba2909e7faa625efc3f84566cf33f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/common/squared-back-shadow.svg" md5="f602b911e426fd2345987b28e9023eff"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/make-zip.sh" md5="a6f99da8ccef10b5377cfd9925664f71"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-fancy/back.png" md5="1dfab7a14b2d59d5ce6de9cf1f3ef5ec"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-fancy/fore.png" md5="77a5befe233cbe30d1590d0a988b95f9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-flat/back.png" md5="1dfab7a14b2d59d5ce6de9cf1f3ef5ec"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-flat/fore.png" md5="a4950c68f6648f487566409d1201b9a4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-glossy/back.png" md5="1dfab7a14b2d59d5ce6de9cf1f3ef5ec"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-glossy/fore.png" md5="bb3f636e18bd5536d0e04cf59d115641"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-none/back.png" md5="a4950c68f6648f487566409d1201b9a4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-none/fore.png" md5="a4950c68f6648f487566409d1201b9a4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-4x2-simple/fore.png" md5="34bd653ab368e3311af09ed7478ec7a0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-fancy/back.png" md5="d1ba2909e7faa625efc3f84566cf33f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-fancy/fore.png" md5="c7b9f02dfda6eccb803f50697406e2bf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-flat/back.png" md5="d1ba2909e7faa625efc3f84566cf33f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-flat/fore.png" md5="39f913b9911437d4bc7dc0104ef31263"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-glossy/back.png" md5="d1ba2909e7faa625efc3f84566cf33f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-glossy/fore.png" md5="aafffce2a185dfa32ed901532bcbaa41"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-none/back.png" md5="2d6ad0f4514d236beca63e51a8266916"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-none/fore.png" md5="2d6ad0f4514d236beca63e51a8266916"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-simple/back.png" md5="d1ba2909e7faa625efc3f84566cf33f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/build/svg-country-squared-simple/fore.png" md5="6c9490bb8b86717668d78efae7c63edc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/example-google-maps.png" md5="9bb0ddf55d5d28e7af7d9f60fd148078"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/example-webgl-earth.png" md5="df23dc035547bee8391d91f93792ee0d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/example-xplanet-de.png" md5="2b740f2eda3475fe044cbfa62df9ec7a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/iso-country-flags-sheet-flat.png" md5="074d9bfa9a62178a22707d221cd4a8da"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/resolutions.png" md5="e0213411a4fbc931dae60298e6310c44"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/resolutions.svg" md5="35b6915b56f8d85c2f6c7b584703ce76"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/templates.png" md5="62005946101e726ee84e944e8e690139"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/examples/templates.svg" md5="3ef018f3d027dfe3dd0b632b0f044d81"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/iso-3166-1.csv" md5="2f320a8a626bfaeffe82af57892c5e34"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/iso-3166-1.json" md5="60c98c0dc6471d70cf9c2e0c3b2f8aa2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/scripts/build.pl" md5="9ed3dcba7fad247b38bfb686a2ab83bc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/scripts/css.py" md5="abae12a6f0997259047cf0131adf5444"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/scripts/png-country-4x2.sh" md5="03a6812752c359d87fb8c0ad95a377e6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/scripts/png-country-squared.sh" md5="88ae82bf8d3c13fd804025751d9409bc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/scripts/sheets.sh" md5="52fa75c36ee507ca3065dda83d6a2f74"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ad.svg" md5="8c03633e4247739ab49a9db0e0894365"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ae.svg" md5="0fbf1481a7cb7a695e8e9d24f4f07133"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/af.svg" md5="e01622bc5f346396978d703f609a3df7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ag.svg" md5="526a221a44513c6c97907753df213a0d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ai.svg" md5="141e7a5984d48383efec4156de901fc4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/al.svg" md5="c92c690222e61471e00d4f9a95213d9a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/am.svg" md5="0932b0bea84251cfa3ebe40f8195d3e2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ao.svg" md5="396789400c3b6ee138199c5afc07ab12"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/aq.svg" md5="812aa8b5439d10f58e8f5bef83ced44f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ar.svg" md5="341c965b3ee6562106520caf8efa5c68"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/as.svg" md5="f988cfb4fa59a30f7f75c489701f3aa8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/at.svg" md5="2c6b5d608b088adf0b15a551e42a4c58"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/au.svg" md5="904a7923d1688b54e3f95215125d2c33"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/aw.svg" md5="211921f8df84954c65b2c4f42f20d2eb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ax.svg" md5="d502948a8c87db21f5367895a19e1d54"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/az.svg" md5="4469bbccc8851d1fd463401b49bbb173"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ba.svg" md5="3f98c59dc811b4ed7b843a15db911bbc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bb.svg" md5="37a3293ba70cc9f3b4fbb54c3635a153"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bd.svg" md5="a6619d9e7b8f97975293a0cb8f8aad58"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/be.svg" md5="0e9c64335b400399e46f864fc6b57ede"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bf.svg" md5="0880b03dd55d057bc26c192e518708e5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bg.svg" md5="883866af5bbdefcba33ec03cdd444432"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bh.svg" md5="9fa16da01653ab0ae1803d1a215ff200"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bi.svg" md5="8c5ed74bce175c2ce6a2a60514c537a2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bj.svg" md5="39dad01fae339e1f5b33c48831780517"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bl.svg" md5="1b2501f72265bd34218b84f20434836e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bm.svg" md5="efdad43a39119140bfe2ecf53dd505e4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bn.svg" md5="c870fcfc6a5138153c1b6e7a04ba88da"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bo.svg" md5="fbd8c25e2e147147354eea0137d8373f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bq.svg" md5="4dc6411451f98effd3a4666dfdb54f47"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/br.svg" md5="34fc379a08dcfdad84bbc1886d71ee50"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bs.svg" md5="29908c037c66d4ad15735ecc6a01eb0f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bt.svg" md5="1c481928d62492971d1fcfea29186309"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bv.svg" md5="c83330a09626bf51669f7a8b7839f0e7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bw.svg" md5="a13f406725e10e87f552cb6680df9d85"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/by.svg" md5="c3ab9e0434354638a02789f9ac7d660a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/bz.svg" md5="f962cb254a84e33aa38dee6213b24800"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ca.svg" md5="8e3051982e25ddfb00f6cff0bdab0bed"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cc.svg" md5="0f3de2b3005d41301699c1cae13856c5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cd.svg" md5="7c0fb930e3ba3452ac88264a248b3152"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cf.svg" md5="fbeb564e5d1ac0d2e5267b3e9d3c13c1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cg.svg" md5="06e735cb5b8dce4637e7f7d4fb6f4717"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ch.svg" md5="0bfff0fb300731e5abb19ee2fa7b2dde"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ci.svg" md5="196407e8c4f5315432ab56a0c15b4322"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ck.svg" md5="a59d1c7fadbbfc7dbfe885da413c0ed2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cl.svg" md5="a3d4a60fb60fb200cc2a63fce4ddc017"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cm.svg" md5="4eefc4de79d47fec5f8a76251daf69f6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cn.svg" md5="861522eb82b1f3f2f9f297a117060b4d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/co.svg" md5="156e60280a16926a47c93feae65ab543"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cr.svg" md5="79fc62ff2ca4b042ddbde5d5c2dd1cdd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cu.svg" md5="e9161f9e73ed2ace27d9618f4f53b511"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cv.svg" md5="6518273df37ec24e3fdb2cb55f8bd2c5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cw.svg" md5="8eb0fa40bd61135a0033a591ccd406c0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cx.svg" md5="6155f102b9521694f766f0d1331b0573"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cy.svg" md5="405899dbf93260b7603c2f70c99f2752"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/cz.svg" md5="bb69460e5b287013038349cf09c3a5c2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/de.svg" md5="9b3bf064887f1879cfbb559ca2ab07aa"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/dj.svg" md5="661856fb0b17ef73782d5e82a09a29c0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/dk.svg" md5="30dc191ff886895d8e09ef2662538a42"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/dm.svg" md5="bad3da7614370b64a98fcc507aca6a2f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/do.svg" md5="8222dabe8a9b9a5bd23dada02897eef0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/dz.svg" md5="dd750a77430c57eac9082d8f79a7b2fb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ec.svg" md5="f62409d7b31cb1fee833f4bef190d709"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ee.svg" md5="cf0f013daed46d33b02af804abfc34e3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/eg.svg" md5="94bf51078be7251802fad1bc057798ca"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/eh.svg" md5="681c8125baed4fee48c68dcd8c425d7f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/er.svg" md5="0a602025c9d4a12e3f4fe2803fd676f3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/es.svg" md5="a83a99dc923b20ab223a44c7792f6214"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/et.svg" md5="fea561d9c60ee8e8a22ad09e57398044"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/fi.svg" md5="99677dc1810d6d9df2b271aecef7b470"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/fj.svg" md5="20bc980065203b1d65f2b6938da99162"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/fk.svg" md5="16105226af59bb4c7e8c326ae56f5e8e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/fm.svg" md5="4788acb32926430b5e2561a4824545b2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/fo.svg" md5="d2fe4bf79e852a5c487a9360cde2de0a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/fr.svg" md5="e6496e4a3349ca34f1de8f8f37929897"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ga.svg" md5="0416e00efb6a42d7e0bb6205346577db"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gb.svg" md5="d3fc3c179763bcc78d4d3c88e1350bf7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gd.svg" md5="e19a6c71dc5a0b9a2a6b73724ca7a434"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ge.svg" md5="406940dda58f9b40b39bdfed07d99386"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gf.svg" md5="9b40c2e38c42a7896d451998b3d4f354"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gg.svg" md5="63f348eed9e0c14a0264d88985006dbf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gh.svg" md5="dbb2d47c2f1d7f60d4d1f5a3430d42db"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gi.svg" md5="1970c29d6aa9c990cec266f6b16d04c0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gl.svg" md5="7d1269e80d04c3ea5c19163b1894ac06"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gm.svg" md5="986bfe09888bb9216a6ece238fe9233c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gn.svg" md5="24e49dd038e19d28ad5690c60776491e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gp.svg" md5="98f3cd9379245cbfc082344bd053027b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gq.svg" md5="0a0fecc1fbfdd883e03b2e9c5a8e4c1e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gr.svg" md5="3e1cbd1fe394d00cbb00b1b2515b10fc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gs.svg" md5="a99838709f0533d7f7281161cb67d354"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gt.svg" md5="544e670b2899f64e17b0d6b3b36482a8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gu.svg" md5="02894230b695327d1b193df7f1e37f30"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gw.svg" md5="c8f138aeafd52bdf4a79540d18b97626"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/gy.svg" md5="693cca373065ac918137560a0d3d8a39"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/hk.svg" md5="224cb788b55023559085a29783803bc5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/hm.svg" md5="4622977714c732b95fe51bd63467993c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/hn.svg" md5="c638f6ed554f6a83fec664c4a15f85b5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/hr.svg" md5="0a2d25de04182f9256193e88e44e3365"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ht.svg" md5="849da3d605fb72da030ec045c2567883"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/hu.svg" md5="f2a32923faf985be998bda633c26182a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/id.svg" md5="e68e3639ffa5014d0acfda2fb76be921"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ie.svg" md5="f5d5a629ec9a883ff0164f799eb8ed0b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/il.svg" md5="54f6690d5e20a4b60ef462bfc79039f4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/im.svg" md5="844e83e8e29a19361990695792454a17"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/in.svg" md5="5c50abc42af2fbc8838ef06b0de3b954"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/intl.svg" md5="733dde5415265e7735c757de0d8864c3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/io.svg" md5="1b3a2e11b9856034fdf127461f378faa"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/iq.svg" md5="d07a32aaec9bbd5a169d0a540267c413"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ir.svg" md5="fe24f5824d0a5c0c7c498785c59ada8c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/is.svg" md5="69583c61dba3fb593fbab87a40f6b8da"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/it.svg" md5="5017491422e699eadf871998640d8009"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/je.svg" md5="f8b31826861228c4b86d3af80262fc12"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/jm.svg" md5="bc0cd3f594387544dc1430a9a9efd3ac"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/jo.svg" md5="de79ece164b016d9d91aaf920af8b99a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/jp.svg" md5="afeb1cb28e41e99094cced511d15cfcc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ke.svg" md5="48d5710ad610e89a4aac16b3480dbb73"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kg.svg" md5="4edca2a33e26a5f8a4b56991a6f5053d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kh.svg" md5="5f9c9ff27743d0ac904eebda82ba7995"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ki.svg" md5="7b29890f96fc26f86f064e4433a93d68"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/km.svg" md5="3fa8b6f6749db58d85933526f4982939"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kn.svg" md5="d87c46fba67e12f08f2120642cff28ab"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kp.svg" md5="4810e0389ed4ad8becd40ab5476598ad"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kr.svg" md5="3479ddac859f290a6cf3aa2426baccd5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kw.svg" md5="2f685577c910354cd01a02e6744cd71a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ky.svg" md5="1b893f404003d77ac44e30eb39e57dff"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/kz.svg" md5="6da00e53adb95499935ab699e7222727"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/la.svg" md5="ba5dae6d658bc31e34ba2b8fbafb33bc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lb.svg" md5="5fd117bbb5bfb558447942db059bede9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lc.svg" md5="ef28bfb9c704376ffc0030e8e8350ff7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/li.svg" md5="a31ed6d98ca841f9e269da3c21a32dd5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lk.svg" md5="a878e46f90e52f91b028a74f82125f46"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lr.svg" md5="05b446996f7805bd0bbde5c63c81c9ac"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ls.svg" md5="4dcbd35a10d61ddad6da51a30f530f71"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lt.svg" md5="11b213daf1d56fdc07a20a2163d59722"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lu.svg" md5="39926ff390bb6bff9e6cdad81e6512ab"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/lv.svg" md5="05977b73e4423513d83666a8d0dfe619"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ly.svg" md5="f82ed49c89a7982b26b64f170253b705"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ma.svg" md5="226ee63ef69d089cdf8e5c7590cd649e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mc.svg" md5="6fa2aeea95119b61c7c317f38a00c852"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/md.svg" md5="445531fafbd0f45839922c9a22116612"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/me.svg" md5="3559fbaa217f0021491eaf4b3600705f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mf.svg" md5="3eb47d11377b8fe956b547e352d8b4e2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mg.svg" md5="a878aebef3d8ee259d75c161ccd3e4dc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mh.svg" md5="8341d8de286d5a0cb8b2c8bc83efd096"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mk.svg" md5="7da42b2596a684625cf5953cc425c2d6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ml.svg" md5="fe61ad58b3c6c3ba78de15102da6cf5f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mm.svg" md5="5c08aba273fbf759ed7aec67c67df208"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mn.svg" md5="d165db9358133030ac24d53a11e0979a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mo.svg" md5="a11dc54da2caee4374b7ba5be0d87263"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mp.svg" md5="1eb797d402b478827abd10bfcedef4f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mq.svg" md5="6e3c741f6e0757b31d13e67c26ae4e6a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mr.svg" md5="5782ee8d285561807fc6b557f68b0ec2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ms.svg" md5="88fae43ffc3ef541af25f84ce3a4e77f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mt.svg" md5="4c71d3fdb5a2f3dca2e58cdfcd2bf521"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mu.svg" md5="f4d12feda3f90f1864575d2d074a7335"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mv.svg" md5="1da76245386fc4578a694f9040b2f46b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mw.svg" md5="4f47c08593a6a144c5aad0a47312afb7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mx.svg" md5="877739edab9c59a56e0f2ce15657e80c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/my.svg" md5="0e74a407601bcd541ac4525a66d4e93a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/mz.svg" md5="8e8ba871c3f83fe83b13c79eea7d2e3b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/na.svg" md5="556e8c0972a8405b662612ea2b0d03f6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/nc.svg" md5="dc978681ec33122e9a441667fbf50a7b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ne.svg" md5="7153b86773a6d7fa2b56791c8b3ac68c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/nf.svg" md5="1a1d51bca984e5e41e8559297a7c9e2f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ng.svg" md5="7b4dc986d9774c2737f4c8b780c8f2f5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ni.svg" md5="86d06351ac5d482d21090be6d7385bd7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/nl.svg" md5="0615b567ea2c37eacd3101d4cb5d16a3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/no.svg" md5="d384ec99d59d1c169052c75bb7d9c529"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/np.svg" md5="d9a622f30b1b363f641bb03fe9129cb3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/nr.svg" md5="e693e06a5f5d2f273607355b4912a5f0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/nu.svg" md5="7f98ffa06238fa598214ffb2b941a53a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/nz.svg" md5="b1cba9449d0484ae9df2c8a4169f87da"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/om.svg" md5="1ca70fae180a1ec5ad5e2a5c1ebcc095"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pa.svg" md5="aa02f703c5f8a27a27b464c5220071e1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pe.svg" md5="e7d4de2343eedc09578a99c8b9b9fe5c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pf.svg" md5="ed80dded8ffd24e9e5def7de2fe23de2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pg.svg" md5="033f23e52f9de832f328d1387cfd1bf8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ph.svg" md5="07f627f3adbe2ebff836dac96b1b7e0e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pk.svg" md5="2e15b125a6e19f5fc894d039067fe0e0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pl.svg" md5="b3edcefae707b93d0b19dca9b0922a68"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pm.svg" md5="8e9ba6970ba12a3564ae247225c1c20e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pn.svg" md5="4b1fa3be18122cf33e2d6adb69c7306b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pr.svg" md5="b0011754c865499978ac56f6aea53c29"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ps.svg" md5="9aeaad8e6bb82f5e4e4edff5a2f925ba"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pt.svg" md5="c855f630820076fbb978458d7701cae0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/pw.svg" md5="b6909db99dba7cb2fcf8d9ae7dfbc8ae"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/py.svg" md5="0a06ee88af49ae3c38282c64960f14ba"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/qa.svg" md5="c93e3011efedeba4c24b0d3f80a85181"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/re.svg" md5="62159c4991310024fb3bc8ec2faf7936"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ro.svg" md5="f14818f8fbbe89a707404639dfc647a8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/rs.svg" md5="a9e803ed9f84fa338073cd9f70ba81a9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ru.svg" md5="7ad90aa078a756630833941c7cfae056"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/rw.svg" md5="853439d60b3f0dd368f4cdbb32802403"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sa.svg" md5="b4477a2ef21587975b872f99199be11c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sb.svg" md5="36cf8fbcb1c3210c5f906c142655939e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sc.svg" md5="9206fb2af0e548eee6c9eceeb1e54b20"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sd.svg" md5="1144f8c0de86a7cb7da8e720b1f0f1fd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/se.svg" md5="652269c500695239c85e984e1f50982c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sg.svg" md5="21d915e9abe7a382260c37b2b803f68a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sh.svg" md5="608eb0218c9f3833427e9c77eda85407"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/si.svg" md5="1365693d6d82fceada75c2afa846d1eb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sj.svg" md5="cbb2c4fc8918da37d0c5fb4995cc6e12"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sk.svg" md5="23350aaccf126a23f42b206763d359a5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sl.svg" md5="567bc34d18ae235d2a14c9143e53a9fc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sm.svg" md5="128167cf4693aa8ac4fa5ba49962a5c9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sn.svg" md5="b3dab1c76f23d2dd970f4c39ba4fab79"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/so.svg" md5="2d3d8e9fcfe0e69378678b8088c1f34b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sr.svg" md5="a2499c094cf905e3ac9d211c41b3e012"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ss.svg" md5="1b4fe7a1b0df86ba802b1fe9947f1749"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/st.svg" md5="7cc6b493312c0100a539a3797125a5dc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sv.svg" md5="d65fc0c7ab541283618e7d83f7cee119"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sx.svg" md5="154ef356f9282a2f20627d2e8119c9d4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sy.svg" md5="5ade270a18e866b1fcdad156c18eec5f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/sz.svg" md5="0bafe885a67eaa8a1c09c56a7cfb103a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tc.svg" md5="85a3397ac7d6a4e00bf27b92ba6e70cb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/td.svg" md5="b30950e801607839b382e3b003b5f301"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tf.svg" md5="80e088fafaf00dfe5bd6254f1f78b844"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tg.svg" md5="1e7756ae60ce9522941d352ffdc2c05c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/th.svg" md5="6f5ae01ac7b754ee5d8e10302a163d4b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tj.svg" md5="bd5df4ec4c3301ae20cbe401dff9cc7a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tk.svg" md5="16e7326c8e81b6532c06aa21ad153e9e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tl.svg" md5="9e4e206340fd53c7d6907d4390bf7d30"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tm.svg" md5="59a8241e94bad49287b7f0e3752262b5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tn.svg" md5="1b3d3830e61d6a0e68d0f92d9d927d78"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/to.svg" md5="369f96bf7f919e2e71321482b1c07a57"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tr.svg" md5="81bd6f3dbc867acf3c3f5f957234bbdc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tt.svg" md5="9c744f0e9b36f4c54a7993a9f21eaac4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tv.svg" md5="d6310b20adc94a2c47402adfe124046b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tw.svg" md5="fd8fe8b68c6b7778ac4799720218d7cd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/tz.svg" md5="78c123b287ad2aff9c327a65574788a7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ua.svg" md5="00dbeaa508fd0455c8a08e8e8b86983d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ug.svg" md5="2e764d6dc676da13f9d109ee7cbd78e8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/um.svg" md5="6ae6e8ed69e28ce8415d5e798174c874"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/us.svg" md5="08055e46267282026bfffd4f23bffb6a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/uy.svg" md5="e676aa9bcee1da4cfa0d2755f41a9fed"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/uz.svg" md5="d76ea736e0baf069af910f74e6c5cf3c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/va.svg" md5="50eda8778f5b54497a45246015235f73"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/vc.svg" md5="9bafda7498503cebea31bfca48b09246"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ve.svg" md5="0bb1d32c0ba66846de4d5bfa5189c79e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/vg.svg" md5="6ae3d3931ff3004d032341d9b46ec9bf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/vi.svg" md5="6ae3d3931ff3004d032341d9b46ec9bf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/vn.svg" md5="9f7aa69b66ad2cf473c5a4522b8d9d35"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/vu.svg" md5="dbc5da6937bb9c5fa5249abe28804565"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/wf.svg" md5="9d1351abe320108610dc3ce73f3fd34e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ws.svg" md5="73f92a465c7648ea978b360ca3f42035"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/ye.svg" md5="d664150a05e0f1489e7aaa0652467f96"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/yt.svg" md5="2654c5ff47a5a18b508068dfe386493b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/za.svg" md5="de05ebda92eb23324ba9d3e26566340a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/zm.svg" md5="e93eb4f208b40ed8d8cd1669736aa469"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/zw.svg" md5="29018b6cecdca6a5450c0b64b6c5fd69"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-4x3/zz.svg" md5="0f9fcda5258ebb030ecd86b7c70fcdef"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ad.svg" md5="db05267735fa9a115d7fc2c651d43a49"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ae.svg" md5="268a49926c7ebb6987b63f81a1f2d572"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/af.svg" md5="62bdad7ff9bed0f046dbcee94069f16e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ag.svg" md5="a4aa9776e93d51dd1ff1fb78fd0d57f1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ai.svg" md5="981a9f0e2e7ecda8bb9ee3082d65b1db"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/al.svg" md5="1a09f4cdb51a53e9ebbe6b74324b4aca"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/am.svg" md5="096f2eff7aa4748006fede6796fe1315"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/an.svg" md5="02f3af44f712f5babbfab5cd23987649"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ao.svg" md5="2061af65e9a02fe5f25ecd1e92f786cf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/aq.svg" md5="f4627b259fd25a4157a0869cb0b4cf06"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ar.svg" md5="03b53cb5fb0d2c4e35e526edd076c25d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/as.svg" md5="5f5552ecdaef1a1fff66926d5ef2c28c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/at.svg" md5="8469bfff747e8f458cfcfb313b3f043d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/au.svg" md5="6d77838128ba0061544860d64bb2f8b2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/aw.svg" md5="c42aa4ba45fb36173a0cf0fe59b280fc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ax.svg" md5="12491ab51023a57755aba84a4506ca18"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/az.svg" md5="58275522f41a2640e82892eac1c0906d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ba.svg" md5="fc385bc1a7c51da123ac0fce7dd633d3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bb.svg" md5="7d2b60104863c4a3216e9fd024292c65"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bd.svg" md5="77c560dc403a44e93e16cd5d439964cd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/be.svg" md5="473279e7f6fb7ce2306cb3226251ceca"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bf.svg" md5="ccb43669d86720f2cfdb064561973516"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bg.svg" md5="540b2b926fe9dccd2efafd7c81379715"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bh.svg" md5="25c52cda8056f14e885ece8ce19f0e1a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bi.svg" md5="7f5cac0b006711303b69c790a2c09ca3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bj.svg" md5="bcd1d4cf8d2a1ba036bcd0654f4a9bd9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bl.svg" md5="992f5e359f3c7983c91b8a6ee02ed388"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bm.svg" md5="66bc343074ff0a6733d5f83ccf760ab4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bn.svg" md5="03b8055ca863752921a35d4acdfb8ed9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bo.svg" md5="2e5909204b8d5715baf4e856185d92b6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bq.svg" md5="9012392da17e40b29b41a3f18b8d8d15"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/br.svg" md5="35519c1d0025dd111b5d510c8d33f411"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bs.svg" md5="628abb1641472c32ae72a8b9c86de80d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bt.svg" md5="963f2ef1c6e2d04f15c47e7c51c1b4ee"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bv.svg" md5="a811267707f25ffad75c36161b1283d0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bw.svg" md5="a4ff039b7e760b8d9f23b9f1740511a7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/by.svg" md5="4025224dc8372ae593476ee2230d4544"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/bz.svg" md5="ebb8df35072d60e27bd49e310eece2f9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ca.svg" md5="2816ba15d31b8656123e88228367b8d4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cc.svg" md5="6d77838128ba0061544860d64bb2f8b2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cd.svg" md5="32bbf28df1486759913e7d57d432fc88"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cf.svg" md5="919db5bb253f4de360cee8fecab63b89"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cg.svg" md5="951a6377943694675838531fb0321a26"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ch.svg" md5="2a0f05bcbc8793ffa2f69fd745bfffbb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ci.svg" md5="eeb77e5f632904db6b00bcd2bd5a8282"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ck.svg" md5="8ee882eee973d306703e2edec489c18e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cl.svg" md5="a179c76f9324569fe170ddb58f2ec8f5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cm.svg" md5="1683dc1208162b830fb764e63cf30dd2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cn.svg" md5="92d0de207a78e8dcd2c5e90f846f49b9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/co.svg" md5="68c300a7aaa7057a242837d30fbf6650"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cr.svg" md5="37390fac694b068e98f7767e58262e11"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cu.svg" md5="70e0d038b29076a0bf6479971fd906c0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cv.svg" md5="5107fe6f33e9401ef6edc2fa021d7f0a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cw.svg" md5="32394809c2ee93f9b34d9c7cafbed99d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cx.svg" md5="11d59a6018df57111ed0087c1ed99391"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cy.svg" md5="37882cb0a8cc317c411a8dcdaf33187b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/cz.svg" md5="58ba068ce1187d083814a1da6e3949ba"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/de.svg" md5="e829e3a0e28691048653b4c9a483ffb8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/dj.svg" md5="77f0541ecd1dbf84f011f54100c01e64"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/dk.svg" md5="f0de4d03ab3cc1f33eaef252f4a796bb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/dm.svg" md5="e118925d1fc1f3fff1afe9883c6fb37b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/do.svg" md5="8f98763b8017c09eeb10d4da88e34892"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/dz.svg" md5="8af89885134b4422e3fbbfd461b38add"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ec.svg" md5="987fbfeb56857dbaab28183f2d68d7c6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ee.svg" md5="f3968953e5a8648039059b6d37d0770a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/eg.svg" md5="ba9cdc3f28fb3747dbeb6d6d73091278"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/eh.svg" md5="7c8503c72c0d658c43760c3c5910e7ec"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/er.svg" md5="dbae62850c6637aea4ef498569634fb9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/es.svg" md5="528534847315ea6adf39af34a7e90f6f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/et.svg" md5="f5dcd80f23c9378dcc8b6a37abbdf9c8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/fi.svg" md5="4565043f0ac48af4aeb2efa33da18454"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/fj.svg" md5="37e2b7da9088e32d9991427880026ba9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/fk.svg" md5="f00dc01cc53e557b184085b37439180e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/fm.svg" md5="73081250215c56db2d2d9fa4ede43387"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/fo.svg" md5="8ae517e28e18bbd70db8539b47190480"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/fr.svg" md5="992f5e359f3c7983c91b8a6ee02ed388"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ga.svg" md5="b1e02072f5f21d6e879fece47d1ae4fd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gb.svg" md5="ac6f9a4ab9ca8e066e3dcfdcbc00d750"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gd.svg" md5="2bdc5725ffbb0ff7c642754b63d86dac"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ge.svg" md5="28fea496359e8e40b76b51a67a250b03"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gf.svg" md5="97daa79e6d900f9c81aaa374b5925284"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gg.svg" md5="9a3b09a3241ef4feb3a3b117f9a2d08a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gh.svg" md5="57a55badbd7322ac04eebbec40b657b2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gi.svg" md5="d9d1bf035c41417fc6e05eea5dc3de7c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gl.svg" md5="db0a02611726befb9ed3b35a2d134864"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gm.svg" md5="50109876da47859f4f312b7d47066006"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gn.svg" md5="382776e6cb7c85ec4f85e4d218ac9046"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gp.svg" md5="b5f26fbf8422845e8b8b9232b8717914"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gq.svg" md5="9fd36161719544b2a359e92093860dd0"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gr.svg" md5="1ac1f08655f472730534ce81a46a5980"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gs.svg" md5="68cf174df0836b1eb8a71f78f408e493"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gt.svg" md5="6b802fdc4b3cd1c61ff9c1810397e981"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gu.svg" md5="536f8c5e12521a65ad8852e8a094d108"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gw.svg" md5="4643558047df7467d44084b7fd24bf05"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/gy.svg" md5="ea84469ea84bfcbeae3c05badd2a0f57"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/hk.svg" md5="825b350a9b83d7536bfb3d44e99421e7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/hm.svg" md5="04d9960b543e374ae45d6eddeeafe3ff"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/hn.svg" md5="d5e1715d1cbd39844fa9188613ae49a1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/hr.svg" md5="f2628fb25f86811b57cf017c7ee026b9"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ht.svg" md5="01f05c3068275525ac15df5af379dbcd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/hu.svg" md5="40dc56812ce18513267f19219cb3d8aa"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/id.svg" md5="7161ac4c04460c5d9e89d62a59af0d98"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ie.svg" md5="c7638586a243b21f0bd47edaccd74339"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/il.svg" md5="f3c5e82373150a5b60776fbe08dc365e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/im.svg" md5="065828a66e9c88ec2408ec7549260d09"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/in.svg" md5="c24e92fd518ed95177b71668c455e191"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/intl.svg" md5="268c7a999f3006e107bf321ca2a57e4c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/io.svg" md5="88042dfaf518b3098669c0a5494c5e1c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/iq.svg" md5="1afc50ebdc4b0c0d18c5e0a45726e1d8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ir.svg" md5="c01bf3bdf833287ab34213fbb14183d4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/is.svg" md5="fec9bd1b2429a41171a59b1c8ba21556"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/it.svg" md5="f86e5b0d13af25293ccf15f2023b5238"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/je.svg" md5="a893ec39a53fb139b8e05cbb712ff067"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/jm.svg" md5="431fe0fc84a11117a727a5cfc9078c74"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/jo.svg" md5="296ec353f8448d74ff51bb968a5c0ad5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/jp.svg" md5="b0df2716680c242f008caedcfe45c0f6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ke.svg" md5="640fb84f4b5d526e0a304842914cf2a1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kg.svg" md5="dfc447487bffffc6a8d810d13103af82"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kh.svg" md5="c263a1cd0010fe848f042b4d4448ee8e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ki.svg" md5="4b7e57e322d82e8ee2aa6f82a1457181"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/km.svg" md5="5836a3187a8aa4b0958016178ca7280f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kn.svg" md5="2755b32d195beb18ce7f35313a3ad8f5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kp.svg" md5="ef1e67b8bdeaa1d70163c5ba0b15bf46"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kr.svg" md5="94667d088a4f81e709c5ed871563fbdf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kw.svg" md5="9f70c27ddc3fc92caa3116d2ea9d2a9d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ky.svg" md5="27f476f64a31919618d377452aa3812a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/kz.svg" md5="fc48ac11af23b380222a9aba202ae52e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/la.svg" md5="ddf36ed4fe5a9d73452ed132fcf81e99"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lb.svg" md5="f57ae79776b596babfcf7a976fad0a4c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lc.svg" md5="ce80d7dba8bbe00a1aa40e0047754ff8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/li.svg" md5="d815bd471225c86fa847e7ea2b4f89b7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lk.svg" md5="1b49affe4c49e4a82cf6529f0f5e3272"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lr.svg" md5="1ba50cdac5e19001050c796e159fbaa2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ls.svg" md5="bcc0d935d2e7f67beef4cda30de2370c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lt.svg" md5="05b4bd226d4d9011c551d30af1f80e0a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lu.svg" md5="8b6f0258b087d395ae30c1ca1483757a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/lv.svg" md5="380a3ff8408b7b9a1fa21083d8915ef8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ly.svg" md5="1da2abb3bcca1f1df0546534d6dd5f44"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ma.svg" md5="d7f42a70484faa7ffe32eb0e413cac97"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mc.svg" md5="c8601656fd93ef7fac277a63a095045b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/md.svg" md5="9d16eaab6414c7f02153f2e082d40fc7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/me.svg" md5="d8b4543d6e51a702d651183c105eeb38"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mf.svg" md5="a11a28a5e6a4d0da036782345205b3d6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mg.svg" md5="73d81b090693cf3d8f5a2981746c222e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mh.svg" md5="949812debf39d6d8a64aef241a809ec3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mk.svg" md5="3a2f1605b402554a6188090b2fd78e32"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ml.svg" md5="c2101a2047902fbe554c2d59cf0287a2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mm.svg" md5="f93f122491568d8fe2e42e9809047c28"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mn.svg" md5="85565a601a31e52032670345b48dfafd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mo.svg" md5="50a8f1b57df49563e0fc06a4fb9d4b07"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mp.svg" md5="6ceb1bd424a2bfb5b5a396f5b1f623aa"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mq.svg" md5="e900bdc75a1916e41c1c492914d1e556"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mr.svg" md5="377137d1277b7111ff46b96c4a6dd8ca"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ms.svg" md5="5c43edb618ba14a2c23dbccc6e758666"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mt.svg" md5="ea2fcd6863580232a13ed4595bc12ead"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mu.svg" md5="d0cdaa2d92a327701f73cdeaa237e3cb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mv.svg" md5="2aff605ac28f34ac57ac1ccf598532c8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mw.svg" md5="88c68de33f5a95cbc31862bf38cbe069"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mx.svg" md5="d6b15e3de56bf0a8ace27c17c5e18610"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/my.svg" md5="8d31953c6556d75f3cc247ea0a96bbbd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/mz.svg" md5="6cac1fcedb81ef65de8a71827c88bc1c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/na.svg" md5="16ecd58a80973a962860e83975bce2ed"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/nc.svg" md5="643bd50bba3f86b1cddd814dab7d0bfb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ne.svg" md5="078d5c5ef82aad057526631455fb5d1e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/nf.svg" md5="ca7cf0423f897578c83e8efea39be4be"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ng.svg" md5="f97e97774cb6add25538aab228bfaf3e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ni.svg" md5="d7f92be6069a5100255efcd75beeb344"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/nl.svg" md5="23e948b7454d2dddc36c70faf669f090"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/no.svg" md5="ea305e2ab9031ae0d462d631a0434769"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/np.svg" md5="2b8837d9038020936e98e54a735d2da8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/nr.svg" md5="ce0b41edb0880039474ce3e5c9bc8a25"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/nu.svg" md5="33dfe56b00aeeceb6d544ed9d1538d73"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/nz.svg" md5="78521793f6ee40fe848ebf49ac6ea473"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/om.svg" md5="5d367bc41b5beff632c119581e4170b5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pa.svg" md5="0d4fc743b50a2d6c8d68297967e90c6e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pe.svg" md5="ddd8ea54f814033991aeddb95e766e90"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pf.svg" md5="5d97ab75e7d614b995667a0524419ffa"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pg.svg" md5="d4d78745d44f8cc3e674133e5fc427fc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ph.svg" md5="642849dfb41d922e1a0510a0ccb08658"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pk.svg" md5="deff01060177f121ee0ab6c813273acf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pl.svg" md5="a20c4e4b2980ff22f9cc590d2c89000d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pm.svg" md5="16ad1c860723fae560b8dd268e1bab47"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pn.svg" md5="31b71ea964f1e1bb9e7e32d5b64fa361"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pr.svg" md5="8b1b900c2ce27140bbd4fd5ea94c2116"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ps.svg" md5="a89e163b9510bd0b550553349c7ce206"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pt.svg" md5="363cbb00ed17a19d9dcb685d7e9702ea"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/pw.svg" md5="7a0c9060ee27dce20124c30620db89cf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/py.svg" md5="21ea26269abe60449a4092515e1e252e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/qa.svg" md5="1bdf16ae104aff6e5d741317f93689d1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/re.svg" md5="561bfbc0d2b002d8d248dedab6467cf1"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ro.svg" md5="10bab3b82e448fb5cf4d5756df739fb5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/rs.svg" md5="ae84b153ea6a8f0e2b0ca0a0bbcbaedc"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ru.svg" md5="84e4b22bd4f18da5377ce545d97873b7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/rw.svg" md5="b575f7bb8ce84811b0db852fbe0a1b27"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sa.svg" md5="21143f0e02722b57f8f3dfc7e08b4e11"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sb.svg" md5="d5416e04d7d12e1e36cdb17037b53a75"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sc.svg" md5="c1988eb0e682882ac4e87c9f64f6e3d7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sd.svg" md5="6204457e425f80bf72eb6b6e764cc536"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/se.svg" md5="cc3a07ca43f684875c76fa4d3b73a699"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sg.svg" md5="8fa87b5facc7823f772d7a23d05aa48f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sh.svg" md5="b70efa02d29a1f44061447065c5108f8"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/si.svg" md5="ae6d567d31404471121de3acb8c17623"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sj.svg" md5="f696417f65c32a1d5e4bf52c5664702f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sk.svg" md5="64a311705f901e2551c3f75dc5b7811e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sl.svg" md5="e1c05a04afadbca26a5696be3c5564a6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sm.svg" md5="a44b9fc74636c3b5d119e393697f915a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sn.svg" md5="eb9532e9301911d55e7b6200bed40581"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/so.svg" md5="ba20f58a09ffa0d4a1e5c9d9ed3b6f07"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sr.svg" md5="ecab1b1f6305af8e1d1f207458eb208d"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ss.svg" md5="be18732731af394e580e847f99519a4e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/st.svg" md5="7504e43a91542e41f789e7312734f911"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sv.svg" md5="4a83c099d17664e2bcbc46928b9f4c85"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sx.svg" md5="a11a28a5e6a4d0da036782345205b3d6"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sy.svg" md5="a5c079c8036471e19423697b5fdc7b2a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/sz.svg" md5="85e68e049a4a325e1fd3d54d51ac5579"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tc.svg" md5="65a10d383379ff0d457e83d19547caa2"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/td.svg" md5="7203fedc6b5286cccc45b7f13678d379"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tf.svg" md5="779bc01fd02a4367df6d815b2638e78f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tg.svg" md5="3ec635025c90fe981926953a97b5655b"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/th.svg" md5="0423eb14967f8ee17fa685e22cae8573"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tj.svg" md5="bfee57121f36104d5e71d9d700bdc064"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tk.svg" md5="a9542920118f04d921166b0f25a1694e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tl.svg" md5="b16f7eb131c6cb8b1fe45c2f5fa5bef3"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tm.svg" md5="4214d8db355593db5f03ea41c855fd10"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tn.svg" md5="364878960dbb1357a61a524c9a404ce7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/to.svg" md5="61628a71a3e04e49dbc5af58566f2dbf"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tr.svg" md5="5d337152ecbce371d4abaacd4a8335dd"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tt.svg" md5="25bf01d55b08a2d187072d3a8e9af7d7"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tv.svg" md5="fc302f25e4c2cab2555d99e4dcc04cf5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tw.svg" md5="b57d9395b7f641c1384a1bbb4ee7c41f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/tz.svg" md5="f2ef6c5fb3a71dc9155ad2a1110f0547"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ua.svg" md5="59509df0fe0cd560091d94fb7a9a13d5"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ug.svg" md5="b5ba997168b957c9c6ab8012113fec3e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/um.svg" md5="1c8f099c0716f640bf3531eeac227b6a"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/us.svg" md5="e9f5d4403c253ec67720b6fd60965227"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/uy.svg" md5="c1932f56e2f091ead167f0bbb4e3a936"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/uz.svg" md5="a92be1f3af1b20ad6121508902441a74"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/va.svg" md5="ddce455e187e4fe803bc2cd4cd16edab"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/vc.svg" md5="0bbd9c398263c0b69787928578877f5e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ve.svg" md5="124d3acae68be5753c273cc2e9c5c0eb"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/vg.svg" md5="63cf1bb842bee499d0d6b5f364464d4e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/vi.svg" md5="63cf1bb842bee499d0d6b5f364464d4e"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/vn.svg" md5="9706fdbd7658eced1266bac4cdf9a42f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/vu.svg" md5="607e6b0b91a994081a6e641f5e4e9c6c"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/wf.svg" md5="9861ba073c20450e0ef99e4b274919d4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ws.svg" md5="45798a65268c00e808ba992a0194ba53"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/ye.svg" md5="830af6a13f883b612ff20fccbb74122f"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/yt.svg" md5="2c4ed07ad4537875406e8d130aaf2278"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/za.svg" md5="dff3a2803526dde56e20ca43e1f72a52"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/zm.svg" md5="a3e78f4a333aec4baad1f5f7b8063560"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/zw.svg" md5="aada5e263d915efa06e06b6e050ea4a4"/>
-		<file filename="core/dev/iso-country-flags-svg-collection/svg/country-squared/zz.svg" md5="f68d403dca95fea6f199ff90a33daf4c"/>
 		<file filename="core/forms/FormAccessStringInput.php" md5="712c831315af7c9c87981dbcf86f4c85">
 			<class name="FormAccessStringInput"/>
 		</file>
@@ -756,10 +238,10 @@
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
 		<file filename="core/htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
-		<file filename="core/i18n/ar.ini" md5="8378a1469d7f90aaae65e147741d20c8"/>
-		<file filename="core/i18n/de.ini" md5="f588c38cafac19054c9ebcbbb7f5736d"/>
-		<file filename="core/i18n/en.ini" md5="7777658b74b35cd2a7a38b8facf6bf33"/>
-		<file filename="core/i18n/fr.ini" md5="4727928eb06804dab24dd732fb45a72c"/>
+		<file filename="core/i18n/ar.ini" md5="c9f9970dea9b80855d88b1d9c42036e8"/>
+		<file filename="core/i18n/de.ini" md5="0beffd32509efaa704cbc2c05a24a1e1"/>
+		<file filename="core/i18n/en.ini" md5="11c122183b4f758fcdaf8ff56526dd27"/>
+		<file filename="core/i18n/fr.ini" md5="3564b5654737c845ac78bd9215a2368f"/>
 		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="5da88cf5770cbde1032f4f22943b4558">
 			<class name="Directory_local_backend"/>
 		</file>
@@ -990,6 +472,9 @@
 			<class name="FormElement"/>
 			<class name="Form"/>
 		</file>
+		<file filename="core/libs/core/HealthCheckResult.php" md5="18d0a83d93c169281fcf0cd79d52448e">
+			<class name="Core\HealthCheckResult"/>
+		</file>
 		<file filename="core/libs/core/HookHandler.class.php" md5="92051c51904e3c006697d159197713a7">
 			<class name="HookHandler"/>
 			<class name="Hook"/>
@@ -1009,7 +494,7 @@
 		<file filename="core/libs/core/MarkdownProcessor.php" md5="21056223dc91feb001afac45241e25de">
 			<class name="Core\MarkdownProcessor"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="c7294002b65efca0478367a443c85c70">
+		<file filename="core/libs/core/Model.class.php" md5="434f0586041884cba803379d9313a4c5">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 		</file>
@@ -1265,7 +750,7 @@
 		<file filename="core/libs/core/i18n/I18NLoader.php" md5="4430dff30abd9dcb2a737d87365bdd4f">
 			<class name="Core\i18n\I18NLoader"/>
 		</file>
-		<file filename="core/libs/core/i18n/I18NString.php" md5="96d090544cc17dac45532f0a03be0d1e">
+		<file filename="core/libs/core/i18n/I18NString.php" md5="d8f59b9103a9c435178cd7ea151d849e">
 			<class name="Core\i18n\I18NString"/>
 		</file>
 		<file filename="core/libs/core/licenses/Factory.php" md5="68732ba1e73e9daed2c0677894b14e4c">
@@ -1322,7 +807,7 @@
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="6a855d8e9d6e80a10063e7331deec2e7">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
-		<file filename="core/libs/core/utilities/Packager.php" md5="4019b620634f9ec83ed4e40f4b2a01de">
+		<file filename="core/libs/core/utilities/Packager.php" md5="65ba2c8b4dcb94c55bec93ce739edeb0">
 			<class name="Core\Utilities\Packager"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="68449b47ea43aee8918263e19d41efec">
@@ -1917,7 +1402,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="e6d65ec2db77448633b8bb3fa5dc9893">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="edc32fbf47d80ee29c754560dc02aa4d">
+		<file filename="core/models/UserModel.php" md5="a31a9a2a6d861802eb46fea83b7f789f">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="b4d65177343e44771cab13aab173a6e0">
@@ -1986,7 +1471,7 @@
 		<file filename="install/steps/PerformInstallStep.php" md5="0bdd9c82531eb3bdf59eb7fd018e1b78">
 			<class name="Core\Installer\PerformInstallStep"/>
 		</file>
-		<file filename="install/steps/PreflightCheckStep.php" md5="07e82e8013a212c8b08901089cd02601">
+		<file filename="install/steps/PreflightCheckStep.php" md5="9ba59d3e79fe7aad4a7b48605ea12aa8">
 			<class name="Core\Installer\PreflightCheckStep"/>
 		</file>
 		<file filename="install/steps/SetupConfigurationStep.php" md5="7d1e9fafc42238febea4fc2ca8833251">
@@ -2015,31 +1500,6 @@
 		<file filename="utilities/reinstall.php" md5="b24e4c5c6d666903c6e4b3ccdff37b43"/>
 		<file filename="utilities/sync_cdn_resources.php" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 	</files>
-	<pages>
-		<page baseurl="/admin" admin="1" access="g:admin" title="t:STRING_ADMIN"/>
-		<page baseurl="/admin/reinstallall" admin="1" access="g:admin" title="t:STRING_REINSTALL_ALL_COMPONENTS"/>
-		<page baseurl="/admin/config" admin="1" access="g:admin" title="t:STRING_SYSTEM_CONFIGURATION" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/updater" admin="1" access="g:admin" title="t:STRING_SYSTEM_UPDATER"/>
-		<page baseurl="/admin/syncsearchindex" admin="1" access="g:admin" title="t:STRING_SYNC_SEARCHABLE_INDEX"/>
-		<page baseurl="/user/login" admin="0" access="!g:authenticated" selectable="0" title="t:STRING_LOGIN"/>
-		<page baseurl="/user/register" admin="0" access="!g:authenticated" selectable="0" title="t:STRING_REGISTER"/>
-		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="t:STRING_LOGOUT"/>
-		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="t:STRING_USER_ADMIN" group="t:STRING_USER"/>
-		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="t:STRING_USER_GROUP_ADMIN" group="t:STRING_USER"/>
-		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_OVERVIEW" group="t:STRING_REPORTING"/>
-		<page baseurl="/useractivity/details" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_DETAILS" group="t:STRING_REPORTING"/>
-		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="t:STRING_USER_OPTIONS" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="t:STRING_SYSTEM_LOG" group="t:STRING_REPORTING"/>
-		<page baseurl="/form/testui" admin="1" access="g:admin" title="t:STRING_TEST_FORM_ELEMENT_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
-		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="t:STRING_ALL_PAGES" group="t:STRING_CONTENT"/>
-		<page baseurl="/widget/admin" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="t:STRING_ALL_WIDGETS" group="t:STRING_CONTENT"/>
-		<page baseurl="/admin/testui" admin="1" access="g:admin" title="t:STRING_TEST_GENERAL_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
-		<page baseurl="/page/sitemap" admin="0" access="*" title="t:STRING_SITEMAP" rewriteurl="/sitemap" selectable="1" indexable="1"/>
-		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="t:STRING_SEO_OPTIONS" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/admin/performance/config" admin="1" access="g:admin" title="t:STRING_PERFORMANCE_OPTIONS" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/admin/email/config" admin="1" access="g:admin" title="t:STRING_EMAIL_OPTIONS_AND_DIAGNOSTICS" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/admin/i18n" admin="1" access="g:admin" title="t:STRING_I18N_TRANSLATIONS" group="t:STRING_THEME_AND_LAYOUTS"/>
-	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>
 		<widget baseurl="/user/login" title="User Login Widget (Link-only)"/>
@@ -2105,6 +1565,7 @@
 		<file filename="core/templates/includes/user/gpg_login.tpl" md5="e86915f5a78e7173aa60dca41a7c0c4b"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="f568ec9e94806a60a086223f578c021c"/>
 		<file filename="core/templates/pages/admin/email_config.tpl" md5="5bd3df6b3cc0742f6335e79f12a5cb6b"/>
+		<file filename="core/templates/pages/admin/health.tpl" md5="0d28b24fb8cc04fe2a5d307e2f5a56e7"/>
 		<file filename="core/templates/pages/admin/i18n.tpl" md5="aa2dbbb2948732ded3d9251a6bb8d6f2"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="55c70edfe3955bb503c8ea3722a63899"/>
@@ -2146,7 +1607,7 @@
 		<file filename="core/templates/pages/page/sitemap.tpl" md5="0fab9ca4b27099999b14a88ec1e02ae9"/>
 		<file filename="core/templates/pages/page/sitemap.xml.tpl" md5="a27828e243dfaac4a261b28567b49fad"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="c213a45e4607af380916ae19355d2d57"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="2a14f650ad2b818fbd6774e05d16c7c3"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="3dc1de19f1f96e5ea92b67ef0d0ebc01"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="87c51a0d5a569270eb04dd58e3ba2fd0"/>
@@ -2890,6 +2351,7 @@
 		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
 		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
 		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">

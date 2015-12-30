@@ -1,0 +1,23 @@
+.page-admin-health {
+	.health-checks {
+		li {
+			list-style: none;
+			
+			&.health-check-good i {
+				color: $success;
+			}
+			
+			&.health-check-warn i {
+				color: $warning;
+			}
+
+			&.health-check-errr i {
+				color: $error;
+			}
+
+			&.health-check-skip i {
+				color: $deprecated;
+			}
+		}
+	}
+}

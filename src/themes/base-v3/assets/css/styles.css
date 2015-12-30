@@ -1426,6 +1426,27 @@ fieldset.collapsible.collapsed .collapsible-hint {
   color: #AAA;
 }
 
+/* line 3, ../scss/pages/_admin_health.scss */
+.page-admin-health .health-checks li {
+  list-style: none;
+}
+/* line 6, ../scss/pages/_admin_health.scss */
+.page-admin-health .health-checks li.health-check-good i {
+  color: #146414;
+}
+/* line 10, ../scss/pages/_admin_health.scss */
+.page-admin-health .health-checks li.health-check-warn i {
+  color: #df5c25;
+}
+/* line 14, ../scss/pages/_admin_health.scss */
+.page-admin-health .health-checks li.health-check-errr i {
+  color: #bb0e19;
+}
+/* line 18, ../scss/pages/_admin_health.scss */
+.page-admin-health .health-checks li.health-check-skip i {
+  color: #aea467;
+}
+
 /**
  * General content styles
  */
@@ -1545,13 +1566,13 @@ footer.page-footer .legal-notice {
     display: none !important;
   }
 }
-/* line 41, ../scss/styles.scss */
+/* line 42, ../scss/styles.scss */
 a.agplv3-tag {
   display: inline-block;
   padding: 0 0.25em;
   color: #636;
 }
-/* line 46, ../scss/styles.scss */
+/* line 47, ../scss/styles.scss */
 a.agplv3-tag:hover {
   border-radius: 0.5em;
   background-color: #636;

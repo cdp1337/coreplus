@@ -60,6 +60,24 @@ class AdminController extends Controller_2_1 {
 	}
 
 	/**
+	 * Full page to display the health checks of the site.
+	 */
+	public function health(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+		
+		$checks = HookHandler::DispatchHook('/core/healthcheck');
+		
+		$view->title = 't:STRING_SYSTEM_HEALTH';
+		$view->assign('checks', $checks);
+	}
+
+	/**
 	 * Run through and reinstall all components and themes.
 	 *
 	 * @return int
@@ -1359,5 +1377,183 @@ class AdminController extends Controller_2_1 {
 
 		\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_TRANSLATION_STRINGS');
 		return true;
+	}
+
+	/**
+	 * Call to check some of the core requirements on Core, such as file permissions and the like.
+	 *
+	 * @return array
+	 */
+	public static function _HealthCheckHook(){
+
+		$checks      = [];
+
+		if(version_compare(phpversion(), '5.5.0', '<')){
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_PHP_S_TOO_OLD', phpversion()),
+				t('MESSAGE_WARNING_PHP_S_TOO_OLD', phpversion()),
+				''
+			);
+		}
+		else{
+			$checks[] = \Core\HealthCheckResult::ConstructGood(
+				t('STRING_CHECK_PHP_S_OK', phpversion()),
+				t('MESSAGE_SUCCESS_PHP_S_OK', phpversion())
+			);
+		}
+
+		$dir = ROOT_PDIR . 'logs/';
+		if(is_dir($dir) && is_writable($dir)){
+			// Yay, everything is good here!
+			$checks[] = \Core\HealthCheckResult::ConstructGood(
+				t('STRING_CHECK_LOG_DIRECTORY_S_OK', $dir),
+				t('MESSAGE_SUCCESS_LOG_DIRECTORY_S_OK', $dir)
+			);
+		}
+		elseif(is_dir($dir)){
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_LOG_DIRECTORY_S_NOT_WRITABLE', $dir),
+				t('MESSAGE_WARNING_LOG_DIRECTORY_S_NOT_WRITABLE', $dir),
+				''
+			);
+		}
+		else{
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_LOG_DIRECTORY_S_DOES_NOT_EXIST', $dir),
+				t('MESSAGE_WARNING_LOG_DIRECTORY_S_DOES_NOT_EXIST', $dir),
+				''
+			);
+		}
+
+		$dir = ROOT_PDIR;
+		if(is_dir($dir) && is_writable($dir)){
+			// Yay, everything is good here!
+			$checks[] = \Core\HealthCheckResult::ConstructGood(
+				t('STRING_CHECK_ROOT_DIRECTORY_S_OK', $dir),
+				t('MESSAGE_SUCCESS_ROOT_DIRECTORY_S_OK', $dir)
+			);
+		}
+		elseif(is_dir($dir)){
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_ROOT_DIRECTORY_S_NOT_WRITABLE', $dir),
+				t('MESSAGE_WARNING_ROOT_DIRECTORY_S_NOT_WRITABLE', $dir),
+				''
+			);
+		}
+		else{
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_ROOT_DIRECTORY_S_DOES_NOT_EXIST', $dir),
+				t('MESSAGE_WARNING_ROOT_DIRECTORY_S_DOES_NOT_EXIST', $dir),
+				''
+			);
+		}
+
+		$dir = \Core\Filestore\Factory::Directory('public/');
+		if($dir->exists() && $dir->isWritable()){
+			// Yay, everything is good here!
+			$checks[] = \Core\HealthCheckResult::ConstructGood(
+				t('STRING_CHECK_PUBLIC_DIRECTORY_S_OK', $dir->getPath()),
+				t('MESSAGE_SUCCESS_PUBLIC_DIRECTORY_S_OK', $dir->getPath())
+			);
+		}
+		elseif($dir->exists()){
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_PUBLIC_DIRECTORY_S_NOT_WRITABLE', $dir->getPath()),
+				t('MESSAGE_WARNING_PUBLIC_DIRECTORY_S_NOT_WRITABLE', $dir->getPath()),
+				''
+			);
+		}
+		else{
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_PUBLIC_DIRECTORY_S_DOES_NOT_EXIST', $dir->getPath()),
+				t('MESSAGE_WARNING_PUBLIC_DIRECTORY_S_DOES_NOT_EXIST', $dir->getPath()),
+				''
+			);
+		}
+
+		$dir = \Core\Filestore\Factory::Directory('assets/');
+		if($dir->exists() && $dir->isWritable()){
+			// Yay, everything is good here!
+			$checks[] = \Core\HealthCheckResult::ConstructGood(
+				t('STRING_CHECK_ASSET_DIRECTORY_S_OK', $dir->getPath()),
+				t('MESSAGE_SUCCESS_ASSET_DIRECTORY_S_OK', $dir->getPath())
+			);
+		}
+		elseif($dir->exists()){
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_ASSET_DIRECTORY_S_NOT_WRITABLE', $dir->getPath()),
+				t('MESSAGE_WARNING_ASSET_DIRECTORY_S_NOT_WRITABLE', $dir->getPath()),
+				''
+			);
+		}
+		else{
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_ASSET_DIRECTORY_S_DOES_NOT_EXIST', $dir->getPath()),
+				t('MESSAGE_WARNING_ASSET_DIRECTORY_S_DOES_NOT_EXIST', $dir->getPath()),
+				''
+			);
+		}
+
+		return $checks;
+	}
+
+	/**
+	 * The weekly health report to email to admins.
+	 * 
+	 * Will only send an email if there was an issue found with the site.
+	 * Otherwise, this will be used by the upstream maintainers to know what versions clients are connecting with.
+	 */
+	public static function _HealthCheckReport(){
+		$checks = HookHandler::DispatchHook('/core/healthcheck');
+		$toReport = [];
+		
+		foreach($checks as $check){
+			/** @var \Core\HealthCheckResult $check */
+			if($check->result != \Core\HealthCheckResult::RESULT_GOOD){
+				$toReport[] = $check;
+			}
+		}
+		
+		if(sizeof($toReport) == 0){
+			// YAY!
+			return true;
+		}
+		
+		if(!defined('SERVER_ADMIN_EMAIL') || SERVER_ADMIN_EMAIL == ''){
+			echo 'Health issues found but unable to send an email, please set SERVER_ADMIN_EMAIL in your configuration.xml!';
+			return false;
+		}
+		
+		$email = new Email();
+		if(strpos(SERVER_ADMIN_EMAIL, ',') !== false){
+			$emails = explode(',', SERVER_ADMIN_EMAIL);
+			foreach($emails as $e){
+				$e = trim($e);
+				if($e){
+					$email->addAddress($e);
+				}
+			}
+		}
+		else{
+			$email->addAddress(SERVER_ADMIN_EMAIL);	
+		}
+		$email->setSubject('Site Health Report');
+		$email->templatename = 'emails/admin/health_report.tpl';
+		$email->assign('checks', $toReport);
+		
+		try{
+			if($email->send()){
+				echo 'Sent health issues to the server admin successfully.';
+				return true;
+			}
+			else{
+				echo 'Unable to send health issues to server admin, please check your email settings.';
+				return false;
+			}
+		}
+		catch(Exception $e){
+			echo 'Unable to send health issues to server admin, please check your email settings.';
+			return false;
+		}
 	}
 }

@@ -1,5 +1,10 @@
 Core Plus 5.0.0
 
+	* [Security] Record password changes to the local security log.
+	* [Bug] Fix the [TOC] markdown checker to only replace the first instance of `[TOC]`!
+	* [Bug] Fix the VersionString library when comparing stability and user versions.
+	* [Bug] Fix Session::Get when a subkey is requested.
+	* [Bug] Fix support for querying the Session for a nested key.
 	* New GPG library for handling encryption and logins; no longer relies on the gnupg_php library.
 	* New i18n support across the platform, (still need to write the rest of the i18n strings and string
 	  replacements).
@@ -18,11 +23,6 @@ Core Plus 5.0.0
 	* New tests for GPG
 	* New tests for UserAgents
 	* Updated tests for SQL Parser.
-	* [Security] Record password changes to the local security log.
-	* [Bug] Fix the [TOC] markdown checker to only replace the first instance of `[TOC]`!
-	* [Bug] Fix the VersionString library when comparing stability and user versions.
-	* [Bug] Fix Session::Get when a subkey is requested.
-	* [Bug] Fix support for querying the Session for a nested key.
 	* Change the behaviour of control links to return the text of links when proxy is not used.
 	* Translate all pages to markdown before returning the indexable string version.
 	* New support for metafields in Markdown files!
@@ -80,6 +80,9 @@ Core Plus 5.0.0
 	* Minify core.strings, (must have forgotten to do this before).
 	* Set version freeze to 0 by default.  This is an enterprise feature that's not useful for standard
 	  community sites.
+
+Core Plus 4.9.0
+
 
 Core Plus 4.2.0
 

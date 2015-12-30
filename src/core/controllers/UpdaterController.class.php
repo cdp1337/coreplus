@@ -825,4 +825,95 @@ class UpdaterController extends Controller_2_1 {
 		Core::SetMessage('Updated repository successfully', 'success');
 		return '/updater/repos';
 	}
+
+	/**
+	 * Call to check for updates as part of the health checking system in Core.
+	 * 
+	 * @return array
+	 */
+	public static function _HealthCheckHook(){
+		// SERVER_ADMIN_EMAIL
+		
+		$checks      = [];
+		$updateSites = UpdateSiteModel::Find();
+		$updates     = UpdaterHelper::GetUpdates();
+		
+		// Scan through the update sites and ensure that they are available and set.
+		if(!sizeof($updateSites)){
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_UPDATER_NO_UPDATE_SITES'),
+				t('MESSAGE_WARNING_UPDATER_NO_UPDATE_SITES'),
+				'/updater'
+			);
+		}
+		else{
+			foreach($updateSites as $site){
+				/** @var UpdateSiteModel $site */
+				if($site->isValid()){
+					$checks[] = \Core\HealthCheckResult::ConstructGood(
+						t('STRING_SUCCESS_UPDATER_SITE_S_OK', $site->get('url')),
+						t('MESSAGE_SUCCESS_UPDATER_SITE_S_OK', $site->get('url'))
+					);
+				}
+				else{
+					$checks[] = \Core\HealthCheckResult::ConstructError(
+						t('STRING_ERROR_UPDATER_SITE_S_OK', $site->get('url')),
+						t('MESSAGE_ERROR_UPDATER_SITE_S_OK', $site->get('url')),
+						'/updater'
+					);
+				}
+			}
+		}
+		
+		if(isset($updates['core'])){
+			// This should always be set, but who knows...
+			if($updates['core']['status'] == 'update'){
+				$checks[] = \Core\HealthCheckResult::ConstructWarn(
+					t('STRING_WARNING_UPDATER_CORE_OUTDATED'),
+					t('MESSAGE_WARNING_UPDATER_CORE_OUTDATED_S_AVAILABLE', $updates['core']['version']),
+					'/updater'
+				);
+			}
+			elseif($updates['core']['status'] == 'installed'){
+				$checks[] = \Core\HealthCheckResult::ConstructGood(
+					t('STRING_SUCCESS_UPDATER_CORE_OUTDATED'),
+					t('MESSAGE_SUCCESS_UPDATER_CORE_OUTDATED_S_AVAILABLE', $updates['core']['version'])
+				);
+			}
+		}
+		
+		foreach($updates['components'] as $dat){
+			if($dat['status'] == 'update'){
+				$checks[] = \Core\HealthCheckResult::ConstructWarn(
+					t('STRING_WARNING_UPDATER_COMPONENT_S_OUTDATED', $dat['title']),
+					t('MESSAGE_WARNING_UPDATER_COMPONENT_S_OUTDATED_S_AVAILABLE', $dat['title'], $dat['version']),
+					'/updater'
+				);
+			}
+			elseif($dat['status'] == 'installed'){
+				$checks[] = \Core\HealthCheckResult::ConstructGood(
+					t('STRING_SUCCESS_UPDATER_COMPONENT_S_OUTDATED', $dat['title']),
+					t('MESSAGE_SUCCESS_UPDATER_COMPONENT_S_OUTDATED_S_AVAILABLE', $dat['title'], $dat['version'])
+				);
+			}
+		}
+
+		foreach($updates['themes'] as $dat){
+			if($dat['status'] == 'update'){
+				$checks[] = \Core\HealthCheckResult::ConstructWarn(
+					t('STRING_WARNING_UPDATER_THEME_S_OUTDATED', $dat['title']),
+					t('MESSAGE_WARNING_UPDATER_THEME_S_OUTDATED_S_AVAILABLE', $dat['title'], $dat['version']),
+					'/updater'
+				);
+			}
+			elseif($dat['status'] == 'installed'){
+				$checks[] = \Core\HealthCheckResult::ConstructGood(
+					t('STRING_SUCCESS_UPDATER_THEME_S_OUTDATED', $dat['title']),
+					t('MESSAGE_SUCCESS_UPDATER_THEME_S_OUTDATED_S_AVAILABLE', $dat['title'], $dat['version'])
+				);
+			}
+		}
+		
+		return $checks;
+	}
 }
