@@ -630,7 +630,10 @@ EOD;
 		$bundle = $tgz;
 
 		if($signed) {
-			exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packager_email . '" -a --sign "' . $tgz . '"');
+			//exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packager_email . '" -a --sign "' . $tgz . '"');
+			// Use the user's current home directory instead of GPG_HOMEDIR!
+			// This is because the private key is required for signing of packages.
+			exec('gpg --homedir ' . escapeshellarg($_SERVER['HOME'] . '/.gnupg') . ' --no-permission-warning -u "' . $packager_email . '" -a --sign "' . $tgz . '"');
 			$bundle .= '.asc';
 		}
 
@@ -804,7 +807,7 @@ EOD;
 			'gnupg',
 			'core/bootstrap.compiled.php',
 			'logs/',
-			'dev/',
+			'core/dev/',
 			'core/tests/',
 		];
 
