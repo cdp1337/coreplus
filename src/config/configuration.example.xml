@@ -88,6 +88,11 @@ required - SSL is always required for all pages.
 		]]></description>
 	</return>
 
+	<define name="SERVER_ADMIN_EMAIL" type="string" formtype="text" advanced="0">
+		<value></value>
+		<description>Set this to an email address, (or comma-separated list for multiple), to receive server health reports and critical errors.</description>
+	</define>
+	
 	<define name="DEVELOPMENT_MODE" type="boolean" formtype="checkbox">
 		<value>@{devmode}@</value>
 		<description>
