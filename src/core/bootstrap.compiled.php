@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 27 Dec 2015 22:20:53 -0500
+ * @compiled Mon, 11 Jan 2016 21:58:14 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -2059,6 +2059,9 @@ if(is_array($v['link'])){
 if(!isset($v['link']['model'])){
 throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
 }
+if(!isset($v['link']['type'])){
+throw new Exception('Required attribute [type] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
+}
 $linkmodel = $v['link']['model'];
 $linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
 $linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
@@ -2382,7 +2385,19 @@ return '';
 }
 }
 public function getControlLinks(){
-return [];
+$ret = [];
+$classname = get_class($this);
+if(isset(self::$_ModelSupplementals[$classname])){
+foreach(self::$_ModelSupplementals[$classname] as $supplemental){
+if(class_exists($supplemental)){
+$ref = new ReflectionClass($supplemental);
+if($ref->hasMethod('GetControlLinks')){
+$ret = array_merge($ret, $ref->getMethod('GetControlLinks')->invoke(null, $this));
+}
+}
+}
+}
+return $ret;
 }
 public function _loadFromRecord($record) {
 $this->_data = $record;
@@ -6017,7 +6032,7 @@ return $ret;
 }
 public function enableAuthDriver($driver) {
 $enabled = explode('|', $this->get('backend'));
-$drivers = User\Helper::GetEnabledAuthDrivers();
+$drivers = \Core\User\Helper::GetEnabledAuthDrivers();
 if(!isset($drivers[ $driver ])) {
 return false;
 }
@@ -6030,7 +6045,7 @@ return true;
 }
 public function disableAuthDriver($driver) {
 $enabled = explode('|', $this->get('backend'));
-$drivers = User\Helper::GetEnabledAuthDrivers();
+$drivers = \Core\User\Helper::GetEnabledAuthDrivers();
 if(!isset($drivers[ $driver ])) {
 return false;
 }
@@ -6313,7 +6328,7 @@ $a[] = array(
 );
 }
 }
-return $a;
+return array_merge($a, parent::getControlLinks());
 }
 protected function _getResolvedPermissions($context = null) {
 if(!$this->isActive()) {
@@ -6494,6 +6509,7 @@ $log->log('Found ' . sizeof($groups) . ' default groups for new users: ' . implo
 else {
 $log->log('No groups set as default, new users will not belong to any groups.');
 }
+$log->log('Starting ' . ($merge ? '*MERGE*' : '*skipping*' ) . ' import of ' . sizeof($data) . ' users');
 foreach($data as $dat) {
 if($pk == 'email' || $pk == 'id') {
 $user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
@@ -7213,6 +7229,210 @@ public static $Indexes = array(
 'searchable' => array('searchable'),
 );
 }
+
+
+### REQUIRE_ONCE FROM core/models/UserUserGroupModel.php
+class UserUserGroupModel extends Model {
+public static $Schema = array(
+'user_id' => array(
+'type' => Model::ATT_TYPE_UUID_FK,
+'required' => true,
+'null' => false,
+'link' => [
+'model' => 'User',
+'type' => Model::LINK_BELONGSTOONE,
+'on' => 'id',
+],
+),
+'group_id' => array(
+'type' => Model::ATT_TYPE_UUID_FK,
+'required' => true,
+'null' => false,
+'link' => [
+'model' => 'UserGroup',
+'type' => Model::LINK_BELONGSTOONE,
+'on' => 'id',
+],
+),
+'context' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => '40',
+'default' => '',
+'comment' => 'If this user group is tied to a specific context, the Model base name is here.',
+'form' => array(
+'type' => 'select',
+'description' => 'If this group will be used to apply permissions in specific contexts, select it here. The specific context object is selected on the respective user edit page under their groups.',
+)
+),
+'context_pk' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => '200',
+'default' => '',
+'comment' => 'The PK of the context for this group, if applicable.'
+),
+'created' => array(
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+),
+'updated' => array(
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+),
+);
+public static $Indexes = array(
+'primary' => array('user_id', 'group_id', 'context', 'context_pk'),
+);
+}
+
+
+### REQUIRE_ONCE FROM core/models/UserGroupModel.php
+class UserGroupModel extends Model {
+public static $Schema = array(
+'id' => array(
+'type' => Model::ATT_TYPE_UUID,
+'required' => true,
+'null' => false,
+),
+'site' => array(
+'type' => Model::ATT_TYPE_SITE,
+'default' => 0,
+'formtype' => 'system',
+'comment' => 'The site id in multisite mode, (or 0 otherwise)',
+),
+'name' => array(
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 48,
+'null' => false,
+'required' => true,
+'validation' => array('this', '_validateName'),
+'form' => array(
+'description' => 'The name for this group displayed in the admin and user interface.',
+)
+),
+'context' => array(
+'type' => Model::ATT_TYPE_STRING,
+'default' => '',
+'comment' => 'If this group is for a specific context, the Model base name is here.',
+'form' => array(
+'type' => 'select',
+'description' => 'If this group will be used to apply permissions in specific contexts, select it here. The specific context object is selected on the respective user edit page under their groups.',
+)
+),
+'permissions' => array(
+'type' => Model::ATT_TYPE_TEXT,
+'formtype' => 'disabled',
+'comment' => 'json-encoded array of permissions this group has'
+),
+'default' => array(
+'type' => Model::ATT_TYPE_BOOL,
+'default' => false,
+'form' => array(
+'title' => 'Default Group',
+'description' => 'Is this a default user group for new account sign-ups?',
+),
+),
+'created' => array(
+'type' => Model::ATT_TYPE_CREATED,
+'null' => false,
+),
+'updated' => array(
+'type' => Model::ATT_TYPE_UPDATED,
+'null' => false,
+),
+);
+public static $Indexes = array(
+'primary' => array('id'),
+'unique:name' => array('site', 'name'),
+);
+public function __construct($id = null){
+$this->_linked['UserUserGroup'] = [
+'link' => Model::LINK_HASMANY,
+'on' => ['group_id' => 'id'],
+];
+parent::__construct($id);
+}
+public function getPermissions(){
+$p = json_decode($this->get('permissions'), true);
+return $p ? $p : array();
+}
+public function setPermissions($permissions){
+if(sizeof($permissions) == 0){
+$this->set('permissions', '');
+}
+else{
+$allperms = Core::GetPermissions();
+$thiscontext = $this->get('context');
+foreach($permissions as $k => $perm){
+if(!isset($allperms[$perm])){
+unset($permissions[$k]);
+}
+elseif($allperms[$perm]['context'] != $thiscontext){
+unset($permissions[$k]);
+}
+}
+$permissions = array_values($permissions);
+$this->set('permissions', json_encode($permissions));
+}
+}
+public function _validateName($key){
+switch(strtolower($key)){
+case 'admin':
+case 'anonymous':
+case 'authenticated':
+return false;
+default:
+return true;
+}
+}
+public static function Import($data, $options, $output_realtime = false) {
+$log = new \Core\ModelImportLogger('User Group Importer', $output_realtime);
+$merge = isset($options['merge']) ? $options['merge'] : true;
+$pk    = isset($options['key']) ? $options['key'] : null;
+if(!$pk) {
+throw new Exception(
+'Import requires a "key" field on options containing the primary key to compare against locally.'
+);
+}
+foreach($data as $dat) {
+if($pk == 'name' || $pk == 'id' || $pk == 'ldap_dn') {
+$group = UserGroupModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
+}
+else {
+$group = UserGroupModel::Find(['name = ' . $dat['name']], 1);
+}
+$status_type = $group ? 'Updated' : 'Created';
+if($group && !$merge) {
+$log->duplicate('Skipped group ' . $group->getLabel() . ', already exists and merge not requested');
+continue;
+}
+if(!$group) {
+if(!isset($dat['name'])) {
+$log->error('Unable to import groups without a name!');
+continue;
+}
+$group = new UserGroupModel();
+}
+foreach($dat as $key => $val){
+$group->set($key, $val);
+}
+try {
+$status = $group->save();
+}
+catch(Exception $e) {
+$log->error($e->getMessage());
+continue;
+}
+if($status) {
+$log->success($status_type . ' group ' . $group->getLabel() . ' successfully!');
+}
+else {
+$log->skip('Skipped group ' . $group->getLabel() . ', no changes detected.');
+}
+}
+$log->finalize();
+return $log;
+}
+} // END class UserGroupModel extends Model
 
 
 ### REQUIRE_ONCE FROM core/libs/core/VersionString.php
@@ -9174,13 +9394,6 @@ $imagestart = null;
 $x++;
 }
 return $html;
-}
-function GetNavigation($base){
-trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
-return page_request()->getReferrer();
-}
-function RecordNavigation(\PageModel $page){
-trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 function set_message($messageText, $messageType = 'info'){
 if(strpos($messageText, 't:MESSAGE_') === 0){
@@ -14409,21 +14622,6 @@ trigger_error('Core::Redirect is deprecated, please use \\Core\\redirect() inste
 static public function Reload() {
 trigger_error('Core::Reload is deprecated, please use \\Core\\reload() instead.', E_USER_DEPRECATED);
 \Core\reload();
-}
-static public function GoBack($depth=1) {
-trigger_error('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
-\Core\go_back();
-}
-public static function GetHistory($depth = 2){
-trigger_error('Core::GetHistory is deprecated and will be removed shortly.', E_USER_DEPRECATED);
-return \Core\page_request()->getReferrer();
-}
-static public function GetNavigation($base) {
-trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
-return \Core\page_request()->getReferrer();
-}
-static public function _RecordNavigation() {
-trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 static public function SetMessage($messageText, $messageType = 'info') {
 if(trim($messageText) == '') return;

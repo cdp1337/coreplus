@@ -106,7 +106,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="ad5edc4ca5372e9245fa6c4af1b5db7a"/>
 		<file filename="core/bootstrap_predefines.php" md5="c8101cbac8a3243c5888d1ae73bede4c"/>
 		<file filename="core/bootstrap_preincludes.php" md5="5e1631050b47769b946d55b6ac0d5779"/>
-		<file filename="core/controllers/AdminController.php" md5="8502f1554ee111e13da9d1c8b6e6a926">
+		<file filename="core/controllers/AdminController.php" md5="c851bc95b665d58caefb13f9f18560eb">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="7d6a0c9b2aae5793e9427204f81ccff0">
@@ -227,7 +227,7 @@
 		<file filename="core/forms/FormUserInput.php" md5="91d7a0a6b0b3abe27c1687ae12fb9361">
 			<class name="FormUserInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="d62e2e84ed4b57ca5a58e3dac85a870e"/>
+		<file filename="core/functions/Core.functions.php" md5="872e94ea75daa5914ae07c29a8eef77b"/>
 		<file filename="core/functions/global.php" md5="64f62f03e4113b32f3634d0264a2b8c8"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="75a21a9412e2a01a9b7b123410bf2fd1">
 			<class name="RewriteMapHelper"/>
@@ -238,29 +238,10 @@
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
 		<file filename="core/htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
-		<file filename="core/i18n/ar.ini" md5="c9f9970dea9b80855d88b1d9c42036e8"/>
-		<file filename="core/i18n/de.ini" md5="0beffd32509efaa704cbc2c05a24a1e1"/>
-		<file filename="core/i18n/en.ini" md5="11c122183b4f758fcdaf8ff56526dd27"/>
-		<file filename="core/i18n/fr.ini" md5="3564b5654737c845ac78bd9215a2368f"/>
-		<file filename="core/legacy-support/pre-2.5.6/Directory_local_backend.php" md5="5da88cf5770cbde1032f4f22943b4558">
-			<class name="Directory_local_backend"/>
-		</file>
-		<file filename="core/legacy-support/pre-2.5.6/File_local_backend.php" md5="4bac4aa1b41220aae5b51c6829111ae8">
-			<class name="File_local_backend"/>
-		</file>
-		<file filename="core/legacy-support/pre-2.5.6/Template.php" md5="fd6e17b28742a5885ffacfbbe71d43c9">
-			<class name="Template"/>
-		</file>
-		<file filename="core/legacy-support/pre-2.7.0/Dataset.php" md5="c163272fb8fdc8a55f03c694eecf94c4">
-			<class name="Dataset"/>
-			<class name="DatasetWhere"/>
-			<class name="DatasetWhereClause"/>
-			<class name="DatasetStream"/>
-		</file>
-		<file filename="core/legacy-support/pre-2.8.0/usernamespaces.php" md5="0a7abab595711bf8aec9c502121ca251">
-			<class name="User\Helper"/>
-			<class name="User\ImportHelper"/>
-		</file>
+		<file filename="core/i18n/ar.ini" md5="c75ab42c06b0d48481931f952921955a"/>
+		<file filename="core/i18n/de.ini" md5="a9b3dd6803df2f501ec4ba91b0442889"/>
+		<file filename="core/i18n/en.ini" md5="afd56687ae8fbfd5d12983f23cf1e330"/>
+		<file filename="core/i18n/fr.ini" md5="35167d47aa2792e376a75c2bfd286ce8"/>
 		<file filename="core/libs/Michelf/License.md" md5="171ec084d03465cd4148b8298a8dfe11"/>
 		<file filename="core/libs/Michelf/Markdown.inc.php" md5="724fb43c68d63fbbc24024ef6e91e456"/>
 		<file filename="core/libs/Michelf/Markdown.php" md5="455f66e6c0931c51b5c1ae95e323f2ab">
@@ -446,7 +427,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="1afbec4642960ca229e7acab7924c8e8">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="bd545678f0fc024e8c899890c6839ed8">
+		<file filename="core/libs/core/Core.class.php" md5="07eb6179c6d50a564efce062dec7cf65">
 			<class name="Core"/>
 		</file>
 		<file filename="core/libs/core/CoreDateTime.php" md5="3213bb356fb936d95d1411d922ff7859">
@@ -1509,6 +1490,7 @@
 		<widgetcreate title="Page Search" class="PageSearchWidget"/>
 	</widgets>
 	<view searchdir="core/templates">
+		<file filename="core/templates/emails/admin/health_report.tpl" md5="06c7bb879f5d92402992217437299337"/>
 		<file filename="core/templates/emails/admin/test_email.tpl" md5="c5eec2c6d33f52a34ee309a1d49349fa"/>
 		<file filename="core/templates/emails/user/activation.tpl" md5="2894752e5f2b582bf16dd0eed82e14e9"/>
 		<file filename="core/templates/emails/user/datastoreauth_forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
