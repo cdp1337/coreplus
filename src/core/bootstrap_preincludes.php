@@ -56,6 +56,8 @@ require_once(ROOT_PDIR . 'core/models/ConfigModel.class.php');
 require_once(ROOT_PDIR . 'core/models/WidgetModel.class.php');
 require_once(ROOT_PDIR . 'core/models/UserUserConfigModel.php');
 require_once(ROOT_PDIR . 'core/models/UserConfigModel.php');
+require_once(ROOT_PDIR . 'core/models/UserUserGroupModel.php');
+require_once(ROOT_PDIR . 'core/models/UserGroupModel.php');
 
 /**
  * The Component system written for API 2.1
