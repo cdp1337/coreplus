@@ -387,7 +387,7 @@ class FacebookController extends Controller_2_1{
 	 */
 	public static function GetUserControlLinks($userid){
 
-		$enabled = User\Helper::GetEnabledAuthDrivers();
+		$enabled = \Core\User\Helper::GetEnabledAuthDrivers();
 		if(!isset($enabled['facebook'])){
 			// GPG isn't enabled at all, disable any control links from the system.
 			return [];
