@@ -361,6 +361,9 @@ class Model implements ArrayAccess {
 					if(!isset($v['link']['model'])){
 						throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
 					}
+					if(!isset($v['link']['type'])){
+						throw new Exception('Required attribute [type] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
+					}
 					$linkmodel = $v['link']['model'];
 					$linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
 					$linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
