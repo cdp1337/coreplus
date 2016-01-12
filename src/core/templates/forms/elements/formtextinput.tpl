@@ -7,9 +7,7 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 	</label>
 
-	<div class="form-element-value">
-		<input type="{$type}"{$element->getInputAttributes()}>
-	</div>
+	
 
 	{if $element->get('autocomplete') && $element->get('autocomplete') != 'on' && $element->get('autocomplete') != 'off'}
 		{* values should be an array of value => label *}
@@ -20,6 +18,11 @@
 		{/if}
 
 		{if $element->get('multiple')}
+			{* Multiple also has a standard element because the existing values are written at the end. *}
+			<div class="form-element-value">
+				<input type="{$type}"{$element->getInputAttributes()}>
+			</div>
+			
 			<div class="form-element-autocomplete-multiple-values">
 				{foreach $values as $v => $l}
 					<div class="autocomplete-value">
@@ -30,14 +33,26 @@
 				{/foreach}
 			</div>
 		{else}
-			<input id="{$element->getID()}-ac" type="hidden" name="{$element->get('name')}" value="{array_pop($values)}"/>
+			{**
+			 * Singular autocomplete field is the main exception here.
+			 * It has the label of the value as its value field to provide feedback to the user that something is saved.
+			 *}
+			<div class="form-element-value">
+				<input type="{$type}"{$element->getInputAttributes()} value="{current($values)}">
+			</div>
+			
+			<input id="{$element->getID()}-ac" type="hidden" name="{$element->get('name')}" value="{key($values)}"/>
 		{/if}
+	{else}
+		{* Standard element! *}
+		<div class="form-element-value">
+			<input type="{$type}"{$element->getInputAttributes()}>
+		</div>
 	{/if}
 
 	{if $element->get('description')}
 		<p class="form-element-description">{$element->get('description')}</p>
 	{/if}
-
 </div>
 
 {if $element->get('autocomplete') && $element->get('autocomplete') != 'on' && $element->get('autocomplete') != 'off'}
@@ -48,9 +63,11 @@
 	{script location="foot"}<script>
 		$(function(){
 			var
-				elementid = "{$element->getID()}", hiddenid = "{$element->getID()}-ac",
-				$element, $hidden, $parent, multiple = {if $element->get('multiple')}true{else}false{/if},
-				name = "{$element->get('name')}";
+				elementid = "{$element->getID()}",
+				hiddenid  = "{$element->getID()}-ac",
+				multiple  = {if $element->get('multiple')}true{else}false{/if},
+				name      = "{$element->get('name')}",
+				$element, $hidden, $parent;
 
 			$element = $('#' + elementid);
 			$parent = $element.closest('.formelement');
@@ -91,10 +108,25 @@
 					}
 					else{
 						if(multiple){
+							// Clear out the input box
 							$element.val('');
 						}
 						else{
-							// Just clear out the values.
+							// Clear out the input box and hidden value for singles.
+							$hidden.val('');
+							$element.val('');
+						}
+					}
+				},
+				change: function(event, ui){
+					if(!ui.item){
+						// This only needs to be called if nothing was selected, (the above logic will handle that!)
+						if(multiple){
+							// Clear out the input box
+							$element.val('');
+						}
+						else{
+							// Clear out the input box and hidden value for singles.
 							$hidden.val('');
 							$element.val('');
 						}
