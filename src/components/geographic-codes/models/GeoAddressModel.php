@@ -135,7 +135,7 @@ class GeoAddressModel extends Model {
 		return ($a1 == '' && $po == '');
 	}
 
-	public function save(){
+	public function save($defer = false){
 		// Quick check to see if this address is actually populated or not.
 		if( $this->_data['address1'] == '' && $this->_data['postal'] == '' ){
 			if($this->exists()){
@@ -173,7 +173,7 @@ class GeoAddressModel extends Model {
 			}
 
 			// Resume with the traditional save!
-			return parent::save();
+			return parent::save($defer);
 		}
 		else{
 			// No change!
