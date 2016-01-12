@@ -473,10 +473,10 @@ abstract class Helper{
 		$allowemailchanging = \ConfigHandler::Get('/user/email/allowchanging');
 
 		if($type == 'registration'){
-			$form->set('callsmethod', 'User\\Helper::RegisterHandler');
+			$form->set('callsmethod', 'Core\\User\\Helper::RegisterHandler');
 		}
 		else{
-			$form->set('callsmethod', 'User\\Helper::UpdateHandler');
+			$form->set('callsmethod', 'Core\\User\\Helper::UpdateHandler');
 		}
 
 		$form->addElement('system', ['name' => 'user', 'value' => $user]);

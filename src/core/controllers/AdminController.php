@@ -1,5 +1,6 @@
 <?php
 use Core\CLI\CLI;
+use Core\Datamodel\Dataset;
 
 /**
  * Admin controller, handles all /Admin requests
@@ -1252,6 +1253,8 @@ class AdminController extends Controller_2_1 {
 		$updatedcount = 0;
 
 		foreach ($elements as $e) {
+			/** @var FormElement $e */
+			
 			// I'm only interested in config options.
 			if (strpos($e->get('name'), 'config[') === false) continue;
 

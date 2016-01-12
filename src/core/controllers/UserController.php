@@ -485,7 +485,7 @@ class UserController extends Controller_2_1{
 		/** @var UserModel $user */
 		$user = $data['user'];
 
-		$form = \User\Helper::GetForm($user);
+		$form = \Core\User\Helper::GetForm($user);
 		$form->addElement('hidden', ['name' => 'redirect', 'value' => $data['redirect']]);
 		if(isset($data['password'])){
 			// Password should ONLY set by a generate password system.
@@ -921,7 +921,7 @@ class UserController extends Controller_2_1{
 		$view->addMetaName('robots', 'noindex');
 
 		$loginform = new Form();
-		$loginform->set('callsMethod', 'User\\Helper::LoginHandler');
+		$loginform->set('callsMethod', 'Core\\User\\Helper::LoginHandler');
 
 		$loginform->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
 		$loginform->addElement('password', array('name' => 'pass', 'title' => 'Password', 'required' => true));

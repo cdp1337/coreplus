@@ -128,7 +128,7 @@ class PageController extends Controller_2_1 {
 		}
 
 		// Run this through the streamer, just in case there are a lot of pages...
-		$stream = new DatasetStream($factory->getDataset());
+		$stream = new \Core\Datamodel\DatasetStream($factory->getDataset());
 
 		$user = \Core\user();
 		$toshow = array();

@@ -494,7 +494,7 @@ class UserModel extends Model {
 	public function enableAuthDriver($driver) {
 		$enabled = explode('|', $this->get('backend'));
 
-		$drivers = User\Helper::GetEnabledAuthDrivers();
+		$drivers = \Core\User\Helper::GetEnabledAuthDrivers();
 		if(!isset($drivers[ $driver ])) {
 			return false;
 		}
@@ -523,7 +523,7 @@ class UserModel extends Model {
 	public function disableAuthDriver($driver) {
 		$enabled = explode('|', $this->get('backend'));
 
-		$drivers = User\Helper::GetEnabledAuthDrivers();
+		$drivers = \Core\User\Helper::GetEnabledAuthDrivers();
 		if(!isset($drivers[ $driver ])) {
 			return false;
 		}
@@ -1324,6 +1324,8 @@ class UserModel extends Model {
 		else {
 			$log->log('No groups set as default, new users will not belong to any groups.');
 		}
+		
+		$log->log('Starting ' . ($merge ? '*MERGE*' : '*skipping*' ) . ' import of ' . sizeof($data) . ' users');
 
 		foreach($data as $dat) {
 

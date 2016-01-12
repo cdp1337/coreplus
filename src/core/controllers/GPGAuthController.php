@@ -691,7 +691,7 @@ EOD;
 	 */
 	public static function GetUserControlLinks($userid){
 
-		$enabled = User\Helper::GetEnabledAuthDrivers();
+		$enabled = \Core\User\Helper::GetEnabledAuthDrivers();
 		//if(!isset($enabled['gpg'])){
 		// GPG isn't enabled at all, disable any control links from the system.
 		//	return [];
