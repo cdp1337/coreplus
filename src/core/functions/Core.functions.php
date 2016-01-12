@@ -112,10 +112,9 @@ function ftp(){
  *
  * If no user systems are currently available, null is returned.
  *
- * @return \UserModel|null
+ * @return \UserModel
  */
 function user(){
-
 	static $_CurrentUserAccount = null;
 
 	if(!class_exists('\\UserModel')){
@@ -573,26 +572,6 @@ function parse_html($html){
 	//var_dump($html);
 
 	return $html;
-}
-
-/**
- * Return the page the user viewed x amount of pages ago based on the navigation stack.
- *
- * @param string $base The base URL to lookup history for
- * @return string
- */
-function GetNavigation($base){
-	trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
-	return page_request()->getReferrer();
-}
-
-/**
- * Record this page into the navigation history.
- *
- * @param string $page
- */
-function RecordNavigation(\PageModel $page){
-	trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
 }
 
 /**

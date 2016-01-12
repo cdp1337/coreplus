@@ -1117,51 +1117,6 @@ class Core implements ISingleton {
 	}
 
 	/**
-	 * Helper function to just go back to a page before this one.
-	 *
-	 * @deprecated 2013.06.11 Please use the namespaced versions.
-	 *
-	 * @param int $depth The amount of pages back to go
-	 */
-	static public function GoBack($depth=1) {
-		trigger_error('Core::GoBack is deprecated, please use \\Core\\go_back() instead.', E_USER_DEPRECATED);
-		\Core\go_back();
-	}
-
-	/**
-	 * Get the page that was last called $depth ago.
-	 *
-	 * @param int $depth
-	 * @return string
-	 */
-	public static function GetHistory($depth = 2){
-		trigger_error('Core::GetHistory is deprecated and will be removed shortly.', E_USER_DEPRECATED);
-		return \Core\page_request()->getReferrer();
-	}
-
-	/**
-	 * Return the page the user viewed x amount of pages ago based on the navigation stack.
-	 *
-	 * @param string $base The base URL to lookup history for
-	 *
-	 * @return string
-	 */
-	static public function GetNavigation($base) {
-		trigger_error('\\Core\\GetNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
-		return \Core\page_request()->getReferrer();
-	}
-
-	/**
-	 * Record this page into the navigation history.
-	 *
-	 * This will hook into the "/core/page/postrender" hook.
-	 *
-	 */
-	static public function _RecordNavigation() {
-		trigger_error('\\Core\\RecordNavigation is deprecated and will be removed shortly', E_USER_DEPRECATED);
-	}
-
-	/**
 	 * Add a message to the user's stack.
 	 *    It will be displayed the next time the user (or session) renders the page.
 	 *
