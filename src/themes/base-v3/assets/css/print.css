@@ -1080,10 +1080,6 @@ table.listing.listing-table-sortable th:hover i.sort-icon.other {
 table.listing.listing-table-sortable th:hover i.sort-icon.current {
   visibility: hidden;
 }
-/* line 69, ../scss/_listing_tables.scss */
-table.listing .edit {
-  display: none;
-}
 
 /* line 75, ../scss/_listing_tables.scss */
 .listing-table-column-select label {
