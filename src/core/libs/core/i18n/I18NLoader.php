@@ -470,6 +470,21 @@ class I18NLoader {
 	}
 
 	/**
+	 * Get just the base languages available, (without dialects), as a valid optionset.
+	 *
+	 * @return array
+	 */
+	public static function GetBaseLanguagesAsOptions(){
+		$localesAvailable = self::GetLocalesAvailable();
+		$ret = [];
+		foreach($localesAvailable as $k => $d){
+			$base = strpos($k, '_') === false ? $k : substr($k, 0, strpos($k, '_'));
+			$ret[$base] = t($d['lang']);
+		}
+		return $ret;
+	}
+
+	/**
 	 * Get the languages available on this system as form options
 	 *
 	 * @return array
