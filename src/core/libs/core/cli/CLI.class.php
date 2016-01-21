@@ -252,8 +252,8 @@ class CLI {
 		echo $line . $nl . COLOR_RESET . COLOR_LINE;
 		echo "+" . str_repeat('=', $maxlen-1);
 		echo COLOR_RESET . $nl;
-
-		if(EXEC_MODE == 'WEB'){
+		
+		if(self::_FlushRequired()){
 			ob_flush();
 			flush();
 		}
@@ -275,7 +275,7 @@ class CLI {
 			$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 			echo COLOR_LINE . '| ' . COLOR_RESET . $color . $line . COLOR_RESET . $nl;
 
-			if(EXEC_MODE == 'WEB'){
+			if(self::_FlushRequired()){
 				ob_flush();
 				flush();
 			}
@@ -302,7 +302,7 @@ class CLI {
 		$flen = strlen($line) + strlen($suffix) + 8;
 		echo "$line..." . str_repeat(NBSP, max($maxlen - $flen, 1));
 
-		if(EXEC_MODE == 'WEB'){
+		if(self::_FlushRequired()){
 			ob_flush();
 			flush();
 		}
@@ -341,7 +341,7 @@ class CLI {
 
 		echo $nl;
 
-		if(EXEC_MODE == 'WEB'){
+		if(self::_FlushRequired()){
 			ob_flush();
 			flush();
 		}
@@ -378,7 +378,7 @@ class CLI {
 			echo (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 		}
 
-		if(EXEC_MODE == 'WEB'){
+		if(self::_FlushRequired()){
 			ob_flush();
 			flush();
 		}
@@ -452,4 +452,29 @@ class CLI {
 		file_put_contents($file, $out);
 	}
 
+	/**
+	 * Get if an obflush is required to send output to the end browser.
+	 * 
+	 * If another output buffer is active other than the primary one, do not flush anything!
+	 */
+	private static function _FlushRequired(){
+		if(EXEC_MODE != 'WEB'){
+			// ob_flush is only required when in web.
+			return false;
+		}
+		
+		$l = ob_get_level();
+		if($l == 0){
+			// No output buffers present!  YAY!
+			return true;
+		}
+		
+		if($l == 1 && ini_get('output_buffering')){
+			// 1 is also allowed if output buffering is turned on.
+			return true;
+		}
+		
+		// Otherwise?
+		return false;
+	}
 }
