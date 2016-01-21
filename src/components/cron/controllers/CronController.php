@@ -311,7 +311,7 @@ class CronController extends Controller_2_1 {
 					}
 					catch(Exception $e){
 						$execution     = false;
-						$executiondata = $e->getMessage();
+						$executiondata = 'EXCEPTION: ' . $e->getMessage() . ob_get_clean();
 					}
 
 
@@ -341,9 +341,21 @@ class CronController extends Controller_2_1 {
 
 
 		// Just in case the contents are returning html... (they should be plain text).
-		$contents = str_replace(array('<br>', '<br/>', '<br />'), "\n", $contents);
-		// And standardize line endings.
-		$contents = str_replace(array("\r\n", "\r"), "\n", $contents);
+		// Replace the most common line endings with things that make sense for plain text.
+		// This is to ensure that all the available scenarios are met and saved/displayed without extra whitespace.
+		//
+		// Since some systems will provide plain text (easy!), windows/os9 line endings,
+		// HTML (br and br/), and formatted HTML (br + \n). 
+		$contents = str_ireplace(
+			[
+				"\r\n<br>", "\r\n<br/>", "\r\n<br />",
+				"\n<br>", "\n<br/>", "\n<br />",
+				"<br>", "<br/>", "<br />",
+			    "\r\n", "\r"
+			],
+			"\n",
+			$contents
+		);
 
 		// Save the results.
 		$log->set('completed', Time::GetCurrentGMT());
