@@ -110,7 +110,7 @@ class Theme{
 			$this->getKeyName() == \ConfigHandler::Get('/theme/selected')
 		){
 			\Core\Utilities\Logger\write_debug('Auto-installing assets for theme [' . $this->getName() . ']');
-			$this->_installAssets();
+			$this->_parseAssets();
 		}
 
 		$this->_loaded = true;
