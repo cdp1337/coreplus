@@ -1733,10 +1733,16 @@ class PageModel extends Model {
 			preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
 			$args = array();
 			foreach ($matches[1] as $idx => $v) {
-				if (!$v) continue;
+				if (!$v){
+					// This preg_match_all creates duplicate keys when there are multiple, so a=a&b=b will produce
+					// [ 'a', '', 'b', '' ]
+					// for some reason.
+					// This continue is a quick hack to ignore that erroneous blank key.
+					continue;
+				}
 				$a =& $args;
 				while(($paranpos = strpos($v, '[')) !== false){
-					$k1 = substr($v, 0, $paranpos);
+					$k1 = strtolower(substr($v, 0, $paranpos));
 					$v = substr($v, $paranpos+1, strpos($v, ']')-$paranpos-1);
 
 					if(!isset($a[$k1])){
@@ -1744,7 +1750,7 @@ class PageModel extends Model {
 					}
 					$a =& $a[$k1];
 				}
-				$a[$v] = $matches[2][$idx];
+				$a[strtolower($v)] = $matches[2][$idx];
 			}
 			$base = substr($base, 0, $qpos);
 		}
