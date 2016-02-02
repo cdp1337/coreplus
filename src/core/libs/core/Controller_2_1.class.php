@@ -156,7 +156,7 @@ class Controller_2_1 {
 			$view->error = $code;
 		}
 		else{
-			Core::SetMessage($message, 'error');
+			\Core\set_message($message, 'error');
 			if($redirect){
 				\Core\redirect($redirect);
 			}

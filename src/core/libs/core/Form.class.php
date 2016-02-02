@@ -1206,7 +1206,7 @@ class Form extends FormGroup {
 
 			$e->set('value', $e->lookupValueFrom($src));
 			if ($e->hasError() && !$quiet){
-				Core::SetMessage($e->getError(), 'error');
+				\Core\set_message($e->getError(), 'error');
 			}
 		}
 	}
@@ -1573,7 +1573,7 @@ class Form extends FormGroup {
 		if($_SERVER['HTTP_REFERER'] != $form->originalurl){
 			// @todo This is reported to be causing issues with production sites.
 			//       If found true, this check may need to be removed / refactored.
-			//Core::SetMessage('Form submission referrer does not match, please try your submission again.', 'error');
+			//\Core\set_message('Form submission referrer does not match, please try your submission again.', 'error');
 			SystemLogModel::LogInfoEvent(
 				'Form Referrer Mismatch',
 				'Form referrer does not match!  Submitted: [' . $_SERVER['HTTP_REFERER'] . '] Expected: [' . $form->originalurl . ']'
@@ -1597,17 +1597,17 @@ class Form extends FormGroup {
 			else $status = false;
 		}
 		catch(ModelValidationException $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			$status = false;
 		}
 		catch(GeneralValidationException $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			$status = false;
 		}
 		catch(Exception $e){
 			if(DEVELOPMENT_MODE){
 				// Developers get the full message
-				Core::SetMessage($e->getMessage(), 'error');
+				\Core\set_message($e->getMessage(), 'error');
 			}
 			else{
 				// While users of production-enabled sites get a friendlier message.

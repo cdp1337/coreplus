@@ -118,7 +118,7 @@ abstract class Helper{
 			// Make a note of this!
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
-			\Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			return false;
 		}
 		catch(\Exception $e){
@@ -126,7 +126,7 @@ abstract class Helper{
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
 			if(DEVELOPMENT_MODE){
-				\Core::SetMessage($e->getMessage(), 'error');
+				\Core\set_message($e->getMessage(), 'error');
 			}
 			else{
 				\Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');

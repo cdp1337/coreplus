@@ -352,7 +352,7 @@ class Core implements ISingleton {
 				// If the component was flagged as invalid.. just skip to the next one.
 				if (!$c->isValid()) {
 					if (DEVELOPMENT_MODE) {
-						Core::SetMessage('Component ' . $c->getName() . ' appears to be invalid.');
+						\Core\set_message('Component ' . $c->getName() . ' appears to be invalid.');
 					}
 					continue;
 				}
@@ -1147,7 +1147,7 @@ class Core implements ISingleton {
 	}
 
 	static public function AddMessage($messageText, $messageType = 'info') {
-		Core::SetMessage($messageText, $messageType);
+		\Core\set_message($messageText, $messageType);
 	}
 
 	/**
