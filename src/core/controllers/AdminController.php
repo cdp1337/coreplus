@@ -419,6 +419,7 @@ class AdminController extends Controller_2_1 {
 		$listings = new Core\ListingTable\Table();
 		$listings->setModelName('SystemLogModel');
 		$listings->setName('system-log');
+		$listings->setDefaultSort('datetime');
 
 		$listings->addFilter(
 			'select',
@@ -523,17 +524,46 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 
-		$listings->addColumn('Date Time', 'datetime');
-		$listings->addColumn('Session', 'session_id');
-		$listings->addColumn('User', 'user_id');
+		$listings->addColumn('Type', 'type');
+		$listings->addColumn('Date/Time', 'datetime');
 		$listings->addColumn('IP Address', 'ip_addr');
-		$listings->addColumn('User Agent', 'useragent');
-		$listings->addColumn('Affected User', 'affected_user_id');
+		$listings->addColumn('Message', 'message');
+		//$listings->addColumn('Session', 'session_id');
+		$listings->addColumn('User', 'user_id', false);
+		$listings->addColumn('Affected User', 'affected_user_id', false);
 
 		$listings->loadFiltersFromRequest($request);
 
-		$view->title = 'System Log';
+		$view->mastertemplate = 'admin';
+		$view->title = 't:STRING_SYSTEM_LOG';
 		$view->assign('listings', $listings);
+	}
+
+	/**
+	 * Page to display full details of a system log, usually opened in an ajax dialog.
+	 * 
+	 * @return int
+	 * @throws DMI_Exception
+	 */
+	public function log_details(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		$view->mode = View::MODE_PAGEORAJAX;
+
+		if(!\Core\user()->checkAccess('p:/core/systemlog/view')){
+			return View::ERROR_ACCESSDENIED;
+		}
+		
+		$log = SystemLogModel::Construct($request->getParameter(0));
+		if(!$log->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+
+		$view->mastertemplate = 'admin';
+		$view->addBreadcrumb('t:STRING_SYSTEM_LOG', '/admin/log');
+		$view->title = 't:STRING_SYSTEM_LOG_DETAILS';
+		$view->assign('entry', $log);
 	}
 
 	/**
@@ -892,7 +922,7 @@ class AdminController extends Controller_2_1 {
 			if($changes['deleted'] == 1) $changetext[] = 'One widget deleted';
 			elseif($changes['deleted'] > 1) $changetext[] = $changes['deleted'] . ' widgets deleted';
 
-			Core::SetMessage(implode('<br/>', $changetext), 'success');
+			\Core\set_message(implode('<br/>', $changetext), 'success');
 		}
 		else{
 			\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
