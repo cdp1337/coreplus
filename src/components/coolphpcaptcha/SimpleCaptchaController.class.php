@@ -129,7 +129,7 @@ class SimpleCaptchaController extends Controller_2_1{
 					ConfigHandler::Set($k, $v);
 				}
 
-				Core::SetMessage('Switched to ' . $presets[$postpreset]['name'] . ' preset.', 'success');
+				\Core\set_message('Switched to ' . $presets[$postpreset]['name'] . ' preset.', 'success');
 			}
 
 			// And the blah post options.

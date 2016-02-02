@@ -418,8 +418,8 @@ class ThemeController extends Controller_2_1{
 
 		// Validate the theme name
 		if(!\Theme\validate_theme_name($themename)){
-			Core::SetMessage('Invalid theme requested', 'error');
-			Core::GoBack();
+			\Core\set_message('Invalid theme requested', 'error');
+			\Core\go_back();
 		}
 
 		$theme = ThemeHandler::GetTheme($themename);
@@ -428,8 +428,8 @@ class ThemeController extends Controller_2_1{
 		if($template){
 			// The template itself can be ignored.
 			if(!\Theme\validate_template_name($themename, $template)){
-				Core::SetMessage('Invalid template requested', 'error');
-				Core::GoBack();
+				\Core\set_message('Invalid template requested', 'error');
+				\Core\go_back();
 			}
 		}
 		else{
@@ -445,13 +445,13 @@ class ThemeController extends Controller_2_1{
 
 			if($config_default->get('overrideable') == 0){
 				// It's a child site and the admin never gave them permission to change default themes!
-				Core::SetMessage('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!', 'error');
-				Core::GoBack();
+				\Core\set_message('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!', 'error');
+				\Core\go_back();
 			}
 			if($config_selected->get('overrideable') == 0){
 				// It's a child site and the admin never gave them permission to change default themes!
-				Core::SetMessage('Unable to set the selected theme on a child site, please ensure that the "/theme/selected" config is set to be overrideable!', 'error');
-				Core::GoBack();
+				\Core\set_message('Unable to set the selected theme on a child site, please ensure that the "/theme/selected" config is set to be overrideable!', 'error');
+				\Core\go_back();
 			}
 		}
 
@@ -473,8 +473,8 @@ class ThemeController extends Controller_2_1{
 				SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $t->getName() . ' reinstalled successfully', implode("\n", $change));
 			}
 
-			Core::SetMessage('Updated default theme', 'success');
-			Core::Redirect('/theme');
+			\Core\set_message('Updated default theme', 'success');
+			\Core\redirect('/theme');
 		}
 
 		$view->assign('theme', $themename);
@@ -500,13 +500,13 @@ class ThemeController extends Controller_2_1{
 
 		// Validate
 		if(!\Theme\validate_theme_name($theme)){
-			Core::SetMessage('Invalid theme requested', 'error');
-			Core::GoBack();
+			\Core\set_message('Invalid theme requested', 'error');
+			\Core\go_back();
 		}
 
 		if(!\Theme\validate_template_name($theme, $template)){
-			Core::SetMessage('Invalid template requested', 'error');
-			Core::GoBack();
+			\Core\set_message('Invalid template requested', 'error');
+			\Core\go_back();
 		}
 
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
@@ -514,21 +514,21 @@ class ThemeController extends Controller_2_1{
 
 			if($config_default->get('overrideable') == 0){
 				// It's a child site and the admin never gave them permission to change default themes!
-				Core::SetMessage('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!', 'error');
-				Core::GoBack();
+				\Core\set_message('Unable to set the default template on a child site, please ensure that the "/theme/default_template" config is set to be overrideable!', 'error');
+				\Core\go_back();
 			}
 		}
 
 		if($request->isPost()){
 
 			if($theme != ConfigHandler::Get('/theme/selected')){
-				Core::SetMessage('The admin skin must be on the same theme as the site!', 'error');
-				Core::GoBack();
+				\Core\set_message('The admin skin must be on the same theme as the site!', 'error');
+				\Core\go_back();
 			}
 			ConfigHandler::Set('/theme/default_admin_template', $template);
 
-			Core::SetMessage('Updated admin skin', 'success');
-			Core::GoBack();
+			\Core\set_message('Updated admin skin', 'success');
+			\Core\go_back();
 		}
 		else{
 			return View::ERROR_BADREQUEST;
@@ -555,8 +555,8 @@ class ThemeController extends Controller_2_1{
 
 		// Validate
 		if(!\Theme\validate_theme_name($theme)){
-			Core::SetMessage('Invalid theme requested', 'error');
-			Core::GoBack();
+			\Core\set_message('Invalid theme requested', 'error');
+			\Core\go_back();
 		}
 
 		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
@@ -564,21 +564,21 @@ class ThemeController extends Controller_2_1{
 
 			if($config_default->get('overrideable') == 0){
 				// It's a child site and the admin never gave them permission to change default themes!
-				Core::SetMessage('Unable to set the default template on a child site, please ensure that the "/theme/default_email_template" config is set to be overrideable!', 'error');
-				Core::GoBack();
+				\Core\set_message('Unable to set the default template on a child site, please ensure that the "/theme/default_email_template" config is set to be overrideable!', 'error');
+				\Core\go_back();
 			}
 		}
 
 		if($request->isPost()){
 
 			if($theme != ConfigHandler::Get('/theme/selected')){
-				Core::SetMessage('The admin skin must be on the same theme as the site!', 'error');
-				Core::GoBack();
+				\Core\set_message('The admin skin must be on the same theme as the site!', 'error');
+				\Core\go_back();
 			}
 			ConfigHandler::Set('/theme/default_email_template', $template);
 
-			Core::SetMessage('Updated email skin', 'success');
-			Core::GoBack();
+			\Core\set_message('Updated email skin', 'success');
+			\Core\go_back();
 		}
 		else{
 			return View::ERROR_BADREQUEST;
@@ -631,7 +631,7 @@ class ThemeController extends Controller_2_1{
 		else {
 			//no special gets...
 			// This version of the editor doesn't support viewing without any file specified.
-			Core::SetMessage('No file requested', 'error');
+			\Core\set_message('No file requested', 'error');
 			\core\redirect('/theme');
 		}
 
@@ -639,8 +639,8 @@ class ThemeController extends Controller_2_1{
 		$fh = \Core\Filestore\Factory::File($filename);
 		$customdest = \Core\directory('themes/custom');
 		if(!$customdest->isWritable()){
-			Core::SetMessage('Directory themes/custom is not writable!  Inline file editing disabled.', 'error');
-			Core::GoBack();
+			\Core\set_message('Directory themes/custom is not writable!  Inline file editing disabled.', 'error');
+			\Core\go_back();
 		}
 
 		// Lookup the mode.
@@ -663,8 +663,8 @@ class ThemeController extends Controller_2_1{
 
 		// @todo Finish this.
 		if(strpos($fh->getMimetype(), 'text/') !== 0){
-			Core::SetMessage('Sorry, but only text files can be edited right now... Expect this to function soon though ;)', 'info');
-			Core::GoBack();
+			\Core\set_message('Sorry, but only text files can be edited right now... Expect this to function soon though ;)', 'info');
+			\Core\go_back();
 		}
 
 
@@ -680,7 +680,7 @@ class ThemeController extends Controller_2_1{
 				$revision = $rev->get('id');
 			}
 			else{
-				Core::SetMessage('Invalid revision requested!', 'error');
+				\Core\set_message('Invalid revision requested!', 'error');
 				$rev = null;
 			}
 		}
@@ -788,8 +788,8 @@ class ThemeController extends Controller_2_1{
 				$model->save();
 			}
 
-			Core::SetMessage('Updated optional stylesheets successfully', 'success');
-			Core::GoBack(1);
+			\Core\set_message('Updated optional stylesheets successfully', 'success');
+			\Core\go_back(1);
 		}
 
 
@@ -811,7 +811,7 @@ class ThemeController extends Controller_2_1{
 			$view->jsondata = array('message' => $message, 'status' => 0);
 		}
 		else{
-			Core::SetMessage($message, 'error');
+			\Core\set_message($message, 'error');
 			\core\redirect('/theme');
 		}
 	}
@@ -831,7 +831,7 @@ class ThemeController extends Controller_2_1{
 				$customfilename = ROOT_PDIR . 'themes/custom/' . $file;
 				break;
 			default:
-				Core::SetMessage('Unsupported file type: ' . $activefile, 'error');
+				\Core\set_message('Unsupported file type: ' . $activefile, 'error');
 				return false;
 		}
 
@@ -847,7 +847,7 @@ class ThemeController extends Controller_2_1{
 
 		// Check and see if they're the same, ie: no change.  I don't want to create a bunch of moot revisions.
 		if($newmodel->get('content') == $sourcefh->getContents()){
-			Core::SetMessage('No changes performed.', 'info');
+			\Core\set_message('No changes performed.', 'info');
 			return '/theme';
 		}
 
@@ -926,7 +926,7 @@ class ThemeController extends Controller_2_1{
 			ThemeHandler::GetTheme(ConfigHandler::Get('/theme/selected'))->reinstall();
 		}
 
-		Core::SetMessage('Updated file successfully', 'success');
+		\Core\set_message('Updated file successfully', 'success');
 		return '/theme';
 	}
 

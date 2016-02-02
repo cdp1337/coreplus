@@ -45,7 +45,7 @@ class ContentController extends Controller_2_1 {
 
 		if(!$page->isPublished()){
 			if($editor){
-				Core::SetMessage('This page is currently set as ' . $page->getPublishedStatus() . '.', 'info');
+				\Core\set_message('This page is currently set as ' . $page->getPublishedStatus() . '.', 'info');
 			}
 			else{
 				return View::ERROR_NOTFOUND;
@@ -172,7 +172,7 @@ class ContentController extends Controller_2_1 {
 		// w00t
 		$msg = ($isnew ? 'Added' : 'Updated');
 		$link = \Core\resolve_link($page->get('baseurl'));
-		Core::SetMessage('<a href="' . $link . '">' . $msg . ' page successfully!</a>', 'success');
+		\Core\set_message('<a href="' . $link . '">' . $msg . ' page successfully!</a>', 'success');
 		return 'back';
 	}
 
@@ -197,7 +197,7 @@ class ContentController extends Controller_2_1 {
 		}
 		$m->delete();
 
-		Core::SetMessage('Removed ' . $m->get('nickname') . ' successfully!', 'success');
+		\Core\set_message('Removed ' . $m->get('nickname') . ' successfully!', 'success');
 
 		$hist = $request->getReferrer();
 		if($hist == $link){

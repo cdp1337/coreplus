@@ -36,7 +36,7 @@ abstract class CronHelper {
 			$count = $cronfac->count();
 
 			if($count == 0){
-				Core::SetMessage('Your ' . $check['cron'] . ' cron has not run in the last ' . $check['label'] . '!  ' . $suffixtext, 'error');
+				\Core\set_message('Your ' . $check['cron'] . ' cron has not run in the last ' . $check['label'] . '!  ' . $suffixtext, 'error');
 				// Only complain to the admin once per view.
 				return;
 			}

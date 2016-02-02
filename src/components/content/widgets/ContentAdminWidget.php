@@ -100,7 +100,7 @@ class ContentAdminWidget extends Widget_2_1 {
 	public static function QuickDraftSave(Form $form){
 
 		if(!$form->getElementValue('title')){
-			Core::SetMessage('All pages must have titles.', 'error');
+			\Core\set_message('All pages must have titles.', 'error');
 			return false;
 		}
 

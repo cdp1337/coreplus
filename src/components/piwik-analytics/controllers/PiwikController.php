@@ -64,7 +64,7 @@ class PiwikController extends Controller_2_1 {
 			\ConfigHandler::Set('/piwik/tracking/all_subdomains', $_POST['all_domains']);
 			\ConfigHandler::Set('/piwik/tracking/domain_title', $_POST['domain_title']);
 
-			Core::SetMessage('Updated Piwik settings successfully', 'success');
+			\Core\set_message('Updated Piwik settings successfully', 'success');
 			\Core\reload();
 		}
 

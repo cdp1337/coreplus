@@ -110,7 +110,7 @@ class GoogleController extends Controller_2_1 {
 			ConfigHandler::Set($k, $el->get('value'));
 		}
 
-		Core::SetMessage('Saved configuration options', 'success');
+		\Core\set_message('Saved configuration options', 'success');
 		return true;
 	}
 }

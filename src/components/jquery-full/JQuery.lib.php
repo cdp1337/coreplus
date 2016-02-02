@@ -107,7 +107,7 @@ abstract class JQuery {
 		if(Core::IsLibraryAvailable('js.cookie')){
 			// No longer maintained, superseded by JS Cookie
 			if(DEVELOPMENT_MODE){
-				Core::SetMessage('Please use js.cookie instead, as jquery.cookie is no longer maintained!');
+				\Core\set_message('Please use js.cookie instead, as jquery.cookie is no longer maintained!');
 			}
 			
 			//return \JSCookie\JSCookie::IncludeJS();	

@@ -269,8 +269,8 @@ class SecurityController extends Controller_2_1 {
 		}
 
 		$ban->delete();
-		Core::SetMessage('Removed ban successfully', 'success');
-		Core::GoBack();
+		\Core\set_message('Removed ban successfully', 'success');
+		\Core\go_back();
 	}
 
 	/**
@@ -336,7 +336,7 @@ class SecurityController extends Controller_2_1 {
 				$k->save();
 			}
 
-			Core::SetMessage('Trained keywords successfully!', 'success');
+			\Core\set_message('Trained keywords successfully!', 'success');
 			\Core\redirect('/security/spam/keywords');
 		}
 		elseif(!$request->isPost() || !$request->getPost('content')){
@@ -425,7 +425,7 @@ class SecurityController extends Controller_2_1 {
 				$mask = ~((1 << (32 - $i)) - 1);
 				$join = long2ip($longip & $mask) . '/' . $i;
 				if($join == $ban->get('ip_addr')){
-					Core::SetMessage('Corwardly refusing to ban an IP range that will blacklist your current connection!', 'error');
+					\Core\set_message('Corwardly refusing to ban an IP range that will blacklist your current connection!', 'error');
 					return false;
 				}
 			}
@@ -437,11 +437,11 @@ class SecurityController extends Controller_2_1 {
 			}
 
 			$ban->save();
-			Core::SetMessage('Banned IP range ' . $ban->get('ip_addr'), 'success');
+			\Core\set_message('Banned IP range ' . $ban->get('ip_addr'), 'success');
 			return 'back';
 		}
 		catch(Exception $e){
-			Core::SetMessage($e->getMessage());
+			\Core\set_message($e->getMessage());
 			return false;
 		}
 	}

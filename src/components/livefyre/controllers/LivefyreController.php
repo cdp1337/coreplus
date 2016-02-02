@@ -22,7 +22,7 @@ class LivefyreController extends Controller_2_1{
 		if($request->isPost()){
 			// Update/save the site id.
 			ConfigHandler::Set('/livefyre/siteid', $_POST['siteid']);
-			Core::SetMessage('Set Site ID Successfully!', 'success');
+			\Core\set_message('Set Site ID Successfully!', 'success');
 			\Core\reload();
 		}
 

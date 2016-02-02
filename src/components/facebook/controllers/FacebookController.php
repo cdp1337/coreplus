@@ -81,7 +81,7 @@ class FacebookController extends Controller_2_1{
 				$user_profile = $facebook->api('/me');
 			}
 			catch(Exception $e){
-				Core::SetMessage($e->getMessage(), 'error');
+				\Core\set_message($e->getMessage(), 'error');
 				\Core\go_back();
 				return null;
 			}
@@ -116,7 +116,7 @@ class FacebookController extends Controller_2_1{
 					// Log this as a login attempt!
 					$logmsg = 'Failed Login (Facebook). Email not registered' . "\n" . 'Email: ' . $user_profile['email'] . "\n";
 					\SystemLogModel::LogSecurityEvent('/user/login', $logmsg);
-					Core::SetMessage('Your Facebook email (' . $user_profile['email'] . ') does not appear to be registered on this site.', 'error');
+					\Core\set_message('Your Facebook email (' . $user_profile['email'] . ') does not appear to be registered on this site.', 'error');
 					\Core\go_back();
 					return null;
 				}
@@ -126,7 +126,7 @@ class FacebookController extends Controller_2_1{
 				// This is the control managed with in the admin.
 				$logmsg = 'Failed Login. User tried to login before account activation' . "\n" . 'User: ' . $user->get('email') . "\n";
 				\SystemLogModel::LogSecurityEvent('/user/login', $logmsg, null, $user->get('id'));
-				Core::SetMessage('Your account is not active yet.', 'error');
+				\Core\set_message('Your account is not active yet.', 'error');
 				\Core\go_back();
 				return null;
 			}
@@ -136,13 +136,13 @@ class FacebookController extends Controller_2_1{
 				$auth = $user->getAuthDriver('facebook');
 			}
 			catch(Exception $e){
-				Core::SetMessage('Your account does not have Facebook logins enabled!  <a href="' . \Core\resolve_link('/facebook/enable') . '">Do you want to enable Facebook?</a>', 'error');
+				\Core\set_message('Your account does not have Facebook logins enabled!  <a href="' . \Core\resolve_link('/facebook/enable') . '">Do you want to enable Facebook?</a>', 'error');
 				\Core\go_back();
 				return null;
 			}
 
 			if(!$user->isActive()){
-				Core::SetMessage('Your account is not active!', 'error');
+				\Core\set_message('Your account is not active!', 'error');
 				\Core\go_back();
 				return null;
 			}
@@ -232,7 +232,7 @@ class FacebookController extends Controller_2_1{
 					$user_profile = $facebook->api('/me');
 				}
 				catch(Exception $e){
-					Core::SetMessage($e->getMessage(), 'error');
+					\Core\set_message($e->getMessage(), 'error');
 					\Core\go_back();
 					return null;
 				}
@@ -241,7 +241,7 @@ class FacebookController extends Controller_2_1{
 				if(\Core\user()->exists()){
 					// Logged in users, the email must match.
 					if(\Core\user()->get('email') != $user_profile['email']){
-						Core::SetMessage('Your Facebook email is ' . $user_profile['email'] . ', which does not match your account email!  Unable to link accounts.', 'error');
+						\Core\set_message('Your Facebook email is ' . $user_profile['email'] . ', which does not match your account email!  Unable to link accounts.', 'error');
 						\Core\go_back();
 						return null;
 					}
@@ -253,7 +253,7 @@ class FacebookController extends Controller_2_1{
 					$user = UserModel::Find(['email' => $user_profile['email']], 1);
 
 					if(!$user){
-						Core::SetMessage('No local account found with the email ' . $user_profile['email'] . ', please <a href="' . \Core\resolve_link('/user/register') . '"create an account</a> instead.', 'error');
+						\Core\set_message('No local account found with the email ' . $user_profile['email'] . ', please <a href="' . \Core\resolve_link('/user/register') . '"create an account</a> instead.', 'error');
 						\Core\go_back();
 						return null;
 					}
@@ -277,12 +277,12 @@ class FacebookController extends Controller_2_1{
 				$email->templatename = 'emails/facebook/enable_confirmation.tpl';
 				$email->assign('link', \Core\resolve_link('/facebook/enable/' . $nonce));
 				if($email->send()){
-					Core::SetMessage('An email has been sent to your account with a link enclosed.  Please click on that to complete activation within twenty minutes.', 'success');
+					\Core\set_message('An email has been sent to your account with a link enclosed.  Please click on that to complete activation within twenty minutes.', 'success');
 					\Core\go_back();
 					return null;
 				}
 				else{
-					Core::SetMessage('Unable to send a confirmation email, please try again later.', 'error');
+					\Core\set_message('Unable to send a confirmation email, please try again later.', 'error');
 					\Core\go_back();
 					return null;
 				}
@@ -296,7 +296,7 @@ class FacebookController extends Controller_2_1{
 			$nonce = NonceModel::Construct($request->getParameter(0));
 
 			if(!$nonce->isValid()){
-				Core::SetMessage('Invalid key requested.', 'error');
+				\Core\set_message('Invalid key requested.', 'error');
 				\Core\redirect('/');
 				return null;
 			}
@@ -317,7 +317,7 @@ class FacebookController extends Controller_2_1{
 				$facebook->api('/me');
 			}
 			catch(Exception $e){
-				Core::SetMessage($e->getMessage(), 'error');
+				\Core\set_message($e->getMessage(), 'error');
 				\Core\redirect('/');
 				return null;
 			}
@@ -327,7 +327,7 @@ class FacebookController extends Controller_2_1{
 			$auth = $user->getAuthDriver('facebook');
 			$auth->syncUser($data['access_token']);
 
-			Core::SetMessage('Linked Facebook successfully!', 'success');
+			\Core\set_message('Linked Facebook successfully!', 'success');
 
 			// And log the user in!
 			if(!\Core\user()->exists()){
@@ -374,7 +374,7 @@ class FacebookController extends Controller_2_1{
 		$user->disableAuthDriver('facebook');
 		$user->save();
 
-		Core::SetMessage('Disabled Facebook logins!', 'success');
+		\Core\set_message('Disabled Facebook logins!', 'success');
 		\Core\go_back();
 	}
 

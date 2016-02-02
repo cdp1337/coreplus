@@ -92,7 +92,7 @@ class MediaManagerNavigatorController extends  Controller_2_1{
 			}
 		}
 		catch(Exception $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 		}
 
 		$view->title = 'File Media Navigator';
@@ -143,7 +143,7 @@ class MediaManagerNavigatorController extends  Controller_2_1{
 			}
 		}
 		catch(Exception $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 		}
 
 		$view->title = 'Images';
