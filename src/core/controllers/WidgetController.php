@@ -110,12 +110,12 @@ class WidgetController extends Controller_2_1 {
 						$image = $obj->getPreviewImage();
 					}
 					else{
-						Core::SetMessage('Invalid "widgetcreate" found in ' .$node->getAttribute('class') . ', ' . $node->getAttribute('title'), 'error');
+						\Core\set_message('Invalid "widgetcreate" found in ' .$node->getAttribute('class') . ', ' . $node->getAttribute('title'), 'error');
 						$image = '';
 					}
 				}
 				else{
-					Core::SetMessage('Invalid "widgetcreate" found in ' . $c->getName() . ', ' . $node->getAttribute('title'), 'error');
+					\Core\set_message('Invalid "widgetcreate" found in ' . $c->getName() . ', ' . $node->getAttribute('title'), 'error');
 					continue;
 				}
 
@@ -156,8 +156,8 @@ class WidgetController extends Controller_2_1 {
 			$page     = PageModel::Construct($baseurl);
 
 			if(!isset($pages[ $page->get('last_template') ])){
-				Core::SetMessage('Requested page template does not seem to contain any widget areas.', 'error');
-				Core::GoBack();
+				\Core\set_message('Requested page template does not seem to contain any widget areas.', 'error');
+				\Core\go_back();
 			}
 
 			$selected = $page->get('last_template');
@@ -216,8 +216,8 @@ class WidgetController extends Controller_2_1 {
 			$factory->where('page_baseurl = ' . $baseurl);
 		}
 		else{
-			Core::SetMessage('Invalid/unknown template type', 'error');
-			Core::GoBack();
+			\Core\set_message('Invalid/unknown template type', 'error');
+			\Core\go_back();
 		}
 
 
@@ -287,7 +287,7 @@ class WidgetController extends Controller_2_1 {
 		}
 
 		if(!class_exists($class)){
-			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
@@ -295,12 +295,12 @@ class WidgetController extends Controller_2_1 {
 		$obj = new $class();
 
 		if(!($obj instanceof Widget_2_1)){
-			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\set_message('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
 			\Core\go_back();
 		}
 
@@ -360,7 +360,7 @@ class WidgetController extends Controller_2_1 {
 		$class = substr($baseurl, 1, strpos($baseurl, '/', 1)-1) . 'widget';
 
 		if(!class_exists($class)){
-			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
@@ -368,12 +368,12 @@ class WidgetController extends Controller_2_1 {
 		$obj = new $class();
 
 		if(!($obj instanceof Widget_2_1)){
-			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\set_message('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
 			\Core\go_back();
 		}
 
@@ -436,7 +436,7 @@ class WidgetController extends Controller_2_1 {
 		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
 
 		if(!class_exists($class)){
-			Core::SetMessage('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
@@ -444,19 +444,19 @@ class WidgetController extends Controller_2_1 {
 		$obj = new $class();
 
 		if(!($obj instanceof Widget_2_1)){
-			Core::SetMessage('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			Core::SetMessage('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\set_message('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
 			\Core\go_back();
 		}
 
 		$model = new WidgetModel($baseurl);
 
 		$model->delete();
-		Core::SetMessage('Deleted widget ' . $model->get('title') . ' successfully!', 'success');
+		\Core\set_message('Deleted widget ' . $model->get('title') . ' successfully!', 'success');
 		\Core\go_back();
 	}
 
@@ -529,7 +529,7 @@ class WidgetController extends Controller_2_1 {
 			if($changes['deleted'] == 1) $changetext[] = 'One widget deleted';
 			elseif($changes['deleted'] > 1) $changetext[] = $changes['deleted'] . ' widgets deleted';
 
-			Core::SetMessage(implode('<br/>', $changetext), 'success');
+			\Core\set_message(implode('<br/>', $changetext), 'success');
 		}
 		else{
 			\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
@@ -580,7 +580,7 @@ class WidgetController extends Controller_2_1 {
 			$w->set('weight', $counter + 1);
 			$w->save();
 
-			Core::SetMessage('Installed widget into requested template', 'success');
+			\Core\set_message('Installed widget into requested template', 'success');
 		}
 		elseif($page_baseurl){
 			$counter = WidgetInstanceModel::Count(['page_baseurl = ' . $page_baseurl, 'widgetarea = ' . $widgetarea]);
@@ -589,10 +589,10 @@ class WidgetController extends Controller_2_1 {
 			$w->set('weight', $counter + 1);
 			$w->save();
 
-			Core::SetMessage('Installed widget into requested page', 'success');
+			\Core\set_message('Installed widget into requested page', 'success');
 		}
 		else{
-			Core::SetMessage('Unknown request', 'error');
+			\Core\set_message('Unknown request', 'error');
 		}
 
 		if($page_baseurl){
@@ -673,7 +673,7 @@ class WidgetController extends Controller_2_1 {
 			$o->save();
 		}
 
-		Core::GoBack();
+		\Core\go_back();
 	}
 
 	/**
@@ -709,7 +709,7 @@ class WidgetController extends Controller_2_1 {
 		$other = WidgetInstanceModel::Find($otherCriteria, 1);
 
 		if(!$other){
-			Core::SetMessage('Widget is already in the top position!', 'error');
+			\Core\set_message('Widget is already in the top position!', 'error');
 		}
 		else{
 			$other->set('weight', $other->get('weight') + 1);
@@ -719,7 +719,7 @@ class WidgetController extends Controller_2_1 {
 			$instance->save();
 		}
 
-		Core::GoBack();
+		\Core\go_back();
 	}
 
 	/**
@@ -755,7 +755,7 @@ class WidgetController extends Controller_2_1 {
 		$other = WidgetInstanceModel::Find($otherCriteria, 1);
 
 		if(!$other){
-			Core::SetMessage('Widget is already in the bottom position!', 'error');
+			\Core\set_message('Widget is already in the bottom position!', 'error');
 		}
 		else{
 			$other->set('weight', $other->get('weight') - 1);
@@ -765,7 +765,7 @@ class WidgetController extends Controller_2_1 {
 			$instance->save();
 		}
 
-		Core::GoBack();
+		\Core\go_back();
 	}
 
 

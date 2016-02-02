@@ -170,7 +170,7 @@ class UserGroupAdminController extends Controller_2_1{
 				}
 				else{
 					// This group has been added to a user's profile, display a message that it's locked!
-					Core::SetMessage('This group has been added to a user account and therefore has been locked to the ' . $contextnames[$model->get('context')]);
+					\Core\set_message('This group has been added to a user account and therefore has been locked to the ' . $contextnames[$model->get('context')]);
 					$form->switchElementType('model[context]', 'hidden');
 					$usecontexts = true;
 				}
@@ -217,7 +217,7 @@ class UserGroupAdminController extends Controller_2_1{
 		}
 
 		$model->delete();
-		Core::SetMessage('Removed group successfully', 'success');
+		\Core\set_message('Removed group successfully', 'success');
 		\core\redirect('/usergroupadmin');
 	}
 
@@ -283,7 +283,7 @@ class UserGroupAdminController extends Controller_2_1{
 					($model->get('site') == MultiSiteHelper::GetCurrentSiteID())
 				)
 				){
-					Core::SetMessage('Invalid group specified', 'error');
+					\Core\set_message('Invalid group specified', 'error');
 					return false;
 				}
 			}
@@ -305,11 +305,11 @@ class UserGroupAdminController extends Controller_2_1{
 			$model->save();
 		}
 		catch(ModelValidationException $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			return false;
 		}
 		catch(Exception $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			return false;
 		}
 

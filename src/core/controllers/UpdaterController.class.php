@@ -180,11 +180,11 @@ class UpdaterController extends Controller_2_1 {
 				mkdir(GPG_HOMEDIR);
 			}
 			else{
-				Core::SetMessage(GPG_HOMEDIR . ' does not exist and could not be created!  Please fix this before proceeding!', 'error');
+				\Core\set_message(GPG_HOMEDIR . ' does not exist and could not be created!  Please fix this before proceeding!', 'error');
 			}
 		}
 		elseif(!is_writable(GPG_HOMEDIR)){
-			Core::SetMessage(GPG_HOMEDIR . ' is not writable!  Please fix this before proceeding!', 'error');
+			\Core\set_message(GPG_HOMEDIR . ' is not writable!  Please fix this before proceeding!', 'error');
 		}
 
 
@@ -224,12 +224,12 @@ class UpdaterController extends Controller_2_1 {
 				mkdir(GPG_HOMEDIR);
 			}
 			else{
-				Core::SetMessage(GPG_HOMEDIR . ' does not exist and could not be created!  Please fix this before proceeding!', 'error');
+				\Core\set_message(GPG_HOMEDIR . ' does not exist and could not be created!  Please fix this before proceeding!', 'error');
 				$form = null;
 			}
 		}
 		elseif(!is_writable(GPG_HOMEDIR)){
-			Core::SetMessage(GPG_HOMEDIR . ' is not writable!  Please fix this before proceeding!', 'error');
+			\Core\set_message(GPG_HOMEDIR . ' is not writable!  Please fix this before proceeding!', 'error');
 			$form = null;
 		}
 
@@ -249,7 +249,7 @@ class UpdaterController extends Controller_2_1 {
 
 			// Lookup that URL first!
 			if(UpdateSiteModel::Count(array('url' => $url)) > 0){
-				Core::SetMessage($url . ' is already used!', 'error');
+				\Core\set_message($url . ' is already used!', 'error');
 				return;
 			}
 
@@ -272,17 +272,17 @@ class UpdaterController extends Controller_2_1 {
 
 			if($remote->requiresAuthentication()){
 				if(!$username){
-					Core::SetMessage($url . ' requires authentication!', 'error');
+					\Core\set_message($url . ' requires authentication!', 'error');
 					return;
 				}
 				else{
-					Core::SetMessage('Invalid credentials for ' . $url, 'error');
+					\Core\set_message('Invalid credentials for ' . $url, 'error');
 					return;
 				}
 			}
 
 			if(!$model->isValid()){
-				Core::SetMessage($url . ' does not appear to be a valid repository!', 'error');
+				\Core\set_message($url . ' does not appear to be a valid repository!', 'error');
 				return;
 			}
 
@@ -291,7 +291,7 @@ class UpdaterController extends Controller_2_1 {
 
 			// Make sure the keys are good
 			if(!$repo->validateKeys()){
-				Core::SetMessage('There were invalid/unpublished keys in the repo!  Refusing to import.', 'error');
+				\Core\set_message('There were invalid/unpublished keys in the repo!  Refusing to import.', 'error');
 				return;
 			}
 
@@ -310,18 +310,18 @@ class UpdaterController extends Controller_2_1 {
 						++$keysimported;
 					}
 					catch(Exception $e){
-						Core::SetMessage('Unable to import key [' . $keyData['key'] . '] from keyserver!', 'error');
+						\Core\set_message('Unable to import key [' . $keyData['key'] . '] from keyserver!', 'error');
 					}
 				}
 
 				if(!$keycount){
-					Core::SetMessage('Added repository site successfully!', 'success');
+					\Core\set_message('Added repository site successfully!', 'success');
 				}
 				elseif($keycount != $keysimported){
-					Core::SetMessage('Added repository site, but unable to import ' . ($keycount-$keysimported) . ' key(s).', 'info');
+					\Core\set_message('Added repository site, but unable to import ' . ($keycount-$keysimported) . ' key(s).', 'info');
 				}
 				else{
-					Core::SetMessage('Added repository site and imported ' . $keysimported . ' key(s) successfully!', 'success');
+					\Core\set_message('Added repository site and imported ' . $keysimported . ' key(s) successfully!', 'success');
 				}
 
 				\core\redirect('/updater/repos');
@@ -370,7 +370,7 @@ class UpdaterController extends Controller_2_1 {
 		}
 
 		$model->delete();
-		Core::SetMessage('Removed repository successfully', 'success');
+		\Core\set_message('Removed repository successfully', 'success');
 		\core\redirect('/updater/repos');
 	}
 
@@ -385,7 +385,7 @@ class UpdaterController extends Controller_2_1 {
 		$sitecount = UpdateSiteModel::Count();
 
 		if($sitecount == 0){
-			Core::SetMessage('Please add at least one repository before searching for new packages!', 'error');
+			\Core\set_message('Please add at least one repository before searching for new packages!', 'error');
 			\core\redirect('/updater/repos/add');
 		}
 
@@ -509,7 +509,7 @@ class UpdaterController extends Controller_2_1 {
 
 		exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --batch --yes --delete-key "' . $key . '"', $output, $result);
 		if($result != 0){
-			Core::SetMessage('Unable to remove key ' . $key, 'error');
+			\Core\set_message('Unable to remove key ' . $key, 'error');
 		}
 		\core\redirect('/updater/keys');
 	}
@@ -818,11 +818,11 @@ class UpdaterController extends Controller_2_1 {
 			$model->save();
 		}
 		catch(Exception $e){
-			Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			return false;
 		}
 
-		Core::SetMessage('Updated repository successfully', 'success');
+		\Core\set_message('Updated repository successfully', 'success');
 		return '/updater/repos';
 	}
 

@@ -360,7 +360,7 @@ class FormController extends Controller_2_1 {
 				$form->addElement( $el );
 			}
 			catch(Exception $e){
-				Core::SetMessage('Form element ' . $v . ' failed to load due to ' . $e->getMessage(), 'error');
+				\Core\set_message('Form element ' . $v . ' failed to load due to ' . $e->getMessage(), 'error');
 			}
 		}
 

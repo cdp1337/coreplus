@@ -182,7 +182,7 @@ class UserConfigController extends Controller_2_1{
 			}
 
 			if(!isset($_POST['authbackend'])){
-				Core::SetMessage('At least one auth backend is required, re-enabling datastore.', 'info');
+				\Core\set_message('At least one auth backend is required, re-enabling datastore.', 'info');
 				$_POST['authbackend'] = ['datastore'];
 			}
 
@@ -191,7 +191,7 @@ class UserConfigController extends Controller_2_1{
 			$config->set('value', $auths);
 			$config->save();
 
-			Core::SetMessage('Saved configuration options successfully', 'success');
+			\Core\set_message('Saved configuration options successfully', 'success');
 			\Core\reload();
 		}
 

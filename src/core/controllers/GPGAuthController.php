@@ -92,7 +92,7 @@ class GPGAuthController extends Controller_2_1 {
 		$nonce = NonceModel::Construct($request->getParameter(0));
 
 		if(!$nonce->isValid()){
-			Core::SetMessage('Invalid nonce provided!', 'error');
+			\Core\set_message('Invalid nonce provided!', 'error');
 			\Core\go_back();
 		}
 
@@ -293,7 +293,7 @@ EOD;
 		$nonce = NonceModel::Construct($request->getParameter(0));
 
 		if(!$nonce->isValid()){
-			Core::SetMessage('Invalid nonce provided!', 'error');
+			\Core\set_message('Invalid nonce provided!', 'error');
 			\Core\go_back();
 		}
 
@@ -376,12 +376,12 @@ EOD;
 			$key = $gpg->importKey($key);
 
 			if(($nonce = \Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint, false))){
-				Core::SetMessage('Instructions have been sent to your email.', 'success');
+				\Core\set_message('Instructions have been sent to your email.', 'success');
 				return '/gpgauth/configure2/' . $nonce;
 			}
 		}
 		catch(\Exception $e){
-			Core::SetMessage('Invalid key provided!', 'error');
+			\Core\set_message('Invalid key provided!', 'error');
 			return false;
 		}
 	}
@@ -415,11 +415,11 @@ EOD;
 		$result = \Core\User\AuthDrivers\gpg::ValidateVerificationResponse($nonceKey, $sig);
 
 		if($result !== true){
-			Core::SetMessage($result, 'error');
+			\Core\set_message($result, 'error');
 			return false;
 		}
 		else{
-			Core::SetMessage('Set/Updated GPG key successfully!', 'success');
+			\Core\set_message('Set/Updated GPG key successfully!', 'success');
 
 			if(!\Core\user()->exists()){
 				$user = UserModel::Construct($data['user']);
@@ -535,7 +535,7 @@ EOD;
 		$nonce = NonceModel::Construct($form->getElement('nonce')->get('value'));
 
 		if(!$nonce->isValid()){
-			Core::SetMessage('Invalid nonce provided!', 'error');
+			\Core\set_message('Invalid nonce provided!', 'error');
 			return false;
 		}
 
@@ -556,21 +556,21 @@ EOD;
 		$key = $gpg->getKey($keyid);
 
 		if(!$key){
-			Core::SetMessage('That key could not be loaded from local!', 'error');
+			\Core\set_message('That key could not be loaded from local!', 'error');
 			return false;
 		}
 
 		if(!$key->isValid()){
-			Core::SetMessage('Your GPG key is not valid anymore, is it revoked or expired?', 'error');
+			\Core\set_message('Your GPG key is not valid anymore, is it revoked or expired?', 'error');
 		}
 
 		if(!$key->isValid($user->get('email'))){
-			Core::SetMessage('Your GPG subkey containing your email address is not valid anymore, is it revoked or expired?', 'error');
+			\Core\set_message('Your GPG subkey containing your email address is not valid anymore, is it revoked or expired?', 'error');
 		}
 
 		// Lastly, verify that the signature is correct.
 		if(!$gpg->verifyDetachedSignature($form->getElement('message')->get('value'), $data['sentence'], $keyid)){
-			Core::SetMessage('Invalid signature!', 'error');
+			\Core\set_message('Invalid signature!', 'error');
 			return false;
 		}
 
@@ -657,15 +657,14 @@ EOD;
 			// Make a note of this!
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
-			\Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			return false;
 		}
 		catch(\Exception $e){
 			// Make a note of this!
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
-			if(DEVELOPMENT_MODE) \Core::SetMessage($e->getMessage(), 'error');
-			else \Core::SetMessage('An unknown error occurred', 'error');
+			\Core\set_message(DEVELOPMENT_MODE ? $e->getMessage() : 'An unknown error occurred', 'error');
 
 			return false;
 		}

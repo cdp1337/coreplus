@@ -116,7 +116,7 @@ class UserController extends Controller_2_1{
 		}
 
 		if(!$user->isActive()){
-			Core::SetMessage('Your account is not active!', 'error');
+			\Core\set_message('Your account is not active!', 'error');
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -195,7 +195,7 @@ class UserController extends Controller_2_1{
 		}
 
 		if(!$user->isActive()){
-			Core::SetMessage('This account is not active!', 'warning');
+			\Core\set_message('This account is not active!', 'warning');
 		}
 
 		$view->controls = ViewControls::DispatchModel($user);
@@ -228,7 +228,7 @@ class UserController extends Controller_2_1{
 
 		// Only allow this if the user is either the same user or has the user manage permission.
 		if(!($userid == \Core\user()->get('id') || $manager)){
-			Core::SetMessage('Insufficient Permissions', 'error');
+			\Core\set_message('Insufficient Permissions', 'error');
 			\core\redirect('/');
 		}
 
@@ -237,7 +237,7 @@ class UserController extends Controller_2_1{
 		if($user) {
 			$form = \Core\User\Helper::GetEditForm($user);
 		} else {
-			Core::SetMessage('A user with this ID does not exist');
+			\Core\set_message('A user with this ID does not exist');
 			\Core\go_back();
 		}
 
@@ -317,7 +317,7 @@ class UserController extends Controller_2_1{
 					$_POST['url'][$k]{0} == '@'
 				)){
 					$error = true;
-					Core::SetMessage($_POST['url'][$k] . ' does not appear to be a valid URL!  Please ensure that it starts with http:// or https://', 'error');
+					\Core\set_message($_POST['url'][$k] . ' does not appear to be a valid URL!  Please ensure that it starts with http:// or https://', 'error');
 				}
 
 				$profiles[] = array(
@@ -330,8 +330,8 @@ class UserController extends Controller_2_1{
 			if(!$error){
 				$user->set('json:profiles', json_encode($profiles));
 				$user->save();
-				Core::SetMessage('Updated profiles successfully', 'success');
-				Core::GoBack();
+				\Core\set_message('Updated profiles successfully', 'success');
+				\Core\go_back();
 			}
 			else{
 				$jsonprofiles = json_encode($profiles);
@@ -466,7 +466,7 @@ class UserController extends Controller_2_1{
 		/** @var NonceModel $nonce */
 		$nonce = NonceModel::Construct($request->getParameter(0));
 		if(!$nonce->isValid()){
-			Core::SetMessage('Invalid nonce token, please try again.', 'error');
+			\Core\set_message('Invalid nonce token, please try again.', 'error');
 			\Core\go_back();
 		}
 		$nonce->decryptData();
@@ -474,10 +474,10 @@ class UserController extends Controller_2_1{
 
 		if(!isset($data['user']) || !($data['user'] instanceof UserModel)){
 			if(DEVELOPMENT_MODE){
-				Core::SetMessage('Your nonce does not include a "user" key.  Please ensure that this is set to a non-existent UserModel object!', 'error');
+				\Core\set_message('Your nonce does not include a "user" key.  Please ensure that this is set to a non-existent UserModel object!', 'error');
 			}
 			else{
-				Core::SetMessage('Invalid login type, please try again later.', 'error');
+				\Core\set_message('Invalid login type, please try again later.', 'error');
 			}
 			\Core\go_back();
 		}
@@ -613,7 +613,7 @@ class UserController extends Controller_2_1{
 
 		// Users are now a standard model, deleting a user account will automatically propagate down the stack.
 		$model->delete();
-		Core::SetMessage('Removed user successfully', 'success');
+		\Core\set_message('Removed user successfully', 'success');
 		\Core\go_back();
 	}
 
@@ -722,7 +722,7 @@ class UserController extends Controller_2_1{
 		$contents = $file->getContentsObject();
 
 		if(!$contents instanceof \Core\Filestore\Contents\ContentCSV){
-			Core::SetMessage($file->getBaseFilename() . ' does not appear to be a valid CSV file!', 'error');
+			\Core\set_message($file->getBaseFilename() . ' does not appear to be a valid CSV file!', 'error');
 			\Core\Session::UnsetKey('user-import/file');
 			\Core\reload();
 		}

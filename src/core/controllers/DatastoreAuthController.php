@@ -80,7 +80,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		$user = UserModel::Construct($userid);
 
 		if(!$user->exists()){
-			Core::SetMessage('Unable to locate requested user', 'error');
+			\Core\set_message('Unable to locate requested user', 'error');
 			\Core\go_back();
 		}
 
@@ -118,11 +118,10 @@ class DatastoreAuthController extends Controller_2_1 {
 				}
 			}
 			catch(ModelValidationException $e){
-				Core::SetMessage($e->getMessage(), 'error');
+				\Core\set_message($e->getMessage(), 'error');
 			}
 			catch(Exception $e){
-				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-				else Core::SetMessage('An unknown error occured', 'error');
+				\Core\set_message((DEVELOPMENT_MODE ? $e->getMessage() : 'An unknown error occured'), 'error');
 				\Core\ErrorManagement\exception_handler($e);
 			}
 		}
@@ -251,7 +250,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			}
 
 			if(!$u){
-				Core::SetMessage('Invalid user account requested', 'error');
+				\Core\set_message('Invalid user account requested', 'error');
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. Invalid email requested for reset: [' . $_POST['email'] . ']');
 				return;
 			}
@@ -279,13 +278,13 @@ class DatastoreAuthController extends Controller_2_1 {
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Forgot password request sent successfully', null, $u->get('id'));
 			}
 			catch(Exception $e){
-				Core::SetMessage('Error sending the email, ' . $e->getMessage(), 'error');
+				\Core\set_message('Error sending the email, ' . $e->getMessage(), 'error');
 				SystemLogModel::LogErrorEvent('/user/forgotpassword/send', $e->getMessage());
 				return;
 			}
 
 			// Otherwise, it must have sent, (hopefully)...
-			Core::SetMessage('Sent reset instructions via email.', 'success');
+			\Core\set_message('Sent reset instructions via email.', 'success');
 			\core\redirect('/');
 		}
 	}
@@ -315,7 +314,7 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		if(!$nonce->isValid()){
 			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid nonce requested: [' . $n . ']');
-			Core::SetMessage('Invalid user account requested', 'error');
+			\Core\set_message('Invalid user account requested', 'error');
 			\core\redirect('/');
 			return;
 		}
@@ -327,7 +326,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		$u = UserModel::Construct($data['user']);
 		if(!$u){
 			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid user account requested: [' . $data['user'] . ']');
-			Core::SetMessage('Invalid user account requested', 'error');
+			\Core\set_message('Invalid user account requested', 'error');
 			\core\redirect('/');
 			return;
 		}
@@ -336,7 +335,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		if($request->isPost()){
 			// Validate the password.
 			if($_POST['p1'] != $_POST['p2']){
-				Core::SetMessage('Passwords do not match.', 'error');
+				\Core\set_message('Passwords do not match.', 'error');
 				return;
 			}
 
@@ -351,7 +350,7 @@ class DatastoreAuthController extends Controller_2_1 {
 				// NOW I can invalidate that nonce!
 				$nonce->markUsed();
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Reset password successfully!', null, $u->get('id'));
-				Core::SetMessage('Reset password successfully', 'success');
+				\Core\set_message('Reset password successfully', 'success');
 				if($u->get('active')){
 					\Core\Session::SetUser($u);
 				}
@@ -359,14 +358,12 @@ class DatastoreAuthController extends Controller_2_1 {
 			}
 			catch(ModelValidationException $e){
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $e->getMessage(), null, $u->get('id'));
-				Core::SetMessage($e->getMessage(), 'error');
+				\Core\set_message($e->getMessage(), 'error');
 				return;
 			}
 			catch(Exception $e){
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. ' . $e->getMessage(), null, $u->get('id'));
-				if(DEVELOPMENT_MODE) Core::SetMessage($e->getMessage(), 'error');
-				else Core::SetMessage('An unknown error occured', 'error');
-
+				\Core\set_message((DEVELOPMENT_MODE ? $e->getMessage() : 'An unknown error occured'), 'error');
 				return;
 			}
 		}
@@ -423,15 +420,14 @@ class DatastoreAuthController extends Controller_2_1 {
 			// Make a note of this!
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
-			\Core::SetMessage($e->getMessage(), 'error');
+			\Core\set_message($e->getMessage(), 'error');
 			return false;
 		}
 		catch(\Exception $e){
 			// Make a note of this!
 			\SystemLogModel::LogSecurityEvent('/user/register', $e->getMessage());
 
-			if(DEVELOPMENT_MODE) \Core::SetMessage($e->getMessage(), 'error');
-			else \Core::SetMessage('An unknown error occurred', 'error');
+			\Core\set_message(DEVELOPMENT_MODE ? $e->getMessage() : 'An unknown error occurred', 'error');
 
 			return false;
 		}
