@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 11 Jan 2016 21:58:14 -0500
+ * @compiled Tue, 02 Feb 2016 08:11:34 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5075,17 +5075,19 @@ $argstring = urldecode(substr($base, $qpos + 1));
 preg_match_all('/([^=&]*)={0,1}([^&]*)/', $argstring, $matches);
 $args = array();
 foreach ($matches[1] as $idx => $v) {
-if (!$v) continue;
+if (!$v){
+continue;
+}
 $a =& $args;
 while(($paranpos = strpos($v, '[')) !== false){
-$k1 = substr($v, 0, $paranpos);
+$k1 = strtolower(substr($v, 0, $paranpos));
 $v = substr($v, $paranpos+1, strpos($v, ']')-$paranpos-1);
 if(!isset($a[$k1])){
 $a[$k1] = [];
 }
 $a =& $a[$k1];
 }
-$a[$v] = $matches[2][$idx];
+$a[strtolower($v)] = $matches[2][$idx];
 }
 $base = substr($base, 0, $qpos);
 }
@@ -14257,7 +14259,7 @@ Core\Utilities\Logger\write_debug('Opened component ' . $file);
 $file = strtolower($file);
 if (!$c->isValid()) {
 if (DEVELOPMENT_MODE) {
-Core::SetMessage('Component ' . $c->getName() . ' appears to be invalid.');
+\Core\set_message('Component ' . $c->getName() . ' appears to be invalid.');
 }
 continue;
 }
@@ -14640,7 +14642,7 @@ Session::Set('message_stack', $stack);
 }
 }
 static public function AddMessage($messageText, $messageType = 'info') {
-Core::SetMessage($messageText, $messageType);
+\Core\set_message($messageText, $messageType);
 }
 static public function GetMessages($returnSorted = false, $clearStack = true) {
 $stack = Session::Get('message_stack', []);
@@ -19720,7 +19722,7 @@ continue;
 }
 $e->set('value', $e->lookupValueFrom($src));
 if ($e->hasError() && !$quiet){
-Core::SetMessage($e->getError(), 'error');
+\Core\set_message($e->getError(), 'error');
 }
 }
 }
@@ -19928,16 +19930,16 @@ if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $for
 else $status = false;
 }
 catch(ModelValidationException $e){
-Core::SetMessage($e->getMessage(), 'error');
+\Core\set_message($e->getMessage(), 'error');
 $status = false;
 }
 catch(GeneralValidationException $e){
-Core::SetMessage($e->getMessage(), 'error');
+\Core\set_message($e->getMessage(), 'error');
 $status = false;
 }
 catch(Exception $e){
 if(DEVELOPMENT_MODE){
-Core::SetMessage($e->getMessage(), 'error');
+\Core\set_message($e->getMessage(), 'error');
 }
 else{
 \Core\set_message('t:MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION');
@@ -20452,14 +20454,28 @@ else{
 return null;
 }
 }
-public function getPost($key){
+public function getPost($key = null){
 $src = &$_POST;
 if(strpos($key, '[') !== false){
 $k1 = substr($key, 0, strpos($key, '['));
 $key = substr($key, strlen($k1) + 1, -1);
 $src = &$_POST[$k1];
 }
+if($key === null){
+return $src;
+}
 return (isset($src[$key])) ? $src[$key] : null;
+}
+public function getCookie($key = null){
+if($key === null){
+return $_COOKIE;
+}
+elseif(isset($_COOKIE[$key])){
+return $_COOKIE[$key];
+}
+else{
+return null;
+}
 }
 public function getPageModel() {
 if ($this->_pagemodel === null) {
@@ -20668,7 +20684,7 @@ $view->jsondata = ['status' => $code, 'message' => $message];
 $view->error = $code;
 }
 else{
-Core::SetMessage($message, 'error');
+\Core\set_message($message, 'error');
 if($redirect){
 \Core\redirect($redirect);
 }
