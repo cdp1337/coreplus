@@ -875,10 +875,10 @@ class PageRequest {
 	 * It is still better to use the form system, as that has data sanitization and everything built in,
 	 * but this allows a lower-level of access to the variables without resorting to raw access.
 	 *
-	 * @param $key string The POST variable to get
-	 * @return null|string
+	 * @param $key string|null The POST variable to get
+	 * @return null|string|array
 	 */
-	public function getPost($key){
+	public function getPost($key = null){
 		// Damn nested data.... :/
 		$src = &$_POST;
 		if(strpos($key, '[') !== false){
@@ -886,9 +886,35 @@ class PageRequest {
 			$key = substr($key, strlen($k1) + 1, -1);
 			$src = &$_POST[$k1];
 		}
+		
+		// Were all post parameters requested?
+		// This isn't common, but can be useful in debugging.
+		if($key === null){
+			return $src;
+		}
 
 		return (isset($src[$key])) ? $src[$key] : null;
 		// Yup, that's it... like I said, shortcut function.
+	}
+
+	/**
+	 * Shortcut for getting cookie
+	 * 
+	 * @param null|string $key
+	 *
+	 * @return null|string|array
+	 */
+	public function getCookie($key = null){
+		if($key === null){
+			// return all
+			return $_COOKIE;
+		}
+		elseif(isset($_COOKIE[$key])){
+			return $_COOKIE[$key];
+		}
+		else{
+			return null;
+		}
 	}
 
 	/**
