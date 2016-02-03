@@ -73,4 +73,28 @@ class GeoAddressController extends Controller_2_1{
 
 		$view->jsondata = $provincejs;
 	}
+
+	public function lookupip(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		$query = $request->getParameter('q');
+
+		$view->contenttype = View::CTYPE_JSON;
+		$view->mode = View::MODE_AJAX;
+		$view->record = false;
+		
+		$result = new geocode\IPLookup($query);
+
+		$view->jsondata = [
+			'query'        => $query,
+			'ip'           => $query,
+			//'network'      => $result->getNetwork(),
+			//'organization' => $result->getOrganization(),
+			'country'      => $result->country,
+			'country_name' => $result->getCountryName(),
+			'flag_sm'      => $result->getCountryIcon('20x20'),
+			'flag_lg'      => $result->getCountryIcon('100x100'),
+		];
+	}
 }
