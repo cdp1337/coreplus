@@ -172,18 +172,17 @@ class WhoisResult {
 
 
 		// This may be the name or (possibly) the code.
-		if(strlen($country) == 2) return strtoupper($country);
-		else return \geocode\Country::NameToISO2($country);
+		if(strlen($country) == 2){
+			return strtoupper($country);
+		}
+		else{
+			\GeoCountryModel::ISO2ToName($country);
+		}
 	}
 
 	public function getCountryName() {
 		$c = $this->getCountry();
-		if(!$c) {
-			return 'Unknown';
-		}
-		else {
-			return \geocode\Country::ISO2ToName($c);
-		}
+		return $c ? \GeoCountryModel::ISO2ToName($c) : 'Unknown';
 	}
 
 	public function getCountryIcon($dimensions = '20x20') {
@@ -194,7 +193,7 @@ class WhoisResult {
 		else {
 			$f =
 				\Core\Filestore\Factory::File(
-					'assets/images/iso-country-flags/png-country-4x3/res-640x480/' . strtolower($c) . '.png'
+					'assets/images/iso-country-flags/' . strtolower($c) . '.png'
 				);
 		}
 
