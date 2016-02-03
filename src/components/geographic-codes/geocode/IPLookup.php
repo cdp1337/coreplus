@@ -22,6 +22,8 @@
  */
 
 namespace geocode;
+use Core\Cache;
+use Core\Filestore\Factory;
 
 
 /**
@@ -78,29 +80,37 @@ class IPLookup {
 				$this->postal   = '43215';
 			}
 			else{
-				$reader = new \GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
+				$cacheKey = 'iplookup-' . $ip_addr;
+				
+				$cache = Cache::Get($cacheKey);
+				
+				if(!$cache){
+					$reader = new \GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
 
-				/** @var \GeoIp2\Model\CityIspOrg $geo */
-				$geo = $reader->cityIspOrg($ip_addr);
-				//$geo = $reader->cityIspOrg('67.149.214.236');
+					/** @var \GeoIp2\Model\CityIspOrg $geo */
+					$geo = $reader->cityIspOrg($ip_addr);
+					//$geo = $reader->cityIspOrg('67.149.214.236');
 
-				$reader->close();
+					$reader->close();
+					
+					$sd = isset($geo->subdivisions[0]) ? $geo->subdivisions[0] : null;
 
-				$this->city = $geo->city->name;
-				/** @var \GeoIp2\Record\Subdivision $geoprovinceobj */
-				if(isset($geo->subdivisions[0])){
-					$geoprovinceobj = $geo->subdivisions[0];
-					$this->province = $geoprovinceobj->isoCode;
+					$cache = [
+						'city'     => $geo->city->name,
+						'province' => $sd ? $sd->isoCode : '',
+						'country'  => $geo->country->isoCode,
+						'timezone' => $geo->location->timeZone,
+						'postal'   => $geo->postal->code,
+					];
+					
+					Cache::Set($cacheKey, $cache, SECONDS_ONE_WEEK);
 				}
-				else{
-					$this->province = '';
-				}
-				$this->country  = $geo->country->isoCode;
-				$this->timezone = $geo->location->timeZone;
-				$this->postal   = $geo->postal->code;
 
-				// Memory cleanup
-				unset($geoprovinceobj, $geo, $reader);
+				$this->city     = $cache['city'];
+				$this->province = $cache['province'];
+				$this->country  = $cache['country'];
+				$this->timezone = $cache['timezone'];
+				$this->postal   = $cache['postal'];
 			}
 		}
 		catch(\Exception $e){
@@ -110,5 +120,20 @@ class IPLookup {
 			$this->country  = 'AQ'; // Yes, AQ is Antarctica!
 			$this->timezone = 'CAST';
 		}
+	}
+
+	public function getCountryName() {
+		return $this->country ? \GeoCountryModel::ISO2ToName($this->country) : 'Unknown';
+	}
+
+	public function getCountryIcon($dimensions = '20x20') {
+		if(!$this->country) {
+			$f = Factory::File('assets/images/placeholders/generic.png');
+		}
+		else {
+			$f = Factory::File('assets/images/iso-country-flags/' . strtolower($this->country) . '.png');
+		}
+
+		return $f->getPreviewURL($dimensions);
 	}
 } 
