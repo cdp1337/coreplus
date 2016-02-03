@@ -32,10 +32,16 @@
 // Set this to true to skip checking for the compiled version.
 $skipcompiled = true;
 
-if(!$skipcompiled && file_exists('core/bootstrap.compiled.php')) require_once('core/bootstrap.compiled.php');
-else require_once('core/bootstrap.php');
+try{
+	if(!$skipcompiled && file_exists('core/bootstrap.compiled.php')) require_once('core/bootstrap.compiled.php');
+	else require_once('core/bootstrap.php');
 
-
-$request   = PageRequest::GetSystemRequest();
-$request->execute();
-$request->render();
+	$request   = PageRequest::GetSystemRequest();
+	$request->execute();
+	$request->render();	
+}
+catch(Exception $e){
+	if(function_exists('\\Core\\ErrorManagement\\exception_handler')){
+		\Core\ErrorManagement\exception_handler($e, true);
+	}
+}

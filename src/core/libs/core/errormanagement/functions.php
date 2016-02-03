@@ -47,16 +47,19 @@ function exception_handler(\Exception $e, $fatal = false){
 
 	try{
 		if(!\Core::GetComponent()){
-			// SQUAK!  Core isn't even loaded yet!
+			// If Core isn't loaded, there's not much we can do.
 			return;
-			//throw new \Exception('Error retrieved before Core was loaded!');
 		}
+		
+		// Allow external systems to hook into this event.
+		\HookHandler::DispatchHook('/core/exception_handler', $e);
 
 		$log = \SystemLogModel::Factory();
 		$log->setFromArray([
 				'type'    => $type,
 				'code'    => $code,
-				'message' => $details . $errstr
+				'message' => $errstr,
+				'details' => $details,
 			]);
 		$log->save();
 	}
@@ -178,8 +181,11 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	try{
 		if(!\Core::GetComponent()){
 			// SQUAK!  Core isn't even loaded yet!
-			throw new \Exception('Error retrieved before Core was loaded!');
+			return;
 		}
+
+		// Allow external systems to hook into this event.
+		\HookHandler::DispatchHook('/core/error_handler', $code, $errstr);
 
 		$log = \SystemLogModel::Factory();
 		$log->setFromArray([
@@ -334,6 +340,23 @@ function print_error_as_html($class, $code, $errstr){
  * @param string|\Exception $errstr
  */
 function print_error_as_text($class, $code, $errstr){
+	echo get_error_as_text($code, $errstr);
+
+	// And to the stderr
+	$stderr = fopen('php://stderr', 'w');
+	fwrite($stderr, '[' . $code . '] ' . $errstr . "\n");
+	fclose($stderr);
+}
+
+/**
+ * Format an error to a plain text string.
+ * 
+ * @param $code
+ * @param $errstr
+ * 
+ * @return string
+ */
+function get_error_as_text($code, $errstr){
 
 	if($errstr instanceof \Exception){
 		$exception = $errstr;
@@ -343,14 +366,11 @@ function print_error_as_text($class, $code, $errstr){
 	else{
 		$back = debug_backtrace();
 	}
+	
+	$out = '';
 
 	// The header
-	echo '[' . $code . ']' . $errstr . "\n";
-
-	// And to the stderr
-	$stderr = fopen('php://stderr', 'w');
-	fwrite($stderr, '[' . $code . ']' . $errstr . "\n");
-	fclose($stderr);
+	$out .= '### [' . $code . '] ' . $errstr . "\n\n";
 
 	// And the stack trace
 	// I need to render the data to a "buffer" so I know the positions of everything.
@@ -358,45 +378,57 @@ function print_error_as_text($class, $code, $errstr){
 	$lines = [];
 	$maxlength1 = $maxlength2 = 0;
 	foreach($back as $entry){
-
-		// Parent?  Skip!
+		
+		$entryFile = isset($entry['file']) ? $entry['file'] : '';
+		$entryLine = isset($entry['line']) ? $entry['line'] : 'N/A';
+		$entryFnc  = isset($entry['function']) ? $entry['function'] : '';
+		$entryArgs = isset($entry['args']) && is_array($entry['args']) ? $entry['args'] : [];
+		
+		// Skip outputing of this file
 		if(
-			!isset($entry['file']) &&
-			!isset($entry['line']) &&
-			isset($entry['function']) &&
-			$entry['function'] == 'Core\ErrorManagement\error_handler'
+			$entryFnc == 'Core\ErrorManagement\error_handler' ||
+			$entryFnc == 'Core\ErrorManagement\print_error_as_text' ||
+			$entryFnc == 'Core\ErrorManagement\check_for_fatal' ||
+			$entryFnc == 'Core\ErrorManagement\get_error_as_text'
 		){
 			continue;
 		}
-
-		// Self?  Also skip!
-		if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\print_error_as_text'){
-			continue;
-		}
-
-		// The fatal error function?  Skip!
-		if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\check_for_fatal'){
-			continue;
-		}
-
+		
 		// Cleanup the file location
 		$file = (isset($entry['file']) ? $entry['file'] : 'unknown');
 		if(strpos($file, ROOT_PDIR) === 0){
 			// Trim off the prefix ROOT_PDIR, I don't need that!
 			$file = '/' . substr($file, strlen(ROOT_PDIR));
 		}
-
-		// Cleanup the file line number
-		$line = isset($entry['line']) ? $entry['line'] : 'N/A';
+		
+		// Convert the arguments to something flat.
+		foreach($entryArgs as $k => $a){
+			if(is_string($a)){
+				$entryArgs[$k] = "'" . $a . "'";
+			}
+			elseif($a === true){
+				$entryArgs[$k] = 'TRUE';
+			}
+			elseif($a === false){
+				$entryArgs[$k] = 'FALSE';
+			}
+			elseif($a === null){
+				$entryArgs[$k] = 'NULL';
+			}
+			elseif(is_array($a)){
+				$entryArgs[$k] = 'Array {' . sizeof($a) . '}';
+			}
+			elseif(is_object($a)){
+				$entryArgs[$k] = 'Object {' . get_class($a) . '}';
+			}
+		}
+		$entryArgs = implode(', ', $entryArgs);
 
 		if(isset($entry['class'])){
-			$linecode = $entry['class'] . $entry['type'] . $entry['function'] . '()';
-		}
-		elseif(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\error_handler'){
-			$linecode = '****';
+			$linecode = $entry['class'] . $entry['type'] . $entry['function'] . '(' . $entryArgs . ')';
 		}
 		elseif(isset($entry['function'])){
-			$linecode = $entry['function'] . '()';
+			$linecode = $entry['function'] . '(' . $entryArgs . ')';
 		}
 		else{
 			$linecode = 'Unknown!?!';
@@ -405,31 +437,33 @@ function print_error_as_text($class, $code, $errstr){
 		$lines[] = [
 			'code' => $linecode,
 			'file' => $file,
-			'line' => $line,
+			'line' => $entryLine,
 		];
 
 		$maxlength1 = max($maxlength1, strlen($linecode));
-		$maxlength2 = max($maxlength2, strlen($file) + 6 + strlen($line));
+		$maxlength2 = max($maxlength2, strlen($file) + 6 + strlen($entryLine));
 	}
 
 	// Now I know the sizes of the table.
 	// This jumble of code will create a table in the shell using ASCII characters.
 	$borderheader = '+' . str_repeat('-', $maxlength1 + $maxlength2) . '+';
-	$borderinner = '+' . str_repeat('-', $maxlength1+2) . '+' . str_repeat('-', $maxlength2-3) . '+';
-	echo $borderheader . "\n";
-	echo '| ' . str_pad('STACK TRACE', $maxlength1 + $maxlength2-1, ' ', STR_PAD_BOTH) . '|' . "\n";
-	echo $borderheader . "\n";
+	$borderinner = str_repeat('-', $maxlength1+1) . '+' . str_repeat('-', $maxlength2-4);
+	//$out .= $borderheader . "\n";
+	//$out .= '| ' . str_pad('STACK TRACE', $maxlength1 + $maxlength2-1, ' ', STR_PAD_BOTH) . '|' . "\n";
+	//$out .= $borderheader . "\n";
 
 	$padding1 = max(0, $maxlength1-15);
 	$padding2 = max(0, $maxlength2-29);
-	echo '| Function/Method' . str_repeat(' ', $padding1) . ' | File Location:Line Number' . str_repeat(' ', $padding2) . '|' . "\n";
-	echo $borderinner . "\n";
+	$out .= 'Function/Method' . str_repeat(' ', $padding1) . ' | File Location:Line Number' . str_repeat(' ', $padding2) . "\n";
+	$out .= $borderinner . "\n";
 
 	foreach($lines as $entry){
 		$padding1 = max(0, $maxlength1-strlen($entry['code']));
 		$padding2 = max(0, $maxlength2-strlen($entry['file'] . ':' . $entry['line'] . '    '));
 
-		echo '| ' . $entry['code'] . str_repeat(' ', $padding1) . ' | ' . $entry['file'] . ':' . $entry['line'] . str_repeat(' ', $padding2) . '|' . "\n";
+		$out .= $entry['code'] . str_repeat(' ', $padding1) . ' | ' . $entry['file'] . ':' . $entry['line'] . str_repeat(' ', $padding2) . "\n";
 	}
-	echo $borderinner . "\n";
+	//$out .= $borderinner . "\n";
+	
+	return $out;
 }

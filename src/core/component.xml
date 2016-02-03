@@ -43,6 +43,8 @@
 		<hookregister name="/core/shutdown" description="Hooks onto the PHP shutdown_register function to be called very very last after any page execution."/>
 		<hookregister name="/core/page/search/results" description="Hook on the page search results with the search object, useful for integration with analytical libraries"/>
 		<hookregister name="/core/healthcheck" description="Hook that is dispatched to retrieve all the health checks registered on the site." return="array"/>
+		<hookregister name="/core/exception_handler" description="Hook that is dispatched when an exception handler invokation is called, (usually from an unhandled exception or something important)."/>
+		<hookregister name="/core/error_handler" description="Hook that is dispatched when an error handler invokation is called."/>
 		<hook name="/core/components/loaded" call="\Core\i18n\I18NLoader::Init"/>
 		<hook name="/core/components/ready" call="Form::CheckSavedSessionData"/>
 		<hook name="/core/page/preexecute" call="Core::_AttachCoreJavascript"/>
