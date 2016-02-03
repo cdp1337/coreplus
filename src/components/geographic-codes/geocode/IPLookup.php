@@ -73,11 +73,13 @@ class IPLookup {
 			if($ip_addr == '127.0.0.1'){
 				// Load local connections up with Columbus, OH.
 				// Why?  ;)
-				$this->city     = 'Columbus';
-				$this->province = 'OH';
-				$this->country  = 'US';
-				$this->timezone = 'America/New_York';
-				$this->postal   = '43215';
+				$cache = [
+					'city'     => 'Columbus',
+					'province' => 'OH',
+					'country'  => 'US',
+					'timezone' => 'America/New_York',
+					'postal'   => '43215',
+				];
 			}
 			else{
 				$cacheKey = 'iplookup-' . $ip_addr;
@@ -105,21 +107,26 @@ class IPLookup {
 					
 					Cache::Set($cacheKey, $cache, SECONDS_ONE_WEEK);
 				}
-
-				$this->city     = $cache['city'];
-				$this->province = $cache['province'];
-				$this->country  = $cache['country'];
-				$this->timezone = $cache['timezone'];
-				$this->postal   = $cache['postal'];
 			}
 		}
 		catch(\Exception $e){
 			// Well, we tried!  Load something at least.
-			$this->city     = 'McMurdo Base';
-			$this->province = '';
-			$this->country  = 'AQ'; // Yes, AQ is Antarctica!
-			$this->timezone = 'CAST';
+			$cacheKey = 'iplookup-' . $ip_addr;
+			$cache = [
+				'city'     => 'McMurdo Base',
+				'province' => '',
+				'country'  => 'AQ',
+				'timezone' => 'CAST',
+				'postal'   => '',
+			];
+			Cache::Set($cacheKey, $cache, SECONDS_ONE_HOUR);
 		}
+
+		$this->city     = $cache['city'];
+		$this->province = $cache['province'];
+		$this->country  = $cache['country'];
+		$this->timezone = $cache['timezone'];
+		$this->postal   = $cache['postal'];
 	}
 
 	public function getCountryName() {
