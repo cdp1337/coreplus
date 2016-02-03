@@ -94,15 +94,13 @@ class PageRequest {
 	 */
 	public $ext = 'html';
 
-	/**
-	 * @var string Hostname of the requested connection
-	 */
+	/** @var string Hostname of the requested connection */
 	public $host;
+	
+	/** @var string HTTP Referrer (aka HTTP_REFERER) of this page. */
+	public $referrer;
 
-	/**
-	 * The cached pagemodel for this request.
-	 * @var PageModel
-	 */
+	/** @var PageModel The cached pagemodel for this request. */
 	private $_pagemodel = null;
 
 	/**
@@ -142,6 +140,7 @@ class PageRequest {
 		$this->ext         = $pagedat['extension'];
 		$this->ctype       = $pagedat['ctype'];
 		$this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
+		$this->referrer    = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 
 		$this->_resolveMethod();
 		$this->_resolveAcceptHeader();
@@ -1032,13 +1031,8 @@ class PageRequest {
 	 * @return string
 	 */
 	public function getReferrer(){
-		if(isset($_SERVER['HTTP_REFERER'])){
-			return $_SERVER['HTTP_REFERER'];
-		}
-		else{
-			// Not available?.. Just return the root URL.
-			return ROOT_URL;
-		}
+		// Not available?.. Just return the root URL.
+		return $this->referrer ? $this->referrer : ROOT_URL;
 	}
 
 

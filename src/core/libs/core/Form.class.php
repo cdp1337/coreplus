@@ -1090,9 +1090,7 @@ class Form extends FormGroup {
 		}
 
 		// Save it
-		if(!$this->referrer && isset($_SERVER['HTTP_REFERER'])){
-			$this->referrer = $_SERVER['HTTP_REFERER'];
-		}
+		$this->referrer = \Core\page_request()->referrer;
 		$this->originalurl = CUR_CALL;
 		$this->persistent = false;
 		if (($part === null || $part == 'foot') && $this->get('callsmethod')) {

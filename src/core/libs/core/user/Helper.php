@@ -58,21 +58,21 @@ abstract class Helper{
 
 			$log = new \UserActivityModel();
 			$log->setFromArray(
-				array(
-						'datetime' => microtime(true),
-						'session_id' => session_id(),
-						'user_id' => \Core\user()->get('id'),
-						'ip_addr' => REMOTE_IP,
-						'useragent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''),
-						'referrer' => (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : ''),
-						'type' => $_SERVER['REQUEST_METHOD'],
-						'request' => $_SERVER['REQUEST_URI'],
-						'baseurl' => $request->getBaseURL(),
-						'status' => $view->error,
-						'db_reads' => DatamodelProfiler::GetDefaultProfiler()->readCount(),
-						'db_writes' => (DatamodelProfiler::GetDefaultProfiler()->writeCount() + 1),
-						'processing_time' => $processingtime,
-				)
+				[
+					'datetime' => microtime(true),
+					'session_id' => session_id(),
+					'user_id' => \Core\user()->get('id'),
+					'ip_addr' => REMOTE_IP,
+					'useragent' => $request->useragent,
+					'referrer' => $request->referrer,
+					'type' => $_SERVER['REQUEST_METHOD'],
+					'request' => $_SERVER['REQUEST_URI'],
+					'baseurl' => $request->getBaseURL(),
+					'status' => $view->error,
+					'db_reads' => DatamodelProfiler::GetDefaultProfiler()->readCount(),
+					'db_writes' => (DatamodelProfiler::GetDefaultProfiler()->writeCount() + 1),
+					'processing_time' => $processingtime,
+				]
 			);
 
 			if(defined('XHPROF_RUN') && defined('XHPROF_SOURCE')){
