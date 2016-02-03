@@ -14,21 +14,15 @@
 		<file filename="classes/GeoAddressFormInput.php" md5="3d0aa78147d981b3915d3f5704078da3">
 			<class name="GeoAddressFormInput"/>
 		</file>
-		<file filename="controllers/GeoAddressController.php" md5="7f9482720683c72dc0237c9431a81b58">
+		<file filename="controllers/GeoAddressController.php" md5="83fcd99d39ad7a6d6ec41358606615fa">
 			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
 		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
 		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
-		<file filename="geocode/Country.php" md5="a7b171d02e43247c4cc20fc4efdf9451">
-			<class name="geocode\Country"/>
-		</file>
-		<file filename="geocode/IPLookup.php" md5="8db9d1e2b0f754865f6341bd7ec676c2">
+		<file filename="geocode/IPLookup.php" md5="905d43b26f4adb6e9127a3f4334c4900">
 			<class name="geocode\IPLookup"/>
-		</file>
-		<file filename="geocode/Updater.php" md5="5aac57ef7a75f6a50443318450e1bedc">
-			<class name="geocode\Updater"/>
 		</file>
 		<file filename="libs/GeoIp2/CHANGELOG.md" md5="15e498e9e60e23fc6cad82a7c8b6962a"/>
 		<file filename="libs/GeoIp2/LICENSE" md5="fbc093901857fcd118f065f900982c24"/>
@@ -168,7 +162,7 @@
 		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
 		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
 		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="c2c93ad9c91936110357ab9a919acdb5">
+		<file filename="models/GeoAddressModel.php" md5="e0ac2127075e2f37af831f198802ab46">
 			<class name="GeoAddressModel"/>
 		</file>
 		<file filename="models/GeoCountryModel.php" md5="f8d5866511d6108257b82cb10cb0b4aa">
@@ -177,264 +171,9 @@
 		<file filename="models/GeoProvinceModel.php" md5="9f04da03f83ebb6dd1c8604ceff3cfac">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="smarty-plugins/function.geoiplookup.php" md5="4ca1586558330f45fd70c9641021dd67"/>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="51fcd710963fff3d5bf31d9f7b942ee7"/>
 	</files>
-	<assets>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aa.png" md5="b51cd1f73e48dff9282fd18da28ebb9a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ad.png" md5="c10a75c76f504a03481b2c9f33e26e7d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ae.png" md5="2f62221d2426957e18d9182721a0ee12"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/af.png" md5="fb13baed14d8b15383568253869f083d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ag.png" md5="90cf382565eecfef8339072a68d2054b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ai.png" md5="459a5ae08e699b44b718e41b87dc00a0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/al.png" md5="8980d6ebf89db9e8f08382ed4404014d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/am.png" md5="5417d8034f0ac3f08164cc4e0ea7ecd0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ao.png" md5="d44d1dbc4692149cdcc42a9c7635a563"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aq.png" md5="c9c191d63e3bc15fe4b38bc7aa9b937e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ar.png" md5="64e27681dae518d19477193b5b12bd76"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/as.png" md5="8ecfd69b729bba64286f02dc3c262323"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/at.png" md5="68f3cd486809b467c265bab355f910db"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/au.png" md5="f043b08392d428911f0a064b7ff7af7a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/aw.png" md5="a83a8eb5507b117951322ce8eb07774a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ax.png" md5="6b75ef51f75a896b8137b089c721112e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/az.png" md5="e2518b40eb95d288ddc3a0133cef65a0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ba.png" md5="275e95035918abcdd5d5c613cdbef570"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bb.png" md5="50bb9fa914604c625dba6b186eda2d12"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bd.png" md5="745a9a82fe8bf44677390e9813b99ddc"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/be.png" md5="d50a637c4c573299c6a44d491e60db95"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bf.png" md5="70ba5277e869d07aa37d691281bd05b8"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bg.png" md5="72fc202388cc227f4fa870477810ee59"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bh.png" md5="7399e14d220fc78cc44e8e523baed775"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bi.png" md5="2542ce83069aaa48cc662388c4cf9024"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bj.png" md5="d1a27bcc0c9aec5181d4f3d758baf65e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bl.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bm.png" md5="09108bb69d20934286d44b9263a835a1"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bn.png" md5="0419008a32d9ee17cd26361c0cc7c89c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bo.png" md5="04d4bdcd59df1e6f56b17819d8e9dbcb"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bq.png" md5="55962da6e5a5786da7b5602bb707206a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/br.png" md5="89ee17155da5ed3c483cfe36a2456365"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/brl.png" md5="44e05b72c4e40db57329dd7f12eea5f3"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bs.png" md5="59d0343b063f5fb3ad569850a0905ab5"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bt.png" md5="21d90346e38ba0286efcfca682149f4d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bv.png" md5="a66a46feeaea72cfbc49a65d3a5ad26d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bw.png" md5="6affd93fdbf871d658f154b1bf8f6f38"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/by.png" md5="0184f53dfd331c2884e412e0716ebdf2"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/bz.png" md5="0a725a50ea651e54732a68f74e79816f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ca.png" md5="8545f47f4ec93a2439e68d96448da67d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cc.png" md5="ae3a554909fb3dcbb74ddcab47193e21"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cd.png" md5="4a18245e58f56727ad801a8dc386dfe9"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cf.png" md5="ded1cd83749b1f8f0caea12e20c08f84"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cg.png" md5="83986c9f08cc2d83028af395f5343311"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ch.png" md5="930200decc01ce9309faecddda521e4a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ci.png" md5="4b2ac24d59858e9b5d1afb601c9fc07b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ck.png" md5="2450db149ed34e696bac3ba48d1c673e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cl.png" md5="33ab3aea3e40b39816999550fcd60a3b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cm.png" md5="792c0cd7ec192f3b09ff75fa4acfbcb3"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cn.png" md5="4a75bb523fb81dbccf2217f04dd9248f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/co.png" md5="e14bc50a4114d43922f31f4953ffcf8c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cr.png" md5="0544c5dbdbfce21040175a3983affe81"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cu.png" md5="26844513f3713905636417a1709d99a4"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cv.png" md5="3bf2d57bdb2ea9a7c53ffcc546c7a820"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cw.png" md5="0dcbe043a237a2ba71e211bf17ddbd0d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cx.png" md5="82d428074e6919e26d928da5ad842a08"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cy.png" md5="dc72c610d6491e0bab52897c93259be5"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/cz.png" md5="c56f0a03813ae13801aab195dbc803bc"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/de.png" md5="d6d24f329cc6f9b6305b5c315da8e658"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/dj.png" md5="139c43ecce163e4cabd4a2249be18f43"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/dk.png" md5="b8021e5780f25efb415984e8e2cd9694"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/dm.png" md5="01159d6cab95012b089b5bee2da29636"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/do.png" md5="2563e59d7781369b70fdab5722056d44"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/dz.png" md5="de8a2b9e2334eeea1f726d59dbed1f5a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ec.png" md5="20aa219c70aa4ab0edbe546ea965559d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ee.png" md5="34c4b764f5019eb1cbf8643a8b11da83"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/eg.png" md5="b0724e15807b7a16d108c2ba213161aa"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/eh.png" md5="5c811e64d4ec53621b54c471e5f6fc91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/eo.png" md5="48b09a9ef1aa1051e0b505eff15014e6"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/er.png" md5="c9072aa61186b16a1e8ce71e8b98211c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/es.png" md5="3f92453d41d6eae3119f6b8e8edb0b25"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/et.png" md5="16b9d3a8d9c507e300d21f1eaae1ca2e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/fi.png" md5="28359b55c65af46f170f5ce869fd5d59"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/fj.png" md5="37246ff639923658cc54b83ea7beee34"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/fk.png" md5="0a858b1c67300bf73a359047031334a9"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/fm.png" md5="1016190114486cf50e15683502964927"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/fo.png" md5="d5fa77c4fa22c486d0571e8e47d3f100"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/fr.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ga.png" md5="a2167744163553bb40be19ec11377007"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gb.png" md5="705193c80c10b99f3fc99a4fcd3d9295"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gd.png" md5="5b8f3c3842e2feb52577478e99c4e559"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ge.png" md5="6a0b79db1422252276cdf288c95fa15e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gf.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gg.png" md5="af5075c491c6c1dd7b4638a5ac598f60"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gh.png" md5="2e8dbfb1db1e5174dc4c6c8d2c52c23c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gi.png" md5="c866b1de3f8b1b48f7520214039b5be7"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gl.png" md5="baf092b81789785c224e3c353c38afc6"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gm.png" md5="0465cc742a91fc8655c9dddced8f1c9b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gn.png" md5="6cf552b4337d1c9ea34fc0f551a30e8c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gp.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gq.png" md5="0807e6d864d4c8ef20460e1a25f46d1e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gr.png" md5="2520a0e84d2146dcf5e291ccc76590a8"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gs.png" md5="336d36f0452c5c8ebe2a4cbaaa5b0124"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gt.png" md5="1f4f4fdf2d7465fad1714bc275f768df"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gu.png" md5="b63df983d23669947f2350692a317659"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gw.png" md5="37b9394b76a432cd076b91c9c3b79971"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/gy.png" md5="f4ff08ce6c2413a521b0b2e19f81ab22"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/hk.png" md5="8ce4b8f484206e623db684cd9dfc0520"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/hm.png" md5="024e6ea8b9670114224df2b7e4a0f87e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/hn.png" md5="5605721e14cfaaa6ebb47ce57b7448e6"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/hr.png" md5="0286b7215192f5cff58d957e9188402e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ht.png" md5="6c2e07742586fb0a5a29a3959b41ab7f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/hu.png" md5="202d69b8fdda17db42f87c14fd901669"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/id.png" md5="babbe8c498b6ed7f4c0a2369b510e804"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ie.png" md5="a42ed015fa0be06f175bd010bcb349b9"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/il.png" md5="006d8d7054957dd4b3cff70dc58ff491"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/im.png" md5="281b59b858a1f4bf38d2c528e4ff0d52"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/in.png" md5="d6cf3c41bfc8daea604a9884553af325"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/intl.png" md5="bdbdbc975769ac7355c3bff5fde17334"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/io.png" md5="630c06c612d8ad7e6467b8f719e36255"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/iq.png" md5="cf6758e79dacd1159a873489308c4e46"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ir.png" md5="4246fb3b8b42a0efc4b52666ec9c3e9f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/is.png" md5="8248575214a9d274a06ff34fab7c8ee1"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/it.png" md5="242da8588ebd282f5f9654ffa13f1a13"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/je.png" md5="7c6c888eaaa022428617e8015eddc2f9"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/jm.png" md5="aedf07fc02465ab2ea25958785fea8f5"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/jo.png" md5="52da58311a21117ef7210d263d983122"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/jp.png" md5="d49d162d966f8c5fd82e48e67f6a7bff"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ke.png" md5="b30e8cfb7f4c2fa48d9a2cfe95e44f3f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kg.png" md5="c521122d5982d1159c3e3f6d02b4a5ae"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kh.png" md5="317335d4bc62dd7d4bcc44a6757b9c1e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ki.png" md5="d1a36a33cc9304c8ef63b2df5f64793b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/km.png" md5="7aa2d9f13aa59d1610c851abf06584b2"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kn.png" md5="212f2cec06ab341e824e51d8b407a1e2"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kp.png" md5="25d6e1ec3403fe5acdbf8d0f6858ce7b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kr.png" md5="06f84b8c6f5ffb52ff8b3feb4d33f563"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kw.png" md5="cde0799119473fe61333a3885f6b15d9"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ky.png" md5="28d2afce29e05884ed5d733366564f93"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/kz.png" md5="a846541d4a7679984c3c3717668911ca"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/la.png" md5="1d69afaabef867de5bfb372eafd956a7"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lb.png" md5="eee5881497086fc0513687bc4baaa265"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lc.png" md5="4986b4a4a49568414d0a0345d885613d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/li.png" md5="6520b0b768a09b68a64606c922135884"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lk.png" md5="187e9cf48878526124862e28116621bc"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lr.png" md5="8cae129ca47d5338c78656e32f41099a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ls.png" md5="f3118ecdd22cdd7a080fbf7300c08593"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lt.png" md5="1cdf16a23ff7ef15d19a3754a8fba0b3"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lu.png" md5="404f5be043e3a1d483f71d840518fc76"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/lv.png" md5="cc6baa2a15fc0b6f376fb2b803b0ef9f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ly.png" md5="b8bbda6c080283ef33663de91d614222"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ma.png" md5="a7de64aa8970cae2160b70e9bfb835b6"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mc.png" md5="4ee944fa435b2bf03823611e779ece92"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/md.png" md5="96427c241e091eab7f326ec7c6cbd9c0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/me.png" md5="680c618a9f288b61e20b4f9bd273307d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mf.png" md5="02bbff5817ec8e7686ada769a7efdf08"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mg.png" md5="9d6f163e53e3d5a0b599df50ad1571c7"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mh.png" md5="48f4e6620d4aba47a538107fece12dbb"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mk.png" md5="a2204d15168c8721764cc782ec39d269"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ml.png" md5="6bcdc0b1b5e6273d2a137199c76a4d4a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mm.png" md5="bbf7afca82ff93dfc8c9e2ebe5c01ed8"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mn.png" md5="094e9fc18d832a4364b1e6599589f9df"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mo.png" md5="bd6984e97ffb3cd5bc5b07f905c20934"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mp.png" md5="3dc7533cb3a121050c9daa8ae7ad3458"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mq.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mr.png" md5="0c6aba6bcb537ceac9d65280e9d89360"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ms.png" md5="36d3258e970929f519787e6bc3a83c5e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mt.png" md5="6393dc6c960f0d5425b6d1d758f2f433"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mu.png" md5="cc29efec57dee36e36aff214591c28c1"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mv.png" md5="3da648bf73c47805444f821ac29b2292"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mw.png" md5="c14821b4290cf3219e6201b759899112"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mx.png" md5="e4be6990c02cd5bde8310d85e8c3e8fc"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/my.png" md5="e72628188c0c6580e0dbe8565a98784a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/mz.png" md5="d4c1597fcc5950639d4d5aadf77d6219"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/na.png" md5="a6cf6792f63fb1aa1596e6cd4fe6c5e6"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/nc.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ne.png" md5="4288ac286c4a5b37356aaed16fb7dff7"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/nf.png" md5="5d82b97a83b5239f325961a83e8065e1"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ng.png" md5="c36f246598a70ef64ac26cee740e9c03"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ni.png" md5="0afd613d00ade4cd5f0355205b89c2f2"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/nl.png" md5="d63fa06de5805451d251ccddf9255113"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/no.png" md5="8a12f4a1dd9dae21272a759aab5d2292"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/np.png" md5="a75b9dc9979e9b2fca62738c70e6887e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/nr.png" md5="63dc6d521b800a63efe293dcb4d61a54"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/nu.png" md5="bd7bc88c8c8364b4f19fd9a144fefab3"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/nz.png" md5="1d7b0bf3717d9a42d94c62aeb2629e70"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/om.png" md5="6f16fed034fae766f3c8f28e271ab867"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pa.png" md5="ba9d6ea6ea2dba1e4f6eaef83f74b393"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pe.png" md5="abebeedb9bc38a7a7b7f363415c3e9c4"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pf.png" md5="eda845c49893887588faca4f6208e919"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pg.png" md5="260d006b169167f3e854a319197d30db"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ph.png" md5="e1daffc9b73b5151a8892ca1494e63d0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pk.png" md5="35156376d2e121913afe38260a50fb3f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pl.png" md5="26792a7cc13efd96deb90c939884b016"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pm.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pn.png" md5="555b06b689d4ff3fd7cecd36721d8d07"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pr.png" md5="85362a9872700b44828db18ed6134838"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ps.png" md5="f16156a07974313f81716569efbd51a8"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pt.png" md5="6b85d57c613c710b8812b44326ef0d9e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/pw.png" md5="35022f767546cb3b7984f98b8d25ab3c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/py.png" md5="3ade93bba48bc9708ed7fda98e457a5f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/qa.png" md5="0241e252118b7123b6c4b5e5ac5a9e49"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/re.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ro.png" md5="2f74e04548c5dfb27bd5cea71399b9ed"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/rs.png" md5="003dda6f7c6e2a580956c1a573fc5077"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ru.png" md5="33554a85bcbe7966cbdf64015ca28d03"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/rw.png" md5="52a8eb01834b693af15d990dfb267b10"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sa.png" md5="e91b94865c1a206b8bf95264b7ed18e9"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sb.png" md5="20b7dff232a70afb5bd9328ad8f86f7e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sc.png" md5="4dbcd0fb9c2940170d1e7971505cad76"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sd.png" md5="53bda4afb00e04e31d4f58499bd06e9b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/se.png" md5="5040d1d30c926358d5bb7962a9374751"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sg.png" md5="c6ca9a6a904589b525a9d96a1a633139"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sh.png" md5="c5031afdabd0244ebf5bdc314e8c1e78"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/si.png" md5="107a80951eb3d10000a3c5f07d08704b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sj.png" md5="94a0bdf4a4f8c84a35dab94bf208a623"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sk.png" md5="71972aa793d731817e039bbe5e677790"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sl.png" md5="afb2031a433a42f6f43dfacc1b97311d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sm.png" md5="dc183dae1f82500c718bc4f3c067daca"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sn.png" md5="14b77ec4528b08c4dc85263c2fa66f7b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/so.png" md5="c58b82a50b0c6bfde8607eed7206ce0b"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sr.png" md5="d1c555a3b56dcae20d886ff2a9e166c2"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ss.png" md5="b1d6e2273f7ed9c753b999cfac1b8391"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/st.png" md5="8bdfeab0698d8cc6cb7fef8af7a23eab"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sv.png" md5="38f39152739936f7db31a1950d9d6705"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sx.png" md5="744d8027791bfedf5172accbeb3c815c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sy.png" md5="2a662fde23318554ff3a74093a74eb64"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/sz.png" md5="23e2f22bc2751d34cce8953fbd810e93"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tc.png" md5="cb0b8f07267a20ef15b5f01d947f7a8c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/td.png" md5="0078894e8a887c7351ebc5326f58ded4"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tf.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tg.png" md5="588d51262ce0102d294cf58fdea7ca3a"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/th.png" md5="a93ae6df8675f912c3980ceb6d7d3c46"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tj.png" md5="8171475e835ffb96991cf8295a45f7d1"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tk.png" md5="31a20347dfc64597f08095a09f98d12f"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tl.png" md5="05148efb2016d2a38ae17b6954f90222"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tm.png" md5="70e56b2e1b77d144aa46f2d545119405"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tn.png" md5="e59af6f6353e06e5c2ce2d9e9792c61e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/to.png" md5="38d933483aa76c1a2f479bd8ab47cec4"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tr.png" md5="015ac6a21f213f699212d3441a0d5e44"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tt.png" md5="73155de3f437ef20114d55d29e54c354"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tv.png" md5="e091b1f5a37ddf56c86307c666c6c3b4"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tw.png" md5="09d84d5360600f4e3a746a4e28860e07"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/tz.png" md5="4cb517349bc44f61f0731eb4f26da292"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ua.png" md5="e863419c08a1db578281054a0f6cb977"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ug.png" md5="487b6a481ba48897b2c0d5e3b8225e54"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/um.png" md5="5e0e99228d4934b9494401005f19e7ea"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/us.png" md5="5e0e99228d4934b9494401005f19e7ea"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/uy.png" md5="7cc72e57f70c31bc0fef71998cb08468"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/uz.png" md5="110a5f43ac21e9be42cc2fc0cee9fd5d"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/va.png" md5="cf40d7901f77a2a34d0ed4fad9423c74"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/vc.png" md5="d20f13f5da6de764d94d3cf581607217"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ve.png" md5="b1920cf59a71ae4a30cfa5251f093547"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/vg.png" md5="1d7caceb37c0f13f8324e392edabf1a0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/vi.png" md5="1d7caceb37c0f13f8324e392edabf1a0"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/vn.png" md5="d78be8ea9b4e5830bb94009c802afabe"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/vu.png" md5="1605224151187c3b73665e1e71767306"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/wf.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ws.png" md5="7d3867d3359155ebea376d3d0c49611c"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/ye.png" md5="6e218987549516a98e376b9bf49ea77e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/yt.png" md5="66dbe59c4f10a4ec6da9dbbbedc57c91"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/za.png" md5="643e34cf4a680a28f00a905ec75dbf3e"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/zm.png" md5="5d25442616e0dfdab9974e9b156afdbd"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/zw.png" md5="6718d34cb68ff50725140b786ce286cd"/>
-		<file filename="assets/images/iso-country-flags/png-country-4x3/res-640x480/zz.png" md5="9ed90edb9aee2d2a912dac2a77eaf979"/>
-	</assets>
+	<assets/>
 	<install>
 		<sql file="datafiles/countries_bulk.sql"/>
 		<sql file="datafiles/provinces_bulk.sql"/>
