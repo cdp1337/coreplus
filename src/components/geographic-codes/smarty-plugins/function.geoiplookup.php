@@ -36,9 +36,10 @@ function smarty_function_geoiplookup($params, $template){
 	if($getflag){
 		$flag = 'assets/images/iso-country-flags/' . strtolower($lookup->country) . '.png';
 		$file = \Core\Filestore\Factory::File($flag);
+		$cname = $lookup->getCountryName();
 
 		if($file->exists()){
-			$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $lookup->country . '" alt="' . $lookup->country . '"/> ';
+			$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $cname . '" alt="' . $lookup->country . '"/> ';
 		}
 		else{
 			$out = '';
@@ -48,7 +49,16 @@ function smarty_function_geoiplookup($params, $template){
 		$out = '';
 	}
 
-	$out .= $lookup->city . ', ' . $lookup->province;
+	
+	if($lookup->province && $lookup->city){
+		$out .= $lookup->city . ', ' . $lookup->province;	
+	}
+	elseif($lookup->province){
+		$out .= $lookup->province;
+	}
+	elseif($lookup->city){
+		$out .= $lookup->city;
+	}
 
 	return $out;
 }
