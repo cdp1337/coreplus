@@ -34,7 +34,7 @@ function smarty_function_geoiplookup($params, $template){
 	$lookup = new \geocode\IPLookup($ip);
 
 	if($getflag){
-		$flag = 'assets/images/iso-country-flags/png-country-4x3/res-640x480/' . strtolower($lookup->country) . '.png';
+		$flag = 'assets/images/iso-country-flags/' . strtolower($lookup->country) . '.png';
 		$file = \Core\Filestore\Factory::File($flag);
 
 		if($file->exists()){
