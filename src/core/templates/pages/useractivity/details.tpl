@@ -20,7 +20,7 @@
 				{/a}
 				<br/>
 				
-				{geoiplookup $entry.ip_addr}
+				{geoiplookup $l.ip_addr}
 				{a href="/useractivity/details?filter[ip_addr]=`$l.ip_addr`" style="text-decoration:none;"}
 					{$l.ip_addr}
 				{/a}
