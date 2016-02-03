@@ -349,6 +349,112 @@ function print_error_as_text($class, $code, $errstr){
 }
 
 /**
+ * Internal function to calculate the backtrace for errors,
+ * (omitting the things higher than the error itself, in theory).
+ * 
+ * This is only needed for errors, so it will be unecessary on PHP 7.
+ * 
+ * @return array
+ */
+function get_backtrace(){
+	$back = debug_backtrace();
+	$bfound = false;
+
+	// This requires a bit of work to figure out where the error started,
+	// as this script will have been called by several others
+	// and errors do not provide the same level of analytics as Exceptions to.
+	foreach($back as $k => $dat){
+		// Run through each backtrace level starting with the latest one until I find this file.
+		// Everything else above that stack, (in theory at least), did not cause the error.
+		// The caveat to this of course if if there's an error in this file!
+		// When found, record that position and then splice the returning output array with the latest instance of functions.php.
+		if(isset($dat['file']) && $dat['file'] == ROOT_PDIR . 'core/libs/core/errormanagement/functions.php'){
+			$bfound = $k;
+		}
+		// Or this one.
+		if(isset($dat['function']) && $dat['function'] == 'Core\ErrorManagement\error_handler'){
+			$bfound = $k;
+		}
+	}
+
+	if($bfound !== false){
+		$back = array_splice($back, $bfound + 1);
+	}
+	
+	return $back;
+}
+
+function standardize_backtrace($array){
+	$out = [];
+	foreach($array as $dat){
+		$line = [
+			'file' => null,
+		    'line' => null,
+		    'call' => null,
+		    'args' => [],
+		];
+		
+		if(isset($dat['file']) && strpos($dat['file'], ROOT_PDIR) === 0){
+			// Cleanup the file location by
+			// trimming off the prefix ROOT_PDIR, I don't need that!
+			$line['file'] = '/' . substr($dat['file'], strlen(ROOT_PDIR));
+		}
+		elseif(isset($dat['file'])){
+			// it's present, but doesn't contain the ROOT directory, just copy as-is.
+			$line['file'] = $dat['file'];
+		}
+		else{
+			$line['file'] = 'unknown';
+		}
+		
+		$line['line'] = isset($dat['line']) ? $dat['line'] : 'N/A';
+
+		if(isset($dat['class'])){
+			$line['call'] = $dat['class'] . $dat['type'] . $dat['function'];
+		}
+		elseif(isset($dat['function'])){
+			$line['call'] = $dat['function'];
+		}
+		else{
+			$line['call'] = 'unknown';
+		}
+		
+		if(isset($dat['args'])){
+			// Convert the arguments to something flat.
+			foreach($dat['args'] as $k => $a){
+				if(is_string($a)){
+					$line['args'][] = "'" . $a . "'";
+				}
+				elseif($a === true){
+					$line['args'][] = 'TRUE';
+				}
+				elseif($a === false){
+					$line['args'][] = 'FALSE';
+				}
+				elseif($a === null){
+					$line['args'][] = 'NULL';
+				}
+				elseif(is_array($a)){
+					$line['args'][] = 'Array {' . sizeof($a) . '}';
+				}
+				elseif(is_object($a)){
+					$line['args'][] = 'Object {' . get_class($a) . '}';
+				}
+				else{
+					// ???
+					$line['args'][] = $a;
+				}
+			}
+		}
+		
+		// Append to stack
+		$out[] = $line;
+	}
+	
+	return $out;
+}
+
+/**
  * Format an error to a plain text string.
  * 
  * @param $code
@@ -364,8 +470,11 @@ function get_error_as_text($code, $errstr){
 		$back = $exception->getTrace();
 	}
 	else{
-		$back = debug_backtrace();
+		$back = get_backtrace();
 	}
+	
+	// Cleanup these back traces.
+	$back = standardize_backtrace($back);
 	
 	$out = '';
 
@@ -378,90 +487,36 @@ function get_error_as_text($code, $errstr){
 	$lines = [];
 	$maxlength1 = $maxlength2 = 0;
 	foreach($back as $entry){
-		
-		$entryFile = isset($entry['file']) ? $entry['file'] : '';
-		$entryLine = isset($entry['line']) ? $entry['line'] : 'N/A';
-		$entryFnc  = isset($entry['function']) ? $entry['function'] : '';
-		$entryArgs = isset($entry['args']) && is_array($entry['args']) ? $entry['args'] : [];
-		
-		// Skip outputing of this file
-		if(
-			$entryFnc == 'Core\ErrorManagement\error_handler' ||
-			$entryFnc == 'Core\ErrorManagement\print_error_as_text' ||
-			$entryFnc == 'Core\ErrorManagement\check_for_fatal' ||
-			$entryFnc == 'Core\ErrorManagement\get_error_as_text'
-		){
-			continue;
-		}
-		
-		// Cleanup the file location
-		$file = (isset($entry['file']) ? $entry['file'] : 'unknown');
-		if(strpos($file, ROOT_PDIR) === 0){
-			// Trim off the prefix ROOT_PDIR, I don't need that!
-			$file = '/' . substr($file, strlen(ROOT_PDIR));
-		}
-		
-		// Convert the arguments to something flat.
-		foreach($entryArgs as $k => $a){
-			if(is_string($a)){
-				$entryArgs[$k] = "'" . $a . "'";
-			}
-			elseif($a === true){
-				$entryArgs[$k] = 'TRUE';
-			}
-			elseif($a === false){
-				$entryArgs[$k] = 'FALSE';
-			}
-			elseif($a === null){
-				$entryArgs[$k] = 'NULL';
-			}
-			elseif(is_array($a)){
-				$entryArgs[$k] = 'Array {' . sizeof($a) . '}';
-			}
-			elseif(is_object($a)){
-				$entryArgs[$k] = 'Object {' . get_class($a) . '}';
-			}
-		}
-		$entryArgs = implode(', ', $entryArgs);
-
-		if(isset($entry['class'])){
-			$linecode = $entry['class'] . $entry['type'] . $entry['function'] . '(' . $entryArgs . ')';
-		}
-		elseif(isset($entry['function'])){
-			$linecode = $entry['function'] . '(' . $entryArgs . ')';
-		}
-		else{
-			$linecode = 'Unknown!?!';
-		}
+		$linecode = $entry['call'] . '(' . implode(', ', $entry['args']) . ')';
+		$file = $entry['file'] . ':' . $entry['line'];
 
 		$lines[] = [
 			'code' => $linecode,
 			'file' => $file,
-			'line' => $entryLine,
 		];
 
 		$maxlength1 = max($maxlength1, strlen($linecode));
-		$maxlength2 = max($maxlength2, strlen($file) + 6 + strlen($entryLine));
+		$maxlength2 = max($maxlength2, strlen($file));
 	}
 
 	// Now I know the sizes of the table.
 	// This jumble of code will create a table in the shell using ASCII characters.
 	$borderheader = '+' . str_repeat('-', $maxlength1 + $maxlength2) . '+';
-	$borderinner = str_repeat('-', $maxlength1+1) . '+' . str_repeat('-', $maxlength2-4);
+	$borderinner = str_repeat('-', $maxlength1+1) . '+' . str_repeat('-', $maxlength2+1);
 	//$out .= $borderheader . "\n";
 	//$out .= '| ' . str_pad('STACK TRACE', $maxlength1 + $maxlength2-1, ' ', STR_PAD_BOTH) . '|' . "\n";
 	//$out .= $borderheader . "\n";
 
 	$padding1 = max(0, $maxlength1-15);
-	$padding2 = max(0, $maxlength2-29);
-	$out .= 'Function/Method' . str_repeat(' ', $padding1) . ' | File Location:Line Number' . str_repeat(' ', $padding2) . "\n";
+	$padding2 = max(0, $maxlength2-13);
+	$out .= 'Function/Method' . str_repeat(' ', $padding1) . ' | File Location' . str_repeat(' ', $padding2) . "\n";
 	$out .= $borderinner . "\n";
 
 	foreach($lines as $entry){
 		$padding1 = max(0, $maxlength1-strlen($entry['code']));
-		$padding2 = max(0, $maxlength2-strlen($entry['file'] . ':' . $entry['line'] . '    '));
+		$padding2 = max(0, $maxlength2-strlen($entry['file']));
 
-		$out .= $entry['code'] . str_repeat(' ', $padding1) . ' | ' . $entry['file'] . ':' . $entry['line'] . str_repeat(' ', $padding2) . "\n";
+		$out .= $entry['code'] . str_repeat(' ', $padding1) . ' | ' . $entry['file'] . str_repeat(' ', $padding2) . "\n";
 	}
 	//$out .= $borderinner . "\n";
 	
