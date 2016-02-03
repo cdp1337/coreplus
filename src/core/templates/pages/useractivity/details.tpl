@@ -1,5 +1,3 @@
-{script library="fancy_ip"}{/script}
-
 {$filters->render()}
 
 {$filters->pagination()}
@@ -21,11 +19,11 @@
 					{$l->getDisplayName()}
 				{/a}
 				<br/>
-				<span class="ip">
-					{a href="/useractivity/details?filter[ip_addr]=`$l.ip_addr`" style="text-decoration:none;"}
-						{$l.ip_addr}
-					{/a}
-				</span>
+				
+				{geoiplookup $entry.ip_addr}
+				{a href="/useractivity/details?filter[ip_addr]=`$l.ip_addr`" style="text-decoration:none;"}
+					{$l.ip_addr}
+				{/a}
 				<br/>
 
 				{a href="/useractivity/details?filter[session_id]=`$l.session_id`" style="text-decoration:none;"}

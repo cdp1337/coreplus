@@ -1,5 +1,4 @@
 {script library="Core.AjaxLinks"}{/script}
-{script library="fancy_ip"}{/script}
 
 {css}<style>
 	.systemlog-entry-type-security {
@@ -27,26 +26,22 @@
 		</td>
 		<td>{date date="`$entry.datetime`"}</td>
 		<td>
-			{a href="/useractivity/details?filter[ip_addr]=`$entry.ip_addr`" title="Track User Activity" style="text-decoration:none;"}<i class="icon-list-alt"></i>{/a}
-			<span class="ip">
-				{$entry.ip_addr}
-			</span>
+			{geoiplookup $entry.ip_addr}<br/>
+			{$entry.ip_addr}
 		</td>
 		<td>{$entry.message|truncate:100}</td>
 		<td>
-			{a href="/useractivity/details?filter[user_id]=`$entry.user_id`" title="Track User Activity" style="text-decoration:none;"}<i class="icon-list-alt"></i>{/a}
 			{user $entry.user_id}
 		</td>
 		<td>
 			{if $entry.affected_user_id}
-				{a href="/useractivity/details?filter[user_id]=`$entry.affected_user_id`" title="Track User Activity" style="text-decoration:none;"}<i class="icon-list-alt"></i>{/a}
 				{user $entry.affected_user_id}
 			{else}
 				N/A
 			{/if}
 		</td>
 		<td>
-			<ul class="controls">
+			<ul class="controls" data-proxy-force="1">
 				<li>
 					{a href="/admin/log/details/`$entry.id`" title="View Details" class="ajax-link"}
 						<i class="icon-view"></i>
@@ -59,6 +54,20 @@
 						<span>Ban IP</span>
 					{/a}
 				</li>
+				<li>
+					{a href="/useractivity/details?filter[ip_addr]=`$entry.ip_addr`" title="Track User Activity"}
+						<i class="icon-list-alt"></i>
+						<span>View Activity by IP</span>
+					{/a}
+				</li>
+				{if $entry.user_id}
+					<li>
+						{a href="/useractivity/details?filter[user_id]=`$entry.user_id`" title="Track User Activity"}
+							<i class="icon-list-alt"></i>
+							<span>View Activity by User</span>
+						{/a}
+					</li>	
+				{/if}
 			</ul>
 		</td>
 	</tr>
