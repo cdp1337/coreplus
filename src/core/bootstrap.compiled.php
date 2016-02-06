@@ -12,7 +12,7 @@
  * @package Core\Core
  * @since 2.1.5
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (C) 2009-2015  Charlie Powell
+ * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * @compiled Tue, 02 Feb 2016 08:11:34 -0500

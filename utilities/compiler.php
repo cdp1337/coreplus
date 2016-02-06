@@ -7,7 +7,7 @@
  * @package Core\CLI Utilities
  * @since 2.1.5
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (C) 2009-2015  Charlie Powell
+ * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -390,7 +390,7 @@ if($onlyCore && $compilePHP){
  * @package Core\Core
  * @since 2.1.5
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (C) 2009-2015  Charlie Powell
+ * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * @compiled $date
