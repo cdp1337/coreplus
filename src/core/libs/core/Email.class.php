@@ -57,7 +57,7 @@ class Email {
 	/**
 	 * Get the template responsible for rendering this email.
 	 *
-	 * @return Template
+	 * @return \Core\Templates\TemplateInterface
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
@@ -106,20 +106,19 @@ class Email {
 				if ($this->_mailer->Username != '') $this->_mailer->SMTPAuth = true;
 			}
 
-			// Tack on some anti-abuse headers.
-			// If these bug you, feel free to safely remove them, as they don't /actually/ do anything.
-			// @todo If this bugs enough people, I might add it as a config option.
-
+			// Tack on some anti-abuse and meta headers.
+			// These don't actually serve an explict function, but are added because.
 			$this->_mailer->AddCustomHeader('X-AntiAbuse: This header was added to track abuse, please include it with any abuse report');
-			if (Core::User()->exists()) {
-				$this->_mailer->AddCustomHeader('X-AntiAbuse: User_id - ' . Core::User()->get('id'));
-				$this->_mailer->AddCustomHeader('X-AntiAbuse: User_name - ' . Core::User()->getDisplayName());
+			if (\Core\user()->exists()) {
+				$this->_mailer->AddCustomHeader('X-AntiAbuse: User_id - ' . \Core\user()->get('id'));
+				$this->_mailer->AddCustomHeader('X-AntiAbuse: User_name - ' . \Core\user()->getDisplayName());
 			}
 
 			$this->_mailer->AddCustomHeader('X-AntiAbuse: Original Domain - ' . SERVERNAME);
 			$this->_mailer->AddCustomHeader('X-AntiAbuse: Sitename - ' . SITENAME);
 			$this->_mailer->AddCustomHeader('MimeOLE: Core Plus');
 			$this->_mailer->AddCustomHeader('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
+			$this->_mailer->XMailer = 'Core Plus ' . Core::GetComponent()->getVersion() . ' (http://corepl.us)';
 
 			// Default to set the formatting to HTML.
 			//$this->_mailer->isHTML(true);
