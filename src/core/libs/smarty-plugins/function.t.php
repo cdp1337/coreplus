@@ -32,8 +32,6 @@
 function smarty_function_t($params, $smarty){
 
 	$key      = $params[0];
-	$result   = \Core\i18n\I18NLoader::Get($key);
-	$str      = $result['match_str'];
 	$modifier = null;
 
 	if(isset($params['modifier'])){
@@ -41,17 +39,10 @@ function smarty_function_t($params, $smarty){
 		unset($params['modifier']);
 	}
 
-	if(!$result['found'] && DEVELOPMENT_MODE){
-		// Provide some feedback to developers if this key was not found.
+	$string = new \Core\i18n\I18NString($key);
+	$string->setParameters($params);
 
-		$str = '[' . $result['lang'] . ':' . $key . ']';
-	}
-	else{
-		// Replace "[%KEY%]" with the parameters, (if there are any).
-		foreach($params as $k => $v){
-			$str = str_replace('[%' . strtoupper($k) . '%]', $v, $str);
-		}
-	}
+	$str = $string->getTranslation();
 
 	// Is there a modifier on this text?
 	$whitelist = ['strtolower', 'strtoupper', 'ucfirst', 'ucwords'];
