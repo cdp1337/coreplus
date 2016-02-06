@@ -5,13 +5,15 @@
 
 {if $sitecount == 0}
 	<p class="message-warning">
-		{t 'MESSAGE_WARNING_UPDATER_NO_UPDATE_SITES'} {a href='updater/repos/add' class="button"}Add Repository{/a}
+		{t 'MESSAGE_WARNING_UPDATER_NO_UPDATE_SITES'}
+		{a href='updater/repos/add' class="button"}
+			{t 'STRING_ADD_REPOSITORY_SITE'}
+		{/a}
 	</p>
 {else}
 	<p>
-		{if $sitecount == 1}There is {$sitecount} update repository{/if}
-		{if $sitecount > 1}There are {$sitecount} update repositories{/if}
-		currently available.  {a href='updater/repos'}Manage Them{/a}
+		{t 'MESSAGE_THERE_ARE_N_REPOSITORIES_AVAILABLE' $sitecount}
+		{a href='updater/repos'}{t 'STRING_MANAGE_REPOSITORIES'}{/a}
 	</p>
 
 	<p>

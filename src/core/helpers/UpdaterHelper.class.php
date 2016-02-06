@@ -769,6 +769,7 @@ class UpdaterHelper {
 
 		// Clear the cache so the next pageload will pick up on the new components and goodies.
 		\Core\Cache::Flush();
+		\Core\Templates\Backends\Smarty::FlushCache();
 
 		// Yup, that's it.
 		// Just extract the files and Core will autoinstall/autoupgrade everything on the next page view.

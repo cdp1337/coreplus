@@ -36,13 +36,46 @@ class UpdaterController extends Controller_2_1 {
 	public function getControls(){
 		$view = $this->getView();
 
-		$view->addControl(['title' => 'Manage Repositories', 'link' => '/updater/repos', 'icon' => 'cloud']);
-		$view->addControl(['title' => 'Add Repository Site', 'link' => 'updater/repos/add', 'icon' => 'add']);
+		$view->addControl(
+			[
+				'title' => t('STRING_MANAGE_REPOSITORIES'), 
+				'link' => '/updater/repos', 
+				'icon' => 'cloud']
+		);
+		$view->addControl(
+			[
+				'title' => t('STRING_ADD_REPOSITORY_SITE'), 
+				'link' => 'updater/repos/add', 
+				'icon' => 'add']
+		);
 
-		$view->addControl(['title' => 'Manage GPG Keys', 'link' => '/updater/keys', 'icon' => 'key']);
-		$view->addControl(['title' => 'Import GPG Key', 'link' => '/updater/keys/import', 'icon' => 'add']);
+		$view->addControl(
+			[
+				'title' => t('STRING_MANAGE_GPG_KEYS'), 
+				'link' => '/updater/keys', 
+				'icon' => 'key']
+		);
+		$view->addControl(
+			[
+				'title' => t('STRING_IMPORT_GPG_KEY'), 
+				'link' => '/updater/keys/import', 
+				'icon' => 'add'
+			]
+		);
 
-		$view->addControl(['title' => 'Find New Packages', 'link' => '/updater/browse', 'icon' => 'search']);
+		$view->addControl(
+			[
+				'title' => t('STRING_FIND_NEW_PACKAGES'), 
+				'link' => '/updater/browse', 
+				'icon' => 'search']
+		);
+		$view->addControl(
+			[
+				'title' => t('STRING_MANUALLY_UPLOAD_PACKAGE'),
+			    'link' => '/updater/upload',
+			    'icon' => 'upload',
+			]
+		);
 	}
 
 	/**
@@ -76,7 +109,7 @@ class UpdaterController extends Controller_2_1 {
 		}
 
 
-		$view->title = 'System Updater';
+		$view->title = 't:STRING_SYSTEM_UPDATER';
 		$view->assign('sitecount', $sitecount);
 		$view->assign('components', $components);
 		$view->assign('core', Core::GetComponent('core'));
@@ -190,7 +223,7 @@ class UpdaterController extends Controller_2_1 {
 
 		$sites = UpdateSiteModel::Find();
 
-		$view->title = 'Repositories';
+		$view->title = 't:STRING_MANAGE_REPOSITORIES';
 		$view->assign('sites', $sites);
 
 	}
@@ -391,6 +424,34 @@ class UpdaterController extends Controller_2_1 {
 
 		$view->assign('sitecount', $sitecount);
 		$view->title = 'Find New Packages';
+	}
+
+	/**
+	 * View to manually upload a package to the system.
+	 * 
+	 * This shouldn't be used too often, but can be used for one-off packages that may not reside in a public repository.
+	 */
+	public function upload(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+		
+		$form = new Form();
+		$form->set('callsmethod', 'UpdaterController::_UploadHandler');
+		$form->addElement(
+			'file',
+			[
+				'name' => 'upload',
+			    'title' => t('STRING_FILE'),
+			    'description' => t('MESSAGE_UPLOAD_TGZ_TO_MANUALLY_INSTALL_PACKAGE'),
+			    'required' => true,
+			    //'accept' => ['application/pgp', 'application/gzip'],
+			    'basedir' => '/tmp',
+			]
+		);
+		$form->addElement('submit', ['value' => t('STRING_INSTALL')]);
+		
+		$view->title = 't:STRING_MANUALLY_UPLOAD_PACKAGE';
+		$view->assign('form', $form);
 	}
 
 	public function keys() {
@@ -915,5 +976,99 @@ class UpdaterController extends Controller_2_1 {
 		}
 		
 		return $checks;
+	}
+
+	public static function _UploadHandler(Form $form) {
+		$localfile = \Core\Filestore\Factory::File($form->getElement('upload')->get('value'));
+		$localobj = $localfile->getContentsObject();
+		if(!$localobj instanceof Core\Filestore\Contents\ContentTGZ){
+			$localfile->delete();
+			\Core\set_message('Invalid file uploaded', 'error');
+			return false;
+		}
+		
+		$tmpdir = $localobj->extract('tmp/installer-' . Core::RandomHex(4));
+		
+		// There should now be a package.xml metafile inside that temporary directory.
+		// Parse it to get the necessary information for this package.
+		$metafile = \Core\Filestore\Factory::File($tmpdir->getPath() . 'package.xml');
+		if(!$metafile->exists()){
+			$localfile->delete();
+			$tmpdir->delete();
+			\Core\set_message('Invalid package, package does not contain a "package.xml" file.');
+			return false;
+		}
+		
+		$pkg     = new PackageXML($metafile->getFilename());
+		$key     = str_replace(' ', '-', strtolower($pkg->getName()));
+		$name    = $pkg->getName();
+		$type    = $pkg->getType();
+		$version = $pkg->getVersion();
+		
+		// Validate the contents of the package.
+		if(!(
+			$type == 'component' ||
+			$type == 'theme' ||
+			$type == 'core'
+		)){
+			$localfile->delete();
+			$tmpdir->delete();
+			\Core\set_message('Invalid package, package does not appear to be a valid Core package.');
+			return false;
+		}
+
+		// Now that the data is extracted in a temporary directory, extract every file in the destination.
+		/** @var $datadir \Core\Filestore\Directory */
+		$datadir = $tmpdir->get('data/');
+		if(!$datadir){
+			\Core\set_message('Invalid package, package does not contain a "data" directory.');
+			return false;
+		}
+		
+		if($type == 'component'){
+			$destdir = ROOT_PDIR . 'components/' . $key . '/';
+		}
+		elseif($type == 'theme'){
+			$destdir = ROOT_PDIR . 'themes/' . $key . '/';
+		}
+		else{
+			$destdir = ROOT_PDIR . '/';
+		}
+
+		try{
+			// Will give me an array of Files in the data directory.
+			$files = $datadir->ls(null, true);
+			// Used to get the relative path for each contained file.
+			$datalen = strlen($datadir->getPath());
+			foreach($files as $file){
+				if(!$file instanceof \Core\Filestore\Backends\FileLocal) continue;
+
+				// It's a file, copy it over.
+				// To do so, resolve the directory path inside the temp data dir.
+				$dest = \Core\Filestore\Factory::File($destdir . substr($file->getFilename(), $datalen));
+				/** @var $dest \Core\Filestore\Backends\FileLocal */
+				$dest->copyFrom($file, true);
+			}
+		}
+		catch(Exception $e){
+			// OH NOES!
+			$localfile->delete();
+			$tmpdir->delete();
+			\Core\set_message($e->getMessage(), 'error');
+			return false;
+		}
+		
+		
+		// Cleanup everything
+		$localfile->delete();
+		$tmpdir->delete();
+
+		// Clear the cache so the next pageload will pick up on the new components and goodies.
+		\Core\Cache::Flush();
+		\Core\Templates\Backends\Smarty::FlushCache();
+		
+		// Print a nice message to the user that it completed.
+		\Core\set_message('Successfully installed ' . $name . ' ' . $version, 'success');
+		return '/updater';
 	}
 }
