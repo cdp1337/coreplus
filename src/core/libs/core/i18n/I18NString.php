@@ -57,7 +57,7 @@ class I18NString {
 		// Allow the key to be changed from _N_ to _0_ or _1_ if exactly two arguments are provided (the key and one number),
 		// and of course if _N_ is present in the originally requested key.
 
-		if(substr_count($this->_key, '_N_') === 1 && sizeof($this->_params) == 2 && is_numeric($this->_params)){
+		if(substr_count($this->_key, '_N_') === 1 && sizeof($this->_params) == 2 && is_numeric($this->_params[1])){
 			if($this->_params[1] == 0){
 				$key = str_replace('_N_', '_0_', $this->_key);
 			}
