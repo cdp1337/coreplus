@@ -250,7 +250,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			}
 
 			if(!$u){
-				\Core\set_message('Invalid user account requested', 'error');
+				\Core\set_message('t:MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND');
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Failed Forgot Password. Invalid email requested for reset: [' . $_POST['email'] . ']');
 				return;
 			}
@@ -270,9 +270,9 @@ class DatastoreAuthController extends Controller_2_1 {
 			$e = new Email();
 			$e->setSubject('Forgot Password Request');
 			$e->to($u->get('email'));
+			$e->templatename = 'emails/user/datastoreauth_forgotpassword.tpl';
 			$e->assign('link', \Core\resolve_link($link));
 			$e->assign('ip', REMOTE_IP);
-			$e->templatename = 'emails/user/datastoreauth_forgotpassword.tpl';
 			try{
 				$e->send();
 				SystemLogModel::LogSecurityEvent('/user/forgotpassword/send', 'Forgot password request sent successfully', null, $u->get('id'));
@@ -284,7 +284,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			}
 
 			// Otherwise, it must have sent, (hopefully)...
-			\Core\set_message('Sent reset instructions via email.', 'success');
+			\Core\set_message('t:MESSAGE_SUCCESS_PLEASE_CHECK_EMAIL_FOR_PASSWORD_RESET_INSTRUCTIONS');
 			\core\redirect('/');
 		}
 	}
@@ -314,7 +314,7 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		if(!$nonce->isValid()){
 			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid nonce requested: [' . $n . ']');
-			\Core\set_message('Invalid user account requested', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND');
 			\core\redirect('/');
 			return;
 		}
@@ -326,7 +326,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		$u = UserModel::Construct($data['user']);
 		if(!$u){
 			SystemLogModel::LogSecurityEvent('/user/forgotpassword/confirm', 'Failed Forgot Password. Invalid user account requested: [' . $data['user'] . ']');
-			\Core\set_message('Invalid user account requested', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND');
 			\core\redirect('/');
 			return;
 		}
@@ -335,7 +335,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		if($request->isPost()){
 			// Validate the password.
 			if($_POST['p1'] != $_POST['p2']){
-				\Core\set_message('Passwords do not match.', 'error');
+				\Core\set_message('t:MESSAGE_ERROR_USER_REGISTER_PASSWORD_MISMATCH');
 				return;
 			}
 
