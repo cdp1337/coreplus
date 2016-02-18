@@ -245,14 +245,10 @@ class I18NLoader {
 
 		self::$DefaultLanguage = \ConfigHandler::Get('/core/language/site_default');
 
-		// Get the preferred language from the browser or cookie.
-		// The first array is a full list of accepted languages
-		$langs = \PageRequest::GetSystemRequest()->acceptLanguages;
-
 		// What locales are currently available on the system?
 		$localesAvailable = self::GetLocalesAvailable();
 		// The first value is all I want, as that is the user's preference.
-		$preferred = $langs[0];
+		$preferred = \PageRequest::GetSystemRequest()->getPreferredLocale();
 
 		// If this language is not available on the local system, then revert back to the system default!
 		if(!isset($localesAvailable[$preferred])){
@@ -475,7 +471,7 @@ class I18NLoader {
 	 * @return array
 	 */
 	public static function GetBaseLanguagesAsOptions(){
-		$localesAvailable = self::GetLocalesAvailable();
+		$localesAvailable = self::GetLocalesEnabled();
 		$ret = [];
 		foreach($localesAvailable as $k => $d){
 			$base = strpos($k, '_') === false ? $k : substr($k, 0, strpos($k, '_'));
@@ -490,7 +486,7 @@ class I18NLoader {
 	 * @return array
 	 */
 	public static function GetLanguagesAsOptions(){
-		$localesAvailable = self::GetLocalesAvailable();
+		$localesAvailable = self::GetLocalesEnabled();
 		$ret = [];
 		foreach($localesAvailable as $k => $d){
 			$ret[$k] = t($d['lang']) . ($d['dialect'] ? ' (' . t($d['dialect']) . ')' : '');
@@ -532,6 +528,32 @@ class I18NLoader {
 		// Cache this so I don't have to execute the command and lookup the values all over again!
 		Cache::Set($cacheKey, $locales, $cacheTime);
 		return $locales;
+	}
+
+	/**
+	 * Get an array (locale => [lang, dialect, charset, dir]) of all locales enabled on the system,
+	 * XORed from the list of currently available locales on the native system.
+	 * 
+	 * @return array
+	 */
+	public static function GetLocalesEnabled(){
+		$all = self::GetLocalesAvailable();
+
+		$enabled = \ConfigHandler::Get('/core/language/languages_enabled');
+		// This is expected to be a pipe-seperated list of languages/locales enabled.
+		$enabled = array_map('trim', explode('|', $enabled));
+		
+		// Return any enabled locale as long as it's available on the system.
+		// Remap them to an array to ensure that the locale description/label is returned too.
+		// This comes from the original GetLocalesAvaiable method.
+		$out = [];
+		foreach($enabled as $v){
+			if(isset($all[$v])){
+				$out[$v] = $all[$v];
+			}
+		}
+		
+		return $out;
 	}
 
 	/**
