@@ -298,7 +298,7 @@ class NonceModel extends Model {
 		$key = Core::GenerateUUID();
 
 		// But since this is designed to be somewhat secure... I want to be a little more cryptographically secure.
-		$fp = fopen('/dev/urandom','rb');
+		$fp = fopen('/dev/random','rb');
 		if ($fp !== FALSE) {
 			$bits = fread($fp, 16);
 			fclose($fp);
