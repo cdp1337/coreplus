@@ -130,7 +130,7 @@ class AdminMenuWidget extends Widget_2_1 {
 		}
 
 		// Build a list of languages that can be set by the user.
-		$locales = \Core\i18n\I18NLoader::GetLocalesAvailable();
+		$locales = \Core\i18n\I18NLoader::GetLocalesEnabled();
 		$selected = \Core\i18n\I18NLoader::GetUsersLanguage();
 		$languages = [];
 		if(sizeof($locales) > 1){
