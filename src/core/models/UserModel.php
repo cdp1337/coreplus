@@ -460,6 +460,24 @@ class UserModel extends Model {
 	}
 
 	/**
+	 * Simple check to see if a given driver is installed.
+	 * 
+	 * @param string $driver
+	 * 
+	 * @return bool
+	 */
+	public function isAuthDriverEnabled($driver){
+		try{
+			// Will trigger an exception if it's not enabled! :)
+			$this->getAuthDriver($driver);
+			return true;
+		}
+		catch(Exception $e){
+			return false;
+		}
+	}
+
+	/**
 	 * Get all enabled authentication drivers for this user.
 	 *
 	 * @return array
