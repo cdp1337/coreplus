@@ -1035,6 +1035,45 @@ class PageRequest {
 		return $this->referrer ? $this->referrer : ROOT_URL;
 	}
 
+	/**
+	 * Get the user's preferred language set from either the browser of the LANG cookie.
+	 * 
+	 * This just returns the language portion, NOT the full string.
+	 * 
+	 * @return string
+	 */
+	public function getPreferredLanguage(){
+		if(!is_array($this->acceptLanguages)){
+			return 'en'; // ???
+		}
+		
+		// The first is the preferred.
+		$preferred = $this->acceptLanguages[0];
+		// I just want the part before the '_'.
+		// The string is in the format of "en_US"
+		if(($key = strpos($preferred, '_')) !== false){
+			return substr($preferred, 0, $key);
+		}
+		else{
+			return $preferred;
+		}
+	}
+
+	/**
+	 * Get the user's preferred language+locale set from either the browser of the LANG cookie.
+	 *
+	 * @return string
+	 */
+	public function getPreferredLocale(){
+		if(!is_array($this->acceptLanguages)){
+			return 'en_US'; // ???
+		}
+		else{
+			// The first is the preferred.
+			return $this->acceptLanguages[0];	
+		}
+	}
+
 
 	private function _resolveMethod() {
 		$method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
