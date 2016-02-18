@@ -78,10 +78,10 @@
 									<div>
 									<ul class="controls">
 										<li>
-											<a href="/widget/instance/update/{$widget.id}" class="control control-edit" title="Edit Options">
+											{a href="/widget/instance/update/{$widget.id}" class="control control-edit" title="Edit Options"}
 												<i class="icon-edit"></i>
 												<span>Edit Installed Options</span>
-											</a>
+											{/a}
 										</li>
 										{if $widget.Widget.editurl}
 											<li>
