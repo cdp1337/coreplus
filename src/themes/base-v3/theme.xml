@@ -2,18 +2,21 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Base V3">
 	<assets>
-		<file filename="assets/css/print.css" md5="b7e398d718cf714e8f82eef49d6e6dcd"/>
-		<file filename="assets/css/print.css.map" md5="332166635c4dee8bb4abdb38850f4de9"/>
-		<file filename="assets/css/print.min.css" md5="7a099e55bb3b703ccf14f63d229c87a1"/>
-		<file filename="assets/css/styles.css" md5="277514ccf94f676feea899230354e3d5"/>
-		<file filename="assets/css/styles.css.map" md5="4a14b3734a41b2c419475f2ee494c6b0"/>
-		<file filename="assets/css/styles.min.css" md5="93b369735436112fc06192df6757a8d8"/>
+		<file filename="assets/css/print.css" md5="1965e8a2f90a43a704ee0fccbd25ca85"/>
+		<file filename="assets/css/print.css.map" md5="cfbab1aa42e2b3b6cceef5e0d2c13b0a"/>
+		<file filename="assets/css/print.min.css" md5="d5177d2d735567b6b4146a56dd89a24a"/>
+		<file filename="assets/css/styles.css" md5="2c6b504116bfc1e3dd92edbe2718a29d"/>
+		<file filename="assets/css/styles.css.map" md5="309db47845766cda5f846e1fdcf0d2ba"/>
+		<file filename="assets/css/styles.min.css" md5="07ed6c2d0b1ce9f2f854eb67c7485dd5"/>
+		<file filename="assets/css/tinymce/content.css" md5="172e802bdcdf857cc9f5f5aced30b336"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="e4070edf42033c17064a62aea6f4805d"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="50ba68b5f86f1d713081f77a090f810f"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
-		<file filename="basic.tpl" md5="3d5d5550c662a68d794ba14d714bac9f" title=""/>
+		<file filename="basic.tpl" md5="f46f9bd07703f36154fc36ff8359a008" title=""/>
 		<file filename="blank.tpl" md5="e0fe07062c844b9a1353d71edf5cc025" title=""/>
-		<file filename="wide.tpl" md5="407f2124d6822de186dbaee248cb896b" title=""/>
-		<file filename="print.tpl" md5="f00ef5717d9b0188ee26d0acc49267a2" title=""/>
+		<file filename="wide.tpl" md5="316ce2d576e183cdd9255b3b8bfe4387" title=""/>
+		<file filename="print.tpl" md5="f82af65b975d46d94be3bbcba910a1c5" title=""/>
 	</skins>
 	<configs>
 		<config key="/theme/site_logo" mapto="THEME_SITE_LOGO" form-attributes="type:file;basedir:public/logo/;accept:image/*;"/>
@@ -51,129 +54,137 @@
 	<otherfiles>
 		<file filename="CHANGELOG" md5="984a0908983598e5f59710c7e3651f5a"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
-		<file filename="assets/scss/_content.scss" md5="a6acb87f98906dc6b1fe34d2faafb280"/>
-		<file filename="assets/scss/_controls.scss" md5="b885ad473325601bf7b48d7ce007dd10"/>
+		<file filename="assets/scss/_content.scss" md5="e6265d8e793f893d8ea50c361dfa008d"/>
+		<file filename="assets/scss/_controls.scss" md5="bd76b95f098ebf71b68de573c2ee31ed"/>
 		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
 		<file filename="assets/scss/_form_elements.scss" md5="fbeffbc3e985af3b98d1dc2f9726cf4a"/>
-		<file filename="assets/scss/_layout.scss" md5="905e9dc01c9500178c8c583c7235d88b"/>
-		<file filename="assets/scss/_listing_tables.scss" md5="4f01f08dd25ec56522f0a2ba1daddcb7"/>
+		<file filename="assets/scss/_layout.scss" md5="42c07a5ecf89d6bf6c0806435c615674"/>
+		<file filename="assets/scss/_listing_tables.scss" md5="80817e8ab700fa1dbe44d2517bb924f2"/>
 		<file filename="assets/scss/_messages.scss" md5="002d7e2910f33c36ff9bcccb9a49e2ed"/>
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
-		<file filename="assets/scss/_variables.scss" md5="924f51662336861c9dd3f499bcc95c55"/>
+		<file filename="assets/scss/_variables.scss" md5="9ce0aaa22a7a985d1b60de8e82f3b1cc"/>
+		<file filename="assets/scss/pages/_admin_health.scss" md5="8f5e2f2aab639df930a16c8804e123a5"/>
 		<file filename="assets/scss/pages/_theme.scss" md5="1039df69f0df35e4c7c9883a109ef103"/>
 		<file filename="assets/scss/pages/_updater.scss" md5="071f9f71dda94d07e8423f02e811e72b"/>
 		<file filename="assets/scss/pages/_user.scss" md5="bb3fdf298ed68cf238227e583a7cca6c"/>
 		<file filename="assets/scss/pages/_widgets.scss" md5="13db361c6afd511138cf054c9cafebab"/>
-		<file filename="assets/scss/print.scss" md5="f876370bc29eb45ce40d0d9cdccfe18d"/>
-		<file filename="assets/scss/styles.scss" md5="6186d5ba74b5aa3b2ec0b99709efebe9"/>
+		<file filename="assets/scss/print.scss" md5="d1d80005e0cff66c29a89e531ad2b56a"/>
+		<file filename="assets/scss/styles.scss" md5="dfdf7bccc347ef946b24b38479281711"/>
+		<file filename="assets/scss/tinymce/content.scss" md5="e9344c1b36962c17c7ce839307df5cc4"/>
 		<file filename="assets/scss/vendor/_normalize.scss" md5="7caceed677229c6cc84aa3f4754ff3a4"/>
-		<file filename="assets/scss/vendor/bitters/_base.scss" md5="563284be5f71a4f841237d8fc09b3957"/>
-		<file filename="assets/scss/vendor/bitters/_buttons.scss" md5="a699743c04866fcf0d71cfd2acf3e2de"/>
-		<file filename="assets/scss/vendor/bitters/_forms.scss" md5="c132547f66e4beb443d96063c91ae37f"/>
-		<file filename="assets/scss/vendor/bitters/_grid-settings.scss" md5="b2fc883699314b823458b5ea92d8bc33"/>
-		<file filename="assets/scss/vendor/bitters/_lists.scss" md5="6eaab410bcb19243d18a9b5063f367f5"/>
-		<file filename="assets/scss/vendor/bitters/_tables.scss" md5="cb3c7bac724da0ec973201b75d8866c7"/>
-		<file filename="assets/scss/vendor/bitters/_typography.scss" md5="a1213cb1ffa3efcc313cabe0208cc00b"/>
-		<file filename="assets/scss/vendor/bitters/_variables.scss" md5="9019d9060f46d29e1d50763cf17f0f57"/>
-		<file filename="assets/scss/vendor/bitters/extends/_button.scss" md5="3a318bfacf2e3b1465b4202d8958187c"/>
-		<file filename="assets/scss/vendor/bitters/extends/_clearfix.scss" md5="947d5bcc17f37c8335fd77c7c81d3c39"/>
-		<file filename="assets/scss/vendor/bitters/extends/_hide-text.scss" md5="2ed482c4524a0492a7e728469baf5286"/>
-		<file filename="assets/scss/vendor/bourbon/_bourbon-deprecated-upcoming.scss" md5="1232ed1bd5ea801bc7bc3c0b60c73aec"/>
-		<file filename="assets/scss/vendor/bourbon/_bourbon.scss" md5="edf7d07be7ec4dcecd6580927aeea72d"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_button.scss" md5="ff7b1f9dc205b3cef0f5a8dad2af52a9"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_clearfix.scss" md5="0da01a56462807d2628530556e0e7c76"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_directional-values.scss" md5="2f5ad412c7d3ee343790a9a67178385a"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_ellipsis.scss" md5="9ad2c8f7ca715ad36dcf825b864e4dda"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_font-family.scss" md5="07ff627848a6862b4a95e19e2c783283"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_hide-text.scss" md5="29bcfb7d95e49d76a08c0a87c6d8cae5"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_html5-input-types.scss" md5="048744a9ea771df7c781f89c94b123a6"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_position.scss" md5="af45a0272e2f78f6b5f152026e88c2e9"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_prefixer.scss" md5="a413205d04665888a1e7586e821f3c1b"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_retina-image.scss" md5="6582394779684e22e5c7fea8342136ec"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_size.scss" md5="95888df85645bab27db66b4be611c79d"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_timing-functions.scss" md5="cce5583ad9adfa72d147681a45f0a0f3"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_triangle.scss" md5="3593e83843a8460c6dfef58d6ce98a17"/>
-		<file filename="assets/scss/vendor/bourbon/addons/_word-wrap.scss" md5="c79b8b2344b0e8f23431c3ed52e70a2d"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_animation.scss" md5="4d3d5364521d737d0998d92ce5178df8"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_appearance.scss" md5="6c436dc81b892aecec061649ad74d71e"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_backface-visibility.scss" md5="7759cec69b20500438e6afbbb8c81a02"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_background-image.scss" md5="fc0c968102173bf343eda7140d65b2ff"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_background.scss" md5="9bd21e818fb612fef14180ecbc25acb8"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_border-image.scss" md5="938056a2097ae322ea00e7f893e0ae04"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_border-radius.scss" md5="373a4d781651d8f70d3a881c2a73e847"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_box-sizing.scss" md5="1d693a6a2827e8f5cd149031832e5599"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_calc.scss" md5="fb95ce1dcd297370874dbabadbae5028"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_columns.scss" md5="e2940a3267c9d75552907a477ce090e8"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_filter.scss" md5="16e358ff42e362d07da723c62ee31484"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_flex-box.scss" md5="a5dd5b10dffa7f1ddda378b9e742fbae"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_font-face.scss" md5="995b120c7fbdc698149b8a0c4b93b7fa"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_font-feature-settings.scss" md5="91e2bced8d742cf1a61442103ce348ed"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_hidpi-media-query.scss" md5="5fbe0b8110e24dbf2b7d4720e5ad01aa"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_hyphens.scss" md5="a16eee1b9701f0bbb69600960f34d00f"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_image-rendering.scss" md5="863218e471076c6ce38a1509d1fb900d"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_keyframes.scss" md5="dc3ecbf496646e5b271fc63f11b389a8"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_linear-gradient.scss" md5="3ed75658f56b71bd13018d86faa7eb1d"/>
+		<file filename="assets/scss/vendor/bitters/_base.scss" md5="7166d9a919b6658b127e59de676742fc"/>
+		<file filename="assets/scss/vendor/bitters/_buttons.scss" md5="077d78fc15392f4eb9254874b9182e2b"/>
+		<file filename="assets/scss/vendor/bitters/_forms.scss" md5="a06daf9497b0098a4cbd8f01ac7ca854"/>
+		<file filename="assets/scss/vendor/bitters/_grid-settings.scss" md5="51dbb58d30497d6f64ec1f60ae98ea16"/>
+		<file filename="assets/scss/vendor/bitters/_lists.scss" md5="7a3b9009ddd0f0918c022365e8f1ee04"/>
+		<file filename="assets/scss/vendor/bitters/_tables.scss" md5="cafb19664e2f77f19210eb2e3e784af7"/>
+		<file filename="assets/scss/vendor/bitters/_typography.scss" md5="2049ad725c9935cbeb82308d9347ee36"/>
+		<file filename="assets/scss/vendor/bitters/_variables.scss" md5="a53af5c9a9769989294a8cdad19390f5"/>
+		<file filename="assets/scss/vendor/bourbon/_bourbon-deprecated-upcoming.scss" md5="4b9dca0323049fa7ae17445c761e9271"/>
+		<file filename="assets/scss/vendor/bourbon/_bourbon.scss" md5="ba5c920a40274bda46707cf0049dcdb0"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_border-color.scss" md5="8818721adc54116481bed9796cde7065"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_border-radius.scss" md5="fbabb4c0961590a98e60120ec1b52b29"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_border-style.scss" md5="4aa1d2fde3478aba86ea53672ec2834a"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_border-width.scss" md5="e0b5f4df87ec0972b663d0725f069457"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_buttons.scss" md5="5544b80f657d270d85f3af0b06db3dca"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_clearfix.scss" md5="be71d3d65015d1074542b0d804654c8c"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_ellipsis.scss" md5="7bbdda101a8becd7ac455fc44f20503c"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_font-stacks.scss" md5="e7bd12977efafa0a92f1750bef37478d"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_hide-text.scss" md5="4990bfe4f457a8077eaf82080129cf25"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_margin.scss" md5="816ca70f6db60c7195fd098aec03400d"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_padding.scss" md5="ccf5ee834100e83105923d701f10d6bf"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_position.scss" md5="1e8139909d92eff64043fc175fef732b"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_prefixer.scss" md5="c5ae2cf35d2a0fefe352f4a283fb9eba"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_retina-image.scss" md5="89c85a8e0ca5b1f215f33079a9c3dfcb"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_size.scss" md5="2c53fd5a2b9f2fa7d33d083e4741ba47"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_text-inputs.scss" md5="9373f7236cc2186e9700ac9a1bc44f98"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_timing-functions.scss" md5="99302f14d64c8c13c37a5d1f5ab7752e"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_triangle.scss" md5="152a8637402a8d123c3898ce5efad2d5"/>
+		<file filename="assets/scss/vendor/bourbon/addons/_word-wrap.scss" md5="7d9cdb16ab56dafdb8a3f4b3996595c6"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_animation.scss" md5="53043a76c4325eab356e00b15129d224"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_appearance.scss" md5="4bd7e7245e566cb88ad4f5116e97851b"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_backface-visibility.scss" md5="5a9099a3744d85f2e120378b804c304b"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_background-image.scss" md5="371db445fa082d6bb782751cc29a0f86"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_background.scss" md5="f0db5d3daac617c57fde6b917641636e"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_border-image.scss" md5="7a80e194df5c58c81db1f4e0cda654fe"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_calc.scss" md5="a996941b4a2948ca7d42defcaff7b10c"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_columns.scss" md5="bdd7cc471e0e47df64846a9bcd33344d"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_filter.scss" md5="f06cbecf1fa11b861f6ec4ae8e517605"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_flex-box.scss" md5="bd1c005f6423e6c7ec5b0d4d16dcddd8"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_font-face.scss" md5="73948f59a21a4aa5e05c830febd47395"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_font-feature-settings.scss" md5="f8ef70e8609a3d1ad70788cacc6a7810"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_hidpi-media-query.scss" md5="951bd63da1141823218c4d67e39e6022"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_hyphens.scss" md5="194fc791edeb430f7e01e8aa21cdf411"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_image-rendering.scss" md5="67d7e689fc6d5df160740101ee647a2d"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_keyframes.scss" md5="79812123e6f7122a382f9f592f0c7cf9"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_linear-gradient.scss" md5="b4b1a793e164135ab9fde910d541802a"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_perspective.scss" md5="793baf79388c99d5a1ba92ba6e1d026f"/>
 		<file filename="assets/scss/vendor/bourbon/css3/_placeholder.scss" md5="961f5d7df43b4323fdf47635634a5c83"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_radial-gradient.scss" md5="7bd48370bfbfd57b543251c912f2f3e0"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_selection.scss" md5="b1f1948072b7de497427b115c55c649f"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_transform.scss" md5="70afecfd28f823fa6bc13fb43eb35a4b"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_transition.scss" md5="660c835cf41f095408f11a9f5c3f151f"/>
-		<file filename="assets/scss/vendor/bourbon/css3/_user-select.scss" md5="fcf794c47fa8279503bf60b68715bb47"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_assign.scss" md5="9de805eb0dfc1ca8972c733c6403d0ce"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_color-lightness.scss" md5="11da9622d359b34a7250cf9cc2f65478"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_flex-grid.scss" md5="2803056bf58562ee5fded423dcb9f527"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_golden-ratio.scss" md5="fcf9ed49bbbe1c3d2ecdd9a688e09fe2"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_grid-width.scss" md5="f22bf5eee2d939854da12ece0ac5bbaf"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_modular-scale.scss" md5="eb8376cb932de12d6f768700439b3b10"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_px-to-em.scss" md5="00dd169ade4de45df164a73ff88b45ad"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_px-to-rem.scss" md5="faaf612eee4688c70074e70d04f24f46"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_strip-units.scss" md5="230b3c2cdceeccd2b358eebae3ef064e"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_tint-shade.scss" md5="b5c422224be3d36942b3a92d8c2ec89e"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_transition-property-name.scss" md5="8a88f39d99dc5747e4ae991d3f4e69e4"/>
-		<file filename="assets/scss/vendor/bourbon/functions/_unpack.scss" md5="309ad420d2b039eee2ec10260c16f742"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_convert-units.scss" md5="86729c86214a69441448b26517670982"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_radial-gradient.scss" md5="084855373df79ba2b195e93aacc18f49"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_selection.scss" md5="5975bf51fcbbe99cf4be9441f3138a07"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_text-decoration.scss" md5="5c6623983dfd9e95501341cc78f13b18"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_transform.scss" md5="7360676c7c4d4a5bbb0cb8a69e65db87"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_transition.scss" md5="781af044ba6410d6d5cc7401a7cf0003"/>
+		<file filename="assets/scss/vendor/bourbon/css3/_user-select.scss" md5="ca20bb9a7efb856ee2b1362992af3131"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_assign-inputs.scss" md5="c6ef363e9f7bace8f1a422c3c6b54809"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_contains-falsy.scss" md5="8f13771575914485397aede2fdddbac9"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_contains.scss" md5="c9627db0265d6e8190be942efc009257"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_is-length.scss" md5="f8c0d06969621e469b5d65bfba0b3af1"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_is-light.scss" md5="3bb477ed18f6d46fec0cbafaffbc84bf"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_is-number.scss" md5="a16a1ff54885e15d4faccc231cce70a4"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_is-size.scss" md5="108e34f902ad3e604c0ececd8aa6c89d"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_modular-scale.scss" md5="275c09d91b4274e7396beeba0e36b0e5"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_px-to-em.scss" md5="058395101877ddc0701d430fdeaec1f8"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_px-to-rem.scss" md5="8b02753d3fc19dac4a17d7c80e8eba7e"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_shade.scss" md5="2c0d7acf53dfe473c5c69f116cd7b695"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_strip-units.scss" md5="49b845d9b6afb16a73c0073156181fb7"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_tint.scss" md5="80c2b571243318aab0710b44ef4536c1"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_transition-property-name.scss" md5="ad0238450a61a7c3be6a09cb4c9bfcb2"/>
+		<file filename="assets/scss/vendor/bourbon/functions/_unpack.scss" md5="dad9d6fe9d8c8feb82af4b089c992fde"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_convert-units.scss" md5="4f3290d45c5da92a6d57da76409a9bcd"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_directional-values.scss" md5="ca88ddb9274db2ed217b59bfaa7765a4"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_font-source-declaration.scss" md5="26ba76f409182f02561af660ded0a4de"/>
 		<file filename="assets/scss/vendor/bourbon/helpers/_gradient-positions-parser.scss" md5="fd4157198cf4848a2ec892dd0a4b6343"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_is-num.scss" md5="1fa346e230af3977103d7d787fe7eebe"/>
 		<file filename="assets/scss/vendor/bourbon/helpers/_linear-angle-parser.scss" md5="520ed0742bb2eb9cf21515ecadca7fda"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_linear-gradient-parser.scss" md5="8f3709be826b6f6e1a8c7093507cf4f9"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_linear-positions-parser.scss" md5="8b2a16ec9d8156a06c0e6ca6b9824bcc"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_linear-side-corner-parser.scss" md5="e3af6af431b255e3f8dd0f337bf576b9"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_radial-arg-parser.scss" md5="a5497a6a006c4f2cd2b3bd61eacb964f"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_radial-gradient-parser.scss" md5="6fd34f4b02a1181d3fef21cbeacc6d8f"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_radial-positions-parser.scss" md5="8fe35e46c19a0e3f05851e77635aa385"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-gradient-parser.scss" md5="5090e60f9810ee3687d15ccb2cf0ad8f"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-positions-parser.scss" md5="59773092551063fb19ef3fd913fcbb7c"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_linear-side-corner-parser.scss" md5="512e2a0445e53313f1b4ed506e96bf96"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_radial-arg-parser.scss" md5="73c6e4781b79273f0e9ff040cd322a69"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_radial-gradient-parser.scss" md5="202da72f11f8a9073907e4d090ef4dbe"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_radial-positions-parser.scss" md5="74612f5cbc0dca7eb069ee3554faffc1"/>
 		<file filename="assets/scss/vendor/bourbon/helpers/_render-gradients.scss" md5="d2982aa29f132f4e4ee76153c6011479"/>
 		<file filename="assets/scss/vendor/bourbon/helpers/_shape-size-stripper.scss" md5="a0e10c7137e2127c985293a3802fafb6"/>
-		<file filename="assets/scss/vendor/bourbon/helpers/_str-to-num.scss" md5="7b72e74372c171df1ea45e63623451bb"/>
-		<file filename="assets/scss/vendor/bourbon/settings/_asset-pipeline.scss" md5="986eab922e7a47c91ead3a37d1f74fc0"/>
-		<file filename="assets/scss/vendor/bourbon/settings/_prefixer.scss" md5="520c130917995eb37187c6a81f32ce1b"/>
+		<file filename="assets/scss/vendor/bourbon/helpers/_str-to-num.scss" md5="9b33e3a2d8ae5a2ef2609cecfba534ca"/>
+		<file filename="assets/scss/vendor/bourbon/settings/_asset-pipeline.scss" md5="208d190104512db8012cef417edfc7a8"/>
+		<file filename="assets/scss/vendor/bourbon/settings/_prefixer.scss" md5="b01501efb3cf2fa2357d76f854118648"/>
 		<file filename="assets/scss/vendor/bourbon/settings/_px-to-em.scss" md5="af526a5742a9ecc661aac5779748523c"/>
 		<file filename="assets/scss/vendor/neat/_neat-helpers.scss" md5="a6a91d52582ef94e69d76b64055c3419"/>
-		<file filename="assets/scss/vendor/neat/_neat.scss" md5="ed50e623880dd7b6e0d4f4392e5228c7"/>
-		<file filename="assets/scss/vendor/neat/functions/_new-breakpoint.scss" md5="5f98f1349a6875e5fab3b8507d53e694"/>
-		<file filename="assets/scss/vendor/neat/functions/_private.scss" md5="a845c347f077eeee25cc1cd0fc771e00"/>
-		<file filename="assets/scss/vendor/neat/grid/_box-sizing.scss" md5="de73264d920844301a8317da4c204b36"/>
-		<file filename="assets/scss/vendor/neat/grid/_direction-context.scss" md5="132e00e6c939e19fc070912bcead9842"/>
-		<file filename="assets/scss/vendor/neat/grid/_display-context.scss" md5="b682b0db99892fc8c1830d41a8e46409"/>
-		<file filename="assets/scss/vendor/neat/grid/_fill-parent.scss" md5="fc6cb276729e7bfb9db748959f0b85ae"/>
-		<file filename="assets/scss/vendor/neat/grid/_media.scss" md5="fffda6fc6a4ffb2fb4be10612c573bcd"/>
-		<file filename="assets/scss/vendor/neat/grid/_omega.scss" md5="2360c54cf708f82fc0bf08d27efbbee6"/>
-		<file filename="assets/scss/vendor/neat/grid/_outer-container.scss" md5="1f7821f2fda8958da5c7b122be11b7c1"/>
-		<file filename="assets/scss/vendor/neat/grid/_pad.scss" md5="f3940f1464d97e728c520ac5b66e3987"/>
+		<file filename="assets/scss/vendor/neat/_neat.scss" md5="4d7a91130c78f7ce1ec384e2b76a0019"/>
+		<file filename="assets/scss/vendor/neat/functions/_new-breakpoint.scss" md5="57ea4980a29b8f443e4c1825fc066d55"/>
+		<file filename="assets/scss/vendor/neat/functions/_private.scss" md5="5418134bff0f870406ecee5ce919953e"/>
+		<file filename="assets/scss/vendor/neat/grid/_box-sizing.scss" md5="d75ea813884735f0d49e874e877b4d64"/>
+		<file filename="assets/scss/vendor/neat/grid/_direction-context.scss" md5="604eaf3ec535a361d2893bd671377bc3"/>
+		<file filename="assets/scss/vendor/neat/grid/_display-context.scss" md5="546d0b3037c287067cc2292d6b47ff41"/>
+		<file filename="assets/scss/vendor/neat/grid/_fill-parent.scss" md5="2655a33398911fa3f2664606ded68e8a"/>
+		<file filename="assets/scss/vendor/neat/grid/_media.scss" md5="4e50c0a674f4a4bd3cdd7cad3ef0d694"/>
+		<file filename="assets/scss/vendor/neat/grid/_omega.scss" md5="da8d66e3429404e597c17200f4eeae4a"/>
+		<file filename="assets/scss/vendor/neat/grid/_outer-container.scss" md5="4a5c6834ad7e01e01240a94ff3d9d3dd"/>
+		<file filename="assets/scss/vendor/neat/grid/_pad.scss" md5="a8575e97bdefc10c7f6c01c7ab21aec3"/>
 		<file filename="assets/scss/vendor/neat/grid/_private.scss" md5="d247111e6c029f89474ad98adc0f2a59"/>
-		<file filename="assets/scss/vendor/neat/grid/_row.scss" md5="fa46ee9b2131d593564f455376aed8c2"/>
-		<file filename="assets/scss/vendor/neat/grid/_shift.scss" md5="fb6f4056cc4ca492a6c322fb3663bb6e"/>
-		<file filename="assets/scss/vendor/neat/grid/_span-columns.scss" md5="538b49299f060a6626547d3fd09040c5"/>
-		<file filename="assets/scss/vendor/neat/grid/_to-deprecate.scss" md5="108072fe24c1be06f84a55a9a01a0425"/>
-		<file filename="assets/scss/vendor/neat/grid/_visual-grid.scss" md5="032022335451585769d465b59f1df5ac"/>
-		<file filename="assets/scss/vendor/neat/settings/_disable-warnings.scss" md5="9b0c3c10625b66595cb87d72e26d69e6"/>
-		<file filename="assets/scss/vendor/neat/settings/_grid.scss" md5="ed4a618a431e9ebfacdf6b892df37c20"/>
-		<file filename="assets/scss/vendor/neat/settings/_visual-grid.scss" md5="1092956edf19213f321958c061bf7517"/>
+		<file filename="assets/scss/vendor/neat/grid/_row.scss" md5="b55a545886675d7e6e94aada4dcb3d06"/>
+		<file filename="assets/scss/vendor/neat/grid/_shift.scss" md5="30962ded733843c99ea4b4cfa9339f3d"/>
+		<file filename="assets/scss/vendor/neat/grid/_span-columns.scss" md5="4b686cf149c7c6fcd5aa4af8c6c31bc4"/>
+		<file filename="assets/scss/vendor/neat/grid/_to-deprecate.scss" md5="cdb5924b3d893af43b5b898545688dde"/>
+		<file filename="assets/scss/vendor/neat/grid/_visual-grid.scss" md5="59d4370cccf83903c634b2fe253a2191"/>
+		<file filename="assets/scss/vendor/neat/settings/_disable-warnings.scss" md5="125d1acf51448751336b9d3bbe6a1ad0"/>
+		<file filename="assets/scss/vendor/neat/settings/_grid.scss" md5="16c14510708df328df1f9d9fb25e43f6"/>
+		<file filename="assets/scss/vendor/neat/settings/_visual-grid.scss" md5="1f76f006a7e91f0cd586556a4fad705b"/>
 		<file filename="dev/update-vendor.sh" md5="f9dd627503dded48c401d049fb383852"/>
 		<file filename="dev/vendor-patches/20141101-bitters.diff" md5="279d56dbbe7496341de17aed922b942a"/>
 		<file filename="dev/vendor-patches/20141101_buttons_use_default_colors.diff" md5="f034c099c68df89b68f99f954957df06"/>
+		<file filename="i18n/en.ini" md5="534a74cfed6d80143fd5ae07071f1624"/>
 		<file filename="includes/site_schema_information.tpl" md5="770ef16a169dec239a03dd56f6ba1267"/>
 		<file filename="includes/site_social_links.tpl" md5="c907bdb3584069ed7da29be6d7b64489"/>
 		<file filename="screenshots/screen1.png" md5="4f252b897e118f4c320245142b5381e2"/>

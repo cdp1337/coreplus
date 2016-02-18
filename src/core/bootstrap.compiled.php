@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 02 Feb 2016 08:11:34 -0500
+ * @compiled Thu, 18 Feb 2016 10:48:09 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6019,6 +6019,15 @@ $ref                          = new ReflectionClass($classname);
 $this->_authdriver[ $driver ] = $ref->newInstance($this);
 }
 return $this->_authdriver[ $driver ];
+}
+public function isAuthDriverEnabled($driver){
+try{
+$this->getAuthDriver($driver);
+return true;
+}
+catch(Exception $e){
+return false;
+}
 }
 public function getEnabledAuthDrivers() {
 $enabled = explode('|', $this->get('backend'));
@@ -13666,11 +13675,13 @@ try{
 if(!\Core::GetComponent()){
 return;
 }
+\HookHandler::DispatchHook('/core/exception_handler', $e);
 $log = \SystemLogModel::Factory();
 $log->setFromArray([
 'type'    => $type,
 'code'    => $code,
-'message' => $details . $errstr
+'message' => $errstr,
+'details' => $details,
 ]);
 $log->save();
 }
@@ -13763,8 +13774,9 @@ $details = '';
 }
 try{
 if(!\Core::GetComponent()){
-throw new \Exception('Error retrieved before Core was loaded!');
+return;
 }
+\HookHandler::DispatchHook('/core/error_handler', $code, $errstr);
 $log = \SystemLogModel::Factory();
 $log->setFromArray([
 'type'    => $type,
@@ -13866,75 +13878,120 @@ echo '</table>';
 echo '</div>';
 }
 function print_error_as_text($class, $code, $errstr){
+echo get_error_as_text($code, $errstr);
+$stderr = fopen('php://stderr', 'w');
+fwrite($stderr, '[' . $code . '] ' . $errstr . "\n");
+fclose($stderr);
+}
+function get_backtrace(){
+$back = debug_backtrace();
+$bfound = false;
+foreach($back as $k => $dat){
+if(isset($dat['file']) && $dat['file'] == ROOT_PDIR . 'core/libs/core/errormanagement/functions.php'){
+$bfound = $k;
+}
+if(isset($dat['function']) && $dat['function'] == 'Core\ErrorManagement\error_handler'){
+$bfound = $k;
+}
+}
+if($bfound !== false){
+$back = array_splice($back, $bfound + 1);
+}
+return $back;
+}
+function standardize_backtrace($array){
+$out = [];
+foreach($array as $dat){
+$line = [
+'file' => null,
+'line' => null,
+'call' => null,
+'args' => [],
+];
+if(isset($dat['file']) && strpos($dat['file'], ROOT_PDIR) === 0){
+$line['file'] = '/' . substr($dat['file'], strlen(ROOT_PDIR));
+}
+elseif(isset($dat['file'])){
+$line['file'] = $dat['file'];
+}
+else{
+$line['file'] = 'unknown';
+}
+$line['line'] = isset($dat['line']) ? $dat['line'] : 'N/A';
+if(isset($dat['class'])){
+$line['call'] = $dat['class'] . $dat['type'] . $dat['function'];
+}
+elseif(isset($dat['function'])){
+$line['call'] = $dat['function'];
+}
+else{
+$line['call'] = 'unknown';
+}
+if(isset($dat['args'])){
+foreach($dat['args'] as $k => $a){
+if(is_string($a)){
+$line['args'][] = "'" . $a . "'";
+}
+elseif($a === true){
+$line['args'][] = 'TRUE';
+}
+elseif($a === false){
+$line['args'][] = 'FALSE';
+}
+elseif($a === null){
+$line['args'][] = 'NULL';
+}
+elseif(is_array($a)){
+$line['args'][] = 'Array {' . sizeof($a) . '}';
+}
+elseif(is_object($a)){
+$line['args'][] = 'Object {' . get_class($a) . '}';
+}
+else{
+$line['args'][] = $a;
+}
+}
+}
+$out[] = $line;
+}
+return $out;
+}
+function get_error_as_text($code, $errstr){
 if($errstr instanceof \Exception){
 $exception = $errstr;
 $errstr = $exception->getMessage();
 $back = $exception->getTrace();
 }
 else{
-$back = debug_backtrace();
+$back = get_backtrace();
 }
-echo '[' . $code . ']' . $errstr . "\n";
-$stderr = fopen('php://stderr', 'w');
-fwrite($stderr, '[' . $code . ']' . $errstr . "\n");
-fclose($stderr);
+$back = standardize_backtrace($back);
+$out = '';
+$out .= '### [' . $code . '] ' . $errstr . "\n\n";
 $lines = [];
 $maxlength1 = $maxlength2 = 0;
 foreach($back as $entry){
-if(
-!isset($entry['file']) &&
-!isset($entry['line']) &&
-isset($entry['function']) &&
-$entry['function'] == 'Core\ErrorManagement\error_handler'
-){
-continue;
-}
-if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\print_error_as_text'){
-continue;
-}
-if(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\check_for_fatal'){
-continue;
-}
-$file = (isset($entry['file']) ? $entry['file'] : 'unknown');
-if(strpos($file, ROOT_PDIR) === 0){
-$file = '/' . substr($file, strlen(ROOT_PDIR));
-}
-$line = isset($entry['line']) ? $entry['line'] : 'N/A';
-if(isset($entry['class'])){
-$linecode = $entry['class'] . $entry['type'] . $entry['function'] . '()';
-}
-elseif(isset($entry['function']) && $entry['function'] == 'Core\ErrorManagement\error_handler'){
-$linecode = '****';
-}
-elseif(isset($entry['function'])){
-$linecode = $entry['function'] . '()';
-}
-else{
-$linecode = 'Unknown!?!';
-}
+$linecode = $entry['call'] . '(' . implode(', ', $entry['args']) . ')';
+$file = $entry['file'] . ':' . $entry['line'];
 $lines[] = [
 'code' => $linecode,
 'file' => $file,
-'line' => $line,
 ];
 $maxlength1 = max($maxlength1, strlen($linecode));
-$maxlength2 = max($maxlength2, strlen($file) + 6 + strlen($line));
+$maxlength2 = max($maxlength2, strlen($file));
 }
 $borderheader = '+' . str_repeat('-', $maxlength1 + $maxlength2) . '+';
-$borderinner = '+' . str_repeat('-', $maxlength1+2) . '+' . str_repeat('-', $maxlength2-3) . '+';
-echo $borderheader . "\n";
-echo '| ' . str_pad('STACK TRACE', $maxlength1 + $maxlength2-1, ' ', STR_PAD_BOTH) . '|' . "\n";
-echo $borderheader . "\n";
+$borderinner = str_repeat('-', $maxlength1+1) . '+' . str_repeat('-', $maxlength2+1);
 $padding1 = max(0, $maxlength1-15);
-$padding2 = max(0, $maxlength2-29);
-echo '| Function/Method' . str_repeat(' ', $padding1) . ' | File Location:Line Number' . str_repeat(' ', $padding2) . '|' . "\n";
-echo $borderinner . "\n";
+$padding2 = max(0, $maxlength2-13);
+$out .= 'Function/Method' . str_repeat(' ', $padding1) . ' | File Location' . str_repeat(' ', $padding2) . "\n";
+$out .= $borderinner . "\n";
 foreach($lines as $entry){
 $padding1 = max(0, $maxlength1-strlen($entry['code']));
-$padding2 = max(0, $maxlength2-strlen($entry['file'] . ':' . $entry['line'] . '    '));
-echo '| ' . $entry['code'] . str_repeat(' ', $padding1) . ' | ' . $entry['file'] . ':' . $entry['line'] . str_repeat(' ', $padding2) . '|' . "\n";
+$padding2 = max(0, $maxlength2-strlen($entry['file']));
+$out .= $entry['code'] . str_repeat(' ', $padding1) . ' | ' . $entry['file'] . str_repeat(' ', $padding2) . "\n";
 }
-echo $borderinner . "\n";
+return $out;
 }
 } // ENDING NAMESPACE Core\ErrorManagement
 
@@ -19007,6 +19064,7 @@ public $settings = [];
 public $_instance = null;
 public $_params = null;
 public $_installable = null;
+public $controls;
 public function getView() {
 if ($this->_view === null) {
 $this->_view              = new View();
@@ -19026,6 +19084,43 @@ $this->_view->baseurl = $cls . '/' . $mth;
 }
 }
 return $this->_view;
+}
+public function addControl($title, $link = null, $class = 'edit') {
+if($title instanceof Model){
+$this->controls = ViewControls::DispatchModel($title);
+$this->controls->setProxyText('Widget Controls');
+return;
+}
+$control = new ViewControl();
+if(func_num_args() == 1 && is_array($title)){
+foreach($title as $k => $v){
+$control->set($k, $v);
+}
+}
+else{
+if(is_array($class)){
+foreach($class as $k => $v){
+$control->set($k, $v);
+}
+}
+else{
+$control->class = $class;
+}
+$control->title = $title;
+$control->link = \Core\resolve_link($link);
+}
+$this->controls->setProxyText('Widget Controls');
+$this->controls[] = $control;
+}
+public function addControls($controls){
+if($controls instanceof Model){
+$this->controls = ViewControls::DispatchModel($controls);
+$this->controls->setProxyText('Widget Controls');
+return;
+}
+foreach($controls as $c){
+$this->addControl($c);
+}
 }
 public function getRequest(){
 if($this->_request === null){
@@ -19681,9 +19776,7 @@ if(($el = $this->getElement($part)) !== false){
 $out = $el->render();
 }
 }
-if(!$this->referrer && isset($_SERVER['HTTP_REFERER'])){
-$this->referrer = $_SERVER['HTTP_REFERER'];
-}
+$this->referrer = \Core\page_request()->referrer;
 $this->originalurl = CUR_CALL;
 $this->persistent = false;
 if (($part === null || $part == 'foot') && $this->get('callsmethod')) {
@@ -20000,6 +20093,7 @@ public $parameters = array();
 public $ctype = View::CTYPE_HTML;
 public $ext = 'html';
 public $host;
+public $referrer;
 private $_pagemodel = null;
 private $_pageview = null;
 private $_cached = false;
@@ -20015,6 +20109,7 @@ $this->protocol    = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTO
 $this->ext         = $pagedat['extension'];
 $this->ctype       = $pagedat['ctype'];
 $this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
+$this->referrer    = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 $this->_resolveMethod();
 $this->_resolveAcceptHeader();
 $this->_resolveUAHeader();
@@ -20531,11 +20626,26 @@ public function getUserAgent(){
 return new \Core\UserAgent($this->useragent);
 }
 public function getReferrer(){
-if(isset($_SERVER['HTTP_REFERER'])){
-return $_SERVER['HTTP_REFERER'];
+return $this->referrer ? $this->referrer : ROOT_URL;
+}
+public function getPreferredLanguage(){
+if(!is_array($this->acceptLanguages)){
+return 'en'; // ???
+}
+$preferred = $this->acceptLanguages[0];
+if(($key = strpos($preferred, '_')) !== false){
+return substr($preferred, 0, $key);
 }
 else{
-return ROOT_URL;
+return $preferred;
+}
+}
+public function getPreferredLocale(){
+if(!is_array($this->acceptLanguages)){
+return 'en_US'; // ???
+}
+else{
+return $this->acceptLanguages[0];
 }
 }
 private function _resolveMethod() {
