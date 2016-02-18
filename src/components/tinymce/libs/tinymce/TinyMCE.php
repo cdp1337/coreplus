@@ -11,14 +11,38 @@
 namespace TinyMCE;
 
 abstract class TinyMCE {
+	/** @var array Container for custom plugins for TinyMCE defined by other libraries. */
+	public static $CustomPlugins = [];
+	
+	private static $_Queued = false;
+
+	/**
+	 * New method to queue TinyMCE to be loaded after the page has been rendered.
+	 * This is used to support custom plugins from other components that may not be present at the time of execution.
+	 */
+	public static function QueueInclude(){
+		self::$_Queued = true;
+		return true;
+	}
+	
+	public static function CheckInclude(){
+		if(self::$_Queued){
+			self::IncludeTinyMCE();
+		}
+		return true;
+	}
 
 	public static function IncludeTinyMCE(){
 		\ComponentHandler::LoadScriptLibrary('jquery');
 		/** @var \View $view */
 		$view = \Core\view();
-		/** @var UserModel $user */
+		/** @var \UserModel $user */
 		$user = \Core\user();
 
+		// I need to include both versions of TinyMCE so that
+		// 1) the tinymce object is visible in the global scope at the time of execution and
+		// 2) so I can target all inputs by their class name instead of the ID.
+		$view->addScript('js/tinymce/tinymce.min.js');
 		$view->addScript('js/tinymce/jquery.tinymce.min.js');
 		$view->addStylesheet('css/tinymce/overrides.css');
 
@@ -41,6 +65,49 @@ abstract class TinyMCE {
 		}
 		// And json the data.
 		$links = json_encode($links);
+		
+		// Create the list of plugins
+		// Start with standard and tack on any custom ones.
+		$plugins = [
+			'advlist',
+			'anchor',
+			'autolink',
+			'charmap',
+			'code',
+			'colorpicker',
+			'contextmenu',
+			'fullscreen',
+			'hr',
+			'image',
+			'imagetools',
+			'insertdatetime',
+			'link',
+			'lists',
+			'media',
+			'pagebreak',
+			'paste',
+			'preview',
+			'searchreplace',
+			'table',
+			'textcolor',
+			'visualblocks',
+			'visualchars',
+			'wordcount'
+		];
+		
+		$customIncludes = '';
+		foreach(self::$CustomPlugins as $name => $src){
+			// The "-" is required to inform TinyMCE not to load the plugin again.
+			// It'll be loaded manually via the .load() method as it has a custom URL.
+			$plugins[] = '-' . $name;
+			// Resolve this src to an absolute URL
+			$src = \Core\resolve_asset($src);
+			
+			$customIncludes .= 'tinymce.PluginManager.load("' . $name . '", "' . $src . '");';
+		}
+		
+		// And make them something that javascript can understand.
+		$plugins = json_encode($plugins);
 
 		$script = <<< EOD
 <script type="text/javascript">
@@ -51,20 +118,7 @@ abstract class TinyMCE {
 
 		// General options
 
-		plugins: [
-			"advlist anchor autolink",
-			"charmap code colorpicker contextmenu",
-			"fullscreen",
-			"hr",
-			"image imagetools insertdatetime",
-			"link lists",
-			"media",
-			"pagebreak paste preview",
-			"searchreplace",
-			"table textcolor",
-			"visualblocks visualchars",
-			"wordcount"
-	    ],
+		plugins: $plugins,
 	    toolbar: "undo redo | styleselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 
 		theme : "modern",
@@ -98,6 +152,7 @@ abstract class TinyMCE {
 	};
 
 	$(function(){
+		$customIncludes
 		$('textarea.tinymce').tinymce(Core.TinyMCEDefaults);
 	});
 </script>	
