@@ -694,6 +694,8 @@ function ImplodeKey($glue, &$array){
  * @return string
  */
 function random_hex($length = 1, $casesensitive = false){
+	
+	// @todo Bug #1757
 	$output = '';
 	if($casesensitive){
 		$chars = '0123456789ABCDEFabcdef';
