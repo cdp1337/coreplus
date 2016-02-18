@@ -67,7 +67,7 @@ use Core\Session;
  * </code>
  *
  * @package Core\Utilities\Profiler
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class DatamodelProfiler {
 	private $_name;

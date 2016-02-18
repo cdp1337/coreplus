@@ -2335,7 +2335,6 @@
 		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
 		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
 		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">

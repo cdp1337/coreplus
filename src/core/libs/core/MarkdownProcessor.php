@@ -3,7 +3,7 @@
  * File for class MarkdownProcessor definition in the Agency-Portal project
  *
  * @package   Core
- * @author    Charlie Powell <charlie@eval.bz>
+ * @author    Charlie Powell <charlie@evalagency.com>
  * @date      20150820.1027
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license   GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
@@ -52,7 +52,7 @@ use Michelf\MarkdownExtra;
  *
  *
  * @package Core
- * @author  Charlie Powell <charlie@eval.bz>
+ * @author  Charlie Powell <charlie@evalagency.com>
  *
  */
 class MarkdownProcessor extends MarkdownExtra {
