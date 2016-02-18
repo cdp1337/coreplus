@@ -16,6 +16,13 @@
 	margin: 0 1em;
 }
 
+/**
+ * The page controls that get floated to the right
+ */
+.page-controls-wrapper {
+	float: right;
+}
+
 .page-column-width-2 {
 	.page-column {
 		// 2-column layouts have two columns, (obviously).
@@ -47,8 +54,9 @@
 	}
 }
 
-.page-content {
+.page-content-and-columns-wrapper {
 	clear: both;
+	margin-top: 2em;
 }
 
 

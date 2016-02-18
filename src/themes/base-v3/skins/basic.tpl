@@ -23,6 +23,10 @@
 	<body class="base-v3-skin skin-basic {$body_classes}">
 		{widget baseurl="adminmenu/view"}
 
+		{**
+		 * Retrieve the contents of both headers first so I know the number of columns to display.
+		 * This is particularly useful for collapsing the space of an unused column without needing weird javascript.
+		 *}
 		{widgetarea name="Left Column" assign="left_col"}
 		{widgetarea name="Right Column" assign="right_col"}
 
@@ -83,45 +87,49 @@
 					{/if}
 
 					{if $controls->hasLinks()}
-						<menu id="page-controls" class="page-controls">
-							{$controls->fetch()}
-						</menu>
+						<div id="page-controls-wrapper" class="page-controls-wrapper">
+							<menu id="page-controls" class="page-controls">
+								{$controls->fetch()}
+							</menu>	
+						</div>
 					{/if}
 				</nav>
-
-				{if $left_col}
-					<!-- There are contents in the Left Column widget, render that aside! -->
-					<aside id="left-col" class="page-column">
-						{$left_col}
-					</aside>
-				{else}
-					<!-- The Left Column widget is empty, skipping rendering of aside#left-col. -->
-				{/if}
-
-				<section class="page-content">
-					{if !empty($messages)}
-						{foreach from=$messages item="m"}
-							<p class="message-{$m.mtype}">
-								{$m.mtext}
-							</p>
-						{/foreach}
+				
+				<div class="page-content-and-columns-wrapper">
+					{if $left_col}
+						<!-- There are contents in the Left Column widget, render that aside! -->
+						<aside id="left-col" class="page-column">
+							{$left_col}
+						</aside>
+					{else}
+						<!-- The Left Column widget is empty, skipping rendering of aside#left-col. -->
 					{/if}
-					
-					{widgetarea name="Above Body"}
-					
-					{$body}
-					
-					{widgetarea name="After Body"}
-				</section>
 
-				{if $right_col}
-					<!-- There are contents in the Right Column widget, render that aside! -->
-					<aside id="right-col" class="page-column">
-						{$right_col}
-					</aside>
-				{else}
-					<!-- The Right Column widget is empty, skipping rendering of aside#right-col. -->
-				{/if}
+					<section class="page-content">
+						{if !empty($messages)}
+							{foreach from=$messages item="m"}
+								<p class="message-{$m.mtype}">
+									{$m.mtext}
+								</p>
+							{/foreach}
+						{/if}
+
+						{widgetarea name="Above Body"}
+
+						{$body}
+
+						{widgetarea name="After Body"}
+					</section>
+
+					{if $right_col}
+						<!-- There are contents in the Right Column widget, render that aside! -->
+						<aside id="right-col" class="page-column">
+							{$right_col}
+						</aside>
+					{else}
+						<!-- The Right Column widget is empty, skipping rendering of aside#right-col. -->
+					{/if}
+				</div>
 			</div>
 
 			<footer class="page-footer">
