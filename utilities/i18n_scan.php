@@ -56,6 +56,12 @@ $lang = $arguments->getArgumentValue('lang');
 $component = $arguments->getArgumentValue('component');
 $theme = $arguments->getArgumentValue('theme');
 $core = $arguments->getArgumentValue('core');
+
+// Shortcut helper to allow the option "-c core" to be used.
+if($component == 'core'){
+	$component = null;
+	$core = true;
+}
 /*
 if(!$lang){
 	$arguments->printError('Please specify a language to compile');
@@ -214,7 +220,7 @@ if(!sizeof($matches)){
 }
 
 // Get a list of languages currently available on the system.
-$locales = \Core\i18n\I18NLoader::GetLocalesAvailable();
+$locales = \Core\i18n\I18NLoader::GetLocalesEnabled();
 $bases = [];
 foreach($locales as $lang => $dat){
 	$base = substr($lang, 0, strpos($lang, '_'));
