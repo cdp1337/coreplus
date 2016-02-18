@@ -80,6 +80,13 @@ class Widget_2_1 {
 	 */
 	public $_installable = null;
 
+	/**
+	 * The controls for ths widget
+	 *
+	 * @var ViewControls
+	 */
+	public $controls;
+
 
 	/**
 	 * Get the view for this controller.
@@ -110,6 +117,76 @@ class Widget_2_1 {
 		}
 
 		return $this->_view;
+	}
+
+	/**
+	 * Add a control into this widget
+	 *
+	 * Useful for embedding functions and administrative utilities inline without having to adjust the
+	 * application template.
+	 *
+	 * @param string|array|Model $title  The title to set for this control
+	 * @param string             $link   The link to set for this control
+	 * @param string|array       $class  The class name or array of attributes to set on this control
+	 *                            If this is an array, it should be an associative array for the advanced parameters
+	 */
+	public function addControl($title, $link = null, $class = 'edit') {
+
+		if($title instanceof Model){
+			// Allow a raw Model to be sent in as the control subject.
+			// This is a shortcut for Controllers much like the {controls} smarty function has.
+			$this->controls = ViewControls::DispatchModel($title);
+			$this->controls->setProxyText('Widget Controls');
+			return;
+		}
+
+		$control = new ViewControl();
+
+		// Completely associative-array based version!
+		if(func_num_args() == 1 && is_array($title)){
+			foreach($title as $k => $v){
+				$control->set($k, $v);
+			}
+		}
+		else{
+			// Advanced method, allow for associative arrays.
+			if(is_array($class)){
+				foreach($class as $k => $v){
+					$control->set($k, $v);
+				}
+			}
+			// Default method; just a string for the class name.
+			else{
+				$control->class = $class;
+			}
+
+			$control->title = $title;
+			$control->link = \Core\resolve_link($link);
+		}
+
+		$this->controls->setProxyText('Widget Controls');
+		$this->controls[] = $control;
+	}
+
+	/**
+	 * Add an array of controls at once, useful in conjunction with the model->getControlLinks method.
+	 *
+	 * If a Model is provided as the subject, that is used as the subject and all system hooks apply thereof.
+	 *
+	 * @param array|Model $controls
+	 */
+	public function addControls($controls){
+		if($controls instanceof Model){
+			// Allow a raw Model to be sent in as the control subject.
+			// This is a shortcut for Controllers much like the {controls} smarty function has.
+			$this->controls = ViewControls::DispatchModel($controls);
+			$this->controls->setProxyText('Widget Controls');
+			return;
+		}
+
+		foreach($controls as $c){
+			$this->addControl($c);
+		}
 	}
 
 	public function getRequest(){

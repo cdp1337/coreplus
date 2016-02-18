@@ -113,8 +113,12 @@ function smarty_function_widgetarea($params, $smarty) {
 	foreach ($widgets as $wi) {
 		/** @var $wi WidgetInstanceModel */
 		// User cannot access this widget? Don't display it...
-		if(!\Core\user()) continue;
-		if (!\Core\user()->checkAccess($wi->get('access'))) continue;
+		if(!\Core\user()){
+			continue;
+		}
+		if (!\Core\user()->checkAccess($wi->get('access'))){
+			continue;
+		}
 
 		if($installable){
 			$wi->set('installable', $installable);
@@ -122,7 +126,9 @@ function smarty_function_widgetarea($params, $smarty) {
 		$view = $wi->execute($parameters);
 
 		// Some widgets may return simply a blank string.  Those should just be ignored.
-		if ($view == '') continue;
+		if ($view == ''){
+			continue;
+		}
 
 		// If it's just a string, return that.
 		if (is_string($view)) {
@@ -138,6 +144,17 @@ function smarty_function_widgetarea($params, $smarty) {
 			$contents = 'Error displaying widget [' . $wi->get('baseurl') . '], returned error [' . $view->error . ']';
 		}
 		++$widgetcount;
+		
+		// Does this widget have controls attached to it?
+		$widget = $wi->getWidget();
+		if($widget->controls instanceof ViewControls && $widget->controls->hasLinks()){
+			$contents = '<div class="widget-controls-wrapper">' .
+				'<menu id="widget-controls-' . $wi->get('id') . '">' . 
+				$widget->controls->fetch() . 
+				'</menu>' . 
+				'</div>' .
+				$contents;
+		}
 
 		$body .= '<div class="widget">' . $contents . '</div>';
 	}
