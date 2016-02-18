@@ -22,126 +22,79 @@
 			</td>
 		{/if}
 		<td>
-			<div class="view">
-				{if $entry->getParent()}
-					{$entry->getParent()->get('title')} &raquo;<br/>
-				{/if}
-				{$entry.title}
-			</div>
-			<div class="edit">
-				{add_form_element form=$listing type="select" options=$page_opts value="`$entry.parenturl`" name="model[`$entry.baseurl`][parenturl]"}
-				{add_form_element form=$listing type="text" value="`$entry.title`" name="model[`$entry.baseurl`][title]"}
-			</div>
+			{if $entry->getParent()}
+				{$entry->getParent()->get('title')} &raquo;<br/>
+			{/if}
+			{$entry.title}
 		</td>
 		<td>
-			<div class="view">{$entry.rewriteurl}</div>
-			<div class="edit">{add_form_element form=$listing type="text" value="`$entry.rewriteurl`" name="model[`$entry.baseurl`][rewriteurl]"}</div>
+			{$entry.rewriteurl}
 		</td>
 		<td>
-			<div class="view">{$entry.pageviews}</div>
-			<div class="edit">&nbsp;</div>
+			{$entry.pageviews}
 		</td>
 		<td>
-			<div class="view">
-				{if $entry.indexable}
-					{$entry.popularity}
-				{else}
-					N/A
-				{/if}
-			</div>
-			<div class="edit">&nbsp;</div>
+			{if $entry.indexable}
+				{$entry.popularity}
+			{else}
+				N/A
+			{/if}
 		</td>
 		<td>
-			<div class="view">
-				{if $entry.expires == 0}
-					{t 'STRING_DISABLED'}
-				{elseif $entry.expires < 60}
-					{$entry.expires} secs
-				{elseif $entry.expires < 3600}
-					{$entry.expires/60} min
-				{else}
-					{$entry.expires/3600} hr
-				{/if}
-			</div>
-			<div class="edit">
-				{add_form_element form=$listing type="select" options=$expire_opts value="`$entry.expires`" name="model[`$entry.baseurl`][expires]"}
-			</div>
+			{if $entry.expires == 0}
+				{t 'STRING_DISABLED'}
+			{elseif $entry.expires < 60}
+				{$entry.expires} secs
+			{elseif $entry.expires < 3600}
+				{$entry.expires/60} min
+			{else}
+				{$entry.expires/3600} hr
+			{/if}
 		</td>
 		<td>
-			<div class="view">{date format="SD" $entry.created}</div>
-			<div class="edit">&nbsp;</div>
+			{date format="SD" $entry.created}
 		</td>
 		<td>
-			<div class="view">{date format="SD" $entry.updated}</div>
-			<div class="edit">&nbsp;</div>
+			{date format="SD" $entry.updated}
 		</td>
 		<td>
-			<div class="view">
-				{$entry->getPublishedStatus()}
-			</div>
-			<div class="edit">
-
-			</div>
+			{$entry->getPublishedStatus()}
 		</td>
 		<td>
-			<div class="view">
-				{if $entry.published}
-					{date format="SD" $entry.published}
-				{else}
-					{t 'STRING_NOT_PUBLISHED'}
-				{/if}
-			</div>
-			<div class="edit">
-
-			</div>
+			{if $entry.published}
+				{date format="SD" $entry.published}
+			{else}
+				{t 'STRING_NOT_PUBLISHED'}
+			{/if}
 		</td>
 		<td>
-			<div class="view">
-				{if $entry.published_expires}
-					{date format="SD" $entry.published_expires}
-				{else}
-					{t 'STRING_NO_EXPIRATION'}
-				{/if}
-			</div>
-			<div class="edit">
-
-			</div>
+			{if $entry.published_expires}
+				{date format="SD" $entry.published_expires}
+			{else}
+				{t 'STRING_NO_EXPIRATION'}
+			{/if}
 		</td>
 		<td>
-			<div class="view">
-				{$entry->getSEOTitle()}
-			</div>
-			<div class="edit">
-				{add_form_element form=$listing type="text" value="`$entry->getMetaValue('title')`" name="model[`$entry.baseurl`][meta][title]"}
-			</div>
+			{$entry->getSEOTitle()}
 		</td>
 		<td>
-			<div class="view">
-				{$entry->getTeaser()}
-			</div>
-			<div class="edit">
-				{add_form_element form=$listing type="textarea" value="`$entry->getMetaValue('description')`" name="model[`$entry.baseurl`][meta][description]"}
-			</div>
+			{$entry->getTeaser()}
 		</td>
 		<td>
-			<div class="view">
-				{if $entry.access == 'g:admin'}
-					Only Super Admins
-				{elseif $entry.access == '*'}
-					Anyone, (guests and users)
-				{elseif $entry.access == 'g:authenticated'}
-					Only Authenticated Users
-				{elseif $entry.access == '!g:authenticated'}
-					Only Anonymous Guests
-				{else}
-					{$entry.access}
-				{/if}
-			</div>
-			<div class="edit">&nbsp;</div>
+			{if $entry.access == 'g:admin'}
+				Only Super Admins
+			{elseif $entry.access == '*'}
+				Anyone, (guests and users)
+			{elseif $entry.access == 'g:authenticated'}
+				Only Authenticated Users
+			{elseif $entry.access == '!g:authenticated'}
+				Only Anonymous Guests
+			{else}
+				{$entry.access}
+			{/if}
 		</td>
 		<td>
-			<div class="view">{$entry.component}</div>
-			<div class="edit">&nbsp;</div>
+			{$entry.component}
 		</td>
 
 		<td>

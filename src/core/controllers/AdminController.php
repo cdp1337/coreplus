@@ -674,7 +674,7 @@ class AdminController extends Controller_2_1 {
 		$table->addColumn(t('STRING_COMPONENT'), 'component', false);
 
 		// This page will also feature a quick-edit feature.
-		$table->setEditFormCaller('AdminController::PagesSave');
+		//$table->setEditFormCaller('AdminController::PagesSave');
 
 		$table->loadFiltersFromRequest();
 
