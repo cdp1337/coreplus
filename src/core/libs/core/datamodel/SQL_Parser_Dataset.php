@@ -289,13 +289,13 @@ class SQL_Parser_Dataset extends SQL_Parser {
 
 		if(sizeof($valsets) > 1){
 			// This is a bulk insert instead!
-			$tree->_mode = Dataset::MODE_BULK_INSERT;
+			$tree->_mode = \Core\Datamodel\Dataset::MODE_BULK_INSERT;
 			$tree->_sets = $valsets;
 			return $tree;
 		}
 		else{
 			// Standard single insert.
-			$tree->_mode = Dataset::MODE_INSERT;
+			$tree->_mode = \Core\Datamodel\Dataset::MODE_INSERT;
 			$tree->_sets = $valsets[0];
 			return $tree;
 		}
