@@ -26,7 +26,7 @@ checkresult = function(result){
 
 	$btn.removeAttr('disabled').val('OK!');
 	Core.Reload();
-}
+};
 
 initialize_form = function(){
 	$container = $('#user-login');
