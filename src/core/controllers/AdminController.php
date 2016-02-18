@@ -997,8 +997,9 @@ class AdminController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$locales = Core\i18n\I18NLoader::GetLocalesAvailable();
+		/*$locales = Core\i18n\I18NLoader::GetLocalesAvailable();
 
+		// Languages will be the current languages/locales available on the system.
 		$languages = [];
 
 		foreach($locales as $lang => $dat){
@@ -1012,7 +1013,20 @@ class AdminController extends Controller_2_1 {
 			}
 
 			$languages[$lang] = t($dat['lang']) . (($dat['dialect']) ? ' (' . t($dat['dialect']) . ')' : '');
+		}*/
+		// I need to use GetLocalesAvailable because the higher level functions will only return what's currently enabled,
+		// which is the entire point of this page!
+		$locales = Core\i18n\I18NLoader::GetLocalesAvailable();
+		
+		// Make this full list a more flat list suitable for populating directly into the form element.
+		$all = [];
+		foreach($locales as $key => $dat){
+			$all[$key] = t($dat['lang']) . ' (' . t($dat['dialect']) . ')';
 		}
+		
+		$enabled = \ConfigHandler::Get('/core/language/languages_enabled');
+		// This is expected to be a pipe-seperated list of languages/locales enabled.
+		$enabled = array_map('trim', explode('|', $enabled));
 
 		// Did the user request a specific language?
 		$requested = $request->getParameter('lang');
@@ -1030,6 +1044,19 @@ class AdminController extends Controller_2_1 {
 
 		$form = new Form();
 		$form->set('callsmethod', 'AdminController::_i18nSaveHandler');
+		
+		$form->addElement(
+			'checkboxes', 
+			[
+				'name' => 'languages[]',
+				'title' => t('STRING_CONFIG_CORE_LANGUAGE_LANGUAGES_ENABLED'),
+				'description' => t('MESSAGE_CONFIG_CORE_LANGUAGE_LANGUAGES_ENABLED'),
+			    'options' => $all,
+			    'value' => $enabled,
+			]
+		);
+		
+		/*
 
 		$form->addElement('system', ['name' => 'lang', 'value' => $requested]);
 
@@ -1046,12 +1073,13 @@ class AdminController extends Controller_2_1 {
 				]
 			);
 		}
+		*/
 
 		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
 
 		$view->addBreadcrumb('t:STRING_ADMIN', '/admin');
-		$view->title = 't:STRING_I18N_TRANSLATIONS';
-		$view->assign('languages', $languages);
+		$view->title = 't:STRING_I18N_LANGUAGES';
+		//$view->assign('languages', $languages);
 		$view->assign('form', $form);
 		$view->assign('strings', $strings);
 		$view->assign('show_strings', $showStrings);
@@ -1387,6 +1415,22 @@ class AdminController extends Controller_2_1 {
 	}
 
 	public static function _i18nSaveHandler(Form $form) {
+		
+		// NEW IDEA!
+		// Instead of setting the override for keys, (possibly useful, just somewhere else)...
+		// Set the enabled languages for this site.
+		// This allows site administrators to NOT have every language under the sun appear if they're running SuSE.
+		$selected = $form->getElement('languages[]')->get('value');
+		
+		// Implode them into a single string.
+		$enabled = implode('|', $selected);
+		// Strip out any invalid character.
+		$enabled = preg_replace('/[^a-zA-Z_|]/', '', $enabled);
+		
+		// And save!
+		ConfigHandler::Set('/core/language/languages_enabled', $enabled);
+		return true;
+		
 		// Create a custom ini for just these options.
 		// This will allow the site admin to change a string without worrying about it getting overridden from an update.
 
