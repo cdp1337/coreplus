@@ -53,18 +53,38 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 
 	self.$tableheads.each(function(){
 		var $th = $(this),
-			sortkey = $th.data('sortkey');
-
-		if(sortkey == self.currentsort.key){
-			$th.append('<i class="sort-icon icon-sort-' + self.currentsort.dir + ' current"></i>');
-			$th.append('<i class="sort-icon icon-sort-' + self.currentsort.other + ' other"></i>');
+			sortkey = $th.data('sortkey'),
+			icons;
+		
+		icons = '<div class="sort-icons">';
+		
+		if(self.currentsort.key === sortkey){
+			// One of these is active!
+			icons += '<i title="Sort ASC" data-key="' + sortkey + '" data-dir="up" class="sort-icon icon-sort-up icon-sort-' + (self.currentsort.dir === 'up' ? 'current' : 'other') + '"></i>';
+			icons += '<i title="Sort DESC" data-key="' + sortkey + '" data-dir="down" class="sort-icon icon-sort-down icon-sort-' + (self.currentsort.dir === 'down' ? 'current' : 'other') + '"></i>';
 		}
 		else{
-			$th.append('<i class="sort-icon icon-sort other"></i>');
+			// Both of these are inactive.
+			icons += '<i title="Sort ASC" data-key="' + sortkey + '" data-dir="up" class="sort-icon icon-sort-up"></i>';
+			icons += '<i title="Sort DESC" data-key="' + sortkey + '" data-dir="down" class="sort-icon icon-sort-down"></i>';
 		}
+		
+		// Finish the div.
+		icons += '</div>';
+		
+		$th.append(icons);
+		
+		// These icons have click events!
+		$th.find('.sort-icon').click(function() {
+			var $this = $(this), newkey = $this.data('key'), newdir = $this.data('dir'),
+				req = 'sortkey=' + newkey + '&sortdir=' + newdir;
+
+			window.location.search = '?' + req;
+			return false;
+		});
 	});
 
-	self.$tableheads.click(function(){
+	/*self.$tableheads.click(function(){
 		var $th = $(this), newkey, newdir, req,
 			sortkey = $th.data('sortkey');
 
@@ -83,7 +103,7 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 		req = 'sortkey=' + newkey + '&sortdir=' + newdir;
 
 		window.location.search = '?' + req;
-	});
+	});*/
 
 	self.$table.find('.control-column-selection').click(function(){
 		var html = '', current, $dialog;

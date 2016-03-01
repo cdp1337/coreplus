@@ -33,6 +33,7 @@ table.listing {
 		vertical-align: top;
 		background: $listing-table-th-background;
 		color: $listing-table-th-color;
+		position: relative;
 	}
 
 	td {
@@ -47,12 +48,46 @@ table.listing {
 	}
 
 	&.listing-table-sortable {
-		th[data-sortkey] {
-			cursor: pointer;
-		}
 
-		th i.sort-icon {
+		th .sort-icons {
 			float: right;
+			position: absolute;
+			height: 1.5em;
+			width: 1em;
+			cursor: pointer;
+			right: 0;
+			top: 4px;
+			background: $listing-table-th-background;
+			
+			i.icon-sort-up {
+				position: absolute;
+				top: 0;
+				opacity: .3;
+			}
+			
+			i.icon-sort-down {
+				position: absolute;
+				bottom: 0;
+				opacity: .3;
+			}
+			
+			i.icon-sort-current {
+				opacity: 1;
+			}
+			
+			&:hover {
+				i.icon-sort-up {
+					opacity: 1;
+				}
+
+				i.icon-sort-down {
+					opacity: 1;
+				}
+			}
+		}
+		
+		th i.sort-icon {
+			//float: right;
 		}
 		th i.sort-icon.other {
 			visibility: hidden;

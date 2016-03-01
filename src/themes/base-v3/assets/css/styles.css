@@ -1041,39 +1041,67 @@ table.listing th {
   vertical-align: top;
   background: #999;
   color: white;
+  position: relative;
 }
-/* line 38, ../scss/_listing_tables.scss */
+/* line 39, ../scss/_listing_tables.scss */
 table.listing td {
   padding: 0.375em 0.25em;
   border: 1px solid #DDD;
   vertical-align: top;
 }
-/* line 45, ../scss/_listing_tables.scss */
+/* line 46, ../scss/_listing_tables.scss */
 table.listing .column-optional {
   display: none;
 }
-/* line 50, ../scss/_listing_tables.scss */
-table.listing.listing-table-sortable th[data-sortkey] {
-  cursor: pointer;
-}
-/* line 54, ../scss/_listing_tables.scss */
-table.listing.listing-table-sortable th i.sort-icon {
+/* line 52, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th .sort-icons {
   float: right;
+  position: absolute;
+  height: 1.5em;
+  width: 1em;
+  cursor: pointer;
+  right: 0;
+  top: 4px;
+  background: #999;
 }
-/* line 57, ../scss/_listing_tables.scss */
+/* line 62, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th .sort-icons i.icon-sort-up {
+  position: absolute;
+  top: 0;
+  opacity: .3;
+}
+/* line 68, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th .sort-icons i.icon-sort-down {
+  position: absolute;
+  bottom: 0;
+  opacity: .3;
+}
+/* line 74, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th .sort-icons i.icon-sort-current {
+  opacity: 1;
+}
+/* line 79, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th .sort-icons:hover i.icon-sort-up {
+  opacity: 1;
+}
+/* line 83, ../scss/_listing_tables.scss */
+table.listing.listing-table-sortable th .sort-icons:hover i.icon-sort-down {
+  opacity: 1;
+}
+/* line 92, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th i.sort-icon.other {
   visibility: hidden;
 }
-/* line 60, ../scss/_listing_tables.scss */
+/* line 95, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th:hover i.sort-icon.other {
   visibility: visible;
 }
-/* line 63, ../scss/_listing_tables.scss */
+/* line 98, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th:hover i.sort-icon.current {
   visibility: hidden;
 }
 
-/* line 75, ../scss/_listing_tables.scss */
+/* line 110, ../scss/_listing_tables.scss */
 .listing-table-column-select label {
   float: left;
   margin-right: 1%;
