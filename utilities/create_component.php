@@ -91,10 +91,10 @@ $directories = array(
 	'assets/css',
 	'assets/images',
 	'assets/js',
-	'assets/scss/' . str_replace('-', '', $component),
 	//'classes', // The global classes are deprecated in favour of namespaced versions located in the libs folder.
 	'controllers',
 	'dev',
+	'dev/assets/scss/' . str_replace('-', '', $component),
 	'libs/' . str_replace('-', '', $component),
 	'models',
 	'templates/pages',
@@ -239,6 +239,7 @@ Some common uses of this directory are to contain
 * Source image files, (XCF, PNG, etc)
 * Supplemental developer-only documentation
 * Random files useful for developers only
+* SASS/SCSS source files
 
 _You get the idea here._
 
@@ -247,9 +248,6 @@ _You get the idea here._
 One special use of this directory is for SASS/SCSS assets.
 Any `*.scss` or `*.sass` file located in `dev/assets/scss/*`
 will get compiled and minified to `assets/css/*`.
-
-This is an optional location for scss files if you do not wish
-that they get included in the final build of the component.
 EOF;
 
 

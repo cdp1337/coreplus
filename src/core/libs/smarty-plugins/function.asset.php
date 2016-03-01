@@ -38,8 +38,66 @@ function smarty_function_asset($params, $smarty){
 	elseif(isset($params[0]))      $file = $params[0];
 	else                           $file = 'images/404.jpg';
 
-	$f = \Core\resolve_asset($file);
+	// Allow already-resolved links to be returned verbatim.
+	if(strpos($file, '://') !== false){
+		// @TODO
+		return $file;
+	}
 
-	if(isset($params['assign'])) $smarty->assign($params['assign'], $f);
-	else return $f;
+	// Since an asset is just a file, I'll use the builtin file store system.
+	// (although every file coming in should be assumed to be an asset, so
+	//  allow for a partial path name to come in, assuming asset/).
+	if(strpos($file, 'asset/') === 0){
+		$file = 'assets/' . substr($file, 7);
+	}
+	if(strpos($file, 'assets/') !== 0){
+		$file = 'assets/' . $file;
+	}
+
+	$f = \Core\Filestore\Factory::File($file);
+
+	$dimensions = $width = $height = null;
+	if(isset($params['width'])){
+		$width = $params['width'];
+		unset($params['width']);
+	}
+
+	if(isset($params['height'])){
+		$height = $params['height'];
+		unset($params['height']);
+	}
+
+	if(isset($params['dimensions'])){
+		$dimensions = $params['dimensions'];
+		$width = preg_replace('#[^0-9]?([0-9]*)x.*#', '$1', $dimensions);
+		$height = preg_replace('#.*x([0-9]*)[^0-9]?#', '$1', $dimensions);
+		unset($params['dimensions']);
+	}
+	
+	if($dimensions){
+		// Passing in dimensions raw will allow the user more control over the size of the images.
+		$d = $dimensions;
+	}
+	else{
+		// If one is provided but not the other, just make them the same.
+		if($width && !$height) $height = $width;
+		if($height && !$width) $width = $height;
+
+		$d = ($width && $height) ? $width . 'x' . $height : false;
+	}
+	
+	// New support for dynamic resizing from within the {asset} tag!
+	if($d){
+		$url = $f->getPreviewURL($d);
+	}
+	else{
+		$url = $f->getURL();
+	}
+
+	if(isset($params['assign'])){
+		$smarty->assign($params['assign'], $url);
+	}
+	else{
+		return $url;
+	}
 }

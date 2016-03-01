@@ -1158,7 +1158,7 @@ class PageModel extends Model {
 		return $transport;
 	}
 
-	public function save() {
+	public function save($defer = false) {
 		// Ensure some helper variables are set.
 		if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
 
@@ -1198,7 +1198,7 @@ class PageModel extends Model {
 		// Update this page's popularity score, just for freshness.
 		$this->set('popularity', $this->getPopularityScore());
 
-		return parent::save();
+		return parent::save($defer);
 	}
 
 	/**

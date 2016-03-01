@@ -2,11 +2,19 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.2.4">
 	<hooks>
+		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/15-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/2-hour" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/3-hour" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/6-hour" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/12-hour" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
 		<hookregister name="/cron/weekly" description="Weekly hook called from the cron system"/>
 		<hookregister name="/cron/monthly" description="Monthly hook called from the cron system"/>
 		<hook name="/core/admin/view" call="CronHelper::AdminHook"/>
+		<hook name="/cron/daily" call="CronLogModel::_CleanupDatabase"/>
 	</hooks>
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>

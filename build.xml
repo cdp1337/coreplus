@@ -74,7 +74,9 @@
 	</target>
 	
 	<target name="compile" depends="clean_src" description="Compile the bootstrap.php file">
-		<exec executable="${basedir}/utilities/compiler.php"/>
+		<exec executable="${basedir}/utilities/compiler.php">
+			<arg value="--php"/>
+		</exec>
 	</target>
 
 	<target name="setup_htaccess" description="Populate and setup the htaccess file from the template and ant properties">

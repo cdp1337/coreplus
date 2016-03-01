@@ -5,10 +5,60 @@
  * @package Cron
  */
 class CronController extends Controller_2_1 {
-	// Each controller can have many views, each defined by a different method.
-	// These methods should be regular public functions that DO NOT begin with an underscore (_).
-	// Any method that begins with an underscore or is static will be assumed as an internal method
-	// and cannot be called externally via a url.
+
+	/**
+	 * The new auto cron handler, this is safe to call minutely.
+	 */
+	public function index(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+		$view->mode = View::MODE_NOOUTPUT;
+		
+		$crons = [
+			'1-minute'  => SECONDS_ONE_MINUTE,
+			'5-minute'  => SECONDS_ONE_MINUTE*5,
+			'15-minute' => SECONDS_ONE_MINUTE*15,
+			'hourly'    => SECONDS_ONE_HOUR,
+			'2-hour'    => SECONDS_ONE_HOUR*2,
+			'3-hour'    => SECONDS_ONE_HOUR*3,
+			'6-hour'    => SECONDS_ONE_HOUR*6,
+			'12-hour'   => SECONDS_ONE_HOUR*12,
+			'daily'     => SECONDS_ONE_DAY,
+			'weekly'    => SECONDS_ONE_WEEK,
+			'monthly'   => SECONDS_ONE_MONTH,
+		];
+		
+		// Iterate over each and ensure that it was recently enough.
+		// Only process two at a time.
+		// This will ensure that each cron, (with the exception of the 1-minute), is staggered.
+		// eg: if the script is called * * * * * like it should be, it'll be executed once-per minute.
+		// The first minute, (0:00), 1-minute and 5-minute will run.
+		// The next, (0:01), 1-minute and 15-minute will run... etc.
+		
+		$ran = 0;
+		$current = Time::GetCurrentGMT();
+		foreach($crons as $cron => $iteration){
+			if($ran < 2){
+				$last = CronLogModel::Find(['cron' => $cron], 1, 'created DESC');
+				if(!
+					(
+						// There is a last executed cron of this type AND
+						$last &&
+						// It was ran at least N seconds ago
+						($last->get('created') + $iteration  > $current)
+					)
+					// NOT :p
+				){
+					// Run the report!
+					$log = $this->_performcron($cron);
+					if($log->get('status') != 'pass'){
+						echo 'failed, check the logs';
+					}
+					$ran++;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Execute the hourly cron
@@ -138,12 +188,11 @@ class CronController extends Controller_2_1 {
 		if(!\Core\user()->checkAccess('p:/cron/viewlog')){
 			return View::ERROR_ACCESSDENIED;
 		}
-
-		$filters = new FilterForm();
-		$filters->setName('cron-admin');
-		$filters->hassort = true;
-		$filters->haspagination = true;
-		$filters->addElement(
+		
+		$listings = new Core\ListingTable\Table();
+		$listings->setModelName('CronLogModel');
+		
+		$listings->addFilter(
 			'select',
 			array(
 				'title' => 'Cron',
@@ -158,7 +207,7 @@ class CronController extends Controller_2_1 {
 				'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
-		$filters->addElement(
+		$listings->addFilter(
 			'select',
 			array(
 				'title' => 'Status',
@@ -171,22 +220,16 @@ class CronController extends Controller_2_1 {
 				'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
-		$filters->setSortkeys(array('cron', 'created', 'duration', 'status'));
-		$filters->load($request);
-
-
-		$cronfac = new ModelFactory('CronLogModel');
-		$filters->applyToFactory($cronfac);
-		$listings = $cronfac->get();
+		
+		$listings->addColumn('Cron', 'cron');
+		$listings->addColumn('Date Started', 'created');
+		$listings->addColumn('Duration', 'Duration');
+		$listings->setDefaultSort('created');
+		$listings->loadFiltersFromRequest($request);
 
 		$view->mastertemplate = 'admin';
 		$view->title = 't:STRING_CRON_RESULTS';
-		$view->assign('filters', $filters);
 		$view->assign('listings', $listings);
-		$view->assign('sortkey', $filters->getSortKey());
-		$view->assign('sortdir', $filters->getSortDirection());
-
-		//var_dump($listings); die();
 	}
 
 	/**
@@ -244,7 +287,14 @@ class CronController extends Controller_2_1 {
 	 */
 	private function _performcron($cron){
 		switch($cron){
+			case '1-minute':
+			case '5-minute':
+			case '15-minute':
 			case 'hourly':
+			case '2-hour':
+			case '3-hour':
+			case '6-hour':
+			case '12-hour':
 			case 'daily':
 			case 'weekly':
 			case 'monthly':

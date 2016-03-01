@@ -143,11 +143,11 @@ class SystemLogModel extends Model {
 		return $this->_ua;
 	}
 
-	public function save(){
+	public function save($defer = false){
 
 		$isnew = !$this->exists();
 
-		$ret = parent::save();
+		$ret = parent::save($defer);
 
 		// No change happened, nothing extra to do.
 		if(!$ret) return $ret;

@@ -806,14 +806,14 @@ class UserModel extends Model {
 		} // foreach(elements)
 	}
 
-	public function save() {
+	public function save($defer = false) {
 		// Every usermodel needs to have an apikey set prior to saving.
 		if(!$this->_data['apikey']) {
 			$this->generateNewApiKey();
 		}
 
 		// The parent save system will handle all child objects and everything.
-		$status = parent::save();
+		$status = parent::save($defer);
 
 		// Fire off the hook!
 		HookHandler::DispatchHook('/user/postsave', $this);

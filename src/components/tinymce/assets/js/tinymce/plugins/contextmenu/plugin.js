@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -62,9 +62,8 @@ tinymce.PluginManager.add('contextmenu', function(editor) {
 
 			menu = new tinymce.ui.Menu({
 				items: items,
-				context: 'contextmenu',
-				classes: 'contextmenu'
-			}).renderTo();
+				context: 'contextmenu'
+			}).addClass('contextmenu').renderTo();
 
 			editor.on('remove', function() {
 				menu.remove();

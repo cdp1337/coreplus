@@ -33,6 +33,6 @@ fi
 
 printheader "Starting watch!"
 while inotifywait -e modify -r $ROOTPDIR/src/themes/$THEME/assets/scss; do
-	$ROOTPDIR/utilities/compiler.php --scss-dev --theme=$THEME
+	$ROOTPDIR/utilities/compiler.php --scss --theme=$THEME
 	$ROOTPDIR/utilities/reinstall.php --assets --theme=$THEME --verbosity=0
 done

@@ -177,7 +177,8 @@ function user(){
 				}
 				else{
 					// Ok, everything is good.
-					return $sudo;
+					// Remap the current user over to this sudo'd account!
+					$_CurrentUserAccount = $sudo;
 				}
 			}
 			else{
@@ -271,58 +272,19 @@ function get_standard_http_headers($forcurl = false, $autoclose = false){
  */
 function resolve_asset($asset){
 	// Allow already-resolved links to be returned verbatim.
-	if(strpos($asset, '://') !== false) return $asset;
+	if(strpos($asset, '://') !== false){
+		return $asset;
+	}
 
 	// Since an asset is just a file, I'll use the builtin file store system.
 	// (although every file coming in should be assumed to be an asset, so
 	//  allow for a partial path name to come in, assuming asset/).
-
-	if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-
-	$version = \ConfigHandler::Get('/core/filestore/assetversion');
-	$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
-
-
-	$file     = \Core\Filestore\Factory::File($asset);
-	$filename = $file->getFilename();
-	$ext      = $file->getExtension();
-	$suffix   = '';
-
-	// Remove the extension from the filename, (makes the logic cleaner).
-	$url = substr($file->getURL(), 0, -1-strlen($ext));
-
-	if(\ConfigHandler::Get('/core/javascript/minified')){
-		// Core is set to use minified css and javascript assets, try to locate those!
-		// I need to do the check based on the base $filename, because 'assets/css/reset.css' may reside in one
-		// of many locations, and not all of them may have a minified version.
-		if($ext == 'js'){
-			// Try to load the minified version instead.
-			$minified = substr($filename, 0, -3) . '.min.js';
-			$minfile = \Core\Filestore\Factory::File($minified);
-			if($minfile->exists()){
-				// Overwrite the $file variable so it's returned instead.
-				$ext = 'min.js';
-			}
-		}
-		elseif($ext == 'css'){
-			// Try to load the minified version instead.
-			$minified = substr($filename, 0, -4) . '.min.css';
-			$minfile = \Core\Filestore\Factory::File($minified);
-			if($minfile->exists()){
-				// Overwrite the $file variable so it's returned instead.
-				$ext = 'min.css';
-			}
-		}
+	if(strpos($asset, 'assets/') !== 0){
+		$asset = 'assets/' . $asset;
 	}
-
-	if($version && $proxyfriendly){
-		$ext = 'v' . $version . '.' . $ext;
-	}
-	elseif($version){
-		$suffix = '?v=' . $version;
-	}
-
-	return $url . '.' . $ext . $suffix;
+	
+	$file = \Core\Filestore\Factory::File($asset);
+	return $file->getURL();
 }
 
 /**

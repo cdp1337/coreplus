@@ -1,8 +1,8 @@
 /**
  * Plugin.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -188,19 +188,15 @@ define("tinymce/spellcheckerplugin/Plugin", [
 					result = JSON.parse(result);
 
 					if (!result) {
-						var message = editor.translate("Server response wasn't proper JSON.");
-						errorCallback(message);
+						errorCallback("Sever response wasn't proper JSON.");
 					} else if (result.error) {
 						errorCallback(result.error);
 					} else {
 						doneCallback(result);
 					}
 				},
-				error: function() {
-					var message = editor.translate("The spelling service was not found: (") +
-							settings.spellchecker_rpc_url +
-							editor.translate(")");
-					errorCallback(message);
+				error: function(type, xhr) {
+					errorCallback("Spellchecker request error: " + xhr.status);
 				}
 			});
 		}
@@ -211,12 +207,15 @@ define("tinymce/spellcheckerplugin/Plugin", [
 		}
 
 		function spellcheck() {
-			if (finish()) {
+			if (started) {
+				finish();
 				return;
+			} else {
+				finish();
 			}
 
 			function errorCallback(message) {
-				editor.notificationManager.open({text: message, type: 'error'});
+				editor.windowManager.alert(message);
 				editor.setProgressState(false);
 				finish();
 			}
@@ -240,7 +239,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 				editor.dom.remove(spans, true);
 				checkIfFinished();
 			}, function(message) {
-				editor.notificationManager.open({text: message, type: 'error'});
+				editor.windowManager.alert(message);
 				editor.setProgressState(false);
 			});
 		}
@@ -268,7 +267,6 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			if (started) {
 				started = false;
 				editor.fire('SpellcheckEnd');
-				return true;
 			}
 		}
 
@@ -371,8 +369,7 @@ define("tinymce/spellcheckerplugin/Plugin", [
 			editor.setProgressState(false);
 
 			if (isEmpty(suggestions)) {
-				var message = editor.translate('No misspellings found.');
-				editor.notificationManager.open({text: message, type: 'info'});
+				editor.windowManager.alert('No misspellings found');
 				started = false;
 				return;
 			}

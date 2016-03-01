@@ -125,9 +125,15 @@ class PageRequest {
 
 		// Now I can trim off the prefix, since that's not needed in deciding the path.
 		$uri = substr($uri, strlen(ROOT_WDIR));
-
-		// the URI should start with a '/'.
-		if ($uri{0} != '/') $uri = '/' . $uri;
+		
+		if(strlen($uri) == 0){
+			// URLs that do not contain anything should remap to the home page ('/')
+			$uri = '/';
+		}
+		elseif( $uri{0} != '/' ){
+			// the URI should start with a '/'.
+			$uri = '/' . $uri;
+		}
 
 		// Split this URL, it'll be used somewhere.
 		$pagedat = PageModel::SplitBaseURL($uri);

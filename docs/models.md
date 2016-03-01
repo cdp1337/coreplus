@@ -347,3 +347,38 @@ A: WELL... This has long been a concern of any dynamically-generated source code
 Q: wait wait wait, copying every single record of a table may consume a HUGE amount of resources when performing installations and upgrades.
 
 A: Yes.
+
+## Supplemental Models
+
+Sometimes it can be extremely useful to be able to extend a Model in another component.
+This can be done to provide new control links for another model, add custom scripts to the pre or post save hooks,
+or even add new columns to the original table.
+
+To make use of this supplemental system, create a new class in your extending component
+that matches the rules of `YourComponent_OrignalNameSupplementalModel`
+
+Where:
+
+    Some unique name space, usually your component name
+    exactly one "_"
+    the original model base name
+    "SupplementalModel"
+
+For example if you have a component named Baz and you wanted to extend the User model,
+your supplemental name should be `Baz_UserSupplementalModel`.
+
+### Supplemental Properties
+
+`public static $Schema` can be used to add new columns onto the original model.
+
+`public static $Index` can be used to add new indexes to the original model.
+
+### Supplemental Methods
+
+`public static PreSaveHook($model)` Called prior to save completion.
+
+`public static PostSaveHook($model)` Called after the model has been saved to the database.
+
+`public static PreDeleteHook($model)` Called before the model is deleted from the database.
+
+`public static GetControlLinks($model)` Called during getControlLinks to return additional links in the controls.

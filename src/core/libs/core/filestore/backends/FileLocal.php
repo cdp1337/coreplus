@@ -121,7 +121,62 @@ class FileLocal implements Filestore\File {
 	 * @return string | false
 	 */
 	public function getURL() {
-		if (!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)) return false;
+		if (!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)){
+			// If this file is not local, do not try to process it!
+			// Seeing as it's getURL, only files that are in assets, private, or public are allowed to be returned as well.
+			return false;
+		}
+		
+		if($this->_type == 'asset'){
+			$useminified   = \ConfigHandler::Get('/core/javascript/minified');
+			$version       = \ConfigHandler::Get('/core/filestore/assetversion');
+			$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
+			
+			$directory = $this->getDirectoryName();
+			$basename  = $this->getBasename(true);
+			//$filename  = $this->getFilename();
+			$ext       = $this->getExtension();
+			$file      = $directory . $basename;
+			$url       = $directory . $basename;
+			$suffix    = '';
+			
+			if(strpos($url, ROOT_PDIR) === 0){
+				// And it should always start with the root pdir!
+				// Remap the base physical directory with the fully resolved web URL of the system.
+				$url = ROOT_URL . substr($url, strlen(ROOT_PDIR));
+			}
+
+			if($useminified){
+				// Core is set to use minified css and javascript assets, try to locate those!
+				// I need to do the check based on the base $filename, because 'assets/css/reset.css' may reside in one
+				// of many locations, and not all of them may have a minified version.
+				if($ext == 'js'){
+					$minfile = \Core\Filestore\Factory::File($file . '.min.js');
+					if($minfile->exists()){
+						// Try to load the minified version instead.
+						// Overwrite the $file variable so it's returned instead.
+						$ext = 'min.js';
+					}
+				}
+				elseif($ext == 'css'){
+					$minfile = \Core\Filestore\Factory::File($file . '.min.css');
+					if($minfile->exists()){
+						// Try to load the minified version instead.
+						// Overwrite the $file variable so it's returned instead.
+						$ext = 'min.css';
+					}
+				}
+			}
+
+			if($version && $proxyfriendly){
+				$ext = 'v' . $version . '.' . $ext;
+			}
+			elseif($version){
+				$suffix = '?v=' . $version;
+			}
+
+			return $url . '.' . $ext . $suffix;
+		}
 
 		return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_URL . '$1', $this->_filename);
 	}

@@ -1,8 +1,8 @@
 /**
  * plugin.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -33,7 +33,7 @@
 		getInfo: function() {
 			return {
 				longname: 'BBCode Plugin',
-				author: 'Ephox Corp',
+				author: 'Moxiecode Systems AB',
 				authorurl: 'http://www.tinymce.com',
 				infourl: 'http://www.tinymce.com/wiki.php/Plugin:bbcode'
 			};

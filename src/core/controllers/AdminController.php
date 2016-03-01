@@ -1570,6 +1570,45 @@ class AdminController extends Controller_2_1 {
 				''
 			);
 		}
+		
+		$functions = [
+			'BCMath' => [
+				'function' => 'bcadd',
+				'info' => 'http://php.net/manual/en/book.bc.php',
+			],
+			'curl' => [
+				'function' => 'curl_exec',
+				'info' => 'http://php.net/manual/en/book.curl.php',
+			],
+			'gd' => [
+				'function' => 'imagecreatefromjpeg',
+				'info' => 'http://php.net/manual/en/book.image.php',
+			],
+			'mcrypt' => [
+				'function' => 'mcrypt_encrypt',
+				'info' => 'http://php.net/manual/en/book.mcrypt.php',
+			],
+			'xml' => [
+				'function' => 'xml_parse',
+				'info' => 'http://php.net/manual/en/function.xml-parse.php',
+			]
+		];
+		
+		foreach($functions as $fn => $fndat){
+			if(function_exists($fndat['function'])){
+				$checks[] = \Core\HealthCheckResult::ConstructGood(
+					t('STRING_CHECK_PHP_LIBRARY_S_OK', $fn),
+					t('MESSAGE_SUCCESS_CHECK_PHP_LIBRARY_S_OK', $fn)
+				);
+			}
+			else{
+				$checks[] = \Core\HealthCheckResult::ConstructWarn(
+					t('STRING_CHECK_PHP_LIBRARY_S_NOT_PRESENT', $fn),
+					t('MESSAGE_ERROR_CHECK_PHP_LIBRARY_S_NOT_PRESENT_SEE_S_FOR_MORE_INFO', $fn, $fndat['info']),
+					''
+				);
+			}
+		}
 
 		return $checks;
 	}

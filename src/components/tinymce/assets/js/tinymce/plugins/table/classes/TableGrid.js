@@ -1,8 +1,8 @@
 /**
  * TableGrid.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -18,35 +18,16 @@
  */
 define("tinymce/tableplugin/TableGrid", [
 	"tinymce/util/Tools",
-	"tinymce/Env",
-	"tinymce/tableplugin/Utils"
-], function(Tools, Env, Utils) {
-	var each = Tools.each, getSpanVal = Utils.getSpanVal;
+	"tinymce/Env"
+], function(Tools, Env) {
+	var each = Tools.each;
 
-	return function(editor, table, selectedCell) {
-		var grid, gridWidth, startPos, endPos, selection = editor.selection, dom = selection.dom;
+	function getSpanVal(td, name) {
+		return parseInt(td.getAttribute(name) || 1, 10);
+	}
 
-		function removeCellSelection() {
-			editor.$('td[data-mce-selected],th[data-mce-selected]').removeAttr('data-mce-selected');
-		}
-
-		function isEditorBody(node) {
-			return node === editor.getBody();
-		}
-
-		function getChildrenByName(node, names) {
-			if (!node) {
-				return [];
-			}
-
-			names = Tools.map(names.split(','), function(name) {
-				return name.toLowerCase();
-			});
-
-			return Tools.grep(node.childNodes, function(node) {
-				return Tools.inArray(names, node.nodeName.toLowerCase()) !== -1;
-			});
-		}
+	return function(editor, table) {
+		var grid, gridWidth, startPos, endPos, selectedCell, selection = editor.selection, dom = selection.dom;
 
 		function buildGrid() {
 			var startY = 0;
@@ -55,13 +36,12 @@ define("tinymce/tableplugin/TableGrid", [
 			gridWidth = 0;
 
 			each(['thead', 'tbody', 'tfoot'], function(part) {
-				var partElm = getChildrenByName(table, part)[0];
-				var rows = getChildrenByName(partElm, 'tr');
+				var rows = dom.select('> ' + part + ' tr', table);
 
 				each(rows, function(tr, y) {
 					y += startY;
 
-					each(getChildrenByName(tr, 'td,th'), function(td, x) {
+					each(dom.select('> td, > th', tr), function(td, x) {
 						var x2, y2, rowspan, colspan;
 
 						// Skip over existing cells produced by rowspan
@@ -100,22 +80,6 @@ define("tinymce/tableplugin/TableGrid", [
 			});
 		}
 
-		function fireNewRow(node) {
-			editor.fire('newrow', {
-				node: node
-			});
-
-			return node;
-		}
-
-		function fireNewCell(node) {
-			editor.fire('newcell', {
-				node: node
-			});
-
-			return node;
-		}
-
 		function cloneNode(node, children) {
 			node = node.cloneNode(children);
 			node.removeAttribute('id');
@@ -145,7 +109,7 @@ define("tinymce/tableplugin/TableGrid", [
 		}
 
 		function isCellSelected(cell) {
-			return cell && (!!dom.getAttrib(cell.elm, 'data-mce-selected') || cell == selectedCell);
+			return cell && (dom.hasClass(cell.elm, 'mce-item-selected') || cell == selectedCell);
 		}
 
 		function getSelectedRows() {
@@ -153,7 +117,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 			each(table.rows, function(row) {
 				each(row.cells, function(cell) {
-					if (dom.getAttrib(cell, 'data-mce-selected') || (selectedCell && cell == selectedCell.elm)) {
+					if (dom.hasClass(cell, 'mce-item-selected') || (selectedCell && cell == selectedCell.elm)) {
 						rows.push(row);
 						return false;
 					}
@@ -165,10 +129,6 @@ define("tinymce/tableplugin/TableGrid", [
 
 		function deleteTable() {
 			var rng = dom.createRng();
-
-			if (isEditorBody(table)) {
-				return;
-			}
 
 			rng.setStartAfter(table);
 			rng.setEndAfter(table);
@@ -211,7 +171,7 @@ define("tinymce/tableplugin/TableGrid", [
 
 					// Add something to the inner node
 					if (curNode) {
-						curNode.innerHTML = Env.ie && Env.ie < 10 ? '&nbsp;' : '<br data-mce-bogus="1" />';
+						curNode.innerHTML = Env.ie ? '&nbsp;' : '<br data-mce-bogus="1" />';
 					}
 
 					return false;
@@ -219,15 +179,15 @@ define("tinymce/tableplugin/TableGrid", [
 			}, 'childNodes');
 
 			cell = cloneNode(cell, false);
-			fireNewCell(cell);
-
 			setSpanVal(cell, 'rowSpan', 1);
 			setSpanVal(cell, 'colSpan', 1);
 
 			if (formatNode) {
 				cell.appendChild(formatNode);
 			} else {
-				Utils.paddCell(cell);
+				if (!Env.ie || Env.ie > 10) {
+					cell.innerHTML = '<br data-mce-bogus="1" />';
+				}
 			}
 
 			return cell;
@@ -404,7 +364,7 @@ define("tinymce/tableplugin/TableGrid", [
 								children = Tools.grep(startCell.childNodes);
 								count = 0;
 								each(children, function(node) {
-									if (node.nodeName == 'BR' && count++ < children.length - 1) {
+									if (node.nodeName == 'BR' && dom.getAttrib(node, 'data-mce-bogus') && count++ < children.length - 1) {
 										startCell.removeChild(node);
 									}
 								});
@@ -429,7 +389,7 @@ define("tinymce/tableplugin/TableGrid", [
 					if (isCellSelected(cell)) {
 						cell = cell.elm;
 						rowElm = cell.parentNode;
-						newRow = fireNewRow(cloneNode(rowElm, false));
+						newRow = cloneNode(rowElm, false);
 						posY = y;
 
 						if (before) {
@@ -543,34 +503,8 @@ define("tinymce/tableplugin/TableGrid", [
 			});
 		}
 
-		function getSelectedCells(grid) {
-			return Tools.grep(getAllCells(grid), isCellSelected);
-		}
-
-		function getAllCells(grid) {
-			var cells = [];
-
-			each(grid, function(row) {
-				each(row, function(cell) {
-					cells.push(cell);
-				});
-			});
-
-			return cells;
-		}
-
 		function deleteCols() {
 			var cols = [];
-
-			if (isEditorBody(table)) {
-				if (grid[0].length == 1) {
-					return;
-				}
-
-				if (getSelectedCells(grid).length == getAllCells(grid).length) {
-					return;
-				}
-			}
 
 			// Get selected column indexes
 			each(grid, function(row) {
@@ -637,10 +571,6 @@ define("tinymce/tableplugin/TableGrid", [
 			// Get selected rows and move selection out of scope
 			rows = getSelectedRows();
 
-			if (isEditorBody(table) && rows.length == table.rows.length) {
-				return;
-			}
-
 			// Delete all selected rows
 			each(rows.reverse(), function(tr) {
 				deleteRow(tr);
@@ -651,10 +581,6 @@ define("tinymce/tableplugin/TableGrid", [
 
 		function cutRows() {
 			var rows = getSelectedRows();
-
-			if (isEditorBody(table) && rows.length == table.rows.length) {
-				return;
-			}
 
 			dom.remove(rows);
 			cleanup();
@@ -709,20 +635,16 @@ define("tinymce/tableplugin/TableGrid", [
 			each(rows, function(row) {
 				var i, cellCount = row.cells.length, cell;
 
-				fireNewRow(row);
-
 				// Remove col/rowspans
 				for (i = 0; i < cellCount; i++) {
 					cell = row.cells[i];
-
-					fireNewCell(cell);
 					setSpanVal(cell, 'colSpan', 1);
 					setSpanVal(cell, 'rowSpan', 1);
 				}
 
 				// Needs more cells
 				for (i = cellCount; i < targetCellCount; i++) {
-					row.appendChild(fireNewCell(cloneCell(row.cells[cellCount - 1])));
+					row.appendChild(cloneCell(row.cells[cellCount - 1]));
 				}
 
 				// Needs less cells
@@ -738,7 +660,8 @@ define("tinymce/tableplugin/TableGrid", [
 				}
 			});
 
-			removeCellSelection();
+			// Remove current selection
+			dom.removeClass(dom.select('td.mce-item-selected,th.mce-item-selected'), 'mce-item-selected');
 		}
 
 		function getPos(target) {
@@ -817,7 +740,7 @@ define("tinymce/tableplugin/TableGrid", [
 				endX = Math.max(startPos.x, endPos.x);
 				endY = Math.max(startPos.y, endPos.y);
 
-				// Expand end position to include spans
+				// Expand end positon to include spans
 				maxX = endX;
 				maxY = endY;
 
@@ -867,13 +790,14 @@ define("tinymce/tableplugin/TableGrid", [
 					}
 				}
 
-				removeCellSelection();
+				// Remove current selection
+				dom.removeClass(dom.select('td.mce-item-selected,th.mce-item-selected'), 'mce-item-selected');
 
 				// Add new selection
 				for (y = startY; y <= maxY; y++) {
 					for (x = startX; x <= maxX; x++) {
 						if (grid[y][x]) {
-							dom.setAttrib(grid[y][x].elm, 'data-mce-selected', '1');
+							dom.addClass(grid[y][x].elm, 'mce-item-selected');
 						}
 					}
 				}
@@ -908,12 +832,11 @@ define("tinymce/tableplugin/TableGrid", [
 			return false;
 		}
 
-		table = table || dom.getParent(selection.getStart(true), 'table');
+		table = table || dom.getParent(selection.getStart(), 'table');
 
 		buildGrid();
 
-		selectedCell = selectedCell || dom.getParent(selection.getStart(true), 'th,td');
-
+		selectedCell = dom.getParent(selection.getStart(), 'th,td');
 		if (selectedCell) {
 			startPos = getPos(selectedCell);
 			endPos = findEndPos();

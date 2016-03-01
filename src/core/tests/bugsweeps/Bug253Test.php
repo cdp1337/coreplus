@@ -50,7 +50,7 @@ class Bug253Test extends PHPUnit_Framework_TestCase {
 		$view = $request->getView();
 		$this->assertEquals(200, $view->error);
 		// Obviously if the title gets changed, change it here to keep the bug from breaking!
-		$this->assertEquals('System Updater', $view->title);
+		$this->assertEquals('t:STRING_SYSTEM_UPDATER', $view->title);
 
 		// Get the body of this page and make sure that it's there.
 		$html = $view->fetchBody();

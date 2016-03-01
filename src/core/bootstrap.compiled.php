@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 18 Feb 2016 10:48:09 -0500
+ * @compiled Tue, 01 Mar 2016 01:32:52 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -469,8 +469,8 @@ define('SECONDS_TWO_HOUR',   7200);
 define('SECONDS_ONE_DAY',    86400);
 define('SECONDS_ONE_WEEK',   604800);  // 7 days
 define('SECONDS_TWO_WEEK',   1209600); // 14 days
-define('SECONDS_ONE_MONTH',  2592000); // 30 days
-define('SECONDS_TWO_MONTH',  5184000); // 60 days
+define('SECONDS_ONE_MONTH',  2629800); // 30.4375 days
+define('SECONDS_TWO_MONTH',  5259600); // 60.8750 days
 
 
 Core\Utilities\Logger\write_debug('Starting Application');
@@ -4801,7 +4801,7 @@ $this->save();
 }
 return $transport;
 }
-public function save() {
+public function save($defer = false) {
 if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
 if(!isset($this->_datainit['rewriteurl'])) $this->_datainit['rewriteurl'] = null;
 if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
@@ -4822,7 +4822,7 @@ elseif($this->get('published_status') == 'draft'){
 $this->set('published', 0);
 }
 $this->set('popularity', $this->getPopularityScore());
-return parent::save();
+return parent::save($defer);
 }
 public function getParent(){
 if(!$this->exists()){
@@ -5685,9 +5685,9 @@ $this->_ua = new \Core\UserAgent($this->get('useragent'));
 }
 return $this->_ua;
 }
-public function save(){
+public function save($defer = false){
 $isnew = !$this->exists();
-$ret = parent::save();
+$ret = parent::save($defer);
 if(!$ret) return $ret;
 if(!$isnew) return $ret;
 if(
@@ -6194,11 +6194,11 @@ else {
 }
 } // foreach(elements)
 }
-public function save() {
+public function save($defer = false) {
 if(!$this->_data['apikey']) {
 $this->generateNewApiKey();
 }
-$status = parent::save();
+$status = parent::save($defer);
 HookHandler::DispatchHook('/user/postsave', $this);
 return $status;
 }
@@ -9193,7 +9193,7 @@ Session::UnsetKey('user_sudo');
 \SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
 }
 else{
-return $sudo;
+$_CurrentUserAccount = $sudo;
 }
 }
 else{
@@ -9235,38 +9235,14 @@ return implode("\r\n", $headers);
 }
 }
 function resolve_asset($asset){
-if(strpos($asset, '://') !== false) return $asset;
-if(strpos($asset, 'assets/') !== 0) $asset = 'assets/' . $asset;
-$version = \ConfigHandler::Get('/core/filestore/assetversion');
-$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
-$file     = \Core\Filestore\Factory::File($asset);
-$filename = $file->getFilename();
-$ext      = $file->getExtension();
-$suffix   = '';
-$url = substr($file->getURL(), 0, -1-strlen($ext));
-if(\ConfigHandler::Get('/core/javascript/minified')){
-if($ext == 'js'){
-$minified = substr($filename, 0, -3) . '.min.js';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.js';
+if(strpos($asset, '://') !== false){
+return $asset;
 }
+if(strpos($asset, 'assets/') !== 0){
+$asset = 'assets/' . $asset;
 }
-elseif($ext == 'css'){
-$minified = substr($filename, 0, -4) . '.min.css';
-$minfile = \Core\Filestore\Factory::File($minified);
-if($minfile->exists()){
-$ext = 'min.css';
-}
-}
-}
-if($version && $proxyfriendly){
-$ext = 'v' . $version . '.' . $ext;
-}
-elseif($version){
-$suffix = '?v=' . $version;
-}
-return $url . '.' . $ext . $suffix;
+$file = \Core\Filestore\Factory::File($asset);
+return $file->getURL();
 }
 function resolve_link($url) {
 if ($url == '#') return $url;
@@ -10621,7 +10597,44 @@ public function getExtension() {
 return Filestore\get_extension_from_string($this->_filename);
 }
 public function getURL() {
-if (!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)) return false;
+if (!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)){
+return false;
+}
+if($this->_type == 'asset'){
+$useminified   = \ConfigHandler::Get('/core/javascript/minified');
+$version       = \ConfigHandler::Get('/core/filestore/assetversion');
+$proxyfriendly = \ConfigHandler::Get('/core/assetversion/proxyfriendly');
+$directory = $this->getDirectoryName();
+$basename  = $this->getBasename(true);
+$ext       = $this->getExtension();
+$file      = $directory . $basename;
+$url       = $directory . $basename;
+$suffix    = '';
+if(strpos($url, ROOT_PDIR) === 0){
+$url = ROOT_URL . substr($url, strlen(ROOT_PDIR));
+}
+if($useminified){
+if($ext == 'js'){
+$minfile = \Core\Filestore\Factory::File($file . '.min.js');
+if($minfile->exists()){
+$ext = 'min.js';
+}
+}
+elseif($ext == 'css'){
+$minfile = \Core\Filestore\Factory::File($file . '.min.css');
+if($minfile->exists()){
+$ext = 'min.css';
+}
+}
+}
+if($version && $proxyfriendly){
+$ext = 'v' . $version . '.' . $ext;
+}
+elseif($version){
+$suffix = '?v=' . $version;
+}
+return $url . '.' . $ext . $suffix;
+}
 return preg_replace('/^' . str_replace('/', '\\/', ROOT_PDIR) . '(.*)/', ROOT_URL . '$1', $this->_filename);
 }
 public function getFilename($prefix = ROOT_PDIR) {
@@ -20100,7 +20113,12 @@ private $_cached = false;
 public function __construct($uri = '') {
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
-if ($uri{0} != '/') $uri = '/' . $uri;
+if(strlen($uri) == 0){
+$uri = '/';
+}
+elseif( $uri{0} != '/' ){
+$uri = '/' . $uri;
+}
 $pagedat = PageModel::SplitBaseURL($uri);
 $this->host = SERVERNAME;
 $this->uri = $uri;

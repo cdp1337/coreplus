@@ -63,12 +63,10 @@
 	}
 
 	function expose(ids) {
-		var i, target, id, fragments, privateModules;
-
-		for (i = 0; i < ids.length; i++) {
-			target = exports;
-			id = ids[i];
-			fragments = id.split(/[.\/]/);
+		for (var i = 0; i < ids.length; i++) {
+			var target = exports;
+			var id = ids[i];
+			var fragments = id.split(/[.\/]/);
 
 			for (var fi = 0; fi < fragments.length - 1; ++fi) {
 				if (target[fragments[fi]] === undefined) {
@@ -80,21 +78,6 @@
 
 			target[fragments[fragments.length - 1]] = modules[id];
 		}
-		
-		// Expose private modules for unit tests
-		if (exports.AMDLC_TESTS) {
-			privateModules = exports.privateModules || {};
-
-			for (id in modules) {
-				privateModules[id] = modules[id];
-			}
-
-			for (i = 0; i < ids.length; i++) {
-				delete privateModules[ids[i]];
-			}
-
-			exports.privateModules = privateModules;
-		}
 	}
 
 // Included from: js/tinymce/plugins/paste/classes/Utils.js
@@ -102,8 +85,8 @@
 /**
  * Utils.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -216,7 +199,6 @@ define("tinymce/pasteplugin/Utils", [
 			/^[\s\S]*<body[^>]*>\s*|\s*<\/body[^>]*>[\s\S]*$/g, // Remove anything but the contents within the BODY element
 			/<!--StartFragment-->|<!--EndFragment-->/g, // Inner fragments (tables from excel on mac)
 			[/( ?)<span class="Apple-converted-space">\u00a0<\/span>( ?)/g, trimSpaces],
-			/<br class="Apple-interchange-newline">/g,
 			/<br>$/i // Trailing BR elements
 		]);
 
@@ -235,8 +217,8 @@ define("tinymce/pasteplugin/Utils", [
 /**
  * Clipboard.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -265,9 +247,8 @@ define("tinymce/pasteplugin/Clipboard", [
 	"tinymce/Env",
 	"tinymce/dom/RangeUtils",
 	"tinymce/util/VK",
-	"tinymce/pasteplugin/Utils",
-	"tinymce/util/Delay"
-], function(Env, RangeUtils, VK, Utils, Delay) {
+	"tinymce/pasteplugin/Utils"
+], function(Env, RangeUtils, VK, Utils) {
 	return function(editor) {
 		var self = this, pasteBinElm, lastRng, keyboardPasteTimeStamp = 0, draggingInternally = false;
 		var pasteBinDefaultContent = '%MCEPASTEBIN%', keyboardPastePlainTextState;
@@ -300,7 +281,7 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 
 				if (!args.isDefaultPrevented()) {
-					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false, data: {paste: true}});
+					editor.insertContent(html, {merge: editor.settings.paste_merge_formats !== false});
 				}
 			}
 		}
@@ -515,63 +496,13 @@ define("tinymce/pasteplugin/Clipboard", [
 		}
 
 		/**
-		 * Some Windows 10/Edge versions will return a double encoded string. This checks if the
-		 * content has this odd encoding and decodes it.
-		 */
-		function decodeEdgeData(data) {
-			var i, out, fingerprint, code;
-
-			// Check if data is encoded
-			fingerprint = [25942, 29554, 28521, 14958];
-			for (i = 0; i < fingerprint.length; i++) {
-				if (data.charCodeAt(i) != fingerprint[i]) {
-					return data;
-				}
-			}
-
-			// Decode UTF-16 to UTF-8
-			out = '';
-			for (i = 0; i < data.length; i++) {
-				code = data.charCodeAt(i);
-
-				/*eslint no-bitwise:0*/
-				out += String.fromCharCode((code & 0x00FF));
-				out += String.fromCharCode((code & 0xFF00) >> 8);
-			}
-
-			// Decode UTF-8
-			return decodeURIComponent(escape(out));
-		}
-
-		/**
-		 * Extracts HTML contents from within a fragment.
-		 */
-		function extractFragment(data) {
-			var idx, startFragment, endFragment;
-
-			startFragment = '<!--StartFragment-->';
-			idx = data.indexOf(startFragment);
-			if (idx !== -1) {
-				data = data.substr(idx + startFragment.length);
-			}
-
-			endFragment = '<!--EndFragment-->';
-			idx = data.indexOf(endFragment);
-			if (idx !== -1) {
-				data = data.substr(0, idx);
-			}
-
-			return data;
-		}
-
-		/**
 		 * Gets various content types out of a datatransfer object.
 		 *
 		 * @param {DataTransfer} dataTransfer Event fired on paste.
 		 * @return {Object} Object with mime types and data for those mime types.
 		 */
 		function getDataTransferItems(dataTransfer) {
-			var items = {};
+			var data = {};
 
 			if (dataTransfer) {
 				// Use old WebKit/IE API
@@ -579,26 +510,20 @@ define("tinymce/pasteplugin/Clipboard", [
 					var legacyText = dataTransfer.getData('Text');
 					if (legacyText && legacyText.length > 0) {
 						if (legacyText.indexOf(mceInternalUrlPrefix) == -1) {
-							items['text/plain'] = legacyText;
+							data['text/plain'] = legacyText;
 						}
 					}
 				}
 
 				if (dataTransfer.types) {
 					for (var i = 0; i < dataTransfer.types.length; i++) {
-						var contentType = dataTransfer.types[i],
-							data = dataTransfer.getData(contentType);
-
-						if (contentType == 'text/html') {
-							data = extractFragment(decodeEdgeData(data));
-						}
-
-						items[contentType] = data;
+						var contentType = dataTransfer.types[i];
+						data[contentType] = dataTransfer.getData(contentType);
 					}
 				}
 			}
 
-			return items;
+			return data;
 		}
 
 		/**
@@ -726,65 +651,6 @@ define("tinymce/pasteplugin/Clipboard", [
 				}
 			});
 
-			function insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode) {
-				var content;
-
-				// Grab HTML from Clipboard API or paste bin as a fallback
-				if (hasContentType(clipboardContent, 'text/html')) {
-					content = clipboardContent['text/html'];
-				} else {
-					content = getPasteBinHtml();
-
-					// If paste bin is empty try using plain text mode
-					// since that is better than nothing right
-					if (content == pasteBinDefaultContent) {
-						plainTextMode = true;
-					}
-				}
-
-				content = Utils.trimHtml(content);
-
-				// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
-				// so we need to force plain text mode in this case
-				if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
-					plainTextMode = true;
-				}
-
-				removePasteBin();
-
-				// If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
-				if (!content.length) {
-					plainTextMode = true;
-				}
-
-				// Grab plain text from Clipboard API or convert existing HTML to plain text
-				if (plainTextMode) {
-					// Use plain text contents from Clipboard API unless the HTML contains paragraphs then
-					// we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
-					if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
-						content = clipboardContent['text/plain'];
-					} else {
-						content = Utils.innerText(content);
-					}
-				}
-
-				// If the content is the paste bin default HTML then it was
-				// impossible to get the cliboard data out.
-				if (content == pasteBinDefaultContent) {
-					if (!isKeyBoardPaste) {
-						editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
-					}
-
-					return;
-				}
-
-				if (plainTextMode) {
-					pasteText(content);
-				} else {
-					pasteHtml(content);
-				}
-			}
-
 			editor.on('paste', function(e) {
 				// Getting content from the Clipboard can take some time
 				var clipboardTimer = new Date().getTime();
@@ -823,15 +689,64 @@ define("tinymce/pasteplugin/Clipboard", [
 					clipboardContent["text/html"] = getPasteBinHtml();
 				}
 
-				// If clipboard API has HTML then use that directly
-				if (hasContentType(clipboardContent, 'text/html')) {
-					e.preventDefault();
-					insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode);
-				} else {
-					Delay.setEditorTimeout(editor, function() {
-						insertClipboardContent(clipboardContent, isKeyBoardPaste, plainTextMode);
-					}, 0);
-				}
+				setTimeout(function() {
+					var content;
+
+					// Grab HTML from Clipboard API or paste bin as a fallback
+					if (hasContentType(clipboardContent, 'text/html')) {
+						content = clipboardContent['text/html'];
+					} else {
+						content = getPasteBinHtml();
+
+						// If paste bin is empty try using plain text mode
+						// since that is better than nothing right
+						if (content == pasteBinDefaultContent) {
+							plainTextMode = true;
+						}
+					}
+
+					content = Utils.trimHtml(content);
+
+					// WebKit has a nice bug where it clones the paste bin if you paste from for example notepad
+					// so we need to force plain text mode in this case
+					if (pasteBinElm && pasteBinElm.firstChild && pasteBinElm.firstChild.id === 'mcepastebin') {
+						plainTextMode = true;
+					}
+
+					removePasteBin();
+
+					// If we got nothing from clipboard API and pastebin then we could try the last resort: plain/text
+					if (!content.length) {
+						plainTextMode = true;
+					}
+
+					// Grab plain text from Clipboard API or convert existing HTML to plain text
+					if (plainTextMode) {
+						// Use plain text contents from Clipboard API unless the HTML contains paragraphs then
+						// we should convert the HTML to plain text since works better when pasting HTML/Word contents as plain text
+						if (hasContentType(clipboardContent, 'text/plain') && content.indexOf('</p>') == -1) {
+							content = clipboardContent['text/plain'];
+						} else {
+							content = Utils.innerText(content);
+						}
+					}
+
+					// If the content is the paste bin default HTML then it was
+					// impossible to get the cliboard data out.
+					if (content == pasteBinDefaultContent) {
+						if (!isKeyBoardPaste) {
+							editor.windowManager.alert('Please use Ctrl+V/Cmd+V keyboard shortcuts to paste contents.');
+						}
+
+						return;
+					}
+
+					if (plainTextMode) {
+						pasteText(content);
+					} else {
+						pasteHtml(content);
+					}
+				}, 0);
 			});
 
 			editor.on('dragstart dragend', function(e) {
@@ -890,40 +805,19 @@ define("tinymce/pasteplugin/Clipboard", [
 
 			// Remove all data images from paste for example from Gecko
 			// except internal images like video elements
-			editor.parser.addNodeFilter('img', function(nodes, name, args) {
-				function isPasteInsert(args) {
-					return args.data && args.data.paste === true;
-				}
-
-				function remove(node) {
-					if (!node.attr('data-mce-object') && src !== Env.transparentSrc) {
-						node.remove();
-					}
-				}
-
-				function isWebKitFakeUrl(src) {
-					return src.indexOf("webkit-fake-url") === 0;
-				}
-
-				function isDataUri(src) {
-					return src.indexOf("data:") === 0;
-				}
-
-				if (!editor.settings.paste_data_images && isPasteInsert(args)) {
+			editor.parser.addNodeFilter('img', function(nodes) {
+				if (!editor.settings.paste_data_images) {
 					var i = nodes.length;
 
 					while (i--) {
 						var src = nodes[i].attributes.map.src;
 
-						if (!src) {
-							continue;
-						}
-
+						// Some browsers automatically produce data uris on paste
 						// Safari on Mac produces webkit-fake-url see: https://bugs.webkit.org/show_bug.cgi?id=49141
-						if (isWebKitFakeUrl(src)) {
-							remove(nodes[i]);
-						} else if (!editor.settings.allow_html_data_urls && isDataUri(src)) {
-							remove(nodes[i]);
+						if (src && /^(data:image|webkit\-fake\-url)/.test(src)) {
+							if (!nodes[i].attr('data-mce-object') && src !== Env.transparentSrc) {
+								nodes[i].remove();
+							}
 						}
 					}
 				}
@@ -937,8 +831,8 @@ define("tinymce/pasteplugin/Clipboard", [
 /**
  * WordFilter.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -1423,9 +1317,7 @@ define("tinymce/pasteplugin/WordFilter", [
 				}
 
 				// Serialize DOM back to HTML
-				e.content = new Serializer({
-					validate: settings.validate
-				}, schema).serialize(rootNode);
+				e.content = new Serializer({}, schema).serialize(rootNode);
 			}
 		});
 	}
@@ -1440,8 +1332,8 @@ define("tinymce/pasteplugin/WordFilter", [
 /**
  * Quirks.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -1602,8 +1494,8 @@ define("tinymce/pasteplugin/Quirks", [
 /**
  * Plugin.js
  *
+ * Copyright, Moxiecode Systems AB
  * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
  *
  * License: http://www.tinymce.com/license
  * Contributing: http://www.tinymce.com/contributing
@@ -1635,12 +1527,10 @@ define("tinymce/pasteplugin/Plugin", [
 				this.active(true);
 
 				if (!userIsInformed) {
-					var message = editor.translate('Paste is now in plain text mode. Contents will now ' +
-						'be pasted as plain text until you toggle this option off.');
-					editor.notificationManager.open({
-						text: message,
-						type: 'info'
-					});
+					editor.windowManager.alert(
+						'Paste is now in plain text mode. Contents will now ' +
+						'be pasted as plain text until you toggle this option off.'
+					);
 
 					userIsInformed = true;
 				}
