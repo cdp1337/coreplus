@@ -144,7 +144,7 @@ class PackageRepositoryController extends Controller_2_1 {
 		}
 		
 		// Retrieve a list of connections to this repo for both downloading and checks!
-		$where = new DatasetWhereClause();
+		$where = new \Core\Datamodel\DatasetWhereClause();
 		$where->addWhereSub('OR', ['baseurl = /packagerepository', 'baseurl = /packagerepository/download']);
 		
 		// Default to a 3-month window for now just to have a relatively useful sample of data.
