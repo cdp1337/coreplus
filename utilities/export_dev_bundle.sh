@@ -12,6 +12,10 @@ if [ ! -e "$EXPORTDIR" ]; then
 	mkdir -p "$EXPORTDIR"
 fi
 
+# Remove old exports so that they do not clutter the filesystem.
+# These aren't meant to be archival storage.
+rm -fr $EXPORTDIR/*.tgz
+
 # Tar up everything, this will be the full build.
 echo "Exporting full tarball..."
 tar -czf "$FULLEXPORTTGZ" -C "$BASEDIR" \
