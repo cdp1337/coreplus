@@ -17,7 +17,7 @@ class CronLogModel extends Model {
 		),
 		'cron'      => array(
 			'type'     => Model::ATT_TYPE_ENUM,
-			'options' => array('1-minute', '5-minute', '15-minute', 'hourly', '2-hour', '3-hour','6-hour', '12-hour', 'daily', 'weekly', 'monthly'),
+			'options' => array('1-minute', '5-minute', '10-minute', '15-minute', '20-minute', '30-minute', '45-minute', 'hourly', '2-hour', '3-hour','6-hour', '12-hour', 'daily', 'weekly', 'monthly'),
 			'default' => 'hourly',
 			'required' => true,
 			'null'     => false,
