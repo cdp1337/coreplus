@@ -4,7 +4,11 @@
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/10-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/15-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/20-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/30-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/45-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/2-hour" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/3-hour" description="Hourly hook called from the cron system"/>

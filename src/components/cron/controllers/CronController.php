@@ -17,7 +17,11 @@ class CronController extends Controller_2_1 {
 		$crons = [
 			'1-minute'  => SECONDS_ONE_MINUTE,
 			'5-minute'  => SECONDS_ONE_MINUTE*5,
+			'10-minute' => SECONDS_ONE_MINUTE*10,
 			'15-minute' => SECONDS_ONE_MINUTE*15,
+			'20-minute' => SECONDS_ONE_MINUTE*20,
+			'30-minute' => SECONDS_ONE_MINUTE*30,
+			'45-minute' => SECONDS_ONE_MINUTE*45,
 			'hourly'    => SECONDS_ONE_HOUR,
 			'2-hour'    => SECONDS_ONE_HOUR*2,
 			'3-hour'    => SECONDS_ONE_HOUR*3,
