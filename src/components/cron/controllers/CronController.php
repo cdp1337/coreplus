@@ -293,7 +293,11 @@ class CronController extends Controller_2_1 {
 		switch($cron){
 			case '1-minute':
 			case '5-minute':
+			case '10-minute':
 			case '15-minute':
+			case '20-minute':
+			case '30-minute':
+			case '45-minute':
 			case 'hourly':
 			case '2-hour':
 			case '3-hour':
