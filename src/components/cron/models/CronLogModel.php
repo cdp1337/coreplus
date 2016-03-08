@@ -78,25 +78,53 @@ class CronLogModel extends Model {
 		$month = $date->format('U');
 		$date->modify('-5 months');
 		$half = $date->format('U');
-		
+
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
 			->where('cron = 1-minute')
 			->where('created <= ' . $week)
 			->execute();
-		
+
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
 			->where('cron = 5-minute')
 			->where('created <= ' . $week)
 			->execute();
-		
+
+		\Core\Datamodel\Dataset::Init()
+			->delete()
+			->table('cron_log')
+			->where('cron = 10-minute')
+			->where('created <= ' . $week)
+			->execute();
+
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
 			->where('cron = 15-minute')
+			->where('created <= ' . $week)
+			->execute();
+
+		\Core\Datamodel\Dataset::Init()
+			->delete()
+			->table('cron_log')
+			->where('cron = 20-minute')
+			->where('created <= ' . $week)
+			->execute();
+
+		\Core\Datamodel\Dataset::Init()
+			->delete()
+			->table('cron_log')
+			->where('cron = 30-minute')
+			->where('created <= ' . $week)
+			->execute();
+
+		\Core\Datamodel\Dataset::Init()
+			->delete()
+			->table('cron_log')
+			->where('cron = 45-minute')
 			->where('created <= ' . $week)
 			->execute();
 		
