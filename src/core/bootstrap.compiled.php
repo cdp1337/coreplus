@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 23 Mar 2016 20:10:34 -0400
+ * @compiled Wed, 23 Mar 2016 22:44:44 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7461,6 +7461,7 @@ public $point = 0;
 public $user;
 public $stability;
 public $build;
+public $core;
 public function __construct($version = null){
 if($version){
 $this->parseString($version);
@@ -7477,6 +7478,9 @@ $ret .= '.' . $this->build;
 if($this->user){
 $ret .= '~' . $this->user;
 }
+if($this->core){
+$ret .= '-' . $this->core;
+}
 return $ret;
 }
 public function parseString($version) {
@@ -7490,9 +7494,17 @@ $this->minor = $parts[1];
 }
 else{
 $digit = $parts[1];
-if(($pos = strpos($digit, '~')) !== false){
+if(($pos = strpos($digit, '~core')) !== false){
+$this->minor = substr($digit, 0, $pos);
+$this->core = substr($digit, $pos+5);
+}
+elseif(($pos = strpos($digit, '~')) !== false){
 $this->minor = substr($digit, 0, $pos);
 $this->user = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, '-')) !== false){
+$this->minor = substr($digit, 0, $pos);
+$this->core = substr($digit, $pos+1);
 }
 elseif(($pos = strpos($digit, 'a')) !== false){
 $this->minor = substr($digit, 0, $pos);
@@ -7514,9 +7526,17 @@ $this->point = $parts[2];
 }
 else{
 $digit = $parts[2];
-if(($pos = strpos($digit, '~')) !== false){
+if(($pos = strpos($digit, '~core')) !== false){
+$this->point = substr($digit, 0, $pos);
+$this->core = substr($digit, $pos+5);
+}
+elseif(($pos = strpos($digit, '~')) !== false){
 $this->point = substr($digit, 0, $pos);
 $this->user = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, '-')) !== false){
+$this->point = substr($digit, 0, $pos);
+$this->core = substr($digit, $pos+1);
 }
 elseif(($pos = strpos($digit, 'a')) !== false){
 $this->point = substr($digit, 0, $pos);
@@ -7538,9 +7558,17 @@ $this->build = $parts[3];
 }
 else{
 $digit = $parts[3];
+if(($pos = strpos($digit, '~core')) !== false){
+$this->build = substr($digit, 0, $pos);
+$this->core = substr($digit, $pos+5);
+}
 if(($pos = strpos($digit, '~')) !== false){
 $this->build = substr($digit, 0, $pos);
 $this->user = substr($digit, $pos);
+}
+elseif(($pos = strpos($digit, '-')) !== false){
+$this->build = substr($digit, 0, $pos);
+$this->core = substr($digit, $pos+1);
 }
 else{
 $this->build = $digit;
@@ -7594,6 +7622,9 @@ $v2    = $other->major . '.' . $other->minor . '.' . $other->point;
 $check = version_compare($v1, $v2);
 if($check == 0 && $this->user && $other->user){
 $check = version_compare('1.0' . $this->user, '1.0' . $other->user);
+}
+if($check == 0 && $this->core && $other->core){
+$check = version_compare($this->core, $other->core);
 }
 if($check == 0 && ($this->stability || $other->stability)){
 $check = version_compare('1.0' . $this->stability, '1.0' . $other->stability);

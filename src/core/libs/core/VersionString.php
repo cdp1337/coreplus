@@ -66,6 +66,8 @@ class VersionString implements \ArrayAccess {
 	public $stability;
 	/** @var string|null The build string, if applicable. */
 	public $build;
+	/** @var string|null ~coreN or -n after the main version. */
+	public $core;
 
 	public function __construct($version = null){
 		if($version){
@@ -89,6 +91,9 @@ class VersionString implements \ArrayAccess {
 		}
 		if($this->user){
 			$ret .= '~' . $this->user;
+		}
+		if($this->core){
+			$ret .= '-' . $this->core;
 		}
 
 		return $ret;
@@ -127,10 +132,18 @@ class VersionString implements \ArrayAccess {
 			}
 			else{
 				$digit = $parts[1];
-
-				if(($pos = strpos($digit, '~')) !== false){
+				
+				if(($pos = strpos($digit, '~core')) !== false){
+					$this->minor = substr($digit, 0, $pos);
+					$this->core = substr($digit, $pos+5);
+				}
+				elseif(($pos = strpos($digit, '~')) !== false){
 					$this->minor = substr($digit, 0, $pos);
 					$this->user = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, '-')) !== false){
+					$this->minor = substr($digit, 0, $pos);
+					$this->core = substr($digit, $pos+1);
 				}
 				elseif(($pos = strpos($digit, 'a')) !== false){
 					$this->minor = substr($digit, 0, $pos);
@@ -153,10 +166,18 @@ class VersionString implements \ArrayAccess {
 			}
 			else{
 				$digit = $parts[2];
-
-				if(($pos = strpos($digit, '~')) !== false){
+				
+				if(($pos = strpos($digit, '~core')) !== false){
+					$this->point = substr($digit, 0, $pos);
+					$this->core = substr($digit, $pos+5);
+				}
+				elseif(($pos = strpos($digit, '~')) !== false){
 					$this->point = substr($digit, 0, $pos);
 					$this->user = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, '-')) !== false){
+					$this->point = substr($digit, 0, $pos);
+					$this->core = substr($digit, $pos+1);
 				}
 				elseif(($pos = strpos($digit, 'a')) !== false){
 					$this->point = substr($digit, 0, $pos);
@@ -179,10 +200,18 @@ class VersionString implements \ArrayAccess {
 			}
 			else{
 				$digit = $parts[3];
-
+				
+				if(($pos = strpos($digit, '~core')) !== false){
+					$this->build = substr($digit, 0, $pos);
+					$this->core = substr($digit, $pos+5);
+				}
 				if(($pos = strpos($digit, '~')) !== false){
 					$this->build = substr($digit, 0, $pos);
 					$this->user = substr($digit, $pos);
+				}
+				elseif(($pos = strpos($digit, '-')) !== false){
+					$this->build = substr($digit, 0, $pos);
+					$this->core = substr($digit, $pos+1);
 				}
 				else{
 					$this->build = $digit;
@@ -291,6 +320,11 @@ class VersionString implements \ArrayAccess {
 		// HOWEVER if versions 1.2.0~core3 and 1.2.0~core5 are compared, it'll use the user version.
 		if($check == 0 && $this->user && $other->user){
 			$check = version_compare('1.0' . $this->user, '1.0' . $other->user);
+		}
+
+		// Allow for Core-specific build version strings
+		if($check == 0 && $this->core && $other->core){
+			$check = version_compare($this->core, $other->core);
 		}
 
 		// Apply the same to stability
