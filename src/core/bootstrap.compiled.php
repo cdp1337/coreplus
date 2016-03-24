@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 01 Mar 2016 01:32:52 -0500
+ * @compiled Wed, 23 Mar 2016 20:10:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -5810,7 +5810,7 @@ public static $Schema = [
 ],
 'avatar'               => [
 'type'      => Model::ATT_TYPE_STRING,
-'maxlength' => '64',
+'maxlength' => '128',
 'form'      => [
 'type'    => 'file',
 'accept'  => 'image/*',
@@ -6522,6 +6522,7 @@ $log->log('No groups set as default, new users will not belong to any groups.');
 }
 $log->log('Starting ' . ($merge ? '*MERGE*' : '*skipping*' ) . ' import of ' . sizeof($data) . ' users');
 foreach($data as $dat) {
+if(isset($dat[$pk])){
 if($pk == 'email' || $pk == 'id') {
 $user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
 }
@@ -6533,6 +6534,10 @@ $user = $uucm->getLink('UserModel');
 else {
 $user = UserModel::Find(['email = ' . $dat['email']], 1);
 }
+}
+}
+else{
+$user = null;
 }
 $status_type = $user ? 'Updated' : 'Created';
 if($user && !$merge) {
@@ -13774,6 +13779,9 @@ $code = 'Unknown PHP Error [' . $errno . ']';
 break;
 }
 if($suppressed){
+if(!DEVELOPMENT_MODE){
+return;
+}
 $code .= ' @SUPPRESSED';
 }
 if($errfile && strpos($errfile, ROOT_PDIR) === 0){
@@ -14896,7 +14904,7 @@ public static function CompareStrings($val1, $val2) {
 return \Core\compare_strings($val1, $val2);
 }
 public static function GenerateUUID(){
-$serverid = 1;
+$serverid = defined('SERVER_ID') ? SERVER_ID : 1;
 return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
 }
 public static function GetSupplementalModels($modelname){
