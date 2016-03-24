@@ -80,9 +80,7 @@ Core Plus 5.0.0
 	* Minify core.strings, (must have forgotten to do this before).
 	* Set version freeze to 0 by default.  This is an enterprise feature that's not useful for standard
 	  community sites.
-
-Core Plus 4.9.0
-
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 21:59:46 -0400
 
 Core Plus 4.2.0
 
