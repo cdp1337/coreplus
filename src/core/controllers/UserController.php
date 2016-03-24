@@ -560,13 +560,13 @@ class UserController extends Controller_2_1{
 					$setpasswordlink = null;
 				}
 
+				$email->templatename = 'emails/user/activation.tpl';
 				$email->assign('user', $user);
 				$email->assign('sitename', SITENAME);
 				$email->assign('rooturl', ROOT_URL);
 				$email->assign('loginurl', \Core\resolve_link('/user/login'));
 				$email->assign('setpasswordlink', $setpasswordlink);
 				$email->setSubject('Welcome to ' . SITENAME);
-				$email->templatename = 'emails/user/activation.tpl';
 				$email->to($user->get('email'));
 
 				// TESTING
