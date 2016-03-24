@@ -1,11 +1,11 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0~core1" name="CodeMirror" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-3" name="CodeMirror" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="2479d72c67b9cad69ade8770725c091b"/>
+		<file filename="CHANGELOG" md5="eb674366e1c4bc19ed8978f701f32fff"/>
 		<file filename="classes/codemirror/Utils.php" md5="8024356fc1f9ad48d16203bf8b552246">
 			<class name="CodeMirror\Utils"/>
 		</file>
@@ -32,9 +32,10 @@
 		<upgrade from="3.12~core2" to="3.12~core3"/>
 		<upgrade from="3.12~core3" to="3.12~core4"/>
 		<upgrade from="3.12~core4" to="5.6.0~core1"/>
+		<upgrade from="5.6.0~core1" to="5.6.0-3"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/codemirror.css" md5="e80f3d7349a4563458e8088bce1ae39e"/>
+		<file filename="assets/css/codemirror.css" md5="81c74138a50b07e3d86973fa4be3da0b"/>
 		<file filename="assets/libs/codemirror/AUTHORS" md5="dae54d0ba943da7adb0cd9cc83d8caeb"/>
 		<file filename="assets/libs/codemirror/CONTRIBUTING.md" md5="89dd65bf9084fce69e3701baaffe1de8"/>
 		<file filename="assets/libs/codemirror/LICENSE" md5="9b220ffd4c5ac8f2dd268ac13493a602"/>
