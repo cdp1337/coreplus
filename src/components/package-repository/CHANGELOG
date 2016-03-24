@@ -1,3 +1,11 @@
+Package Repository 1.1.0
+
+	* [Bug] Fix the PackageRepository to use the namespaced version of DatasetWhereClause for 5.0
+	  compatibility.
+	* Tweak the analytic reports on the package repo system to be a little more useful.
+	* Add analytics to the package repository system and switch to the new GPG library in Core.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:48:16 -0400
+
 Package Repository 1.0.4
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.

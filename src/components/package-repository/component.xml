@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.0.4">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.1.0">
 	<configs>
 		<config key="/package_repository/base_directory" type="string"/>
 		<config key="/package_repository/is_private" default="0" type="boolean"/>
@@ -18,10 +18,10 @@
 		<page baseurl="/packagerepository/analytics" title="t:STRING_PACKAGE_REPOSITORY_ANALYTICS" admin="1" access="p:/package_repository/view_analytics" group="t:STRING_REPORTING"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="89b46c11f42aa4031d59131d9a5aa2df"/>
+		<file filename="CHANGELOG" md5="5ac4d200e4fe09e6cdc16e5a7f3ad8fb"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="assets/scss/package-repository.scss" md5="f1386c9db81b75b581af931c10ac48fe"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="fdc1c194b0853d49e3d4bfceccad4203">
+		<file filename="assets/scss/package-repository.scss" md5="c1c8326bc8c4ef205387fa36d7a4d63f"/>
+		<file filename="controllers/PackageRepositoryController.php" md5="72cf71baa0124de85494d22db4af4e52">
 			<controller name="PackageRepositoryController"/>
 		</file>
 		<file filename="controllers/PackageRepositoryLicenseController.php" md5="181fa2ec1c74406f03b5238d8503629f">
@@ -36,7 +36,7 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/pages/packagerepository/analytics.tpl" md5="4b75bd884d0e5095ed62e526df7a29c7"/>
+		<file filename="templates/pages/packagerepository/analytics.tpl" md5="193308b38899c4eea4c5ed997ef028fc"/>
 		<file filename="templates/pages/packagerepository/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/packagerepository/index.tpl" md5="6de5afe57770779ad5165c095a049e39"/>
 		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -48,14 +48,15 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
 		<upgrade from="1.0.3" to="1.0.4"/>
+		<upgrade from="1.0.4" to="1.1.0"/>
 	</upgrades>
+	<assets>
+		<file filename="assets/css/package-repository.css" md5="47d22655fd93ac1a111e50a2ab7591b5"/>
+		<file filename="assets/css/package-repository.css.map" md5="32691ede4162443382397f92abbfe769"/>
+		<file filename="assets/css/package-repository.min.css" md5="94fb1013dc5da945a10c3231b6ddb8d2"/>
+	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
-	<assets>
-		<file filename="assets/css/package-repository.css" md5="affaed13cc449437ff76f21518160c3d"/>
-		<file filename="assets/css/package-repository.css.map" md5="579dbe0b0860c5436195f12d84adc4bb"/>
-		<file filename="assets/css/package-repository.min.css" md5="50792fffaef0b0023b392ced664cadd6"/>
-	</assets>
 </component>
 
