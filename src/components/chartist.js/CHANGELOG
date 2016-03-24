@@ -1,3 +1,9 @@
+Chartist.JS 0.9.5-2
+
+	* Correctly minified version of chartist.js.
+	* Add Chartist.JS library for SVG-based graph generation.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:00:50 -0400
+
 Chartist.JS 0.9.5-1
 
 

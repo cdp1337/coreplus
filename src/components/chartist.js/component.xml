@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.5-1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.5-2">
 	<provides>
 		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="fe2c27362e0d9135834beb51c1fb7093"/>
+		<file filename="CHANGELOG" md5="b0140e9e7077028d2c3f9e8f7ae6c4c2"/>
 		<file filename="CHANGELOG.md" md5="e13af389bde5daa8ceb3d1c0d4403264"/>
 		<file filename="CODINGSTYLE.md" md5="be72d83bc148e1ad9874d889a109307d"/>
 		<file filename="CONTRIBUTING.md" md5="d5ac0fe9972fbaa49c539e28f8c61487"/>
@@ -24,9 +24,12 @@
 		<file filename="assets/css/chartist.css" md5="b9a91a1e35ddaa5c9f333d725fdf91cf"/>
 		<file filename="assets/css/chartist.min.css" md5="b9a91a1e35ddaa5c9f333d725fdf91cf"/>
 		<file filename="assets/js/chartist.js" md5="4e688387f6663d5a4eea99bbfa1c3975"/>
-		<file filename="assets/js/chartist.min.js" md5="d41d8cd98f00b204e9800998ecf8427e"/>
+		<file filename="assets/js/chartist.min.js" md5="cc4ba68c611dd83bc5f9d8b54bcc30ff"/>
 		<file filename="assets/js/chartist.min.js.map" md5="8a475158f2f74c33a010c325263f19c4"/>
 	</assets>
+	<upgrades>
+		<upgrade from="0.9.5-1" to="0.9.5-2"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 		<author name="Sam Hocevar" email="sam@hocevar.net"/>
