@@ -5,6 +5,7 @@
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/15-minute" description="Hourly hook called from the cron system"/>
+		<hookregister name="/cron/30-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/2-hour" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/3-hour" description="Hourly hook called from the cron system"/>
@@ -14,7 +15,7 @@
 		<hookregister name="/cron/weekly" description="Weekly hook called from the cron system"/>
 		<hookregister name="/cron/monthly" description="Monthly hook called from the cron system"/>
 		<hook name="/core/admin/view" call="CronHelper::AdminHook"/>
-		<hook name="/cron/daily" call="CronLogModel::_CleanupDatabase"/>
+		<hook name="/cron/hourly" call="CronLogModel::_CleanupDatabase"/>
 	</hooks>
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>

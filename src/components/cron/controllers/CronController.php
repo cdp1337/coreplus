@@ -18,6 +18,7 @@ class CronController extends Controller_2_1 {
 			'1-minute'  => SECONDS_ONE_MINUTE,
 			'5-minute'  => SECONDS_ONE_MINUTE*5,
 			'15-minute' => SECONDS_ONE_MINUTE*15,
+			'30-minute' => SECONDS_ONE_MINUTE*30,
 			'hourly'    => SECONDS_ONE_HOUR,
 			'2-hour'    => SECONDS_ONE_HOUR*2,
 			'3-hour'    => SECONDS_ONE_HOUR*3,
@@ -199,6 +200,10 @@ class CronController extends Controller_2_1 {
 				'name' => 'cron',
 				'options' => array(
 					'' => '-- All --',
+					'1-minute' => '1-minute',
+					'5-minute' => '5-minute',
+					'15-minute' => '15-minute',
+					'30-minute' => '30-minute',
 					'hourly' => 'hourly',
 					'daily' => 'daily',
 					'weekly' => 'weekly',
@@ -290,6 +295,7 @@ class CronController extends Controller_2_1 {
 			case '1-minute':
 			case '5-minute':
 			case '15-minute':
+			case '30-minute':
 			case 'hourly':
 			case '2-hour':
 			case '3-hour':

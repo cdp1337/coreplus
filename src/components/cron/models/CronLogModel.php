@@ -17,7 +17,7 @@ class CronLogModel extends Model {
 		),
 		'cron'      => array(
 			'type'     => Model::ATT_TYPE_ENUM,
-			'options' => array('1-minute', '5-minute', '15-minute', 'hourly', '2-hour', '3-hour','6-hour', '12-hour', 'daily', 'weekly', 'monthly'),
+			'options' => array('1-minute', '5-minute', '15-minute', '30-minute', 'hourly', '2-hour', '3-hour','6-hour', '12-hour', 'daily', 'weekly', 'monthly'),
 			'default' => 'hourly',
 			'required' => true,
 			'null'     => false,
@@ -72,6 +72,10 @@ class CronLogModel extends Model {
 	 */
 	public static function _CleanupDatabase(){
 		$date = new \Core\Date\DateTime();
+		$date->modify('-2 hours');
+		$hours = $date->format('U');
+		$date->modify('-1 day');
+		$day = $date->format('U');
 		$date->modify('-1 week');
 		$week = $date->format('U');
 		$date->modify('-3 weeks');
@@ -83,23 +87,30 @@ class CronLogModel extends Model {
 			->delete()
 			->table('cron_log')
 			->where('cron = 1-minute')
-			->where('created <= ' . $week)
+			->where('created <= ' . $hours)
 			->execute();
 		
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
 			->where('cron = 5-minute')
-			->where('created <= ' . $week)
+			->where('created <= ' . $hours)
 			->execute();
-		
+
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
 			->where('cron = 15-minute')
-			->where('created <= ' . $week)
+			->where('created <= ' . $hours)
 			->execute();
-		
+
+		\Core\Datamodel\Dataset::Init()
+			->delete()
+			->table('cron_log')
+			->where('cron = 30-minute')
+			->where('created <= ' . $hours)
+			->execute();
+
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
@@ -139,14 +150,14 @@ class CronLogModel extends Model {
 			->delete()
 			->table('cron_log')
 			->where('cron = daily')
-			->where('created <= ' . $month)
+			->where('created <= ' . $week)
 			->execute();
 
 		\Core\Datamodel\Dataset::Init()
 			->delete()
 			->table('cron_log')
 			->where('cron = weekly')
-			->where('created <= ' . $half)
+			->where('created <= ' . $month)
 			->execute();
 
 		\Core\Datamodel\Dataset::Init()
