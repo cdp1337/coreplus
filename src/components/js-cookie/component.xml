@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JS Cookie" version="2.0.3-1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JS Cookie" version="2.0.3-2">
 	<provides>
 		<provide version="2.0.3" name="js.cookie" type="library"/>
 		<scriptlibrary name="js.cookie" call="\JSCookie\JSCookie::IncludeJS"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="d94517c7f01f9929e7f46e09b69e555f"/>
+		<file filename="CHANGELOG" md5="38c23cfb89aaf1c9e99559d3e2e35e59"/>
+		<file filename="CONTRIBUTING.md" md5="a830e593ceb228b849e91ff850562633"/>
 		<file filename="MIT-LICENSE.txt" md5="962f4f746673a8b7bb2c26d1800de5cb"/>
 		<file filename="README.md" md5="24690bc71e38173a017ad96af81799b6"/>
-		<file filename="libs/jscookie/JSCookie.php" md5="64630ecadcaabbc673b4af042f8c6191">
+		<file filename="libs/jscookie/JSCookie.php" md5="17f6153c13eec7820cd7c9491050805e">
 			<class name="JSCookie\JSCookie"/>
 		</file>
 	</files>
@@ -18,6 +19,9 @@
 		<file filename="assets/js/js-cookie/js.cookie.js" md5="e25babeb8470a438aa42b01b96745555"/>
 		<file filename="assets/js/js-cookie/js.cookie.min.js" md5="947f7b51e39a367442f3b264975cedb3"/>
 	</assets>
+	<upgrades>
+		<upgrade from="2.0.3-1" to="2.0.3-2"/>
+	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
