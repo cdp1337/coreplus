@@ -73,7 +73,7 @@ class UserModel extends Model {
 		],
 		'avatar'               => [
 			'type'      => Model::ATT_TYPE_STRING,
-			'maxlength' => '64',
+			'maxlength' => '128',
 			'form'      => [
 				'type'    => 'file',
 				'accept'  => 'image/*',
@@ -1347,24 +1347,31 @@ class UserModel extends Model {
 
 		foreach($data as $dat) {
 
-			if($pk == 'email' || $pk == 'id') {
-				// These are the only two fields on the User object itself.
-				$user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
-			}
-			else {
-				$uucm = UserUserConfigModel::Find(['key = ' . $pk, 'value = ' . $dat[ $pk ]], 1);
-
-				if($uucm) {
-					$user = $uucm->getLink('UserModel');
+			if(isset($dat[$pk])){
+				// Only check the information if the primary key is set on this record.
+				if($pk == 'email' || $pk == 'id') {
+					// These are the only two fields on the User object itself.
+					$user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
 				}
 				else {
+					$uucm = UserUserConfigModel::Find(['key = ' . $pk, 'value = ' . $dat[ $pk ]], 1);
 
-					// Try the lookup from the email address instead.
-					// This will force accounts that exist to be synced up correctly.
-					// The only caveat to this is that users will not be updated with the foreign key if merge is disabled.
-					$user = UserModel::Find(['email = ' . $dat['email']], 1);
+					if($uucm) {
+						$user = $uucm->getLink('UserModel');
+					}
+					else {
+
+						// Try the lookup from the email address instead.
+						// This will force accounts that exist to be synced up correctly.
+						// The only caveat to this is that users will not be updated with the foreign key if merge is disabled.
+						$user = UserModel::Find(['email = ' . $dat['email']], 1);
+					}
 				}
 			}
+			else{
+				$user = null;
+			}
+			
 
 			$status_type = $user ? 'Updated' : 'Created';
 
