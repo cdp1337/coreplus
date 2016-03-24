@@ -164,6 +164,12 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	}
 
 	if($suppressed){
+		// Ignore suppressed errors when on production.
+		// This is required because PHP < 7.0 has some functions that can only be called with the '@' operator.
+		// Such as LDAP binding or many things in Smarty.
+		if(!DEVELOPMENT_MODE){
+			return;	
+		}
 		$code .= ' @SUPPRESSED';
 	}
 
