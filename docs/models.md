@@ -355,17 +355,17 @@ This can be done to provide new control links for another model, add custom scri
 or even add new columns to the original table.
 
 To make use of this supplemental system, create a new class in your extending component
-that matches the rules of `YourComponent_OrignalNameSupplementalModel`
+that matches the rules of `YourComponent_OrignalNameModelSupplemental`
 
 Where:
 
     Some unique name space, usually your component name
     exactly one "_"
     the original model base name
-    "SupplementalModel"
+    "ModelSupplemental"
 
 For example if you have a component named Baz and you wanted to extend the User model,
-your supplemental name should be `Baz_UserSupplementalModel`.
+your supplemental name should be `Baz_UserModelSupplemental`.
 
 ### Supplemental Properties
 
