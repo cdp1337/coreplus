@@ -1,3 +1,9 @@
+PHPWhois 5.0.0-4
+
+	* Copyright update from 2015 to 2016.
+	* Remove geocode\Country as it duplicates GeoCountryModel and the model is better at it.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:48:43 -0400
+
 PHPWhois 5.0.0-3
 
 	* Some more fixes for the damned phpwhois library.  (Can someone please replace this damn thing
