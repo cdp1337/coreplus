@@ -70,6 +70,8 @@
 		<file filename="assets/css/images/ui-icons_454545_256x240.png" md5="3b001ae33bd74fff64bc609ce6a55628"/>
 		<file filename="assets/css/images/ui-icons_888888_256x240.png" md5="6cc57703e2f287de68f76244a618f15c"/>
 		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="fdc58c14e91fbb086f953818c525a7ee"/>
+		<file filename="assets/css/images/yellow.png" md5="251d5e87dd14be5dc1f2f3fa4b405d92"/>
+		<file filename="assets/css/images/yellow@2x.png" md5="334c995aadc9bc51d9ba042af807cf3c"/>
 		<file filename="assets/css/jquery-ui-1.11.4.css" md5="f13d3c58407b2bac7d773900d84754f5"/>
 		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="cfacb039c20e0c0c52c438e86cc175d7"/>
 		<file filename="assets/css/jquery.icheck.css" md5="a75642d46565de832b31f2d073d25272"/>
