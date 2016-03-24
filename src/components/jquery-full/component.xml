@@ -37,6 +37,26 @@
 		<config key="/jquery/use_2_x" title="Use JQuery 2.x" type="enum" options="0|1|auto" default="auto" description="jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Uncheck this to revert back to 1.11 when calling jQuery if you need to support clients running old versions of IE."/>
 	</configs>
 	<assets>
+		<file filename="assets/css/images/aero.png" md5="5681c3c82b05e7236a747304d9efc65f"/>
+		<file filename="assets/css/images/aero@2x.png" md5="e87893c94fe3c1ef0c4684ac92f47cc1"/>
+		<file filename="assets/css/images/blue.png" md5="96f8a9053c5b1ab49111b9e243fd5c38"/>
+		<file filename="assets/css/images/blue@2x.png" md5="2694acfdd21dfca86aa67beac8e0a108"/>
+		<file filename="assets/css/images/flat.png" md5="2176d6d6e814b0da1c71b73ca7a675e8"/>
+		<file filename="assets/css/images/flat@2x.png" md5="0fd2837df39867a90c7a6fca9ca6fe6e"/>
+		<file filename="assets/css/images/green.png" md5="869a3a67e8e1ca55bc5ee0a70438f320"/>
+		<file filename="assets/css/images/green@2x.png" md5="1a0de24f0bfb1a31dd5d2a11c94484e7"/>
+		<file filename="assets/css/images/grey.png" md5="aed7d43e7f00789bf6e18c6bb9570d14"/>
+		<file filename="assets/css/images/grey@2x.png" md5="fec2537d7a4b8ceb5a26fd7bf1b22dee"/>
+		<file filename="assets/css/images/orange.png" md5="a0ef9dc171052d43ca07023635da2af3"/>
+		<file filename="assets/css/images/orange@2x.png" md5="b9b55a9183b928c68be28c59bd12821a"/>
+		<file filename="assets/css/images/pink.png" md5="5db00a177725022a6a1249537583a738"/>
+		<file filename="assets/css/images/pink@2x.png" md5="61bca2872be7b37b479026896c86babf"/>
+		<file filename="assets/css/images/purple.png" md5="9284a1280875a68f96b31d512155d35f"/>
+		<file filename="assets/css/images/purple@2x.png" md5="fca6329c2e393036dcf6e2b3500c545c"/>
+		<file filename="assets/css/images/red.png" md5="5902e033b5c08edf7ddeef3c435c5a44"/>
+		<file filename="assets/css/images/red@2x.png" md5="c517aac442b70478eedfdd5438d621d5"/>
+		<file filename="assets/css/images/square.png" md5="86ba927efe80c36da9a4b76ed5768fce"/>
+		<file filename="assets/css/images/square@2x.png" md5="a711b529b4fe1f20f0f9850c67a87848"/>
 		<file filename="assets/css/images/ui-bg_flat_0_aaaaaa_40x100.png" md5="bb6a5f39e51c3f28c716467bd7128c67"/>
 		<file filename="assets/css/images/ui-bg_flat_75_ffffff_40x100.png" md5="3f7d973feb0b40f3641b09052ab306df"/>
 		<file filename="assets/css/images/ui-bg_glass_55_fbf9ee_1x400.png" md5="1bddecb7b5b0f6b0d63f55548efd1e4d"/>
@@ -53,6 +73,7 @@
 		<file filename="assets/css/jquery-ui-1.11.4.css" md5="f13d3c58407b2bac7d773900d84754f5"/>
 		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="cfacb039c20e0c0c52c438e86cc175d7"/>
 		<file filename="assets/css/jquery.icheck.css" md5="a75642d46565de832b31f2d073d25272"/>
+		<file filename="assets/css/jquery.icheck.min.css" md5="a75642d46565de832b31f2d073d25272"/>
 		<file filename="assets/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.js" md5="3b80424646a7ecdb19273d86800c1ac0"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.min.js" md5="f5fb81fde31e9f5d0ccf14eb479cbc8d"/>
@@ -101,7 +122,7 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG" md5="1132c613e8db766dd753b08e1f3692b5"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="caad11c3bb43763a4b522d41e68c74b4">
+		<file filename="JQuery.lib.php" md5="2d6cd8eded810b37f83511608f999014">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
