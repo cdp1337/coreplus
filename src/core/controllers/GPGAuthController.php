@@ -569,7 +569,7 @@ EOD;
 		}
 
 		// Lastly, verify that the signature is correct.
-		if(!$gpg->verifyDetachedSignature($form->getElement('message')->get('value'), $data['sentence'], $keyid)){
+		if(!$gpg->verifyDataSignature($form->getElement('message')->get('value'), $data['sentence'])){
 			\Core\set_message('Invalid signature!', 'error');
 			return false;
 		}
