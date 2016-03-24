@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="1.2.3">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="1.2.4">
 	<description>
 		A simple component to display a favicon for various browsers and mobile devices.
 	</description>
@@ -14,12 +14,12 @@
 		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="f49cd18c7f149f6eb2d052730718b4cb"/>
+		<file filename="CHANGELOG" md5="19ddb07c384e3abd39d337a19935df42"/>
 		<file filename="README.md" md5="e758db0d8cb23bbfe0b3132575fed948"/>
-		<file filename="controllers/FaviconController.php" md5="f322e8841db4c65823057088736c2b6d">
+		<file filename="controllers/FaviconController.php" md5="7ed60cd421725bbf7863c71155c1b2cf">
 			<controller name="FaviconController"/>
 		</file>
-		<file filename="libs/favicon/ViewMeta_favicon.php" md5="05742cc4a960affdb734accdc96d7890">
+		<file filename="libs/favicon/ViewMeta_favicon.php" md5="014e3652508f0f3c769e47c64222c7af">
 			<class name="ViewMeta_favicon"/>
 		</file>
 	</files>
@@ -36,6 +36,7 @@
 		<upgrade from="1.2.0" to="1.2.1"/>
 		<upgrade from="1.2.1" to="1.2.2"/>
 		<upgrade from="1.2.2" to="1.2.3"/>
+		<upgrade from="1.2.3" to="1.2.4"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
