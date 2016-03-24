@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.2" name="Google" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.3" name="Google" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -29,23 +29,23 @@
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="t:STRING_CONFIGURE" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="21ecf38d58a420de449991f2eeb890a4"/>
-		<file filename="controllers/GoogleController.php" md5="20a662c7b42b68bcc79294e98fbd1172">
+		<file filename="CHANGELOG" md5="f7666c8d89375ca05e3f1dcc9a6d129b"/>
+		<file filename="controllers/GoogleController.php" md5="40e1b64b24519c0b5440a7bf24bdfe16">
 			<controller name="GoogleController"/>
 		</file>
-		<file filename="libs/google/CSE/Helper.php" md5="3b1c00fa0625fda212bc9ec53f1c3fe3">
+		<file filename="libs/google/CSE/Helper.php" md5="c38f429641fc9c6a15744ecb4e86dba7">
 			<class name="Google\CSE\Helper"/>
 		</file>
-		<file filename="libs/google/analytics/Helper.php" md5="8597d047e2b42b4d22d15c7043cf1a64">
+		<file filename="libs/google/analytics/Helper.php" md5="74c87f785b3cec6145e3ec8491ef98a9">
 			<class name="Google\Analytics\Helper"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeRequest.php" md5="39c501957ef6a3b61c0b6ea73d09b98b">
+		<file filename="libs/google/maps/GeocodeRequest.php" md5="dbb354e17d6f55e4b477c3d88b6c50bf">
 			<class name="Google\Maps\GeocodeRequest"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeResponse.php" md5="d293207f6b2ebe4b796d971e10d793a4">
+		<file filename="libs/google/maps/GeocodeResponse.php" md5="187175984b12e8f2cd20628ae7ca3d07">
 			<class name="Google\Maps\GeocodeResponse"/>
 		</file>
-		<file filename="libs/google/maps/Helper.php" md5="55b40971aa8f27690f55a1ad4ec79ca9">
+		<file filename="libs/google/maps/Helper.php" md5="795b471c04d771edea9ef63b7eb16a62">
 			<class name="Google\Maps\Helper"/>
 		</file>
 	</files>
@@ -66,6 +66,7 @@
 		<upgrade from="1.4.0" to="1.5.0"/>
 		<upgrade from="1.5.0" to="1.5.1"/>
 		<upgrade from="1.5.1" to="1.5.2"/>
+		<upgrade from="1.5.2" to="1.5.3"/>
 	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="a3fc7915404242b727080991ab014cda"/>

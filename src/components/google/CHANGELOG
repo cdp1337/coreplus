@@ -1,3 +1,10 @@
+Google 1.5.3
+
+	* Copyright update from 2015 to 2016.
+	* Switch to 5.0 version of function namespaces for set_message.
+	* New I18N support across a variety of base components.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:24:00 -0400
+
 Google 1.5.2
 
 	* Update the copyright to 2015 and my email address throughout the project.
