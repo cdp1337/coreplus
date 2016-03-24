@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Markdown Browser" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Markdown Browser" execmode="web">
 	<requires>
 		<require name="core" type="component" version="4.9" operation="ge"/>
 	</requires>
@@ -24,8 +24,9 @@
 		<hook name="/cron/hourly" call="MarkdownBrowserController::_AutoRegisterFiles"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="8fb3b39e5768e85135eb3daa1582c5f3"/>
-		<file filename="controllers/MarkdownBrowserController.php" md5="05815991b8837c0064065a7419f38f25">
+		<file filename="CHANGELOG" md5="ae5052b9cf15e8ec16797df8c09238ef"/>
+		<file filename="README.md" md5="f4f72d72499902599c77b0e065712f0a"/>
+		<file filename="controllers/MarkdownBrowserController.php" md5="65e7231e785c35643179c2099d74be4f">
 			<controller name="MarkdownBrowserController"/>
 			<class name="MarkdownBrowserUrlHelper"/>
 		</file>
@@ -44,6 +45,7 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="2.0.0"/>
+		<upgrade from="2.0.0" to="2.1.0"/>
 	</upgrades>
 	<users/>
 	<widgets/>

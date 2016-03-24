@@ -1,3 +1,11 @@
+Markdown Browser 2.1.0
+
+	* Add documentation for the markdown browser project.
+	* Add support for download links for non-web files in markdown sources.
+	* Email changes for consistency from @eval.bz to @evalagency.com.  (Don't know how these keep sneaking
+	  in...)
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:47:03 -0400
+
 Markdown Browser 2.0.0
 
 	* [Feature] Add options to automatically import markdown files as pages.
