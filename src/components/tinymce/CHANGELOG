@@ -1,3 +1,15 @@
+TinyMCE 4.3.4-1
+
+	* Backported work from various projects!
+	* Update TinyMCE to 4.3.4-1
+	* Upgrade TinyMCE from 4.2.4 to 4.3.4.
+	* New function to be able to register and include custom plugins into TinyMCE from external
+	  components.
+	* Copyright update from 2015 to 2016.
+	* Allow TinyMCE to include scripts, (and other minor tweaks to the buttons).
+	* Include minified versions of all javascript files.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:50:08 -0400
+
 TinyMCE 4.2.4-2
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
