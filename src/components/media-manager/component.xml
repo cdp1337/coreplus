@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.6" name="Media Manager">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.7" name="Media Manager">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -22,12 +22,12 @@
 		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ed6aca75262c6e48847adb6a9178d6ed"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="9a094e9cc736483afcdaca5246748e23"/>
+		<file filename="CHANGELOG" md5="aa0b056a3fdb77de2e649ef61c0882e8"/>
 		<file filename="assets/scss/mediamanager/navigator.scss" md5="396c6a0e76af12591512d543ae638e5b"/>
-		<file filename="controllers/MediaManagerNavigatorController.php" md5="c141a52ad72e1b751f39961238867f5b">
+		<file filename="controllers/MediaManagerNavigatorController.php" md5="093d0fdbe1a7dcb59ef84149b4ad9a3a">
 			<controller name="MediaManagerNavigatorController"/>
 		</file>
-		<file filename="libs/mediamanager/Navigator.php" md5="e47dfe72ebba2c828b79f52ef75ca155">
+		<file filename="libs/mediamanager/Navigator.php" md5="77e70c56e3f05c0972e30811f5ea89f1">
 			<class name="MediaManager\Navigator"/>
 		</file>
 	</files>
@@ -45,6 +45,7 @@
 		<upgrade from="1.0.3" to="1.0.4"/>
 		<upgrade from="1.0.4" to="1.0.5"/>
 		<upgrade from="1.0.5" to="1.0.6"/>
+		<upgrade from="1.0.6" to="1.0.7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
