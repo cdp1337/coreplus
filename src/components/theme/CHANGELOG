@@ -1,3 +1,13 @@
+Theme 3.1.0
+
+	* Switch to 5.0 version of function namespaces for set_message.
+	* s/install/parse/
+	* New I18N support across a variety of base components.
+	* New support for setting the default skins to use throughout the site.
+	* Standardize many of the theme/component reinstallation utilities and expose them as public
+	  functions.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:49:45 -0400
+
 Theme 3.0.0
 
 	* [Bug] Install all custom assets, not just registered ones.  Fixes Bug #1520
