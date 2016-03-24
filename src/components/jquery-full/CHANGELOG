@@ -1,3 +1,18 @@
+JQuery-Full 2.1.3-3
+
+	* There are yellow icons too?...
+	* some missing assets on jquery.icheck component
+	* Copyright update from 2015 to 2016.
+	* Switch to 5.0 version of function namespaces for set_message.
+	* Add a notice when in DEVELOPMENT_MODE when requesting to use jquery.cookie, as that library is no
+	  longer maintained upstream.
+	* jQuery didn't like being minified :/
+	* Upgrade jQuery and jQuery.form to the newest upstream versions.
+	* Cleanup some legacy css assets.
+	* Corrected minified version of jquery.masonry.  (The previous bundle evidently did not include the
+	  necessary libraries.)
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:46:07 -0400
+
 JQuery-Full 2.1.3-2
 
 	* Add the non-minified version of jquery.masonry and upgrade both to the latest upstream version.
