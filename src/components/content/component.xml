@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.1" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.2" name="Content" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -12,18 +12,18 @@
 		<widgetcreate title="Content Area" class="ContentWidget"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="5b0114a1602b1bc028fc58b1ab42f40d"/>
-		<file filename="controllers/ContentController.php" md5="ad0d851e256c454aaa3a30c8a3e4f295">
+		<file filename="CHANGELOG" md5="f486dcdbc2cff58371f470372163155d"/>
+		<file filename="controllers/ContentController.php" md5="f94f55b8ddbef7d7edc6b64c41f52dab">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="models/ContentModel.php" md5="5dfad55c31606a49c142e1070fc87cb7">
+		<file filename="models/ContentModel.php" md5="bef1298b9fc787a1b02fa70c7d638691">
 			<class name="ContentModel"/>
 		</file>
 		<file filename="upgrades/310_page_updates.php" md5="549b9de9daba51cff04fe6c2cd6d6db1"/>
-		<file filename="widgets/ContentAdminWidget.php" md5="c5041d80201b248b301a600303b2263d">
+		<file filename="widgets/ContentAdminWidget.php" md5="d4ad7c956be903685ef65b2d8bec03b4">
 			<class name="ContentAdminWidget"/>
 		</file>
-		<file filename="widgets/ContentWidget.php" md5="3508f66a903b8d71ead33f70e6cdbfb8">
+		<file filename="widgets/ContentWidget.php" md5="bc8aa790a9a1c205f12c39802c2ba1b7">
 			<class name="ContentWidget"/>
 		</file>
 	</files>
@@ -71,6 +71,7 @@
 		<upgrade from="2.4.1" to="2.4.2"/>
 		<upgrade from="2.4.2" to="2.5.0"/>
 		<upgrade from="2.5.0" to="2.5.1"/>
+		<upgrade from="2.5.1" to="2.5.2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-140.png" md5="673cfa327007694704fe95e47dcc9ec0"/>
