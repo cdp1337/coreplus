@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.2" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7.0" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -9,19 +9,19 @@
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="49db721de61e92cbed66784c8f768779"/>
+		<file filename="CHANGELOG" md5="6b4b7fb9bf2d40a93d517a92ba66b37c"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
-		<file filename="classes/GeoAddressFormInput.php" md5="3d0aa78147d981b3915d3f5704078da3">
+		<file filename="classes/GeoAddressFormInput.php" md5="70d2051369a72c2309fdbfd64de550e0">
 			<class name="GeoAddressFormInput"/>
 		</file>
-		<file filename="controllers/GeoAddressController.php" md5="83fcd99d39ad7a6d6ec41358606615fa">
+		<file filename="controllers/GeoAddressController.php" md5="91792353e30098794c50b62a13a930e3">
 			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
 		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
 		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
-		<file filename="geocode/IPLookup.php" md5="905d43b26f4adb6e9127a3f4334c4900">
+		<file filename="geocode/IPLookup.php" md5="7e5765098bc146091e884467cba6b79b">
 			<class name="geocode\IPLookup"/>
 		</file>
 		<file filename="libs/GeoIp2/CHANGELOG.md" md5="15e498e9e60e23fc6cad82a7c8b6962a"/>
@@ -165,13 +165,13 @@
 		<file filename="models/GeoAddressModel.php" md5="e0ac2127075e2f37af831f198802ab46">
 			<class name="GeoAddressModel"/>
 		</file>
-		<file filename="models/GeoCountryModel.php" md5="f8d5866511d6108257b82cb10cb0b4aa">
+		<file filename="models/GeoCountryModel.php" md5="c64d35d1b532b3b1666b676c4a94289a">
 			<class name="GeoCountryModel"/>
 		</file>
-		<file filename="models/GeoProvinceModel.php" md5="9f04da03f83ebb6dd1c8604ceff3cfac">
+		<file filename="models/GeoProvinceModel.php" md5="95a1e0afccc24541473b6afdb03683dd">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="smarty-plugins/function.geoiplookup.php" md5="51fcd710963fff3d5bf31d9f7b942ee7"/>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="617dfb67780551203eb56260d702c99f"/>
 	</files>
 	<assets/>
 	<install>
@@ -193,6 +193,7 @@
 		<upgrade from="1.5.0" to="1.6.0"/>
 		<upgrade from="1.6.0" to="1.6.1"/>
 		<upgrade from="1.6.1" to="1.6.2"/>
+		<upgrade from="1.6.2" to="1.7.0"/>
 	</upgrades>
 	<view>
 		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>

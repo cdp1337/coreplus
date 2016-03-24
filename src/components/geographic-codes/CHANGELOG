@@ -1,3 +1,23 @@
+Geographic Codes 1.7.0
+
+	* [Performance] Better performance on IP lookups and added country methods for retrieving the flag and
+	  country name from a result.
+	* Copyright update from 2015 to 2016.
+	* Display the country name as the title text instead of the ISO-2 code.
+	* Better support for caching IP lookups that result in an error, (albiet with a much shorter cache
+	  TTL).
+	* Compiler
+	* Switch to Core's built-in country flag assets.
+	* Remove geocode\Country as it duplicates GeoCountryModel and the model is better at it.
+	* New view, geoaddress/lookupip for performing IP lookups against the geo database directly.
+	* Remove the large version of country flags from geographic-codes as Core now has smaller versions
+	  embedded.
+	* Ensure that GeoAddressModel is compatible with Core 5.0 models.
+	* Decrease the size of the keys for GeoAddressModel so the total keysize is < 1000 bytes.
+	* Add an index for the new model/record_key to speed up lookups based on those criteria.
+	* Add support for GeoAddress models to have the linking parent inline.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:23:42 -0400
+
 Geographic Codes 1.6.2
 
 	* [Bug] Fix for when there are multiple geoAddress inputs on a single page.
