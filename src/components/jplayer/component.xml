@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-4" name="jPlayer" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-5" name="jPlayer" execmode="web">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="JQuery" type="library" version="1.4" operation="ge"/>
@@ -16,9 +16,10 @@
 		<upgrade from="2.2.0~core1" to="2.2.0~core2"/>
 		<upgrade from="2.2.0~core2" to="2.2.0~core3"/>
 		<upgrade from="2.2.0~core3" to="2.2.0-4"/>
+		<upgrade from="2.2.0-4" to="2.2.0-5"/>
 	</upgrades>
 	<files>
-		<file filename="CHANGELOG" md5="980589e237eb88ce840e01e68ea76553"/>
+		<file filename="CHANGELOG" md5="bfe8e10baeccad301d2d8378d0240a48"/>
 		<file filename="jPlayer.class.php" md5="d55160306298b4ff5a0ca70a259518b5">
 			<class name="jPlayer"/>
 		</file>
