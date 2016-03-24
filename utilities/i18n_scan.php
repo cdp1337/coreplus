@@ -155,11 +155,19 @@ if($comp){
 
 // Retrieve the models for this component
 if($comp){
-	$models = $comp->getModelList();
+	$models = array_merge($comp->getModelList(), $comp->getSupplementalModelList());
 	foreach($models as $key => $file){
-		$modelName = strtoupper($key);
 		$class = new ReflectionClass($key);
-		$schema = $class->getMethod('GetSchema')->invoke(null);
+		if($class->isSubclassOf('Model')){
+			$modelName = strtoupper($key);
+			$schema = $class->getMethod('GetSchema')->invoke(null);
+		}
+		else{
+			// This model name needs some trimming performed to chop off the dynamic prefix and "modelsupplemental" suffix.
+			$modelName = strtoupper(substr($key, strpos($key, '_')+1, -17)) . 'MODEL';
+			$schema = $class->getStaticPropertyValue('Schema', []);
+		}
+		
 
 		// Schema now contains the schema for this model!
 		// These should support translation strings
