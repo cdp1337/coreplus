@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.0" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.1" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
@@ -46,35 +46,39 @@
 		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="d65be7ffdf71b5d16e5edc20c32530ed"/>
-		<file filename="controllers/SecurityController.php" md5="077603ed38cfdb0f418830df85f7ceb3">
+		<file filename="CHANGELOG" md5="eba030d357d20f4c3cb531047693a81e"/>
+		<file filename="controllers/SecurityController.php" md5="4f31078a130714a4a1e7d4a43991e9f8">
 			<controller name="SecurityController"/>
 		</file>
-		<file filename="controllers/WPHoneypotController.php" md5="9f2e5ed12f20ab21b9c4b4560d56044c">
+		<file filename="controllers/WPHoneypotController.php" md5="3acd01b4e34da133ad7b433b1c8b2ac2">
 			<controller name="WPHoneypotController"/>
 		</file>
-		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="6f34fceba17c7d576d4d9c994c9f44d8">
+		<file filename="i18n/ar.ini" md5="7f9a8d11dbd58388c16eeee3d0c71900"/>
+		<file filename="i18n/de.ini" md5="3013c421e24d6903b69251f135e0d3b6"/>
+		<file filename="i18n/en.ini" md5="7371ee8c0de4e64e0b2f2509c0becdf1"/>
+		<file filename="i18n/fr.ini" md5="0ce04f05d4a7bbfc0fb46889fa33aeb7"/>
+		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="f6d430efc682249e34a1af82d4ae999b">
 			<class name="SecuritySuite\IpBlacklistHelper"/>
 		</file>
-		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="3e803d2b2987abf4f77d79fe0071ba24">
+		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="a831625cd81fc72eb4984a1685bc0b44">
 			<class name="SecuritySuite\SimpleSitePassword"/>
 		</file>
-		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="d154f3aa3019a678e14bba22e4cb7747">
+		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="ace1db77dfdedd363236c143b27bb760">
 			<class name="SecuritySuite\StopForumSpam"/>
 		</file>
-		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="fec292d78da18f69a712647e34b9dce9">
+		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="9dd497eaa65769397e1c6ffc1df4c580">
 			<class name="SecuritySuite\SpamCan\SpamCheck"/>
 			<class name="SecuritySuite\SpamCan\SpamCheckResult"/>
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
-		<file filename="models/IpBlacklistModel.php" md5="9a4a99eb17ca02a8018f7c3879b4a0cd">
+		<file filename="models/IpBlacklistModel.php" md5="679111ba5457e122be3a6ff1a975bdac">
 			<class name="IpBlacklistModel"/>
 		</file>
 		<file filename="models/SecurityLogModel.php" md5="a2f1c71c47ee33fff7de2e57447cb056">
 			<class name="SecurityLogModel"/>
 		</file>
-		<file filename="models/SpamHamKeywordModel.php" md5="23c046a5bb7dc9785180f56152ec7d16">
+		<file filename="models/SpamHamKeywordModel.php" md5="15a93c61855fd326769d5a9e5300efe3">
 			<class name="SpamHamKeywordModel"/>
 		</file>
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
@@ -100,6 +104,7 @@
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.6.0"/>
+		<upgrade from="1.6.0" to="1.6.1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>
