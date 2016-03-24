@@ -1,3 +1,9 @@
+Gallery 1.5.7
+
+	* Copyright update from 2015 to 2016.
+	* New I18N support across a variety of base components.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:23:20 -0400
+
 Gallery 1.5.6
 
 	* [Bug] Fix the positioning of the Next and Prev links for photo galleries.

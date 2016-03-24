@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.6" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.7" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -37,11 +37,11 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="8dad5af49faf6ac7fb90b777a154ef1f"/>
-		<file filename="controllers/GalleryController.php" md5="b2ee6aac08a7b3bfd5208dd931f547bd">
+		<file filename="CHANGELOG" md5="91e4d2bd7a0323ca646fd777387b5d90"/>
+		<file filename="controllers/GalleryController.php" md5="fcc0907fc6b91edcd7797231b793afa9">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="controllers/GalleryWidgetController.php" md5="77960ded4999bb05560f105c53d6ebf7">
+		<file filename="controllers/GalleryWidgetController.php" md5="b1edab7f0bcc9c1b77e96321b1b0472d">
 			<controller name="GalleryWidgetController"/>
 		</file>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
@@ -100,6 +100,7 @@
 		<upgrade from="1.5.3" to="1.5.4"/>
 		<upgrade from="1.5.4" to="1.5.5"/>
 		<upgrade from="1.5.5" to="1.5.6"/>
+		<upgrade from="1.5.6" to="1.5.7"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
