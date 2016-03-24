@@ -283,12 +283,12 @@ abstract class Helper{
 			// Send an activation notice email to the user.
 			try{
 				$email = new \Email();
+				$email->templatename = 'emails/user/activation.tpl';
 				$email->assign('user', $user);
 				$email->assign('sitename', SITENAME);
 				$email->assign('rooturl', ROOT_URL);
 				$email->assign('loginurl', \Core\resolve_link('/user/login'));
 				$email->setSubject('Welcome to ' . SITENAME);
-				$email->templatename = 'emails/user/activation.tpl';
 				$email->to($user->get('email'));
 
 				// TESTING
