@@ -267,10 +267,29 @@ function get_exported_components(){
 		// Split up the name and the version.
 		// This is a little touchy because a dash in the package name is perfectly valid.
 		// instead, grab the last dash in the string.
-
-		$dash = strrpos($fbase, '-');
-		$n = substr($fbase, 0, $dash);
-		$v = substr($fbase, ($dash+1));
+		// Additionally, versions such as:
+		// name-1.2.3
+		// name-blah-1.2.3
+		// name-blah-1.2.3-4
+		// must all be supported.
+		preg_match('/^([a-z\.\-]*)-(r[0-9]|[0-9][0-9abrc\.\-]*)(~.*)?$/', $fbase, $fileparts);
+		switch(sizeof($fileparts)){
+			case 3:
+				$n = $fileparts[1];
+				$v = $fileparts[2];
+				break;
+			case 4:
+				$n = $fileparts[1];
+				$v = $fileparts[2] . $fileparts[3];
+				break;
+			default:
+				CLI::PrintWarning('Unsupported file version string: [' . $fbase . '], please submit this.');
+				continue;
+		}
+		
+		//$dash = strrpos($fbase, '-');
+		//$n = substr($fbase, 0, $dash);
+		//$v = substr($fbase, ($dash+1));
 		// instead, I need to look for a dash followed by a number.  This should indicate the version number.
 		//preg_match('/^(.*)\-([0-9]+.*)$/', $fbase, $matches);
 
