@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3~core5" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3-6" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/usermodel" call="FacebookController::GetUserControlLinks"/>
@@ -34,11 +34,11 @@
 		<file filename="templates/widgets/facebook/login.tpl" md5="d2c35fdad4e78240358e39c4c4ee3db1"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="721b303b2621db7f78449901aaeca36f"/>
+		<file filename="CHANGELOG" md5="e9c163ed762aa7de96b4ed5e9733d121"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
-		<file filename="controllers/FacebookController.php" md5="7c3c4ffe2e91970cd368242337b20b17">
+		<file filename="controllers/FacebookController.php" md5="017e2b9f4ea2e44b60580b80347425e2">
 			<controller name="FacebookController"/>
 		</file>
 		<file filename="libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
@@ -50,12 +50,12 @@
 			<class name="FacebookApiException"/>
 			<class name="BaseFacebook"/>
 		</file>
-		<file filename="libs/facebook-php-sdk/src/facebook.php" md5="55eff3b0c609b03f592b3d0e8163e9b0">
+		<file filename="libs/facebook-php-sdk/src/facebook.php" md5="439079e5184c24758e08f08313b8b659">
 			<class name="Facebook"/>
 		</file>
 		<file filename="libs/facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c4290b9deb70d0bef2f88b67fc68c8ec"/>
 		<file filename="libs/facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
-		<file filename="libs/facebook-php-sdk/tests/tests.php" md5="c6ce6ff792706c294df3902ea5178dec">
+		<file filename="libs/facebook-php-sdk/tests/tests.php" md5="7d445aa0f8b042c65ddd9e703fe081c3">
 			<class name="PHPSDKTestCase"/>
 			<class name="TransientFacebook"/>
 			<class name="FBRecordURL"/>
@@ -70,10 +70,10 @@
 			<class name="FBPublicGetAccessTokenFromCode"/>
 			<class name="FBPublicState"/>
 		</file>
-		<file filename="libs/facebook/UserAuth.php" md5="7a3cf8dbc0bfac7e30e2941e832967ef">
+		<file filename="libs/facebook/UserAuth.php" md5="4d542dece339e188238a369a9355af3f">
 			<class name="Facebook\UserAuth"/>
 		</file>
-		<file filename="widgets/FacebookWidget.php" md5="3884d78934cc04eadf56f83b926d706b">
+		<file filename="widgets/FacebookWidget.php" md5="fdb60f6c5cfefd6d5d52db5182f51fbd">
 			<class name="FacebookWidget"/>
 		</file>
 	</files>
@@ -91,10 +91,12 @@
 		<upgrade from="3.2.3~core2" to="3.2.3~core3"/>
 		<upgrade from="3.2.3~core3" to="3.2.3~core4"/>
 		<upgrade from="3.2.3~core4" to="3.2.3~core5"/>
+		<upgrade from="3.2.3~core5" to="3.2.3-6"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
 		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
+		<file filename="assets/js/facebook/login.min.js" md5="47160cc5f84a321aba41e44d4e786d22"/>
 	</assets>
 	<authors>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
