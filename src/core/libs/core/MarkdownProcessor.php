@@ -202,12 +202,22 @@ class MarkdownProcessor extends MarkdownExtra {
 		
 		return $text;
 	}
-	
+
+	/**
+	 * Resolve a URL to its Core version, (or call the urlCallback function if defined).
+	 * 
+	 * @param string $url
+	 *
+	 * @return string
+	 */
 	public function doLink($url){
+		// In this method, $url may be an alias for a registered footnote.
+		// If it is, pull that footnote source instead of the alias.
 		if(isset($this->urls[$url])){
-			return $this->urls[$url];
+			$url = $this->urls[$url];
 		}
-		elseif(strpos($url, '://') !== false){
+		
+		if(strpos($url, '://') !== false){
 			// Skip translation for fully resolved links.
 			return $url;
 		}
