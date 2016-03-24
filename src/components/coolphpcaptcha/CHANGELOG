@@ -1,3 +1,10 @@
+CoolPHPCaptcha 1.1.3
+
+	* Copyright update from 2015 to 2016.
+	* Switch to 5.0 version of function namespaces for set_message.
+	* New I18N support across a variety of base components.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:21:31 -0400
+
 CoolPHPCaptcha 1.1.2
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
