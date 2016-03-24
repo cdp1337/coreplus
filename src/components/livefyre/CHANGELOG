@@ -1,3 +1,9 @@
+Livefyre 1.0.3
+
+	* Switch to 5.0 version of function namespaces for set_message.
+	* New I18N support across a variety of base components.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:46:46 -0400
+
 Livefyre 1.0.2
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
