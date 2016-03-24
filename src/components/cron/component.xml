@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.2.4">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.3.0">
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
@@ -30,7 +30,7 @@
 		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="t:STRING_CRON_RESULTS"/>
 	</pages>
 	<view searchdir="templates">
-		<file filename="templates/pages/cron/admin.tpl" md5="b46c7df494d30a0f3daa43a2ba24cc33"/>
+		<file filename="templates/pages/cron/admin.tpl" md5="f88f82a8597b2865dcc8153bcc2b4ef7"/>
 		<file filename="templates/pages/cron/howto.tpl" md5="2e383dac65fc8c90dfbeb215234c1c83"/>
 		<file filename="templates/pages/cron/view.tpl" md5="85a11c600e0df17c5eec99df61b508d4"/>
 		<file filename="templates/widgets/cron/dashboard.tpl" md5="529c9f4d014a4a59e40d20eea6265d1c"/>
@@ -39,18 +39,18 @@
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="4aaf33d56c80cf910c7a65a87469c19d"/>
+		<file filename="CHANGELOG" md5="840e4dfa787a864a84b863ca473d43d6"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
-		<file filename="classes/CronHelper.php" md5="f179d8b6acdfca6ff05b1f1d4a2d8772">
+		<file filename="classes/CronHelper.php" md5="592a77bef59ee2d228cc91687b668511">
 			<class name="CronHelper"/>
 		</file>
-		<file filename="controllers/CronController.php" md5="8dac18c4b08731a926b1840805a14f06">
+		<file filename="controllers/CronController.php" md5="74fff9c8b42b3e1f11a340d14c7ba397">
 			<controller name="CronController"/>
 		</file>
-		<file filename="models/CronLogModel.php" md5="febfe029a9b79996df5fb99e26e279fc">
+		<file filename="models/CronLogModel.php" md5="a009f692f5f5485638c0ed1257f1550c">
 			<class name="CronLogModel"/>
 		</file>
-		<file filename="widgets/CronWidget.php" md5="594f9ab08be213d7ec4e2497bba79e3e">
+		<file filename="widgets/CronWidget.php" md5="ecb11a7ef265b06f100e133796b4530d">
 			<class name="CronWidget"/>
 		</file>
 	</files>
@@ -69,6 +69,7 @@
 		<upgrade from="1.2.1" to="1.2.2"/>
 		<upgrade from="1.2.2" to="1.2.3"/>
 		<upgrade from="1.2.3" to="1.2.4"/>
+		<upgrade from="1.2.4" to="1.3.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
