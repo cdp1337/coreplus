@@ -1543,8 +1543,7 @@ EOD;
 	 * @return string
 	 */
 	public static function GenerateUUID(){
-		// @todo Make this dynamic based on the server ID assigned by the administrator.
-		$serverid = 1;
+		$serverid = defined('SERVER_ID') ? SERVER_ID : 1;
 		return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
 	}
 	

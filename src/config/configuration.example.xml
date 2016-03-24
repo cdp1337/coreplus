@@ -92,6 +92,11 @@ required - SSL is always required for all pages.
 		<value></value>
 		<description>Set this to an email address, (or comma-separated list for multiple), to receive server health reports and critical errors.</description>
 	</define>
+
+	<define name="SERVER_ID" type="int" formtype="text" advanced="1">
+		<value></value>
+		<description>The server ID when used in a multi-server environment, leave empty for "1" (default).</description>
+	</define>
 	
 	<define name="DEVELOPMENT_MODE" type="boolean" formtype="checkbox">
 		<value>@{devmode}@</value>
