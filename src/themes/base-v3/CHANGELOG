@@ -1,3 +1,25 @@
+Theme/Base V3 2.1.0
+
+	* [Bug] Fix the email basic skin for base-v3.
+	* [Bug] Fix the content header issue (Fixes Bug #1528)
+	* [Feature] Make listing table sort icons more user friendly and more direct - Feature #1725
+	* [Feature] Implement Feature #1434 - Health Reports on the site and via automated emails.
+	* some missing assets on jquery.icheck component
+	* adding the cron minutely cases to _performcron
+	* Backported work from various projects!
+	* Compiler
+	* Tweak some skin classnames to remove possible confllicts with other systems, eg: '.page-content'.
+	* Disabling hiding of ".edit" elements in listing tables now that control links are displayed in-line,
+	  (and consequently have the "edit" class).
+	* Change the behaviour of control links to return the text of links when proxy is not used.
+	* Update bourbon, bitters, and neat to the newest stable version upstream.
+	* New I18N support across a variety of base components.
+	* Swap the cite :before content from a UTF-16 character?? to a plain-ol dash.
+	* Add some default styling for UL and OL tags.
+	* New support for setting the default skins to use throughout the site.
+	* Include TinyMCE content styles in base-v3.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:51:06 -0400
+
 Theme/Base V3 2.0.0
 
 	* [Feature] #1074 New support for theme-based configuration options and all the supplemental code for
