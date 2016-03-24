@@ -1,3 +1,10 @@
+Nonce 1.0.7
+
+	* Switch /dev/urandom in favour of /dev/random to ensure that enough entropy is available first.
+	* Copyright update from 2015 to 2016.
+	* LookupKey can return NULL when there is no valid key.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:48:01 -0400
+
 Nonce 1.0.6
 
 	* Update the copyright to 2015 and my email address throughout the project.
