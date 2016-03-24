@@ -1,3 +1,9 @@
+Blog 1.6.7
+
+	* Copyright update from 2015 to 2016.
+	* New I18N support across a variety of base components.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:00:20 -0400
+
 Blog 1.6.6
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
