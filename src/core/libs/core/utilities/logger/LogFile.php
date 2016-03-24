@@ -297,8 +297,10 @@ EOD;
 					/** @var \Core\Filestore\Backends\FileLocal $file */
 					++$x;
 					if($x > $limit){
-						$file->delete();
-						++$deleted;
+						if($file->exists()){
+							$file->delete();
+							++$deleted;
+						}
 					}
 				}
 
