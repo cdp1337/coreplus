@@ -244,6 +244,29 @@ class MarkdownBrowserController extends Controller_2_1{
 	}
 
 	/**
+	 * Helper method for downloading an embedded file from a markdown file.
+	 */
+	public function download(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+
+		// I need to build the path of directories from the top down to the current to
+		// 1) build a breadcrumb back up and
+		// 2) ensure that these directories actually exist.
+
+		$info = $this->_resolveInfoFromURL();
+
+		if($info['status'] !== 200){
+			return $info['status'];
+		}
+		
+		/** @var \Core\Filestore\File $file */
+		$file = $info['file'];
+		$file->sendToUserAgent(true);
+		return;
+	}
+
+	/**
 	 * Helper method for viewing an embedded image from a markdown file.
 	 * 
 	 * This expects the image to be available from within the registered markdown directory!
@@ -333,13 +356,20 @@ class MarkdownBrowserController extends Controller_2_1{
 
 			$requestedFile .= '/' . $v;
 		}
-
-		$return['url'] = $requestedFile . ($return['source'] ? '.md' : '');
+		
+		// Append the file extension if one was requested.
+		if($request->ext == ''){
+			$return['url'] = $requestedFile;
+			$file = \Core\Filestore\Factory::File($topPath . $requestedFile . '.md');
+		}
+		else{
+			$return['url'] = $requestedFile . '.' . $request->ext;
+			$file = \Core\Filestore\Factory::File($topPath . $requestedFile . '.' . $request->ext);
+		}
 		
 		// Is the file requested a directory?
 		// If so, redirect that to the index file, (if set).
 		// And 404 if none set.
-		$file = \Core\Filestore\Factory::File($topPath . $requestedFile . '.md');
 		if($file->exists()) {
 			$return['file'] = $file;
 			$return['relative_file'] = $requestedFile . '.md';
@@ -603,8 +633,11 @@ class MarkdownBrowserUrlHelper{
 			if(strpos($url, '.md') !== false){
 				return \Core\resolve_link('/markdownbrowser/view/' . substr($file->getFilename(), $dirlen, -3));
 			}
-			else{
+			elseif($file->isImage()){
 				return \Core\resolve_link('/markdownbrowser/img/' . substr($file->getFilename(), $dirlen));
+			}
+			else{
+				return \Core\resolve_link('/markdownbrowser/download/' . substr($file->getFilename(), $dirlen));
 			}
 		}
 		else{
