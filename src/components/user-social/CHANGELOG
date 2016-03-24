@@ -1,3 +1,8 @@
+User-Social 1.2.3
+
+	* Set the user-social "bio" flag to use markdown instead of tinymce.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 23 Mar 2016 22:50:53 -0400
+
 User-Social 1.2.2
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.
