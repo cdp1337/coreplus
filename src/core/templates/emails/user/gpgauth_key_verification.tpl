@@ -2,7 +2,7 @@
 
 <p>
 	A recent request from <strong>{$smarty.const.REMOTE_CITY}, {$smarty.const.REMOTE_PROVINCE} ({$smarty.const.REMOTE_IP})</strong>
-	to set your GPG key to <strong>{$key}</strong>
+	to set your GPG key to <strong>{$key|gpg_fingerprint}</strong>
 	has been made.  If this action was performed by you, please confirm the key by running the following command in a terminal window.
 	to set or reset your GPG key for logging in has been made.
 </p>
@@ -15,6 +15,8 @@
 	If you did not make this request, then be aware that someone may be trying to do something malicious!
 </p>
 
+<hr/>
+
 <strong>Request Details:</strong>
 <ul>
 	<li>New Key: {$key}</li>
@@ -22,8 +24,3 @@
 	<li>City: </li>
 	<li>State: </li>
 </ul>
-
-<hr/>
-
-
-

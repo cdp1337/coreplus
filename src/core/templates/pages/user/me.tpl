@@ -8,7 +8,7 @@
 		<li>Member Since: {date format="FD" $user.created}</li>
 		{if $user->get('/user/gpgauth/pubkey')}
 			<li>
-				GPG Public Key: {$user->get('/user/gpgauth/pubkey')}
+				GPG Public Key: {$user->get('/user/gpgauth/pubkey')|gpg_fingerprint}
 			</li>
 		{/if}
 		<li>

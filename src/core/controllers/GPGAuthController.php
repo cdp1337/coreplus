@@ -204,7 +204,7 @@ EOD;
 				// This one and the web connection.
 				$data['redirect'] = \Core\resolve_link('/gpgauth/configure2/' . $newnonce);
 				$nonce->set('data', $data);
-				$nonce->save();
+				$nonce->markUsed();
 				echo "Step 1 of 2 complete!  Please check your email for further instructions to verify this key!\n";
 				return;
 			}
@@ -360,22 +360,30 @@ EOD;
 		$data = $nonce->get('data');
 		/** @var UserModel $user */
 		$user      = UserModel::Construct($data['user']);
-		$isManager = false;
+		$isManager = \Core\user()->checkAccess('p:/user/users/manage');
 		$loggedin  = \Core\user()->checkAccess('p:authenticated');
 		$key       = $nonce->get('key');
 		
 		if(!$nonce->isValid()){
-			\Core\set_message('t:MESSAGE_ERROR_BAD_OR_EXPIRED_SESSION');
-			\Core\go_back();
-			return View::ERROR_BADREQUEST;
+			// If the user is currently a manager, allow the first key to be the user ID that is being edited.
+			if($isManager){
+				$user = UserModel::Construct($request->getParameter(0));
+				$key = NonceModel::Generate(
+					'5 minutes',
+					null,
+					[
+						'user' => $user->get('id')
+					]
+				);
+			}
+			else{
+				\Core\set_message('t:MESSAGE_ERROR_BAD_OR_EXPIRED_SESSION');
+				\Core\go_back();
+				return View::ERROR_BADREQUEST;	
+			}
 		}
 
-		if(\Core\user()->checkAccess('p:/user/users/manage')){
-			// This user can manage other people's accounts.
-			// Accept any inbound user.
-			$isManager = true;
-		}
-		elseif(\Core\user()->exists() && $user->get('id') != \Core\user()->get('id')){
+		if(!$isManager && $user->get('id') != \Core\user()->get('id')){
 			// Current user is not a manager and is not the same user as the one submitting!
 			// This is triggered if the user is logged in and it's not their account.
 			// The idea is anonymous users can reset their own account if necessary.
