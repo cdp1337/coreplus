@@ -1,3 +1,8 @@
+{**
+ * Rejecting this commit, please make them as widgets in the appropriate components so that
+ * 1) the admin can select which to display and
+ * 2) components that do not exist will not have functionality that throws errors due to unmet requirements
+ *}
 {script library="Core.AjaxLinks"}{/script}
 {script library="jqueryui"}{/script}
 {script library="core.strings"}{/script}
