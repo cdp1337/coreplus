@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.1" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -102,7 +102,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="4d4dbdae8457816c69fe3cf344186304"/>
-		<file filename="core/CHANGELOG" md5="383dad57eb69826ebc39c9fa6773b335"/>
+		<file filename="core/CHANGELOG" md5="7bbc6209159b24778f7b3673127bf90f"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="4e90b808bb4667b83e4925cc03b1b5ff"/>
 		<file filename="core/bootstrap_postincludes.php" md5="ad5edc4ca5372e9245fa6c4af1b5db7a"/>
@@ -123,7 +123,7 @@
 		<file filename="core/controllers/FormController.class.php" md5="e05cf08b97dee440c3888ffd72214856">
 			<controller name="FormController"/>
 		</file>
-		<file filename="core/controllers/GPGAuthController.php" md5="b63fea174a7dd58c011d9d235ba1b145">
+		<file filename="core/controllers/GPGAuthController.php" md5="019c51e1fa28897a95f283137608ec90">
 			<controller name="GPGAuthController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="b50f5bb042dfa261f16c170baf76b241">
@@ -242,7 +242,7 @@
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
 		<file filename="core/i18n/ar.ini" md5="4ea64b352aa1a9e3316cee1a2b8b3ee5"/>
 		<file filename="core/i18n/de.ini" md5="520ac83e16a3baeb1bcbf62b0f9d9d87"/>
-		<file filename="core/i18n/en.ini" md5="918a6b0911a395a40efd4a6c7ed62587"/>
+		<file filename="core/i18n/en.ini" md5="73d66ae1a5ad6d68ce7a1fcbe165da15"/>
 		<file filename="core/i18n/es.ini" md5="e3fd11cd9ca5b0b8fe55cec42cfd3813"/>
 		<file filename="core/i18n/fr.ini" md5="eb77d602204d539f22b01ae45753af21"/>
 		<file filename="core/libs/Michelf/License.md" md5="171ec084d03465cd4148b8298a8dfe11"/>
@@ -488,6 +488,9 @@
 		<file filename="core/libs/core/ModelSchema.php" md5="07a407546c8980b665fd42feddfec521">
 			<class name="ModelSchema"/>
 		</file>
+		<file filename="core/libs/core/ModelSupplemental.php" md5="a7c620c10b29cccac56944397d79771c">
+			<interface name="ModelSupplemental"/>
+		</file>
 		<file filename="core/libs/core/PackageXML.class.php" md5="222b4fb20c82a1946a4f66b9f91b68b0">
 			<class name="PackageXML"/>
 		</file>
@@ -506,7 +509,7 @@
 		<file filename="core/libs/core/UserAgent.php" md5="0184a0953ba467d62dbe96114b14c34c">
 			<class name="Core\UserAgent"/>
 		</file>
-		<file filename="core/libs/core/VersionString.php" md5="c1dcb05f1a5a68033de7ca03a3d23966">
+		<file filename="core/libs/core/VersionString.php" md5="d8ce3e330402dd8c49b789991d13a797">
 			<class name="Core\VersionString"/>
 		</file>
 		<file filename="core/libs/core/View.class.php" md5="0b94a2f959f89671969f56d347dac664">
@@ -788,7 +791,7 @@
 		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="bf1e8bc8190c15e320b5623773a11990">
 			<class name="Core\User\AuthDrivers\datastore"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="3affa2da317e70a2cbdea0d8644cad6a">
+		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="7d23022cf1101095f0a244f7b868a13e">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
 		<file filename="core/libs/core/utilities/Packager.php" md5="e3d3f16ea4ee1bccde749886d0c06939">
@@ -1003,6 +1006,7 @@
 		<file filename="core/libs/smarty-plugins/function.user.php" md5="f8d0b10c7c0be23640ebfe79e47b4e59"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="7e4b3cd8a8f078e84dd390cf6f4084fd"/>
 		<file filename="core/libs/smarty-plugins/function.widgetarea.php" md5="da8057f8a6ae9830f4d69cf90e402ee0"/>
+		<file filename="core/libs/smarty-plugins/modifier.gpg_fingerprint.php" md5="2e21b37b84c3e77e406b94e06f359e03"/>
 		<file filename="core/libs/smarty-plugins/modifier.md_to_html.php" md5="1f30b48b25674f4b35dca34d9e786b00"/>
 		<file filename="core/libs/smarty-plugins/modifier.to_url.php" md5="3bff7dde152222e9469ca086676d2762"/>
 		<file filename="core/libs/smarty/Smarty.class.php" md5="05cac322ace840b29849dd0f76784927">
@@ -1497,9 +1501,9 @@
 	<view searchdir="core/templates">
 		<file filename="core/templates/emails/admin/health_report.tpl" md5="06c7bb879f5d92402992217437299337"/>
 		<file filename="core/templates/emails/admin/test_email.tpl" md5="c5eec2c6d33f52a34ee309a1d49349fa"/>
-		<file filename="core/templates/emails/user/activation.tpl" md5="2894752e5f2b582bf16dd0eed82e14e9"/>
+		<file filename="core/templates/emails/user/activation.tpl" md5="7cdb992418a86922f94a7c5910224a1f"/>
 		<file filename="core/templates/emails/user/datastoreauth_forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
-		<file filename="core/templates/emails/user/gpgauth_key_verification.tpl" md5="2365c0dc5bb30d415f3b26ab5abcff1c"/>
+		<file filename="core/templates/emails/user/gpgauth_key_verification.tpl" md5="1037f7c73480f623476e2b8bf30c808d"/>
 		<file filename="core/templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="core/templates/emails/user/registration.tpl" md5="e8607f3c1e8a62435e503d26f2ee44f9"/>
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="2499a9ce11662ce5b4e950058dfb90de"/>
@@ -1587,9 +1591,9 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="286730a5c35399f12541addc65006492"/>
 		<file filename="core/templates/pages/form/testui.tpl" md5="9c786b9e5952ff16f481d45d8259f872"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="5a938c2eccf4a9401a10404097a860de"/>
-		<file filename="core/templates/pages/gpgauth/configure.tpl" md5="a0d13817f4e53238987353178f19cd1b"/>
-		<file filename="core/templates/pages/gpgauth/configure2.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="core/templates/pages/gpgauth/login2.tpl" md5="e4be564621b615c485752cdd6d8d75a9"/>
+		<file filename="core/templates/pages/gpgauth/configure.tpl" md5="ff2e86731a708f188dbd5234a435c5a7"/>
+		<file filename="core/templates/pages/gpgauth/configure2.tpl" md5="671faf214dd257f6956e01f313054cf0"/>
+		<file filename="core/templates/pages/gpgauth/login2.tpl" md5="07c8cc12e36d1b9cccba723b7a8c2999"/>
 		<file filename="core/templates/pages/gpgauth/reset.tpl" md5="c8745e49dd3ad22749c2ec412c76dc55"/>
 		<file filename="core/templates/pages/page/passwordprotected.tpl" md5="5ab0529bb90a7dd8f0570708723bd9db"/>
 		<file filename="core/templates/pages/page/search.tpl" md5="e923c707a21829f1f06428c8df92a7db"/>
@@ -1613,7 +1617,7 @@
 		<file filename="core/templates/pages/user/import2.tpl" md5="125ea1f03cae7d6395d56c0665570e52"/>
 		<file filename="core/templates/pages/user/import3.tpl" md5="655994a8909458e93fa643349788621d"/>
 		<file filename="core/templates/pages/user/login.tpl" md5="9ad039138380432ab2c74b7c65507298"/>
-		<file filename="core/templates/pages/user/me.tpl" md5="c645ecb6b8113cf0cdeff5c36c2b45a3"/>
+		<file filename="core/templates/pages/user/me.tpl" md5="4353410274a47ddc9b1b3d2428313093"/>
 		<file filename="core/templates/pages/user/register.tpl" md5="f254f666a67b9d990c29fb35ee929cc5"/>
 		<file filename="core/templates/pages/user/register2.tpl" md5="3e437be080512b86c2c9f24c1cdcaf5b"/>
 		<file filename="core/templates/pages/user/view.tpl" md5="6f6c5bd640c6a2cde0f475fc157feaf2"/>
@@ -2293,6 +2297,7 @@
 		<upgrade from="4.1.2" to="4.2.0"/>
 		<upgrade from="4.2.0" to="4.9.0"/>
 		<upgrade from="4.9.0" to="5.0.0"/>
+		<upgrade from="5.0.0" to="5.0.1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

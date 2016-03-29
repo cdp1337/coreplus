@@ -1,3 +1,12 @@
+Core Plus 5.0.1
+
+	* [Bug] Fix for the broken GPG auth signature verification
+	* [Bug] Better matching for version strings, (add core-specific build versions).
+	* [Feature] MAJOR improvements to GPG authentication and verification!
+	* New interface for pulling in default methods on the ModelSupplemental system.
+	* More pretty formatted GPG fingerprints!
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 29 Mar 2016 17:12:29 -0400
+
 Core Plus 5.0.0
 
 	* [Security] Record password changes to the local security log.
