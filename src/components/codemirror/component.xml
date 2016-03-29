@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-3" name="CodeMirror" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-4" name="CodeMirror" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.1.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="eb674366e1c4bc19ed8978f701f32fff"/>
-		<file filename="classes/codemirror/Utils.php" md5="8024356fc1f9ad48d16203bf8b552246">
+		<file filename="CHANGELOG" md5="a25e9b066fc37c314119de049f45f6dc"/>
+		<file filename="classes/codemirror/Utils.php" md5="95d3d9f4ce9f05c49623c1b3729209a7">
 			<class name="CodeMirror\Utils"/>
 		</file>
 	</files>
@@ -34,6 +34,7 @@
 		<upgrade from="3.12~core3" to="3.12~core4"/>
 		<upgrade from="3.12~core4" to="5.6.0~core1"/>
 		<upgrade from="5.6.0~core1" to="5.6.0-3"/>
+		<upgrade from="5.6.0-3" to="5.6.0-4"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="81c74138a50b07e3d86973fa4be3da0b"/>
