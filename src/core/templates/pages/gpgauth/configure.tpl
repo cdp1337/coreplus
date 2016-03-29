@@ -1,6 +1,6 @@
 {if $current_key}
 	<p class="message-success">
-		{t 'MESSAGE_SUCCESS_GPGAUTH_GPG_KEY_S_CURRENTLY_ENABLED' $current_key}
+		{t 'MESSAGE_SUCCESS_GPGAUTH_GPG_KEY_S_CURRENTLY_ENABLED' $current_key|gpg_fingerprint}
 	</p>
 {/if}
 <p class="message-tutorial">
