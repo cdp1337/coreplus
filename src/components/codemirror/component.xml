@@ -25,6 +25,7 @@
 		<scriptlibrary name="codemirror_md" call="CodeMirror\Utils::IncludeMD"/>
 		<scriptlibrary name="codemirror_php" call="CodeMirror\Utils::IncludePHP"/>
 		<scriptlibrary name="codemirror_smarty" call="CodeMirror\Utils::IncludeSmarty"/>
+		<scriptlibrary name="codemirror_shell" call="CodeMirror\Utils::IncludeShell"/>
 	</provides>
 	<view searchdir="templates"/>
 	<upgrades>

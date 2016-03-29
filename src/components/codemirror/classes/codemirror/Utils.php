@@ -112,6 +112,10 @@ abstract class Utils {
 		return self::_IncludeMode('smarty');
 	}
 
+	public static function IncludeShell() {
+		return self::_IncludeMode('shell');
+	}
+
 	private static function _IncludeMode($mode) {
 		self::IncludeCodeMirror();
 
