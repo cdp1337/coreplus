@@ -382,3 +382,12 @@ your supplemental name should be `Baz_UserModelSupplemental`.
 `public static PreDeleteHook($model)` Called before the model is deleted from the database.
 
 `public static GetControlLinks($model)` Called during getControlLinks to return additional links in the controls.
+
+### ModelSupplemental Interface
+
+For convenience, the interface `ModelSupplemental` has been created that contains
+all these methods.  Feel free to implement it in the extending ModelSupplemental class
+to pull in these methods.
+
+Please note, you will still need to define
+`$Schema` and `$Indexes` as necessary.
