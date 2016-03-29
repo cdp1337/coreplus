@@ -140,6 +140,7 @@ class gpg implements AuthDriverInterface{
 		$form->set('callsMethod', 'GPGAuthController::LoginHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
+		$form->addElement('hidden', ['name' => 'redirect', 'value' => CUR_CALL]);
 
 		$tpl = \Core\Templates\Template::Factory('includes/user/gpg_login.tpl');
 		$tpl->assign('form', $form);
@@ -231,10 +232,12 @@ class gpg implements AuthDriverInterface{
 		$url = \Core\resolve_link('/gpgauth/rawverify');
 		if($cli){
 			$cmd = <<<EOD
-echo -n "{$sentence}" | gpg -b -a | curl --data-binary @- \\
---header "X-Core-Auth-Key: $key" \\
+echo -n "{$sentence}" \\
+| gpg -b -a --default-key $fingerprint \\
+| curl --data-binary @- \\
 --header "X-Core-Nonce-Key: $nonce" \\
 $url
+
 EOD;
 		}
 		else{

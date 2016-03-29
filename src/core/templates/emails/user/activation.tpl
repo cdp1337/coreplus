@@ -1,5 +1,5 @@
-<h1>Registration to {$sitename} Approved!</h1>
 
+<h1>Registration to {$sitename} Approved!</h1>
 <p>
 	Your account on {$sitename} has been approved by an administrator.
 	{if $user->get('password')}

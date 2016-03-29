@@ -84,20 +84,47 @@ class GPGAuthController extends Controller_2_1 {
 
 		if(\Core\user()->exists()){
 			// Already logged in!
-
 			return View::ERROR_ACCESSDENIED;
 		}
 
 		/** @var NonceModel $nonce */
 		$nonce = NonceModel::Construct($request->getParameter(0));
+		$nonce->decryptData();
+		$data = $nonce->get('data');
+		
+		if($nonce->isUsed()){
+			// It's used!  yay!
+			// This is needed here because the CLI will submit to one page and that session,
+			// but the user is browsing with another session.
+			// If it's marked as used, then it was a successful login.
+			$user = \UserModel::Construct($data['user']);
+			\Core\Session::SetUser($user);
+
+			// Allow an external script to override the redirecting URL.
+			$overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl');
+			$url = $overrideurl ? $overrideurl : $data['redirect'];
+			
+			\Core\redirect($url);
+		}
 
 		if(!$nonce->isValid()){
 			\Core\set_message('Invalid nonce provided!', 'error');
 			\Core\go_back();
 		}
+		
+		$user = UserModel::Construct($data['user']);
+		$sentence = $data['sentence'];
+		$email = $user->get('email'); // use this instead of fingerprint to not reveal which key the user used for signing their logins!
+		$url = \Core\resolve_link('/gpgauth/rawlogin');
 
-		$nonce->decryptData();
-		$data = $nonce->get('data');
+		$cmd = <<<EOD
+echo -n "{$sentence}" \\
+| gpg -b -a --default-key "$email" \\
+| curl --data-binary @- \\
+--header "X-Core-Nonce-Key: $nonce" \\
+$url
+
+EOD;
 
 		$form = new Form();
 		$form->set('orientation', 'vertical');
@@ -114,18 +141,44 @@ class GPGAuthController extends Controller_2_1 {
 		);
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Verify and Login']);
 
+		$view->assign('cmd', $cmd);
 		$view->assign('sentence', $data['sentence']);
 		$view->assign('form', $form);
+		$view->assign('nonce', $nonce->get('key'));
 	}
 
 	/**
 	 * Method to be expected to be called from the command line to upload a key.
+	 * 
+	 * This is used from the reset+configure page.
 	 */
 	public function rawUpload(){
 		$view = $this->getView();
 		$view->mode = View::MODE_NOOUTPUT;
 		$view->templatename = false;
 		$view->contenttype = 'text/plain';
+
+		$nonce = isset($_SERVER['HTTP_X_CORE_NONCE_KEY']) ? $_SERVER['HTTP_X_CORE_NONCE_KEY'] : null;
+
+		if(!$nonce){
+			echo "Invalid nonce provided!\n";
+			return;
+		}
+
+		/** @var \NonceModel $nonce */
+		$nonce = \NonceModel::Construct($nonce);
+
+		if($nonce->isUsed()){
+			echo 'Step already complete!';
+			return;	
+		}
+
+		if(!$nonce->isValid()){
+			echo "Invalid nonce provided!\n";
+			return;
+		}
+		$nonce->decryptData();
+		$data = $nonce->get('data');
 
 		$input = file_get_contents('php://input');
 
@@ -134,7 +187,7 @@ class GPGAuthController extends Controller_2_1 {
 			return;
 		}
 
-		$user = \Core\user();
+		$user = UserModel::Construct($data['user']);
 
 		if(!$user->exists()){
 			echo "Invalid user requested!\n";
@@ -145,13 +198,24 @@ class GPGAuthController extends Controller_2_1 {
 			$gpg = new Core\GPG\GPG();
 			$key = $gpg->importKey($input);
 
-			if(\Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint)){
-				echo "Step 1 of 2 complete!  Please check your email for futher instructions to verify this key!\n";
+			if(($newnonce = \Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint))){
+				// Record the new nonce so that the other process checking for a status update has more metainformation to pull from.
+				// This is because there are two separate connections going on;
+				// This one and the web connection.
+				$data['redirect'] = \Core\resolve_link('/gpgauth/configure2/' . $newnonce);
+				$nonce->set('data', $data);
+				$nonce->save();
+				echo "Step 1 of 2 complete!  Please check your email for further instructions to verify this key!\n";
 				return;
 			}
 		}
+		catch(\phpmailerException $e){
+			\Core\ErrorManagement\exception_handler($e);
+			echo "Unable to send the verification email!  Please ensure that mail sending is enabled on the system.\n";
+		}
 		catch(\Exception $e){
-			echo "Invalid input provided :(\n";
+			\Core\ErrorManagement\exception_handler($e);
+			echo (DEVELOPMENT_MODE ? $e->getMessage() : "Invalid input provided, upload failed!") . "\n";
 			return;
 		}
 	}
@@ -174,6 +238,11 @@ class GPGAuthController extends Controller_2_1 {
 		/** @var \NonceModel $nonce */
 		$nonce = \NonceModel::Construct($nonce);
 
+		if($nonce->isUsed()){
+			echo "GPG key already submitted!\n";
+			return;
+		}
+		
 		if(!$nonce->isValid()){
 			echo "Invalid nonce provided!\n";
 			return;
@@ -183,22 +252,9 @@ class GPGAuthController extends Controller_2_1 {
 			echo "No key found!  Do you have one generated yet?\n";
 			return;
 		}
-
-		$user = \Core\user();
-
-		if(!$user->exists()){
-			echo "Invalid user requested!\n";
-			return;
-		}
-
+		
 		// Verify that this user was the one provided by the nonce.
 		$nonce->decryptData();
-		$data = $nonce->get('data');
-
-		if($data['user'] != $user->get('id')){
-			echo "Invalid user requested!\n";
-			return;
-		}
 
 		$result = \Core\User\AuthDrivers\gpg::ValidateVerificationResponse($nonce, $input);
 
@@ -212,6 +268,80 @@ class GPGAuthController extends Controller_2_1 {
 		}
 	}
 
+	public function rawLogin(){
+		$view = $this->getView();
+		$view->mode = View::MODE_NOOUTPUT;
+		$view->templatename = false;
+		$view->contenttype = 'text/plain';
+
+		$input = file_get_contents('php://input');
+
+		$nonce = isset($_SERVER['HTTP_X_CORE_NONCE_KEY']) ? $_SERVER['HTTP_X_CORE_NONCE_KEY'] : null;
+
+		if(!$nonce){
+			echo "Invalid nonce provided!\n";
+			return;
+		}
+
+		/** @var \NonceModel $nonce */
+		$nonce = \NonceModel::Construct($nonce);
+		
+		if($nonce->isUsed()){
+			echo "GPG already used to login once, please login again!\n";
+			return;
+		}
+
+		if(!$nonce->isValid()){
+			echo "Invalid nonce provided!\n";
+			return;
+		}
+
+		// Now is where the real fun begins.
+		$nonce->decryptData();
+		$data = $nonce->get('data');
+
+		/** @var UserModel $user */
+		$user = UserModel::Construct($data['user']);
+		$keyid = $user->get('/user/gpgauth/pubkey');
+
+		//var_dump($data, $form->getElement('message')->get('value')); die();
+
+		$gpg = new \Core\GPG\GPG();
+		// I can skip the import here, as it was just checked for validity on the first step of login.
+		$key = $gpg->getKey($keyid);
+
+		if(!$key){
+			echo "That key could not be loaded from local!\n";
+			return;
+		}
+
+		if(!$key->isValid()){
+			echo "Your GPG key is not valid anymore, is it revoked or expired?\n";
+			return;
+		}
+
+		if(!$key->isValid($user->get('email'))){
+			echo "Your GPG subkey containing your email address is not valid anymore, is it revoked or expired?\n";
+			return;
+		}
+
+		// Lastly, verify that the signature is correct.
+		if(!$gpg->verifyDataSignature($input, $data['sentence'])){
+			echo "Invalid signature!  Did the command execute successfully?\n";
+			return;
+		}
+
+		// Well, record this too!
+		\SystemLogModel::LogSecurityEvent('/user/login', 'Login successful (via GPG Key)', null, $user->get('id'));
+
+		// yay...
+		$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
+		$user->save();
+		
+		$nonce->markUsed();
+		echo "Login successful!  Please refresh your browser if it does not automatically.\n";
+	}
+
 	/**
 	 * The public configure method for each user.
 	 *
@@ -220,24 +350,36 @@ class GPGAuthController extends Controller_2_1 {
 	public function configure(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
-
-		if(!\Core\user()->exists()){
-			// This system can work off reset key as well, but requires a nonce first to do so.
-			$nonce = NonceModel::Construct($request->getParameter(0));
-			$nonce->decryptData();
-			$data = $nonce->get('data');
-			/** @var UserModel $user */
-			$user = UserModel::Construct($data['user']);
-			$isManager = false;
+		
+		if(!$request->getParameter(0)){
+			return View::ERROR_BADREQUEST;
 		}
-		elseif(\Core\user()->checkAccess('p:/user/users/manage') && $request->getParameter(0)){
-			/** @var UserModel $user */
-			$user = UserModel::Construct($request->getParameter(0));
+		
+		$nonce = NonceModel::Construct($request->getParameter(0));
+		$nonce->decryptData();
+		$data = $nonce->get('data');
+		/** @var UserModel $user */
+		$user      = UserModel::Construct($data['user']);
+		$isManager = false;
+		$loggedin  = \Core\user()->checkAccess('p:authenticated');
+		$key       = $nonce->get('key');
+		
+		if(!$nonce->isValid()){
+			\Core\set_message('t:MESSAGE_ERROR_BAD_OR_EXPIRED_SESSION');
+			\Core\go_back();
+			return View::ERROR_BADREQUEST;
+		}
+
+		if(\Core\user()->checkAccess('p:/user/users/manage')){
+			// This user can manage other people's accounts.
+			// Accept any inbound user.
 			$isManager = true;
 		}
-		else{
-			$user = \Core\user();
-			$isManager = false;
+		elseif(\Core\user()->exists() && $user->get('id') != \Core\user()->get('id')){
+			// Current user is not a manager and is not the same user as the one submitting!
+			// This is triggered if the user is logged in and it's not their account.
+			// The idea is anonymous users can reset their own account if necessary.
+			return View::ERROR_ACCESSDENIED;
 		}
 
 		if(!$user->exists()){
@@ -248,12 +390,13 @@ class GPGAuthController extends Controller_2_1 {
 		$currentkey = $user->get('/user/gpgauth/pubkey');
 
 		$eml = $user->get('email');
-		$key = $user->get('apikey');
+		//$key = $user->get('apikey');
 		$url = \Core\resolve_link('/gpgauth/rawupload');
 		$cmd = <<<EOD
-gpg --export -a $eml 2>/dev/null | curl --data-binary @- \\
---header "X-Core-Auth-Key: $key" \\
+gpg --export -a $eml 2&gt;/dev/null | curl --data-binary @- \\
+--header "X-Core-Nonce-Key: $key" \\
 $url
+
 EOD;
 		$form = new Form();
 		$form->set('callsmethod', 'GPGAuthController::ConfigureHandler');
@@ -275,8 +418,9 @@ EOD;
 		}
 		$view->title = 'Configure GPG Public Key';
 		$view->assign('form', $form);
-		$view->assign('current_key', $currentkey);
+		$view->assign('current_key', $loggedin ? $currentkey : null);
 		$view->assign('cmd', $cmd);
+		$view->assign('nonce', $key);
 	}
 
 	/**
@@ -313,6 +457,53 @@ EOD;
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Set Key']);
 
 		$view->assign('form', $form);
+		$view->assign('nonce', $nonce->get('key'));
+	}
+
+	/**
+	 * View for checking if there was a successful action from the command line,
+	 * and redirect to the next page when successful.
+	 */
+	public function jsoncheck(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+		
+		$view->mode = View::MODE_AJAX;
+		$view->contenttype = View::CTYPE_JSON;
+		
+		// The nonce key should be the first parameter.
+		if(!$request->getParameter(0)){
+			$view->jsondata = ['status' => 'error', 'message' => 'No Nonce key provided!'];
+			return;
+		}
+		
+		$nonce = NonceModel::Construct($request->getParameter(0));
+		if(!$nonce->exists()){
+			$view->jsondata = ['status' => 'error', 'message' => 'Nonce completed or does not exist anymore!'];
+			return;
+		}
+
+		$nonce->decryptData();
+		$data = $nonce->get('data');
+
+		if($nonce->isUsed()){
+			if(isset($data['redirect'])){
+				$view->jsondata = ['status' => 'complete', 'message' => 'Nonce completed.', 'redirect' => $data['redirect']];
+			}
+			else{
+				$view->jsondata = ['status' => 'complete', 'message' => 'Nonce completed.'];
+			}
+			return;
+		}
+		
+		if($nonce->isValid()){
+			$view->jsondata = ['status' => 'pending', 'message' => 'Still valid Nonce, waiting.'];
+			return;
+		}
+		else{
+			$view->jsondata = ['status' => 'error', 'message' => 'Nonce completed or does not exist anymore!'];
+			return;
+		}
 	}
 
 	/**
@@ -509,7 +700,7 @@ EOD;
 			[
 				'sentence' => $sentence,
 				'user' => $u->get('id'),
-				'redirect' => $form->getElementValue('redirect'),
+				'redirect' => ($form->getElementValue('redirect') ? $form->getElementValue('redirect') : ROOT_URL),
 			]
 		);
 
