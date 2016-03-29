@@ -123,31 +123,37 @@ class NonceModel extends Model {
 	 * @static
 	 * @var array
 	 */
-	public static $Schema = array(
-		'key' => array(
-			'type' => Model::ATT_TYPE_STRING,
+	public static $Schema = [
+		'key'          => [
+			'type'     => Model::ATT_TYPE_STRING,
 			'required' => true,
-		),
-		'expires' => array(
-			'type' => Model::ATT_TYPE_INT,
+		],
+		'status' => [
+			'type' => Model::ATT_TYPE_ENUM,
+			'options' => ['valid', 'used'], // No expired, as they just get deleted!
+			// Used is useful for marking a nonce as used, (thus not allowing for isValid()), but allowing for data to be used from it.
+			'default' => 'valid',
+		],
+		'expires'      => [
+			'type'     => Model::ATT_TYPE_INT,
 			'required' => true,
-		),
-		'hash' => array(
-			'type' => Model::ATT_TYPE_STRING,
-			'required' => false,
+		],
+		'hash'         => [
+			'type'      => Model::ATT_TYPE_STRING,
+			'required'  => false,
 			'maxlength' => 64,
-			'comment' => 'An optional hash usable to verify this is matching exactly what is expected',
-		),
-		'hash_version' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'comment'   => 'An optional hash usable to verify this is matching exactly what is expected',
+		],
+		'hash_version' => [
+			'type'    => Model::ATT_TYPE_INT,
 			'default' => '1',
-		),
-		'data' => array(
+		],
+		'data'         => [
 			'type'      => Model::ATT_TYPE_DATA,
 			'comment'   => 'Large column space for JSON, serialized, or any other data',
 			'encrypted' => true,
-		)
-	);
+		]
+	];
 
 	/**
 	 * Index definition for NonceModel
@@ -169,6 +175,15 @@ class NonceModel extends Model {
 			return parent::get($k);
 		}
 	}
+	
+	public function set($k, $v){
+		if($k == 'data'){
+			return parent::set($k, serialize($v));
+		}
+		else{
+			return parent::set($k, $v);
+		}
+	}
 
 	/**
 	 * Check and see if this nonce is valid and has not expired yet.
@@ -179,6 +194,10 @@ class NonceModel extends Model {
 	public function isValid($hash = null){
 		// Nonces are not valid if they're not recorded!
 		if(!$this->exists()) return false;
+		
+		// If this is marked as used, then it's not valid!
+		if($this->get('status') != 'valid') return false;
+		
 		// Expired ones aren't valid either!
 		if($this->get('expires') < CoreDateTime::Now('U', Time::TIMEZONE_GMT)) return false;
 
@@ -201,14 +220,37 @@ class NonceModel extends Model {
 	}
 
 	/**
+	 * Check if this nonce has been used, (does NOT check validity)
+	 * 
+	 * @return true
+	 */
+	public function isUsed(){
+		// Nonces are not valid if they're not recorded!
+		if(!$this->exists()) return false;
+
+		// Expired ones aren't valid either!
+		if($this->get('expires') < CoreDateTime::Now('U', Time::TIMEZONE_GMT)) return false;
+
+		// Is this marked as used?
+		return ($this->get('status') == 'used');
+	}
+
+	/**
 	 * Mark this nonce key as used.
-	 * (Actually this just deletes the record from the database)
+	 * --(Actually this just deletes the record from the database)--
+	 * 
+	 * Now it actually marks this nonce as used!
 	 */
 	public function markUsed(){
-		$this->delete();
+		$this->set('status', 'used');
+		
+		//$this->delete();
 		// And purge out some of the previous info.
-		$this->set('key', null);
-		$this->set('hash', null);
+		//$this->set('key', null);
+		//$this->set('hash', null);
+		
+		// And save
+		$this->save();
 	}
 
 	/**
@@ -338,7 +380,7 @@ class NonceModel extends Model {
 		$date->modify($expires);
 		$nonce->set('expires', $date->getFormatted('U', Time::TIMEZONE_GMT));
 
-		$nonce->set('data', serialize($data));
+		$nonce->set('data', $data);
 		$nonce->save();
 
 		return $nonce->get('key');
