@@ -148,6 +148,24 @@ class mysqli_Schema extends Schema{
 				$column->type = \Model::ATT_TYPE_FLOAT;
 				$column->precision = substr($def['Type'], 8, -1);
 			}
+			// Version < 5.0.1 of UUIDs
+			elseif(
+				strpos($def['Type'], 'char(') !== false &&
+				strpos($def['Type'], '32') !== false &&
+				isset($this->indexes['primary']) &&
+				in_array($column->field, $this->indexes['primary'])
+			){
+				$column->type = \Model::ATT_TYPE_UUID;
+				$column->maxlength = 32;
+			}
+			elseif(
+				strpos($def['Type'], 'char(') !== false &&
+				strpos($def['Type'], '32') !== false
+			){
+				$column->type = \Model::ATT_TYPE_UUID_FK;
+				$column->maxlength = 32;
+			}
+			// Version < 5.0.1 of UUIDs
 			elseif(
 				strpos($def['Type'], 'char(') !== false &&
 				strpos($def['Type'], '21') !== false &&

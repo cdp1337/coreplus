@@ -1037,10 +1037,10 @@ class mysqli_backend implements BackendInterface {
 				$type = 'int(' . $column->maxlength . ')';
 				break;
 			case \Model::ATT_TYPE_UUID:
-				$type = 'char(21)';
+				$type = 'char(32)';
 				break;
 			case \Model::ATT_TYPE_UUID_FK:
-				$type = 'char(21)';
+				$type = 'char(32)';
 				break;
 			case \Model::ATT_TYPE_STRING:
 				$maxlength = ($column->maxlength)? $column->maxlength : 255; // It needs something...

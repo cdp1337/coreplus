@@ -137,13 +137,14 @@ class ModelSchema extends Core\Datamodel\Schema{
 			// siteid-timestamp-randomhex
 			// or [1-3 numbers] - [11-12 hex] - [4 hex]
 			// a total of up to 21 digits.
-			$column->maxlength = 21;
+			// Support global server UUIDS which contain 32 characters.
+			$column->maxlength = 32;
 			$column->autoinc = false;
 		}
 
 		if($column->type == Model::ATT_TYPE_UUID_FK){
 			// Mimic the UUID column.
-			$column->maxlength = 21;
+			$column->maxlength = 32;
 		}
 
 		if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
