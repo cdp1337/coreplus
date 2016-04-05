@@ -115,6 +115,11 @@ class UpdateSiteModel extends Model {
 			$this->_remotefile           = new \Core\Filestore\Backends\FileRemote();
 			$this->_remotefile->password = $this->get('password');
 			$this->_remotefile->username = $this->get('username');
+			
+			// Set the license information if set.
+			if(defined('SERVER_ID') && strlen(SERVER_ID) == 32){
+				$this->_remotefile->setRequestHeader('X-Core-Server-ID', SERVER_ID);
+			}
 			$this->_remotefile->setFilename($this->get('url') . '/repo.xml.gz');
 		}
 
