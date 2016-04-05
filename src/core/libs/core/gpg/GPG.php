@@ -374,7 +374,7 @@ class GPG {
 	 *
 	 * You must specify the key by its full fingerprint to prevent accidental deletion of multiple keys.
 	 *
-	 * @param string $fingerprint
+	 * @param string $fingerprint      The fingerprint to delete
 	 *
 	 * @throws \Exception
 	 *
@@ -387,6 +387,27 @@ class GPG {
 			throw new \Exception(trim($result['error']));
 		}
 
+		return true;
+	}
+
+	/**
+	 * Delete a secret (private) key from the keyring.
+	 *
+	 * You must specify the key by its full fingerprint to prevent accidental deletion of multiple keys.
+	 *
+	 * @param string $fingerprint      The fingerprint to delete
+	 *
+	 * @throws \Exception
+	 *
+	 * @return bool
+	 */
+	public function deleteSecretKey($fingerprint){
+		$result = $this->_exec('--with-colons --fixed-list-mode --with-fingerprint --batch --no-tty --delete-secret-keys ' . escapeshellarg($fingerprint));
+
+		if($result['return'] != 0){
+			throw new \Exception(trim($result['error']));
+		}
+		
 		return true;
 	}
 
@@ -511,6 +532,74 @@ class GPG {
 		$sig->delete();
 		$con->delete();
 		return $result;
+	}
+
+	/**
+	 * Generate a public+secret key on this server, useful for installation and licensing.
+	 * 
+	 * @param string $name      The full name for this key
+	 * @param string $email     The email for this key
+	 * @param string $comment   An optional comment for this key
+	 * @param string $keyType   Either 'DSA', 'RSA', or any of the other supported algorithms
+	 * @param int    $keyLength The key length, DSA should be limited to 3072 and RSA limited to 4096
+	 *
+	 * @return PrimaryKey|null
+	 * 
+	 * @throws \Exception
+	 */
+	public function generateKey($name, $email, $comment = '', $keyType = 'RSA', $keyLength = 4096){
+		
+		// Is RNG available on the system?
+		// This only works with that binary available!
+		if(exec('which rngd 2>/dev/null') == ''){
+			throw new \Exception('Unable to generate GPG keys without rng-tools installed!  Please install rng-tools and add /etc/default/rng-tools with a line "HRNGDEVICE=/dev/urandom".');
+		}
+		
+		if(exec('which systemctl 2>/dev/null') != ''){
+			// Use systemctl to check if the service is running.
+			if(trim(exec("systemctl show --property=ActiveState rng-tools | sed 's:.*=::'")) == 'inactive'){
+				throw new \Exception('rng-tools is not running!  Please issue systemctl start rng-tools before generating a key!');
+			}
+		}
+		
+		// Ensure that rngd is running currently.
+		
+		if($comment == ''){
+			$comment = 'Key for ' . $name;
+		}
+		$data = <<<EOD
+Key-Type: $keyType
+Key-Length: $keyLength
+Subkey-Type: ELG-E
+Subkey-Length: $keyLength
+Name-Real: $name
+Name-Comment: $comment
+Name-Email: $email
+Expire-Date: 0
+%no-protection
+%commit
+EOD;
+		
+		$out = $this->_exec('--gen-key --batch', $data);
+		
+		if($out['return'] == '0'){
+			// Completed successfully!
+			// Find the key from the error output.
+			// (error is a misnomer here.)
+			preg_match('/^gpg: key ([A-Z0-9]*).*/m', $out['error'], $key);
+			if(sizeof($key) == 2){
+				// Success!
+				$key = $key[1];
+				
+				return $this->getKey($key);
+			}
+			else{
+				throw new \Exception($out['error']);
+			}
+		}
+		else{
+			throw new \Exception($out['error']);
+		}
 	}
 
 	/**
