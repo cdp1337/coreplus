@@ -77,6 +77,37 @@ class AdminController extends Controller_2_1 {
 		$view->title = 't:STRING_SYSTEM_HEALTH';
 		$view->assign('checks', $checks);
 	}
+	
+	public function serverid(){
+		// Admin-only page.
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+
+		$view    = $this->getView();
+		$request = $this->getPageRequest();
+		
+		$serverid = defined('SERVER_ID') ? SERVER_ID : null;
+		
+		if($serverid === null || $serverid == ''){
+			\Core\set_message('t:MESSAGE_ERROR_SERVER_ID_NOT_SET_ADD_TO_CONFIGURATION');
+			$newkey = \Core\random_hex(32);
+		}
+		elseif(strlen($serverid) < 32){
+			\Core\set_message('t:MESSAGE_WARNING_SERVER_ID_LEGACY_UPDATE_NOW');
+			$newkey = \Core\random_hex(32);
+		}
+		else{
+			// Format the server ID to be human-readable (ish).
+			$serverid = wordwrap($serverid, 4, '-', true);
+			$newkey = null;
+		}
+		
+		
+		$view->title = 't:STRING_SERVER_ID';
+		$view->assign('server_id', $serverid);
+		$view->assign('new_key', $newkey);
+	}
 
 	/**
 	 * Run through and reinstall all components and themes.
@@ -1608,6 +1639,20 @@ class AdminController extends Controller_2_1 {
 					''
 				);
 			}
+		}
+		
+		if(defined('SERVER_ID') && strlen(SERVER_ID) == 32){
+			$checks[] = \Core\HealthCheckResult::ConstructGood(
+				t('STRING_CHECK_SERVER_ID_IS_S', wordwrap(SERVER_ID, 4, '-', true)),
+				t('MESSAGE_SUCCESS_CHECK_SERVER_ID_IS_S', wordwrap(SERVER_ID, 4, '-', true))
+			);
+		}
+		else{
+			$checks[] = \Core\HealthCheckResult::ConstructWarn(
+				t('STRING_CHECK_SERVER_ID_NOT_VALID'),
+				t('MESSAGE_ERROR_CHECK_SERVER_ID_NOT_VALID'),
+				'/admin/serverid'
+			);
 		}
 
 		return $checks;

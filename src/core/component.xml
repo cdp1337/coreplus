@@ -99,6 +99,7 @@
 		<page baseurl="/admin/email/config" admin="1" access="g:admin" title="t:STRING_EMAIL_OPTIONS_AND_DIAGNOSTICS" group="t:STRING_CONFIGURE"/>
 		<page baseurl="/admin/i18n" admin="1" access="g:admin" title="t:STRING_I18N_LANGUAGES" group="t:STRING_CONFIGURE"/>
 		<page baseurl="/admin/health" admin="1" access="g:admin" title="t:STRING_SYSTEM_HEALTH" group="t:STRING_ADMIN"/>
+		<page baseurl="/admin/serverid" admin="1" access="g:admin" title="t:STRING_SERVER_ID" group="t:STRING_ADMIN"/>
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="4d4dbdae8457816c69fe3cf344186304"/>
