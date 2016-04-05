@@ -242,7 +242,7 @@ function view(){
  * Get the standard HTTP request headers for retrieving remote files.
  *
  * @param bool $forcurl
- * @return array | string
+ * @return array|string
  */
 function get_standard_http_headers($forcurl = false, $autoclose = false){
 	$headers = array(
@@ -647,7 +647,7 @@ function ImplodeKey($glue, &$array){
 
 
 /**
- * Generate a random hex-deciman value of a given length.
+ * Generate a random hex-decimal value of a given length.
  *
  * @param int  $length
  * @param bool $casesensitive [false] Set to true to return a case-sensitive string.
@@ -804,142 +804,13 @@ function CheckEmailValidity($email){
 	}
 
 	// Allow the admin to skip DNS checks via config.
-	if (ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
+	if (\ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
 		// domain not found in DNS
 		return false;
 	}
 
 	// All checks passed?
 	return true;
-}
-
-
-/**
- * Clone of the php version_compare function, with the exception that it treats
- * version numbers the same that Debian treats them.
- *
- * @param string $version1 Version to compare
- * @param string $version2 Version to compare against
- * @param string $operation Operation to use or null
- * @return bool | int Boolean if $operation is provided, int if omited.
- */
-function VersionCompare($version1, $version2, $operation = null){
-	// Just to make sure they're strings at least.
-	if(!$version1) $version1 = 0;
-	if(!$version2) $version2 = 0;
-
-	$version1 = Core::VersionSplit($version1);
-	$version2 = Core::VersionSplit($version2);
-
-	// version1 and 2 are now standardized.
-	$keys = array('major', 'minor', 'point', 'core', 'user', 'stability');
-
-	// @todo Support user and stability checks.
-
-	// The standard keys I can compare pretty easily.
-	$v1 = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'] . '.' . $version1['core'];
-	$v2 = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'] . '.' . $version2['core'];
-	$check = version_compare($v1, $v2);
-	if($check != 0){
-		// Will preserve PHP's -1, 0, 1 nature.
-		if($operation == null) return $check;
-
-		// Otherwise
-		switch($operation){
-			case 'lt':
-			case 'le':
-			case '<':
-			case '<=':
-				return ($check == -1);
-			default:
-				return true;
-		}
-	}
-	else{
-		// it's 0.
-		if($operation == null) return $check;
-
-		// Otherwise
-		switch($operation){
-			case 'le':
-			case '<=':
-			case 'ge':
-			case '>=':
-			case 'eq':
-			case '=':
-				return true;
-			default:
-				return false;
-		}
-	}
-}
-
-/**
- * Break a version string into the corresponding parts.
- *
- * Major Version
- * Minor Version
- * Point Release
- * Core Version
- * Developer-Specific Version
- * Development Status
- *
- * @param string $version
- * @return array
- */
-function VersionSplit($version){
-	$ret = array(
-		'major' => 0,
-		'minor' => 0,
-		'point' => 0,
-		'core' => 0,
-		'user' => 0,
-		'stability' => '',
-	);
-
-	$v = array();
-
-	// dev < alpha = a < beta = b < RC = rc < # < pl = p
-	$lengthall = strlen($version);
-	$pos = 0;
-	$x = 0;
-	//while(($pos = strpos($version, '.')) !== false){
-	while($pos < $lengthall && $x < 10){
-		$nextpos = strpos($version, '.', $pos) - $pos;
-
-		$part = ($nextpos > 0) ? substr($version, $pos, $nextpos) : substr($version, $pos);
-
-		if(($subpos = strpos($part, '-')) !== false){
-			$subpart = strtolower(substr($part, $subpos + 1));
-			if(is_numeric($subpart)){
-				$ret['core'] = $subpart;
-			}
-			elseif($subpart == 'a'){
-				$ret['stability'] = 'alpha';
-			}
-			elseif($subpart == 'b'){
-				$ret['stability'] = 'beta';
-			}
-			else{
-				$ret['stability'] = $subpart;
-			}
-
-			$part = substr($part, 0, $subpos);
-		}
-
-		$v[] = (int)$part;
-		$pos = ($nextpos > 0) ? $pos + $nextpos + 1 : $lengthall;
-		$x++; // Just in case something really bad happens here...
-	}
-
-	for($i = 0; $i < 3; $i++){
-		if(!isset($v[$i])) $v[$i] = 0;
-	}
-
-	$ret['major'] = $v[0];
-	$ret['minor'] = $v[1];
-	$ret['point'] = $v[2];
-	return $ret;
 }
 
 function str_to_latin($string){
@@ -1160,4 +1031,62 @@ function is_numeric_array($array){
 function get_stop_words(){
 	$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go', 'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometime', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
 	return $stopwords;
+}
+
+/**
+ * Generate a globally unique identifier that can be used as a replacement for an autoinc or similar.
+ *
+ * This method IS compatible with multiple servers on a single codebase!
+ *
+ * An example of a UUID returned by this function would be: "1a3f-c5dbcaaf9db-8d77"
+ *
+ * @since 2.4.2
+ *
+ * @return string
+ */
+function generate_uuid(){
+	static $__serverid = null;
+	
+	if($__serverid === null){
+		$serverid = defined('SERVER_ID') ? SERVER_ID : '0001';
+
+		if($serverid == '1'){
+			// Catch for legacy servers that had '1' as the server ID.
+			// after 5.0.1, this has been migrated to a global UUID of its own.
+			$serverid = '0001';
+		}
+		
+		if(strlen($serverid) > 4){
+			// It should be honestly!  It's 32-digits long.
+			$serverid = substr($serverid, -4);
+		}
+		
+		$__serverid = $serverid;
+	}
+	else{
+		$serverid = $__serverid;
+	}
+	
+	//var_dump($serverid); die();
+	
+	return strtolower(
+		$serverid . '-' . 
+		dechex(microtime(true) * 10000) . '-' .
+		random_hex(4)	
+	);
+}
+
+/**
+ * Clone of the php version_compare function, with the exception that it treats
+ * version numbers the same that Debian treats them.
+ *
+ * @param string $version1 Version to compare
+ * @param string $version2 Version to compare against
+ * @param string $operation Operation to use or null
+ *
+ * @return bool | int Boolean if $operation is provided, int if omited.
+ */
+function version_compare($version1, $version2, $operation = null) {
+	$version1 = new \Core\VersionString($version1);
+	return $version1->compare($version2, $operation);
 }
