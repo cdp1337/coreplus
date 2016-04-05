@@ -92,10 +92,10 @@ required - SSL is always required for all pages.
 		<value></value>
 		<description>Set this to an email address, (or comma-separated list for multiple), to receive server health reports and critical errors.</description>
 	</define>
-
-	<define name="SERVER_ID" type="int" formtype="text" advanced="1">
-		<value></value>
-		<description>The server ID when used in a multi-server environment, leave empty for "1" (default).</description>
+	
+	<define name="SERVER_ID" type="string" formtype="text" advanced="1">
+		<value>RANDOM</value>
+		<description>The server ID when used in a multi-server environment and the full global ID for this server when used with licensed software.</description>
 	</define>
 	
 	<define name="DEVELOPMENT_MODE" type="boolean" formtype="checkbox">
@@ -390,7 +390,7 @@ required - SSL is always required for all pages.
 		<value>RANDOM</value>
 		<description>
 			The encryption key used for sensitive information that must be saved in the database and retrieved as plain text.
-			Storing the passphrase with the code is required beccause the encrypted data must be visible via the application.
+			Storing the passphrase with the code is required because the encrypted data must be visible via the application.
 
 			This does provide one level of security however, that is if the database is leaked, it would be difficult to
 			decrypt those bits of information without the correct pass phrase.
