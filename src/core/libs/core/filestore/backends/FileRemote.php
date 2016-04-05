@@ -81,6 +81,8 @@ class FileRemote implements Filestore\File {
 	 * @var FileLocal
 	 */
 	private $_tmplocal = null;
+	
+	private $_requestHeaders = null;
 
 	/**
 	 * If the file was a 302, this is the temporary redirect placeholder.
@@ -103,6 +105,9 @@ class FileRemote implements Filestore\File {
 
 	public function __construct($filename = null) {
 		if ($filename) $this->setFilename($filename);
+		
+		// Set the initial  headers when requesting this file over HTTP.
+		$this->_requestHeaders = \Core::GetStandardHTTPHeaders(true);
 	}
 
 	/**
@@ -574,6 +579,16 @@ class FileRemote implements Filestore\File {
 	}
 
 	/**
+	 * Set a particular REQUEST header to this file.
+	 *
+	 * @param string $value The header key to set before the ':')
+	 * @param string $key   The header value to set (after the ':')
+	 */
+	public function setRequestHeader($value, $key){
+		$this->_requestHeaders[] = $value . ': ' . $key;
+	}
+
+	/**
 	 * Get the headers for this given file.
 	 * This will go out and query the server with a HEAD request if no headers set otherwise.
 	 */
@@ -591,7 +606,7 @@ class FileRemote implements Filestore\File {
 					CURLOPT_NOBODY         => true,
 					CURLOPT_RETURNTRANSFER => true,
 					CURLOPT_URL            => $this->getURL(),
-					CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
+					CURLOPT_HTTPHEADER     => $this->_requestHeaders,
 				)
 			);
 
