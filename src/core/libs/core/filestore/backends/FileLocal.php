@@ -109,9 +109,13 @@ class FileLocal implements Filestore\File {
 		return $type;
 	}
 
+	/**
+	 * Get the extension of this file, (without the ".")
+	 * 
+	 * @return string
+	 */
 	public function getExtension() {
-		return Filestore\get_extension_from_string($this->_filename);
-		//return substr($this->_filename, strrpos($this->_filename, '.'));
+		return Filestore\get_extension_from_string(basename($this->_filename));
 	}
 
 	/**
