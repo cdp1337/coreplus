@@ -536,7 +536,11 @@ class PageRequest {
 		}
 
 
-		if(
+		if($view->mode == View::MODE_NOOUTPUT){
+			$view->mastertemplate = false;
+			$view->templatename = null;
+		}
+		elseif(
 			$view->error == View::ERROR_NOERROR &&
 			$view->contenttype == View::CTYPE_HTML &&
 			$view->templatename === null
