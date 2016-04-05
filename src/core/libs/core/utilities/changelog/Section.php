@@ -141,10 +141,42 @@ class Section {
 	/**
 	 * Get the released/packaged date of this changelog section.
 	 *
-	 * @return mixed
+	 * @return string
 	 */
 	public function getReleasedDate(){
 		return $this->_packageddate;
+	}
+
+	/**
+	 * Get the released/packaged date of this version as a UTC int
+	 * 
+	 * @return int
+	 */
+	public function getReleasedDateUTC(){
+		if(!$this->_packageddate){
+			return 0;
+		}
+		
+		$d = new \Core\Date\DateTime($this->_packageddate);
+		return $d->format('U', \Core\Date\Timezone::TIMEZONE_GMT);
+	}
+
+	/**
+	 * Get the packager name for this version
+	 * 
+	 * @return string
+	 */
+	public function getPackagerName(){
+		return $this->_packagername;
+	}
+
+	/**
+	 * Get the packager email for this version
+	 *
+	 * @return string
+	 */
+	public function getPackagerEmail(){
+		return $this->_packageremail;
 	}
 
 	/**
@@ -210,21 +242,31 @@ class Section {
 
 	/**
 	 * Fetch this changelog section as HTML; useful for reports.
+	 * 
+	 * If the first parameter is null or false, then no header is returned.
+	 * Otherwise, "2" will yield &lt;h2&gt; tags.
 	 *
-	 * @param int $startinglevel The starting <h#> level to start with.
+	 * @param int|bool  $startinglevel The starting <h#> level to start with.
 	 *
 	 * @return string (HTML)
 	 */
 	public function fetchAsHTML($startinglevel = 2){
 		$out = '';
 
-		$out .= '<h' . $startinglevel . '>' . $this->_name . ' ' . $this->_version . '</h' . $startinglevel . '>' . "\n";
-		if($this->_packageddate){
-			$out .= sprintf(
-				'<p>Packaged by %s on %s</p>',
-				$this->_packagername,
-				$this->_packageddate
-			);
+		if(!($startinglevel === null || $startinglevel === false || $startinglevel == '0')){
+			// There is a starting level requested, include that header!
+			$out .= '<h' . $startinglevel . '>' . $this->_name . ' ' . $this->_version . '</h' . $startinglevel . '>' . "\n";
+			if($this->_packageddate){
+				$out .= sprintf(
+					'<p>Packaged by %s on %s</p>',
+					$this->_packagername,
+					$this->_packageddate
+				);
+			}	
+		}
+
+		if(!sizeof($this->_entries)){
+			return $out;
 		}
 
 		// Because I want bugs, then features, then other.
