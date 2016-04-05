@@ -44,6 +44,11 @@ class InstallConfigurationStep extends InstallerStep{
 						$value = \Core\random_hex(96);
 						$c->nodeValue = $value;
 					}
+					elseif($name == 'SERVER_ID' && isset($_SESSION['configs'][$name]) && $_SESSION['configs'][$name] == 'RANDOM'){
+						// The server ID is a 32-digit random string.
+						$value = \Core\random_hex(32);
+						$c->nodeValue = $value;
+					}
 					// An override is provided, use that and overwrite the xml.
 					elseif(isset($_SESSION['configs'][$name])){
 						$value = $_SESSION['configs'][$name];
