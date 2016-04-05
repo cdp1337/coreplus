@@ -306,7 +306,7 @@ class VersionString implements \ArrayAccess {
 		// The standard keys I can compare pretty easily.
 		$v1    = $this->major . '.' . $this->minor . '.' . $this->point;
 		$v2    = $other->major . '.' . $other->minor . '.' . $other->point;
-		$check = version_compare($v1, $v2);
+		$check = \version_compare($v1, $v2);
 
 		// If both upstream versions are identical, drop into the "user" version, (or core-specific).
 		// This is used as both user and core versions because both essentially indicate the same thing;
@@ -319,17 +319,17 @@ class VersionString implements \ArrayAccess {
 		// distinguishing if maintainer Y or maintainer Z did the actual package creation.
 		// HOWEVER if versions 1.2.0~core3 and 1.2.0~core5 are compared, it'll use the user version.
 		if($check == 0 && $this->user && $other->user){
-			$check = version_compare('1.0' . $this->user, '1.0' . $other->user);
+			$check = \version_compare('1.0' . $this->user, '1.0' . $other->user);
 		}
 
 		// Allow for Core-specific build version strings
 		if($check == 0 && $this->core && $other->core){
-			$check = version_compare($this->core, $other->core);
+			$check = \version_compare($this->core, $other->core);
 		}
 
 		// Apply the same to stability
 		if($check == 0 && ($this->stability || $other->stability)){
-			$check = version_compare('1.0' . $this->stability, '1.0' . $other->stability);
+			$check = \version_compare('1.0' . $this->stability, '1.0' . $other->stability);
 		}
 
 		// Will preserve PHP's -1, 0, 1 nature.
