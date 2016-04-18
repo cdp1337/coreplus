@@ -38,19 +38,22 @@ function write_debug($message, $level = DEBUG_LEVEL_FULL){
 	$profiler = Profiler::GetDefaultProfiler();
 	// Grab how many ms have passed since the application started.
 	$time = $profiler->getTime();
-	// And format it all perrrrty like.
-	$time = str_pad(number_format(round($time, 6) * 1000, 2), 7, '0', STR_PAD_LEFT);
 
+	// Format this into a human readable format.
+	$time = \Core\time_duration_format($time, 2);
+
+	$time = str_pad($time, 10, '0', STR_PAD_LEFT);
+	
 	if (EXEC_MODE == 'CLI'){
 		// CLI gets no formatting and is just written to the screen.
-		echo '[ DEBUG ' . $time . ' ms ] - ' . $message . "\n";
+		echo '[ DEBUG ' . $time . ' ] - ' . $message . "\n";
 	}
 	elseif($level == DEBUG_LEVEL_LOG){
 		// LOG level messages just get error logged.
-		error_log('[ DEBUG ' . $time . ' ms ] - ' . $message);
+		error_log('[ DEBUG ' . $time . ' ] - ' . $message);
 	}
 	else{
-		echo '<pre class="xdebug-var-dump screen">[' . $time . ' ms] ' . $message . '</pre>';
+		echo '<pre class="xdebug-var-dump screen">[' . $time . '] ' . $message . '</pre>';
 	}
 }
 

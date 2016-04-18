@@ -153,6 +153,8 @@ class DatamodelProfiler {
 			$callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
 		}
 
+		\Core\Utilities\Logger\write_debug('DatamodelProfiler: [' . $type . '] ' . $query);
+
 		$this->_last[] = [
 			'start' => microtime(true),
 			'type' => $type,
@@ -171,7 +173,7 @@ class DatamodelProfiler {
 		$last = array_pop($this->_last);
 
 		$time = microtime(true) - $last['start'];
-		$timeFormatted = $this->getTimeFormatted($time);
+		$timeFormatted = \Core\time_duration_format($time, 2);
 
 		if($last['type'] == 'read'){
 			++$this->_reads;
@@ -186,7 +188,7 @@ class DatamodelProfiler {
 			$events[] = array(
 				'query'  => $last['query'],
 				'type'   => $last['type'],
-				'time'   => $timeFormatted,
+				'time'   => $time,
 				'errno'  => null,
 				'error'  => '',
 				'caller' => $last['caller'],
@@ -218,7 +220,7 @@ class DatamodelProfiler {
 		$last = array_pop($this->_last);
 
 		$time = microtime(true) - $last['start'];
-		$timeFormatted = $this->getTimeFormatted($time);
+		$timeFormatted = \Core\time_duration_format($time, 2);
 
 		if($last['type'] == 'read'){
 			++$this->_reads;
@@ -233,7 +235,7 @@ class DatamodelProfiler {
 			$events[] = [
 				'query'  => $last['query'],
 				'type'   => $last['type'],
-				'time'   => $timeFormatted,
+				'time'   => $time,
 				'errno'  => $code,
 				'error'  => $error,
 				'caller' => $last['caller'],
@@ -323,14 +325,14 @@ class DatamodelProfiler {
 			$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
 			$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
 			$type   = $dat['type'];
-			$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
+			$time   = str_pad(\Core\time_duration_format($dat['time'], 2), 9, '0', STR_PAD_LEFT);
 			$query  = $dat['query'];
 			$caller = print_r($dat['caller'], true);
 			if($dat['rows'] !== null){
 				$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 			}
 			$out .= sprintf(
-				"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] %s</span>\n",
+				"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] <code class='sql'>%s</code></span>\n",
 				$caller,
 				$typecolor,
 				$type,

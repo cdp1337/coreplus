@@ -25,11 +25,10 @@ namespace Core;
 use Core\Datamodel;
 use Core\Filestore\FTP\FTPConnection;
 use DMI;
-use Cache;
 
 /**
  * Shortcut function to get the current system database/datamodel interface.
- * @return Datamodel\BackendInterface;
+ * @return \Core\Datamodel\BackendInterface;
  */
 function db(){
 	return DMI::GetSystemDMI()->connection();
@@ -680,12 +679,15 @@ function random_hex($length = 1, $casesensitive = false){
 
 
 /**
- * Simple method to compare two values with each other in a more restrictive manner than == but not quite fully typecasted.
+ * Simple method to compare two values with each other in a more restrictive manner
+ * than == but not quite fully typecasted.
  *
  * This is useful for the scenarios that involve needing to check that "3" == 3, but "" != 0.
+ * 
+ * Returns true if they seem to be the same, false if they differ.
  *
- * @param $val1
- * @param $val2
+ * @param mixed $val1
+ * @param mixed $val2
  *
  * @return boolean
  */
@@ -1089,4 +1091,58 @@ function generate_uuid(){
 function version_compare($version1, $version2, $operation = null) {
 	$version1 = new \Core\VersionString($version1);
 	return $version1->compare($version2, $operation);
+}
+
+/**
+ * Format a time duration in a human-readable format.
+ * 
+ * The formatting returned is in the format of:
+ *
+ * 0.0000001 = "100 ns"
+ * 0.0000010 = "1 µs" (10E-6)
+ * 0.0000100 = "10 µs"
+ * 0.0001000 = "100 µs"
+ * 0.0010000 = "1 ms" (10E-3)
+ * 0.0100000 = "10 ms"
+ * 0.1000000 = "100 ms"
+ * 1.0000000 = "1 s"
+ * 60.000000 = "1 m"
+ * 70.000000 = "1 m 10 s"
+ * 3600.0000 = "1 h"
+ * 3720.0000 = "1 h 2 m"
+ * 
+ * @param float $time_in_seconds Time (in seconds) to format
+ * @param int   $round           Optionally rounding precision
+ *
+ * @return string
+ */
+function time_duration_format($time_in_seconds, $round = 4){
+	if($time_in_seconds < 0.000001){
+		$suffix = 'ns';
+		$time = $time_in_seconds * 1000000000; 
+	}
+	elseif($time_in_seconds < 0.001){
+		$suffix = 'µs';
+		$time = $time_in_seconds * 1000000;
+	}
+	elseif($time_in_seconds < 1){
+		$suffix = 'ms';
+		$time = $time_in_seconds * 1000;
+	}
+	elseif($time_in_seconds < 60){
+		$suffix = 's';
+		$time = $time_in_seconds;
+	}
+	elseif($time_in_seconds < 3600){
+		$m = floor($time_in_seconds / 60);
+		$s = round($time_in_seconds - $m*60, 0);
+		return $m . ' m ' . $s . ' s';
+	}
+	else{
+		$h = floor($time_in_seconds / 3600);
+		$m = round($time_in_seconds - $h*3600, 0);
+		return $h . ' h ' . $m . ' m';
+	}
+
+	return number_format(round($time, $round), $round)  . ' ' . $suffix;
 }
