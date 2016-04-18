@@ -93,34 +93,39 @@ class Helper {
 
 		// Conjunction words to skip
 		$skips = self::GetSkipWords();
-
-		$index = '';
-		$primary = '';
-		$secondary = '';
-		foreach($parts as $word){
-			// Skip blank words
-			if(!$word) continue;
-			// Skip "skip" words
-			if(in_array($word, $skips)) continue;
-
-			$it = new DoubleMetaPhone($word);
-			$index .= ' ' . $word;
-			$primary .= ' ' . $it->primary;
-			$secondary .= ' ' . $it->secondary;
+		
+		// Generate the plain text index and only run the doublemetaphone conversion if it changes.
+		// This is because that function is painfully slow, so the less it runs the better!
+		foreach($parts as $k => $word){
+			if(!$word){
+				// Skip blank words
+				unset($parts[$k]);
+			}
+			elseif(in_array($word, $skips)){
+				// Skip "skip" words
+				unset($parts[$k]);	
+			}
+			// OK to add, no else needed here.
 		}
-
-		// Drop the first space.
-		$index = trim($index);
-		$primary = trim($primary);
-		$secondary = trim($secondary);
-
-		$model->setFromArray(
-			[
-				'search_index_str' => $index,
-				'search_index_pri' => $primary,
-				'search_index_sec' => $secondary,
-			]
-		);
+		
+		// Strip uniques
+		$parts = array_unique($parts);
+		
+		$model->set('search_index_str', implode(' ', $parts));
+		
+		if($model->changed('search_index_str')){
+			// It changed, NOW generate the doublemetaphone conversion strings.
+			$primary = [];
+			$secondary = [];
+			foreach($parts as $k => $word){
+				$it = new DoubleMetaPhone($word);
+				$primary[] = $it->primary;
+				$secondary[] = $it->secondary;
+			}
+			
+			$model->set('search_index_pri', implode(' ', $primary));
+			$model->set('search_index_sec', implode(' ', $secondary));
+		}
 
 		return true;
 	}
