@@ -44,6 +44,7 @@ if (PHP_VERSION < '5.4.0') {
 umask(0);
 
 // Start a timer for performance tuning purposes.
+require_once(__DIR__ . '/functions/Core.functions.php');
 require_once(__DIR__ . '/libs/core/utilities/profiler/Profiler.php');
 require_once(__DIR__ . '/libs/core/utilities/profiler/DatamodelProfiler.php');
 require_once(__DIR__ . '/libs/core/utilities/logger/functions.php');
@@ -467,16 +468,17 @@ if(!defined('XHPROF')){
 	define('XHPROF', 0);
 }
 
-if(XHPROF > 0 && function_exists('xhprof_enable')){
-	if(XHPROF == 100){
-		define('ENABLE_XHPROF', true);
-	}
-	else{
-		define('ENABLE_XHPROF', (XHPROF > rand(1,100)));
+$profilingEnabled = (XHPROF == 100 || (XHPROF > rand(1,100)));
+
+if(function_exists('xhprof_enable')){
+	define('ENABLE_XHPROF', $profilingEnabled);
+	if($profilingEnabled){
+		xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 	}
 }
-else{
-	define('ENABLE_XHPROF', false);
+elseif(function_exists('xdebug_start_trace')){
+	// Use xdebug instead!
+	ini_set('xdebug.profiler_enable_trigger', $profilingEnabled ? 1 : 0);
 }
 
 // Cleanup!
@@ -493,9 +495,6 @@ $maindefines_time = microtime(true);
 
 
 /**************************  START EXECUTION *****************************/
-if(ENABLE_XHPROF){
-	xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
-}
 
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 

@@ -261,6 +261,8 @@ required - SSL is always required for all pages.
 		<description>
 			Set to a value greater than 0 to enable the XHprof profiler that percentage of the time.
 			For example, setting to 100 will enable the profiler on every page; setting to 50 will enable the profiler on 50% of the page views.
+			&lt;br/&gt;&lt;br/&gt;
+			If XHProf is not available and Xdebug is, Xdebug will be used instead.
 		</description>
 	</define>
 
