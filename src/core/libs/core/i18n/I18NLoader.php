@@ -62,6 +62,8 @@ class I18NLoader {
 	protected static $DefaultLanguage = null;
 	protected static $UserLanguage = null;
 	protected static $FallbackLanguage = 'en';
+	
+	protected static $_StringLookupCache = [];
 	/**
 	 * decimal_point 	Decimal point character
 	 * thousands_sep 	Thousands separator
@@ -606,6 +608,16 @@ class I18NLoader {
 	 * @return array
 	 */
 	protected static function _SearchForString($string, $lang){
+		
+		if(!isset(self::$_StringLookupCache[$lang])){
+			self::$_StringLookupCache[$lang] = [];
+		}
+		
+		// Cached copy?
+		if(isset(self::$_StringLookupCache[$lang][$string])){
+			return self::$_StringLookupCache[$lang][$string];
+		}
+		
 		if(strpos($lang, '_') !== false){
 			// Determine the base language as a fallback.
 			// This is to allow en_US to match anything in en if an exact match isn't available.
@@ -617,22 +629,24 @@ class I18NLoader {
 		}
 
 		if(isset(self::$Strings[$lang]) && isset(self::$Strings[$lang][$string]) && self::$Strings[$lang][$string] !== ''){
-			return [
+			self::$_StringLookupCache[$lang][$string] = [
 				'locale' => $lang,
 				'string' => self::$Strings[$lang][$string],
-	        ];
+			]; 
 		}
 		elseif($base && isset(self::$Strings[$base]) && isset(self::$Strings[$base][$string]) && self::$Strings[$base][$string] !== ''){
-			return [
+			self::$_StringLookupCache[$lang][$string] = [
 				'locale' => $base,
 				'string' => self::$Strings[$base][$string],
 			];
 		}
 		else{
-			return [
+			self::$_StringLookupCache[$lang][$string] = [
 				'locale' => null,
 			    'string' => null,
 			];
 		}
+		
+		return self::$_StringLookupCache[$lang][$string];
 	}
 } 
