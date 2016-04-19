@@ -50,10 +50,12 @@ class SessionModel extends Model {
 			'type'    => Model::ATT_TYPE_DATA,
 			'default' => null,
 			'null'    => true,
+			'encoding' => Model::ATT_ENCODING_GZIP,
 		),
 		'external_data' => array(
 			'type' => Model::ATT_TYPE_DATA,
 			'comment' => 'JSON-encoded array of any external data set onto this session.',
+			'encoding' => Model::ATT_ENCODING_JSON,
 			'default' => null,
 			'null' => true,
 		),
@@ -73,86 +75,46 @@ class SessionModel extends Model {
 		return parent::__construct($key);
 	}
 
-	public function get($k) {
-		if ($k == 'data') {
-			return $this->getData();
-		} else {
-			return parent::get($k);
-		}
-	}
-
-	public function set($k, $v) {
-		if ($k == 'data') {
-			$this->setData($v);
-		} else {
-			parent::set($k, $v);
-		}
-	}
-
 	/**
 	 * Get the data for this session.  Useful for compression :p
+	 * 
+	 * as of 5.1.0, this is handled natively.
 	 */
 	public function getData() {
-		$data     = $this->_data['data'];
-
-		// If the session did not exist before, simply return an empty array.
-		if(!$data) return array();
-
-		$unzipped = gzuncompress($data);
-		if ($unzipped === false) {
-			return $data;
-		}
-		else {
-			return $unzipped;
-		}
+		return $this->get('data');
 	}
 
 	/**
 	 * Get the JSON-decoded data of the external data on this session.
+	 * 
+	 * as of 5.1.0, this is handled natively.
 	 *
 	 * @return array
 	 */
 	public function getExternalData(){
-		$ext = $this->get('external_data');
-
-		// Blank values decode as an empty array.
-		if($ext == '') return [];
-
-		$json = json_decode($ext, true);
-
-		// Invalid encoded arrays decode as an empty aray.
-		if(!$json) return [];
-
-		return $json;
+		return $this->get('external_data');
 	}
 
 	/**
 	 * Set the data for this session.  This will automatically compress the contents.
+	 * 
+	 * as of 5.1.0, this is handled natively.
 	 *
 	 * @param $data mixed Uncompressed data
 	 */
 	public function setData($data) {
-		$zipped              = gzcompress($data);
-		$this->_data['data'] = $zipped;
-		// Always cause this to set the dirty flag.
-		$this->_dirty = true;
+		return $this->set('data', $data);
 	}
 
 	/**
 	 * Set data on this session from an external script or source.
+	 * 
+	 * as of 5.1.0, this is handled natively.
 	 *
 	 * @param array $data External data to set
 	 */
 	public function setExternalData($data){
-		if(!is_array($data)){
-			$this->set('external_data', null);
-		}
-		elseif(!sizeof($data)){
-			$this->set('external_data', null);
-		}
-		else{
-			$this->set('external_data', json_encode($data));
-		}
+		return $this->set('external_data', $data);
 	}
 /*
 	public function save(){

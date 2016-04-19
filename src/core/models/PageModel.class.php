@@ -440,7 +440,7 @@ class PageModel extends Model {
 		if (!$v) return true;
 
 		// If it's the same as the baseurl, that's fine.
-		if ($v == $this->_data['baseurl']) return true;
+		if ($v == $this->_columns['baseurl']->value) return true;
 
 		if ($v{0} != '/') return "Rewrite URL must start with a '/'";
 
@@ -664,12 +664,9 @@ class PageModel extends Model {
 				/** @var $ins InsertableModel */
 				$ins->set('site', $v);
 			}
+		}
 
-			return parent::set($k, $v);
-		}
-		else{
-			return parent::set($k, $v);
-		}
+		parent::set($k, $v);
 	}
 
 	/**
@@ -1160,12 +1157,15 @@ class PageModel extends Model {
 
 	public function save($defer = false) {
 		// Ensure some helper variables are set.
-		if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
+		if (!$this->get('rewriteurl')){
+			$this->set('rewriteurl', $this->get('baseurl'));
+		}
 
 		// If the rewrite URL was changed, I need to invalidate the cache.
 		// This is because many components that may change the url, will immediately want to reload to that new url.
-		if(!isset($this->_datainit['rewriteurl'])) $this->_datainit['rewriteurl'] = null;
-		if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
+		/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+		$c = $this->_columns['rewriteurl'];
+		if($c->changed()){
 			self::$_FuzzyCache = null;
 			self::$_RewriteCache = null;
 		}
@@ -1173,13 +1173,13 @@ class PageModel extends Model {
 		// If this model existed before and the URL has changed, update the lookup table!
 		// This will act as a basis of rewrite rules for changed URLs, allowing users to change
 		// their pages rewriteurls without adversely affecting inbounding links.
-		if($this->exists() && $this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
+		if($this->exists() && $c->changed()){
 			// I don't care if the map existed, or was linked to something else...
 			// All I need to do is ensure that it will redirect to the new URL.
-			$map = new RewriteMapModel($this->_datainit['rewriteurl']);
-			$map->set('site', $this->_data['site']);
-			$map->set('baseurl', $this->_data['baseurl']);
-			$map->set('fuzzy', $this->_data['fuzzy']);
+			$map = new RewriteMapModel($this->get('rewriteurl'));
+			$map->set('site', $this->get('site'));
+			$map->set('baseurl', $this->get('baseurl'));
+			$map->set('fuzzy', $this->get('fuzzy'));
 			$map->save();
 		}
 

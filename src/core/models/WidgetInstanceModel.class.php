@@ -41,9 +41,7 @@ class WidgetInstanceModel extends Model {
 		],
 		'site' => [
 			'type' => Model::ATT_TYPE_SITE,
-			'default' => 0,
 			'formtype' => 'system',
-			'comment' => 'The site id in multisite mode, (or 0 otherwise)',
 		],
 		'baseurl'    => [
 			'type'      => Model::ATT_TYPE_STRING,

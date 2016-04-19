@@ -63,6 +63,7 @@ class UserUserConfigModel extends Model{
 		'primary' => array('user_id', 'key'),
 	);
 
+	/*
 	public function set($k, $v){
 		if($k == 'value'){
 			// I need a custom function here because of the unique validation for this model.
@@ -130,4 +131,5 @@ class UserUserConfigModel extends Model{
 			return parent::set($k, $v);
 		}
 	}
+	*/
 }

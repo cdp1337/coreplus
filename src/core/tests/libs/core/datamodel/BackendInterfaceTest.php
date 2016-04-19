@@ -108,7 +108,7 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 		);
 
 		foreach($cols as $key => $dat){
-			$col = new \Core\Datamodel\SchemaColumn();
+			$col = new \Core\Datamodel\Columns\SchemaColumn();
 			$col->field = $key;
 			$col->type = $dat['type'];
 			if(isset($dat['default']))   $col->default = $dat['default'];
@@ -129,7 +129,7 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 		$this->assertTrue(\Core\db()->tableExists('test_table_create'));
 
 		// Modify the table now.
-		$newcol = new \Core\Datamodel\SchemaColumn();
+		$newcol = new \Core\Datamodel\Columns\SchemaColumn();
 		$newcol->field = 'foo';
 		$newcol->type = Model::ATT_TYPE_TEXT;
 		$newcol->maxlength = 45;

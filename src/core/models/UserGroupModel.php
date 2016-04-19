@@ -31,9 +31,7 @@ class UserGroupModel extends Model {
 		),
 		'site' => array(
 			'type' => Model::ATT_TYPE_SITE,
-			'default' => 0,
 			'formtype' => 'system',
-			'comment' => 'The site id in multisite mode, (or 0 otherwise)',
 		),
 		'name' => array(
 			'type' => Model::ATT_TYPE_STRING,

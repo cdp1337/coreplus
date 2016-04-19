@@ -173,8 +173,8 @@ class UserModel extends Model {
 	 *
 	 * @return mixed String, boolean, int or float if exists, null if otherwise.
 	 */
-	public function get($key) {
-		if(array_key_exists($key, $this->_data)) {
+	/*public function get($key) {
+		if($this->getKeySchema($key) !== null){
 			return parent::get($key);
 		}
 		elseif(($c = $this->getConfigObject($key)) !== null) {
@@ -186,7 +186,7 @@ class UserModel extends Model {
 		else {
 			return null;
 		}
-	}
+	}*/
 
 	/**
 	 * Get the human-readable label for this record.
@@ -652,7 +652,7 @@ class UserModel extends Model {
 	 *
 	 * @return bool
 	 */
-	public function set($k, $v) {
+	/*public function set($k, $v) {
 		if(array_key_exists($k, $this->_data)) {
 			// The key exists, it's a standard set.
 			return parent::set($k, $v);
@@ -665,7 +665,7 @@ class UserModel extends Model {
 
 			return true;
 		}
-	}
+	}*/
 
 	/**
 	 * Set all groups for a given user on the current site from a set of IDs.
