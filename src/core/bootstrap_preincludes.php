@@ -39,6 +39,27 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Exceptions.php');
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/Schema.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn.php');
+
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___created.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___deleted.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___id.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___id_fk.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___site.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___updated.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___uuid.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn___uuid_fk.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_boolean.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_data.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_enum.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_float.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_int.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_string.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_text.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_ISO_8601_date.php');
+require_once(ROOT_PDIR . 'core/libs/core/datamodel/columns/SchemaColumn_ISO_8601_datetime.php');
+
 require_once(ROOT_PDIR . 'core/libs/core/ModelSchema.php');
 
 // Time is a useful component.
@@ -64,7 +85,7 @@ require_once(ROOT_PDIR . 'core/models/UserGroupModel.php');
  */
 require_once(ROOT_PDIR . 'core/libs/core/VersionString.php');
 require_once(ROOT_PDIR . 'core/libs/core/Component_2_1.php');
-require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
+
 
 // File manipulation is a core feature required by the component system.
 require_once(ROOT_PDIR . 'core/libs/core/filestore/functions.php');
