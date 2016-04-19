@@ -204,6 +204,17 @@ class Model implements ArrayAccess {
 	 * between two models.
 	 */
 	const LINK_BELONGSTOMANY = 'belongs_many';
+	
+	/** Data encoding for base64 data, only available on ATT_TYPE_DATA columns! */
+	const ATT_ENCODING_BASE64 = 'base64';
+	/** Data encoding for JSON data, only available on ATT_TYPE_DATA columns! */
+	const ATT_ENCODING_JSON = 'json';
+	/** Data encoding for serialized data, only available on ATT_TYPE_DATA columns! */
+	const ATT_ENCODING_SERIALIZE = 'serialize';
+	/** Data encoding for compressed data, only available on ATT_TYPE_DATA columns! */
+	const ATT_ENCODING_GZIP = 'gzip';
+	/** Default encoding for strings in the database, available for any STRING-based columns. */
+	const ATT_ENCODING_UTF8 = 'utf8';
 
 	/**
 	 * Which DataModelInterface should this model execute its operations with.
@@ -216,24 +227,6 @@ class Model implements ArrayAccess {
 	public $interface = null;
 
 	/**
-	 * @var array Associative array of the data in this corresponding record.
-	 */
-	protected $_data = [];
-
-	/**
-	 * The data according to the database.
-	 * Useful for something.... :/
-	 * @var array
-	 */
-	protected $_datainit = [];
-
-	/**
-	 * Some models have encrypted fields.  This will store the decrypted data for the application to access.
-	 * @var array
-	 */
-	protected $_datadecrypted = null;
-
-	/**
 	 * Allow data to get overloaded onto models.
 	 * This is common with Controllers tacking on extra data for templates to better handle the model.
 	 * This data is not saved and does not effect the dirty flags.
@@ -241,6 +234,16 @@ class Model implements ArrayAccess {
 	 * @var array
 	 */
 	protected $_dataother = [];
+
+	/**
+	 * @var null|array Set of columns along with the data represented therein.
+	 */
+	protected $_columns = null;
+
+	/**
+	 * @var null|array Array of aliases defined on this model, used because they can work from getters and setters.
+	 */
+	protected $_aliases = null;
 
 	/**
 	 * @var boolean Flag to signify if this record exists in the database.
@@ -348,30 +351,35 @@ class Model implements ArrayAccess {
 
 		// Update the _data array based on the schema.
 		$s = self::GetSchema();
-		foreach ($s as $k => $v) {
-			// Aliases don't get special treatment :P
-			if($v['type'] == Model::ATT_TYPE_ALIAS) continue;
-
-			// Populate the default options based on the schema.
-			$this->_data[$k] = (isset($v['default'])) ? $v['default'] : null;
-
-			if(isset($v['link'])){
+		$this->_columns = [];
+		$this->_aliases = [];
+		foreach ($s as $k => $sdat) {
+			
+			if($sdat['type'] == Model::ATT_TYPE_ALIAS){
+				$this->_aliases[$k] = $sdat['alias'];
+			}
+			else{
+				$this->_columns[$k] = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($sdat);
+				$this->_columns[$k]->field = $k;
+			}
+			
+			if(isset($sdat['link'])){
 				// If the link is requested on this property, populate the linked array for the corresponding model!
-				if(is_array($v['link'])){
-					if(!isset($v['link']['model'])){
+				if(is_array($sdat['link'])){
+					if(!isset($sdat['link']['model'])){
 						throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
 					}
-					if(!isset($v['link']['type'])){
+					if(!isset($sdat['link']['type'])){
 						throw new Exception('Required attribute [type] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
 					}
-					$linkmodel = $v['link']['model'];
-					$linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
-					$linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
+					$linkmodel = $sdat['link']['model'];
+					$linktype  = isset($sdat['link']['type']) ? $sdat['link']['type'] : Model::LINK_HASONE;
+					$linkon    = isset($sdat['link']['on']) ? $sdat['link']['on'] : 'id';
 				}
 				else{
 					// Allow the short-hand version to be used too.
 					// This will setup a 1-to-1 relationship.
-					$linkmodel = $v['link'];
+					$linkmodel = $sdat['link'];
 					$linktype  = Model::LINK_HASONE;
 					$linkon    = 'id'; // ... erm yeah... hopefully this is it!
 				}
@@ -398,8 +406,10 @@ class Model implements ArrayAccess {
 		if($pri && !is_array($pri)) $pri = [$pri];
 
 		if ($pri && func_num_args() == sizeof($i['primary'])) {
-			foreach ($pri as $k => $v) {
-				$this->_data[$v] = func_get_arg($k);
+			foreach ($pri as $idx => $k) {
+				/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+				$c = $this->_columns[$k];
+				$c->setValueFromApp(func_get_arg($idx));
 			}
 		}
 
@@ -443,12 +453,12 @@ class Model implements ArrayAccess {
 			}
 		}
 
-		if ($this->_cacheable) {
+		//if ($this->_cacheable) {
 			//$cachekey = $this->_getCacheKey();
 			//$cache    = Core::Cache()->get($cachekey);
 
 			// do something if cache succeeds....
-		}
+		//}
 
 		// If the enterprise/multimode is set and enabled and there's a site column here,
 		// that should be enforced at a low level.
@@ -472,9 +482,7 @@ class Model implements ArrayAccess {
 			->execute($this->interface);
 
 		if ($data->num_rows) {
-			$this->_data     = $data->current();
-			$this->_datainit = $data->current();
-
+			$this->_loadFromRecord($data->current());
 			$this->_exists = true;
 		}
 		else {
@@ -489,11 +497,20 @@ class Model implements ArrayAccess {
 	 *
 	 * Return true if saved successfully, false if no change required,
 	 * and will throw a DMI_Exception if there was an error.
+	 * 
+	 * As of 5.0.0, bulk inserts can be performed by passing TRUE as the one argument.
+	 * If this is done, you MUST call CommitSaves() after all data has been stored!
+	 * 
+	 * @param bool $defer Set to true to batch-save this data as a BULK INSERT.
 	 *
 	 * @return boolean
 	 * @throws DMI_Exception
 	 */
 	public function save($defer = false) {
+
+		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+			'Issuing save() on ' . $this->get('__CLASS__') . ' ' . $this->getLabel()
+		);
 
 		// Only do the same operation if it's been changed.
 		// This is actually a little more in depth than simply seeing if it's been modified, as I also
@@ -523,28 +540,11 @@ class Model implements ArrayAccess {
 		}
 
 		if(!$save){
+			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+				'No column detected as changed, skipping save.'
+			);
 			return false;
 		}
-		/*
-		// Do the key validation first of all.
-		if (get_class($this) == 'PageModel') {
-			$s = self::GetSchema();
-			foreach ($this->_data as $k => $v) {
-				// Date created and updated have their own validations.
-				if (
-					$s[$k]['type'] == Model::ATT_TYPE_CREATED ||
-					$s[$k]['type'] == Model::ATT_TYPE_UPDATED
-				) {
-					if (!(is_numeric($v) || !$v)) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ' has an invalid value.');
-					continue;
-				}
-				// This key null?
-				if ($v === null && !(isset($s[$k]['null']) && $s[$k]['null'])) {
-					if (!isset($s[$k]['default'])) throw new DMI_Exception('Unable to save ' . self::GetTableName() . '.' . $k . ', null is not allowed and there is no default value set.');
-				}
-			}
-		}
-		*/
 
 		// Dispatch the pre-save hook for models.
 		// This allows utilities to hook in and modify the model or perform some other action.
@@ -589,11 +589,11 @@ class Model implements ArrayAccess {
 					/** @var Model $model */
 					$model = $l['records'];
 				}
-				elseif(isset($this->_data[$localk]) && $this->_data[$localk] instanceof Model){
+				elseif(isset($this->_columns[$localk]) && $this->_columns[$localk]->value instanceof Model){
 					// The alternative location for this linked model to be.
 					// This can happen when the link is established in the Schema data and the parent record doesn't exist yet.
 					/** @var Model $model */
-					$model = $this->_data[$localk];
+					$model = $this->_columns[$localk];
 				}
 				else{
 					// No valid model found... :/
@@ -608,11 +608,17 @@ class Model implements ArrayAccess {
 
 		if ($this->_exists){
 			$changed = $this->_saveExisting();
+			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+				'Saved existing record to database'
+			);
 		}
 		else{
 			// Inserts can be deferred!
 			$this->_saveNew($defer);
 			$changed = true;
+			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+				'Saved new record to database'
+			);
 		}
 
 
@@ -670,8 +676,12 @@ class Model implements ArrayAccess {
 			}
 		}
 
+		// Commit all the columns
 		$this->_exists   = true;
-		$this->_datainit = $this->_data;
+		foreach($this->_columns as $c){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			$c->commit();
+		}
 
 		// Check and see if this model extends another model.
 		// If it does, then create/update that parent object to keep it in sync!
@@ -734,17 +744,13 @@ class Model implements ArrayAccess {
 			// Magic key
 			return $this->getPrimaryKeyString();
 		}
-		elseif($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
-			// Check if the data exists and was decrypted from the database.
-			return $this->_datadecrypted[$k];
+		elseif(isset($this->_columns[$k])){
+			// It's a standard column object!
+			return $this->_columns[$k]->valueTranslated;
 		}
-		elseif (array_key_exists($k, $this->_data)) {
-			// Check if this data was loaded from the original data array
-			return $this->_data[$k];
-		}
-		elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
-			// This key is actually just an alias to another key.
-			return $this->get( $this->getKeySchema($k)['alias'] );
+		elseif(isset($this->_aliases[$k])){
+			// It's an alias of another key, re-call this method on that key instead.
+			return $this->get($this->_aliases[$k]);
 		}
 		elseif (array_key_exists($k, $this->_dataother)) {
 			// Check if this data was set from the "set" command on a non-tracked column.
@@ -800,13 +806,12 @@ class Model implements ArrayAccess {
 	 * @return array
 	 */
 	public function getAsArray() {
-		// Has there been data that has been decrypted?
-		if($this->_datadecrypted !== null){
-			return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
+		$ret = [];
+		foreach($this->_columns as $c){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			$ret[$c->field] = $c->valueTranslated;
 		}
-		else{
-			return array_merge($this->_data, $this->_dataother);
-		}
+		return $ret;
 	}
 
 	/**
@@ -825,7 +830,12 @@ class Model implements ArrayAccess {
 	 * @return array
 	 */
 	public function getData(){
-		return $this->_data;
+		$ret = [];
+		foreach($this->_columns as $c){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			$ret[$c->field] = $c->value;
+		}
+		return $ret;
 	}
 
 	/**
@@ -834,7 +844,12 @@ class Model implements ArrayAccess {
 	 * @return array|null
 	 */
 	public function getInitialData(){
-		return $this->_datainit;
+		$ret = [];
+		foreach($this->_columns as $c){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			$ret[$c->field] = $c->valueDB;
+		}
+		return $ret;
 	}
 
 	/**
@@ -993,12 +1008,15 @@ class Model implements ArrayAccess {
 	 * @param array $record
 	 */
 	public function _loadFromRecord($record) {
-
-		$this->_data = $record;
-
-		// And since this is supposed to be the initial load method... toggle the appropriate flags.
-		$this->_datainit = $this->_data;
-		$this->_exists   = true;
+		
+		foreach($record as $k => $v){
+			if(isset($this->_columns[$k])){
+				/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+				$c = $this->_columns[$k];
+				$c->setValueFromDB($v);
+			}
+		}
+		$this->_exists = true;
 	}
 
 	/**
@@ -1027,24 +1045,17 @@ class Model implements ArrayAccess {
 			}
 		}
 
-		$s = self::GetSchema();
-
-		foreach ($this->_data as $k => $v) {
-			if(!isset($s[$k])){
-				// This key was not in the schema.  Probable reasons for this would be a column that was
-				// removed from the schema in an upgrade, but was never removed from the database.
-				// This is typical because the installer tries to be non-destructive when it comes to data.
-				continue;
-			}
-			$keyschema = $s[$k];
+		foreach ($this->_columns as $c) {
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			
 			// Certain key types have certain functions.
-			if($keyschema['type'] == Model::ATT_TYPE_DELETED) {
+			if($c->type == Model::ATT_TYPE_DELETED) {
 				// Is this record already set as deleted?
 				// If it is, then proceed with the delete as usual.
 				// Otherwise, update the record instead of deleting it.
-				if(!$v){
+				if(!$c->value){
 					$nv = Time::GetCurrentGMT();
-					$this->set($k, $nv);
+					$this->set($c->field, $nv);
 					return $this->save();
 				}
 				else{
@@ -1113,7 +1124,7 @@ class Model implements ArrayAccess {
 			if(!is_array($pri)) $pri = [$pri];
 
 			foreach ($pri as $k) {
-				$dat->where([$k => $this->_data[$k]]);
+				$dat->where([$k => $this->get($k)]);
 			}
 
 			$dat->limit(1)->delete();
@@ -1213,137 +1224,6 @@ class Model implements ArrayAccess {
 	}
 
 	/**
-	 * Translate a key to the strict version of it.
-	 * ie: if a given key is a "Boolean" and the string "true" is given, that should be resolved to 1.
-	 *
-	 * This will also handle null and default values more gracefully than trying to pass them directly to the
-	 * underlying datamodel.
-	 *
-	 * @param string $k      Key to lookup
-	 * @param mixed  $v      Value to check
-	 * @param bool   $commit Set to true to commit any Model, (should the value be a linked Model).
-	 *
-	 * @return mixed The translated value
-	 */
-	public function translateKey($k, $v, $commit = false){
-		$s = self::GetSchema();
-
-		// Not in the schema.... just return the value unmodified.
-		if(!isset($s[$k])) return $v;
-
-		// Shortcut
-		$t = &$s[$k];
-
-		$type = $t['type']; // Type is one of the required properties.
-
-		// Try to determine the generic default value if not set.
-		if(!isset($t['default'])){
-			if(isset($t['null']) && $t['null']){
-				// Easy enough!
-				$default = null;
-			}
-			else{
-				// Not so easy, I need to guess the default based on the type.
-				switch($type){
-					case Model::ATT_TYPE_BOOL:
-					case Model::ATT_TYPE_CREATED:
-					case Model::ATT_TYPE_FLOAT:
-					case Model::ATT_TYPE_INT:
-					case Model::ATT_TYPE_UPDATED:
-					case Model::ATT_TYPE_DELETED:
-						$default = '0';
-						break;
-					case Model::ATT_TYPE_DATA:
-					case Model::ATT_TYPE_STRING:
-					case Model::ATT_TYPE_TEXT:
-						$default = '';
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATE:
-						$default = '0000-00-00';
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATETIME:
-						$default = '0000-00-00 00:00:00';
-						break;
-					case Model::ATT_TYPE_ID:
-					case Model::ATT_TYPE_UUID:
-						$default = null;
-						break;
-					// Umm
-					default:
-						$default = '';
-						break;
-				}
-			}
-		}
-		else{
-			// Simple enough :)
-			$default = $t['default'];
-		}
-
-
-		// This part of the logic will detect if the default value should be used!
-		// Usually this is pretty simple, but some values require a little extra care.
-		switch($type){
-			// Damn datetime strings :/
-			case Model::ATT_TYPE_ISO_8601_DATE:
-				if($v == '' || $v == '0000-00-00' || $v === null){
-					// This gets remapped to "default", which may or may not be the same.
-					$v = $default;
-				}
-				break;
-
-			case Model::ATT_TYPE_ISO_8601_DATETIME:
-				if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
-					// This gets remapped to "default", which may or may not be the same.
-					$v = $default;
-				}
-				break;
-
-			case Model::ATT_TYPE_BOOL:
-				if($v === true){
-					$v = '1';
-				}
-				elseif($v === false){
-					$v = '0';
-				}
-				else{
-					switch(strtolower($v)){
-						// This is used by checkboxes
-						case 'yes':
-							// A single checkbox will have the value of "on" if checked
-						case 'on':
-							// Hidden inputs will have the value of "1"
-						case 1:
-							// sometimes the string "true" is sent.
-						case 'true':
-							$v = '1';
-							break;
-						default:
-							$v = '0';
-					}
-				}
-				break;
-
-			default:
-				if($v === null){
-					// This may or may not remapped... all depends on what the "default" value is.
-					$v = $default;
-				}
-				elseif($v instanceof Model && $commit){
-					// Fringe case for Address case.
-					// In this case, a full Model is passed in as the value.
-					// However, saving a full model as a singular key doesn't work, (obviously).
-					// Instead, save that Model and return the key as the value instead.
-					$v->save();
-					$v = $v->get('id');
-				}
-				break;
-		}
-
-		return $v;
-	}
-
-	/**
 	 * Set a value of a specific key.
 	 *
 	 * The data is validated automatically as per the specific Model specifications.
@@ -1353,7 +1233,6 @@ class Model implements ArrayAccess {
 	 * @param string $k The key to set
 	 * @param mixed  $v The value to set
 	 *
-	 * @return boolean True on success, false on no change needed
 	 * @throws ModelValidationException
 	 */
 	public function set($k, $v) {
@@ -1361,66 +1240,37 @@ class Model implements ArrayAccess {
 			// Allow setting a linked Model via set().
 			// This allows a full Model to be passed in from let's say a form system.
 			$this->setLink($k, $v);
-			return true;
+			return;
 		}
-		elseif (array_key_exists($k, $this->_data)) {
-			// $this->_data will always have the schema keys at least set to null.
-
-			$keydat = $this->getKeySchema($k);
-
-			if($this->_data[$k] === null && $v === null){
-				// Both values are NULL, No change needed.
-				return false;
-			}
-			elseif(
-				$this->_data[$k] !== null &&
-				$keydat['type'] == Model::ATT_TYPE_STRING
-			){
-				if(\Core\compare_strings($this->_data[$k], $v)){
-					// The attribute type is a string and they seem to be identical...
-					return false;
-				}
-			}
-			elseif ($this->_data[$k] !== null){
-				if(\Core\compare_values($this->_data[$k], $v)){
-					// The data is something or other, but they still seem to be identical.
-					return false;
-				}
-			}
-
-			// Is there validation for this key?
-			// That function will handle all of this logic, (including the exception throwing)
-			$this->validate($k, $v, true);
-
-			// Some model types get special treatment with the translation function... ie: booleans.
-			// everything else will simply return the unmodified value.
-			$v = $this->translateKey($k, $v);
-
-			// Set the propagation FIRST, that way I have the old key in memory to lookup.
-			$this->_setLinkKeyPropagation($k, $v);
-
-			// See if this is an encrypted field first.  If it is... set the decrypted version and encrypt it.
-			if($keydat['encrypted']){
-				$this->decryptData();
-				$this->_datadecrypted[$k] = $v;
-				$this->_data[$k] = self::EncryptValue($v);
-			}
-			else{
-				$this->_data[$k] = $v;
-			}
-			return true;
+		
+		// Remap this to an alias if one is set.
+		if(isset($this->_aliases[$k])){
+			$k = $this->_aliases[$k];
 		}
-		elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
-			// It's an alias, set the aliased column instead.
-			return $this->set( $this->getKeySchema($k)['alias'], $v);
-		}
-		else {
-			// Ok, let data to get overloaded for convenience sake.
-			// This doesn't get any validation or anything however.
+
+		$keydat = $this->getKeySchema($k);
+		
+		if($keydat === null){
+			// If the key schema isn't available, then simply set the dataother and exit out.
+			// This generally means that the key isn't a registered column on this model
+			// and that the developer is overloading the model with extra data.
 			$this->_dataother[$k] = $v;
-			return true;
+			return;
 		}
+
+		// Is there validation for this key?
+		// That function will handle all of this logic, (including the exception throwing)
+		$this->validate($k, $v, true);
+
+		// Set the propagation FIRST, that way I have the old key in memory to lookup.
+		$this->_setLinkKeyPropagation($k, $v);
+		
+		/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+		$c = $this->_columns[$k];
+		
+		$c->setValueFromApp($v);
 	}
+
 
 	/**
 	 * Get the model factory for a given link.
@@ -1736,33 +1586,19 @@ class Model implements ArrayAccess {
 	public function isdeleted(){
 		$s = self::GetSchema();
 
-		foreach ($this->_data as $k => $v) {
-			if(!isset($s[$k])){
-				// This key was not in the schema.  Probable reasons for this would be a column that was
-				// removed from the schema in an upgrade, but was never removed from the database.
-				// This is typical because the installer tries to be non-destructive when it comes to data.
-				continue;
-			}
-			$keyschema = $s[$k];
+		foreach ($this->_columns as $c) {
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			
 			// Certain key types have certain functions.
-			if($keyschema['type'] == Model::ATT_TYPE_DELETED) {
-				if($v){
-					// Is this record already set as deleted?
-					// If value is > 0|NULL, it's marked as deleted!
-					return true;
-				}
+			if($c->type == Model::ATT_TYPE_DELETED && $c->value) {
+				// Is this record already set as deleted?
+				// If value is > 0|NULL, it's marked as deleted!
+				return true;
 			}
 		}
-
-		if( sizeof($this->_datainit) > 0 && !$this->_exists ){
-			// The data at time of initialization existed, but
-			// the exists flag is set to false, which gets set on initialization.
-			// This means that delete() was called at some point.
-			return true;
-		}
-
-		// Still no?  OK!
-		return false;
+		
+		// Otherwise, it's safe to check the value of exists.
+		return !$this->_exists;
 	}
 
 	/**
@@ -1782,79 +1618,38 @@ class Model implements ArrayAccess {
 	 * @return bool
 	 */
 	public function changed($key = null){
-		$s = self::GetSchema();
-
-		foreach ($this->_data as $k => $v) {
-			if($key !== null && $key != $k){
-				// Allow checking only a specific key.
-				continue;
+		
+		if($key === null){
+			// Check all columns!
+			foreach($this->_columns as $c){
+				/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+				if($c->changed()){
+					return true;
+				}
 			}
-
-			if(!isset($s[$k])){
-				// This key was not in the schema.  Probable reasons for this would be a column that was
-				// removed from the schema in an upgrade, but was never removed from the database.
-				// This is typical because the installer tries to be non-destructive when it comes to data.
-				continue;
-			}
-			$keyschema = $s[$k];
-
-			// Certain key types are to be ignored in the "changed" logic check.  Namely automatic timestamps.
-			switch ($keyschema['type']) {
-				case Model::ATT_TYPE_CREATED:
-				case Model::ATT_TYPE_UPDATED:
-					continue 2;
-			}
-
-			// It's a standard column, check and see if it matches the datainit value.
-			// If the datainit key doesn't exist, that also constitutes as a changed flag!
-			// ** I'm beginning to really dislike PHP....
-			if(!array_key_exists($k, $this->_datainit)){
-				//echo "$k changed!<br/>\n"; // DEBUG
+			return false;
+		}
+		elseif(isset($this->_columns[$key])){
+			// Individual key was requested.
+			if($this->_columns[$key]->changed()){
 				return true;
-			}
-
-			if($this->_datainit[$k] != $this->_data[$k]){
-				// This will match if "blah" is different than "foo", but fails at "" is different than "0".
-
-				//echo "$k changed!<br/>\n"; // DEBUG
-				//var_dump($this->_datainit[$k], $this->_data[$k]); // DEBUG
-				return true;
-			}
-
-
-			if(isset($keyschema['type']) && $keyschema['type'] == Model::ATT_TYPE_STRING){
-				// If this attribute is a string, use Core's string comparison.
-				if(!\Core\compare_strings($this->_datainit[$k], $this->_data[$k])) return true;
 			}
 			else{
-				// Default, more precise comparison.
-				// This one knows the difference between "", "0", and false!
-				if(!\Core\compare_values($this->_datainit[$k], $this->_data[$k])) return true;
+				return false;
 			}
-
-			// The data seems to have matched up, nothing to see here, move on!
 		}
-
-		// Oh, if it's gotten past all the data keys, then the data must have been identical!
-		return false;
+		else{
+			return false;
+		}
 	}
 
 	/**
 	 * Function to call to decrypt data from this model.
 	 *
-	 * NOTE, to increase performance, data is NOT automatically decrypted upon loading data from the datastore!
+	 * As of 5.1.0, this is called automatically and therefores this does nothing.
 	 */
 	public function decryptData(){
-		if($this->_datadecrypted === null){
-			$this->_datadecrypted = [];
-
-			foreach($this->getKeySchemas() as $k => $v){
-				// Since certain keys in a model may be encrypted.
-				if($v['encrypted']){
-					$this->_datadecrypted[$k] = self::DecryptValue($this->_data[$k]);
-				}
-			}
-		}
+		return;
 	}
 
 	/**
@@ -1906,7 +1701,7 @@ class Model implements ArrayAccess {
 	 * @return boolean Returns true on success or false on failure.
 	 */
 	public function offsetExists($offset) {
-		return (array_key_exists($offset, $this->_data));
+		return (array_key_exists($offset, $this->_columns));
 	}
 
 	/**
@@ -2074,158 +1869,73 @@ class Model implements ArrayAccess {
 		}
 
 		$idcol = false;
-		foreach ($this->_data as $k => $v) {
-			$keyschema = $s[$k];
-
-			switch ($keyschema['type']) {
-				case Model::ATT_TYPE_CREATED:
-				case Model::ATT_TYPE_UPDATED:
-					// If this value has already been set, (some advanced utilities may want to specify a different updated or created time),
-					// then allow that value to stick.
-					if($v){
-						if($defer){
-							$inserts[$k] = $v;
-						}
-						else{
-							$dat->insert($k, $v);
-						}
-					}
-					else{
-						$nv = Time::GetCurrentGMT();
-						if($defer){
-							$inserts[$k] = $nv;
-						}
-						else{
-							$dat->insert($k, $nv);
-						}
-						$this->_data[$k] = $nv;
-					}
-					break;
-
-				case Model::ATT_TYPE_ID:
-					$nv = $this->_data[$k];
-					if($this->_data[$k]){
-						// An ID is already set on this key, even though it's an auto-increment ID.
-						// Allow this as you may be syncing a model from another system and want their IDs to match up.
-						// NOTE, this can be a dangerous operation.
-						if($defer){
-							$inserts[$k] = $nv;
-						}
-						else{
-							$dat->insert($k, $nv);
-						}
-					}
-					if(!$defer){
-						$dat->setID($k, $nv);
-						$idcol = $k; // Remember this for after the save.
-					}
-
-					break;
-
-				case Model::ATT_TYPE_UUID:
-					if($this->_data[$k] && isset($this->_datainit[$k]) && $this->_datainit[$k]){
-						// Yay, a UUID is already set, no need to really do much.
-						$nv = $this->_data[$k];
-						// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
-						// although there shouldn't be any update statements here.... but ya never know
-						if($defer){
-							$inserts[$k] = $nv;
-						}
-						else{
-							$dat->setID($k, $nv);
-						}
-					}
-					elseif($this->_data[$k]){
-						// a UUID is already set, but it doesn't exist yet still.
-						// This means that the UUID was set externally even though the record is new.
-						// THIS IS ALLOWED!
-						// Insert it as typical key.
-						$nv = $this->_data[$k];
-						if($defer){
-							$inserts[$k] = $nv;
-						}
-						else{
-							$dat->insert($k, $nv);
-							$dat->setID($k, $nv);
-						}
-					}
-					else{
-						// I need to generate a new key and set that.
-						$nv = Core::GenerateUUID();
-						// In this case, the database isn't going to care what the column is, other than the fact it's unique.
-						// It will be :)
-						if($defer){
-							$inserts[$k] = $nv;
-						}
-						else{
-							$dat->insert($k, $nv);
-							$dat->setID($k, $nv);
-						}
-
-						// And I need to set this on the data so it's available next time.
-						$this->_data[$k] = $nv;
-					}
-					// Remember this for after the save.
-					$idcol = $k;
-					break;
-
-				case Model::ATT_TYPE_SITE:
-					if(
-						Core::IsComponentAvailable('enterprise') &&
-						MultiSiteHelper::IsEnabled() &&
-						($v === null || $v === false)
-					){
-						$site = MultiSiteHelper::GetCurrentSiteID();
-						if($defer){
-							$inserts['site'] = $site;
-						}
-						else{
-							$dat->insert('site', $site);
-						}
-
-						$this->_data[$k] = $site;
-					}
-					elseif($v === null || $v === false){
-						if($defer){
-							$inserts['site'] = 0;
-						}
-						else{
-							$dat->insert('site', 0);
-						}
-						$this->_data[$k] = 0;
-					}
-					else{
-						if($defer){
-							$inserts[$k] = $v;
-						}
-						else{
-							$dat->insert($k, $v);
-						}
-					}
-					break;
-
-				default:
-					// Make sure this value is resolved to its strict version!
-					// This is because the underlying data layer will throw kinipshits if (for example),
-					// NULL is passed in on a non-null column.
-					$v = $this->translateKey($k, $v, true);
+		
+		foreach($this->_columns as $c){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			if($c->type == Model::ATT_TYPE_UUID){
+				if($c->value && $c->valueDB){
+					// Yay, a UUID is already set, no need to really do much.
+					// It's already set and this will most likely be ignored, but may not be for UPDATE statements...
+					// although there shouldn't be any update statements here.... but ya never know
 					if($defer){
-						$inserts[$k] = $v;
+						$inserts[$c->field] = $c->getInsertValue();
 					}
 					else{
-						$dat->insert($k, $v);
+						$dat->setID($c->field, $c->getInsertValue());
 					}
-					break;
+				}
+				else{
+					// a UUID is already set, but it doesn't exist yet still.
+					// This means that the UUID was set externally even though the record is new.
+					// THIS IS ALLOWED!
+					// Insert it as typical key.
+					// Addtionally if this is a new key, the column will automatically generate a UUID as necessary.
+					if($defer){
+						$inserts[$c->field] = $c->getInsertValue();
+					}
+					else{
+						$dat->insert($c->field, $c->getInsertValue());
+						$dat->setID($c->field, $c->getInsertValue());
+					}
+				}
+				// Remember this for after the save.
+				$idcol = $c->field;
+			}
+			elseif($c->type == Model::ATT_TYPE_ID){
+				if($c->value){
+					// An ID is already set on this key, even though it's an auto-increment ID.
+					// Allow this as you may be syncing a model from another system and want their IDs to match up.
+					// NOTE, this can be a dangerous operation.
+					if($defer){
+						$inserts[$c->field] = $c->getInsertValue();
+					}
+					else{
+						$dat->insert($c->field, $c->getInsertValue());
+					}
+				}
+				if(!$defer){
+					$dat->setID($c->field, $c->getInsertValue());
+					// Remember this for after the save.
+					$idcol = $c->field;
+				}
+			}
+			else{
+				if($defer){
+					$inserts[$c->field] = $c->getInsertValue();
+				}
+				else{
+					$dat->insert($c->field, $c->getInsertValue());
+				}
 			}
 		}
-
+//var_dump($dat); die();
 		if($defer) {
 			$dat->_sets[] = $inserts;
 		}
 		else{
 			$dat->execute($this->interface);
 			if ($idcol){
-				$this->_data[$idcol] = $dat->getID();
+				$this->_columns[$idcol]->setValueFromDB($dat->getID());
 			}
 		}
 	}
@@ -2257,75 +1967,23 @@ class Model implements ArrayAccess {
 		$dat = new Core\Datamodel\Dataset();
 		$dat->table($n);
 
-		$idcol = false;
-		foreach ($this->_data as $k => $v) {
-			if(!isset($s[$k])){
-				// This key was not in the schema.  Probable reasons for this would be a column that was
-				// removed from the schema in an upgrade, but was never removed from the database.
-				// This is typical because the installer tries to be non-destructive when it comes to data.
-				continue;
+		foreach($this->_columns as $c){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $c */
+			
+			if($c->type == Model::ATT_TYPE_ID || $c->type == Model::ATT_TYPE_UUID){
+				$dat->setID($c->field, $c->value);
 			}
-			$keyschema = $s[$k];
-			// Certain key types have certain functions.
-			switch ($keyschema['type']) {
-				case Model::ATT_TYPE_CREATED:
-					// Already created... don't update the flag.
-					continue 2;
-				case Model::ATT_TYPE_UPDATED:
-					// Update the updated timestamp with now.
-					$nv = Time::GetCurrentGMT();
-					$dat->update($k, $nv);
-					$this->_data[$k] = $nv;
-					continue 2;
-				case Model::ATT_TYPE_ID:
-				case Model::ATT_TYPE_UUID:
-					$dat->setID($k, $this->_data[$k]);
-					$idcol = $k; // Remember this for after the save.
-					continue 2;
+			elseif($c->changed()){
+				$dat->update($c->field, $c->getUpdateValue());
 			}
 
-			// Make sure this value is resolved to its strict version!
-			// This is because the underlying data layer will throw kinipshits if (for example),
-			// NULL is passed in on a non-null column.
-			$v = $this->translateKey($k, $v, true);
-
-			//var_dump($k, $i['primary']);
-			// Everything else
-			if (in_array($k, $pri)) {
-				// Just in case the new data changed....
-				if ($this->_datainit[$k] != $v){
-					if($useset){
-						$dat->set($k, $v);
-					}
-					else{
-						$dat->update($k, $v);
-					}
-				}
-
-				$dat->where($k, $this->_datainit[$k]);
-
-				$this->_data[$k] = $v;
-			}
-			else {
-				// Do some logic to see if I can skip updating non-changed columns.
-				if(isset($this->_datainit[$k])){
-					if($keyschema['type'] == Model::ATT_TYPE_STRING){
-						if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
-					}
-					else{
-						if(\Core\compare_values($this->_datainit[$k], $v)) continue;
-					}
-				}
-
-				//echo "Setting [$k] = [$v]<br/>"; // DEBUG
-				if($useset){
-					$dat->set($k, $v);
-				}
-				else{
-					$dat->update($k, $v);
-				}
+			if (in_array($c->field, $pri)) {
+				// Any field keyed as a primary field sets the WHERE clause.
+				$dat->where($c->field, $c->getUpdateValue());
 			}
 		}
+		
+		//var_dump($dat); die();
 
 		// No data.. nothing to change I guess!
 		// This is a failsafe should (for some reason), the changed() method doesn't return the correct value.
@@ -2948,29 +2606,26 @@ class Model implements ArrayAccess {
 		if (!isset($schema['type']))               $schema['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
 		if (!isset($schema['maxlength']))          $schema['maxlength'] = false;
 		if (!isset($schema['null']))               $schema['null']      = false;
-		if (!isset($schema['comment']))            $schema['comment']   = '';
+		if (!isset($schema['comment']))            $schema['comment']   = false;
 		if (!array_key_exists('default', $schema)) $schema['default']   = false;
 		if (!isset($schema['encrypted']))          $schema['encrypted'] = false;
 		if (!isset($schema['required']))           $schema['required']  = false;
+		if (!isset($schema['encoding']))           $schema['encoding']  = false;
 
-		// Ensure that the default value is appropriate.
-		if($schema['default'] === false && !$schema['null']){
-			if($schema['type'] == Model::ATT_TYPE_TEXT){
-				// Strings that do not have a default but cannot be null are defaulted to "".
-				$schema['default'] = '';
-			}
+		if($schema['default'] === false && $schema['null'] === true){
+			// Easiest case!  NULL is allowed on this column.
+			$schema['default'] = null;
 		}
-
-
+		
 		if($schema['type'] == Model::ATT_TYPE_ENUM){
 			// Enums have an options array!
 			$schema['options'] = isset($schema['options']) ? $schema['options'] : [];
 		}
 		else{
 			// Other fields don't.
-			$schema['options'] = null;
+			$schema['options'] = false;
 		}
-
+		
 		return $schema;
 	}
 }

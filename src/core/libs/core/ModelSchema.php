@@ -72,13 +72,14 @@ class ModelSchema extends Core\Datamodel\Schema{
 		$this->order       = [];
 
 		foreach($schema as $name => $def){
-			$def['name'] = $name;
-			$column = $this->_getColumnDefinition($def);
+			if($def['type'] == Model::ATT_TYPE_ALIAS){
+				$this->aliases[$name] = $def['alias'];
+			}
+			else{
+				$def['name'] = $name;
+				$column = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($def);
 
-			$this->definitions[$name] = $column;
-
-			// Aliases are skipped when considering the order of columns.
-			if($def['type'] != Model::ATT_TYPE_ALIAS){
+				$this->definitions[$name] = $column;
 				$this->order[] = $name;
 			}
 		}
@@ -95,137 +96,5 @@ class ModelSchema extends Core\Datamodel\Schema{
 				$this->indexes[$key] = $dat;
 			}
 		}
-	}
-
-	/**
-	 * Get the SchemaColumn for a given Model Schema.
-	 *
-	 * @param array $def
-	 *
-	 * @return \Core\Datamodel\SchemaColumn
-	 */
-	private function _getColumnDefinition($def){
-		$column = new \Core\Datamodel\SchemaColumn();
-		$column->field     = $def['name'];
-		$column->type      = $def['type'];
-		$column->required  = $def['required'];
-		$column->maxlength = $def['maxlength'];
-		// Options have been moved below to support associative arrays.
-		//$column->options   = $def['options'];
-		$column->default   = $def['default'];
-		$column->null      = $def['null'];
-		$column->comment   = $def['comment'];
-
-		if(isset($def['precision'])) $column->precision = $def['precision'];
-
-		// Some defaults.
-		if($column->type == Model::ATT_TYPE_STRING && !$column->maxlength){
-			$column->maxlength = 255;
-		}
-
-		if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
-			$column->maxlength = 15;
-			$column->autoinc = true;
-		}
-
-		if($column->type == Model::ATT_TYPE_ID_FK){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_UUID){
-			// A UUID is in the format of:
-			// siteid-timestamp-randomhex
-			// or [1-3 numbers] - [11-12 hex] - [4 hex]
-			// a total of up to 21 digits.
-			// Support global server UUIDS which contain 32 characters.
-			$column->maxlength = 32;
-			$column->autoinc = false;
-		}
-
-		if($column->type == Model::ATT_TYPE_UUID_FK){
-			// Mimic the UUID column.
-			$column->maxlength = 32;
-		}
-
-		if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_CREATED && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_DELETED && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_SITE){
-			$column->default = 0;
-			$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_ALIAS){
-			$column->aliasof = $def['alias'];
-		}
-
-		if($column->type == Model::ATT_TYPE_ENUM){
-			// This logic is to support model definitions such as
-			// 'foo' => [
-			//          'type' => Model::ATT_TYPE_ENUM,
-			//          'options' => ['key-1' => 'Key One', 'key-2' => 'Key TWO'],
-			// ...
-			if(!\Core\is_numeric_array($def['options'])){
-				$column->options = array_keys($def['options']);
-			}
-			else{
-				$column->options = $def['options'];
-			}
-		}
-
-		// Is default not set?  Some columns would really like this to be!
-		if($column->default === false){
-			if($column->null){
-				$column->default = null;
-			}
-			else{
-				switch($column->type){
-					case Model::ATT_TYPE_INT:
-					case Model::ATT_TYPE_BOOL:
-					case Model::ATT_TYPE_CREATED:
-					case Model::ATT_TYPE_UPDATED:
-					case Model::ATT_TYPE_DELETED:
-					case Model::ATT_TYPE_FLOAT:
-						$column->default = 0;
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATE:
-						$column->default = '0000-00-00';
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATETIME:
-						$column->default = '0000-00-00 00:00:00';
-						break;
-					default:
-						$column->default = '';
-				}
-			}
-		}
-
-		// Handle the default encoding for strings.
-		switch($column->type){
-			case Model::ATT_TYPE_BOOL:
-			case Model::ATT_TYPE_ENUM:
-			case Model::ATT_TYPE_STRING:
-			case Model::ATT_TYPE_TEXT:
-			case Model::ATT_TYPE_UUID:
-			case Model::ATT_TYPE_UUID_FK:
-				$column->encoding = 'utf8';
-				break;
-		}
-
-		return $column;
 	}
 }

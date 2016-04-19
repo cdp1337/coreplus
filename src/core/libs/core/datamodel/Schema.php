@@ -54,32 +54,23 @@ namespace Core\Datamodel;
  *
  */
 class Schema {
-	/**
-	 * An associative array of SchemaColumn objects.
-	 *
-	 * @var array
-	 */
-	public $definitions = array();
+	/** @var array All SchemaColumn objects. */
+	public $definitions = [];
 
-	/**
-	 * An indexed array of the names of the columns in this schema.
-	 *
-	 * @var array
-	 */
-	public $order = array();
+	/** @var array names of the columns in this schema. */
+	public $order = [];
 
-	/**
-	 * Flat array of indexes on this schema
-	 *
-	 * @var array
-	 */
-	public $indexes = array();
+	/** @var array Flat array of indexes on this schema */
+	public $indexes = [];
+	
+	/** @var array Flat array of aliases and their destination key */
+	public $aliases = [];
 
 	/**
 	 * Get a column by order (int) or name
 	 *
 	 * @param string|int $column
-	 * @return SchemaColumn|null
+	 * @return Columns\SchemaColumn|null
 	 */
 	public function getColumn($column){
 		// This will resolve an int to the column name.
@@ -112,12 +103,12 @@ class Schema {
 			if(!$thiscol){
 				// Only complain about these if this column is not an alias.
 				// Aliased columns are ignored otherwise.
-				if($dat->type != \Model::ATT_TYPE_ALIAS){
-					$diffs[] = array(
-						'title' => 'A does not have column ' . $name,
-						'type' => 'column',
-					);
-				}
+				$diffs[] = array(
+					'title' => 'A does not have column ' . $name,
+					'column' => $name,
+					'a' => null,
+					'b' => $dat,
+				);
 				continue;
 			}
 			// Conversely, if *that* column is an alias, I can also safely skip it.
@@ -128,7 +119,9 @@ class Schema {
 			if(($colchange = $thiscol->getDiff($dat)) !== null){
 				$diffs[] = array(
 					'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
-					'type' => 'column',
+					'column' => $name,
+					'a' => $thiscol,
+					'b' => $dat,
 				);
 			}
 		}
@@ -149,7 +142,9 @@ class Schema {
 		if(implode(',', $a_order) != implode(',', $schema->order)){
 			$diffs[] = array(
 				'title' => 'Order of columns is different',
-				'type' => 'order',
+				'column' => '*MANY*',
+				'a' => null,
+				'b' => null,
 			);
 		}
 
@@ -162,7 +157,9 @@ class Schema {
 		if($thisidx != $thatidx){
 			$diffs[] = array(
 				'title' => 'Indexes do not match up',
-				'type' => 'index'
+				'column' => '*MANY*',
+				'a' => null,
+				'b' => null,
 			);
 		}
 
@@ -183,193 +180,5 @@ class Schema {
 
 		// And see if there is something there.
 		return !sizeof($diff);
-	}
-}
-
-class SchemaColumn {
-
-	/**
-	 * The field name or key name of this column
-	 * @var string
-	 */
-	public $field;
-
-	/**
-	 * Specifies the data type contained in this column.  Must be one of the \Model::ATT_TYPE_* fields.
-	 * @var string
-	 */
-	public $type = null;
-
-	/**
-	 * Set to true to disallow blank values
-	 * @var bool
-	 */
-	public $required = false;
-
-	/**
-	 * Maximum length in characters (or bytes), of data stored.
-	 * @var bool|int
-	 */
-	public $maxlength = false;
-
-	/**
-	 * ATT_TYPE_ENUM column types expect a set of values.  This is defined here as an array.
-	 * @var null|array
-	 */
-	public $options = null;
-
-	/**
-	 * Default value to use for this column
-	 * @var bool|int|float|string
-	 */
-	public $default = false;
-
-	/**
-	 * Allow null values for this column.  If set to true, null is preserved as null.  False will change null values to blank.
-	 * @var bool
-	 */
-	public $null = false;
-
-	/**
-	 * Comment to add onto the database column.  Useful for administrative comments for.
-	 * @var string
-	 */
-	public $comment = '';
-
-	/**
-	 * ATT_TYPE_FLOAT supports precision for its data.  Should be set as a string such as "6,2" for 6 digits left of decimal,
-	 * 2 digits right of decimal.
-	 * @var null|string
-	 */
-	public $precision = null;
-
-	/**
-	 * Core+ allows data to be encrypted / decrypted on-the-fly.  This is useful for sensitive information such as
-	 * credit card data or authorization credentials for external sources.  Setting this to true will store all
-	 * information as encrypted, and allow it to be read decrypted.
-	 * @var bool
-	 */
-	public $encrypted = false;
-
-	/**
-	 * Indicator if this column needs to be auto incremented from the datamodel.
-	 * @var bool
-	 */
-	public $autoinc = false;
-
-	/**
-	 * The default encoding of this schema column.
-	 * @var string|null
-	 */
-	public $encoding = null;
-
-	/**
-	 * @var null|string If this column is actually an alias of another column, that other column name is here.
-	 */
-	public $aliasof = null;
-
-	/**
-	 * Check to see if this column is datastore identical to another column.
-	 *
-	 * @param SchemaColumn $col
-	 *
-	 * @return bool
-	 */
-	public function isIdenticalTo(SchemaColumn $col){
-		$diff = $this->getDiff($col);
-
-		return ($diff === null);
-	}
-
-	/**
-	 * Get the actual differences between this schema and another column.
-	 *
-	 * Will return null if there are no differences.
-	 *
-	 * @param SchemaColumn $col
-	 * @return null|string
-	 */
-	public function getDiff(SchemaColumn $col){
-
-		// Do an array comparison.
-		$thisarray = (array)$this;
-		$colarray  = (array)$col;
-
-		// If the schemas-to-arrays are identical, no need to proceed.
-		if($thisarray === $colarray) return null;
-
-		// What has changed?
-		$differences = [];
-
-		if($this->field != $col->field) $differences[] = 'field name';
-
-		//if($this->required != $col->required) return false;
-		if($this->maxlength != $col->maxlength) $differences[] = 'max length';
-		if($this->null != $col->null) $differences[] = 'is null';
-		if($this->comment != $col->comment) $differences[] = 'comment';
-		if($this->precision != $col->precision) $differences[] = 'precision';
-		if($this->autoinc !== $col->autoinc) $differences[] = 'auto increment';
-		if($this->encoding != $col->encoding) $differences[] = 'encoding';
-
-		// Default is a bit touchy because it can have database-specific defaults if not set locally.
-		if($this->default === false){
-			// I don't care what the database is, it'll pick its own defaults.
-		}
-		elseif($this->default === $col->default){
-			// They're identical... yay!
-		}
-		elseif(\Core\compare_values($this->default, $col->default)){
-			// They're close enough....
-			// Core will check and see if val1 === (string)"12" and val2 === (int)12.
-			// Consider it a fuzzy comparison that actually acknowledges the difference between NULL, "", and 0.
-		}
-		elseif($col->default === false && $this->default !== false){
-			$differences[] = 'default value (#1)';
-		}
-		else{
-			$differences[] = 'default value (#2)';
-		}
-
-		// If one is an array but not the other....
-		if(is_array($this->options) != is_array($col->options)) $differences[] = 'options set/unset';
-
-		if(is_array($this->options) && is_array($col->options)){
-			// If they're both arrays, I need another way to check them.
-			if(implode(',', $this->options) != implode(',', $col->options)) $differences[] = 'options changed';
-		}
-
-		// Type needs to allow for a few special cases.
-		// Here, there are several columns that are all identical.
-		$typematches = array(
-			array(
-				\Model::ATT_TYPE_INT,
-				\Model::ATT_TYPE_UUID,
-				\Model::ATT_TYPE_UUID_FK,
-				\Model::ATT_TYPE_CREATED,
-				\Model::ATT_TYPE_UPDATED,
-				\Model::ATT_TYPE_DELETED,
-				\Model::ATT_TYPE_SITE,
-			)
-		);
-
-		$typesidentical = false;
-		foreach($typematches as $types){
-			if(in_array($this->type, $types) && in_array($col->type, $types)){
-				// Found an identical pair!  break out to continue;
-				$typesidentical = true;
-				break;
-			}
-		}
-
-		// If the types aren't found to be identical from above, then they have to actually be identical!
-		if(!$typesidentical && $this->type != $col->type) $differences[] = 'type';
-
-		if(sizeof($differences)){
-			return implode(', ', $differences);
-		}
-		else{
-			// Otherwise....
-			return null;
-		}
 	}
 }

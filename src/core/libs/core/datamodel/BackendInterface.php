@@ -63,7 +63,8 @@ interface BackendInterface {
 	 * @param string $table  Table name to be created
 	 * @param Schema $schema Schema to match
 	 *
-	 * @return bool
+	 * @return bool|array
+	 * 
 	 * @throws \DMI_Exception
 	 * @throws \DMI_Query_Exception
 	 */

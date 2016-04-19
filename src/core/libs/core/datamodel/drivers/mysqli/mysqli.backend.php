@@ -24,11 +24,11 @@
 namespace Core\Datamodel\Drivers\mysqli;
 
 use Core\Datamodel\BackendInterface;
+use Core\Datamodel\Columns\SchemaColumn;
 use Core\Datamodel\Dataset;
 use Core\Datamodel\DatasetWhere;
 use Core\Datamodel\DatasetWhereClause;
 use Core\Datamodel\Schema;
-use Core\Datamodel\SchemaColumn;
 use Core\Filestore\Factory;
 use Core\Filestore\File;
 use Core\Utilities\Profiler\DatamodelProfiler;
@@ -218,25 +218,28 @@ class mysqli_backend implements BackendInterface {
 	 * @param string $table
 	 * @param Schema $schema
 	 *
-	 * @return bool
+	 * @return bool|array
+	 * 
 	 * @throws \DMI_Exception
 	 * @throws \DMI_Query_Exception
 	 */
 	public function modifyTable($table, Schema $schema){
 		// BEFORE I do all the exhaustive work of sifting through the table and what not, do a quick check to see if this table is unchanged.
-		/** @var mysqli_Schema $old_schema */
-		$old_schema = $this->describeTable($table);
-
-		$differences = $old_schema->getDiff($schema);
-		if(sizeof($differences) == 0){
+		/** @var mysqli_Schema $oldSchema */
+		$oldSchema = $this->describeTable($table);
+		
+		$changed = $this->_schemasDiffer($oldSchema, $schema);
+		$changes = [];
+		
+		if(!$changed){
 			// If the schemas are identical, no need to change anything.
 			// Indicate this with a false return status.
 			return false;
 		}
 
-		//var_dump($table, $old_schema->getDiff($schema)); // DEBUG //
+		//var_dump($table, $oldSchema->getDiff($schema)); // DEBUG //
 		//var_dump('Model declaration says:', $schema); // DEBUG //
-		//var_dump('Database says:', $old_schema); // DEBUG //
+		//var_dump('Database says:', $oldSchema); // DEBUG //
 		//die();
 
 		// Table does exist... I need to do a merge of the data schemas.
@@ -260,8 +263,8 @@ class mysqli_backend implements BackendInterface {
 		// any/all primary keys and indexes, do the operations, then reset the ai and indexes afterwards.
 
 		// This will search for and strip the AI attribute.
-		foreach($old_schema->definitions as $column){
-			/** @var SchemaColumn $column */
+		foreach($oldSchema->definitions as $column){
+			/** @var \Core\Datamodel\Columns\SchemaColumn $column */
 			if($column->autoinc){
 				$columndef = str_replace(' AUTO_INCREMENT', '', $this->_getColumnString($column));
 				// This statement will perform the alter statement, removing the AUTO INCREMENT attribute.
@@ -271,7 +274,7 @@ class mysqli_backend implements BackendInterface {
 
 		// Now remove the indexes completely.
 		// These will get re-added after the modify logic runs through.
-		foreach($old_schema->indexes as $key => $idx){
+		foreach($oldSchema->indexes as $key => $idx){
 			if($key == 'primary'){
 				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` DROP PRIMARY KEY');
 			}
@@ -291,88 +294,81 @@ class mysqli_backend implements BackendInterface {
 		$x = 0;
 		// Now I can start running through the new schema and create/move the columns as necessary.
 		foreach($schema->definitions as $column){
-			/** @var SchemaColumn $column */
+			/** @var \Core\Datamodel\Columns\SchemaColumn $column */
 
-			// This is the column definition, (without the AI attribute, I'll get to that in a second).
-			$columndef = str_replace(' AUTO_INCREMENT', '', $this->_getColumnString($column));
-			$oldname   = isset($old_schema->definitions[$column->field]) ? $column->field : null;
-			$newname   = $column->field;
-
-			if($column->aliasof){
-				// This column is an alias.
-				// Check if it exists in the old schema (database), and rename it to the aliased column if necessary.
-
-				if(!isset($old_schema->definitions[$column->field])){
-					// This column doesn't exist in the database, no need to perform any changes!
-					continue;
-				}
-
-				if(isset($old_schema->definitions[$column->aliasof])){
-					// The new alias already exists in the new schema.
-					// This could happen because the developer already ran this upgrade.
-					continue;
-				}
-
-				$alias = false;
-				foreach($schema->definitions as $checkcol){
-					/** @var SchemaColumn $checkcol */
-					if($checkcol->field == $column->aliasof){
-						$alias = $checkcol;
-						break;
+			// If this new column has an alias that matches to it and the current table has that
+			// column listed, then I need to perform a rename instead of create to preserve data.
+			$aliases   = array_keys($schema->aliases, $column->field);
+			/** @var \Core\Datamodel\Columns\SchemaColumn|null $oldColumn */
+			$oldColumn = isset($oldSchema->definitions[$column->field]) ? $oldSchema->definitions[$column->field] : null;
+			$newDef    = $this->_getColumnString($column);
+			$oldDef    = null;
+			$newPos    = array_search($column->field, $schema->order);
+			$oldPos    = array_search($column->field, $oldSchema->order);
+			$newName   = $column->field;
+			$oldName   = null;
+			
+			if(sizeof($aliases)){
+				foreach($aliases as $key){
+					if(isset($oldSchema->definitions[$key])){
+						// It exists in the database currently!  w00t!
+						// This will overwrite the oldColumn from above, which only matches if it existed.
+						$oldColumn = $oldSchema->definitions[$key];
+						break; // Exit the foreach aliases loop.
 					}
 				}
-
-				$columndef = str_replace(' AUTO_INCREMENT', '', $this->_getColumnString($alias));
-				$newname   = $alias->field;
-
-				//var_dump($column, $columndef, $alias); die();
 			}
-
-
-			if($oldname && isset($old_schema->order[$x]) && $old_schema->order[$x] == $oldname){
-				// Yay, the column is in the same order in the new schema as the old schema!
-				// All I need to do here is just ensure the structure is appropriate.
-				$q = 'ALTER TABLE _tmptable CHANGE COLUMN `' . $oldname . '` `' . $newname . '` ' . $columndef;
-				$neednewschema = ($oldname != $newname);
+			
+			if($oldColumn){
+				$oldDef  = $this->_getColumnString($oldColumn);
+				$oldPos  = array_search($oldColumn->field, $oldSchema->order);
+				$oldName = $oldColumn->field;
 			}
-			elseif($oldname){
-				// Well, it's in the old schema, just not necessarily in the same order.
-				// Move it along with the updated attributes.
-				$q = 'ALTER TABLE _tmptable CHANGE COLUMN `' . $oldname . '` `' . $newname . '` ' . $columndef . ' ';
-				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $old_schema->order[$x-1] . '`';
-				$neednewschema = true;
+			
+			if($oldName){
+				// The column existed before!
+				// Check and see if it's the exact same as the new column.
+				if($oldName === $newName && $oldPos === $newPos && $oldDef === $newDef){
+					// SKIP!
+					$x++;
+					continue;
+				}
 			}
-			elseif(!$column->aliasof){
-				$newcolumns[$column->field] = $column;
-				// It's a new column altogether!  ADD IT!
-				$q = 'ALTER TABLE _tmptable ADD `' . $newname . '` ' . $columndef . ' ';
-				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $old_schema->order[$x-1] . '`';
-				$neednewschema = true;
+			
+			$q = 'ALTER TABLE _tmptable';
+			
+			if($oldName){
+				// This column exists already, perform a CHANGE request instead of an ADD request.
+				$q .= ' CHANGE COLUMN `' . $oldName . '`';
+				
+				// Reporting text
+				if($oldName != $newName){
+					$changes[] = 'DB Table ' . $table . ': Renamed column ' . $oldName . ' to ' . $newName . ' with new definition of ' . $newDef;
+				}
+				else{
+					$changes[] = 'DB Table ' . $table . ': Update column ' . $newName . ' with new definition of ' . $newDef;
+				}
 			}
 			else{
-				// The column did not exist before and it is an alias... nothing needs done.
-				$q = null;
-				$neednewschema = false;
+				// It's a new column that did not exist nor did an alias exist.
+				$q .= ' ADD';
+
+				$changes[] = 'DB Table ' . $table . ': Add column ' . $newName . ' with new definition of ' . $newDef;
+			}
+			
+			// The part that remains the same for both new and existing keys regardless of shuffling is:
+			$q .= ' `' . $column->field . '` ' . str_replace(' AUTO_INCREMENT', '', $newDef);
+			
+			if($oldPos !== $x){
+				// The previous position and new positions are different, append the FIRST or AFTER `key` bits!
+				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $oldSchema->order[$x-1] . '`';
 			}
 
-			if($q){
-				// Execute this query, increment X, and re-read the "old" structure.
-				$this->_rawExecute('write', $q);
-				//echo 'EXECUTE [' . $q . ']' . NL . '<br/>';
-			}
-
-			// Aliases do not count as steps.
-			if(!$column->aliasof){
-				$x++;
-			}
-
-			if($neednewschema){
-				// Only update the schema if the column order changed.
-				// This is to increase performance a little.
-				$old_schema = $this->describeTable('_tmptable');
-			}
+			// Execute this query, increment X, and re-read the "old" structure.
+			$this->_rawExecute('write', $q);
+			$x++;
+			$oldSchema = $this->describeTable('_tmptable');
 		}
-
 
 
 		// Here's where some voodoo begins real quick.
@@ -420,7 +416,7 @@ class mysqli_backend implements BackendInterface {
 		// And lastly, search and re-add the AI attribute!
 		// This has to be done last because it requires the PRIMARY KEY to already be set.
 		foreach($schema->definitions as $column){
-			/** @var SchemaColumn $column */
+			/** @var \Core\Datamodel\Columns\SchemaColumn $column */
 			if($column->autoinc){
 				$this->_rawExecute('write', 'ALTER TABLE `_tmptable` CHANGE `' . $column->field . '` `' . $column->field . '` ' . $this->_getColumnString($column));
 			}
@@ -434,7 +430,7 @@ class mysqli_backend implements BackendInterface {
 		$this->_rawExecute('write', 'DROP TABLE _tmptable');
 
 		// Something changed, return true to indicate this.
-		return true;
+		return $changes;
 	}
 
 	/**
@@ -973,37 +969,22 @@ class mysqli_backend implements BackendInterface {
 	 *
 	 * Useful for create table and modify table routines.
 	 *
-	 * @param SchemaColumn $column
+	 * @param \Core\Datamodel\Columns\SchemaColumn $column
 	 *
 	 * @return string
 	 * @throws \DMI_Exception
 	 */
-	private function _getColumnString(SchemaColumn $column){
-		$null = ($column->null) ? 'NULL' : 'NOT NULL';
-
-		// Handle the default option
-		if($column->null){
-			if($column->default === null){
-				$default = 'NULL';
-			}
-			else{
-				$default = $column->default;
-			}
-		}
-		else{
-			if($column->default === null){
-				$default = false;
-			}
-			else{
-				$default = "'" . $this->getConnection()->escape_string($column->default) . "'";
-			}
-		}
-
-		$ai = $column->autoinc;
+	private function _getColumnString(\Core\Datamodel\Columns\SchemaColumn $column){
+		$null     = ($column->null) ? 'NULL' : 'NOT NULL';
+		$ai       = $column->autoinc;
+		$default  = $column->default;
+		$isString = false;
+		$isInt    = false;
 
 		switch($column->type){
 			case \Model::ATT_TYPE_BOOL:
 				$type = "enum('0','1')";
+				$isString = true;
 				break;
 			case \Model::ATT_TYPE_ENUM:
 				if(!sizeof($column->options)){
@@ -1016,6 +997,7 @@ class mysqli_backend implements BackendInterface {
 					$opts[] = str_replace("'", "\\'", $opt);
 				}
 				$type = "enum('" . implode("','", $opts) . "')";
+				$isString = true;
 				break;
 			case \Model::ATT_TYPE_FLOAT:
 				if(!$column->precision){
@@ -1023,28 +1005,40 @@ class mysqli_backend implements BackendInterface {
 					$type = "float";
 				}
 				else{
-					// DB-level precision requested.  This is not recommended in Core+, but still supported.
+					// DB-level precision requested.
 					$type = "decimal(" . $column->precision . ")";
+					
+					if($default !== false){
+						// Floats have a thing where the database returns the default as the precision'd value.
+						// As such, convert the float to a string with the help of number_format.
+						$prec = substr($column->precision, strpos($column->precision, ',') + 1);
+						$default = number_format($default, $prec);
+					}
 				}
 				break;
 			case \Model::ATT_TYPE_ID:
 				$type = 'int(' . $column->maxlength . ')';
+				$isInt = true;
 				// IDs are also auto_increment!
 				//$ai = true;
 				//$default = false;
 				break;
 			case \Model::ATT_TYPE_ID_FK:
 				$type = 'int(' . $column->maxlength . ')';
+				$isInt = true;
 				break;
 			case \Model::ATT_TYPE_UUID:
 				$type = 'char(32)';
+				$isString = true;
 				break;
 			case \Model::ATT_TYPE_UUID_FK:
 				$type = 'char(32)';
+				$isString = true;
 				break;
 			case \Model::ATT_TYPE_STRING:
 				$maxlength = ($column->maxlength)? $column->maxlength : 255; // It needs something...
 				$type = "varchar($maxlength)";
+				$isString = true;
 				break;
 			case \Model::ATT_TYPE_TEXT:
 				$type = "text";
@@ -1062,6 +1056,7 @@ class mysqli_backend implements BackendInterface {
 			case \Model::ATT_TYPE_DELETED:
 			case \Model::ATT_TYPE_SITE:
 				$type = 'int(' . $column->maxlength . ')';
+				$isInt = true;
 				if($default === ''){
 					// A bug in MySQL 5.6 where ints cannot have a '' default value.
 					$default = false;
@@ -1087,10 +1082,12 @@ class mysqli_backend implements BackendInterface {
 		$q = $type;
 
 		// Collation!
-		if($column->encoding == 'utf8'){
+		// Strings get encoding set, probably UTF-8 or something similar.
+		// Other fields ignore it.
+		if($isString && $column->encoding == \Model::ATT_ENCODING_UTF8){
 			$q .= ' CHARACTER SET utf8 COLLATE utf8_unicode_ci';
 		}
-		elseif($column->encoding){
+		elseif($isString && $column->encoding){
 			$q .= ' COLLATE ' . $column->encoding . '_swedish_ci';
 		}
 		// No else needed, INTs and the like do not contain encodings.
@@ -1104,9 +1101,13 @@ class mysqli_backend implements BackendInterface {
 			// Is there an AUTO_INCREMENT value here?
 			$q .= ' AUTO_INCREMENT';
 		}
+		
+		if($default === null){
+			$q .= ' DEFAULT NULL';
+		}
 		elseif($default !== false){
 			// If there is a default option, tack that on.
-			$q .= ' DEFAULT ' . $default;
+			$q .= ' DEFAULT ' . "'" . $this->getConnection()->escape_string($default) . "'";
 		}
 
 		// Don't forget the comments!
@@ -1114,6 +1115,51 @@ class mysqli_backend implements BackendInterface {
 
 		// Yay, all done.
 		return $q;
+	}
+
+	/**
+	 * Simple method to return if two schemas are different
+	 * 
+	 * @param Schema $schema1
+	 * @param Schema $schema2
+	 * 
+	 * @return bool
+	 */
+	private function _schemasDiffer(Schema $schema1, Schema $schema2){
+		if(sizeof(array_diff($schema1->order, $schema2->order)) > 0){
+			// The orders are different!
+			\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Column Order Different');
+			return true;
+		}
+		
+		if(!\Core\compare_values($schema1->indexes, $schema2->indexes)){
+			\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Indexes Different');
+			return true;
+		}
+		
+		// The schemas require a little more work,
+		// iterate over each and compare the resolved SQL for altering.
+		// This is because some columns have oddities such as TEXT fields and defaults.
+		
+		foreach($schema1->definitions as $c1){
+			/** @var SchemaColumn $c1 */
+			
+			$c2 = $schema2->getColumn($c1->field);
+			
+			$c1String = $this->_getColumnString($c1);
+			$c2String = $this->_getColumnString($c2);
+			
+			if($c1String != $c2String){
+				\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Column ' . $c1->field . ' Different');
+				\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: C1 == ' . $c1String);
+				\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: C2 == ' . $c2String);
+				return true;
+			}
+		}
+		
+		// Order, Index, and Defintiion checks all passed.
+		// The columns seem to be the same.
+		return false;
 	}
 
 
