@@ -6,9 +6,9 @@
 		<li>User Name: {$user->getDisplayName()}</li>
 		<li>Email: {$user.email}</li>
 		<li>Member Since: {date format="FD" $user.created}</li>
-		{if $user->get('/user/gpgauth/pubkey')}
+		{if $user->get('gpgauth_pubkey')}
 			<li>
-				GPG Public Key: {$user->get('/user/gpgauth/pubkey')}
+				GPG Public Key: {$user->get('gpgauth_pubkey')|gpg_fingerprint}
 			</li>
 		{/if}
 		{foreach $user->getConfigObjects() as $c}

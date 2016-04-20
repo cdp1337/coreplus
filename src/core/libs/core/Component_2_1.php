@@ -424,6 +424,31 @@ class Component_2_1 {
 	}
 
 	/**
+	 * Get all screenshots in this metafile
+	 *
+	 * @return array
+	 */
+	public function getScreenshots(){
+		$s = $this->_xmlloader->getElements('//screenshots/screenshot');
+
+		if(!$s){
+			return [];
+		}
+		
+		if($s->length == 0){
+			return [];
+		}
+		
+		$ret = [];
+		for($i = 0; $i<$s->length; $i++){
+			$n = $s->item($i);
+			$ret[] = $n->attributes->getNamedItem('file')->nodeValue;
+		}
+		
+		return $ret;
+	}
+
+	/**
 	 * Get the pages defined in this component.
 	 *
 	 * These are usually admin-only pages, (but may not be).
@@ -949,6 +974,21 @@ class Component_2_1 {
 	 */
 	public function getVersion() {
 		return $this->_version;
+	}
+	
+	public function getLicenseData(){
+		$f = ($this->getKeyName() == 'core' ? ROOT_PDIR . 'core/' : $this->getBaseDir() ) . 'LICENSER.php';
+		
+		if(file_exists($f)){
+			include($f);
+			
+			if(!isset($licenser)){
+				trigger_error('Please ensure that LICENSER.php defines $licenser with the necessary data!', E_USER_WARNING);
+			}
+			else{
+				return $licenser;
+			}
+		}
 	}
 
 	/**
@@ -1627,6 +1667,8 @@ class Component_2_1 {
 		// I need to get the schema definitions first.
 		$node   = $this->_xmlloader->getElement('dbschema');
 		$prefix = $node->getAttribute('prefix');
+		/** @var \Core\Datamodel\BackendInterface $db */
+		$db     = \Core\db();
 
 		$changes = array();
 
@@ -1647,24 +1689,21 @@ class Component_2_1 {
 			}
 
 			try{
-				if (\Core\db()->tableExists($tablename)) {
-
-					// Get a list of the changes for reporting reasons.
-					/** @var \Core\Datamodel\SchemaColumn $old_schema */
-					$old_schema = \Core\db()->describeTable($tablename);
-					$tablediffs = $old_schema->getDiff($schema);
-
-					if(sizeof($tablediffs)){
-						\Core\db()->modifyTable($tablename, $schema);
+				if ($db->tableExists($tablename)) {
+					// modifyTable will not change the table if there are no changes to perform and
+					// will return a list of the changes for reporting reasons.
+					$res = $db->modifyTable($tablename, $schema);
+					if($res !== false){
+						// Changes detected!
 						$changes[] = 'Modified table ' . $tablename;
-						foreach($tablediffs as $d){
-							$changes[] = '[' . $d['type'] . '] ' . $d['title'];
-						}
+						// $changes[] = '[' . $d['type'] . '] ' . $d['title'];
+						$changes = array_merge($changes, $res);
 						if($verbosity == 2){
 							CLI::PrintActionStatus('ok');
 						}
 					}
 					else{
+						// No changes detected.
 						if($verbosity == 2){
 							CLI::PrintActionStatus('skip');
 						}

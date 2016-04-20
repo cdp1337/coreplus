@@ -374,7 +374,7 @@ class Email {
 						SystemLogModel::LogErrorEvent('/core/email/failed', 'Unable to locate GPG key for ' . $email . ', cannot send encrypted email to recipient!');
 					}
 					else{
-						$key = $user->get('/user/gpgauth/pubkey');
+						$key = $user->get('gpgauth_pubkey');
 						if(!$key){
 							SystemLogModel::LogErrorEvent('/core/email/failed', 'No GPG key uploaded for ' . $email . ', cannot send encrypted email to recipient!');
 						}

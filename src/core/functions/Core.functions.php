@@ -696,11 +696,11 @@ function compare_values($val1, $val2){
 		// Exact same values and exact same typecasts.  They're the same!
 		return true;
 	}
-	if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
+	elseif(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
 		// Both values are numeric and seem to be the same value, ie: "3" and 3.
 		return true;
 	}
-	if(is_scalar($val1) && is_scalar($val2) && strlen($val1) == strlen($val2) && $val1 == $val2){
+	elseif(is_scalar($val1) && is_scalar($val2) && strlen($val1) == strlen($val2) && $val1 == $val2){
 		// If they're both strings of the same length and equal to each other... same value.
 		return true;
 	}

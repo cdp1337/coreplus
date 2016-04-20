@@ -53,25 +53,20 @@ class PackageXML extends XMLLoader {
 	 */
 	public function setFromComponent(Component_2_1 $component){
 		// Populate the root attributes for this component package.
-		$this->getRootDOM()->setAttribute('type', 'component');
-		$this->getRootDOM()->setAttribute('name', $component->getName());
-		$this->getRootDOM()->setAttribute('version', $component->getVersion());
-		// Declare the packager
-		$this->getRootDOM()->setAttribute('packager', Core::GetComponent()->getVersion());
-
+		$this->setType('component');
+		$this->setName($component->getName());
+		$this->setVersion($component->getVersion());
+		$this->setPackager(Core::GetComponent()->getVersion());
 
 		// Copy over any provide directives.
 		foreach ($component->getRootDOM()->getElementsByTagName('provide') as $u) {
 			$this->getRootDOM()->appendChild($this->getDOM()->importNode($u));
 		}
-
-		// And the component provide as well.
-		$this->getElement('/provide[type="component"][name="' . strtolower($component->getName()) . '"][version="' . $component->getVersion() . '"]');
-
+		
+		$this->setProvide('component', $component->getName(), $component->getVersion());
 	
 		// Copy over any requires directives.
 		foreach ($component->getRootDOM()->getElementsByTagName('require') as $u) {
-
 			$this->getRootDOM()->appendChild($this->getDOM()->importNode($u));
 		}
 	
@@ -80,16 +75,13 @@ class PackageXML extends XMLLoader {
 		// package can provide a valid upgrade path.
 		foreach ($component->getRootDOM()->getElementsByTagName('upgrade') as $u) {
 			// In this case, I just need the definition itself, I don't also need the contents of that upgrade.
-			$this->getElement(
-				'/upgrade[from="' . $u->getAttribute('from') . '"][to="' . $u->getAttribute('to') . '"]'
-			);
+			$this->setUpgrade($u->getAttribute('from'), $u->getAttribute('to'));
 		}
 	
 		// Tack on description
 		$desc = $component->getRootDOM()->getElementsByTagName('description')->item(0);
 		if ($desc) {
-			$descel = $this->getElement('description');
-			$descel->nodeValue = trim($desc->nodeValue);
+			$this->setDescription($desc->nodeValue);
 		}
 	}
 
@@ -103,29 +95,266 @@ class PackageXML extends XMLLoader {
 		return $this->getRootDOM();
 	}
 
+	/**
+	 * Get the type of this package, either "component", "theme", or "core"
+	 * @return string
+	 */
 	public function getType() {
 		return $this->getRootDOM()->getAttribute('type');
 	}
 
+	/**
+	 * Get the name translated to a valid keyname for this package
+	 * 
+	 * @return string
+	 */
+	public function getKeyName(){
+		if($this->getType() == 'core'){
+			return 'core';
+		}
+		else{
+			return strtolower(str_replace(' ', '-', $this->getRootDOM()->getAttribute('name')));	
+		}
+	}
+
+	/**
+	 * Get the unmodified name for this package
+	 * 
+	 * @return string
+	 */
 	public function getName() {
 		return $this->getRootDOM()->getAttribute('name');
 	}
 
+	/**
+	 * Get the version for this package
+	 * 
+	 * @return string
+	 */
 	public function getVersion() {
 		return $this->getRootDOM()->getAttribute('version');
 	}
 
+	/**
+	 * Get the description for this package
+	 * 
+	 * @return string
+	 */
 	public function getDescription() {
 		return trim($this->getElement('description')->nodeValue);
 	}
 
+	/**
+	 * Get the file location to download this package
+	 * 
+	 * @return string
+	 */
 	public function getFileLocation() {
 		return trim($this->getElement('location')->nodeValue);
 	}
 
+	/**
+	 * Get the packager version for this package
+	 * 
+	 * @return string
+	 */
+	public function getPackager(){
+		// Most packages will have it as a root-level attribute.
+		if($this->getRootDOM()->hasAttribute('packager')){
+			return $this->getRootDOM()->getAttribute('packager');
+		}
+		
+		// Others may have an element inside the root node called packager.
+		$p = $this->getRootDOM()->getElementsByTagName('packager');
+		if($p->length == 1){
+			return trim($p->item(0)->attributes->getNamedItem('version')->value);
+		}
+		
+		return '';
+	}
+
+	/**
+	 * Get an array of requires from this package, with the keys 'name', 'type', 'version', 'operation'.
+	 * 
+	 * @return array
+	 */
+	public function getRequires() {
+		$ret = array();
+		foreach ($this->getElements('require') as $el) {
+			// <require name="JQuery" type="library" version="1.4" operation="ge"/>
+			$ret[] = array(
+				'name'      => strtolower($el->getAttribute('name')),
+				'type'      => $el->getAttribute('type'),
+				'version'   => $el->getAttribute('version'),
+				'operation' => $el->getAttribute('operation'),
+			);
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get an array of provides from this package, with the keys 'name', 'type', 'version'.
+	 * 
+	 * @return array
+	 */
+	public function getProvides() {
+		$ret = array();
+		foreach ($this->getElements('provide') as $el) {
+			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
+			$ret[] = array(
+				'name'    => strtolower($el->getAttribute('name')),
+				'type'    => $el->getAttribute('type'),
+				'version' => $el->getAttribute('version'),
+			);
+		}
+		return $ret;
+	}
+
+	/**
+	 * Get an array of upgrades from this component, with they keys 'from', and 'to'.
+	 * 
+	 * @return array
+	 */
+	public function getUpgrades() {
+		$ret = array();
+		foreach ($this->getElements('upgrade') as $el) {
+			$ret[] = [
+				'from' => $el->getAttribute('from'),
+				'to'   => $el->getAttribute('to'),
+			];
+		}
+		return $ret;
+	}
+
+	/**
+	 * If this package is embedded in a repo.xml, it probably has a GPG key associated to it!
+	 *
+	 * @return string
+	 */
+	public function getKey(){
+		$k = $this->getRootDOM()->getAttribute('key');
+		return $k ? preg_replace('/[^a-fA-F0-9]/', '', $k) : null;
+	}
+
+	/**
+	 * Set the file location for this package to a fully resolved URL.
+	 * 
+	 * @param string $loc
+	 */
 	public function setFileLocation($loc) {
 		$node            = $this->getElement('location');
 		$node->nodeValue = $loc;
+	}
+
+	/**
+	 * Set the type for this package, probably "component", "theme", or "core".
+	 * 
+	 * @param $type string
+	 */
+	public function setType($type) {
+		$this->getRootDOM()->setAttribute('type', $type);
+	}
+
+	/**
+	 * Set the name for this package
+	 * 
+	 * @param $name string
+	 */
+	public function setName($name) {
+		$this->getRootDOM()->setAttribute('name', $name);
+	}
+
+	/**
+	 * Set the version for this package
+	 *
+	 * @param $version string
+	 */
+	public function setVersion($version) {
+		$this->getRootDOM()->setAttribute('version', $version);
+	}
+
+	/**
+	 * Set the original packager version for this package
+	 *
+	 * @param $version string
+	 */
+	public function setPackager($version) {
+		$this->getRootDOM()->setAttribute('packager', $version);
+	}
+
+	/**
+	 * Set a provide line in this package XML
+	 * 
+	 * @param $type
+	 * @param $name
+	 * @param $version
+	 */
+	public function setProvide($type, $name, $version){
+		$el = $this->getElement('/provide[name="' . str_replace(' ', '-', strtolower($name)) . '"][type="' . $type . '"]');
+		$el->setAttribute('version', $version);
+	}
+
+	/**
+	 * Set a provide line in this package XML
+	 *
+	 * @param $type
+	 * @param $name
+	 * @param $version
+	 * @param $op
+	 */
+	public function setRequire($type, $name, $version = null, $op = null){
+		$el = $this->getElement('/require[name="' . str_replace(' ', '-', strtolower($name)) . '"][type="' . $type . '"]');
+		
+		if($version !== null){
+			$el->setAttribute('version', $version);	
+		}
+		
+		if($op !== null){
+			$el->setAttribute('operation', $op);
+		}
+	}
+
+	/**
+	 * Set an upgrade path in this package
+	 * 
+	 * @param $from
+	 * @param $to
+	 */
+	public function setUpgrade($from, $to){
+		$this->getElement('/upgrade[from="' . $from . '"][to="' . $to . '"]');
+	}
+
+	/**
+	 * Set a screenshot for this package
+	 *
+	 * @param string $url
+	 */
+	public function setScreenshot($url){
+		$node = $this->createElement('/screenshot');
+		$node->nodeValue = $url;
+	}
+
+	/**
+	 * Set the description for this package
+	 * 
+	 * @param $desc string
+	 */
+	public function setDescription($desc) {
+		$el = $this->getElement('/description');
+		$el->nodeValue = $desc;
+	}
+
+	/**
+	 * Set the GPG key for this package
+	 * 
+	 * @param $key string
+	 */
+	public function setKey($key){
+		$this->getRootDOM()->setAttribute('key', $key);
+	}
+	
+	public function setChangelog($text){
+		$this->getElement('/changelog')->textContent = $text;
 	}
 
 	/**
@@ -167,66 +396,5 @@ class PackageXML extends XMLLoader {
 				if (!$t) return false; // Not installed?  Not current.
 				return version_compare($t->getVersion(), $this->getVersion(), 'ge');
 		}
-	}
-
-	public function getRequires() {
-		$ret = array();
-		foreach ($this->getElements('require') as $el) {
-			// <require name="JQuery" type="library" version="1.4" operation="ge"/>
-			$ret[] = array(
-				'name'      => strtolower($el->getAttribute('name')),
-				'type'      => $el->getAttribute('type'),
-				'version'   => $el->getAttribute('version'),
-				'operation' => $el->getAttribute('operation'),
-			);
-		}
-		return $ret;
-	}
-
-	public function getProvides() {
-		$ret = array();
-		/* (this is now handled in the packager correctly!)
-		// This element itself.
-		$ret[] = array(
-			'name'    => strtolower($this->getName()),
-			'type'    => 'component',
-			'version' => $this->getVersion()
-		);
-		*/
-		foreach ($this->getElements('provide') as $el) {
-			// <requires name="JQuery" type="library" version="1.4" operation="ge"/>
-			$ret[] = array(
-				'name'    => strtolower($el->getAttribute('name')),
-				'type'    => $el->getAttribute('type'),
-				'version' => $el->getAttribute('version'),
-			);
-		}
-		return $ret;
-	}
-
-	/*
-	public function isInstallable(){
-		// If it's already up to date, it can't be reinstalled.
-		if($this->isCurrent()) return false;
-		
-		$c = ComponentHandler::GetComponent($this->getName());
-		
-		if($this->isInstalled()){
-			// It needs to be upgradeable, (ie: in the upgrade path)
-			$upel = $this->getElement('upgrade[from="' . $c->getVersion() . '"]', false);
-			// Not in the upgrade path, not upgradable.
-			if(!$upel) return false;
-		}
-	}
-	*/
-
-	/**
-	 * If this package is embedded in a repo.xml, it probably has a GPG key associated to it!
-	 *
-	 * @return string
-	 */
-	public function getKey(){
-		$k = $this->getRootDOM()->getAttribute('key');
-		return $k ? preg_replace('/[^a-fA-F0-9]/', '', $k) : null;
 	}
 }

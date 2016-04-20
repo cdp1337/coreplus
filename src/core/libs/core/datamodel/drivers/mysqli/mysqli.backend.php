@@ -361,7 +361,7 @@ class mysqli_backend implements BackendInterface {
 			
 			if($oldPos !== $x){
 				// The previous position and new positions are different, append the FIRST or AFTER `key` bits!
-				$q .= ($x == 0)? 'FIRST' : 'AFTER `' . $oldSchema->order[$x-1] . '`';
+				$q .= ($x == 0)? ' FIRST' : ' AFTER `' . $oldSchema->order[$x-1] . '`';
 			}
 
 			// Execute this query, increment X, and re-read the "old" structure.
@@ -1126,7 +1126,7 @@ class mysqli_backend implements BackendInterface {
 	 * @return bool
 	 */
 	private function _schemasDiffer(Schema $schema1, Schema $schema2){
-		if(sizeof(array_diff($schema1->order, $schema2->order)) > 0){
+		if(!\Core\compare_values($schema1->order, $schema2->order)){
 			// The orders are different!
 			\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Column Order Different');
 			return true;

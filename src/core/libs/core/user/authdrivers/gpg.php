@@ -86,7 +86,7 @@ class gpg implements AuthDriverInterface{
 	 * @return boolean|string
 	 */
 	public function isActive(){
-		$keyid = $this->_usermodel->get('/user/gpgauth/pubkey');
+		$keyid = $this->_usermodel->get('gpgauth_pubkey');
 		if(!$keyid){
 			return 'No GPG key is set for your user account, please add one before logging in.';
 		}
@@ -312,7 +312,7 @@ EOD;
 
 		// Otherwise?
 		$user->enableAuthDriver('gpg');
-		$user->set('/user/gpgauth/pubkey', $fpr);
+		$user->set('gpgauth_pubkey', $fpr);
 		$user->save();
 
 		$nonce->markUsed();

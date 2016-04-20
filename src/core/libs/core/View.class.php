@@ -557,6 +557,9 @@ class View {
 
 		try{
 			$body = $this->fetchBody();
+			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+				'Fetched application content from within View->fetch() for ' . $this->templatename
+			);
 		}
 		catch(Exception $e){
 			$this->error = View::ERROR_SERVERERROR;
@@ -743,7 +746,7 @@ class View {
 
 				$foot = $this->getFootContent();
 
-				if(ENABLE_XHPROF){
+				if(defined('ENABLE_XHPROF') && function_exists('xhprof_disable')){
 					require_once('xhprof_lib/utils/xhprof_lib.php'); #SKIPCOMPILER
 					require_once('xhprof_lib/utils/xhprof_runs.php'); #SKIPCOMPILER
 					$xhprof_data = xhprof_disable();
@@ -842,6 +845,16 @@ class View {
 						$debug .= "</span>";
 					}
 					$debug .= '</fieldset>';
+
+					// Display the licensed content on this application
+					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-licenser-information">';
+					$debug .= sprintf($legend, 'Licensed Information');
+					$lic = \Core\Licenser::GetRaw();
+					$debug .= '<div>';
+					foreach($lic as $dat){
+						$debug .= $dat['url'] . '::' . $dat['feature'] . ' => ' . $dat['value'] . "\n";
+					}
+					$debug .= '</div></fieldset>';
 
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
 					// I want to see how many files were included.

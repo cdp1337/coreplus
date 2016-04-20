@@ -302,7 +302,7 @@ EOD;
 
 		/** @var UserModel $user */
 		$user = UserModel::Construct($data['user']);
-		$keyid = $user->get('/user/gpgauth/pubkey');
+		$keyid = $user->get('gpgauth_pubkey');
 
 		//var_dump($data, $form->getElement('message')->get('value')); die();
 
@@ -395,7 +395,7 @@ EOD;
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$currentkey = $user->get('/user/gpgauth/pubkey');
+		$currentkey = $user->get('gpgauth_pubkey');
 
 		$eml = $user->get('email');
 		//$key = $user->get('apikey');
@@ -746,7 +746,7 @@ EOD;
 
 		/** @var UserModel $user */
 		$user = UserModel::Construct($data['user']);
-		$keyid = $user->get('/user/gpgauth/pubkey');
+		$keyid = $user->get('gpgauth_pubkey');
 
 		//var_dump($data, $form->getElement('message')->get('value')); die();
 
@@ -850,7 +850,7 @@ EOD;
 			$user = new \UserModel();
 			$user->set('email', $email->get('value'));
 			$user->enableAuthDriver('gpg');
-			$user->set('/user/gpgauth/pubkey', $keyid->get('value'));
+			$user->set('gpgauth_pubkey', $keyid->get('value'));
 		}
 		catch(\ModelValidationException $e){
 			// Make a note of this!
@@ -914,7 +914,7 @@ EOD;
 			// Current user does not have access to manage the provided user's data.
 			return [];
 		}
-		if($user->get('/user/gpgauth/pubkey')){
+		if($user->get('gpgauth_pubkey')){
 			$text = 'Change GPG Key';
 		}
 		else{

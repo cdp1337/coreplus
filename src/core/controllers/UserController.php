@@ -137,7 +137,7 @@ class UserController extends Controller_2_1{
 		$view->assign('user', $user);
 		$view->assign('form', $form);
 		$view->assign('logins', $logins);
-		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
+		$view->assign('profiles', $user->get('external_profiles'));
 
 		return null;
 	}
@@ -180,16 +180,9 @@ class UserController extends Controller_2_1{
 
 			$view->jsondata['user'] = $user->getAsArray();
 			$view->jsondata['logins'] = $logins;
-			$view->jsondata['profiles'] = json_decode($user->get('json:profiles'), true);
 
 			// Massage some user data a bit, and remove things that don't need to be exported.
 			unset($view->jsondata['user']['password']);
-			foreach($user->getConfigObjects() as $c){
-				/** @var UserUserConfigModel $c */
-				if(!$c->getLink('UserConfig')->get('hidden')){
-					$view->jsondata['user'][ $c->get('key') ] = $c->get('value');
-				}
-			}
 
 			return;
 		}
@@ -206,7 +199,7 @@ class UserController extends Controller_2_1{
 		$view->title = $user->getLabel() . ' Profile';
 		$view->assign('user', $user);
 		$view->assign('logins', $logins);
-		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
+		$view->assign('profiles', $user->get('external_profiles'));
 	}
 
 
@@ -301,8 +294,7 @@ class UserController extends Controller_2_1{
 		/** @var UserModel $user */
 		$user = UserModel::Construct($userid);
 		// I will be dealing with only one custom field...
-		$jsonprofiles = $user->get('json:profiles');
-		$profiles = json_decode($jsonprofiles, true);
+		$profiles = $user->get('external_profiles');
 
 		if($req->isPost()){
 			// Update the new profiles.... yay
@@ -328,13 +320,10 @@ class UserController extends Controller_2_1{
 			}
 
 			if(!$error){
-				$user->set('json:profiles', json_encode($profiles));
+				$user->set('external_profiles', $profiles);
 				$user->save();
 				\Core\set_message('Updated profiles successfully', 'success');
 				\Core\go_back();
-			}
-			else{
-				$jsonprofiles = json_encode($profiles);
 			}
 		}
 
@@ -345,7 +334,7 @@ class UserController extends Controller_2_1{
 			$view->addBreadcrumb($user->getDisplayName(), '/user/me');
 		}
 		$view->title = 'Edit Connected Profiles';
-		$view->assign('profiles_json', $jsonprofiles);
+		$view->assign('profiles_json', json_encode($profiles));
 		$view->assign('profiles', $profiles);
 	}
 

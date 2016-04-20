@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 23 Mar 2016 22:44:44 -0400
+ * @compiled Tue, 19 Apr 2016 21:06:22 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -72,6 +72,612 @@ if (PHP_VERSION < '5.4.0') {
 die('This application requires at least PHP 5.4 to run!');
 }
 umask(0);
+### REQUIRE_ONCE FROM core/functions/Core.functions.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core {
+use Core\Datamodel;
+use Core\Filestore\FTP\FTPConnection;
+use DMI;
+function db(){
+return DMI::GetSystemDMI()->connection();
+}
+function ftp(){
+static $ftp = null;
+if($ftp === null){
+if(!defined('FTP_USERNAME')){
+$ftp = false;
+return false;
+}
+if(!defined('FTP_PASSWORD')){
+$ftp = false;
+return false;
+}
+if(!defined('FTP_PATH')){
+$ftp = false;
+return false;
+}
+if(!FTP_USERNAME){
+$ftp = false;
+return false;
+}
+$ftp = new FTPConnection();
+$ftp->host = '127.0.0.1';
+$ftp->username = FTP_USERNAME;
+$ftp->password = FTP_PASSWORD;
+$ftp->root = FTP_PATH;
+$ftp->url = ROOT_WDIR;
+try{
+$ftp->connect();
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
+$ftp = false;
+return false;
+}
+}
+if($ftp && $ftp instanceof FTPConnection){
+try{
+$ftp->reset();
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
+$ftp = false;
+return false;
+}
+}
+return $ftp;
+}
+function user(){
+static $_CurrentUserAccount = null;
+if(!class_exists('\\UserModel')){
+return null;
+}
+if($_CurrentUserAccount !== null){
+return $_CurrentUserAccount;
+}
+if(isset($_SERVER['HTTP_X_CORE_AUTH_KEY'])){
+$user = \UserModel::Find(['apikey = ' . $_SERVER['HTTP_X_CORE_AUTH_KEY']], 1);
+if($user){
+$_CurrentUserAccount = $user;
+}
+}
+elseif(Session::Get('user') instanceof \UserModel){
+if(isset(Session::$Externals['user_forcesync'])){
+$_CurrentUserAccount = \UserModel::Construct(Session::Get('user')->get('id'));
+Session::Set('user', $_CurrentUserAccount);
+unset(Session::$Externals['user_forcesync']);
+}
+else{
+$_CurrentUserAccount = Session::Get('user');
+}
+}
+if($_CurrentUserAccount === null){
+$_CurrentUserAccount = new \UserModel();
+}
+if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
+$_CurrentUserAccount->clearAccessStringCache();
+}
+if(Session::Get('user_sudo') !== null){
+$sudo = Session::Get('user_sudo');
+if($sudo instanceof \UserModel){
+if($_CurrentUserAccount->checkAccess('p:/user/users/sudo')){
+if($sudo->checkAccess('g:admin') && !$_CurrentUserAccount->checkAccess('g:admin')){
+Session::UnsetKey('user_sudo');
+\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
+}
+else{
+$_CurrentUserAccount = $sudo;
+}
+}
+else{
+Session::UnsetKey('user_sudo');
+\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
+}
+}
+else{
+Session::UnsetKey('user_sudo');
+}
+}
+return $_CurrentUserAccount;
+}
+function file($filename = null){
+return \Core\Filestore\Factory::File($filename);
+}
+function directory($directory){
+return \Core\Filestore\Factory::Directory($directory);
+}
+function page_request(){
+return \PageRequest::GetSystemRequest();
+}
+function view(){
+return page_request()->getView();
+}
+function get_standard_http_headers($forcurl = false, $autoclose = false){
+$headers = array(
+'User-Agent: Core Plus ' . \Core::GetComponent()->getVersion() . ' (http://corepl.us)',
+'Servername: ' . SERVERNAME,
+);
+if($autoclose){
+$headers[] = 'Connection: close';
+}
+if($forcurl){
+return $headers;
+}
+else{
+return implode("\r\n", $headers);
+}
+}
+function resolve_asset($asset){
+if(strpos($asset, '://') !== false){
+return $asset;
+}
+if(strpos($asset, 'assets/') !== 0){
+$asset = 'assets/' . $asset;
+}
+$file = \Core\Filestore\Factory::File($asset);
+return $file->getURL();
+}
+function resolve_link($url) {
+if ($url == '#') return $url;
+if (strpos($url, '://') !== false) return $url;
+if($url{0} == '?'){
+$url = REL_REQUEST_PATH . $url;
+}
+if(stripos($url, 'site:') === 0){
+$slashpos = strpos($url, '/');
+$site = substr($url, 5, $slashpos-5);
+$url = substr($url, $slashpos);
+}
+else{
+$site = null;
+}
+try{
+$a = \PageModel::SplitBaseURL($url, $site);
+}
+catch(\Exception $e){
+\Core\ErrorManagement\exception_handler($e);
+error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
+return '';
+}
+return $a['fullurl'];
+}
+function redirect($page, $code = 302){
+if(!($code == 301 || $code == 302)){
+throw new \Exception('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
+}
+$hp = ($page == '/');
+$page = resolve_link($page);
+if(!$page && $hp) $page = ROOT_URL;
+if ($page == CUR_CALL) return;
+switch($code){
+case 301:
+$movetext = '301 Moved Permanently';
+break;
+case 302:
+$movetext = '302 Moved Temporarily';
+break;
+default:
+$movetext = $code . ' Moved Temporarily';
+break;
+}
+header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
+if(\ConfigHandler::Get('/core/security/x-frame-options')){
+header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+}
+if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
+}
+header('HTTP/1.1 ' . $movetext);
+header('Location: ' . $page);
+\HookHandler::DispatchHook('/core/page/postrender');
+die('If your browser does not refresh, please <a href="' . $page . '">Click Here</a>');
+}
+function reload(){
+$movetext = '302 Moved Temporarily';
+header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
+if(\ConfigHandler::Get('/core/security/x-frame-options')){
+header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
+}
+if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
+header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
+}
+header('HTTP/1.1 302 Moved Temporarily');
+header('Location:' . CUR_CALL);
+\HookHandler::DispatchHook('/core/page/postrender');
+die('If your browser does not refresh, please <a href="' . CUR_CALL . '">Click Here</a>');
+}
+function go_back() {
+$request = page_request();
+$history = $request->getReferrer();
+if($history != CUR_CALL){
+redirect($history);
+}
+else{
+reload();
+}
+}
+function parse_html($html){
+$x = 0;
+$imagestart = null;
+while($x < strlen($html)){
+if(substr($html, $x, 4) == '<img'){
+$imagestart = $x;
+$x+= 3;
+continue;
+}
+$fullimagetag = null;
+if($imagestart !== null && $html{$x} == '>'){
+$fullimagetag = substr($html, $imagestart, $x-$imagestart+1);
+}
+elseif($imagestart !== null && substr($html, $x, 2) == '/>'){
+$fullimagetag = substr($html, $imagestart, $x-$imagestart+2);
+}
+if($imagestart !== null && $fullimagetag){
+$simple = new \SimpleXMLElement($fullimagetag);
+$attributes = array();
+foreach($simple->attributes() as $k => $v){
+$attributes[$k] = (string)$v;
+}
+$file = \Core\Filestore\Factory::File($attributes['src']);
+if(!isset($attributes['alt']) || $attributes['alt'] == ''){
+$attributes['alt'] = $file->getTitle();
+}
+if(isset($attributes['width']) || isset($attributes['height'])){
+if(isset($attributes['width']) && isset($attributes['height'])){
+$dimension = $attributes['width'] . 'x' . $attributes['height'] . '!';
+unset($attributes['width'], $attributes['height']);
+}
+elseif(isset($attributes['width'])){
+$dimension = $attributes['width'];
+unset($attributes['width']);
+}
+else{
+$dimension = $attributes['height'];
+unset($attributes['height']);
+}
+$attributes['src'] = $file->getPreviewURL($dimension);
+}
+$img = '<img';
+foreach($attributes as $k => $v){
+$img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
+}
+$img .= '/>';
+$metahelper  = new \Core\Filestore\FileMetaHelper($file);
+$metacontent = $metahelper->getAsHTML();
+if($metacontent){
+$img = '<div class="image-metadata-wrapper">' . $img . $metacontent . '</div>';
+}
+$x += strlen($img) - strlen($fullimagetag);
+$html = substr_replace($html, $img, $imagestart, strlen($fullimagetag));
+$imagestart = null;
+}
+$x++;
+}
+return $html;
+}
+function set_message($messageText, $messageType = 'info'){
+if(strpos($messageText, 't:MESSAGE_') === 0){
+$messageText = substr($messageText, 2);
+if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
+$messageType = 'success';
+}
+elseif(strpos($messageText, 'MESSAGE_ERROR_') === 0){
+$messageType = 'error';
+}
+elseif(strpos($messageText, 'MESSAGE_TUTORIAL_') === 0){
+$messageType = 'tutorial';
+}
+elseif(strpos($messageText, 'MESSAGE_WARNING_') === 0){
+$messageType = 'warning';
+}
+elseif(strpos($messageText, 'MESSAGE_INFO_') === 0){
+$messageType = 'info';
+}
+else{
+$messageType = 'info';
+}
+if(func_num_args() > 1){
+$messageText = call_user_func_array('t', func_get_args());
+}
+else{
+$messageText = t($messageText);
+}
+}
+if(EXEC_MODE == 'CLI'){
+$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
+echo "[" . $messageType . "] - " . $messageText . "\n";
+}
+else{
+$stack = Session::Get('message_stack', []);
+$stack[] = array(
+'mtext' => $messageText,
+'mtype' => $messageType,
+);
+Session::Set('message_stack', $stack);
+}
+}
+function get_messages($returnSorted = FALSE, $clearStack = TRUE){
+return \Core::GetMessages($returnSorted, $clearStack);
+}
+function SortByKey($named_recs, $order_by, $rev=false, $flags=0){
+$named_hash = array();
+foreach($named_recs as $key=>$fields) $named_hash["$key"] = $fields[$order_by];
+if($rev) arsort($named_hash,$flags) ;
+else asort($named_hash, $flags);
+$sorted_records = array();
+foreach($named_hash as $key=>$val) $sorted_records["$key"]= $named_recs[$key];
+return $sorted_records;
+}
+function ImplodeKey($glue, &$array){
+$arrayKeys = array();
+foreach($array as $key => $value){
+$arrayKeys[] = $key;
+}
+return implode($glue, $arrayKeys);
+}
+function random_hex($length = 1, $casesensitive = false){
+$output = '';
+if($casesensitive){
+$chars = '0123456789ABCDEFabcdef';
+$charlen = 21; // (needs to be -1 of the actual length)
+}
+else{
+$chars = '0123456789ABCDEF';
+$charlen = 15; // (needs to be -1 of the actual length)
+}
+$output = '';
+for ($i = 0; $i < $length; $i++){
+$pos = rand(0, $charlen);
+$output .= $chars{$pos};
+}
+return $output;
+}
+function compare_values($val1, $val2){
+if($val1 === $val2){
+return true;
+}
+elseif(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
+return true;
+}
+elseif(is_scalar($val1) && is_scalar($val2) && strlen($val1) == strlen($val2) && $val1 == $val2){
+return true;
+}
+return false;
+}
+function compare_strings($val1, $val2) {
+if($val1 === $val2){
+return true;
+}
+if(strlen($val1) == strlen($val2) && $val1 == $val2){
+return true;
+}
+return false;
+}
+function FormatSize($filesize, $round = 2){
+return \Core\Filestore\format_size($filesize, $round);
+}
+function GetExtensionFromString($str){
+if(strpos($str, '.') === false) return '';
+return substr($str, strrpos($str, '.') + 1 );
+}
+function CheckEmailValidity($email){
+$atIndex = strrpos($email, "@");
+if (is_bool($atIndex) && !$atIndex) return false;
+$domain = substr($email, $atIndex+1);
+$local = substr($email, 0, $atIndex);
+$localLen = strlen($local);
+$domainLen = strlen($domain);
+if ($localLen < 1 || $localLen > 64) {
+return false;
+}
+if ($domainLen < 1 || $domainLen > 255) {
+return false;
+}
+if ($local[0] == '.' || $local[$localLen-1] == '.') {
+return false;
+}
+if (preg_match('/\\.\\./', $local)) {
+return false;
+}
+if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
+return false;
+}
+if (preg_match('/\\.\\./', $domain)) {
+return false;
+}
+if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local))) {
+if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local))) {
+return false;
+}
+}
+if (\ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
+return false;
+}
+return true;
+}
+function str_to_latin($string){
+$internationalmappings = array(
+'À' => 'A',
+'Á' => 'A',
+'Â' => 'A',
+'Ã' => 'A',
+'Ä' => 'A',
+'Å' => 'AA',
+'Æ' => 'AE',
+'Ç' => 'C',
+'È' => 'E',
+'É' => 'E',
+'Ê' => 'E',
+'Ë' => 'E',
+'Ì' => 'I',
+'Í' => 'I',
+'Î' => 'I',
+'Ï' => 'I',
+'Ð' => 'D',
+'Ł' => 'L',
+'Ñ' => 'N',
+'Ò' => 'O',
+'Ó' => 'O',
+'Ô' => 'O',
+'Õ' => 'O',
+'Ö' => 'O',
+'Ø' => 'OE',
+'Ù' => 'U',
+'Ú' => 'U',
+'Ü' => 'U',
+'Û' => 'U',
+'Ý' => 'Y',
+'Þ' => 'Th',
+'ß' => 'ss',
+'à' => 'a',
+'á' => 'a',
+'â' => 'a',
+'ã' => 'a',
+'ä' => 'a',
+'å' => 'aa',
+'æ' => 'ae',
+'ç' => 'c',
+'è' => 'e',
+'é' => 'e',
+'ê' => 'e',
+'ë' => 'e',
+'ì' => 'i',
+'í' => 'i',
+'î' => 'i',
+'ï' => 'i',
+'ð' => 'd',
+'ł' => 'l',
+'ñ' => 'n',
+'ń' => 'n',
+'ò' => 'o',
+'ó' => 'o',
+'ô' => 'o',
+'õ' => 'o',
+'ō' => 'o',
+'ö' => 'o',
+'ø' => 'oe',
+'ś' => 's',
+'ù' => 'u',
+'ú' => 'u',
+'û' => 'u',
+'ū' => 'u',
+'ü' => 'u',
+'ý' => 'y',
+'þ' => 'th',
+'ÿ' => 'y',
+'ż' => 'z',
+'Œ' => 'OE',
+'œ' => 'oe',
+'&' => 'and'
+);
+return str_replace(array_keys($internationalmappings), array_values($internationalmappings), $string);
+}
+function str_to_url($string, $keepdots = false){
+$string = str_to_latin($string);
+if(\ConfigHandler::Get('/core/page/url_remove_stop_words')){
+$stopwords = get_stop_words();
+$exploded = explode(' ', $string);
+$nt = '';
+foreach($exploded as $w){
+$lw = strtolower($w);
+if(!in_array($lw, $stopwords)){
+$nt .= ' ' . $w;
+}
+}
+$string = trim($string);
+}
+$string = str_replace(' ', '-', $string);
+if($keepdots){
+$string = preg_replace('/[^a-z0-9\-\.]/i', '', $string);
+}
+else{
+$string = preg_replace('/[^a-z0-9\-]/i', '', $string);
+}
+$string = preg_replace('/[-]+/', '-', $string);
+$string = preg_replace('/^-/', '', $string);
+$string = preg_replace('/-$/', '', $string);
+$string = strtolower($string);
+return $string;
+}
+function translate_upload_error($errno){
+return \Core\Filestore\translate_upload_error($errno);
+}
+function check_file_mimetype($acceptlist, $mimetype, $extension = null){
+return \Core\Filestore\check_file_mimetype($acceptlist, $mimetype, $extension);
+}
+function is_numeric_array($array){
+if(!is_array($array)) return false;
+reset($array);
+if(key($array) !== 0) return false;
+$c = count($array) - 1;
+end($array);
+if(key($array) !== $c) return false;
+return true;
+}
+function get_stop_words(){
+$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go',
+'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometim
+e', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
+return $stopwords;
+}
+function generate_uuid(){
+static $__serverid = null;
+if($__serverid === null){
+$serverid = defined('SERVER_ID') ? SERVER_ID : '0001';
+if($serverid == '1'){
+$serverid = '0001';
+}
+if(strlen($serverid) > 4){
+$serverid = substr($serverid, -4);
+}
+$__serverid = $serverid;
+}
+else{
+$serverid = $__serverid;
+}
+return strtolower(
+$serverid . '-' .
+dechex(microtime(true) * 10000) . '-' .
+random_hex(4)
+);
+}
+function version_compare($version1, $version2, $operation = null) {
+$version1 = new \Core\VersionString($version1);
+return $version1->compare($version2, $operation);
+}
+function time_duration_format($time_in_seconds, $round = 4){
+if($time_in_seconds < 0.000001){
+$suffix = 'ns';
+$time = $time_in_seconds * 1000000000;
+}
+elseif($time_in_seconds < 0.001){
+$suffix = 'µs';
+$time = $time_in_seconds * 1000000;
+}
+elseif($time_in_seconds < 1){
+$suffix = 'ms';
+$time = $time_in_seconds * 1000;
+}
+elseif($time_in_seconds < 60){
+$suffix = 's';
+$time = $time_in_seconds;
+}
+elseif($time_in_seconds < 3600){
+$m = floor($time_in_seconds / 60);
+$s = round($time_in_seconds - $m*60, 0);
+return $m . ' m ' . $s . ' s';
+}
+else{
+$h = floor($time_in_seconds / 3600);
+$m = round($time_in_seconds - $h*3600, 0);
+return $h . ' h ' . $m . ' m';
+}
+return number_format(round($time, $round), $round)  . ' ' . $suffix;
+}
+} // ENDING NAMESPACE Core
+
+namespace  {
+
 ### REQUIRE_ONCE FROM core/libs/core/utilities/profiler/Profiler.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Utilities\Profiler {
@@ -96,7 +702,7 @@ $this->_events[] = array(
 'event'     => $event,
 'microtime' => $now,
 'timetotal' => $time,
-'memory'  => memory_get_usage(true),
+'memory'  => memory_get_usage(false),
 );
 }
 public function getTime(){
@@ -107,25 +713,7 @@ return $this->_events;
 }
 public function getTimeFormatted(){
 $time = $this->getTime();
-if($time < 0.001){
-return round($time, 4) * 1000000 . ' µs';
-}
-elseif($time < 2.0){
-return round($time, 4) * 1000 . ' ms';
-}
-elseif($time < 120){
-return round($time, 0) . ' s';
-}
-elseif($time < 3600) {
-$m = round($time, 0) / 60;
-$s = round($time - $m*60, 0);
-return $m . ' m ' . $s . ' s';
-}
-else{
-$h = round($time, 0) / 3600;
-$m = round($time - $h*3600, 0);
-return $h . ' h ' . $m . ' m';
-}
+return \Core\time_duration_format($time, 4);
 }
 public function getEventTimesFormatted(){
 $out = '';
@@ -213,6 +801,7 @@ break;
 else{
 $callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
 }
+\Core\Utilities\Logger\write_debug('DatamodelProfiler: [' . $type . '] ' . $query);
 $this->_last[] = [
 'start' => microtime(true),
 'type' => $type,
@@ -227,7 +816,7 @@ return;
 }
 $last = array_pop($this->_last);
 $time = microtime(true) - $last['start'];
-$timeFormatted = $this->getTimeFormatted($time);
+$timeFormatted = \Core\time_duration_format($time, 2);
 if($last['type'] == 'read'){
 ++$this->_reads;
 }
@@ -239,7 +828,7 @@ $events = Session::Get('datamodel_profiler_events/events', []);
 $events[] = array(
 'query'  => $last['query'],
 'type'   => $last['type'],
-'time'   => $timeFormatted,
+'time'   => $time,
 'errno'  => null,
 'error'  => '',
 'caller' => $last['caller'],
@@ -265,7 +854,7 @@ return;
 }
 $last = array_pop($this->_last);
 $time = microtime(true) - $last['start'];
-$timeFormatted = $this->getTimeFormatted($time);
+$timeFormatted = \Core\time_duration_format($time, 2);
 if($last['type'] == 'read'){
 ++$this->_reads;
 }
@@ -277,7 +866,7 @@ $events   = Session::Get('datamodel_profiler_events/events', []);
 $events[] = [
 'query'  => $last['query'],
 'type'   => $last['type'],
-'time'   => $timeFormatted,
+'time'   => $time,
 'errno'  => $code,
 'error'  => $error,
 'caller' => $last['caller'],
@@ -333,14 +922,14 @@ break;
 $typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
 $tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
 $type   = $dat['type'];
-$time   = str_pad($dat['time'], 5, '0', STR_PAD_RIGHT);
+$time   = str_pad(\Core\time_duration_format($dat['time'], 2), 9, '0', STR_PAD_LEFT);
 $query  = $dat['query'];
 $caller = print_r($dat['caller'], true);
 if($dat['rows'] !== null){
 $caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 }
 $out .= sprintf(
-"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] %s</span>\n",
+"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] <code class='sql'>%s</code></span>\n",
 $caller,
 $typecolor,
 $type,
@@ -379,15 +968,16 @@ function write_debug($message, $level = DEBUG_LEVEL_FULL){
 if($level >= DEBUG_LEVEL_FULL && !FULL_DEBUG) return;
 $profiler = Profiler::GetDefaultProfiler();
 $time = $profiler->getTime();
-$time = str_pad(number_format(round($time, 6) * 1000, 2), 7, '0', STR_PAD_LEFT);
+$time = \Core\time_duration_format($time, 2);
+$time = str_pad($time, 10, '0', STR_PAD_LEFT);
 if (EXEC_MODE == 'CLI'){
-echo '[ DEBUG ' . $time . ' ms ] - ' . $message . "\n";
+echo '[ DEBUG ' . $time . ' ] - ' . $message . "\n";
 }
 elseif($level == DEBUG_LEVEL_LOG){
-error_log('[ DEBUG ' . $time . ' ms ] - ' . $message);
+error_log('[ DEBUG ' . $time . ' ] - ' . $message);
 }
 else{
-echo '<pre class="xdebug-var-dump screen">[' . $time . ' ms] ' . $message . '</pre>';
+echo '<pre class="xdebug-var-dump screen">[' . $time . '] ' . $message . '</pre>';
 }
 }
 function append_to($filebase, $message, $code = null){
@@ -1744,153 +2334,6 @@ return $matches;
 
 namespace  {
 
-### REQUIRE_ONCE FROM core/libs/core/datamodel/Schema.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core\Datamodel {
-class Schema {
-public $definitions = array();
-public $order = array();
-public $indexes = array();
-public function getColumn($column){
-if(is_int($column)){
-if(isset($this->order[$column])) $column = $this->order[$column];
-else return null;
-}
-if(isset($this->definitions[$column])) return $this->definitions[$column];
-else return null;
-}
-public function getDiff(Schema $schema){
-$diffs = array();
-foreach($schema->definitions as $name => $dat){
-$thiscol = $this->getColumn($name);
-if(!$thiscol){
-if($dat->type != \Model::ATT_TYPE_ALIAS){
-$diffs[] = array(
-'title' => 'A does not have column ' . $name,
-'type' => 'column',
-);
-}
-continue;
-}
-if($dat->type == \Model::ATT_TYPE_ALIAS){
-continue;
-}
-if(($colchange = $thiscol->getDiff($dat)) !== null){
-$diffs[] = array(
-'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
-'type' => 'column',
-);
-}
-}
-$a_order = $this->order;
-foreach($this->definitions as $name => $dat){
-if(!$schema->getColumn($name)){
-unset($a_order[array_search($name, $a_order)]);
-}
-elseif($schema->getColumn($name)->type == \Model::ATT_TYPE_ALIAS){
-unset($a_order[array_search($name, $a_order)]);
-}
-}
-if(implode(',', $a_order) != implode(',', $schema->order)){
-$diffs[] = array(
-'title' => 'Order of columns is different',
-'type' => 'order',
-);
-}
-$thisidx = '';
-foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
-$thatidx = '';
-foreach($schema->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
-if($thisidx != $thatidx){
-$diffs[] = array(
-'title' => 'Indexes do not match up',
-'type' => 'index'
-);
-}
-return $diffs;
-}
-public function isDataIdentical(Schema $schema){
-$diff = $this->getDiff($schema);
-return !sizeof($diff);
-}
-}
-class SchemaColumn {
-public $field;
-public $type = null;
-public $required = false;
-public $maxlength = false;
-public $options = null;
-public $default = false;
-public $null = false;
-public $comment = '';
-public $precision = null;
-public $encrypted = false;
-public $autoinc = false;
-public $encoding = null;
-public $aliasof = null;
-public function isIdenticalTo(SchemaColumn $col){
-$diff = $this->getDiff($col);
-return ($diff === null);
-}
-public function getDiff(SchemaColumn $col){
-$thisarray = (array)$this;
-$colarray  = (array)$col;
-if($thisarray === $colarray) return null;
-$differences = [];
-if($this->field != $col->field) $differences[] = 'field name';
-if($this->maxlength != $col->maxlength) $differences[] = 'max length';
-if($this->null != $col->null) $differences[] = 'is null';
-if($this->comment != $col->comment) $differences[] = 'comment';
-if($this->precision != $col->precision) $differences[] = 'precision';
-if($this->autoinc !== $col->autoinc) $differences[] = 'auto increment';
-if($this->encoding != $col->encoding) $differences[] = 'encoding';
-if($this->default === false){
-}
-elseif($this->default === $col->default){
-}
-elseif(\Core\compare_values($this->default, $col->default)){
-}
-elseif($col->default === false && $this->default !== false){
-$differences[] = 'default value (#1)';
-}
-else{
-$differences[] = 'default value (#2)';
-}
-if(is_array($this->options) != is_array($col->options)) $differences[] = 'options set/unset';
-if(is_array($this->options) && is_array($col->options)){
-if(implode(',', $this->options) != implode(',', $col->options)) $differences[] = 'options changed';
-}
-$typematches = array(
-array(
-\Model::ATT_TYPE_INT,
-\Model::ATT_TYPE_UUID,
-\Model::ATT_TYPE_UUID_FK,
-\Model::ATT_TYPE_CREATED,
-\Model::ATT_TYPE_UPDATED,
-\Model::ATT_TYPE_DELETED,
-\Model::ATT_TYPE_SITE,
-)
-);
-$typesidentical = false;
-foreach($typematches as $types){
-if(in_array($this->type, $types) && in_array($col->type, $types)){
-$typesidentical = true;
-break;
-}
-}
-if(!$typesidentical && $this->type != $col->type) $differences[] = 'type';
-if(sizeof($differences)){
-return implode(', ', $differences);
-}
-else{
-return null;
-}
-}
-}
-} // ENDING NAMESPACE Core\Datamodel
-
-namespace  {
-
 ### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetStream.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Datamodel {
@@ -2018,11 +2461,15 @@ const LINK_HASONE  = 'one';
 const LINK_HASMANY = 'many';
 const LINK_BELONGSTOONE = 'belongs_one';
 const LINK_BELONGSTOMANY = 'belongs_many';
+const ATT_ENCODING_BASE64 = 'base64';
+const ATT_ENCODING_JSON = 'json';
+const ATT_ENCODING_SERIALIZE = 'serialize';
+const ATT_ENCODING_GZIP = 'gzip';
+const ATT_ENCODING_UTF8 = 'utf8';
 public $interface = null;
-protected $_data = [];
-protected $_datainit = [];
-protected $_datadecrypted = null;
 protected $_dataother = [];
+protected $_columns = null;
+protected $_aliases = null;
 protected $_exists = false;
 protected $_linked = [];
 protected $_linkIndexCache = [];
@@ -2051,23 +2498,30 @@ $this->_linked[] = $dat;
 }
 }
 $s = self::GetSchema();
-foreach ($s as $k => $v) {
-if($v['type'] == Model::ATT_TYPE_ALIAS) continue;
-$this->_data[$k] = (isset($v['default'])) ? $v['default'] : null;
-if(isset($v['link'])){
-if(is_array($v['link'])){
-if(!isset($v['link']['model'])){
-throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
-}
-if(!isset($v['link']['type'])){
-throw new Exception('Required attribute [type] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
-}
-$linkmodel = $v['link']['model'];
-$linktype  = isset($v['link']['type']) ? $v['link']['type'] : Model::LINK_HASONE;
-$linkon    = isset($v['link']['on']) ? $v['link']['on'] : 'id';
+$this->_columns = [];
+$this->_aliases = [];
+foreach ($s as $k => $sdat) {
+if($sdat['type'] == Model::ATT_TYPE_ALIAS){
+$this->_aliases[$k] = $sdat['alias'];
 }
 else{
-$linkmodel = $v['link'];
+$this->_columns[$k] = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($sdat);
+$this->_columns[$k]->field = $k;
+}
+if(isset($sdat['link'])){
+if(is_array($sdat['link'])){
+if(!isset($sdat['link']['model'])){
+throw new Exception('Required attribute [model] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
+}
+if(!isset($sdat['link']['type'])){
+throw new Exception('Required attribute [type] not provided on link [' . $k . '] of model [' . get_class($this) . ']');
+}
+$linkmodel = $sdat['link']['model'];
+$linktype  = isset($sdat['link']['type']) ? $sdat['link']['type'] : Model::LINK_HASONE;
+$linkon    = isset($sdat['link']['on']) ? $sdat['link']['on'] : 'id';
+}
+else{
+$linkmodel = $sdat['link'];
 $linktype  = Model::LINK_HASONE;
 $linkon    = 'id'; // ... erm yeah... hopefully this is it!
 }
@@ -2086,8 +2540,9 @@ $i = self::GetIndexes();
 $pri = (isset($i['primary'])) ? $i['primary'] : false;
 if($pri && !is_array($pri)) $pri = [$pri];
 if ($pri && func_num_args() == sizeof($i['primary'])) {
-foreach ($pri as $k => $v) {
-$this->_data[$v] = func_get_arg($k);
+foreach ($pri as $idx => $k) {
+$c = $this->_columns[$k];
+$c->setValueFromApp(func_get_arg($idx));
 }
 }
 if($key !== null){
@@ -2110,8 +2565,6 @@ if ($v === null) continue;
 $keys[$k] = $v;
 }
 }
-if ($this->_cacheable) {
-}
 if(
 isset($s['site']) &&
 $s['site']['type'] == Model::ATT_TYPE_SITE &&
@@ -2127,8 +2580,7 @@ $data = Core\Datamodel\Dataset::Init()
 ->where($keys)
 ->execute($this->interface);
 if ($data->num_rows) {
-$this->_data     = $data->current();
-$this->_datainit = $data->current();
+$this->_loadFromRecord($data->current());
 $this->_exists = true;
 }
 else {
@@ -2137,6 +2589,9 @@ $this->_exists = false;
 return;
 }
 public function save($defer = false) {
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+'Issuing save() on ' . $this->get('__CLASS__') . ' ' . $this->getLabel()
+);
 $save = false;
 if(!$this->_exists){
 $save = true;
@@ -2157,6 +2612,9 @@ break;
 }
 }
 if(!$save){
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+'No column detected as changed, skipping save.'
+);
 return false;
 }
 $classname = get_called_class();
@@ -2185,8 +2643,8 @@ if($locals['type'] != Model::ATT_TYPE_UUID_FK) continue;
 if(isset($l['records'])){
 $model = $l['records'];
 }
-elseif(isset($this->_data[$localk]) && $this->_data[$localk] instanceof Model){
-$model = $this->_data[$localk];
+elseif(isset($this->_columns[$localk]) && $this->_columns[$localk]->value instanceof Model){
+$model = $this->_columns[$localk];
 }
 else{
 continue;
@@ -2197,10 +2655,16 @@ $this->set($localk, $model->get($remotek));
 }
 if ($this->_exists){
 $changed = $this->_saveExisting();
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+'Saved existing record to database'
+);
 }
 else{
 $this->_saveNew($defer);
 $changed = true;
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+'Saved new record to database'
+);
 }
 foreach($this->_linked as $k => $l){
 switch($l['link']){
@@ -2234,7 +2698,9 @@ $changed = true;
 }
 }
 $this->_exists   = true;
-$this->_datainit = $this->_data;
+foreach($this->_columns as $c){
+$c->commit();
+}
 if(($class = get_parent_class($this)) != 'Model'){
 $idx = self::GetIndexes();
 if(isset($idx['primary']) && sizeof($idx['primary']) == 1){
@@ -2276,14 +2742,11 @@ return get_called_class();
 elseif($k === '__PRIMARYKEY__'){
 return $this->getPrimaryKeyString();
 }
-elseif($this->_datadecrypted !== null && array_key_exists($k, $this->_datadecrypted)){
-return $this->_datadecrypted[$k];
+elseif(isset($this->_columns[$k])){
+return $this->_columns[$k]->valueTranslated;
 }
-elseif (array_key_exists($k, $this->_data)) {
-return $this->_data[$k];
-}
-elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
-return $this->get( $this->getKeySchema($k)['alias'] );
+elseif(isset($this->_aliases[$k])){
+return $this->get($this->_aliases[$k]);
 }
 elseif (array_key_exists($k, $this->_dataother)) {
 return $this->_dataother[$k];
@@ -2314,21 +2777,28 @@ return 'Unnamed ' . $this->getPrimaryKeyString();
 }
 }
 public function getAsArray() {
-if($this->_datadecrypted !== null){
-return array_merge($this->_data, $this->_dataother, $this->_datadecrypted);
+$ret = [];
+foreach($this->_columns as $c){
+$ret[$c->field] = $c->valueTranslated;
 }
-else{
-return array_merge($this->_data, $this->_dataother);
-}
+return $ret;
 }
 public function getAsJSON(){
 return json_encode($this->getAsArray());
 }
 public function getData(){
-return $this->_data;
+$ret = [];
+foreach($this->_columns as $c){
+$ret[$c->field] = $c->value;
+}
+return $ret;
 }
 public function getInitialData(){
-return $this->_datainit;
+$ret = [];
+foreach($this->_columns as $c){
+$ret[$c->field] = $c->valueDB;
+}
+return $ret;
 }
 public function getKeySchemas() {
 return self::GetSchema();
@@ -2400,9 +2870,13 @@ $ret = array_merge($ret, $ref->getMethod('GetControlLinks')->invoke(null, $this)
 return $ret;
 }
 public function _loadFromRecord($record) {
-$this->_data = $record;
-$this->_datainit = $this->_data;
-$this->_exists   = true;
+foreach($record as $k => $v){
+if(isset($this->_columns[$k])){
+$c = $this->_columns[$k];
+$c->setValueFromDB($v);
+}
+}
+$this->_exists = true;
 }
 public function delete() {
 $classname = get_called_class();
@@ -2416,16 +2890,11 @@ $ref->getMethod('PreDeleteHook')->invoke(null, $this);
 }
 }
 }
-$s = self::GetSchema();
-foreach ($this->_data as $k => $v) {
-if(!isset($s[$k])){
-continue;
-}
-$keyschema = $s[$k];
-if($keyschema['type'] == Model::ATT_TYPE_DELETED) {
-if(!$v){
+foreach ($this->_columns as $c) {
+if($c->type == Model::ATT_TYPE_DELETED) {
+if(!$c->value){
 $nv = Time::GetCurrentGMT();
-$this->set($k, $nv);
+$this->set($c->field, $nv);
 return $this->save();
 }
 else{
@@ -2471,7 +2940,7 @@ throw new Exception('Unable to delete model [ ' . get_class($this) . ' ] without
 $pri = $i['primary'];
 if(!is_array($pri)) $pri = [$pri];
 foreach ($pri as $k) {
-$dat->where([$k => $this->_data[$k]]);
+$dat->where([$k => $this->get($k)]);
 }
 $dat->limit(1)->delete();
 if ($dat->execute($this->interface)) {
@@ -2527,135 +2996,23 @@ else {
 return $msg;
 }
 }
-public function translateKey($k, $v, $commit = false){
-$s = self::GetSchema();
-if(!isset($s[$k])) return $v;
-$t = &$s[$k];
-$type = $t['type']; // Type is one of the required properties.
-if(!isset($t['default'])){
-if(isset($t['null']) && $t['null']){
-$default = null;
-}
-else{
-switch($type){
-case Model::ATT_TYPE_BOOL:
-case Model::ATT_TYPE_CREATED:
-case Model::ATT_TYPE_FLOAT:
-case Model::ATT_TYPE_INT:
-case Model::ATT_TYPE_UPDATED:
-case Model::ATT_TYPE_DELETED:
-$default = '0';
-break;
-case Model::ATT_TYPE_DATA:
-case Model::ATT_TYPE_STRING:
-case Model::ATT_TYPE_TEXT:
-$default = '';
-break;
-case Model::ATT_TYPE_ISO_8601_DATE:
-$default = '0000-00-00';
-break;
-case Model::ATT_TYPE_ISO_8601_DATETIME:
-$default = '0000-00-00 00:00:00';
-break;
-case Model::ATT_TYPE_ID:
-case Model::ATT_TYPE_UUID:
-$default = null;
-break;
-default:
-$default = '';
-break;
-}
-}
-}
-else{
-$default = $t['default'];
-}
-switch($type){
-case Model::ATT_TYPE_ISO_8601_DATE:
-if($v == '' || $v == '0000-00-00' || $v === null){
-$v = $default;
-}
-break;
-case Model::ATT_TYPE_ISO_8601_DATETIME:
-if($v == '' || $v == '0000-00-00 00:00:00' || $v === null){
-$v = $default;
-}
-break;
-case Model::ATT_TYPE_BOOL:
-if($v === true){
-$v = '1';
-}
-elseif($v === false){
-$v = '0';
-}
-else{
-switch(strtolower($v)){
-case 'yes':
-case 'on':
-case 1:
-case 'true':
-$v = '1';
-break;
-default:
-$v = '0';
-}
-}
-break;
-default:
-if($v === null){
-$v = $default;
-}
-elseif($v instanceof Model && $commit){
-$v->save();
-$v = $v->get('id');
-}
-break;
-}
-return $v;
-}
 public function set($k, $v) {
 if($v instanceof Model && $this->_getLinkIndex($k) !== null){
 $this->setLink($k, $v);
-return true;
+return;
 }
-elseif (array_key_exists($k, $this->_data)) {
+if(isset($this->_aliases[$k])){
+$k = $this->_aliases[$k];
+}
 $keydat = $this->getKeySchema($k);
-if($this->_data[$k] === null && $v === null){
-return false;
-}
-elseif(
-$this->_data[$k] !== null &&
-$keydat['type'] == Model::ATT_TYPE_STRING
-){
-if(\Core\compare_strings($this->_data[$k], $v)){
-return false;
-}
-}
-elseif ($this->_data[$k] !== null){
-if(\Core\compare_values($this->_data[$k], $v)){
-return false;
-}
+if($keydat === null){
+$this->_dataother[$k] = $v;
+return;
 }
 $this->validate($k, $v, true);
-$v = $this->translateKey($k, $v);
 $this->_setLinkKeyPropagation($k, $v);
-if($keydat['encrypted']){
-$this->decryptData();
-$this->_datadecrypted[$k] = $v;
-$this->_data[$k] = self::EncryptValue($v);
-}
-else{
-$this->_data[$k] = $v;
-}
-return true;
-}
-elseif($this->getKeySchema($k) && $this->getKeySchema($k)['type'] == Model::ATT_TYPE_ALIAS){
-return $this->set( $this->getKeySchema($k)['alias'], $v);
-}
-else {
-$this->_dataother[$k] = $v;
-return true;
-}
+$c = $this->_columns[$k];
+$c->setValueFromApp($v);
 }
 public function getLinkFactory($linkname){
 $idx = $this->_getLinkIndex($linkname);
@@ -2827,64 +3184,39 @@ return $this->_exists;
 }
 public function isdeleted(){
 $s = self::GetSchema();
-foreach ($this->_data as $k => $v) {
-if(!isset($s[$k])){
-continue;
-}
-$keyschema = $s[$k];
-if($keyschema['type'] == Model::ATT_TYPE_DELETED) {
-if($v){
+foreach ($this->_columns as $c) {
+if($c->type == Model::ATT_TYPE_DELETED && $c->value) {
 return true;
 }
 }
-}
-if( sizeof($this->_datainit) > 0 && !$this->_exists ){
-return true;
-}
-return false;
+return !$this->_exists;
 }
 public function isnew() {
 return !$this->_exists;
 }
 public function changed($key = null){
-$s = self::GetSchema();
-foreach ($this->_data as $k => $v) {
-if($key !== null && $key != $k){
-continue;
-}
-if(!isset($s[$k])){
-continue;
-}
-$keyschema = $s[$k];
-switch ($keyschema['type']) {
-case Model::ATT_TYPE_CREATED:
-case Model::ATT_TYPE_UPDATED:
-continue 2;
-}
-if(!array_key_exists($k, $this->_datainit)){
+if($key === null){
+foreach($this->_columns as $c){
+if($c->changed()){
 return true;
-}
-if($this->_datainit[$k] != $this->_data[$k]){
-return true;
-}
-if(isset($keyschema['type']) && $keyschema['type'] == Model::ATT_TYPE_STRING){
-if(!\Core\compare_strings($this->_datainit[$k], $this->_data[$k])) return true;
-}
-else{
-if(!\Core\compare_values($this->_datainit[$k], $this->_data[$k])) return true;
 }
 }
 return false;
 }
+elseif(isset($this->_columns[$key])){
+if($this->_columns[$key]->changed()){
+return true;
+}
+else{
+return false;
+}
+}
+else{
+return false;
+}
+}
 public function decryptData(){
-if($this->_datadecrypted === null){
-$this->_datadecrypted = [];
-foreach($this->getKeySchemas() as $k => $v){
-if($v['encrypted']){
-$this->_datadecrypted[$k] = self::DecryptValue($this->_data[$k]);
-}
-}
-}
+return;
 }
 public function _getTableName(){
 return self::GetTableName();
@@ -2905,7 +3237,7 @@ $bits[] = $val;
 return implode('-', $bits);
 }
 public function offsetExists($offset) {
-return (array_key_exists($offset, $this->_data));
+return (array_key_exists($offset, $this->_columns));
 }
 public function offsetGet($offset) {
 return $this->get($offset);
@@ -2990,120 +3322,48 @@ $dat = new Core\Datamodel\Dataset();
 $dat->table($n);
 }
 $idcol = false;
-foreach ($this->_data as $k => $v) {
-$keyschema = $s[$k];
-switch ($keyschema['type']) {
-case Model::ATT_TYPE_CREATED:
-case Model::ATT_TYPE_UPDATED:
-if($v){
+foreach($this->_columns as $c){
+if($c->type == Model::ATT_TYPE_UUID){
+if($c->value && $c->valueDB){
 if($defer){
-$inserts[$k] = $v;
+$inserts[$c->field] = $c->getInsertValue();
 }
 else{
-$dat->insert($k, $v);
+$dat->setID($c->field, $c->getInsertValue());
 }
 }
 else{
-$nv = Time::GetCurrentGMT();
 if($defer){
-$inserts[$k] = $nv;
+$inserts[$c->field] = $c->getInsertValue();
 }
 else{
-$dat->insert($k, $nv);
+$dat->insert($c->field, $c->getInsertValue());
+$dat->setID($c->field, $c->getInsertValue());
 }
-$this->_data[$k] = $nv;
 }
-break;
-case Model::ATT_TYPE_ID:
-$nv = $this->_data[$k];
-if($this->_data[$k]){
+$idcol = $c->field;
+}
+elseif($c->type == Model::ATT_TYPE_ID){
+if($c->value){
 if($defer){
-$inserts[$k] = $nv;
+$inserts[$c->field] = $c->getInsertValue();
 }
 else{
-$dat->insert($k, $nv);
+$dat->insert($c->field, $c->getInsertValue());
 }
 }
 if(!$defer){
-$dat->setID($k, $nv);
-$idcol = $k; // Remember this for after the save.
+$dat->setID($c->field, $c->getInsertValue());
+$idcol = $c->field;
 }
-break;
-case Model::ATT_TYPE_UUID:
-if($this->_data[$k] && isset($this->_datainit[$k]) && $this->_datainit[$k]){
-$nv = $this->_data[$k];
-if($defer){
-$inserts[$k] = $nv;
-}
-else{
-$dat->setID($k, $nv);
-}
-}
-elseif($this->_data[$k]){
-$nv = $this->_data[$k];
-if($defer){
-$inserts[$k] = $nv;
-}
-else{
-$dat->insert($k, $nv);
-$dat->setID($k, $nv);
-}
-}
-else{
-$nv = Core::GenerateUUID();
-if($defer){
-$inserts[$k] = $nv;
-}
-else{
-$dat->insert($k, $nv);
-$dat->setID($k, $nv);
-}
-$this->_data[$k] = $nv;
-}
-$idcol = $k;
-break;
-case Model::ATT_TYPE_SITE:
-if(
-Core::IsComponentAvailable('enterprise') &&
-MultiSiteHelper::IsEnabled() &&
-($v === null || $v === false)
-){
-$site = MultiSiteHelper::GetCurrentSiteID();
-if($defer){
-$inserts['site'] = $site;
-}
-else{
-$dat->insert('site', $site);
-}
-$this->_data[$k] = $site;
-}
-elseif($v === null || $v === false){
-if($defer){
-$inserts['site'] = 0;
-}
-else{
-$dat->insert('site', 0);
-}
-$this->_data[$k] = 0;
 }
 else{
 if($defer){
-$inserts[$k] = $v;
+$inserts[$c->field] = $c->getInsertValue();
 }
 else{
-$dat->insert($k, $v);
+$dat->insert($c->field, $c->getInsertValue());
 }
-}
-break;
-default:
-$v = $this->translateKey($k, $v, true);
-if($defer){
-$inserts[$k] = $v;
-}
-else{
-$dat->insert($k, $v);
-}
-break;
 }
 }
 if($defer) {
@@ -3112,7 +3372,7 @@ $dat->_sets[] = $inserts;
 else{
 $dat->execute($this->interface);
 if ($idcol){
-$this->_data[$idcol] = $dat->getID();
+$this->_columns[$idcol]->setValueFromDB($dat->getID());
 }
 }
 }
@@ -3126,54 +3386,15 @@ if($pri && !is_array($pri)) $pri = [$pri];
 if($pri && !is_array($pri)) $pri = [$pri];
 $dat = new Core\Datamodel\Dataset();
 $dat->table($n);
-$idcol = false;
-foreach ($this->_data as $k => $v) {
-if(!isset($s[$k])){
-continue;
+foreach($this->_columns as $c){
+if($c->type == Model::ATT_TYPE_ID || $c->type == Model::ATT_TYPE_UUID){
+$dat->setID($c->field, $c->value);
 }
-$keyschema = $s[$k];
-switch ($keyschema['type']) {
-case Model::ATT_TYPE_CREATED:
-continue 2;
-case Model::ATT_TYPE_UPDATED:
-$nv = Time::GetCurrentGMT();
-$dat->update($k, $nv);
-$this->_data[$k] = $nv;
-continue 2;
-case Model::ATT_TYPE_ID:
-case Model::ATT_TYPE_UUID:
-$dat->setID($k, $this->_data[$k]);
-$idcol = $k; // Remember this for after the save.
-continue 2;
+elseif($c->changed()){
+$dat->update($c->field, $c->getUpdateValue());
 }
-$v = $this->translateKey($k, $v, true);
-if (in_array($k, $pri)) {
-if ($this->_datainit[$k] != $v){
-if($useset){
-$dat->set($k, $v);
-}
-else{
-$dat->update($k, $v);
-}
-}
-$dat->where($k, $this->_datainit[$k]);
-$this->_data[$k] = $v;
-}
-else {
-if(isset($this->_datainit[$k])){
-if($keyschema['type'] == Model::ATT_TYPE_STRING){
-if(\Core\compare_strings($this->_datainit[$k], $v)) continue;
-}
-else{
-if(\Core\compare_values($this->_datainit[$k], $v)) continue;
-}
-}
-if($useset){
-$dat->set($k, $v);
-}
-else{
-$dat->update($k, $v);
-}
+if (in_array($c->field, $pri)) {
+$dat->where($c->field, $c->getUpdateValue());
 }
 }
 if(!sizeof($dat->_sets)){
@@ -3515,20 +3736,19 @@ private static function _StandardizeSchemaDefinition($schema){
 if (!isset($schema['type']))               $schema['type']      = Model::ATT_TYPE_TEXT; // Default if not present.
 if (!isset($schema['maxlength']))          $schema['maxlength'] = false;
 if (!isset($schema['null']))               $schema['null']      = false;
-if (!isset($schema['comment']))            $schema['comment']   = '';
+if (!isset($schema['comment']))            $schema['comment']   = false;
 if (!array_key_exists('default', $schema)) $schema['default']   = false;
 if (!isset($schema['encrypted']))          $schema['encrypted'] = false;
 if (!isset($schema['required']))           $schema['required']  = false;
-if($schema['default'] === false && !$schema['null']){
-if($schema['type'] == Model::ATT_TYPE_TEXT){
-$schema['default'] = '';
-}
+if (!isset($schema['encoding']))           $schema['encoding']  = false;
+if($schema['default'] === false && $schema['null'] === true){
+$schema['default'] = null;
 }
 if($schema['type'] == Model::ATT_TYPE_ENUM){
 $schema['options'] = isset($schema['options']) ? $schema['options'] : [];
 }
 else{
-$schema['options'] = null;
+$schema['options'] = false;
 }
 return $schema;
 }
@@ -3639,6 +3859,665 @@ return $s;
 }
 
 
+### REQUIRE_ONCE FROM core/libs/core/datamodel/Schema.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel {
+class Schema {
+public $definitions = [];
+public $order = [];
+public $indexes = [];
+public $aliases = [];
+public function getColumn($column){
+if(is_int($column)){
+if(isset($this->order[$column])) $column = $this->order[$column];
+else return null;
+}
+if(isset($this->definitions[$column])) return $this->definitions[$column];
+else return null;
+}
+public function getDiff(Schema $schema){
+$diffs = array();
+foreach($schema->definitions as $name => $dat){
+$thiscol = $this->getColumn($name);
+if(!$thiscol){
+$diffs[] = array(
+'title' => 'A does not have column ' . $name,
+'column' => $name,
+'a' => null,
+'b' => $dat,
+);
+continue;
+}
+if($dat->type == \Model::ATT_TYPE_ALIAS){
+continue;
+}
+if(($colchange = $thiscol->getDiff($dat)) !== null){
+$diffs[] = array(
+'title' => 'Column ' . $name . ' does not match up: ' . $colchange,
+'column' => $name,
+'a' => $thiscol,
+'b' => $dat,
+);
+}
+}
+$a_order = $this->order;
+foreach($this->definitions as $name => $dat){
+if(!$schema->getColumn($name)){
+unset($a_order[array_search($name, $a_order)]);
+}
+elseif($schema->getColumn($name)->type == \Model::ATT_TYPE_ALIAS){
+unset($a_order[array_search($name, $a_order)]);
+}
+}
+if(implode(',', $a_order) != implode(',', $schema->order)){
+$diffs[] = array(
+'title' => 'Order of columns is different',
+'column' => '*MANY*',
+'a' => null,
+'b' => null,
+);
+}
+$thisidx = '';
+foreach($this->indexes as $name => $cols) $thisidx .= ';' . $name . '-' . implode(',', $cols);
+$thatidx = '';
+foreach($schema->indexes as $name => $cols) $thatidx .= ';' . $name . '-' . implode(',', $cols);
+if($thisidx != $thatidx){
+$diffs[] = array(
+'title' => 'Indexes do not match up',
+'column' => '*MANY*',
+'a' => null,
+'b' => null,
+);
+}
+return $diffs;
+}
+public function isDataIdentical(Schema $schema){
+$diff = $this->getDiff($schema);
+return !sizeof($diff);
+}
+}
+} // ENDING NAMESPACE Core\Datamodel
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn {
+public $field;
+public $type = '__UNDEFINED__';
+public $required = false;
+public $maxlength = false;
+public $options = null;
+public $default = false;
+public $null = false;
+public $comment = '';
+public $precision = null;
+public $encrypted = false;
+public $autoinc = false;
+public $encoding = null;
+public $aliasof = null;
+public $valueDB = null;
+public $valueTranslated = null;
+public $value = null;
+public function isIdenticalTo(SchemaColumn $col){
+$diff = $this->getDiff($col);
+return ($diff === null);
+}
+public function getDiff(SchemaColumn $col){
+$thisarray = (array)$this;
+$colarray  = (array)$col;
+if($thisarray === $colarray) return null;
+$differences = [];
+if($this->field != $col->field) $differences[] = 'field name';
+if($this->maxlength != $col->maxlength) $differences[] = 'max length';
+if($this->null != $col->null) $differences[] = 'is null';
+if($this->comment != $col->comment) $differences[] = 'comment';
+if($this->precision != $col->precision) $differences[] = 'precision';
+if($this->autoinc !== $col->autoinc) $differences[] = 'auto increment';
+if($this->encoding != $col->encoding) $differences[] = 'encoding';
+if($this->default === false){
+}
+elseif($this->default === $col->default){
+}
+elseif(\Core\compare_values($this->default, $col->default)){
+}
+elseif($col->default === false && $this->default !== false){
+$differences[] = 'default value (#1)';
+}
+else{
+$differences[] = 'default value (#2)';
+}
+if(is_array($this->options) != is_array($col->options)) $differences[] = 'options set/unset';
+if(is_array($this->options) && is_array($col->options)){
+if(implode(',', $this->options) != implode(',', $col->options)) $differences[] = 'options changed';
+}
+$typematches = array(
+array(
+\Model::ATT_TYPE_INT,
+\Model::ATT_TYPE_UUID,
+\Model::ATT_TYPE_UUID_FK,
+\Model::ATT_TYPE_CREATED,
+\Model::ATT_TYPE_UPDATED,
+\Model::ATT_TYPE_DELETED,
+\Model::ATT_TYPE_SITE,
+)
+);
+$typesidentical = false;
+foreach($typematches as $types){
+if(in_array($this->type, $types) && in_array($col->type, $types)){
+$typesidentical = true;
+break;
+}
+}
+if(!$typesidentical && $this->type != $col->type) $differences[] = 'type';
+if(sizeof($differences)){
+return implode(', ', $differences);
+}
+else{
+return null;
+}
+}
+public function setValueFromDB($val){
+$this->valueDB = $val;
+$this->value = $val;
+if($this->encrypted){
+$val = \Model::DecryptValue($val);
+}
+$this->valueTranslated = $val;
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+public function getInsertValue(){
+return $this->value;
+}
+public function getUpdateValue(){
+return $this->value;
+}
+public function changed(){
+return ($this->valueDB != $this->value);
+}
+public function commit(){
+$this->valueDB = $this->value;
+}
+public function setSchema($schema){
+if($this->type != $schema['type']){
+throw new \Exception('Type mismatch, please use Factory to construct a correctly typed SchemaColumn (' . $this->type . ' vs ' . $schema['type'] . ')');
+}
+$this->required  = $schema['required'];
+if($schema['default'] !== false){
+$this->default = $schema['default'];
+}
+if($schema['null'] !== false) {
+$this->null = $schema['null'];
+}
+if($schema['comment'] !== false) {
+$this->comment = $schema['comment'];
+}
+if($schema['encoding'] !== false) {
+$this->encoding = $schema['encoding'];
+}
+if($schema['maxlength'] !== false){
+$this->maxlength = $schema['maxlength'];
+}
+if(isset($schema['precision'])){
+$this->precision = $schema['precision'];
+}
+if(isset($schema['name'])){
+$this->field = $schema['name'];
+}
+if(isset($schema['autoinc'])){
+$this->autoinc = $schema['autoinc'];
+}
+$this->value = $this->default;
+$this->valueTranslated = $this->default;
+}
+public static function Factory($type){
+if(class_exists('\\Core\\Datamodel\\Columns\\SchemaColumn_' . $type)){
+$c = '\\Core\\Datamodel\\Columns\\SchemaColumn_' . $type;
+}
+else{
+$c = '\\Core\\Datamodel\\Columns\\SchemaColumn';
+}
+return new $c();
+}
+public static function FactoryFromSchema($schema){
+$c = self::Factory($schema['type']);
+$c->setSchema($schema);
+return $c;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___created.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+use Core\Date\DateTime;
+class SchemaColumn___created extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_CREATED;
+$this->maxlength = 15;
+$this->default = 0;
+}
+public function getInsertValue(){
+if(!$this->value){
+$this->setValueFromApp(DateTime::NowGMT());
+}
+return $this->value;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___deleted.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn___deleted extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_DELETED;
+$this->maxlength = 15;
+$this->default = 0;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___id.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn___id extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_ID;
+$this->maxlength = 15;
+$this->autoinc = true;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___id_fk.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn___id_fk extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_ID_FK;
+$this->maxlength = 15;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___site.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn___site extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_SITE;
+$this->maxlength = 15;
+$this->default = 0;
+$this->comment = 'The site id in multisite mode, (or -1 if global)';
+}
+public function getInsertValue(){
+if($this->value === null || $this->value === false){
+if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+$this->setValueFromApp(\MultiSiteHelper::GetCurrentSiteID());
+}
+else{
+$this->setValueFromApp(0);
+}
+}
+return $this->value;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___updated.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+use Core\Date\DateTime;
+class SchemaColumn___updated extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_UPDATED;
+$this->maxlength = 15;
+$this->default = 0;
+}
+public function getInsertValue(){
+if(!$this->value){
+$this->setValueFromApp(DateTime::NowGMT());
+}
+return $this->value;
+}
+public function getUpdateValue(){
+$this->setValueFromApp(DateTime::NowGMT());
+return $this->value;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___uuid.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn___uuid extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_UUID;
+$this->maxlength = 32;
+$this->encoding = \Model::ATT_ENCODING_UTF8;
+}
+public function getInsertValue(){
+if(!$this->value){
+$this->setValueFromApp(\Core\generate_uuid());
+}
+return $this->value;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn___uuid_fk.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn___uuid_fk extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_UUID_FK;
+$this->maxlength = 32;
+$this->encoding = \Model::ATT_ENCODING_UTF8;
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($val === null && !$this->null){
+$val = '0';
+}
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_boolean.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_boolean extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_BOOL;
+$this->encoding = \Model::ATT_ENCODING_UTF8;
+$this->default = '0';
+}
+public function setValueFromDB($val){
+$this->valueDB = $val;
+$this->value = $val;
+$this->valueTranslated = ($val == '0' || $val == '') ? false : true;
+}
+public function setValueFromApp($val){
+if(
+$val === '0' || $val === 0 ||
+$val === '' ||
+$val === 'no' || $val === 'NO'
+){
+$val = false;
+}
+elseif(
+$val == '1' || $val === 1 ||
+$val === 'yes' || $val === 'YES' ||
+$val === 'on' || $val === 'ON' ||
+$val === 'true' || $val === 'TRUE'
+){
+$val = true;
+}
+$this->valueTranslated = $val;
+$this->value = $val ? '1' : '0';
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_data.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_data extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_DATA;
+}
+public function setValueFromDB($val){
+$this->valueDB = $val;
+$this->value = $val;
+if($this->encrypted){
+$val = \Model::DecryptValue($val);
+}
+if($this->encoding == \Model::ATT_ENCODING_JSON){
+if($val === '' || $val === null){
+$this->valueTranslated = $this->null ? null : '';
+}
+else{
+$this->valueTranslated = json_decode($val, true);
+}
+}
+elseif($this->encoding == \Model::ATT_ENCODING_GZIP){
+if($val === '' || $val === null){
+$this->valueTranslated = $this->null ? null : '';
+}
+else{
+$this->valueTranslated = gzuncompress($val);
+if($this->valueTranslated === false){
+$this->valueTranslated = $this->null ? null : '';
+}
+}
+}
+else{
+$this->valueTranslated = $val;
+}
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($this->encoding == \Model::ATT_ENCODING_JSON){
+$val = json_encode($val);
+}
+elseif($this->encoding == \Model::ATT_ENCODING_GZIP){
+$val = gzcompress($val);
+}
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_enum.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_enum extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_ENUM;
+$this->encoding = \Model::ATT_ENCODING_UTF8;
+}
+public function setSchema($schema){
+parent::setSchema($schema);
+if(!\Core\is_numeric_array($schema['options'])){
+$this->options = array_keys($schema['options']);
+}
+else{
+$this->options = $schema['options'];
+}
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_float.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_float extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_FLOAT;
+$this->default = 0.0;
+}
+public function setValueFromDB($val){
+$this->valueDB = $val;
+$this->value = $val;
+if($this->encrypted){
+$val = \Model::DecryptValue($val);
+}
+$this->valueTranslated = (float)$val;
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_int.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_int extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_INT;
+$this->maxlength = 15;
+$this->default = 0;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_string.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_string extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_STRING;
+$this->maxlength = 255;
+$this->encoding = \Model::ATT_ENCODING_UTF8;
+$this->default = '';
+}
+public function setValueFromDB($val){
+$this->valueDB = $val;
+$this->value = $val;
+if($this->encrypted){
+$val = \Model::DecryptValue($val);
+}
+$this->valueTranslated = (string)$val;
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($val === null && !$this->null){
+$val = '';
+}
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+public function changed(){
+return !\Core\compare_strings($this->valueDB, $this->value);
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_text.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_text extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_TEXT;
+$this->encoding = \Model::ATT_ENCODING_UTF8;
+$this->default = '';
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($val === null && !$this->null){
+$val = '';
+}
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+public function changed(){
+return !\Core\compare_strings($this->valueDB, $this->value);
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_ISO_8601_date.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_ISO_8601_date extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_ISO_8601_DATE;
+$this->default = '0000-00-00';
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($val === '' || $val === '0000-00-00' || $val === null){
+$val = $this->null ? null : $this->default;
+}
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/datamodel/columns/SchemaColumn_ISO_8601_datetime.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Datamodel\Columns {
+class SchemaColumn_ISO_8601_datetime extends SchemaColumn {
+public function __construct(){
+$this->type = \Model::ATT_TYPE_ISO_8601_DATETIME;
+$this->default = '0000-00-00 00:00:00';
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($val === '' || $val === '0000-00-00 00:00:00' || $val === null){
+$val = $this->null ? null : $this->default;
+}
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
+}
+}
+} // ENDING NAMESPACE Core\Datamodel\Columns
+
+namespace  {
+
 ### REQUIRE_ONCE FROM core/libs/core/ModelSchema.php
 class ModelSchema extends Core\Datamodel\Schema{
 public function __construct($model = null){
@@ -3655,10 +4534,13 @@ $this->indexes     = [];
 $this->definitions = [];
 $this->order       = [];
 foreach($schema as $name => $def){
+if($def['type'] == Model::ATT_TYPE_ALIAS){
+$this->aliases[$name] = $def['alias'];
+}
+else{
 $def['name'] = $name;
-$column = $this->_getColumnDefinition($def);
+$column = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($def);
 $this->definitions[$name] = $column;
-if($def['type'] != Model::ATT_TYPE_ALIAS){
 $this->order[] = $name;
 }
 }
@@ -3670,98 +4552,6 @@ else{
 $this->indexes[$key] = $dat;
 }
 }
-}
-private function _getColumnDefinition($def){
-$column = new \Core\Datamodel\SchemaColumn();
-$column->field     = $def['name'];
-$column->type      = $def['type'];
-$column->required  = $def['required'];
-$column->maxlength = $def['maxlength'];
-$column->default   = $def['default'];
-$column->null      = $def['null'];
-$column->comment   = $def['comment'];
-if(isset($def['precision'])) $column->precision = $def['precision'];
-if($column->type == Model::ATT_TYPE_STRING && !$column->maxlength){
-$column->maxlength = 255;
-}
-if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
-$column->maxlength = 15;
-$column->autoinc = true;
-}
-if($column->type == Model::ATT_TYPE_ID_FK){
-$column->maxlength = 15;
-}
-if($column->type == Model::ATT_TYPE_UUID){
-$column->maxlength = 21;
-$column->autoinc = false;
-}
-if($column->type == Model::ATT_TYPE_UUID_FK){
-$column->maxlength = 21;
-}
-if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
-$column->maxlength = 15;
-}
-if($column->type == Model::ATT_TYPE_CREATED && !$column->maxlength){
-$column->maxlength = 15;
-}
-if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
-$column->maxlength = 15;
-}
-if($column->type == Model::ATT_TYPE_DELETED && !$column->maxlength){
-$column->maxlength = 15;
-}
-if($column->type == Model::ATT_TYPE_SITE){
-$column->default = 0;
-$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
-$column->maxlength = 15;
-}
-if($column->type == Model::ATT_TYPE_ALIAS){
-$column->aliasof = $def['alias'];
-}
-if($column->type == Model::ATT_TYPE_ENUM){
-if(!\Core\is_numeric_array($def['options'])){
-$column->options = array_keys($def['options']);
-}
-else{
-$column->options = $def['options'];
-}
-}
-if($column->default === false){
-if($column->null){
-$column->default = null;
-}
-else{
-switch($column->type){
-case Model::ATT_TYPE_INT:
-case Model::ATT_TYPE_BOOL:
-case Model::ATT_TYPE_CREATED:
-case Model::ATT_TYPE_UPDATED:
-case Model::ATT_TYPE_DELETED:
-case Model::ATT_TYPE_FLOAT:
-$column->default = 0;
-break;
-case Model::ATT_TYPE_ISO_8601_DATE:
-$column->default = '0000-00-00';
-break;
-case Model::ATT_TYPE_ISO_8601_DATETIME:
-$column->default = '0000-00-00 00:00:00';
-break;
-default:
-$column->default = '';
-}
-}
-}
-switch($column->type){
-case Model::ATT_TYPE_BOOL:
-case Model::ATT_TYPE_ENUM:
-case Model::ATT_TYPE_STRING:
-case Model::ATT_TYPE_TEXT:
-case Model::ATT_TYPE_UUID:
-case Model::ATT_TYPE_UUID_FK:
-$column->encoding = 'utf8';
-break;
-}
-return $column;
 }
 }
 
@@ -4391,7 +5181,7 @@ $this->_params[$key] = $val;
 }
 public function validateRewriteURL($v) {
 if (!$v) return true;
-if ($v == $this->_data['baseurl']) return true;
+if ($v == $this->_columns['baseurl']->value) return true;
 if ($v{0} != '/') return "Rewrite URL must start with a '/'";
 if(strpos($v, '#') !== false){
 return 'Invalid Rewrite URL, cannot contain a pound sign (#).';
@@ -4520,11 +5310,8 @@ $insertables = $this->getLink('Insertable');
 foreach($insertables as $ins){
 $ins->set('site', $v);
 }
-return parent::set($k, $v);
 }
-else{
-return parent::set($k, $v);
-}
+parent::set($k, $v);
 }
 public function setMetas($metaarray) {
 if (is_array($metaarray) && count($metaarray)){
@@ -4802,17 +5589,19 @@ $this->save();
 return $transport;
 }
 public function save($defer = false) {
-if (!$this->get('rewriteurl')) $this->set('rewriteurl', $this->get('baseurl'));
-if(!isset($this->_datainit['rewriteurl'])) $this->_datainit['rewriteurl'] = null;
-if($this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
+if (!$this->get('rewriteurl')){
+$this->set('rewriteurl', $this->get('baseurl'));
+}
+$c = $this->_columns['rewriteurl'];
+if($c->changed()){
 self::$_FuzzyCache = null;
 self::$_RewriteCache = null;
 }
-if($this->exists() && $this->_data['rewriteurl'] != $this->_datainit['rewriteurl']){
-$map = new RewriteMapModel($this->_datainit['rewriteurl']);
-$map->set('site', $this->_data['site']);
-$map->set('baseurl', $this->_data['baseurl']);
-$map->set('fuzzy', $this->_data['fuzzy']);
+if($this->exists() && $c->changed()){
+$map = new RewriteMapModel($this->get('rewriteurl'));
+$map->set('site', $this->get('site'));
+$map->set('baseurl', $this->get('baseurl'));
+$map->set('fuzzy', $this->get('fuzzy'));
 $map->save();
 }
 if($this->get('published_status') == 'published' && !$this->get('published')){
@@ -5406,10 +6195,12 @@ public static $Schema = array(
 'type'    => Model::ATT_TYPE_DATA,
 'default' => null,
 'null'    => true,
+'encoding' => Model::ATT_ENCODING_GZIP,
 ),
 'external_data' => array(
 'type' => Model::ATT_TYPE_DATA,
 'comment' => 'JSON-encoded array of any external data set onto this session.',
+'encoding' => Model::ATT_ENCODING_JSON,
 'default' => null,
 'null' => true,
 ),
@@ -5426,53 +6217,17 @@ public static $Indexes = array(
 public function __construct($key = null){
 return parent::__construct($key);
 }
-public function get($k) {
-if ($k == 'data') {
-return $this->getData();
-} else {
-return parent::get($k);
-}
-}
-public function set($k, $v) {
-if ($k == 'data') {
-$this->setData($v);
-} else {
-parent::set($k, $v);
-}
-}
 public function getData() {
-$data     = $this->_data['data'];
-if(!$data) return array();
-$unzipped = gzuncompress($data);
-if ($unzipped === false) {
-return $data;
-}
-else {
-return $unzipped;
-}
+return $this->get('data');
 }
 public function getExternalData(){
-$ext = $this->get('external_data');
-if($ext == '') return [];
-$json = json_decode($ext, true);
-if(!$json) return [];
-return $json;
+return $this->get('external_data');
 }
 public function setData($data) {
-$zipped              = gzcompress($data);
-$this->_data['data'] = $zipped;
-$this->_dirty = true;
+return $this->set('data', $data);
 }
 public function setExternalData($data){
-if(!is_array($data)){
-$this->set('external_data', null);
-}
-elseif(!sizeof($data)){
-$this->set('external_data', null);
-}
-else{
-$this->set('external_data', json_encode($data));
-}
+return $this->set('external_data', $data);
 }
 }
 
@@ -5817,6 +6572,14 @@ public static $Schema = [
 'basedir' => 'public/user/avatar',
 ],
 ],
+'gpgauth_pubkey' => [
+'type' => Model::ATT_TYPE_STRING,
+'maxlength' => 40,
+],
+'external_profiles' => [
+'type' => Model::ATT_TYPE_DATA,
+'encoding' => Model::ATT_ENCODING_JSON,
+],
 'registration_ip'      => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => '24',
@@ -5863,20 +6626,6 @@ $this->_linked['UserUserGroup']  = [
 'on'   => ['user_id' => 'id'],
 ];
 parent::__construct($id);
-}
-public function get($key) {
-if(array_key_exists($key, $this->_data)) {
-return parent::get($key);
-}
-elseif(($c = $this->getConfigObject($key)) !== null) {
-return $c->get('value');
-}
-elseif(array_key_exists($key, $this->_dataother)) {
-return $this->_dataother[ $key ];
-}
-else {
-return null;
-}
 }
 public function getLabel() {
 if(!$this->exists()) {
@@ -6110,18 +6859,6 @@ else {
 return false;
 }
 }
-public function set($k, $v) {
-if(array_key_exists($k, $this->_data)) {
-return parent::set($k, $v);
-}
-elseif(($c = $this->getConfigObject($k)) !== null) {
-return $c->set('value', $v);
-}
-else {
-$this->_dataother[ $k ] = $v;
-return true;
-}
-}
 public function setGroups($groups) {
 if(!is_array($groups)) $groups = [];
 $this->_setGroups($groups, false);
@@ -6193,14 +6930,6 @@ $this->setContextGroups($groups);
 else {
 }
 } // foreach(elements)
-}
-public function save($defer = false) {
-if(!$this->_data['apikey']) {
-$this->generateNewApiKey();
-}
-$status = parent::save($defer);
-HookHandler::DispatchHook('/user/postsave', $this);
-return $status;
 }
 public function generateNewApiKey() {
 $this->set('apikey', Core::RandomHex(64, true));
@@ -6576,10 +7305,9 @@ $log->actionSuccess();
 }
 elseif($key == 'profiles' && is_array($val)) {
 $new_profiles = $val;
-$profiles = $user->get('json:profiles');
-if($profiles) {
+$profiles = $user->get('external_profiles');
+if($profiles && is_array($profiles)) {
 $current_flat = [];
-$profiles     = json_decode($profiles, true);
 foreach($profiles as $current_profile) {
 $current_flat[] = $current_profile['url'];
 }
@@ -6594,7 +7322,7 @@ else {
 $profiles = $new_profiles;
 unset($new_profiles);
 }
-$user->set('json:profiles', json_encode($profiles));
+$user->set('external_profiles', $profiles);
 }
 elseif($key == 'backend'){
 $user->enableAuthDriver($val);
@@ -7102,58 +7830,6 @@ public static $Schema = array(
 public static $Indexes = array(
 'primary' => array('user_id', 'key'),
 );
-public function set($k, $v){
-if($k == 'value'){
-$config = UserConfigModel::Construct($this->_data['key']);
-if(!$config->get('validation')){
-return parent::set($k, $v);
-}
-else{
-$check = $config->get('validation');
-$valid = true;
-if (strpos($check, '::') !== false) {
-$ref = new ReflectionClass(substr($check, 0, strpos($check, ':')));
-$checklast = substr($check, strrpos($check, ':')+1);
-if($ref->hasMethod($checklast)){
-$valid = call_user_func($check, $v, $this);
-}
-elseif($ref->hasProperty($checklast)){
-$check = $ref->getProperty($checklast)->getValue();
-if (
-($check{0} == '/' && !preg_match($check, $v)) ||
-($check{0} == '#' && !preg_match($check, $v))
-) {
-$valid = false;
-}
-}
-}
-elseif (
-($check{0} == '/' && !preg_match($check, $v)) ||
-($check{0} == '#' && !preg_match($check, $v))
-) {
-$valid = false;
-}
-if($valid === true){
-return parent::set($k, $v);
-}
-else{
-if($valid === false){
-$msg = $this->_data['key'] . ' fails validation!';
-}
-elseif($valid === null){
-$msg = $this->_data['key'] . ' fails validation! (no reason given though)';
-}
-else{
-$msg = $valid;
-}
-throw new ModelValidationException($msg);
-}
-}
-}
-else{
-return parent::set($k, $v);
-}
-}
 }
 
 
@@ -7311,9 +7987,7 @@ public static $Schema = array(
 ),
 'site' => array(
 'type' => Model::ATT_TYPE_SITE,
-'default' => 0,
 'formtype' => 'system',
-'comment' => 'The site id in multisite mode, (or 0 otherwise)',
 ),
 'name' => array(
 'type' => Model::ATT_TYPE_STRING,
@@ -7619,15 +8293,15 @@ $other = new VersionString($other);
 }
 $v1    = $this->major . '.' . $this->minor . '.' . $this->point;
 $v2    = $other->major . '.' . $other->minor . '.' . $other->point;
-$check = version_compare($v1, $v2);
+$check = \version_compare($v1, $v2);
 if($check == 0 && $this->user && $other->user){
-$check = version_compare('1.0' . $this->user, '1.0' . $other->user);
+$check = \version_compare('1.0' . $this->user, '1.0' . $other->user);
 }
 if($check == 0 && $this->core && $other->core){
-$check = version_compare($this->core, $other->core);
+$check = \version_compare($this->core, $other->core);
 }
 if($check == 0 && ($this->stability || $other->stability)){
-$check = version_compare('1.0' . $this->stability, '1.0' . $other->stability);
+$check = \version_compare('1.0' . $this->stability, '1.0' . $other->stability);
 }
 if ($operation === null){
 return $check;
@@ -7812,6 +8486,21 @@ $this->_xmlloader->getElement('//description')->nodeValue = $desc;
 }
 public function getPermissions(){
 return $this->_permissions;
+}
+public function getScreenshots(){
+$s = $this->_xmlloader->getElements('//screenshots/screenshot');
+if(!$s){
+return [];
+}
+if($s->length == 0){
+return [];
+}
+$ret = [];
+for($i = 0; $i<$s->length; $i++){
+$n = $s->item($i);
+$ret[] = $n->attributes->getNamedItem('file')->nodeValue;
+}
+return $ret;
 }
 public function getPagesDefined(){
 $pages = [];
@@ -8120,6 +8809,18 @@ return str_replace(' ', '-', strtolower($this->_name));
 }
 public function getVersion() {
 return $this->_version;
+}
+public function getLicenseData(){
+$f = ($this->getKeyName() == 'core' ? ROOT_PDIR . 'core/' : $this->getBaseDir() ) . 'LICENSER.php';
+if(file_exists($f)){
+include($f);
+if(!isset($licenser)){
+trigger_error('Please ensure that LICENSER.php defines $licenser with the necessary data!', E_USER_WARNING);
+}
+else{
+return $licenser;
+}
+}
 }
 public function setVersion($vers) {
 if ($vers == $this->_version) return;
@@ -8544,6 +9245,7 @@ return (sizeof($overallChanges) > 0) ? $overallChanges : false;
 public function _parseDBSchema($install = true, $verbosity = 0) {
 $node   = $this->_xmlloader->getElement('dbschema');
 $prefix = $node->getAttribute('prefix');
+$db     = \Core\db();
 $changes = array();
 Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
 $classes = $this->getModelList();
@@ -8555,15 +9257,11 @@ if($verbosity == 2){
 CLI::PrintActionStart('Processing database table ' . $tablename);
 }
 try{
-if (\Core\db()->tableExists($tablename)) {
-$old_schema = \Core\db()->describeTable($tablename);
-$tablediffs = $old_schema->getDiff($schema);
-if(sizeof($tablediffs)){
-\Core\db()->modifyTable($tablename, $schema);
+if ($db->tableExists($tablename)) {
+$res = $db->modifyTable($tablename, $schema);
+if($res !== false){
 $changes[] = 'Modified table ' . $tablename;
-foreach($tablediffs as $d){
-$changes[] = '[' . $d['type'] . '] ' . $d['title'];
-}
+$changes = array_merge($changes, $res);
 if($verbosity == 2){
 CLI::PrintActionStatus('ok');
 }
@@ -9133,639 +9831,6 @@ return true;
 }
 }
 
-
-### REQUIRE_ONCE FROM core/functions/Core.functions.php
-} // ENDING GLOBAL NAMESPACE
-namespace Core {
-use Core\Datamodel;
-use Core\Filestore\FTP\FTPConnection;
-use DMI;
-use Cache;
-function db(){
-return DMI::GetSystemDMI()->connection();
-}
-function ftp(){
-static $ftp = null;
-if($ftp === null){
-if(!defined('FTP_USERNAME')){
-$ftp = false;
-return false;
-}
-if(!defined('FTP_PASSWORD')){
-$ftp = false;
-return false;
-}
-if(!defined('FTP_PATH')){
-$ftp = false;
-return false;
-}
-if(!FTP_USERNAME){
-$ftp = false;
-return false;
-}
-$ftp = new FTPConnection();
-$ftp->host = '127.0.0.1';
-$ftp->username = FTP_USERNAME;
-$ftp->password = FTP_PASSWORD;
-$ftp->root = FTP_PATH;
-$ftp->url = ROOT_WDIR;
-try{
-$ftp->connect();
-}
-catch(\Exception $e){
-\Core\ErrorManagement\exception_handler($e);
-$ftp = false;
-return false;
-}
-}
-if($ftp && $ftp instanceof FTPConnection){
-try{
-$ftp->reset();
-}
-catch(\Exception $e){
-\Core\ErrorManagement\exception_handler($e);
-$ftp = false;
-return false;
-}
-}
-return $ftp;
-}
-function user(){
-static $_CurrentUserAccount = null;
-if(!class_exists('\\UserModel')){
-return null;
-}
-if($_CurrentUserAccount !== null){
-return $_CurrentUserAccount;
-}
-if(isset($_SERVER['HTTP_X_CORE_AUTH_KEY'])){
-$user = \UserModel::Find(['apikey = ' . $_SERVER['HTTP_X_CORE_AUTH_KEY']], 1);
-if($user){
-$_CurrentUserAccount = $user;
-}
-}
-elseif(Session::Get('user') instanceof \UserModel){
-if(isset(Session::$Externals['user_forcesync'])){
-$_CurrentUserAccount = \UserModel::Construct(Session::Get('user')->get('id'));
-Session::Set('user', $_CurrentUserAccount);
-unset(Session::$Externals['user_forcesync']);
-}
-else{
-$_CurrentUserAccount = Session::Get('user');
-}
-}
-if($_CurrentUserAccount === null){
-$_CurrentUserAccount = new \UserModel();
-}
-if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
-$_CurrentUserAccount->clearAccessStringCache();
-}
-if(Session::Get('user_sudo') !== null){
-$sudo = Session::Get('user_sudo');
-if($sudo instanceof \UserModel){
-if($_CurrentUserAccount->checkAccess('p:/user/users/sudo')){
-if($sudo->checkAccess('g:admin') && !$_CurrentUserAccount->checkAccess('g:admin')){
-Session::UnsetKey('user_sudo');
-\SystemLogModel::LogSecurityEvent('/user/sudo', 'Authorized but non-SA user requested sudo access to a system admin!', null, $sudo->get('id'));
-}
-else{
-$_CurrentUserAccount = $sudo;
-}
-}
-else{
-Session::UnsetKey('user_sudo');
-\SystemLogModel::LogSecurityEvent('/user/sudo', 'Unauthorized user requested sudo access to another user!', null, $sudo->get('id'));
-}
-}
-else{
-Session::UnsetKey('user_sudo');
-}
-}
-return $_CurrentUserAccount;
-}
-function file($filename = null){
-return \Core\Filestore\Factory::File($filename);
-}
-function directory($directory){
-return \Core\Filestore\Factory::Directory($directory);
-}
-function page_request(){
-return \PageRequest::GetSystemRequest();
-}
-function view(){
-return page_request()->getView();
-}
-function get_standard_http_headers($forcurl = false, $autoclose = false){
-$headers = array(
-'User-Agent: Core Plus ' . \Core::GetComponent()->getVersion() . ' (http://corepl.us)',
-'Servername: ' . SERVERNAME,
-);
-if($autoclose){
-$headers[] = 'Connection: close';
-}
-if($forcurl){
-return $headers;
-}
-else{
-return implode("\r\n", $headers);
-}
-}
-function resolve_asset($asset){
-if(strpos($asset, '://') !== false){
-return $asset;
-}
-if(strpos($asset, 'assets/') !== 0){
-$asset = 'assets/' . $asset;
-}
-$file = \Core\Filestore\Factory::File($asset);
-return $file->getURL();
-}
-function resolve_link($url) {
-if ($url == '#') return $url;
-if (strpos($url, '://') !== false) return $url;
-if($url{0} == '?'){
-$url = REL_REQUEST_PATH . $url;
-}
-if(stripos($url, 'site:') === 0){
-$slashpos = strpos($url, '/');
-$site = substr($url, 5, $slashpos-5);
-$url = substr($url, $slashpos);
-}
-else{
-$site = null;
-}
-try{
-$a = \PageModel::SplitBaseURL($url, $site);
-}
-catch(\Exception $e){
-\Core\ErrorManagement\exception_handler($e);
-error_log('Unable to resolve URL [' . $url . '] due to exception [' . $e->getMessage() . ']');
-return '';
-}
-return $a['fullurl'];
-}
-function redirect($page, $code = 302){
-if(!($code == 301 || $code == 302)){
-throw new \Exception('Invalid response code requested for redirect, [' . $code . '].  Please ensure it is either a 301 (permanent), or 302 (temporary) redirect!');
-}
-$hp = ($page == '/');
-$page = resolve_link($page);
-if(!$page && $hp) $page = ROOT_URL;
-if ($page == CUR_CALL) return;
-switch($code){
-case 301:
-$movetext = '301 Moved Permanently';
-break;
-case 302:
-$movetext = '302 Moved Temporarily';
-break;
-default:
-$movetext = $code . ' Moved Temporarily';
-break;
-}
-header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
-if(\ConfigHandler::Get('/core/security/x-frame-options')){
-header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
-}
-if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
-header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
-}
-header('HTTP/1.1 ' . $movetext);
-header('Location: ' . $page);
-\HookHandler::DispatchHook('/core/page/postrender');
-die('If your browser does not refresh, please <a href="' . $page . '">Click Here</a>');
-}
-function reload(){
-$movetext = '302 Moved Temporarily';
-header('X-Content-Encoded-By: Core Plus ' . (DEVELOPMENT_MODE ? \Core::GetComponent()->getVersion() : ''));
-if(\ConfigHandler::Get('/core/security/x-frame-options')){
-header('X-Frame-Options: ' . \ConfigHandler::Get('/core/security/x-frame-options'));
-}
-if(\ConfigHandler::Get('/core/security/csp-frame-ancestors')){
-header('Content-Security-Policy: frame-ancestors \'self\' ' . \ConfigHandler::Get('/core/security/content-security-policy'));
-}
-header('HTTP/1.1 302 Moved Temporarily');
-header('Location:' . CUR_CALL);
-\HookHandler::DispatchHook('/core/page/postrender');
-die('If your browser does not refresh, please <a href="' . CUR_CALL . '">Click Here</a>');
-}
-function go_back() {
-$request = page_request();
-$history = $request->getReferrer();
-if($history != CUR_CALL){
-redirect($history);
-}
-else{
-reload();
-}
-}
-function parse_html($html){
-$x = 0;
-$imagestart = null;
-while($x < strlen($html)){
-if(substr($html, $x, 4) == '<img'){
-$imagestart = $x;
-$x+= 3;
-continue;
-}
-$fullimagetag = null;
-if($imagestart !== null && $html{$x} == '>'){
-$fullimagetag = substr($html, $imagestart, $x-$imagestart+1);
-}
-elseif($imagestart !== null && substr($html, $x, 2) == '/>'){
-$fullimagetag = substr($html, $imagestart, $x-$imagestart+2);
-}
-if($imagestart !== null && $fullimagetag){
-$simple = new \SimpleXMLElement($fullimagetag);
-$attributes = array();
-foreach($simple->attributes() as $k => $v){
-$attributes[$k] = (string)$v;
-}
-$file = \Core\Filestore\Factory::File($attributes['src']);
-if(!isset($attributes['alt']) || $attributes['alt'] == ''){
-$attributes['alt'] = $file->getTitle();
-}
-if(isset($attributes['width']) || isset($attributes['height'])){
-if(isset($attributes['width']) && isset($attributes['height'])){
-$dimension = $attributes['width'] . 'x' . $attributes['height'] . '!';
-unset($attributes['width'], $attributes['height']);
-}
-elseif(isset($attributes['width'])){
-$dimension = $attributes['width'];
-unset($attributes['width']);
-}
-else{
-$dimension = $attributes['height'];
-unset($attributes['height']);
-}
-$attributes['src'] = $file->getPreviewURL($dimension);
-}
-$img = '<img';
-foreach($attributes as $k => $v){
-$img .= ' ' . $k . '="' . str_replace('"', '&quot;', $v) . '"';
-}
-$img .= '/>';
-$metahelper  = new \Core\Filestore\FileMetaHelper($file);
-$metacontent = $metahelper->getAsHTML();
-if($metacontent){
-$img = '<div class="image-metadata-wrapper">' . $img . $metacontent . '</div>';
-}
-$x += strlen($img) - strlen($fullimagetag);
-$html = substr_replace($html, $img, $imagestart, strlen($fullimagetag));
-$imagestart = null;
-}
-$x++;
-}
-return $html;
-}
-function set_message($messageText, $messageType = 'info'){
-if(strpos($messageText, 't:MESSAGE_') === 0){
-$messageText = substr($messageText, 2);
-if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
-$messageType = 'success';
-}
-elseif(strpos($messageText, 'MESSAGE_ERROR_') === 0){
-$messageType = 'error';
-}
-elseif(strpos($messageText, 'MESSAGE_TUTORIAL_') === 0){
-$messageType = 'tutorial';
-}
-elseif(strpos($messageText, 'MESSAGE_WARNING_') === 0){
-$messageType = 'warning';
-}
-elseif(strpos($messageText, 'MESSAGE_INFO_') === 0){
-$messageType = 'info';
-}
-else{
-$messageType = 'info';
-}
-if(func_num_args() > 1){
-$messageText = call_user_func_array('t', func_get_args());
-}
-else{
-$messageText = t($messageText);
-}
-}
-if(EXEC_MODE == 'CLI'){
-$messageText = preg_replace('/<br[^>]*>/i', "\n", $messageText);
-echo "[" . $messageType . "] - " . $messageText . "\n";
-}
-else{
-$stack = Session::Get('message_stack', []);
-$stack[] = array(
-'mtext' => $messageText,
-'mtype' => $messageType,
-);
-Session::Set('message_stack', $stack);
-}
-}
-function get_messages($returnSorted = FALSE, $clearStack = TRUE){
-return \Core::GetMessages($returnSorted, $clearStack);
-}
-function SortByKey($named_recs, $order_by, $rev=false, $flags=0){
-$named_hash = array();
-foreach($named_recs as $key=>$fields) $named_hash["$key"] = $fields[$order_by];
-if($rev) arsort($named_hash,$flags) ;
-else asort($named_hash, $flags);
-$sorted_records = array();
-foreach($named_hash as $key=>$val) $sorted_records["$key"]= $named_recs[$key];
-return $sorted_records;
-}
-function ImplodeKey($glue, &$array){
-$arrayKeys = array();
-foreach($array as $key => $value){
-$arrayKeys[] = $key;
-}
-return implode($glue, $arrayKeys);
-}
-function random_hex($length = 1, $casesensitive = false){
-$output = '';
-if($casesensitive){
-$chars = '0123456789ABCDEFabcdef';
-$charlen = 21; // (needs to be -1 of the actual length)
-}
-else{
-$chars = '0123456789ABCDEF';
-$charlen = 15; // (needs to be -1 of the actual length)
-}
-$output = '';
-for ($i = 0; $i < $length; $i++){
-$pos = rand(0, $charlen);
-$output .= $chars{$pos};
-}
-return $output;
-}
-function compare_values($val1, $val2){
-if($val1 === $val2){
-return true;
-}
-if(is_numeric($val1) && is_numeric($val2) && $val1 == $val2){
-return true;
-}
-if(is_scalar($val1) && is_scalar($val2) && strlen($val1) == strlen($val2) && $val1 == $val2){
-return true;
-}
-return false;
-}
-function compare_strings($val1, $val2) {
-if($val1 === $val2){
-return true;
-}
-if(strlen($val1) == strlen($val2) && $val1 == $val2){
-return true;
-}
-return false;
-}
-function FormatSize($filesize, $round = 2){
-return \Core\Filestore\format_size($filesize, $round);
-}
-function GetExtensionFromString($str){
-if(strpos($str, '.') === false) return '';
-return substr($str, strrpos($str, '.') + 1 );
-}
-function CheckEmailValidity($email){
-$atIndex = strrpos($email, "@");
-if (is_bool($atIndex) && !$atIndex) return false;
-$domain = substr($email, $atIndex+1);
-$local = substr($email, 0, $atIndex);
-$localLen = strlen($local);
-$domainLen = strlen($domain);
-if ($localLen < 1 || $localLen > 64) {
-return false;
-}
-if ($domainLen < 1 || $domainLen > 255) {
-return false;
-}
-if ($local[0] == '.' || $local[$localLen-1] == '.') {
-return false;
-}
-if (preg_match('/\\.\\./', $local)) {
-return false;
-}
-if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
-return false;
-}
-if (preg_match('/\\.\\./', $domain)) {
-return false;
-}
-if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local))) {
-if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local))) {
-return false;
-}
-}
-if (ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
-return false;
-}
-return true;
-}
-function VersionCompare($version1, $version2, $operation = null){
-if(!$version1) $version1 = 0;
-if(!$version2) $version2 = 0;
-$version1 = Core::VersionSplit($version1);
-$version2 = Core::VersionSplit($version2);
-$keys = array('major', 'minor', 'point', 'core', 'user', 'stability');
-$v1 = $version1['major'] . '.' . $version1['minor'] . '.' . $version1['point'] . '.' . $version1['core'];
-$v2 = $version2['major'] . '.' . $version2['minor'] . '.' . $version2['point'] . '.' . $version2['core'];
-$check = version_compare($v1, $v2);
-if($check != 0){
-if($operation == null) return $check;
-switch($operation){
-case 'lt':
-case 'le':
-case '<':
-case '<=':
-return ($check == -1);
-default:
-return true;
-}
-}
-else{
-if($operation == null) return $check;
-switch($operation){
-case 'le':
-case '<=':
-case 'ge':
-case '>=':
-case 'eq':
-case '=':
-return true;
-default:
-return false;
-}
-}
-}
-function VersionSplit($version){
-$ret = array(
-'major' => 0,
-'minor' => 0,
-'point' => 0,
-'core' => 0,
-'user' => 0,
-'stability' => '',
-);
-$v = array();
-$lengthall = strlen($version);
-$pos = 0;
-$x = 0;
-while($pos < $lengthall && $x < 10){
-$nextpos = strpos($version, '.', $pos) - $pos;
-$part = ($nextpos > 0) ? substr($version, $pos, $nextpos) : substr($version, $pos);
-if(($subpos = strpos($part, '-')) !== false){
-$subpart = strtolower(substr($part, $subpos + 1));
-if(is_numeric($subpart)){
-$ret['core'] = $subpart;
-}
-elseif($subpart == 'a'){
-$ret['stability'] = 'alpha';
-}
-elseif($subpart == 'b'){
-$ret['stability'] = 'beta';
-}
-else{
-$ret['stability'] = $subpart;
-}
-$part = substr($part, 0, $subpos);
-}
-$v[] = (int)$part;
-$pos = ($nextpos > 0) ? $pos + $nextpos + 1 : $lengthall;
-$x++; // Just in case something really bad happens here...
-}
-for($i = 0; $i < 3; $i++){
-if(!isset($v[$i])) $v[$i] = 0;
-}
-$ret['major'] = $v[0];
-$ret['minor'] = $v[1];
-$ret['point'] = $v[2];
-return $ret;
-}
-function str_to_latin($string){
-$internationalmappings = array(
-'À' => 'A',
-'Á' => 'A',
-'Â' => 'A',
-'Ã' => 'A',
-'Ä' => 'A',
-'Å' => 'AA',
-'Æ' => 'AE',
-'Ç' => 'C',
-'È' => 'E',
-'É' => 'E',
-'Ê' => 'E',
-'Ë' => 'E',
-'Ì' => 'I',
-'Í' => 'I',
-'Î' => 'I',
-'Ï' => 'I',
-'Ð' => 'D',
-'Ł' => 'L',
-'Ñ' => 'N',
-'Ò' => 'O',
-'Ó' => 'O',
-'Ô' => 'O',
-'Õ' => 'O',
-'Ö' => 'O',
-'Ø' => 'OE',
-'Ù' => 'U',
-'Ú' => 'U',
-'Ü' => 'U',
-'Û' => 'U',
-'Ý' => 'Y',
-'Þ' => 'Th',
-'ß' => 'ss',
-'à' => 'a',
-'á' => 'a',
-'â' => 'a',
-'ã' => 'a',
-'ä' => 'a',
-'å' => 'aa',
-'æ' => 'ae',
-'ç' => 'c',
-'è' => 'e',
-'é' => 'e',
-'ê' => 'e',
-'ë' => 'e',
-'ì' => 'i',
-'í' => 'i',
-'î' => 'i',
-'ï' => 'i',
-'ð' => 'd',
-'ł' => 'l',
-'ñ' => 'n',
-'ń' => 'n',
-'ò' => 'o',
-'ó' => 'o',
-'ô' => 'o',
-'õ' => 'o',
-'ō' => 'o',
-'ö' => 'o',
-'ø' => 'oe',
-'ś' => 's',
-'ù' => 'u',
-'ú' => 'u',
-'û' => 'u',
-'ū' => 'u',
-'ü' => 'u',
-'ý' => 'y',
-'þ' => 'th',
-'ÿ' => 'y',
-'ż' => 'z',
-'Œ' => 'OE',
-'œ' => 'oe',
-'&' => 'and'
-);
-return str_replace(array_keys($internationalmappings), array_values($internationalmappings), $string);
-}
-function str_to_url($string, $keepdots = false){
-$string = str_to_latin($string);
-if(\ConfigHandler::Get('/core/page/url_remove_stop_words')){
-$stopwords = get_stop_words();
-$exploded = explode(' ', $string);
-$nt = '';
-foreach($exploded as $w){
-$lw = strtolower($w);
-if(!in_array($lw, $stopwords)){
-$nt .= ' ' . $w;
-}
-}
-$string = trim($string);
-}
-$string = str_replace(' ', '-', $string);
-if($keepdots){
-$string = preg_replace('/[^a-z0-9\-\.]/i', '', $string);
-}
-else{
-$string = preg_replace('/[^a-z0-9\-]/i', '', $string);
-}
-$string = preg_replace('/[-]+/', '-', $string);
-$string = preg_replace('/^-/', '', $string);
-$string = preg_replace('/-$/', '', $string);
-$string = strtolower($string);
-return $string;
-}
-function translate_upload_error($errno){
-return \Core\Filestore\translate_upload_error($errno);
-}
-function check_file_mimetype($acceptlist, $mimetype, $extension = null){
-return \Core\Filestore\check_file_mimetype($acceptlist, $mimetype, $extension);
-}
-function is_numeric_array($array){
-if(!is_array($array)) return false;
-reset($array);
-if(key($array) !== 0) return false;
-$c = count($array) - 1;
-end($array);
-if(key($array) !== $c) return false;
-return true;
-}
-function get_stop_words(){
-$stopwords = array('a', 'about', 'above', 'above', 'across', 'after', 'afterwards', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also','although','always','am','among', 'amongst', 'amoungst', 'amount',  'an', 'and', 'another', 'any','anyhow','anyone','anything','anyway', 'anywhere', 'are', 'around', 'as',  'at', 'back','be','became', 'because','become','becomes', 'becoming', 'been', 'before', 'beforehand', 'behind', 'being', 'below', 'beside', 'besides', 'between', 'beyond', 'bill', 'both', 'bottom','but', 'by', 'call', 'can', 'cannot', 'cant', 'co', 'con', 'could', 'couldnt', 'cry', 'de', 'describe', 'detail', 'do', 'done', 'down', 'due', 'during', 'each', 'eg', 'eight', 'either', 'eleven','else', 'elsewhere', 'empty', 'enough', 'etc', 'even', 'ever', 'every', 'everyone', 'everything', 'everywhere', 'except', 'few', 'fifteen', 'fify', 'fill', 'find', 'fire', 'first', 'five', 'for', 'former', 'formerly', 'forty', 'found', 'four', 'from', 'front', 'full', 'further', 'get', 'give', 'go',
-'had', 'has', 'hasnt', 'have', 'he', 'hence', 'her', 'here', 'hereafter', 'hereby', 'herein', 'hereupon', 'hers', 'herself', 'him', 'himself', 'his', 'how', 'however', 'hundred', 'ie', 'if', 'in', 'inc', 'indeed', 'interest', 'into', 'is', 'it', 'its', 'itself', 'keep', 'last', 'latter', 'latterly', 'least', 'less', 'ltd', 'made', 'many', 'may', 'me', 'meanwhile', 'might', 'mill', 'mine', 'more', 'moreover', 'most', 'mostly', 'move', 'much', 'must', 'my', 'myself', 'name', 'namely', 'neither', 'never', 'nevertheless', 'next', 'nine', 'no', 'nobody', 'none', 'noone', 'nor', 'not', 'nothing', 'now', 'nowhere', 'of', 'off', 'often', 'on', 'once', 'one', 'only', 'onto', 'or', 'other', 'others', 'otherwise', 'our', 'ours', 'ourselves', 'out', 'over', 'own','part', 'per', 'perhaps', 'please', 'put', 'rather', 're', 'same', 'see', 'seem', 'seemed', 'seeming', 'seems', 'serious', 'several', 'she', 'should', 'show', 'side', 'since', 'sincere', 'six', 'sixty', 'so', 'some', 'somehow', 'someone', 'something', 'sometim
-e', 'sometimes', 'somewhere', 'still', 'such', 'system', 'take', 'ten', 'than', 'that', 'the', 'their', 'them', 'themselves', 'then', 'thence', 'there', 'thereafter', 'thereby', 'therefore', 'therein', 'thereupon', 'these', 'they', 'thickv', 'thin', 'third', 'this', 'those', 'though', 'three', 'through', 'throughout', 'thru', 'thus', 'to', 'together', 'too', 'top', 'toward', 'towards', 'twelve', 'twenty', 'two', 'un', 'under', 'until', 'up', 'upon', 'us', 'very', 'via', 'was', 'we', 'well', 'were', 'what', 'whatever', 'when', 'whence', 'whenever', 'where', 'whereafter', 'whereas', 'whereby', 'wherein', 'whereupon', 'wherever', 'whether', 'which', 'while', 'whither', 'who', 'whoever', 'whole', 'whom', 'whose', 'why', 'will', 'with', 'within', 'without', 'would', 'yet', 'you', 'your', 'yours', 'yourself', 'yourselves', 'the');
-return $stopwords;
-}
-} // ENDING NAMESPACE Core
-
-namespace  {
 
 ### REQUIRE_ONCE FROM core/libs/core/filestore/functions.php
 } // ENDING GLOBAL NAMESPACE
@@ -10630,7 +10695,7 @@ elseif ($ext == 'otf'  && $type == 'application/octet-stream') $type = 'font/otf
 return $type;
 }
 public function getExtension() {
-return Filestore\get_extension_from_string($this->_filename);
+return Filestore\get_extension_from_string(basename($this->_filename));
 }
 public function getURL() {
 if (!preg_match('/^' . str_replace('/', '\\/', ROOT_PDIR) . '/', $this->_filename)){
@@ -11977,10 +12042,12 @@ private $_url = null;
 private $_headers = null;
 private $_response = null;
 private $_tmplocal = null;
+private $_requestHeaders = null;
 protected $_redirectFile = null;
 protected $_redirectCount = 0;
 public function __construct($filename = null) {
 if ($filename) $this->setFilename($filename);
+$this->_requestHeaders = \Core::GetStandardHTTPHeaders(true);
 }
 public function getTitle(){
 $metas = new Filestore\FileMetaHelper($this);
@@ -12204,6 +12271,9 @@ return $this->_getTmpLocal()->getPreviewFile($dimensions);
 public function isWritable() {
 return false;
 }
+public function setRequestHeader($value, $key){
+$this->_requestHeaders[] = $value . ': ' . $key;
+}
 protected function _getHeaders() {
 if ($this->_headers === null) {
 $this->_headers = array();
@@ -12214,7 +12284,7 @@ CURLOPT_HEADER         => true,
 CURLOPT_NOBODY         => true,
 CURLOPT_RETURNTRANSFER => true,
 CURLOPT_URL            => $this->getURL(),
-CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
+CURLOPT_HTTPHEADER     => $this->_requestHeaders,
 )
 );
 $result = curl_exec($curl);
@@ -14505,6 +14575,14 @@ $h->returnType = Hook::RETURN_TYPE_ARRAY;
 $h->description = 'Automatic hook for control links on the ' . $class . ' object.  Attach onto this hook if you want to add a custom link anytime this object\'s control is displayed.';
 }
 }
+$licenser = $c->getLicenseData();
+if($licenser && defined('SERVER_ID') && class_exists('\\Core\\Licenser')){
+$url  = $licenser['url'];
+$comp = $c->getKeyName();
+foreach($licenser['features'] as $key){
+\Core\Licenser::RegisterFeature($key, $url, $comp);
+}
+}
 $c->_setReady(true);
 }
 public static function CheckClass($classname) {
@@ -14596,19 +14674,7 @@ if (isset($controllers[$controller])) return $c;
 return null;
 }
 public static function GetStandardHTTPHeaders($forcurl = false, $autoclose = false) {
-$headers = array(
-'User-Agent: Core Plus ' . self::GetComponent()->getVersion() . ' (http://corepl.us)',
-'Referer: ' . SERVERNAME,
-);
-if ($autoclose) {
-$headers[] = 'Connection: close';
-}
-if ($forcurl) {
-return $headers;
-}
-else {
-return implode("\r\n", $headers);
-}
+return \Core\get_standard_http_headers($forcurl, $autoclose);
 }
 public static function Singleton() {
 if(self::$instance === null){
@@ -14921,9 +14987,38 @@ public static function _AttachJSON(){
 \Core\view()->addScript ('js/json2.js', 'head');
 return true;
 }
+public static function _GetLegalFooterContent(){
+$lic = \Core\Licenser::Get('/core/license');
+$licurl = \Core\Licenser::Get('/core/license_url');
+$licto = \Core\Licenser::Get('/core/licensed_to');
+$hide = \Core\Licenser::Get('/core/hide_legal_notice');
+if(!$lic) {
+$lic = 'AGPLv3';
+$licurl = 'https://www.gnu.org/licenses/agpl';
+$hide = 0;
+}
+if($hide == '1'){
+return '';
+}
+$licclass = strtolower($lic) . '-tag';
+if($licto){
+$lictext = t('STRING_LICENSED_TO_S', $licto);
+if($lic && $licurl){
+$lictext .= ' (<a href="' . $licurl . '" target="_blank" class="' . $licclass . '">' . $lic . '</a>)';
+}
+}
+elseif($lic && $licurl){
+$lictext = t('STRING_LICENSED_UNDER');
+$lictext .= ' <a href="' . $licurl . '" target="_blank" class="' . $licclass . '">' . $lic . '</a>';
+}
+elseif($lic){
+$lictext = t('STRING_LICENSED_UNDER') . ' ' . $lic;
+}
+$poweredBy = t('STRING_POWERED_BY') . ' <a href="http://corepl.us" target="_blank">Secure PHP Framework and CMS, Core Plus</a>';
+return '<p class="legal-notice">' . $lictext . '&nbsp;&nbsp;' . $poweredBy . '</p>';
+}
 public static function VersionCompare($version1, $version2, $operation = null) {
-$version1 = new \Core\VersionString($version1);
-return $version1->compare($version2, $operation);
+return \Core\version_compare($version1, $version2, $operation);
 }
 public static function VersionSplit($version) {
 return new \Core\VersionString($version);
@@ -14935,8 +15030,7 @@ public static function CompareStrings($val1, $val2) {
 return \Core\compare_strings($val1, $val2);
 }
 public static function GenerateUUID(){
-$serverid = defined('SERVER_ID') ? SERVER_ID : 1;
-return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
+return \Core\generate_uuid();
 }
 public static function GetSupplementalModels($modelname){
 if(!Core::$_LoadedComponents){
@@ -15294,16 +15388,15 @@ putenv('GNUPGHOME=' . GPG_HOMEDIR);
 if(!defined('XHPROF')){
 define('XHPROF', 0);
 }
-if(XHPROF > 0 && function_exists('xhprof_enable')){
-if(XHPROF == 100){
-define('ENABLE_XHPROF', true);
+$profilingEnabled = (XHPROF == 100 || (XHPROF > rand(1,100)));
+if(function_exists('xhprof_enable')){
+define('ENABLE_XHPROF', $profilingEnabled);
+if($profilingEnabled){
+xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
 }
-else{
-define('ENABLE_XHPROF', (XHPROF > rand(1,100)));
 }
-}
-else{
-define('ENABLE_XHPROF', false);
+elseif(function_exists('xdebug_start_trace')){
+ini_set('xdebug.profiler_enable_trigger', $profilingEnabled ? 1 : 0);
 }
 unset(
 $enablessl, $servername, $servernameNOSSL, $servernameSSL, $rooturl, $rooturlNOSSL,
@@ -15311,9 +15404,6 @@ $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir, $relativereque
 $core_settings
 );
 $maindefines_time = microtime(true);
-if(ENABLE_XHPROF){
-xhprof_enable(XHPROF_FLAGS_CPU | XHPROF_FLAGS_MEMORY);
-}
 \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 try {
 $dbconn = DMI::GetSystemDMI();
@@ -18455,6 +18545,9 @@ return $this->_fetchCache;
 }
 try{
 $body = $this->fetchBody();
+\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
+'Fetched application content from within View->fetch() for ' . $this->templatename
+);
 }
 catch(Exception $e){
 $this->error = View::ERROR_SERVERERROR;
@@ -18579,7 +18672,7 @@ $data = preg_replace('#</head>#i', $this->getHeadContent() . "\n" . '</head>', $
 if(preg_match('#</body>#i', $data)){
 $match = strrpos($data, '</body>');
 $foot = $this->getFootContent();
-if(ENABLE_XHPROF){
+if(defined('ENABLE_XHPROF') && function_exists('xhprof_disable')){
 require_once('xhprof_lib/utils/xhprof_lib.php'); #SKIPCOMPILER
 require_once('xhprof_lib/utils/xhprof_runs.php'); #SKIPCOMPILER
 $xhprof_data = xhprof_disable();
@@ -18661,6 +18754,14 @@ $debug .= "\n\n";
 $debug .= "</span>";
 }
 $debug .= '</fieldset>';
+$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-licenser-information">';
+$debug .= sprintf($legend, 'Licensed Information');
+$lic = \Core\Licenser::GetRaw();
+$debug .= '<div>';
+foreach($lic as $dat){
+$debug .= $dat['url'] . '::' . $dat['feature'] . ' => ' . $dat['value'] . "\n";
+}
+$debug .= '</div></fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
 $debug .= sprintf($legend, 'Included Files');
 $debug .= '<span>Number: ' . sizeof(get_included_files()) . "</span>";
@@ -19230,7 +19331,11 @@ return true;
 $request  = \Core\page_request();
 $view     = \Core\view();
 $page     = $request->getPageModel();
-$template = \Core\Templates\Template::Factory($page->get('last_template'));
+$tmplName = $page->get('last_template') ? $page->get('last_template') : $view->templatename;
+if(!$tmplName){
+return true;
+}
+$template = \Core\Templates\Template::Factory($tmplName);
 $areas    = $template->getWidgetAreas();
 if(!sizeof($areas)){
 return true;
@@ -20402,7 +20507,11 @@ $view->templatename === null
 ){
 $view->contenttype = View::CTYPE_JSON;
 }
-if(
+if($view->mode == View::MODE_NOOUTPUT){
+$view->mastertemplate = false;
+$view->templatename = null;
+}
+elseif(
 $view->error == View::ERROR_NOERROR &&
 $view->contenttype == View::CTYPE_HTML &&
 $view->templatename === null

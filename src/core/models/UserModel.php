@@ -80,6 +80,14 @@ class UserModel extends Model {
 				'basedir' => 'public/user/avatar',
 			],
 		],
+		'gpgauth_pubkey' => [
+			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 40,
+		],
+		'external_profiles' => [
+			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
+		],
 		'registration_ip'      => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => '24',
@@ -806,21 +814,6 @@ class UserModel extends Model {
 		} // foreach(elements)
 	}
 
-	public function save($defer = false) {
-		// Every usermodel needs to have an apikey set prior to saving.
-		if(!$this->_data['apikey']) {
-			$this->generateNewApiKey();
-		}
-
-		// The parent save system will handle all child objects and everything.
-		$status = parent::save($defer);
-
-		// Fire off the hook!
-		HookHandler::DispatchHook('/user/postsave', $this);
-
-		return $status;
-	}
-
 	/**
 	 * Generate a new secure API key for this user.
 	 *
@@ -1427,10 +1420,9 @@ class UserModel extends Model {
 					$new_profiles = $val;
 
 					// Pull the current profiles from the account
-					$profiles = $user->get('json:profiles');
-					if($profiles) {
+					$profiles = $user->get('external_profiles');
+					if($profiles && is_array($profiles)) {
 						$current_flat = [];
-						$profiles     = json_decode($profiles, true);
 						foreach($profiles as $current_profile) {
 							$current_flat[] = $current_profile['url'];
 						}
@@ -1449,8 +1441,7 @@ class UserModel extends Model {
 						unset($new_profiles);
 					}
 
-					// Convert this to a JSON array and remap the field.
-					$user->set('json:profiles', json_encode($profiles));
+					$user->set('external_profiles', $profiles);
 				}
 				elseif($key == 'backend'){
 					// Was a backend requested?

@@ -62,14 +62,14 @@ class RepoXML extends XMLLoader {
 		$node    = $package->getPackageDOM();
 
 		// The type, this determines where it'll go.
-		if($package->getName() == 'core'){
-			// Yeah I know the plural of core is technically cores....
-			// <core> sounds better; consider it as "data"!
+		if($package->getType() == 'theme'){
+			$type = 'themes';
+		}
+		elseif($package->getName() == 'core' || $package->getKeyName() == 'core'){
 			$type = 'core';
 		}
 		else{
-			// . s because the repo contains many of "$type" directives.
-			$type = $package->getType() . 's';
+			$type = 'components';
 		}
 
 		$newnode = $this->getDOM()->importNode($node, true);

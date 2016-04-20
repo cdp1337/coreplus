@@ -49,7 +49,7 @@
 			<td>
 				<a href="#" class="icon-change-link">
 					<span class="icon-none">
-						Set Icon
+						Pick Icon
 					</span>
 					<span class="icon-set" style="display:none;">
 						<span class="icon-current"></span>

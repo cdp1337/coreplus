@@ -597,6 +597,16 @@ class Core implements ISingleton {
 				$h->description = 'Automatic hook for control links on the ' . $class . ' object.  Attach onto this hook if you want to add a custom link anytime this object\'s control is displayed.';
 			}
 		}
+		
+		$licenser = $c->getLicenseData();
+		if($licenser && defined('SERVER_ID') && class_exists('\\Core\\Licenser')){
+			// This will contain a url key and the features.
+			$url  = $licenser['url'];
+			$comp = $c->getKeyName();
+			foreach($licenser['features'] as $key){
+				\Core\Licenser::RegisterFeature($key, $url, $comp);
+			}
+		}
 
 		// Lastly, mark this component as available!
 		$c->_setReady(true);
@@ -831,21 +841,7 @@ class Core implements ISingleton {
 	 * @return array|string
 	 */
 	public static function GetStandardHTTPHeaders($forcurl = false, $autoclose = false) {
-		$headers = array(
-			'User-Agent: Core Plus ' . self::GetComponent()->getVersion() . ' (http://corepl.us)',
-			'Referer: ' . SERVERNAME,
-		);
-
-		if ($autoclose) {
-			$headers[] = 'Connection: close';
-		}
-		
-		if ($forcurl) {
-			return $headers;
-		}
-		else {
-			return implode("\r\n", $headers);
-		}
+		return \Core\get_standard_http_headers($forcurl, $autoclose);
 	}
 
 	/**
@@ -1463,6 +1459,45 @@ EOD;
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+	
+	
+	public static function _GetLegalFooterContent(){
+		
+		$lic = \Core\Licenser::Get('/core/license');
+		$licurl = \Core\Licenser::Get('/core/license_url');
+		$licto = \Core\Licenser::Get('/core/licensed_to');
+		$hide = \Core\Licenser::Get('/core/hide_legal_notice');
+
+		if(!$lic) {
+			$lic = 'AGPLv3';
+			$licurl = 'https://www.gnu.org/licenses/agpl';
+			$hide = 0;
+		}
+		
+		if($hide == '1'){
+			return '';
+		}
+		
+		$licclass = strtolower($lic) . '-tag';
+		
+		if($licto){
+			$lictext = t('STRING_LICENSED_TO_S', $licto);
+			if($lic && $licurl){
+				$lictext .= ' (<a href="' . $licurl . '" target="_blank" class="' . $licclass . '">' . $lic . '</a>)';
+			}
+		}
+		elseif($lic && $licurl){
+			$lictext = t('STRING_LICENSED_UNDER');
+			$lictext .= ' <a href="' . $licurl . '" target="_blank" class="' . $licclass . '">' . $lic . '</a>';
+		}
+		elseif($lic){
+			$lictext = t('STRING_LICENSED_UNDER') . ' ' . $lic;
+		}
+		
+		$poweredBy = t('STRING_POWERED_BY') . ' <a href="http://corepl.us" target="_blank">Secure PHP Framework and CMS, Core Plus</a>';
+		
+		return '<p class="legal-notice">' . $lictext . '&nbsp;&nbsp;' . $poweredBy . '</p>';
+	}
 
 
 	/**
@@ -1476,8 +1511,7 @@ EOD;
 	 * @return bool | int Boolean if $operation is provided, int if omited.
 	 */
 	public static function VersionCompare($version1, $version2, $operation = null) {
-		$version1 = new \Core\VersionString($version1);
-		return $version1->compare($version2, $operation);
+		return \Core\version_compare($version1, $version2, $operation);
 	}
 
 	/**
@@ -1543,8 +1577,7 @@ EOD;
 	 * @return string
 	 */
 	public static function GenerateUUID(){
-		$serverid = defined('SERVER_ID') ? SERVER_ID : 1;
-		return dechex($serverid) . '-' . dechex(microtime(true) * 10000) . '-' . strtolower(Core::RandomHex(4));
+		return \Core\generate_uuid();
 	}
 	
 	public static function GetSupplementalModels($modelname){

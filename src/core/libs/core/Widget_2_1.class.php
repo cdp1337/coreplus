@@ -323,7 +323,14 @@ class Widget_2_1 {
 		$request  = \Core\page_request();
 		$view     = \Core\view();
 		$page     = $request->getPageModel();
-		$template = \Core\Templates\Template::Factory($page->get('last_template'));
+		$tmplName = $page->get('last_template') ? $page->get('last_template') : $view->templatename;
+		
+		if(!$tmplName){
+			// This page has no templates, ergo no widget areas.
+			return true;
+		}
+		
+		$template = \Core\Templates\Template::Factory($tmplName);
 		$areas    = $template->getWidgetAreas();
 
 		if(!sizeof($areas)){
