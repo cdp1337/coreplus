@@ -31,12 +31,7 @@
 			<footer class="page-footer">
 				{include file='includes/site_schema_information.tpl'}
 
-				<p class="legal-notice">
-					{t 'STRING_LICENSED_UNDER'}
-					<a href="https://www.gnu.org/licenses/agpl" target="_blank" title="Licensed Under AGPLv3" class="agplv3-tag">AGPLv3</a>.
-					&nbsp;&nbsp;
-					{t 'STRING_POWERED_BY'} <a href="http://corepl.us" target="_blank">Secure PHP Framework and CMS, Core Plus</a>.
-				</p>
+				{Core::_GetLegalFooterContent()}
 			</footer>
 		</div>
 	</body>

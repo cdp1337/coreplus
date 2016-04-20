@@ -1214,13 +1214,11 @@ header.page-header .listing-schema-information .listing-schema-address-address {
   display: block;
 }
 
-/* line 23, ../../scss/_content.scss */
-pre code {
-  display: block;
-  padding: 0.5em 1em;
-  border: 1px solid;
-}
-
+/*pre code {
+	display: block;
+	padding: 0.5em 1em;
+	border: 1px solid;
+}*/
 /* line 29, ../../scss/_content.scss */
 ul {
   list-style-type: disc;

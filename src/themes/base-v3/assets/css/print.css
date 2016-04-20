@@ -760,44 +760,14 @@ html {
  *****************************************************************************/
 /* line 6, ../scss/_debugging.scss */
 pre.xdebug-var-dump {
-  border-top: 2px solid #FFE5C0;
   padding: 0;
   text-align: left;
-  font-size: 0.8em;
-  background: #dedede;
-  color: #555;
-  margin-bottom: 0;
+  font-size: 0.7em;
+  background: #eceaea;
+  color: #747171;
+  margin: 0;
 }
 
-/*
-pre.xdebug-var-dump .debug-section {
-	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.35);
-	border-color: #EEEEEE -moz-use-text-color;
-	border-radius: 0;
-	border-style: solid none;
-	border-width: 1px 0;
-	box-shadow: 0 0 0.2em 0.1em rgba(0, 0, 0, 0.03);
-	height: auto;
-	margin: 0 0 1em;
-	min-height: 1.2em;
-	padding: 0 0.8em;
-	position: relative;
-}
-pre.xdebug-var-dump .debug-section legend {
-	font-size: 1em;
-	margin:0;
-	padding:0;
-	position: absolute;
-}
-pre.xdebug-var-dump .debug-section:last-child {margin-bottom:0;}
-pre.xdebug-var-dump .debug-section i {color:#bbb;}
-pre.xdebug-var-dump .debug-section.collapsed {
-	height:1.5em;
-	overflow:hidden;
-}
-pre.xdebug-var-dump .debug-section.collapsible i {display:none;}
-pre.xdebug-var-dump .debug-section.collapsed i {display:inline;}
-*/
 /*****************************************************************************
  *****************************************************************************
  **                          CONTROL ELEMENTS                               **
@@ -1467,13 +1437,11 @@ header.page-header .listing-schema-information .listing-schema-address-address {
   display: block;
 }
 
-/* line 23, ../scss/_content.scss */
-pre code {
-  display: block;
-  padding: 0.5em 1em;
-  border: 1px solid;
-}
-
+/*pre code {
+	display: block;
+	padding: 0.5em 1em;
+	border: 1px solid;
+}*/
 /* line 29, ../scss/_content.scss */
 ul {
   list-style-type: disc;
