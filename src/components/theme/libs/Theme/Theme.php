@@ -1107,6 +1107,28 @@ class Theme{
 	}
 
 	/**
+	 * Get all screenshots in this metafile
+	 *
+	 * @return array
+	 */
+	public function getScreenshots(){
+		$s = $this->_xmlloader->getElements('//screenshots/screenshot');
+
+		if(!$s){
+			return [ ];
+		}
+		else{
+
+			$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
+
+			return [
+				'file' => $f,
+				'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
+			];
+		}
+	}
+
+	/**
 	 * Because install, upgrade and remove all are actually the exact same logic for themes.
 	 *
 	 * Returns false if nothing changed, else will return an array containing all changes.
