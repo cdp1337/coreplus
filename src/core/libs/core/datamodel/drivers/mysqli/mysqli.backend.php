@@ -244,7 +244,7 @@ class mysqli_backend implements BackendInterface {
 
 		// Table does exist... I need to do a merge of the data schemas.
 		// Create a temp table to do the operations on.
-		$this->_rawExecute('write', 'CREATE TEMPORARY TABLE _tmptable LIKE ' . $table);
+		$this->_rawExecute('write', 'CREATE TABLE _tmptable LIKE ' . $table);
 		$this->_rawExecute('write', 'INSERT INTO _tmptable SELECT * FROM ' . $table);
 
 		// The old_schema from above will get reloaded after each change.
@@ -423,11 +423,8 @@ class mysqli_backend implements BackendInterface {
 		}
 
 		$this->_rawExecute('write', 'DROP TABLE `' . $table . '`');
-		$this->_rawExecute('write', 'CREATE TABLE `' . $table . '` LIKE _tmptable');
-		$this->_rawExecute('write', 'INSERT INTO `' . $table . '` SELECT * FROM _tmptable');
-
-		// Drop the table so it's ready for the next table.
-		$this->_rawExecute('write', 'DROP TABLE _tmptable');
+		$this->_rawExecute('write', 'RENAME TABLE _tmptable TO `' . $table . '`');
+		
 
 		// Something changed, return true to indicate this.
 		return $changes;
@@ -1120,19 +1117,33 @@ class mysqli_backend implements BackendInterface {
 	/**
 	 * Simple method to return if two schemas are different
 	 * 
-	 * @param Schema $schema1
-	 * @param Schema $schema2
+	 * @param Schema $oldSchema
+	 * @param Schema $newSchema
 	 * 
 	 * @return bool
 	 */
-	private function _schemasDiffer(Schema $schema1, Schema $schema2){
-		if(!\Core\compare_values($schema1->order, $schema2->order)){
-			// The orders are different!
-			\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Column Order Different');
-			return true;
+	private function _schemasDiffer(Schema $oldSchema, Schema $newSchema){
+		// Compare the order of the columns.
+		// This requires more than just A == B ?
+		// because old columns that exist in the database should be ignored if they do not appear in the new schema
+		// AND are at the end of the table.
+		// This is because they get shuffled to the end WITHOUT deleting them.
+		// So if the DB version has `key1`, `key2`, `oldkey1`
+		// and the new has `key1`, `key2`, the order should NOT trigger a different flag since the old keys are at the end.
+		
+		foreach($newSchema->order as $i => $name){
+			if(!isset($oldSchema->order[$i])){
+				// The old schema has fewer keys than the new schema!
+				return true;
+			}
+			if($oldSchema->order[$i] != $name){
+				// The old schema has a different order than the new schema,
+				// eg: column '0' on old is `oldkey1` but the new schema has `key1`.
+				return true;
+			}
 		}
 		
-		if(!\Core\compare_values($schema1->indexes, $schema2->indexes)){
+		if(!\Core\compare_values($oldSchema->indexes, $newSchema->indexes)){
 			\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Indexes Different');
 			return true;
 		}
@@ -1141,10 +1152,15 @@ class mysqli_backend implements BackendInterface {
 		// iterate over each and compare the resolved SQL for altering.
 		// This is because some columns have oddities such as TEXT fields and defaults.
 		
-		foreach($schema1->definitions as $c1){
-			/** @var SchemaColumn $c1 */
+		foreach($newSchema->definitions as $c2){
+			/** @var SchemaColumn $c2 */
 			
-			$c2 = $schema2->getColumn($c1->field);
+			$c1 = $oldSchema->getColumn($c2->field);
+			
+			if($c1 === null){
+				// This column doesn't exist in the old schema, DIFFERENT!
+				return true;
+			}
 			
 			$c1String = $this->_getColumnString($c1);
 			$c2String = $this->_getColumnString($c2);
