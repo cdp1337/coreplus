@@ -77,7 +77,7 @@ class ContentModel extends Model{
 		$k = strtolower($k);
 		switch($k){
 			case 'baseurl':
-				return '/content/view/' . $this->_data['id'];
+				return '/content/view/' . $this->_columns['id']->valueTranslated;
 				break;
 			default:
 				return parent::get($k);
