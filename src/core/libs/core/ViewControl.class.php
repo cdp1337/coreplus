@@ -422,6 +422,12 @@ class ViewControl implements ArrayAccess {
 					break;
 			}
 		}
+		
+		$title = $this->title;
+		if(strpos($title, 't:') === 0){
+			// Translate this title.
+			$title = t(substr($title, 2));
+		}
 
 		$html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
 		if($this->link){
@@ -432,7 +438,7 @@ class ViewControl implements ArrayAccess {
 			$html .= '<i class="icon-' . $this->icon . '"></i> ';
 		}
 
-		$html .= '<span>' . $this->title . '</span>';
+		$html .= '<span>' . $title . '</span>';
 
 		// Close the a tag if it's a link
 		if($this->link){
@@ -468,7 +474,13 @@ class ViewControl implements ArrayAccess {
 			$dat['href'] = $this->link;
 		}
 
-		$dat['title'] = $this->title;
+		$title = $this->title;
+		if(strpos($title, 't:') === 0){
+			// Translate this title.
+			$title = t(substr($title, 2));
+		}
+
+		$dat['title'] = $title;
 		if($this->class) $dat['class'] = $this->class;
 
 		$html = '<a ';
