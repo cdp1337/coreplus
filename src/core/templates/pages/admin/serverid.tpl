@@ -1,9 +1,8 @@
-{if $server_id}
+{if $server_id && strlen($server_id) == 39}
 	<p class="message-info">
 		{t 'MESSAGE_INFO_SERVER_KEY_IS_S' $server_id}
 	</p>
 {else}
-	
 	<p class="message-tutorial">
 		{t 'MESSAGE_TUTORIAL_SERVER_KEY_INSTALL_TO_CONFIG'}
 	</p>
