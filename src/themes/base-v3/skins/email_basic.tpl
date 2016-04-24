@@ -11,12 +11,14 @@
 	<body class="base-v3-emailskin skin-email skin-print{if isset($body_classes) && $body_classes} {$body_classes}{/if}">
 		<div class="outer-wrapper" id="outer-wrapper">
 			<header class="page-header">
+				{assign var='site_logo' value=ConfigHandler::Get('/theme/site_logo')}
+
 				{a href="`$smarty.const.ROOT_URL`" title="`$smarty.const.SITENAME|escape`"}
-				{if $smarty.const.THEME_SITE_LOGO}
-					{img src="`$smarty.const.THEME_SITE_LOGO`" alt="`$smarty.const.SITENAME|escape`" inline="1"}
-				{else}
-					{img src="assets/images/logo.png" alt="`$smarty.const.SITENAME|escape`" inline="1"}
-				{/if}
+					{if $site_logo}
+						{img src="`$site_logo`" alt="`$smarty.const.SITENAME|escape`"}
+					{else}
+						{img src="assets/images/logo.png" alt="`$smarty.const.SITENAME|escape`"}
+					{/if}
 				{/a}
 
 				{include file='includes/site_schema_information.tpl'}

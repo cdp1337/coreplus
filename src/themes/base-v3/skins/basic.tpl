@@ -40,9 +40,11 @@
 
 		<div class="outer-wrapper" id="outer-wrapper">
 			<header class="page-header">
+				{assign var='site_logo' value=ConfigHandler::Get('/theme/site_logo')}
+				
 				{a href="`$smarty.const.ROOT_URL`" title="`$smarty.const.SITENAME|escape`"}
-					{if $smarty.const.THEME_SITE_LOGO}
-						{img src="`$smarty.const.THEME_SITE_LOGO`" alt="`$smarty.const.SITENAME|escape`"}
+					{if $site_logo}
+						{img src="`$site_logo`" alt="`$smarty.const.SITENAME|escape`"}
 					{else}
 						{img src="assets/images/logo.png" alt="`$smarty.const.SITENAME|escape`"}
 					{/if}
