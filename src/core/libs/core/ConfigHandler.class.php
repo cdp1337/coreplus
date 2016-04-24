@@ -188,8 +188,9 @@ class ConfigHandler implements ISingleton {
 			if($config->get('mapto') && !defined($config->get('mapto'))){
 				define($config->get('mapto'), $val);
 			}
-
 		}
+		
+		Core\Utilities\Logger\write_debug('Config data loaded from database');
 	}
 
 	/**
@@ -296,7 +297,7 @@ class ConfigHandler implements ISingleton {
 		// This is a trade-off between standard procedure and convenience.
 		if(
 			$config->get('overrideable') == 1 &&
-			Core::IsComponentAvailable('enterprise') &&
+			Core::IsComponentAvailable('multisite') &&
 			MultiSiteHelper::GetCurrentSiteID()
 		){
 			$siteconfig = MultiSiteConfigModel::Construct($key, MultiSiteHelper::GetCurrentSiteID());
