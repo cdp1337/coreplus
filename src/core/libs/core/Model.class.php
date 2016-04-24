@@ -466,7 +466,7 @@ class Model implements ArrayAccess {
 		if(
 			isset($s['site']) &&
 			$s['site']['type'] == Model::ATT_TYPE_SITE &&
-			Core::IsComponentAvailable('enterprise') &&
+			Core::IsComponentAvailable('multisite') &&
 			MultiSiteHelper::IsEnabled() &&
 			$this->get('site') === null
 		){
@@ -2029,7 +2029,7 @@ class Model implements ArrayAccess {
 
 
 		// Pages have a special extra here.  If it's enterprise/multisite mode, enforce that relationship.
-		if($linkname === 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if($linkname === 'Page' && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			// See if there's a site column on this schema.  If there is, enforce that binding too!
 			$schema = self::GetSchema();
 			if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
@@ -2552,6 +2552,11 @@ class Model implements ArrayAccess {
 		}
 
 		self::$_ModelSupplementals[$classname][] = $class;
+		
+		// Clear the cache so that the next check for this model contains the supplemental data.
+		if(isset(self::$_ModelSchemaCache[$classname])){
+			self::$_ModelSchemaCache[$classname] = null;
+		}
 	}
 
 	public static function GetIndexes() {
@@ -2813,7 +2818,7 @@ class ModelFactory {
 		if(
 			isset($schema['site']) &&
 			$schema['site']['type'] == Model::ATT_TYPE_SITE &&
-			Core::IsComponentAvailable('enterprise') &&
+			Core::IsComponentAvailable('multisite') &&
 			MultiSiteHelper::IsEnabled()
 		){
 			// I want to look it up because if the script actually set the site, then
@@ -2822,9 +2827,13 @@ class ModelFactory {
 			$idexact = false;
 
 			// The primary check will allow a model to be instantiated with the exact primary key string.
-			if(isset($index['primary'])){
+			$pri = isset($index['primary']) ? $index['primary'] : null;
+			
+			if($pri && !is_array($pri)) $pri = [$pri];
+			
+			if($pri){
 				$allids = true;
-				foreach($index['primary'] as $k){
+				foreach($pri as $k){
 					if(sizeof($this->_dataset->getWhereClause()->findByField($k)) == 0){
 						$allids = false;
 						break;
@@ -2834,7 +2843,7 @@ class ModelFactory {
 			}
 
 			if(!($siteexact || $idexact)){
-				$w = new DatasetWhereClause();
+				$w = new \Core\Datamodel\DatasetWhereClause();
 				$w->setSeparator('or');
 				$w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
 				$w->addWhere('site = -1');
