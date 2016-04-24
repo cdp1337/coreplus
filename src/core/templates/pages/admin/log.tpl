@@ -24,7 +24,7 @@
 			{/if}
 			{$entry.code}
 		</td>
-		<td>{date date="`$entry.datetime`"}</td>
+		<td>{date $entry.datetime format='SDT'}</td>
 		<td>
 			{geoiplookup $entry.ip_addr}<br/>
 			{$entry.ip_addr}
