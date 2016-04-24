@@ -21,6 +21,6 @@
 <ul>
 	<li>New Key: {$key}</li>
 	<li>IP: {$smarty.const.REMOTE_IP}</li>
-	<li>City: </li>
-	<li>State: </li>
+	<li>City: {$smarty.const.REMOTE_CITY}</li>
+	<li>State: {$smarty.const.REMOTE_PROVINCE}</li>
 </ul>
