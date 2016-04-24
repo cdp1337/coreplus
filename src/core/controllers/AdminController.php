@@ -268,7 +268,7 @@ class AdminController extends Controller_2_1 {
 
 		$where = array();
 		// If the enterprise component is installed and multisite is enabled, configurations have another layer of complexity.
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::GetCurrentSiteID()){
 			$where['overrideable'] = '1';
 		}
 
@@ -682,7 +682,7 @@ class AdminController extends Controller_2_1 {
 		);
 
 		// Add in all the columns for this listing table.
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
 			$table->addColumn('Site', 'site', false);
 			$ms = true;
 		}
@@ -1201,10 +1201,12 @@ class AdminController extends Controller_2_1 {
 			'/core/email/enable_sending',
 			'/core/email/from',
 			'/core/email/from_name',
-			'/core/email/mailer',
 			'/core/email/sandbox_to',
+			'/core/email/mailer',
 			'/core/email/sendmail_path',
+			'/core/email/smtp_auth',
 			'/core/email/smtp_host',
+			'/core/email/smtp_domain',
 			'/core/email/smtp_user',
 			'/core/email/smtp_password',
 			'/core/email/smtp_port',
@@ -1373,7 +1375,7 @@ class AdminController extends Controller_2_1 {
 			}
 
 			// This is required because enterprise multisite mode has a different location for site configs.
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::GetCurrentSiteID()){
 				$siteconfig = MultiSiteConfigModel::Construct($c->get('key'), MultiSiteHelper::GetCurrentSiteID());
 				$siteconfig->setValue($val);
 				if($siteconfig->save()) ++$updatedcount;

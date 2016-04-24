@@ -38,6 +38,90 @@
 {script location="foot"}<script>
 	$(function(){
 		$('#tabs-group').tabs();
+		
+		// Hide options based on what's selected.
+		var $mailer        = $('#formselectinput-config-core-email-mailer'),
+			$smtpAuth      = $('#formselectinput-config-core-email-smtpauth'),
+			$smtpSecurity  = $('#formselectinput-config-core-email-smtpsecurity'),
+			$smtpPort      = $('#formtextinput-config-core-email-smtpport'),
+			$sendmails     = $('.formtextinput-config-core-email-sendmailpath'),
+			$smtpDomain    = $('.formtextinput-config-core-email-smtpdomain'),
+			$smtpAuthOther = $(
+				'.formtextinput-config-core-email-smtpuser,' +
+				'.formtextinput-config-core-email-smtppassword'
+			),
+			$smtps =  $(
+				'.formselectinput-config-core-email-smtpauth,' + 
+				'.formtextinput-config-core-email-smtphost,' + 
+				'.formtextinput-config-core-email-smtpdomain,' +
+				'.formtextinput-config-core-email-smtpuser,' +
+				'.formtextinput-config-core-email-smtppassword,' +
+				'.formtextinput-config-core-email-smtpport,' +
+				'.formselectinput-config-core-email-smtpsecurity'
+			);
+		
+		$mailer.change(function() {
+			var v = $(this).val();
+			if(v == 'mail'){
+				$sendmails.hide();
+				$smtps.hide();
+				$smtpAuth.val('NONE');
+			}
+			else if(v == 'smtp'){
+				$sendmails.hide();
+				$smtps.show();
+				
+				$smtpAuth.change();
+			}
+			else if(v == 'sendmail'){
+				$sendmails.show();
+				$smtps.hide();
+				$smtpAuth.val('NONE');
+			}
+		}).change();
+
+		$smtpAuth.change(function() {
+			var v = $(this).val();
+			
+			if(v == 'NTLM'){
+				$smtpDomain.show();
+				$smtpAuthOther.show();
+				
+				if($smtpSecurity.val() == 'tls'){
+					$smtpPort.val(25);
+				}
+			}
+			else if(v == 'NONE'){
+				$smtpDomain.hide();
+				$smtpAuthOther.hide();
+			}
+			else{
+				$smtpDomain.hide();
+				$smtpAuthOther.show();
+			}
+		}).change();
+
+		$smtpSecurity.change(function() {
+			var v = $(this).val();
+			if(v == 'none'){
+				$smtpPort.val(25);
+			}
+			else if(v == 'ssl'){
+				$smtpPort.val(465);
+			}
+			else if(v == 'tls' && $smtpAuth.val() == 'NTLM'){
+				// Exchange uses TLS on the same port as NONE.
+				$smtpPort.val(25);
+			}
+			else if(v == 'tls'){
+				$smtpPort.val(587);
+			}
+		});
+		
+		if($smtpPort.val() == ''){
+			// Set something by default!
+			$smtpSecurity.change();
+		}
 	});
 </script>{/script}
 
