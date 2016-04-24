@@ -98,12 +98,30 @@ class Email {
 			if ($this->_mailer->Mailer == 'smtp') {
 				$this->_mailer->Host       = ConfigHandler::Get('/core/email/smtp_host');
 				$this->_mailer->Port       = ConfigHandler::Get('/core/email/smtp_port');
-				$this->_mailer->Username   = ConfigHandler::Get('/core/email/smtp_user');
-				$this->_mailer->Password   = ConfigHandler::Get('/core/email/smtp_password');
+				
+				switch(ConfigHandler::Get('/core/email/smtp_auth')){
+					case 'LOGIN':
+					case 'PLAIN':
+						$this->_mailer->AuthType = ConfigHandler::Get('/core/email/smtp_auth'); 
+						$this->_mailer->Username = ConfigHandler::Get('/core/email/smtp_user');
+						$this->_mailer->Password = ConfigHandler::Get('/core/email/smtp_password');
+						$this->_mailer->SMTPAuth = true;
+						break;
+					case 'NTLM':
+						$this->_mailer->AuthType = ConfigHandler::Get('/core/email/smtp_auth');
+						$this->_mailer->Username = ConfigHandler::Get('/core/email/smtp_user');
+						$this->_mailer->Password = ConfigHandler::Get('/core/email/smtp_password');
+						$this->_mailer->Realm    = ConfigHandler::Get('/core/email/smtp_domain');
+						$this->_mailer->SMTPAuth = true;
+						break;
+					case 'NONE':
+						$this->_mailer->SMTPAuth = false;
+						break;
+				}
+				
 				$this->_mailer->SMTPSecure =
 					(ConfigHandler::Get('/core/email/smtp_security') == 'none') ?
 					'' : ConfigHandler::Get('/core/email/smtp_security');
-				if ($this->_mailer->Username != '') $this->_mailer->SMTPAuth = true;
 			}
 
 			// Tack on some anti-abuse and meta headers.
@@ -119,9 +137,6 @@ class Email {
 			$this->_mailer->AddCustomHeader('MimeOLE: Core Plus');
 			$this->_mailer->AddCustomHeader('X-Content-Encoded-By: Core Plus ' . Core::GetComponent()->getVersion());
 			$this->_mailer->XMailer = 'Core Plus ' . Core::GetComponent()->getVersion() . ' (http://corepl.us)';
-
-			// Default to set the formatting to HTML.
-			//$this->_mailer->isHTML(true);
 		}
 
 		return $this->_mailer;

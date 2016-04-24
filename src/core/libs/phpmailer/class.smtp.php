@@ -363,7 +363,7 @@ class SMTP {
          ** How to telnet in windows: http://technet.microsoft.com/en-us/library/aa995718%28EXCHG.65%29.aspx
          ** PROTOCOL Documentation http://curl.haxx.se/rfc/ntlm.html#ntlmSmtpAuthentication
          */
-        require_once('ntlm_sasl_client.php');
+        require_once(ROOT_PDIR . 'core/libs/phpmailer/extras/ntlm_sasl_client.php');
         $temp = new stdClass();
         $ntlm_client = new ntlm_sasl_client_class;
         if(! $ntlm_client->Initialize($temp)){//let's test if every function its available

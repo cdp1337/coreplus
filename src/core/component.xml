@@ -1751,6 +1751,8 @@
 		<config key="/core/email/smtp_host" type="string" default=""/>
 		<config key="/core/email/smtp_security" type="enum" options="none|ssl|tls" default="none"/>
 		<config key="/core/email/smtp_port" type="string" default=""/>
+		<config key="/core/email/smtp_auth" type="enum" default="LOGIN" options="NONE|LOGIN|PLAIN|NTLM"/>
+		<config key="/core/email/smtp_domain" type="string" default=""/>
 		<config key="/core/email/smtp_user" type="string" default=""/>
 		<config key="/core/email/smtp_password" type="string" default=""/>
 		<config key="/core/email/verify_with_dns" type="boolean" default="0"/>
