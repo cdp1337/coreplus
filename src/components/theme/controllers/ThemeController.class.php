@@ -22,7 +22,14 @@ class ThemeController extends Controller_2_1{
 
 		$themes = ThemeHandler::GetAllThemes();
 		$current = ThemeHandler::GetTheme($selected);
-
+		// Set to true if multisite is enabled AND the page is currently on a child site.
+		$multisite = Core::IsLibraryAvailable('multisite') && MultiSiteHelper::IsEnabled() && MultiSiteHelper::GetCurrentSiteID() != 0;
+		$configDefault  = ConfigHandler::GetConfig('/theme/default_template');
+		$configSelected = ConfigHandler::GetConfig('/theme/selected');
+		$configEmailDefault  = ConfigHandler::GetConfig('/theme/default_email_template');
+		// Only allow changing the theme if it's on the root site OR both config options are overrideable.
+		$themeSelectionEnabled = (!$multisite || ($configDefault->get('overrideable') && $configSelected->get('overrideable')));
+		$emailSelectionEnabled = (!$multisite || $configEmailDefault->get('overrideable'));
 
 		$configOptions = $current->getConfigs();
 		if(!sizeof($configOptions)){
@@ -33,9 +40,30 @@ class ThemeController extends Controller_2_1{
 			$optionForm->set('callsmethod', 'AdminController::_ConfigSubmit');
 			foreach($configOptions as $c){
 				/** @var $c ConfigModel */
-				$optionForm->addElement($c->getAsFormElement());
+				
+				if($multisite){
+					// Only pull the config options that are enabled for this specific site.
+					if($c->get('overrideable')){
+						$optionForm->addElement($c->getAsFormElement());
+					}
+				}
+				else{
+					// Sites that either
+					// do NOT have multisite installed
+					// nor have multisite enabled
+					// or on the root site, get all options.
+					$optionForm->addElement($c->getAsFormElement());
+				}
 			}
-			$optionForm->addElement('submit', ['value' => 'Save Configurable Options']);
+			
+			if(sizeof($optionForm->getElements()) > 0){
+				// There is at least one element in the option forms!
+				$optionForm->addElement('submit', ['value' => 'Save Configurable Options']);
+			}
+			else{
+				// Reset the form back to null so that the section doesn't display.
+				$optionForm = null;
+			}
 		}
 
 		// The source objects to look for assets in.
@@ -262,6 +290,9 @@ class ThemeController extends Controller_2_1{
 		$view->assign('site_skins_form', $siteskinform);
 		$view->assign('cssform', $cssform);
 		$view->assign('cssprintform', $cssprintform);
+		$view->assign('multisite', $multisite);
+		$view->assign('theme_selection_enabled', $themeSelectionEnabled);
+		$view->assign('email_selection_enabled', $emailSelectionEnabled);
 	}
 
 	/**
@@ -439,7 +470,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::GetCurrentSiteID()){
 			$config_default  = ConfigHandler::GetConfig('/theme/default_template');
 			$config_selected = ConfigHandler::GetConfig('/theme/selected');
 
@@ -509,7 +540,7 @@ class ThemeController extends Controller_2_1{
 			\Core\go_back();
 		}
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::GetCurrentSiteID()){
 			$config_default  = ConfigHandler::GetConfig('/theme/default_admin_template');
 
 			if($config_default->get('overrideable') == 0){
@@ -559,7 +590,7 @@ class ThemeController extends Controller_2_1{
 			\Core\go_back();
 		}
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::GetCurrentSiteID()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::GetCurrentSiteID()){
 			$config_default  = ConfigHandler::GetConfig('/theme/default_email_template');
 
 			if($config_default->get('overrideable') == 0){
