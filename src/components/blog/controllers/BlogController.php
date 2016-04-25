@@ -530,7 +530,7 @@ class BlogController extends Controller_2_1 {
 
 		// Get the latest published article's update date.  This will be used for the blog updated timestamp.
 		// (This doesn't have a whole lot of benefit above the ModelFactory, simply illustrating a different way to query data).
-		$latest = Dataset::Init()
+		$latest = \Core\Datamodel\Dataset::Init()
 			->select('*')
 			->table('page')
 			->where('parenturl = ' . $blog->get('baseurl'))
