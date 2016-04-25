@@ -182,33 +182,30 @@ class UserAuth implements AuthDriverInterface {
 
 		if(!$user->exists()){
 			// Some config options for new accounts only.
-			if($user->getConfigObject('json:profiles')){
-				// This is a field from the user-social component.
-				// Link facebook just because!
-				$user->set(
-					'json:profiles', json_encode(
-						[
-							[
-								'type' => 'facebook',
-								'url' => $user_profile['link'],
-								'title' => 'Facebook Profile',
-							]
-						]
-					)
-				);
+			
+			$profiles = $user->get('external_profiles');
+			if(!is_array($profiles)){
+				$profiles = [];
 			}
+			
+			$profiles[] = [
+				[
+					'type' => 'facebook',
+					'url' => $user_profile['link'],
+					'title' => 'Facebook Profile',
+				]
+			];
+			$user->set('external_profiles', $profiles);
 
-			if($user->getConfigObject('username')){
-				// Another component from the user-social component.
-				// This needs to be unique, so do a little fudging if necessary.
-				try{
-					$user->set('username', $user_profile['username']);
-				}
-				catch(\ModelValidationException $e){
-					$user->set('username', $user_profile['username'] . '-' . \Core\random_hex(3));
-				}
+			// Another component from the user-social component.
+			// This needs to be unique, so do a little fudging if necessary.
+			try{
+				$user->set('username', $user_profile['username']);
 			}
-
+			catch(\ModelValidationException $e){
+				$user->set('username', $user_profile['username'] . '-' . \Core\random_hex(3));
+			}
+			
 			// Sync the user avatar.
 			$f = new \Core\Filestore\Backends\FileRemote('http://graph.facebook.com/' . $user_profile['id'] . '/picture?type=large');
 			$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
@@ -217,26 +214,11 @@ class UserAuth implements AuthDriverInterface {
 		}
 
 		// Get all user configs and load in anything possible.
-		foreach($user->getConfigs() as $k => $v){
-			// Facebook can import several configs...
-			switch($k){
-				case 'first_name':
-				case 'last_name':
-					$user->set($k, $user_profile[$k]);
-					break;
-				case 'gender':
-					$user->set($k, ucwords($user_profile[$k]));
-					break;
-				case 'facebook_id':
-					$user->set($k, $user_profile['id']);
-					break;
-				case 'facebook_link':
-					$user->set($k, $user_profile['link']);
-					break;
-				case 'facebook_access_token':
-					$user->set($k, $facebook->getAccessToken());
-					break;
-			}
-		}
+		$user->set('first_name', $user_profile['first_name']);
+		$user->set('last_name', $user_profile['last_name']);
+		$user->set('gender', ucwords($user_profile['gender']));
+		$user->set('facebook_id', $user_profile['id']);
+		$user->set('facebook_link', $user_profile['link']);
+		$user->set('facebook_access_token', $facebook->getAccessToken());
 	}
 }
