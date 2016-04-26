@@ -145,15 +145,21 @@ class SystemLogModel extends Model {
 
 	public function save($defer = false){
 
-		$isnew = !$this->exists();
-
-		$ret = parent::save($defer);
-
-		// No change happened, nothing extra to do.
-		if(!$ret) return $ret;
-
-		// Wasn't a previously new model?  Also nothing to do beyond.
-		if(!$isnew) return $ret;
+		if(Core::IsComponentAvailable('core')){
+			$isnew = !$this->exists();
+	
+			$ret = parent::save($defer);
+	
+			// No change happened, nothing extra to do.
+			if(!$ret){
+				return $ret;
+			}
+	
+			// Wasn't a previously new model?  Also nothing to do beyond.
+			if(!$isnew){
+				return $ret;
+			}
+		}
 
 		// @todo email message function
 
