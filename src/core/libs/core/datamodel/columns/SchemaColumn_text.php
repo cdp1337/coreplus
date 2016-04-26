@@ -15,6 +15,7 @@ class SchemaColumn_text extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_TEXT;
 		$this->encoding = \Model::ATT_ENCODING_UTF8;
 		$this->default = '';
+		$this->formAttributes['type'] = 'textarea';
 	}
 
 	/**

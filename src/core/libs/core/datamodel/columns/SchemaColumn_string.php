@@ -16,6 +16,7 @@ class SchemaColumn_string extends SchemaColumn {
 		$this->maxlength = 255;
 		$this->encoding = \Model::ATT_ENCODING_UTF8;
 		$this->default = '';
+		$this->formAttributes['type'] = 'text';
 	}
 
 	/**

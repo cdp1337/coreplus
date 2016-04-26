@@ -14,6 +14,8 @@ class SchemaColumn_ISO_8601_date extends SchemaColumn {
 		// Defaults
 		$this->type = \Model::ATT_TYPE_ISO_8601_DATE;
 		$this->default = '0000-00-00';
+		$this->formAttributes['datepicker_dateformat'] = 'yy-mm-dd';
+		$this->formAttributes['type'] = 'date';
 	}
 
 	/**

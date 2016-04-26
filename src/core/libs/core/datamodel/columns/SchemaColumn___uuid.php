@@ -15,6 +15,7 @@ class SchemaColumn___uuid extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_UUID;
 		$this->maxlength = 32;
 		$this->encoding = \Model::ATT_ENCODING_UTF8;
+		$this->formAttributes['type']     = 'system';
 	}
 
 	/**

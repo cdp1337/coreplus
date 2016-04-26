@@ -15,5 +15,6 @@ class SchemaColumn___deleted extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_DELETED;
 		$this->maxlength = 15;
 		$this->default = 0;
+		$this->formAttributes['type'] = 'disabled';
 	}
 }

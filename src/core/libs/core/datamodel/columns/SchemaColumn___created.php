@@ -16,6 +16,7 @@ class SchemaColumn___created extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_CREATED;
 		$this->maxlength = 15;
 		$this->default = 0;
+		$this->formAttributes['type'] = 'disabled';
 	}
 
 	/**

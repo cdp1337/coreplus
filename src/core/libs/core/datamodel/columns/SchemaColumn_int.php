@@ -15,5 +15,29 @@ class SchemaColumn_int extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_INT;
 		$this->maxlength = 15;
 		$this->default = 0;
+		$this->formAttributes['type'] = 'text';
+	}
+
+	/**
+	 * Get an array of the form element attributes for this column.
+	 *
+	 * @return array
+	 */
+	public function getFormElementAttributes(){
+		if($this->formAttributes['type'] == 'datetime'){
+			$defaults = [ 
+				'datetimepicker_dateformat' => 'yy-mm-dd',
+				'datetimepicker_timeformat' => 'HH:mm',
+				'displayformat' => 'Y-m-d H:i',
+				'saveformat' => 'U',
+			];
+		}
+		else{
+			$defaults = [];
+		}
+		
+		$na = parent::getFormElementAttributes();
+		
+		return array_merge($defaults, $na);
 	}
 }

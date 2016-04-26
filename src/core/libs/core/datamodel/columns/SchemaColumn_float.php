@@ -14,6 +14,7 @@ class SchemaColumn_float extends SchemaColumn {
 		// Defaults
 		$this->type = \Model::ATT_TYPE_FLOAT;
 		$this->default = 0.0;
+		$this->formAttributes['type'] = 'text';
 	}
 
 	/**

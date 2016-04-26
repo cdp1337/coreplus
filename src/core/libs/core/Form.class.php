@@ -679,8 +679,17 @@ class FormElement {
 	 */
 	public function getClass() {
 		$classes = array_merge($this->classnames, explode(' ', $this->get('class')));
-		if($this->get('required')) $classes[] = 'formrequired';
-		if($this->hasError()) $classes[] = 'formerror';
+		
+		// Tack on some system classes 
+		if($this->get('required')){
+			$classes[] = 'formrequired';
+		}
+		if($this->hasError()){
+			$classes[] = 'formerror';
+		}
+		if($this->get('disabled')){
+			$classes[] = 'formelement-disabled';
+		}
 
 		return implode(' ', array_unique($classes));
 	}
@@ -1221,215 +1230,31 @@ class Form extends FormGroup {
 	public function addModel(Model $model, $prefix = 'model'){
 
 		// Is this model already attached?
-		if(isset($this->_models[$prefix])) return;
-
-		// Adding support for grouped items directly from the model :)
-		// This will contain the links to the group names if there are any grouped elements.
-		// Will make lookups quicker.
-		$groups = array();
+		if(isset($this->_models[$prefix])){
+			return;
+		}
 
 		$this->_models[$prefix] = $model;
 
-		// Add the initial model tracker, will remember which model is attached.
-		//$this->set('___' . $prefix . 'name', get_class($model));
 		$s = $model->getKeySchemas();
 		$i = $model->GetIndexes();
-		if (!isset($i['primary'])) $i['primary'] = array();
-		$i18nKey = '_MODEL_' . strtoupper(get_class($model)) . '_';
-
-		$new = $model->isnew();
-
-		//if (!$new) {
-		//	// Save the PKs of this model in the SESSION data so they don't have to be sent to the browser.
-		//	$pks = array();
-		//	foreach ($i['primary'] as $k => $v) {
-		//		$pks[$v] = $model->get($v);
-		//	}
-		//	$this->set('___' . $prefix . 'pks', $pks);
-		//}
+		if (!isset($i['primary'])){
+			$i['primary'] = array();
+		}
 
 		foreach ($s as $k => $v) {
-			/*
-			// Skip the AI column if it doesn't exist.
-			if ($new && $v['type'] == Model::ATT_TYPE_ID) continue;
+			$el = $model->getColumn($k)->getAsFormElement();
+			if($el !== null){
+				// Update the name as it will need to be prefixed with this model's prefix.
+				$el->set('name', $prefix . '[' . $k . ']');
 
-			// Skip the UUID column if it doesn't exist too.
-			if($new && $v['type'] == Model::ATT_TYPE_UUID) continue;
-
-			// These are already taken care above in the SESSION data.
-			if (!$new && in_array($k, $i['primary'])) continue;
-			*/
-
-			// NEW i18n support for Models!
-			$title       = t('STRING' . $i18nKey . strtoupper($k));
-			$description = t('MESSAGE' . $i18nKey . strtoupper($k));
-
-			if(!$title && isset($dat['formtitle'])){
-				// Allow pulling from inline to support legacy models.
-				$title = $dat['formtitle'];
+				// I need to give the model a chance to act on this new element too.
+				// Sometimes models may have a few special things to update on the element.
+				// $model->setFromForm($this, $prefix);
+				$model->setToFormElement($k, $el);
+				
+				$this->addElement($el);	
 			}
-
-			if(!$description && isset($dat['formdescription'])){
-				// Allow pulling from inline to support legacy models.
-				$description = $dat['formdescription'];
-			}
-
-			// Base required keys for all form elements.
-			// These get mapped by the necessary fields.
-			$formatts = array(
-				'type' => null,
-				'title' => $title,
-				'description' => $description,
-				'required' => false,
-				'value' => $model->get($k),
-				'name' => $prefix . '[' . $k . ']',
-			);
-
-			// Default options, these are set by the conditional switch below, and are only set if the $formatts do not contain them.
-			$defaults = [];
-
-			if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
-
-			// Default values from the standard (outside the form set), attributes.
-			if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
-			if(isset($v['required']))        $formatts['required'] = $v['required'];
-			if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
-
-			// Merge the defaults with the form array if it's present.
-			// This is the most precise method for setting form attributes, and is therefore authoritative above the generic ones.
-			if(isset($v['form'])){
-				$formatts = array_merge($formatts, $v['form']);
-			}
-
-
-
-			//// IDs, FOREIGN IDs, UUIDs, ETC
-
-			if($formatts['type'] == 'disabled'){
-				// "disabled" form types are ignored completely.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_ID){
-				$el = FormElement::Factory('system');
-				// These are handled automatically.
-				$formatts['required'] = false;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_ID_FK){
-				$el = FormElement::Factory('system');
-				// These are handled automatically.
-				$formatts['required'] = false;
-			}
-			elseif($v['type'] == Model::ATT_TYPE_UUID){
-				$el = FormElement::Factory('system');
-				// These are handled automatically.
-				$formatts['required'] = false;
-			}
-			elseif($v['type'] == Model::ATT_TYPE_UUID_FK && $formatts['type'] === null){
-				// Allow foreign keys to be represented as other form types if there is a form type set!
-				$el = FormElement::Factory('system');
-				// These are handled automatically.
-				$formatts['required'] = false;
-			}
-
-			//// FORM TYPE ATTRIBUTES
-
-			elseif($formatts['type'] == 'datetime' && $v['type'] == Model::ATT_TYPE_INT){
-				$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
-				$defaults['datetimepicker_timeformat'] = 'HH:mm';
-				$defaults['displayformat'] = 'Y-m-d H:i';
-				$defaults['saveformat'] = 'U';
-				$el = FormElement::Factory('datetime');
-			}
-			elseif ($formatts['type'] !== null) {
-				$el = FormElement::Factory($formatts['type']);
-			}
-
-			// MODEL TYPE ATTRIBUTES ONLY
-
-			elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
-				$el = FormElement::Factory('radio');
-				$el->set('options', ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')]);
-
-				if ($formatts['value']) $formatts['value'] = 'yes';
-				elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'yes';
-				elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'no';
-				else $formatts['value'] = 'no';
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_SITE) {
-				$el = FormElement::Factory('system');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_STRING) {
-				$el = FormElement::Factory('text');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_INT) {
-				$el = FormElement::Factory('text');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
-				$el = FormElement::Factory('text');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
-				$el = FormElement::Factory('textarea');
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
-				// This element doesn't need to be in the form.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
-				// This element doesn't need to be in the form.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_DELETED) {
-				// This element doesn't need to be in the form.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_ALIAS) {
-				// This element doesn't need to be in the form.
-				continue;
-			}
-			elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
-				$el   = FormElement::Factory('select');
-				$opts = $v['options'];
-				if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
-				$el->set('options', $opts);
-				if ($v['default']) $el->set('value', $v['default']);
-			}
-			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
-				$defaults['datepicker_dateformat'] = 'yy-mm-dd';
-				$el = FormElement::Factory('date');
-			}
-			elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
-				$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
-				$defaults['datetimepicker_timeformat'] = 'HH:mm';
-				$defaults['saveformat'] = 'Y-m-d H:i:00';
-				$el = FormElement::Factory('datetime');
-			}
-			else {
-				die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
-			}
-
-			// I no longer need the type attribute.
-			unset($formatts['type']);
-
-			// Merge in any defaults, (without overriding).
-			foreach($defaults as $k => $v){
-				if(!isset($formatts[$k])) $formatts[$k] = $v;
-			}
-
-			// Add special functionality here to allow passing in "this" as a valid reference for the "source" attribute.
-			// This will allow the instantiated Model object as a whole to be used as a reference when retriving options.
-			if(isset($formatts['source']) && strpos($formatts['source'], 'this::') === 0){
-				$formatts['source'] = [$model, substr($formatts['source'], 6)];
-			}
-
-			// And set everything else.
-			$el->setFromArray($formatts);
-
-			// I need to give the model a chance to act on this new element too.
-			// Sometimes models may have a few special things to update on the element.
-			// $model->setFromForm($this, $prefix);
-			$model->setToFormElement($k, $el);
-
-			$this->addElement($el);
 		}
 
 		// Anything else?
@@ -1591,8 +1416,12 @@ class Form extends FormGroup {
 			$form->getModel();
 
 			// Still good?
-			if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $form);
-			else $status = false;
+			if (!$form->hasError()){
+				$status = call_user_func($form->get('callsmethod'), $form);
+			}
+			else{
+				$status = false;
+			}
 		}
 		catch(ModelValidationException $e){
 			\Core\set_message($e->getMessage(), 'error');

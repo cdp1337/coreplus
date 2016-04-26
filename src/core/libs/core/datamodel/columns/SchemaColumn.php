@@ -120,6 +120,12 @@ class SchemaColumn {
 	 */
 	public $value = null;
 
+	/** @var null|\Model Parent Model this column is attached to, may or may not be set. */
+	public $parent = null;
+	
+	/** @var array Array of form attributes for this column, generally set from the Model's metadata. */
+	public $formAttributes = [];
+
 	/**
 	 * Check to see if this column is datastore identical to another column.
 	 *
@@ -226,44 +232,6 @@ class SchemaColumn {
 	}
 
 	/**
-	 * Set the value from the database for this column
-	 * 
-	 * Handles all translations and conversions as necessary.
-	 * 
-	 * @param mixed $val
-	 */
-	public function setValueFromDB($val){
-		$this->valueDB = $val;
-		$this->value = $val;
-		
-		if($this->encrypted){
-			// Decrypt the value first.
-			$val = \Model::DecryptValue($val);
-		}
-		
-		$this->valueTranslated = $val;
-	}
-
-	/**
-	 * Set the value from the application/userspace for this column
-	 *
-	 * Handles all translations and conversions as necessary.
-	 *
-	 * @param mixed $val
-	 */
-	public function setValueFromApp($val){
-		$this->valueTranslated = $val;
-		
-
-		if($this->encrypted){
-			// Decrypt the value last.
-			$val = \Model::EncryptValue($val);
-		}
-
-		$this->value = $val;
-	}
-
-	/**
 	 * Get the value appropriate for INSERT statements.
 	 * 
 	 * @return string
@@ -279,6 +247,57 @@ class SchemaColumn {
 	 */
 	public function getUpdateValue(){
 		return $this->value;
+	}
+
+	/**
+	 * Get the form element type that is the default for this type of field type.
+	 * 
+	 * @return string
+	 */
+	public function getFormElementType(){
+		return 'text';
+	}
+
+	/**
+	 * Get an array of the form element attributes for this column.
+	 * 
+	 * @return array
+	 */
+	public function getFormElementAttributes(){
+		$i18nKey = '_MODEL_' . strtoupper(get_class($this->parent)) . '_';
+
+		// NEW i18n support for Models!
+		$title       = t('STRING' . $i18nKey . strtoupper($this->field));
+		$description = t('MESSAGE' . $i18nKey . strtoupper($this->field));
+		
+		$na = $this->formAttributes;
+
+		$na['title'] = $title;
+		$na['description'] = $description;
+		$na['value'] = $this->valueTranslated;
+		$na['name'] = $this->field;
+		
+		return $na;
+	}
+
+	/**
+	 * Get this column value as a valid form element.
+	 * 
+	 * @return \FormElement|null
+	 */
+	public function getAsFormElement(){
+		
+		$attributes = $this->getFormElementAttributes();
+		$type = isset($this->formAttributes['type']) ? $this->formAttributes['type'] : 'text';
+		
+		if($type == 'disabled'){
+			// Disabled form elements do not render to anything.
+			return null;
+		}
+		
+		$el = \FormElement::Factory($type, $attributes);
+		
+		return $el;
 	}
 
 	/**
@@ -352,112 +371,59 @@ class SchemaColumn {
 		$this->valueTranslated = $this->default;
 		// Do not set the database value, as at the time of loading, there is nothing in the database!
 		
-		/*
+		// Set any of the form attributes that are defined in the schema, as well as the automatic/default ones.
+		if(isset($schema['form'])){
+			$this->formAttributes = array_merge($this->formAttributes, $schema['form']);
+		}
+		
+		// Allow for some legacy/shortcut fields.
+		if(isset($schema['formtype'])){
+			$this->formAttributes['type'] = $schema['formtype'];
+		}
+		if(!isset($this->formAttributes['required'])){
+			$this->formAttributes['required'] = $this->required;
+		}
+		if(!isset($this->formAttributes['maxlength']) && $this->maxlength){
+			$this->formAttributes['maxlength'] = $this->maxlength;
+		}
+	}
 
-		if($column->type == Model::ATT_TYPE_ID && !$column->maxlength){
-			$column->maxlength = 15;
-			$column->autoinc = true;
+	/**
+	 * Set the value from the database for this column
+	 *
+	 * Handles all translations and conversions as necessary.
+	 *
+	 * @param mixed $val
+	 */
+	public function setValueFromDB($val){
+		$this->valueDB = $val;
+		$this->value = $val;
+
+		if($this->encrypted){
+			// Decrypt the value first.
+			$val = \Model::DecryptValue($val);
 		}
 
-		if($column->type == Model::ATT_TYPE_ID_FK){
-			$column->maxlength = 15;
+		$this->valueTranslated = $val;
+	}
+
+	/**
+	 * Set the value from the application/userspace for this column
+	 *
+	 * Handles all translations and conversions as necessary.
+	 *
+	 * @param mixed $val
+	 */
+	public function setValueFromApp($val){
+		$this->valueTranslated = $val;
+
+
+		if($this->encrypted){
+			// Decrypt the value last.
+			$val = \Model::EncryptValue($val);
 		}
 
-		if($column->type == Model::ATT_TYPE_UUID){
-			// A UUID is in the format of:
-			// siteid-timestamp-randomhex
-			// or [1-3 numbers] - [11-12 hex] - [4 hex]
-			// a total of up to 21 digits.
-			// Support global server UUIDS which contain 32 characters.
-			$column->maxlength = 32;
-			$column->autoinc = false;
-		}
-
-		if($column->type == Model::ATT_TYPE_UUID_FK){
-			// Mimic the UUID column.
-			$column->maxlength = 32;
-		}
-
-		if($column->type == Model::ATT_TYPE_INT && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_CREATED && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_UPDATED && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_DELETED && !$column->maxlength){
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_SITE){
-			$column->default = 0;
-			$column->comment = 'The site id in multisite mode, (or 0 otherwise)';
-			$column->maxlength = 15;
-		}
-
-		if($column->type == Model::ATT_TYPE_ALIAS){
-			$column->aliasof = $def['alias'];
-		}
-
-		if($column->type == Model::ATT_TYPE_ENUM){
-			// This logic is to support model definitions such as
-			// 'foo' => [
-			//          'type' => Model::ATT_TYPE_ENUM,
-			//          'options' => ['key-1' => 'Key One', 'key-2' => 'Key TWO'],
-			// ...
-			if(!\Core\is_numeric_array($def['options'])){
-				$column->options = array_keys($def['options']);
-			}
-			else{
-				$column->options = $def['options'];
-			}
-		}
-
-		// Is default not set?  Some columns would really like this to be!
-		if($column->default === false){
-			if($column->null){
-				$column->default = null;
-			}
-			else{
-				switch($column->type){
-					case Model::ATT_TYPE_INT:
-					case Model::ATT_TYPE_BOOL:
-					case Model::ATT_TYPE_CREATED:
-					case Model::ATT_TYPE_UPDATED:
-					case Model::ATT_TYPE_DELETED:
-					case Model::ATT_TYPE_FLOAT:
-						$column->default = 0;
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATE:
-						$column->default = '0000-00-00';
-						break;
-					case Model::ATT_TYPE_ISO_8601_DATETIME:
-						$column->default = '0000-00-00 00:00:00';
-						break;
-					default:
-						$column->default = '';
-				}
-			}
-		}
-
-		// Handle the default encoding for strings.
-		switch($column->type){
-			case Model::ATT_TYPE_BOOL:
-			case Model::ATT_TYPE_ENUM:
-			case Model::ATT_TYPE_STRING:
-			case Model::ATT_TYPE_TEXT:
-			case Model::ATT_TYPE_UUID:
-			case Model::ATT_TYPE_UUID_FK:
-				$column->encoding = 'utf8';
-				break;
-		}
-
-		return $column;*/
+		$this->value = $val;
 	}
 
 	/**

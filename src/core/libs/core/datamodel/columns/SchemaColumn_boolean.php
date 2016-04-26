@@ -15,6 +15,7 @@ class SchemaColumn_boolean extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_BOOL;
 		$this->encoding = \Model::ATT_ENCODING_UTF8;
 		$this->default = '0';
+		$this->formAttributes['type'] = 'radio';
 	}
 
 	/**
@@ -59,5 +60,18 @@ class SchemaColumn_boolean extends SchemaColumn {
 		$this->valueTranslated = $val;
 
 		$this->value = $val ? '1' : '0';
+	}
+
+	/**
+	 * Get an array of the form element attributes for this column.
+	 *
+	 * @return array
+	 */
+	public function getFormElementAttributes(){
+		$na = parent::getFormElementAttributes();
+
+		$na['options'] = ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')];
+
+		return $na;
 	}
 }

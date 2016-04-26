@@ -12,9 +12,10 @@ namespace Core\Datamodel\Columns;
 class SchemaColumn___uuid_fk extends SchemaColumn {
 	public function __construct(){
 		// Defaults
-		$this->type = \Model::ATT_TYPE_UUID_FK;
-		$this->maxlength = 32;
-		$this->encoding = \Model::ATT_ENCODING_UTF8;
+		$this->type                       = \Model::ATT_TYPE_UUID_FK;
+		$this->maxlength                  = 32;
+		$this->encoding                   = \Model::ATT_ENCODING_UTF8;
+		$this->formAttributes['type']     = 'system';
 	}
 
 	/**

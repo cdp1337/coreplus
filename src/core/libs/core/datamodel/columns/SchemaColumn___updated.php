@@ -16,6 +16,7 @@ class SchemaColumn___updated extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_UPDATED;
 		$this->maxlength = 15;
 		$this->default = 0;
+		$this->formAttributes['type'] = 'disabled';
 	}
 
 	/**

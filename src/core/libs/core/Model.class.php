@@ -361,6 +361,7 @@ class Model implements ArrayAccess {
 			else{
 				$this->_columns[$k] = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($sdat);
 				$this->_columns[$k]->field = $k;
+				$this->_columns[$k]->parent = $this;
 			}
 			
 			if(isset($sdat['link'])){
@@ -763,6 +764,17 @@ class Model implements ArrayAccess {
 		else {
 			return null;
 		}
+	}
+
+	/**
+	 * Get the column schema for a given key, or null if it doesn't exist.
+	 * 
+	 * @param string $key
+	 * 
+	 * @return \Core\Datamodel\Columns\SchemaColumn|null
+	 */
+	public function getColumn($key){
+		return isset($this->_columns[$key]) ? $this->_columns[$key] : null;
 	}
 
 	/**
@@ -2436,6 +2448,7 @@ class Model implements ArrayAccess {
 					$schema['created'] = [
 						'type' => Model::ATT_TYPE_CREATED,
 						'null' => false,
+						'formtype' => 'disabled',
 						'default' => 0,
 						'comment' => 'The created timestamp of this record, populated automatically',
 					];
@@ -2448,6 +2461,7 @@ class Model implements ArrayAccess {
 					$schema['updated'] = [
 						'type' => Model::ATT_TYPE_UPDATED,
 						'null' => false,
+						'formtype' => 'disabled',
 						'default' => 0,
 						'comment' => 'The updated timestamp of this record, populated automatically',
 					];
@@ -2460,6 +2474,7 @@ class Model implements ArrayAccess {
 					$schema['deleted'] = [
 						'type' => Model::ATT_TYPE_DELETED,
 						'null' => false,
+						'formtype' => 'disabled',
 						'default' => 0,
 						'comment' => 'The deleted timestamp of this record, populated automatically',
 					];

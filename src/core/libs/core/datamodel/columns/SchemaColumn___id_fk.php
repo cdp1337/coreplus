@@ -14,5 +14,6 @@ class SchemaColumn___id_fk extends SchemaColumn {
 		// Defaults
 		$this->type = \Model::ATT_TYPE_ID_FK;
 		$this->maxlength = 15;
+		$this->formAttributes['type']     = 'system';
 	}
 }

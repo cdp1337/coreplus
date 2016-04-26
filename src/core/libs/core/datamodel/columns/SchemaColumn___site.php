@@ -16,6 +16,9 @@ class SchemaColumn___site extends SchemaColumn {
 		$this->maxlength = 15;
 		$this->default = 0;
 		$this->comment = 'The site id in multisite mode, (or -1 if global)';
+		$this->formAttributes['type'] = 'system';
+		// Sites have the option to pull from the multisite system when enabled.
+		$this->formAttributes['source'] = 'MultiSiteModel::GetAllAsOptions';
 	}
 
 	/**
@@ -25,7 +28,7 @@ class SchemaColumn___site extends SchemaColumn {
 	 */
 	public function getInsertValue(){
 		if($this->value === null || $this->value === false){
-			if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+			if(\Core::IsComponentAvailable('multisite') && \MultiSiteHelper::IsEnabled()){
 				$this->setValueFromApp(\MultiSiteHelper::GetCurrentSiteID());	
 			}
 			else{

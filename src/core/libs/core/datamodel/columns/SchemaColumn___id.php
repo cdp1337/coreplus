@@ -15,5 +15,6 @@ class SchemaColumn___id extends SchemaColumn {
 		$this->type = \Model::ATT_TYPE_ID;
 		$this->maxlength = 15;
 		$this->autoinc = true;
+		$this->formAttributes['type']     = 'system';
 	}
 }
