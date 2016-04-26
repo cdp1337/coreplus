@@ -501,73 +501,6 @@ abstract class Helper{
 				)
 			);
 
-		}
-
-		// Avatars can be updated on editing the profile, if enabled.
-		if(\ConfigHandler::Get('/user/enableavatar')){
-			// Avatar is for existing accounts or admins.
-			$form->addElement(
-				'file',
-				array(
-					'name' => 'avatar',
-					'title' => 'Avatar Image',
-					'basedir' => 'public/user/avatar',
-					'accept' => 'image/*',
-					'value' => $user->get('avatar')
-				)
-			);
-		}
-
-		// For non-admins, the factory depends on the registration type as well.
-		if($usermanager){
-			$fac = \UserConfigModel::Find(array('hidden = 0'), null, 'weight ASC');
-		}
-		elseif($type == 'registration'){
-			$fac = \UserConfigModel::Find(array('onregistration' => 1), null, 'weight ASC');
-		}
-		else{
-			$fac = \UserConfigModel::Find(array('onedit' => 1), null, 'weight ASC');
-		}
-
-		foreach($fac as $f){
-			/** @var \UserConfigModel $f */
-			$key = $f->get('key');
-
-			try{
-				$val = ($user->get($key) === null) ? $f->get('default_value') : $user->get($key);
-				$el = \FormElement::Factory($f->get('formtype'));
-				$el->set('name', 'option[' . $key . ']');
-				$el->set('title', $f->get('name'));
-				$el->set('value', $val);
-				if($f->get('required')) $el->set('required', true);
-
-				switch($f->get('formtype')){
-					case 'file':
-						$el->set('basedir', 'public/user/config');
-						break;
-					case 'checkboxes':
-					case 'select':
-					case 'radio':
-						$opts = array_map('trim', explode('|', $f->get('options')));
-						$el->set('options', $opts);
-						break;
-					case 'checkbox':
-						$el->set('value', 1);
-						$el->set('checked', ($val ? true : false));
-						break;
-				}
-
-				$form->addElement($el);
-			}
-			catch(\Exception $e){
-				// Well, damn... Don't really care.
-				\SystemLogModel::LogErrorEvent('/userconfig/exception/' . $key, $e->getMessage());
-			}
-
-			//var_dump($f);
-		}
-
-		if(\Core\user()->checkAccess('g:admin')){
 			$form->addElement(
 				'checkbox',
 				array(
@@ -578,13 +511,30 @@ abstract class Helper{
 				)
 			);
 		}
+		
+		if($type == 'registration'){
+			$elements = explode('|', \ConfigHandler::Get('/user/register/form_elements'));
+		}
+		else{
+			$elements = explode('|', \ConfigHandler::Get('/user/edit/form_elements'));
+		}
+		
+		// If avatars are disabled globally, remove that from the list if it's set.
+		if(!\ConfigHandler::Get('/user/enableavatar') && in_array('avatar', $elements)){
+			array_splice($elements, array_search('avatar', $elements), 1);
+		}
+		
+		foreach($elements as $k){
+			$el = $user->getColumn($k)->getAsFormElement();
+			$form->addElement($el);
+		}
 
 		// Tack on the group registration if the current user is an admin.
 		if($groupmanager){
 			// Find all the groups currently on the site.
 
 			$where = ['context = '];
-			if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+			if(\Core::IsComponentAvailable('multisite') && \MultiSiteHelper::IsEnabled()){
 				$where['site'] = \MultiSiteHelper::GetCurrentSiteID();
 			}
 
@@ -607,12 +557,9 @@ abstract class Helper{
 				);
 			}
 
-
-
-
 			$where = new DatasetWhereClause();
 			$where->addWhere('context != ');
-			if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+			if(\Core::IsComponentAvailable('multisite') && \MultiSiteHelper::IsEnabled()){
 				$w = new DatasetWhereClause();
 				$w->setSeparator('or');
 				$w->addWhere('site = ' . \MultiSiteHelper::GetCurrentSiteID());
