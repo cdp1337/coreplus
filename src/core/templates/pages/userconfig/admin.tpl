@@ -4,71 +4,101 @@
  *}
 
 {$configform->render('head')}
-	<fieldset>
-		<legend> User Config Options </legend>
 
-		<table id="user-config-admin-table">
-			<thead>
-				<tr>
-					<th>&nbsp;</th>
-					<th>Name/Title</th>
-					<th>On Registration</th>
-					<th>On Edit</th>
-				</tr>
-			</thead>
+<div id="tabs-group">
+	<ul>
+		<li>
+			<a href="#user-config-options" class="formtabsgroup-tab-link"><span>{t 'STRING_CONFIGURATION'}</span></a>
+		</li>
+		<li>
+			<a href="#user-config-register-elements" class="formtabsgroup-tab-link"><span>Register Elements Enabled</span></a>
+		</li>
+		<li>
+			<a href="#user-config-edit-elements" class="formtabsgroup-tab-link"><span>Edit Elements Enabled</span></a>
+		</li>
+		<li>
+			<a href="#user-auth-sources">Authentication Sources</a>
+		</li>
+	</ul>
+	
+	<div id="user-config-options">
+		{$configform->render('body')}
+	</div>
+
+	<div id="user-config-register-elements">
+		<p class="message-tutorial">
+			Select the elements to display on the registration page for new user signups.<br/><br/>
+			You can also rearrange the order that they display in.
+		</p>
+		
+		<table class="user-config-sortable-table">
 			<tbody>
-				{foreach $configs as $config}
+				{foreach $on_register_elements as $config}
 					<tr class="sortable">
-						<td>
+						<td width="50">
 							<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
 						</td>
 						<td>
-							<input type="text" name="name[{$config.key}]" value="{$config.name|escape}"/>
-						</td>
-						<td>
-							<input type="checkbox" name="onregistration[{$config.key}]" {if $config.onregistration}checked="checked"{/if}/>
-						</td>
-						<td>
-							<input type="checkbox" name="onedit[{$config.key}]" {if $config.onedit}checked="checked"{/if}/>
+							<label>
+								<input type="checkbox" name="onregister[]" value="{$config.key}" {if $config.checked}checked="checked"{/if}/>
+								{$config.title}
+							</label>
 						</td>
 					</tr>
 				{/foreach}
 			</tbody>
 		</table>
-	</fieldset>
-
-	<fieldset>
-		<legend> Configs </legend>
-
-		{$configform->render('body')}
-	</fieldset>
-
-	<fieldset>
-		<legend> Authentication Sources </legend>
-
-		<table id="user-config-admin-table">
+	</div>
+	
+	<div id="user-config-edit-elements">
+		<p class="message-tutorial">
+			Select the elements to display on the edit page for users.<br/><br/>
+			You can also rearrange the order that they display in.
+		</p>
+		
+		<table class="user-config-sortable-table">
 			<tbody>
-			{foreach $auth_backends as $backend}
-				<tr class="sortable">
-					<td>
-						<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
-					</td>
-					<td>
-						{$backend.title}
-					</td>
-					<td>
-						<label>
-							<input type="checkbox" name="authbackend[]" value="{$backend.name}" {if $backend.enabled}checked="checked"{/if}/>
-							Enabled
-						</label>
-					</td>
-				</tr>
-			{/foreach}
+				{foreach $on_edit_elements as $config}
+					<tr class="sortable">
+						<td width="50">
+							<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
+						</td>
+						<td>
+							<label>
+								<input type="checkbox" name="onedit[]" value="{$config.key}" {if $config.checked}checked="checked"{/if}/>
+								{$config.title}
+							</label>
+						</td>
+					</tr>
+				{/foreach}
 			</tbody>
 		</table>
-	</fieldset>
-
-
+	</div>
+	
+	<div id="user-auth-sources">
+		<p class="message-tutorial">
+			Select what authentication sources are enabled for this site.
+		</p>
+		
+		<table class="user-config-sortable-table">
+			<tbody>
+				{foreach $auth_backends as $backend}
+					<tr class="sortable">
+						<td width="50">
+							<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
+						</td>
+						<td>
+							<label>
+								<input type="checkbox" name="authbackend[]" value="{$backend.name}" {if $backend.enabled}checked="checked"{/if}/>
+								{$backend.title}
+							</label>
+						</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
 	<br/>
 	<input type="submit" value="Save Options"/>
 {$configform->render('foot')}
@@ -77,7 +107,7 @@
 {script library="jqueryui"}{/script}
 {script location="foot"}<script>
 	$(function(){
-		$('#user-config-admin-table tbody').sortable({
+		$('.user-config-sortable-table tbody').sortable({
 			helper: function(e, tr) {
 				var $originals = tr.children();
 				var $helper = tr.clone();
@@ -92,6 +122,8 @@
 		});
 
 		// Don't forget to update the UI to make it look like it can be sorted.
-		$('#user-config-admin-table .icon-move').show().css('cursor', 'move');
+		$('.user-config-sortable-table .icon-move').show().css('cursor', 'move');
+		
+		$('#tabs-group').tabs();
 	});
 </script>{/script}

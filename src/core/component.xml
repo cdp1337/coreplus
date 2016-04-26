@@ -15,13 +15,18 @@
 		<scriptlibrary name="JSONjs" call="Core::_AttachJSON"/>
 	</provides>
 	<requires>
-		<!-- Core can't have any requires! -->
+		<require name="bcmath" type="phpextension"/>
+		<require name="curl" type="phpextension"/>
+		<require name="gd" type="phpextension"/>
+		<require name="hash" type="phpextension"/>
+		<require name="mbstring" type="phpextension"/>
+		<require name="mcrypt" type="phpextension"/>
+		<require name="xml" type="phpextension"/>
+		<require name="zlib" type="phpextension"/>
 	</requires>
 	<users>
 		<userauth name="datastore" class="Core\User\AuthDrivers\datastore"/>
 		<userauth name="gpg" class="Core\User\AuthDrivers\gpg"/>
-		<userconfig key="/user/gpgauth/pubkey" name="GPG Public Key" formtype="disabled" onedit="0" onregistration="0" hidden="1"/>
-		<userconfig weight="" key="json:profiles" name="Connected Profiles (json encoded)" hidden="1"/>
 	</users>
 	<hooks>
 		<hookregister name="/core/components/loaded" description="Called immediately after all components have been loaded into memory."/>
@@ -1739,10 +1744,12 @@
 		<config key="/user/authdrivers" type="string" default="datastore"/>
 		<config key="/user/register/allowpublic" type="boolean" default="true"/>
 		<config key="/user/register/requireapproval" type="boolean" default="false"/>
+		<config key="/user/register/form_elements" type="text" default=""/>
 		<config key="/user/email/allowchanging" type="boolean" default="false"/>
 		<config key="/user/enableavatar" type="boolean" default="true"/>
 		<config key="/user/profileedits/requireapproval" type="boolean" default="false"/>
 		<config key="/user/activity/keephistory" type="enum" default="3-months" options="1-week|1-month|2-months|3-months|6-months|12-months|24-months|36-months|all"/>
+		<config key="/user/edit/form_elements" type="text" default=""/>
 		<!-- System Email Options -->
 		<config key="/core/email/from" type="string" default=""/>
 		<config key="/core/email/from_name" type="string" default=""/>

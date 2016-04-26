@@ -66,11 +66,72 @@ class UserConfigController extends Controller_2_1{
 		if(!\Core\user()->checkAccess('g:admin')){
 			return View::ERROR_ACCESSDENIED;
 		}
-
-		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
-
-		// Pull all the user configs from the database.
-		$userconfigs = UserConfigModel::Find(['hidden = 0'], null, 'weight');
+		
+		$userConfigs = [];
+		$userSchema = UserModel::GetSchema();
+		foreach($userSchema as $k => $dat){
+			if(
+				$dat['type'] == Model::ATT_TYPE_UUID ||
+				$dat['type'] == Model::ATT_TYPE_UUID_FK ||
+				$dat['type'] == Model::ATT_TYPE_ID ||
+				$dat['type'] == Model::ATT_TYPE_ID_FK ||
+				(isset($dat['formtype']) && $dat['formtype'] == 'disabled') ||
+				(isset($dat['form']) && isset($dat['form']['type']) && $dat['form']['type'] == 'disabled')
+			){
+				// Skip these columns.
+				continue;
+			}
+			
+			$title = t('STRING_MODEL_USERMODEL_' . strtoupper($k));
+			
+			$userConfigs[$k] = $title;
+		}
+		
+		// Pull a list of options currently enabled for both registration and edit.
+		$onReg = [];
+		$onEdits = [];
+		
+		$curReg = explode('|', ConfigHandler::Get('/user/register/form_elements'));
+		$curEdits = explode('|', ConfigHandler::Get('/user/edit/form_elements'));
+		
+		foreach($curReg as $k){
+			if(isset($userConfigs[$k])){
+				// It's a valid key in the current application!
+				$onReg[] = [
+					'key' => $k,
+					'checked' => true,
+					'title' => $userConfigs[$k],
+				];
+			}
+		}
+		foreach($curEdits as $k){
+			if(isset($userConfigs[$k])){
+				// It's a valid key in the current application!
+				$onEdits[] = [
+					'key' => $k,
+					'checked' => true,
+					'title' => $userConfigs[$k],
+				];
+			}
+		}
+		
+		foreach($userConfigs as $k => $title) {
+			// If any key isn't in either curReg and curEdit, tack it to the end of the respective array.
+			if(!in_array($k, $curReg)) {
+				$onReg[] = [
+					'key'     => $k,
+					'checked' => false,
+					'title'   => $title,
+				];
+			}
+			if(!in_array($k, $curEdits)) {
+				$onEdits[] = [
+					'key'     => $k,
+					'checked' => false,
+					'title'   => $title,
+				];
+			}
+		}
 
 		// Build a form to handle the config options themselves.
 		// These will include password strength, whether or not captcha is enabled, etc.
@@ -84,7 +145,7 @@ class UserConfigController extends Controller_2_1{
 		$configform = new Form();
 
 		foreach($configs as $key){
-			$el = \Core\Configs\get_form_element_from_config(ConfigModel::Construct($key));
+			$el = ConfigHandler::GetConfig($key)->getAsFormElement();
 			// I don't need this, (Everything from this group will be on the root-level form).
 			$el->set('group', null);
 			$configform->addElement($el);
@@ -157,53 +218,33 @@ class UserConfigController extends Controller_2_1{
 
 
 		if($request->isPost()){
-			// If the request was a post... handle that by running through each config option and looking it up
-			// in the POST data.
+			$onEditSelected = (isset($_POST['onedit'])) ? implode('|', $_POST['onedit']) : '';
+			$onRegSelected  = (isset($_POST['onregister'])) ? implode('|', $_POST['onregister']) : '';
+			$authSelected   = (isset($_POST['authbackend'])) ? implode('|', $_POST['authbackend']) : '';
 
-			$keymap = array_keys($_POST['name']);
-
-			foreach($userconfigs as $config){
-				/** @var $config UserConfigModel */
-				$k = $config->get('key');
-
-				$config->set('name', $_POST['name'][$k]);
-				$config->set('onregistration', (isset($_POST['onregistration'][$k])) );
-				$config->set('onedit', (isset($_POST['onedit'][$k])) );
-				$config->set('weight', array_search($k, $keymap));
-
-				$config->save();
+			if($authSelected == ''){
+				\Core\set_message('At least one auth backend is required, re-enabling datastore.', 'info');
+				$authSelected = 'datastore';
 			}
+			
+			ConfigHandler::Set('/user/register/form_elements', $onRegSelected);
+			ConfigHandler::Set('/user/edit/form_elements', $onEditSelected);
+			ConfigHandler::Set('/user/authdrivers', $authSelected);
 
 			// Handle the actual config options too!
 			foreach($configs as $key){
-				$config = ConfigModel::Construct($key);
-				$config->set('value', $_POST['config'][$key]);
-				$config->save();
+				ConfigHandler::Set($key, $_POST['config'][$key]);
 			}
-
-			if(!isset($_POST['authbackend'])){
-				\Core\set_message('At least one auth backend is required, re-enabling datastore.', 'info');
-				$_POST['authbackend'] = ['datastore'];
-			}
-
-			$auths = implode('|', $_POST['authbackend']);
-			$config = ConfigModel::Construct('/user/authdrivers');
-			$config->set('value', $auths);
-			$config->save();
 
 			\Core\set_message('Saved configuration options successfully', 'success');
 			\Core\reload();
 		}
 
-
-
-
-
-
 		$view->mastertemplate = 'admin';
 		$view->title = 'User Options';
-		$view->assign('configs', $userconfigs);
 		$view->assign('configform', $configform);
 		$view->assign('auth_backends', $authbackends);
+		$view->assign('on_register_elements', $onReg);
+		$view->assign('on_edit_elements', $onEdits);
 	}
 }
