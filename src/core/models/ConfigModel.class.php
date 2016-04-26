@@ -336,6 +336,14 @@ class ConfigModel extends Model {
 		}
 
 		$el->set('value', $val);
+		
+		// If multisite is enabled and this config is NOT set to overrideable, then set the field as read only!
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && MultiSiteHelper::GetCurrentSiteID()){
+			if(!$this->get('overrideable')){
+				$el->set('readonly', true);
+				$el->set('disabled', true);
+			}
+		}
 
 		return $el;
 	}
