@@ -1288,7 +1288,8 @@ class Component_2_1 {
 				
 				case 'phpextension':
 					$v = phpversion($r['name']);
-					if($v === false){
+					$l = extension_loaded($r['name']);
+					if($l === false){
 						$check['result']['message'] = 'Missing PHP Extension ' . $r['name'];
 					}
 					elseif($r['version'] && !version_compare($v, $r['version'], $r['operation'])){
