@@ -33,12 +33,13 @@ class UserModel extends Model {
 			'type'       => Model::ATT_TYPE_STRING,
 			'maxlength'  => 64,
 			'null'       => false,
+			'formtype' => 'disabled',
 			'validation' => ['this', 'validateEmail'],
 			'required'   => true,
 		],
 		'backend'              => [
 			'type'     => Model::ATT_TYPE_STRING,
-			'formtype' => 'hidden',
+			'formtype' => 'disabled',
 			'default'  => 'datastore',
 			'comment'  => 'Pipe-delimited list of authentication drivers on this user'
 		],
@@ -46,11 +47,13 @@ class UserModel extends Model {
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 60,
 			'null'      => false,
+			'formtype'  => 'disabled',
 		],
 		'apikey'               => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 64,
 			'null'      => false,
+			'formtype'  => 'disabled',
 		],
 		'active'               => [
 			'type'    => Model::ATT_TYPE_ENUM,
@@ -58,6 +61,7 @@ class UserModel extends Model {
 			'options' => ['-1', '0', '1'],
 			'null'    => false,
 			'form'    => [
+				'type' => 'disabled',
 				'title'   => 'User Status',
 				'options' => [
 					'-1' => 'Disabled',
@@ -70,6 +74,7 @@ class UserModel extends Model {
 			'type'    => Model::ATT_TYPE_BOOL,
 			'default' => '0',
 			'null'    => false,
+			'formtype'  => 'disabled',
 		],
 		'avatar'               => [
 			'type'      => Model::ATT_TYPE_STRING,
@@ -83,34 +88,41 @@ class UserModel extends Model {
 		'gpgauth_pubkey' => [
 			'type' => Model::ATT_TYPE_STRING,
 			'maxlength' => 40,
+			'formtype'  => 'disabled',
 		],
 		'external_profiles' => [
 			'type' => Model::ATT_TYPE_DATA,
 			'encoding' => Model::ATT_ENCODING_JSON,
+			'formtype'  => 'disabled',
 		],
 		'registration_ip'      => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => '24',
 			'comment'   => 'The original IP of the user registration',
+			'formtype'  => 'disabled',
 		],
 		'registration_source'  => [
 			'type'    => Model::ATT_TYPE_STRING,
 			'default' => 'self',
-			'comment' => 'The source of the user registration, either self, admin, or other.'
+			'comment' => 'The source of the user registration, either self, admin, or other.',
+			'formtype'  => 'disabled',
 		],
 		'registration_invitee' => [
 			'type'    => Model::ATT_TYPE_UUID_FK,
 			'comment' => 'If invited/created by a user, this is the ID of that user.',
+			'formtype'  => 'disabled',
 		],
 		'last_login'           => [
 			'type'    => Model::ATT_TYPE_INT,
 			'default' => 0,
 			'comment' => 'The timestamp of the last login of this user',
+			'formtype'  => 'disabled',
 		],
 		'last_password'        => [
 			'type'    => Model::ATT_TYPE_INT,
 			'default' => 0,
 			'comment' => 'The timestamp of the last password reset of this user',
+			'formtype'  => 'disabled',
 		],
 	];
 
@@ -337,7 +349,7 @@ class UserModel extends Model {
 			// These are a little more complex.
 			if($uug->get('context')) continue;
 
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 				// Only return this site's groups if in multisite mode
 				$g = $uug->getLink('UserGroup');
 				if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()) {
@@ -391,7 +403,7 @@ class UserModel extends Model {
 			// Skip regular groups.
 			if(!$uug->get('context')) continue;
 
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 				// Only return this site's groups if in multisite mode
 				$g     = $uug->getLink('UserGroup');
 				$gsite = $g->get('site');
@@ -719,7 +731,9 @@ class UserModel extends Model {
 			$value = $el->get('value');
 
 			// If a prefix was requested and it doesn't match, skip this element.
-			if($prefix && strpos($name, $prefix . '[') !== 0) continue;
+			if($prefix && strpos($name, $prefix . '[') !== 0){
+				continue;
+			}
 
 			// Otherwise if there is a prefix, trim it off from the name.
 			if($prefix) {
@@ -734,54 +748,9 @@ class UserModel extends Model {
 			}
 
 
-			// Email?
-			if($name == 'email') {
-				// Validation handled internally!
-				$this->set('email', $value);
-			}
-
-			// Is this element a config option?
-			elseif(strpos($name, 'option[') === 0) {
-				$k   = substr($name, 7, -1);
-				$obj = $this->getConfigObject($k);
-
-				if($obj === null){
-					// Skip invalid/non-existent fields.
-					continue;
-				}
-				$obj = $obj->getLink('UserConfig');
-
-				if($value === null && $obj->get('formtype') == 'checkbox') {
-					// Checkboxes behave slightly differently.
-					// null here just means that it was unchecked.
-					$value = 0;
-				}
-
-				// Some attributes require some modifications.
-				if($el instanceof FormFileInput) {
-					$value = 'public/user/config/' . $value;
-				}
-
-				$this->set($k, $value);
-			}
-
-			// Is this element the group definition?
-			elseif($name == 'groups[]') {
+			if($name == 'groups[]') {
 				$this->setGroups($value);
 			}
-
-			elseif($name == 'active') {
-				$this->set('active', $value ? 1 : 0);
-			}
-
-			elseif($name == 'admin') {
-				$this->set('admin', $value);
-			}
-
-			elseif($name == 'avatar') {
-				$this->set('avatar', $value);
-			}
-
 			elseif($name == 'contextgroup[]') {
 				// This is a two-part system with data pulling from contextgroup and contextgroupcontext.
 				$gids       = $value;
@@ -807,9 +776,36 @@ class UserModel extends Model {
 
 				$this->setContextGroups($groups);
 			}
-
-			else {
-				// I don't care.
+			elseif($name == 'active'){
+				$current = $this->get('active');
+				// The incoming value will probably be 'on' or NULL.
+				// This is because the form displays as a BOOL even though the backend field is an ENUM.
+				$new = ($value) ? '1' : '0';
+				
+				// -1 => 0 = -1 (Disabled to unchecked, no change)
+				// -1 => 1 =  1 (Disabled to checked, activate)
+				//  0 => 0 =  0 (New to unchecked, wot?)
+				//  0 => 1 =  1 (New to checked, activate... still shouldn't happen though)
+				//  1 => 0 = -1 (Enabled to unchecked, disable)
+				//  1 => 1 =  1 (Enabled to checked, no change)
+				
+				if($current == '1' && $new == '0'){
+					// User was set from active to inactive.
+					// Instead of setting to a new account, set to deactivated.
+					$this->set('active', '-1');
+				}
+				elseif($current == '-1' && $new == '0'){
+					// No change!
+				}
+				else{
+					// Otherwise, allow the change to go through.
+					$this->set('active', $new);
+				}
+			}
+			elseif($name != 'user'){
+				// Skip the user record,
+				// otherwise Default behaviour
+				$this->set($name, $value);
 			}
 		} // foreach(elements)
 	}
@@ -1067,7 +1063,7 @@ class UserModel extends Model {
 				/** @var UserGroupModel $group */
 				$group = $uug->getLink('UserGroup');
 
-				if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+				if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 					// Only return this site's groups if in multisite mode
 					if(!($group->get('site') == -1 || $group->get('site') == MultiSiteHelper::GetCurrentSiteID())) {
 						continue;
@@ -1152,7 +1148,7 @@ class UserModel extends Model {
 				continue;
 			}
 
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 				// Only return this site's groups if in multisite mode
 				$ugsite = $uug->getLink('UserGroup')->get('site');
 				if(!($ugsite == -1 || $ugsite == MultiSiteHelper::GetCurrentSiteID())) {
