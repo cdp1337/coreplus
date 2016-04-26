@@ -27,6 +27,7 @@ class PreflightCheckStep extends InstallerStep {
 			$this->testRewrite(),
 			$this->testPHPXML(),
 			$this->testPHPMcrypt(),
+			$this->testMBString(),
 			$this->testPHPcURL(),
 			$this->testHTAccessFile(),
 			$this->testConfigFile(),
@@ -249,7 +250,13 @@ class PreflightCheckStep extends InstallerStep {
 				$fix = 'sudo yum install php-mcrypt' . NL . 'sudo service httpd restart';
 			}
 			elseif(SERVER_FAMILY == 'debian'){
-				$fix = 'sudo apt-get install php5-mcrypt' . NL . 'sudo service apache2 restart';
+				$version = phpversion();
+				if(version_compare($version, '7.0', 'ge')){
+					$fix = 'sudo apt-get install php7.0-mcrypt' . NL . 'sudo systemctl restart apache2';
+				}
+				else{
+					$fix = 'sudo apt-get install php5-mcrypt' . NL . 'sudo service apache2 restart';
+				}
 			}
 			else{
 				$fix = null;
@@ -259,7 +266,43 @@ class PreflightCheckStep extends InstallerStep {
 				'title' => 'php-mcrypt',
 				'status' => 'error',
 				'message' => 'php-mcrypt is not available',
-				'description' => 'Core Plus utilizes encryption via the mcrypt library.  Please install php5-mcrypt.',
+				'description' => 'Core Plus utilizes encryption via the mcrypt library.  Please install php-mcrypt.',
+				'fix' => $fix,
+			];
+		}
+	}
+
+	private function testMBString(){
+		if(function_exists('mb_check_encoding')){
+			return [
+				'title' => 'php-mbstring',
+				'status' => 'passed',
+				'message' => 'php-mbstring is available!',
+				'description' => '',
+			];
+		}
+		else{
+			if(SERVER_FAMILY == 'redhat'){
+				$fix = 'sudo yum install php-mbstring' . NL . 'sudo service httpd restart';
+			}
+			elseif(SERVER_FAMILY == 'debian'){
+				$version = phpversion();
+				if(version_compare($version, '7.0', 'ge')){
+					$fix = 'sudo apt-get install php7.0-mbstring' . NL . 'sudo systemctl restart apache2';	
+				}
+				else{
+					$fix = 'sudo apt-get install php5-mbstring' . NL . 'sudo service apache2 restart';
+				}
+			}
+			else{
+				$fix = null;
+			}
+
+			return [
+				'title' => 'php-mbstring',
+				'status' => 'error',
+				'message' => 'php-mbstring is not available',
+				'description' => 'Please install mbstring for php.',
 				'fix' => $fix,
 			];
 		}
@@ -280,7 +323,13 @@ class PreflightCheckStep extends InstallerStep {
 				$fix = 'sudo yum install php-curl; ' . NL . 'sudo service httpd restart';
 			}
 			elseif(SERVER_FAMILY == 'debian'){
-				$fix = 'sudo apt-get install php5-curl' . NL . 'sudo service apache2 restart';
+				$version = phpversion();
+				if(version_compare($version, '7.0', 'ge')){
+					$fix = 'sudo apt-get install php7.0-curl' . NL . 'sudo systemctl restart apache2';
+				}
+				else{
+					$fix = 'sudo apt-get install php5-curl' . NL . 'sudo service apache2 restart';
+				}
 			}
 			else{
 				$fix = null;
@@ -290,7 +339,7 @@ class PreflightCheckStep extends InstallerStep {
 				'title' => 'php-curl',
 				'status' => 'error',
 				'message' => 'php-curl is not available',
-				'description' => 'Please install php5-curl.',
+				'description' => 'Please install php-curl.',
 				'fix' => $fix,
 			];
 		}
