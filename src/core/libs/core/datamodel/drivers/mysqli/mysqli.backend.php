@@ -244,6 +244,7 @@ class mysqli_backend implements BackendInterface {
 
 		// Table does exist... I need to do a merge of the data schemas.
 		// Create a temp table to do the operations on.
+		$this->_rawExecute('write', 'DROP TABLE IF EXISTS _tmptable'); // Include this for catching failed installs on a prior run.
 		$this->_rawExecute('write', 'CREATE TABLE _tmptable LIKE ' . $table);
 		$this->_rawExecute('write', 'INSERT INTO _tmptable SELECT * FROM ' . $table);
 
