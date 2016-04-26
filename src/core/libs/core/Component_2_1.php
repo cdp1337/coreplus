@@ -365,6 +365,13 @@ class Component_2_1 {
 		}
 	}
 
+	/**
+	 * Get a raw array of the requirements for this component.
+	 * 
+	 * Each array index contains 'type', 'name', 'version', and 'operation'.
+	 * 
+	 * @return array
+	 */
 	public function getRequires() {
 		if($this->_requires === null){
 			$this->_requires = array();
@@ -377,12 +384,43 @@ class Component_2_1 {
 				// Defaults.
 				if ($v == '') $v = false;
 				if ($op == '') $op = 'ge';
+				
+				if($v !== false){
+					$vstr = $n . ' ';
+					switch($op){
+						case 'ge':
+						case '>=':
+							$vstr .= '>=';
+							break;
+						case 'gt':
+						case '>':
+							$vstr .= '>';
+							break;
+						case 'le':
+						case '<=':
+							$vstr .= '<=';
+							break;
+						case 'lt':
+						case '<':
+							$vstr .= '<';
+							break;
+						case 'eq':
+						case '=':
+							$vstr .= '=';
+							break;
+					}
+					$vstr .= ' ' . $v;
+				}
+				else{
+					$vstr = $n;
+				}
 
 				$this->_requires[] = array(
 					'type'      => strtolower($t),
 					'name'      => strtolower($n),
 					'version'   => strtolower($v),
 					'operation' => strtolower($op),
+					'vstring'   => $vstr,
 					//'value' => $value,
 				);
 			}
@@ -1146,6 +1184,132 @@ class Component_2_1 {
 		}
 	}
 
+	public function runRequirementChecks(){
+		$requires = $this->getRequires();
+		$results = [];
+		foreach ($requires as $r) {
+			$check = [
+				'require' => $r,
+				'result' => [
+					'passed' => false,
+					'available' => null,
+					'message' => null,
+				],
+			];
+			
+			switch ($r['type']) {
+				case 'component':
+					if (!Core::IsComponentAvailable($r['name'])) {
+						// Component is not available.
+						$check['result']['message'] = $check['result']['message'] = 'Missing component ' . $r['name'];
+					}
+					elseif (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
+						$check['result']['available'] = Core::GetComponent($r['name'])->getVersionInstalled();
+						$check['result']['message'] = 'Requires component ' . $r['vstring'] . ',  ' . $check['available'] . ' available.';
+					}
+					else{
+						$check['result']['passed'] = true;
+						$check['result']['available'] = Core::GetComponent($r['name'])->getVersionInstalled();
+						$check['result']['message'] = 'Component ' . $r['vstring'] . ' is available';
+					}
+
+					$results[] = $check;
+					break;
+				
+				case 'define':
+					// Ensure that whatever define the script is expecting is there... this is useful for the EXEC_MODE define.
+					if (!defined($r['name'])) {
+						$check['result']['message'] = $check['result']['message'] = 'Missing define ' . $r['name'];
+					}
+					elseif ($r['value'] != null && constant($r['name']) != $r['value']) {
+						// Also if they opted to include a value... check that too.
+						$check['result']['message'] = $check['result']['message'] = 'Incorrect define ' . $r['name'] . ', expected value of: ' . $r['value'];
+					}
+					else{
+						$check['result']['passed'] = true;
+						$check['result']['available'] = true;
+						$check['result']['message'] = 'Define ' . $r['name'] . ' is set and correct';
+					}
+
+					$results[] = $check;
+					break;
+
+				case 'function':
+					// Requires a specific function to exist.  This is most common with built-in PHP functions,
+					// such as gd, ldap, or imap support.
+					if(!function_exists($r['name'])){
+						$check['result']['message'] = $check['result']['message'] = 'Missing function ' . $r['name'];
+					}
+					else{
+						$check['result']['passed'] = true;
+						$check['result']['available'] = true;
+						$check['result']['message'] = 'Function ' . $r['name'] . ' is available';
+					}
+
+					$results[] = $check;
+					break;
+
+				case 'jslibrary':
+					if (!Core::IsJSLibraryAvailable($r['name'])) {
+						// The library is not even available!
+						$check['result']['message'] = 'Missing JSlibrary ' . $r['name'];
+					}
+					else{
+						$check['result']['passed'] = true;
+						$check['result']['available'] = true;
+						$check['result']['message'] = 'JSLibrary ' . $r['name'] . ' is available';
+					}
+
+					$results[] = $check;
+					break;
+				
+				case 'library':
+					if (!Core::IsLibraryAvailable($r['name'])) {
+						// The library is not even available!
+						$check['result']['message'] = 'Missing library ' . $r['name'];
+					}
+					elseif (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
+						// The library is available, but is out of date.
+						$check['result']['available'] = Core::GetLibraryVersion($r['name']);
+						$check['result']['message'] = 'Requires library ' . $r['vstring'] . ',  ' . $check['available'] . ' available.';
+					}
+					else{
+						$check['result']['passed'] = true;
+						$check['result']['available'] = Core::GetLibraryVersion($r['name']);
+						$check['result']['message'] = 'Library ' . $r['vstring'] . ' is available';
+					}
+					
+					$results[] = $check;
+					break;
+				
+				case 'phpextension':
+					$v = phpversion($r['name']);
+					if($v === false){
+						$check['result']['message'] = 'Missing PHP Extension ' . $r['name'];
+					}
+					elseif($r['version'] && !version_compare($v, $r['version'], $r['operation'])){
+						$check['result']['available'] = $v;
+						$check['result']['message'] = 'Requires PHP Extension ' . $r['vstring'] . ',  ' . $check['available'] . ' available.';
+					}
+					else{
+						$check['result']['passed'] = true;
+						$check['result']['available'] = $v;
+						$check['result']['message'] = 'PHP Extension ' . $r['vstring'] . ' is available';
+					}
+
+					$results[] = $check;
+					break;
+			}
+		}
+		
+		return $results;
+	}
+	
+	/**
+	 * Simple check if this component is currently enabled.
+	 * 
+	 * @return bool
+	 */
 	public function isEnabled() {
 		return ($this->_enabled === true);
 	}
@@ -1169,63 +1333,18 @@ class Component_2_1 {
 		$this->error   = 0;
 		$this->errstrs = array();
 
-		// Check the mode of it also, quick check.
-		// 2013.06.06 cpowell
-		// Is this check even really needed?  Asking because any operation on the web simply won't apply on CLI,
-		// like controllers and hooks.  HOWEVER, the libraries themselves should still be available!
-		// Same thing vice versa... if there is a CLI application, it simply won't have Controllers or what not.
-		//if ($this->_execMode != 'BOTH') {
-		//	if ($this->_execMode != EXEC_MODE) {
-		//		$this->error     = $this->error | Component_2_1::ERROR_WRONGEXECMODE;
-		//		$this->errstrs[] = 'Wrong execution mode, can only be ran in ' . $this->_execMode . ' mode';
-		//	}
-		//}
-
 		// Can this component be loaded as-is?
-		foreach ($this->getRequires() as $r) {
-			switch ($r['type']) {
-				case 'library':
-					if (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-						$this->errstrs[] = 'Requires missing library ' . $r['name'] . ' ' . $r['version'];
-					}
-					break;
-				case 'jslibrary':
-					if (!Core::IsJSLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-						$this->errstrs[] = 'Requires missing JSlibrary ' . $r['name'] . ' ' . $r['version'];
-					}
-					break;
-				case 'component':
-					if (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
-						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-						$this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
-					}
-					break;
-				case 'function':
-					// Requires a specific function to exist.  This is most common with built-in PHP functions,
-					// such as gd, ldap, or imap support.
-					if(!function_exists($r['name'])){
-						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-						$this->errstrs[] = 'Requires missing function ' . $r['name'];
-					}
-					break;
-				case 'define':
-					// Ensure that whatever define the script is expecting is there... this is useful for the EXEC_MODE define.
-					if (!defined($r['name'])) {
-						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-						$this->errstrs[] = 'Requires missing define ' . $r['name'];
-					}
-					// Also if they opted to include a value... check that too.
-					if ($r['value'] != null && constant($r['name']) != $r['value']) {
-						$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-						$this->errstrs[] = 'Requires wrong define ' . $r['name'] . '(' . $r['value'] . ')';
-					}
-					break;
+		$requireChecks = $this->runRequirementChecks();
+		foreach($requireChecks as $r){
+			if(!$r['result']['passed']){
+				$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
+				$this->errstrs[] = $r['result']['message'];
 			}
 		}
 
-		if ($this->error) return false;
+		if ($this->error){
+			return false;
+		}
 
 		// Check classes.  If a class is provided in another package, DON'T LOAD!
 		$cs = $this->getClassList();
