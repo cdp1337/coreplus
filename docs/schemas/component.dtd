@@ -60,7 +60,7 @@ type (component|library) "library"
 <!ELEMENT require EMPTY>
 <!ATTLIST require
 	name CDATA #REQUIRED
-	type (component|define|function|jslibrary|library) #REQUIRED
+	type (component|define|function|jslibrary|library|phpextension) #REQUIRED
 	version CDATA #IMPLIED
 	operation (lt|le|eq|ge|gt) "ge"
 	>
