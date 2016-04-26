@@ -525,8 +525,11 @@ abstract class Helper{
 		}
 		
 		foreach($elements as $k){
-			$el = $user->getColumn($k)->getAsFormElement();
-			$form->addElement($el);
+			if($k){
+				// Skip blank elements that can be caused by string|param|foo| or empty strings.
+				$el = $user->getColumn($k)->getAsFormElement();
+				$form->addElement($el);	
+			}
 		}
 
 		// Tack on the group registration if the current user is an admin.
