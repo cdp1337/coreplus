@@ -286,7 +286,9 @@ class UserAgent {
 	 * @param string $useragent
 	 */
 	public function __construct($useragent = null) {
-		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+		if($useragent === null){
+			$useragent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		}
 		
 		if(class_exists('DeviceDetector\\DeviceDetector')){
 			// Piwik's DeviceDetector is available, use that instead! :)
@@ -889,7 +891,9 @@ class UserAgent {
 	 * @return UserAgent
 	 */
 	public static function Construct($useragent = null){
-		if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+		if($useragent === null){
+			$useragent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+		}
 
 		$cachekey = 'useragent-constructor-' . md5($useragent);
 		$cache = Cache::Get($cachekey);
