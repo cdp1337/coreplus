@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 19 Apr 2016 21:06:22 -0400
+ * @compiled Tue, 26 Apr 2016 13:32:46 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -154,7 +154,7 @@ $_CurrentUserAccount = Session::Get('user');
 if($_CurrentUserAccount === null){
 $_CurrentUserAccount = new \UserModel();
 }
-if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
+if(\Core::IsComponentAvailable('multisite') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
 $_CurrentUserAccount->clearAccessStringCache();
 }
 if(Session::Get('user_sudo') !== null){
@@ -2507,6 +2507,7 @@ $this->_aliases[$k] = $sdat['alias'];
 else{
 $this->_columns[$k] = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($sdat);
 $this->_columns[$k]->field = $k;
+$this->_columns[$k]->parent = $this;
 }
 if(isset($sdat['link'])){
 if(is_array($sdat['link'])){
@@ -2568,7 +2569,7 @@ $keys[$k] = $v;
 if(
 isset($s['site']) &&
 $s['site']['type'] == Model::ATT_TYPE_SITE &&
-Core::IsComponentAvailable('enterprise') &&
+Core::IsComponentAvailable('multisite') &&
 MultiSiteHelper::IsEnabled() &&
 $this->get('site') === null
 ){
@@ -2757,6 +2758,9 @@ return $this->getLink($k);
 else {
 return null;
 }
+}
+public function getColumn($key){
+return isset($this->_columns[$key]) ? $this->_columns[$key] : null;
 }
 public function __toString(){
 return $this->getLabel();
@@ -3422,7 +3426,7 @@ else {
 $k          = $this->_linked[$idx]['on'];
 $wheres[$k] = $this->get($k);
 }
-if($linkname === 'Page' && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if($linkname === 'Page' && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $schema = self::GetSchema();
 if(isset($schema['site']) && $schema['site']['type'] == Model::ATT_TYPE_SITE){
 $wheres['site'] = $this->get('site');
@@ -3617,6 +3621,7 @@ if(!isset($schema['created'])){
 $schema['created'] = [
 'type' => Model::ATT_TYPE_CREATED,
 'null' => false,
+'formtype' => 'disabled',
 'default' => 0,
 'comment' => 'The created timestamp of this record, populated automatically',
 ];
@@ -3627,6 +3632,7 @@ if(!isset($schema['updated'])){
 $schema['updated'] = [
 'type' => Model::ATT_TYPE_UPDATED,
 'null' => false,
+'formtype' => 'disabled',
 'default' => 0,
 'comment' => 'The updated timestamp of this record, populated automatically',
 ];
@@ -3637,6 +3643,7 @@ if(!isset($schema['deleted'])){
 $schema['deleted'] = [
 'type' => Model::ATT_TYPE_DELETED,
 'null' => false,
+'formtype' => 'disabled',
 'default' => 0,
 'comment' => 'The deleted timestamp of this record, populated automatically',
 ];
@@ -3704,6 +3711,9 @@ if(!isset(self::$_ModelSupplementals[$classname])){
 self::$_ModelSupplementals[$classname] = [];
 }
 self::$_ModelSupplementals[$classname][] = $class;
+if(isset(self::$_ModelSchemaCache[$classname])){
+self::$_ModelSchemaCache[$classname] = null;
+}
 }
 public static function GetIndexes() {
 $classname = get_called_class();
@@ -3828,14 +3838,16 @@ $index = $ref->getMethod('GetIndexes')->invoke(null);
 if(
 isset($schema['site']) &&
 $schema['site']['type'] == Model::ATT_TYPE_SITE &&
-Core::IsComponentAvailable('enterprise') &&
+Core::IsComponentAvailable('multisite') &&
 MultiSiteHelper::IsEnabled()
 ){
 $siteexact = (sizeof($this->_dataset->getWhereClause()->findByField('site')) > 0);
 $idexact = false;
-if(isset($index['primary'])){
+$pri = isset($index['primary']) ? $index['primary'] : null;
+if($pri && !is_array($pri)) $pri = [$pri];
+if($pri){
 $allids = true;
-foreach($index['primary'] as $k){
+foreach($pri as $k){
 if(sizeof($this->_dataset->getWhereClause()->findByField($k)) == 0){
 $allids = false;
 break;
@@ -3844,7 +3856,7 @@ break;
 if($allids) $idexact = true;
 }
 if(!($siteexact || $idexact)){
-$w = new DatasetWhereClause();
+$w = new \Core\Datamodel\DatasetWhereClause();
 $w->setSeparator('or');
 $w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
 $w->addWhere('site = -1');
@@ -3960,6 +3972,8 @@ public $aliasof = null;
 public $valueDB = null;
 public $valueTranslated = null;
 public $value = null;
+public $parent = null;
+public $formAttributes = [];
 public function isIdenticalTo(SchemaColumn $col){
 $diff = $this->getDiff($col);
 return ($diff === null);
@@ -4018,26 +4032,34 @@ else{
 return null;
 }
 }
-public function setValueFromDB($val){
-$this->valueDB = $val;
-$this->value = $val;
-if($this->encrypted){
-$val = \Model::DecryptValue($val);
-}
-$this->valueTranslated = $val;
-}
-public function setValueFromApp($val){
-$this->valueTranslated = $val;
-if($this->encrypted){
-$val = \Model::EncryptValue($val);
-}
-$this->value = $val;
-}
 public function getInsertValue(){
 return $this->value;
 }
 public function getUpdateValue(){
 return $this->value;
+}
+public function getFormElementType(){
+return 'text';
+}
+public function getFormElementAttributes(){
+$i18nKey = '_MODEL_' . strtoupper(get_class($this->parent)) . '_';
+$title       = t('STRING' . $i18nKey . strtoupper($this->field));
+$description = t('MESSAGE' . $i18nKey . strtoupper($this->field));
+$na = $this->formAttributes;
+$na['title'] = $title;
+$na['description'] = $description;
+$na['value'] = $this->valueTranslated;
+$na['name'] = $this->field;
+return $na;
+}
+public function getAsFormElement(){
+$attributes = $this->getFormElementAttributes();
+$type = isset($this->formAttributes['type']) ? $this->formAttributes['type'] : 'text';
+if($type == 'disabled'){
+return null;
+}
+$el = \FormElement::Factory($type, $attributes);
+return $el;
 }
 public function changed(){
 return ($this->valueDB != $this->value);
@@ -4076,6 +4098,33 @@ $this->autoinc = $schema['autoinc'];
 }
 $this->value = $this->default;
 $this->valueTranslated = $this->default;
+if(isset($schema['form'])){
+$this->formAttributes = array_merge($this->formAttributes, $schema['form']);
+}
+if(isset($schema['formtype'])){
+$this->formAttributes['type'] = $schema['formtype'];
+}
+if(!isset($this->formAttributes['required'])){
+$this->formAttributes['required'] = $this->required;
+}
+if(!isset($this->formAttributes['maxlength']) && $this->maxlength){
+$this->formAttributes['maxlength'] = $this->maxlength;
+}
+}
+public function setValueFromDB($val){
+$this->valueDB = $val;
+$this->value = $val;
+if($this->encrypted){
+$val = \Model::DecryptValue($val);
+}
+$this->valueTranslated = $val;
+}
+public function setValueFromApp($val){
+$this->valueTranslated = $val;
+if($this->encrypted){
+$val = \Model::EncryptValue($val);
+}
+$this->value = $val;
 }
 public static function Factory($type){
 if(class_exists('\\Core\\Datamodel\\Columns\\SchemaColumn_' . $type)){
@@ -4105,6 +4154,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_CREATED;
 $this->maxlength = 15;
 $this->default = 0;
+$this->formAttributes['type'] = 'disabled';
 }
 public function getInsertValue(){
 if(!$this->value){
@@ -4125,6 +4175,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_DELETED;
 $this->maxlength = 15;
 $this->default = 0;
+$this->formAttributes['type'] = 'disabled';
 }
 }
 } // ENDING NAMESPACE Core\Datamodel\Columns
@@ -4139,6 +4190,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_ID;
 $this->maxlength = 15;
 $this->autoinc = true;
+$this->formAttributes['type']     = 'system';
 }
 }
 } // ENDING NAMESPACE Core\Datamodel\Columns
@@ -4152,6 +4204,7 @@ class SchemaColumn___id_fk extends SchemaColumn {
 public function __construct(){
 $this->type = \Model::ATT_TYPE_ID_FK;
 $this->maxlength = 15;
+$this->formAttributes['type']     = 'system';
 }
 }
 } // ENDING NAMESPACE Core\Datamodel\Columns
@@ -4167,10 +4220,12 @@ $this->type = \Model::ATT_TYPE_SITE;
 $this->maxlength = 15;
 $this->default = 0;
 $this->comment = 'The site id in multisite mode, (or -1 if global)';
+$this->formAttributes['type'] = 'system';
+$this->formAttributes['source'] = 'MultiSiteModel::GetAllAsOptions';
 }
 public function getInsertValue(){
 if($this->value === null || $this->value === false){
-if(\Core::IsComponentAvailable('enterprise') && \MultiSiteHelper::IsEnabled()){
+if(\Core::IsComponentAvailable('multisite') && \MultiSiteHelper::IsEnabled()){
 $this->setValueFromApp(\MultiSiteHelper::GetCurrentSiteID());
 }
 else{
@@ -4193,6 +4248,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_UPDATED;
 $this->maxlength = 15;
 $this->default = 0;
+$this->formAttributes['type'] = 'disabled';
 }
 public function getInsertValue(){
 if(!$this->value){
@@ -4217,6 +4273,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_UUID;
 $this->maxlength = 32;
 $this->encoding = \Model::ATT_ENCODING_UTF8;
+$this->formAttributes['type']     = 'system';
 }
 public function getInsertValue(){
 if(!$this->value){
@@ -4234,9 +4291,10 @@ namespace  {
 namespace Core\Datamodel\Columns {
 class SchemaColumn___uuid_fk extends SchemaColumn {
 public function __construct(){
-$this->type = \Model::ATT_TYPE_UUID_FK;
-$this->maxlength = 32;
-$this->encoding = \Model::ATT_ENCODING_UTF8;
+$this->type                       = \Model::ATT_TYPE_UUID_FK;
+$this->maxlength                  = 32;
+$this->encoding                   = \Model::ATT_ENCODING_UTF8;
+$this->formAttributes['type']     = 'system';
 }
 public function setValueFromApp($val){
 $this->valueTranslated = $val;
@@ -4261,6 +4319,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_BOOL;
 $this->encoding = \Model::ATT_ENCODING_UTF8;
 $this->default = '0';
+$this->formAttributes['type'] = 'radio';
 }
 public function setValueFromDB($val){
 $this->valueDB = $val;
@@ -4285,6 +4344,11 @@ $val = true;
 }
 $this->valueTranslated = $val;
 $this->value = $val ? '1' : '0';
+}
+public function getFormElementAttributes(){
+$na = parent::getFormElementAttributes();
+$na['options'] = ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')];
+return $na;
 }
 }
 } // ENDING NAMESPACE Core\Datamodel\Columns
@@ -4352,6 +4416,7 @@ class SchemaColumn_enum extends SchemaColumn {
 public function __construct(){
 $this->type = \Model::ATT_TYPE_ENUM;
 $this->encoding = \Model::ATT_ENCODING_UTF8;
+$this->formAttributes['type'] = 'select';
 }
 public function setSchema($schema){
 parent::setSchema($schema);
@@ -4361,6 +4426,22 @@ $this->options = array_keys($schema['options']);
 else{
 $this->options = $schema['options'];
 }
+}
+public function getFormElementAttributes(){
+$na = parent::getFormElementAttributes();
+if(isset($na['source'])){
+if(strpos($na['source'], 'this::') === 0){
+$na['source'] = [$this->parent, substr($na['source'], 6)];
+}
+}
+elseif(!isset($na['options'])){
+$opts = $this->options;
+if($this->null){
+$opts = array_merge(['' => '-- Select One --'], $opts);
+}
+$na['options'] = $opts;
+}
+return $na;
 }
 }
 } // ENDING NAMESPACE Core\Datamodel\Columns
@@ -4374,6 +4455,7 @@ class SchemaColumn_float extends SchemaColumn {
 public function __construct(){
 $this->type = \Model::ATT_TYPE_FLOAT;
 $this->default = 0.0;
+$this->formAttributes['type'] = 'text';
 }
 public function setValueFromDB($val){
 $this->valueDB = $val;
@@ -4403,6 +4485,22 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_INT;
 $this->maxlength = 15;
 $this->default = 0;
+$this->formAttributes['type'] = 'text';
+}
+public function getFormElementAttributes(){
+if($this->formAttributes['type'] == 'datetime'){
+$defaults = [
+'datetimepicker_dateformat' => 'yy-mm-dd',
+'datetimepicker_timeformat' => 'HH:mm',
+'displayformat' => 'Y-m-d H:i',
+'saveformat' => 'U',
+];
+}
+else{
+$defaults = [];
+}
+$na = parent::getFormElementAttributes();
+return array_merge($defaults, $na);
 }
 }
 } // ENDING NAMESPACE Core\Datamodel\Columns
@@ -4418,6 +4516,7 @@ $this->type = \Model::ATT_TYPE_STRING;
 $this->maxlength = 255;
 $this->encoding = \Model::ATT_ENCODING_UTF8;
 $this->default = '';
+$this->formAttributes['type'] = 'text';
 }
 public function setValueFromDB($val){
 $this->valueDB = $val;
@@ -4453,6 +4552,7 @@ public function __construct(){
 $this->type = \Model::ATT_TYPE_TEXT;
 $this->encoding = \Model::ATT_ENCODING_UTF8;
 $this->default = '';
+$this->formAttributes['type'] = 'textarea';
 }
 public function setValueFromApp($val){
 $this->valueTranslated = $val;
@@ -4479,6 +4579,8 @@ class SchemaColumn_ISO_8601_date extends SchemaColumn {
 public function __construct(){
 $this->type = \Model::ATT_TYPE_ISO_8601_DATE;
 $this->default = '0000-00-00';
+$this->formAttributes['datepicker_dateformat'] = 'yy-mm-dd';
+$this->formAttributes['type'] = 'date';
 }
 public function setValueFromApp($val){
 $this->valueTranslated = $val;
@@ -4502,6 +4604,10 @@ class SchemaColumn_ISO_8601_datetime extends SchemaColumn {
 public function __construct(){
 $this->type = \Model::ATT_TYPE_ISO_8601_DATETIME;
 $this->default = '0000-00-00 00:00:00';
+$this->formAttributes['datepicker_dateformat'] = 'yy-mm-dd';
+$this->formAttributes['datetimepicker_timeformat'] = 'HH:mm';
+$this->formAttributes['saveformat'] = 'Y-m-d H:i:00';
+$this->formAttributes['type'] = 'datetime';
 }
 public function setValueFromApp($val){
 $this->valueTranslated = $val;
@@ -5132,7 +5238,7 @@ $this->_linked = array(
 )
 );
 if(func_num_args() == 1){
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $site = MultiSiteHelper::GetCurrentSiteID();
 }
 else{
@@ -5195,12 +5301,12 @@ $ds = Core\Datamodel\Dataset::Init()
 ->select('*')
 ->whereGroup('OR', 'baseurl = ' . $v, 'rewriteurl = ' . $v);
 if ($this->exists()) $ds->where('baseurl != ' . $this->_data['baseurl']);
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $ds->whereGroup('OR', 'site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID());
 }
 $ds->execute();
 if ($ds->num_rows > 0) {
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 foreach($ds as $row){
 if($row['site'] == $this->get('site') || $row['site'] == '-1'){
 return 'Rewrite URL already taken';
@@ -5472,7 +5578,7 @@ $element->set('templatename', $this->getBaseTemplateName());
 }
 }
 public function addToFormPost(Form $form, $prefix){
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
 $form->switchElementType($prefix . '[site]', 'select');
 $el = $form->getElement($prefix . '[site]');
 $opts = [
@@ -5532,7 +5638,7 @@ public function getResolvedURL() {
 if(strpos($this->get('baseurl'), '://') !== false){
 return $this->get('baseurl');
 }
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 if($this->get('site') == -1){
 $base = ROOT_URL;
 }
@@ -5639,7 +5745,7 @@ $p = PageModel::Construct($altbaseurl);
 if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
 }
-elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+elseif(!$p->exists() && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $p = PageModel::Construct(-1, $altbaseurl);
 if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
@@ -5655,7 +5761,7 @@ $p = PageModel::Construct($parentb);
 if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
 }
-elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+elseif(!$p->exists() && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $p = PageModel::Construct(-1, $parentb);
 if ($p->exists() && \Core\user()->checkAccess($p->get('access'))) {
 return array_merge($p->getParentTree(), array($p));
@@ -5890,7 +5996,7 @@ $ctype = \Core\Filestore\extension_to_mimetype($ext);
 if(!$ctype){
 $ctype = 'text/html';
 }
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 if($site === null){
 $site = MultiSiteHelper::GetCurrentSiteID();
 }
@@ -6015,7 +6121,7 @@ if (self::$_RewriteCache === null) {
 $s = new Core\Datamodel\Dataset();
 $s->select('site, rewriteurl, baseurl, fuzzy');
 $s->table('page');
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 if($site === null){
 $site = MultiSiteHelper::GetCurrentSiteID();
 }
@@ -6076,7 +6182,7 @@ return [
 ];
 }
 private static function _LookupReverseUrl($url, $site = null) {
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 if($site === null){
 $site = MultiSiteHelper::GetCurrentSiteID();
 }
@@ -6110,7 +6216,13 @@ $tries = array_merge($tries, $dat);
 }
 }
 else{
-$tries = array_merge(self::$_FuzzyCache['_GLOBAL_'], self::$_FuzzyCache[$site]);
+$tries = [];
+if(isset(self::$_FuzzyCache['_GLOBAL_'])){
+$tries = array_merge($tries, self::$_FuzzyCache['_GLOBAL_']);
+}
+if(isset(self::$_FuzzyCache[$site])){
+$tries = array_merge($tries, self::$_FuzzyCache[$site]);
+}
 }
 while($try != '' && $try != '/') {
 if(isset($tries[$try])) {
@@ -6136,7 +6248,7 @@ else {
 $f = new ModelFactory('PageModel');
 $f->where($where);
 }
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $g = new Core\Datamodel\DatasetWhereClause();
 $g->setSeparator('OR');
 $g->addWhere('site = -1');
@@ -6278,7 +6390,7 @@ $this->_linked = array(
 ),
 );
 if(func_num_args() == 3){
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $site = MultiSiteHelper::GetCurrentSiteID();
 }
 else{
@@ -6339,7 +6451,7 @@ public static $Indexes = array(
 );
 public function __construct(){
 if(func_num_args() == 2){
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $site = MultiSiteHelper::GetCurrentSiteID();
 }
 else{
@@ -6525,12 +6637,13 @@ public static $Schema = [
 'type'       => Model::ATT_TYPE_STRING,
 'maxlength'  => 64,
 'null'       => false,
+'formtype' => 'disabled',
 'validation' => ['this', 'validateEmail'],
 'required'   => true,
 ],
 'backend'              => [
 'type'     => Model::ATT_TYPE_STRING,
-'formtype' => 'hidden',
+'formtype' => 'disabled',
 'default'  => 'datastore',
 'comment'  => 'Pipe-delimited list of authentication drivers on this user'
 ],
@@ -6538,11 +6651,13 @@ public static $Schema = [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 60,
 'null'      => false,
+'formtype'  => 'disabled',
 ],
 'apikey'               => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 64,
 'null'      => false,
+'formtype'  => 'disabled',
 ],
 'active'               => [
 'type'    => Model::ATT_TYPE_ENUM,
@@ -6550,6 +6665,7 @@ public static $Schema = [
 'options' => ['-1', '0', '1'],
 'null'    => false,
 'form'    => [
+'type' => 'disabled',
 'title'   => 'User Status',
 'options' => [
 '-1' => 'Disabled',
@@ -6562,6 +6678,7 @@ public static $Schema = [
 'type'    => Model::ATT_TYPE_BOOL,
 'default' => '0',
 'null'    => false,
+'formtype'  => 'disabled',
 ],
 'avatar'               => [
 'type'      => Model::ATT_TYPE_STRING,
@@ -6575,34 +6692,41 @@ public static $Schema = [
 'gpgauth_pubkey' => [
 'type' => Model::ATT_TYPE_STRING,
 'maxlength' => 40,
+'formtype'  => 'disabled',
 ],
 'external_profiles' => [
 'type' => Model::ATT_TYPE_DATA,
 'encoding' => Model::ATT_ENCODING_JSON,
+'formtype'  => 'disabled',
 ],
 'registration_ip'      => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => '24',
 'comment'   => 'The original IP of the user registration',
+'formtype'  => 'disabled',
 ],
 'registration_source'  => [
 'type'    => Model::ATT_TYPE_STRING,
 'default' => 'self',
-'comment' => 'The source of the user registration, either self, admin, or other.'
+'comment' => 'The source of the user registration, either self, admin, or other.',
+'formtype'  => 'disabled',
 ],
 'registration_invitee' => [
 'type'    => Model::ATT_TYPE_UUID_FK,
 'comment' => 'If invited/created by a user, this is the ID of that user.',
+'formtype'  => 'disabled',
 ],
 'last_login'           => [
 'type'    => Model::ATT_TYPE_INT,
 'default' => 0,
 'comment' => 'The timestamp of the last login of this user',
+'formtype'  => 'disabled',
 ],
 'last_password'        => [
 'type'    => Model::ATT_TYPE_INT,
 'default' => 0,
 'comment' => 'The timestamp of the last password reset of this user',
+'formtype'  => 'disabled',
 ],
 ];
 public static $Indexes = [
@@ -6691,7 +6815,7 @@ $out  = [];
 $uugs = $this->getLink('UserUserGroup');
 foreach($uugs as $uug) {
 if($uug->get('context')) continue;
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 $g = $uug->getLink('UserGroup');
 if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()) {
 $out[] = $g->get('id');
@@ -6720,7 +6844,7 @@ $contextpk   = null;
 }
 foreach($uugs as $uug) {
 if(!$uug->get('context')) continue;
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 $g     = $uug->getLink('UserGroup');
 $gsite = $g->get('site');
 if(!($gsite == '-1' || $gsite == MultiSiteHelper::GetCurrentSiteID())
@@ -6871,7 +6995,9 @@ public function setFromForm(Form $form, $prefix = null) {
 foreach($form->getElements() as $el) {
 $name  = $el->get('name');
 $value = $el->get('value');
-if($prefix && strpos($name, $prefix . '[') !== 0) continue;
+if($prefix && strpos($name, $prefix . '[') !== 0){
+continue;
+}
 if($prefix) {
 if(strpos($name, '][')) {
 $name = str_replace('][', '[', substr($name, strlen($prefix) + 1));
@@ -6880,35 +7006,8 @@ else {
 $name = substr($name, strlen($prefix) + 1, -1);
 }
 }
-if($name == 'email') {
-$this->set('email', $value);
-}
-elseif(strpos($name, 'option[') === 0) {
-$k   = substr($name, 7, -1);
-$obj = $this->getConfigObject($k);
-if($obj === null){
-continue;
-}
-$obj = $obj->getLink('UserConfig');
-if($value === null && $obj->get('formtype') == 'checkbox') {
-$value = 0;
-}
-if($el instanceof FormFileInput) {
-$value = 'public/user/config/' . $value;
-}
-$this->set($k, $value);
-}
-elseif($name == 'groups[]') {
+if($name == 'groups[]') {
 $this->setGroups($value);
-}
-elseif($name == 'active') {
-$this->set('active', $value ? 1 : 0);
-}
-elseif($name == 'admin') {
-$this->set('admin', $value);
-}
-elseif($name == 'avatar') {
-$this->set('avatar', $value);
 }
 elseif($name == 'contextgroup[]') {
 $gids       = $value;
@@ -6927,7 +7026,20 @@ $groups[] = [
 }
 $this->setContextGroups($groups);
 }
-else {
+elseif($name == 'active'){
+$current = $this->get('active');
+$new = ($value) ? '1' : '0';
+if($current == '1' && $new == '0'){
+$this->set('active', '-1');
+}
+elseif($current == '-1' && $new == '0'){
+}
+else{
+$this->set('active', $new);
+}
+}
+elseif($name != 'user'){
+$this->set($name, $value);
 }
 } // foreach(elements)
 }
@@ -7083,7 +7195,7 @@ if(!isset($this->_resolvedpermissions[ $key ])) {
 $this->_resolvedpermissions[ $key ] = [];
 }
 $group = $uug->getLink('UserGroup');
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 if(!($group->get('site') == -1 || $group->get('site') == MultiSiteHelper::GetCurrentSiteID())) {
 continue;
 }
@@ -7139,7 +7251,7 @@ continue;
 elseif($context && $contextpk && $uug->get('context_pk') != $contextpk) {
 continue;
 }
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()) {
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 $ugsite = $uug->getLink('UserGroup')->get('site');
 if(!($ugsite == -1 || $ugsite == MultiSiteHelper::GetCurrentSiteID())) {
 continue;
@@ -7584,6 +7696,12 @@ if($type == 'checkboxes' && !is_array($val)){
 $val  = array_map('trim', explode('|', $val));
 }
 $el->set('value', $val);
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && MultiSiteHelper::GetCurrentSiteID()){
+if(!$this->get('overrideable')){
+$el->set('readonly', true);
+$el->set('disabled', true);
+}
+}
 return $el;
 }
 public function asFormElement(){
@@ -8464,11 +8582,41 @@ $v  = @$r->getAttribute('version');
 $op = @$r->getAttribute('operation');
 if ($v == '') $v = false;
 if ($op == '') $op = 'ge';
+if($v !== false){
+$vstr = $n . ' ';
+switch($op){
+case 'ge':
+case '>=':
+$vstr .= '>=';
+break;
+case 'gt':
+case '>':
+$vstr .= '>';
+break;
+case 'le':
+case '<=':
+$vstr .= '<=';
+break;
+case 'lt':
+case '<':
+$vstr .= '<';
+break;
+case 'eq':
+case '=':
+$vstr .= '=';
+break;
+}
+$vstr .= ' ' . $v;
+}
+else{
+$vstr = $n;
+}
 $this->_requires[] = array(
 'type'      => strtolower($t),
 'name'      => strtolower($n),
 'version'   => strtolower($v),
 'operation' => strtolower($op),
+'vstring'   => $vstr,
 );
 }
 }
@@ -8913,6 +9061,105 @@ else {
 return $this->errors;
 }
 }
+public function runRequirementChecks(){
+$requires = $this->getRequires();
+$results = [];
+foreach ($requires as $r) {
+$check = [
+'require' => $r,
+'result' => [
+'passed' => false,
+'available' => null,
+'message' => null,
+],
+];
+switch ($r['type']) {
+case 'component':
+if (!Core::IsComponentAvailable($r['name'])) {
+$check['result']['message'] = $check['result']['message'] = 'Missing component ' . $r['name'];
+}
+elseif (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
+$check['result']['available'] = Core::GetComponent($r['name'])->getVersionInstalled();
+$check['result']['message'] = 'Requires component ' . $r['vstring'] . ',  ' . $check['available'] . ' available.';
+}
+else{
+$check['result']['passed'] = true;
+$check['result']['available'] = Core::GetComponent($r['name'])->getVersionInstalled();
+$check['result']['message'] = 'Component ' . $r['vstring'] . ' is available';
+}
+$results[] = $check;
+break;
+case 'define':
+if (!defined($r['name'])) {
+$check['result']['message'] = $check['result']['message'] = 'Missing define ' . $r['name'];
+}
+elseif ($r['value'] != null && constant($r['name']) != $r['value']) {
+$check['result']['message'] = $check['result']['message'] = 'Incorrect define ' . $r['name'] . ', expected value of: ' . $r['value'];
+}
+else{
+$check['result']['passed'] = true;
+$check['result']['available'] = true;
+$check['result']['message'] = 'Define ' . $r['name'] . ' is set and correct';
+}
+$results[] = $check;
+break;
+case 'function':
+if(!function_exists($r['name'])){
+$check['result']['message'] = $check['result']['message'] = 'Missing function ' . $r['name'];
+}
+else{
+$check['result']['passed'] = true;
+$check['result']['available'] = true;
+$check['result']['message'] = 'Function ' . $r['name'] . ' is available';
+}
+$results[] = $check;
+break;
+case 'jslibrary':
+if (!Core::IsJSLibraryAvailable($r['name'])) {
+$check['result']['message'] = 'Missing JSlibrary ' . $r['name'];
+}
+else{
+$check['result']['passed'] = true;
+$check['result']['available'] = true;
+$check['result']['message'] = 'JSLibrary ' . $r['name'] . ' is available';
+}
+$results[] = $check;
+break;
+case 'library':
+if (!Core::IsLibraryAvailable($r['name'])) {
+$check['result']['message'] = 'Missing library ' . $r['name'];
+}
+elseif (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
+$check['result']['available'] = Core::GetLibraryVersion($r['name']);
+$check['result']['message'] = 'Requires library ' . $r['vstring'] . ',  ' . $check['available'] . ' available.';
+}
+else{
+$check['result']['passed'] = true;
+$check['result']['available'] = Core::GetLibraryVersion($r['name']);
+$check['result']['message'] = 'Library ' . $r['vstring'] . ' is available';
+}
+$results[] = $check;
+break;
+case 'phpextension':
+$v = phpversion($r['name']);
+if($v === false){
+$check['result']['message'] = 'Missing PHP Extension ' . $r['name'];
+}
+elseif($r['version'] && !version_compare($v, $r['version'], $r['operation'])){
+$check['result']['available'] = $v;
+$check['result']['message'] = 'Requires PHP Extension ' . $r['vstring'] . ',  ' . $check['available'] . ' available.';
+}
+else{
+$check['result']['passed'] = true;
+$check['result']['available'] = $v;
+$check['result']['message'] = 'PHP Extension ' . $r['vstring'] . ' is available';
+}
+$results[] = $check;
+break;
+}
+}
+return $results;
+}
 public function isEnabled() {
 return ($this->_enabled === true);
 }
@@ -8923,45 +9170,16 @@ return false;
 if($this->_filesloaded) return true;
 $this->error   = 0;
 $this->errstrs = array();
-foreach ($this->getRequires() as $r) {
-switch ($r['type']) {
-case 'library':
-if (!Core::IsLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
+$requireChecks = $this->runRequirementChecks();
+foreach($requireChecks as $r){
+if(!$r['result']['passed']){
 $this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing library ' . $r['name'] . ' ' . $r['version'];
-}
-break;
-case 'jslibrary':
-if (!Core::IsJSLibraryAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing JSlibrary ' . $r['name'] . ' ' . $r['version'];
-}
-break;
-case 'component':
-if (!Core::IsComponentAvailable($r['name'], $r['version'], $r['operation'])) {
-$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing component ' . $r['name'] . ' ' . $r['version'];
-}
-break;
-case 'function':
-if(!function_exists($r['name'])){
-$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing function ' . $r['name'];
-}
-break;
-case 'define':
-if (!defined($r['name'])) {
-$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires missing define ' . $r['name'];
-}
-if ($r['value'] != null && constant($r['name']) != $r['value']) {
-$this->error     = $this->error | Component_2_1::ERROR_MISSINGDEPENDENCY;
-$this->errstrs[] = 'Requires wrong define ' . $r['name'] . '(' . $r['value'] . ')';
-}
-break;
+$this->errstrs[] = $r['result']['message'];
 }
 }
-if ($this->error) return false;
+if ($this->error){
+return false;
+}
 $cs = $this->getClassList();
 foreach ($cs as $c => $file) {
 if (Core::IsClassAvailable($c)) {
@@ -13436,6 +13654,10 @@ $this->icon = $this->class;
 break;
 }
 }
+$title = $this->title;
+if(strpos($title, 't:') === 0){
+$title = t(substr($title, 2));
+}
 $html .= '<li' . ($this->class ? (' class="' . $this->class . '"') : '') . '>';
 if($this->link){
 $html .= $this->_fetchA();
@@ -13443,7 +13665,7 @@ $html .= $this->_fetchA();
 if($this->icon){
 $html .= '<i class="icon-' . $this->icon . '"></i> ';
 }
-$html .= '<span>' . $this->title . '</span>';
+$html .= '<span>' . $title . '</span>';
 if($this->link){
 $html .= '</a>';
 }
@@ -13462,7 +13684,11 @@ $dat['href'] = '#false';
 else{
 $dat['href'] = $this->link;
 }
-$dat['title'] = $this->title;
+$title = $this->title;
+if(strpos($title, 't:') === 0){
+$title = t(substr($title, 2));
+}
+$dat['title'] = $title;
 if($this->class) $dat['class'] = $this->class;
 $html = '<a ';
 foreach($dat as $k => $v){
@@ -14726,6 +14952,10 @@ if (!isset($ch->_scriptlibraries[$name])) return false;
 elseif ($version) return version_compare(str_replace('~', '-', $ch->_scriptlibraries[$name]->version), $version, $operation);
 else return true;
 }
+public static function GetLibraryVersion($library){
+$s = self::Singleton();
+return isset($s->_libraries[$library]) ? $s->_libraries[$library] : null;
+}
 public static function GetJSLibrary($library) {
 $library = strtolower($library);
 return self::Singleton()->_scriptlibraries[$library];
@@ -15148,6 +15378,7 @@ if($config->get('mapto') && !defined($config->get('mapto'))){
 define($config->get('mapto'), $val);
 }
 }
+Core\Utilities\Logger\write_debug('Config data loaded from database');
 }
 public static function Singleton() {
 if (self::$Instance === null) {
@@ -15183,7 +15414,7 @@ return false;
 $config = $instance->_cacheFromDB[$key];
 if(
 $config->get('overrideable') == 1 &&
-Core::IsComponentAvailable('enterprise') &&
+Core::IsComponentAvailable('multisite') &&
 MultiSiteHelper::GetCurrentSiteID()
 ){
 $siteconfig = MultiSiteConfigModel::Construct($key, MultiSiteHelper::GetCurrentSiteID());
@@ -19704,8 +19935,15 @@ return $tpl->fetch();
 }
 public function getClass() {
 $classes = array_merge($this->classnames, explode(' ', $this->get('class')));
-if($this->get('required')) $classes[] = 'formrequired';
-if($this->hasError()) $classes[] = 'formerror';
+if($this->get('required')){
+$classes[] = 'formrequired';
+}
+if($this->hasError()){
+$classes[] = 'formerror';
+}
+if($this->get('disabled')){
+$classes[] = 'formelement-disabled';
+}
 return implode(' ', array_unique($classes));
 }
 public function getID(){
@@ -19977,133 +20215,22 @@ if ($e->hasError() && !$quiet){
 }
 }
 public function addModel(Model $model, $prefix = 'model'){
-if(isset($this->_models[$prefix])) return;
-$groups = array();
+if(isset($this->_models[$prefix])){
+return;
+}
 $this->_models[$prefix] = $model;
 $s = $model->getKeySchemas();
 $i = $model->GetIndexes();
-if (!isset($i['primary'])) $i['primary'] = array();
-$i18nKey = '_MODEL_' . strtoupper(get_class($model)) . '_';
-$new = $model->isnew();
+if (!isset($i['primary'])){
+$i['primary'] = array();
+}
 foreach ($s as $k => $v) {
-$title       = t('STRING' . $i18nKey . strtoupper($k));
-$description = t('MESSAGE' . $i18nKey . strtoupper($k));
-if(!$title && isset($dat['formtitle'])){
-$title = $dat['formtitle'];
-}
-if(!$description && isset($dat['formdescription'])){
-$description = $dat['formdescription'];
-}
-$formatts = array(
-'type' => null,
-'title' => $title,
-'description' => $description,
-'required' => false,
-'value' => $model->get($k),
-'name' => $prefix . '[' . $k . ']',
-);
-$defaults = [];
-if($formatts['value'] === null && isset($v['default'])) $formatts['value'] = $v['default'];
-if(isset($v['formtype']))        $formatts['type'] = $v['formtype'];
-if(isset($v['required']))        $formatts['required'] = $v['required'];
-if(isset($v['maxlength']))       $formatts['maxlength'] = $v['maxlength'];
-if(isset($v['form'])){
-$formatts = array_merge($formatts, $v['form']);
-}
-if($formatts['type'] == 'disabled'){
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_ID){
-$el = FormElement::Factory('system');
-$formatts['required'] = false;
-}
-elseif ($v['type'] == Model::ATT_TYPE_ID_FK){
-$el = FormElement::Factory('system');
-$formatts['required'] = false;
-}
-elseif($v['type'] == Model::ATT_TYPE_UUID){
-$el = FormElement::Factory('system');
-$formatts['required'] = false;
-}
-elseif($v['type'] == Model::ATT_TYPE_UUID_FK && $formatts['type'] === null){
-$el = FormElement::Factory('system');
-$formatts['required'] = false;
-}
-elseif($formatts['type'] == 'datetime' && $v['type'] == Model::ATT_TYPE_INT){
-$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
-$defaults['datetimepicker_timeformat'] = 'HH:mm';
-$defaults['displayformat'] = 'Y-m-d H:i';
-$defaults['saveformat'] = 'U';
-$el = FormElement::Factory('datetime');
-}
-elseif ($formatts['type'] !== null) {
-$el = FormElement::Factory($formatts['type']);
-}
-elseif ($v['type'] == Model::ATT_TYPE_BOOL) {
-$el = FormElement::Factory('radio');
-$el->set('options', ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')]);
-if ($formatts['value']) $formatts['value'] = 'yes';
-elseif ($formatts['value'] === null && $v['default']) $formatts['value'] = 'yes';
-elseif ($formatts['value'] === null && !$v['default']) $formatts['value'] = 'no';
-else $formatts['value'] = 'no';
-}
-elseif ($v['type'] == Model::ATT_TYPE_SITE) {
-$el = FormElement::Factory('system');
-}
-elseif ($v['type'] == Model::ATT_TYPE_STRING) {
-$el = FormElement::Factory('text');
-}
-elseif ($v['type'] == Model::ATT_TYPE_INT) {
-$el = FormElement::Factory('text');
-}
-elseif ($v['type'] == Model::ATT_TYPE_FLOAT) {
-$el = FormElement::Factory('text');
-}
-elseif ($v['type'] == Model::ATT_TYPE_TEXT) {
-$el = FormElement::Factory('textarea');
-}
-elseif ($v['type'] == Model::ATT_TYPE_CREATED) {
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_UPDATED) {
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_DELETED) {
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_ALIAS) {
-continue;
-}
-elseif ($v['type'] == Model::ATT_TYPE_ENUM) {
-$el   = FormElement::Factory('select');
-$opts = $v['options'];
-if ($v['null']) $opts = array_merge(array('' => '-Select One-'), $opts);
-$el->set('options', $opts);
-if ($v['default']) $el->set('value', $v['default']);
-}
-elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATE){
-$defaults['datepicker_dateformat'] = 'yy-mm-dd';
-$el = FormElement::Factory('date');
-}
-elseif($v['type'] == Model::ATT_TYPE_ISO_8601_DATETIME){
-$defaults['datetimepicker_dateformat'] = 'yy-mm-dd';
-$defaults['datetimepicker_timeformat'] = 'HH:mm';
-$defaults['saveformat'] = 'Y-m-d H:i:00';
-$el = FormElement::Factory('datetime');
-}
-else {
-die('Unsupported model attribute type for Form Builder [' . $v['type'] . ']');
-}
-unset($formatts['type']);
-foreach($defaults as $k => $v){
-if(!isset($formatts[$k])) $formatts[$k] = $v;
-}
-if(isset($formatts['source']) && strpos($formatts['source'], 'this::') === 0){
-$formatts['source'] = [$model, substr($formatts['source'], 6)];
-}
-$el->setFromArray($formatts);
+$el = $model->getColumn($k)->getAsFormElement();
+if($el !== null){
+$el->set('name', $prefix . '[' . $k . ']');
 $model->setToFormElement($k, $el);
 $this->addElement($el);
+}
 }
 $model->addToFormPost($this, $prefix);
 }
@@ -20176,8 +20303,12 @@ else $src =& $_GET;
 $form->loadFrom($src);
 try{
 $form->getModel();
-if (!$form->hasError()) $status = call_user_func($form->get('callsmethod'), $form);
-else $status = false;
+if (!$form->hasError()){
+$status = call_user_func($form->get('callsmethod'), $form);
+}
+else{
+$status = false;
+}
 }
 catch(ModelValidationException $e){
 \Core\set_message($e->getMessage(), 'error');
@@ -20392,7 +20523,7 @@ $view->error = View::ERROR_BADREQUEST;
 return;
 }
 }
-if(!$page->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(!$page->exists() && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $site = MultiSiteHelper::GetCurrentSiteID();
 $anypage = PageModel::Find(['baseurl = ' . $page->get('baseurl')], 1);
 if($anypage){
@@ -20744,7 +20875,7 @@ $uri = $this->uriresolved;
 $pagefac = new ModelFactory('PageModel');
 $pagefac->where('rewriteurl = ' . $uri);
 $pagefac->limit(1);
-if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 $pagefac->whereGroup('OR', array('site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()));
 }
 $p = $pagefac->get();
