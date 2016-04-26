@@ -17,8 +17,6 @@ class SecurityController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
-
 		// Build a form to handle the config options themselves.
 		// These will include password strength, whether or not captcha is enabled, etc.
 		$configs = [
@@ -28,7 +26,7 @@ class SecurityController extends Controller_2_1 {
 		$configform->set('callsmethod', 'SecurityController::SitePasswordSave');
 
 		foreach($configs as $key){
-			$el = \Core\Configs\get_form_element_from_config(ConfigModel::Construct($key));
+			$el = ConfigHandler::GetConfig($key)->getAsFormElement();
 			// I don't need this, (Everything from this group will be on the root-level form).
 			$el->set('group', null);
 			$configform->addElement($el);
