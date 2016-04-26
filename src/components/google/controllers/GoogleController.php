@@ -54,7 +54,6 @@ class GoogleController extends Controller_2_1 {
 	 * View to set google API keys and other configuration options.
 	 */
 	public function configure(){
-		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
 
 		$view = $this->getView();
 		$request = $this->getPageRequest();
