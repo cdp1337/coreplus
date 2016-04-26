@@ -264,8 +264,6 @@ class AdminController extends Controller_2_1 {
 
 		$view = $this->getView();
 
-		require_once(ROOT_PDIR . 'core/libs/core/configs/functions.php');
-
 		$where = array();
 		// If the enterprise component is installed and multisite is enabled, configurations have another layer of complexity.
 		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::GetCurrentSiteID()){
@@ -276,8 +274,9 @@ class AdminController extends Controller_2_1 {
 
 		$groups  = array();
 		foreach ($configs as $c) {
+			/** @var ConfigModel $c */
 			// Export out the group for this config option.
-			$el = \Core\Configs\get_form_element_from_config($c);
+			$el = $c->getAsFormElement();
 			$gname = $el->get('group');
 
 			if (!isset($groups[$gname])){
@@ -1604,45 +1603,6 @@ class AdminController extends Controller_2_1 {
 			);
 		}
 		
-		$functions = [
-			'BCMath' => [
-				'function' => 'bcadd',
-				'info' => 'http://php.net/manual/en/book.bc.php',
-			],
-			'curl' => [
-				'function' => 'curl_exec',
-				'info' => 'http://php.net/manual/en/book.curl.php',
-			],
-			'gd' => [
-				'function' => 'imagecreatefromjpeg',
-				'info' => 'http://php.net/manual/en/book.image.php',
-			],
-			'mcrypt' => [
-				'function' => 'mcrypt_encrypt',
-				'info' => 'http://php.net/manual/en/book.mcrypt.php',
-			],
-			'xml' => [
-				'function' => 'xml_parse',
-				'info' => 'http://php.net/manual/en/function.xml-parse.php',
-			]
-		];
-		
-		foreach($functions as $fn => $fndat){
-			if(function_exists($fndat['function'])){
-				$checks[] = \Core\HealthCheckResult::ConstructGood(
-					t('STRING_CHECK_PHP_LIBRARY_S_OK', $fn),
-					t('MESSAGE_SUCCESS_CHECK_PHP_LIBRARY_S_OK', $fn)
-				);
-			}
-			else{
-				$checks[] = \Core\HealthCheckResult::ConstructWarn(
-					t('STRING_CHECK_PHP_LIBRARY_S_NOT_PRESENT', $fn),
-					t('MESSAGE_ERROR_CHECK_PHP_LIBRARY_S_NOT_PRESENT_SEE_S_FOR_MORE_INFO', $fn, $fndat['info']),
-					''
-				);
-			}
-		}
-		
 		if(defined('SERVER_ID') && strlen(SERVER_ID) == 32){
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
 				t('STRING_CHECK_SERVER_ID_IS_S', wordwrap(SERVER_ID, 4, '-', true)),
@@ -1656,6 +1616,26 @@ class AdminController extends Controller_2_1 {
 				'/admin/serverid'
 			);
 		}
+		
+		foreach(Core::GetComponents() as $c){
+			/** @var Component_2_1 $c */
+			
+			$rc = $c->runRequirementChecks();
+			
+			foreach($rc as $result){
+				$m = $c->getName() . ': ' . $result['result']['message'];
+				if($result['result']['passed']){
+					if($result['result']['available'] !== true){
+						$m .= ' (' . $result['result']['available'] . ')';
+					}
+					$checks[] = \Core\HealthCheckResult::ConstructGood($m, '');
+				}
+				else{
+					$checks[] = \Core\HealthCheckResult::ConstructWarn($m, '', '');
+				}
+			}
+		}
+		
 
 		return $checks;
 	}
