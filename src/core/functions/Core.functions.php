@@ -156,7 +156,7 @@ function user(){
 	// If this is in multisite mode, blank out the access string cache too!
 	// This is because siteA may have some groups, while siteB may have another.
 	// We don't want a user going to a site they have full access to, hopping to another and having cached permissions!
-	if(\Core::IsComponentAvailable('enterprise') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
+	if(\Core::IsComponentAvailable('multisite') && class_exists('MultiSiteHelper') && \MultiSiteHelper::IsEnabled()){
 		$_CurrentUserAccount->clearAccessStringCache();
 	}
 
