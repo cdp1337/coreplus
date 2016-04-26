@@ -2,30 +2,24 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.2.3">
 	<requires>
-		<require name="User" type="library" version="2.8.0"/>
-		<require name="Core" type="component" version="2.8.0"/>
-		<require name="core" type="component" version="3.4.0" operation="ge"/>
+		<require name="Core" type="component" version="5.0.0"/>
 	</requires>
-	<users>
-		<userconfig weight="2" key="first_name" name="First Name" onedit="1" onregistration="1" searchable="1"/>
-		<userconfig weight="3" key="last_name" name="Last Name" onedit="1" onregistration="1" searchable="1"/>
-		<userconfig weight="4" key="phone" name="Phone Number" onedit="1" onregistration="0"/>
-		<userconfig weight="50" key="bio" name="Biography" formtype="markdown" onedit="1" onregistration="0"/>
-		<userconfig weight="1" key="username" name="Username" required="1" onedit="1" onregistration="1" validation="UserSocialHelper::ValidateUsername" searchable="1"/>
-	</users>
 	<hooks>
-		<hook name="/core/controllinks/usermodel" call="UserSocialHelper::GetUserLinks"/>
 	</hooks>
 	<files>
 		<file filename="CHANGELOG" md5="b53c97a6b1708f613b41143c3190fca2"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
-		<file filename="controllers/UserProfileController.php" md5="a57f00fb171c445d02d300e1e3c42d7c">
+		<file filename="controllers/UserProfileController.php" md5="66853e201317d6ef72b0925f6f298fc2">
 			<controller name="UserProfileController"/>
 		</file>
 		<file filename="helpers/UserSocialHelper.class.php" md5="f76a1418a7b97ace4d798aa5b7637486">
 			<class name="UserSocialHelper"/>
 		</file>
-		<file filename="widgets/UserProfileWidget.php" md5="cf95b5bffd25c23ea54b8d82b35684fe">
+		<file filename="models/UserSocial_UserModelSupplemental.php" md5="f9a82159fa528eb3cceb38c93429d326">
+			<class name="UserSocial_UserModelSupplemental"/>
+		</file>
+		<file filename="upgrades/123_user_config_migration.php" md5="64d7198dd20afaf598be06b5cc87f2c8"/>
+		<file filename="widgets/UserProfileWidget.php" md5="d3439ef919e587370e2daa7aa00fd567">
 			<class name="UserProfileWidget"/>
 		</file>
 	</files>
@@ -47,6 +41,9 @@
 		<upgrade from="1.2.0" to="1.2.1"/>
 		<upgrade from="1.2.1" to="1.2.2"/>
 		<upgrade from="1.2.2" to="1.2.3"/>
+		<upgrade from="next" to="next">
+			<php file="upgrades/123_user_config_migration.php"/>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

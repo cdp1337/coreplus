@@ -52,8 +52,6 @@ class UserProfileController extends Controller_2_1 {
 
 		$view->title = $user->getDisplayName();
 		$view->assign('user', $user);
-		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
+		$view->assign('profiles', $user->get('external_profiles'));
 	}
-
-
 }

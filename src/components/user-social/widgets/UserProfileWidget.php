@@ -27,7 +27,7 @@ class UserProfileWidget extends Widget_2_1{
 		$view->assign('enableavatar', (\ConfigHandler::Get('/user/enableavatar')));
 		$view->assign('link', UserSocialHelper::ResolveProfileLink($user));
 		$view->assign('user', $user);
-		$view->assign('profiles', json_decode($user->get('json:profiles'), true));
+		$view->assign('profiles', $user->get('external_profiles'));
 		$view->assign('direction', $direction);
 		$view->assign('orientation', $orientation);
 		$view->assign('title', $request->getParameter('title'));
