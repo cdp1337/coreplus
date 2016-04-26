@@ -1,75 +1,88 @@
+{assign var='social_facebook' value=ConfigHandler::Get('/theme/social_link_facebook')}
+{assign var='social_foursquare' value=ConfigHandler::Get('/theme/social_link_foursquare')}
+{assign var='social_github' value=ConfigHandler::Get('/theme/social_link_github')}
+{assign var='social_gittip' value=ConfigHandler::Get('/theme/social_link_gittip')}
+{assign var='social_gplus' value=ConfigHandler::Get('/theme/social_link_gplus')}
+{assign var='social_instagram' value=ConfigHandler::Get('/theme/social_link_instagram')}
+{assign var='social_pinterest' value=ConfigHandler::Get('/theme/social_link_pinterest')}
+{assign var='social_linkedin' value=ConfigHandler::Get('/theme/social_link_linkedin')}
+{assign var='social_twitter' value=ConfigHandler::Get('/theme/social_link_twitter')}
+{assign var='social_vimeo' value=ConfigHandler::Get('/theme/social_link_vimeo')}
+{assign var='social_youtube' value=ConfigHandler::Get('/theme/social_link_youtube')}
+{assign var='social_generic' value=ConfigHandler::Get('/theme/social_link_generic')}
+
 {if
-	$smarty.const.THEME_SOCIAL_FACEBOOK ||
-	$smarty.const.THEME_SOCIAL_FOURSQUARE ||
-	$smarty.const.THEME_SOCIAL_GITHUB ||
-	$smarty.const.THEME_SOCIAL_GITTIP ||
-	$smarty.const.THEME_SOCIAL_GPLUS ||
-	$smarty.const.THEME_SOCIAL_INSTAGRAM ||
-	$smarty.const.THEME_SOCIAL_PINTEREST ||
-	$smarty.const.THEME_SOCIAL_LINKEDIN ||
-	$smarty.const.THEME_SOCIAL_TWITTER ||
-	$smarty.const.THEME_SOCIAL_VIMEO ||
-	$smarty.const.THEME_SOCIAL_YOUTUBE ||
-	$smarty.const.THEME_SOCIAL_GENERIC
+	$social_facebook ||
+	$social_foursquare ||
+	$social_github ||
+	$social_gittip ||
+	$social_gplus ||
+	$social_instagram ||
+	$social_pinterest ||
+	$social_linkedin ||
+	$social_twitter ||
+	$social_vimeo ||
+	$social_youtube ||
+	$social_generic
 }
 	<div class="site-social-links">
-		{if $smarty.const.THEME_SOCIAL_FACEBOOK}
-			<a href="{$smarty.const.THEME_SOCIAL_FACEBOOK}" target="_blank" title="Check us out on Facebook!">
+		{if $social_facebook}
+			<a href="{$social_facebook}" target="_blank" title="Check us out on Facebook!">
 				<i class="icon-facebook-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_FOURSQUARE}
-			<a href="{$smarty.const.THEME_SOCIAL_FOURSQUARE}" target="_blank" title="Check us out on Foursquare!">
+		{if $social_foursquare}
+			<a href="{$social_foursquare}" target="_blank" title="Check us out on Foursquare!">
 				<i class="icon-foursquare"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_GITHUB}
-			<a href="{$smarty.const.THEME_SOCIAL_GITHUB}" target="_blank" title="Fork us on Github!">
+		{if $social_github}
+			<a href="{$social_github}" target="_blank" title="Fork us on Github!">
 				<i class="icon-github-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_GITTIP}
-			<a href="{$smarty.const.THEME_SOCIAL_GITTIP}" target="_blank" title="Tip us on Gittip!">
+		{if $social_gittip}
+			<a href="{$social_gittip}" target="_blank" title="Tip us on Gittip!">
 				<i class="icon-gittip"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_GPLUS}
-			<a href="{$smarty.const.THEME_SOCIAL_GPLUS}" target="_blank" title="Check us out on Google Plus!">
+		{if $social_gplus}
+			<a href="{$social_gplus}" target="_blank" title="Check us out on Google Plus!">
 				<i class="icon-google-plus-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_INSTAGRAM}
-			<a href="{$smarty.const.THEME_SOCIAL_INSTAGRAM}" target="_blank" title="Check us out on Instagram!">
+		{if $social_instagram}
+			<a href="{$social_instagram}" target="_blank" title="Check us out on Instagram!">
 				<i class="icon-instagram"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_LINKEDIN}
-			<a href="{$smarty.const.THEME_SOCIAL_LINKEDIN}" target="_blank" title="Check us out on Linkedin!">
+		{if $social_linkedin}
+			<a href="{$social_linkedin}" target="_blank" title="Check us out on Linkedin!">
 				<i class="icon-linkedin-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_PINTEREST}
-			<a href="{$smarty.const.THEME_SOCIAL_PINTEREST}" target="_blank" title="Check us out on Pinterest!">
+		{if $social_pinterest}
+			<a href="{$social_pinterest}" target="_blank" title="Check us out on Pinterest!">
 				<i class="icon-pinterest-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_TWITTER}
-			<a href="{$smarty.const.THEME_SOCIAL_TWITTER}" target="_blank" title="Send us a Tweet!">
+		{if $social_twitter}
+			<a href="{$social_twitter}" target="_blank" title="Send us a Tweet!">
 				<i class="icon-twitter-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_VIMEO}
-			<a href="{$smarty.const.THEME_SOCIAL_VIMEO}" target="_blank" title="Check us out on Vimeo!">
+		{if $social_vimeo}
+			<a href="{$social_vimeo}" target="_blank" title="Check us out on Vimeo!">
 				<i class="icon-vimeo-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_YOUTUBE}
-			<a href="{$smarty.const.THEME_SOCIAL_YOUTUBE}" target="_blank" title="Check us out on Youtube!">
+		{if $social_youtube}
+			<a href="{$social_youtube}" target="_blank" title="Check us out on Youtube!">
 				<i class="icon-youtube-square"></i>
 			</a>
 		{/if}
-		{if $smarty.const.THEME_SOCIAL_GENERIC}
-			<a href="{$smarty.const.THEME_SOCIAL_GENERIC}" target="_blank" title="Check us out here too!">
+		{if $social_generic}
+			<a href="{$social_generic}" target="_blank" title="Check us out here too!">
 				<i class="icon-globe"></i>
 			</a>
 		{/if}
