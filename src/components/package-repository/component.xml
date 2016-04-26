@@ -12,35 +12,39 @@
 		<permission key="/package_repository/view_analytics"/>
 	</permissions>
 	<pages>
-		<page baseurl="/packagerepository" title="Package Repository" rewriteurl="/repo" indexable="1" admin="0" access="*"/>
-		<page baseurl="/packagerepositorylicense/admin" title="Package Repository License Manager" admin="1" group="t:STRING_ADMIN" access="p:/package_repository/licenses/manager"/>
-		<page baseurl="/packagerepository/config" title="Package Repository Configuration" admin="1" access="g:admin" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/packagerepository" title="t:STRING_PACKAGE_REPOSITORY" rewriteurl="/repo" indexable="1" admin="0" access="*"/>
+		<page baseurl="/packagerepositorylicense" title="t:STRING_PACKAGE_REPOSITORY_LICENSER" rewriteurl="/licenser" indexable="0" admin="0" access="*"/>
+		<page baseurl="/packagerepositorylicense/admin" title="t:STRING_PACKAGE_REPOSITORY_LICENSE_MANAGER" admin="1" group="t:STRING_ADMIN" access="p:/package_repository/licenses/manager"/>
+		<page baseurl="/packagerepository/config" title="t:STRING_PACKAGE_REPOSITORY_CONFIGURATION" admin="1" access="g:admin" group="t:STRING_CONFIGURE"/>
 		<page baseurl="/packagerepository/analytics" title="t:STRING_PACKAGE_REPOSITORY_ANALYTICS" admin="1" access="p:/package_repository/view_analytics" group="t:STRING_REPORTING"/>
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="5ac4d200e4fe09e6cdc16e5a7f3ad8fb"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
-		<file filename="assets/scss/package-repository.scss" md5="c1c8326bc8c4ef205387fa36d7a4d63f"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="72cf71baa0124de85494d22db4af4e52">
+		<file filename="assets/scss/package-repository.scss" md5="c0ec0d8ad35fac327622b3a1c4be6565"/>
+		<file filename="controllers/PackageRepositoryController.php" md5="cd37eeb937e34767328651e8868e9bf1">
 			<controller name="PackageRepositoryController"/>
 		</file>
-		<file filename="controllers/PackageRepositoryLicenseController.php" md5="181fa2ec1c74406f03b5238d8503629f">
+		<file filename="controllers/PackageRepositoryLicenseController.php" md5="afc10a65d1a2d8b261afab6813fac66d">
 			<controller name="PackageRepositoryLicenseController"/>
 		</file>
 		<file filename="i18n/ar.ini" md5="a8b41ec7ee76f305ca4b3372cbf25f6d"/>
 		<file filename="i18n/de.ini" md5="992527fd785e95a33a94bc426b9dc94c"/>
 		<file filename="i18n/en.ini" md5="268b07bba4b3a0fb3202cb569164c2a6"/>
 		<file filename="i18n/fr.ini" md5="2e54ae729dd18fc82a460f349834a5e8"/>
-		<file filename="models/PackageRepositoryLicenseModel.php" md5="e836cd516352361b1ba5ce06138ea1d5">
+		<file filename="models/PackageRepositoryLicenseModel.php" md5="b546b3d44b6c41408f8194dd86c36e06">
 			<class name="PackageRepositoryLicenseModel"/>
+		</file>
+		<file filename="models/PackageRepositoryPackageModel.php" md5="7263e3c6ffe8c63409fd1ec599df3f06">
+			<class name="PackageRepositoryPackageModel"/>
 		</file>
 	</files>
 	<view>
 		<file filename="templates/pages/packagerepository/analytics.tpl" md5="193308b38899c4eea4c5ed997ef028fc"/>
 		<file filename="templates/pages/packagerepository/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/packagerepository/index.tpl" md5="6de5afe57770779ad5165c095a049e39"/>
+		<file filename="templates/pages/packagerepository/index.tpl" md5="63462b391d3ed0da59dc0bc17fd930bf"/>
 		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="0bfc0cac42ab230d9d2d319f63dd8ca3"/>
+		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="bbca812e43ef1e85d0eb9e9ea42291fd"/>
 		<file filename="templates/pages/packagerepositorylicense/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 	</view>
 	<upgrades>
@@ -51,9 +55,9 @@
 		<upgrade from="1.0.4" to="1.1.0"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/package-repository.css" md5="47d22655fd93ac1a111e50a2ab7591b5"/>
-		<file filename="assets/css/package-repository.css.map" md5="32691ede4162443382397f92abbfe769"/>
-		<file filename="assets/css/package-repository.min.css" md5="94fb1013dc5da945a10c3231b6ddb8d2"/>
+		<file filename="assets/css/package-repository.css" md5="e3e84fdae6058076a4f0971ad715506c"/>
+		<file filename="assets/css/package-repository.css.map" md5="783b1757e654a0169db979f97a39d88f"/>
+		<file filename="assets/css/package-repository.min.css" md5="5bf7ae5899bf0ac8e10c26ee87f7629e"/>
 	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

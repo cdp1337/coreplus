@@ -129,3 +129,40 @@ $colorOutline:   #fff;
 		vertical-align: top;
 	}
 }
+
+/**
+ * All the styles for the package repo browser
+ */
+.page-packagerepository {
+	.package {
+		display: inline-block;
+		margin-right: 1em;
+		margin-bottom: 1em;
+		width: 500px;
+		vertical-align: top;
+		
+		.package-screenshot {
+			float: left;
+			box-shadow: 0 0 4px rgba(100, 100, 100, 0.4);
+			margin-right: 1em;
+		}
+		
+		.package-name {
+			font-size: 125%;
+			font-weight: bold;
+		}
+		
+		.package-description {
+			font-size: 90%;
+			color: rgba(0, 0, 0, 0.8);
+		}
+		
+		.package-release-date {
+			clear: left;
+			display: block;
+		}
+		.package-compatibility-versions {
+			display: block;
+		}
+	}
+}

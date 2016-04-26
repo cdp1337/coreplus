@@ -4,14 +4,18 @@
 {$listings->render('head')}
 	{foreach $listings as $l}
 		<tr>
-			<td>{$l.id}</td>
 			<td>
-				<a href="#" class="toggle-password" title="Click to toggle password">
-					<span class="plain-text"><i class="icon-eye"></i></span>
-					<span class="password" style="display:none;"><i class="icon-eye-slash"></i></span>
-				</a>
-				<span class="plain-text">**********</span>
-				<span class="password" style="display:none;">{$l.password}</span>
+				{$l->getLabel()}
+			</td>
+			<td>
+				{if $l.password}
+					<a href="#" class="toggle-password" title="Click to toggle password">
+						<span class="plain-text"><i class="icon-eye"></i></span>
+						<span class="password" style="display:none;"><i class="icon-eye-slash"></i></span>
+					</a>
+					<span class="plain-text">**********</span>
+					<span class="password" style="display:none;">{$l.password}</span>	
+				{/if}
 			</td>
 			<td>{$l.comment}</td>
 			<td>{$l.expires}</td>

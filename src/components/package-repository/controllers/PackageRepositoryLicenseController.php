@@ -6,6 +6,64 @@
  * @author Charlie Powell <charlie@evalagency.com>
  */
 class PackageRepositoryLicenseController extends Controller_2_1 {
+	
+	public function index(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+
+		$serverid = isset($_SERVER['HTTP_X_CORE_SERVER_ID']) ? $_SERVER['HTTP_X_CORE_SERVER_ID'] : null;
+		// If the server ID is set, it should be a 32-digit character.
+		// Anything else and omit.
+		if(strlen($serverid) != 32){
+			$serverid = null;
+		}
+		elseif(!preg_match('/^[A-Z0-9]*$/', $serverid)){
+			// Invalid string.
+			$serverid = null;
+		}
+
+		$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+
+		if(strpos($ua, '(http://corepl.us)') !== false) {
+			/** @var string $uav ex: "Core Plus 1.2.3" */
+			$uav = str_replace(' (http://corepl.us)', '', $ua);
+			/** @var string $version Just the version, ex: "1.2.3" */
+			$version = str_replace('Core Plus ', '', $uav);
+
+			// The set of logic to compare the current version of Core against the version connecting.
+			// This is used primarily to set a class name onto the graphs so that they can be coloured specifically.
+			$v = Core::VersionSplit($version);
+
+			// These two values are used in the historical map, (as revision may be a bit useless at this scale).
+			$briefVersion = $v['major'] . '.' . $v['minor'];
+		}
+		elseif($request->getParameter('packager')){
+			$briefVersion = $request->getParameter('packager');
+		}
+		else{
+			$briefVersion = null;
+		}
+
+		// Record this key as connected.
+		if($serverid){
+			$licmod = PackageRepositoryLicenseModel::Construct($serverid);
+			$licmod->set('datetime_last_checkin', Core\Date\DateTime::NowGMT());
+			$licmod->set('ip_last_checkin', REMOTE_IP);
+			$licmod->set('referrer_last_checkin', isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+			$licmod->set('useragent_last_checkin', isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
+			$licmod->save();
+		}
+		
+		if($request->ext == 'json'){
+			// Get a list of all licensed features for this server ID,
+			// or nothing at all if an invalid server ID was requested.
+			$view->contenttype = View::CTYPE_JSON;
+			if(!$serverid){
+				$view->jsondata = ['status' => false, 'message' => 'Invalid server ID provided!'];
+				return;
+			}
+		}
+	}
 
 	public function admin(){
 		$request = $this->getPageRequest();
@@ -50,7 +108,7 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 		$table = new \Core\ListingTable\Table();
 		$table->setModelName('PackageRepositoryLicenseModel');
 		$table->setDefaultSort('expires', 'ASC');
-		$table->addColumn('License Key', 'id');
+		$table->addColumn('License Key/Server ID', 'id');
 		$table->addColumn('License Password', 'password');
 		$table->addColumn('Comment', 'comment');
 		$table->addColumn('Expiration Date', 'expires');

@@ -116,4 +116,41 @@
   vertical-align: top;
 }
 
+/**
+ * All the styles for the package repo browser
+ */
+/* line 137, ../scss/package-repository.scss */
+.page-packagerepository .package {
+  display: inline-block;
+  margin-right: 1em;
+  margin-bottom: 1em;
+  width: 500px;
+  vertical-align: top;
+}
+/* line 144, ../scss/package-repository.scss */
+.page-packagerepository .package .package-screenshot {
+  float: left;
+  box-shadow: 0 0 4px rgba(100, 100, 100, 0.4);
+  margin-right: 1em;
+}
+/* line 150, ../scss/package-repository.scss */
+.page-packagerepository .package .package-name {
+  font-size: 125%;
+  font-weight: bold;
+}
+/* line 155, ../scss/package-repository.scss */
+.page-packagerepository .package .package-description {
+  font-size: 90%;
+  color: rgba(0, 0, 0, 0.8);
+}
+/* line 160, ../scss/package-repository.scss */
+.page-packagerepository .package .package-release-date {
+  clear: left;
+  display: block;
+}
+/* line 164, ../scss/package-repository.scss */
+.page-packagerepository .package .package-compatibility-versions {
+  display: block;
+}
+
 /*# sourceMappingURL=package-repository.css.map */

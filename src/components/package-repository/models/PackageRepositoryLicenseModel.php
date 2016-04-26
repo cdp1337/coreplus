@@ -20,39 +20,51 @@ class PackageRepositoryLicenseModel extends Model {
 	 * @var array
 	 */
 	public static $Schema = [
-		'id' => [
-			'type' => Model::ATT_TYPE_UUID,
-		    'comment' => 'Also the public key to send to the client',
+		'id'             => [
+			'type'    => Model::ATT_TYPE_UUID,
+			'comment' => 'Also the server ID for clients on > 5.0.1',
 		],
-	    'password' => [
-		    'type' => Model::ATT_TYPE_STRING,
-		    'form' => [
-			    'description' => 'Password of this license to send to the client',
-		    ],
-	        'comment' => 'Password of this license to send to the client',
-	    ],
-	    'comment' => [
-		    'type' => Model::ATT_TYPE_STRING,
-		    'form' => [
-			    'description' => 'Administrative comment, displayed on the listing page',
-		    ],
-	        'comment' => 'Administrative comment',
-	    ],
-	    'expires' => [
-		    'type' => Model::ATT_TYPE_ISO_8601_DATE,
-		    'form' => [
-			    'description' => 'Date this license expires',
-		    ],
-	        'comment' => 'Y-m-d format of expiration date for this license',
-	    ],
-	    'ip_restriction' => [
-		    'type' => Model::ATT_TYPE_TEXT,
-		    'form' => [
-			    'title' => 'IP Restriction',
-		        'description' => 'Set to an IP, IP network, or newline-separated list of IPs to restrict for this license key.',
-		    ],
-	        'comment' => 'Single IP, single network, or newline-separated list of IPs to allow for this license key',
-	    ],
+		'password'       => [
+			'type'    => Model::ATT_TYPE_STRING,
+			'form'    => [
+				'description' => 'Password of this license to send to the client',
+			],
+			'comment' => 'Password of this license to send to the client',
+		],
+		'comment'        => [
+			'type'    => Model::ATT_TYPE_STRING,
+			'form'    => [
+				'description' => 'Administrative comment, displayed on the listing page',
+			],
+			'comment' => 'Administrative comment',
+		],
+		'expires'        => [
+			'type'    => Model::ATT_TYPE_ISO_8601_DATE,
+			'form'    => [
+				'description' => 'Date this license expires',
+			],
+			'comment' => 'Y-m-d format of expiration date for this license',
+		],
+		'ip_restriction' => [
+			'type'    => Model::ATT_TYPE_TEXT,
+			'form'    => [
+				'title'       => 'IP Restriction',
+				'description' => 'Set to an IP, IP network, or newline-separated list of IPs to restrict for this license key.',
+			],
+			'comment' => 'Single IP, single network, or newline-separated list of IPs to allow for this license key',
+		],
+		'datetime_last_checkin' => [
+			'type' => Model::ATT_TYPE_INT,
+		],
+		'ip_last_checkin' => [
+			'type' => Model::ATT_TYPE_STRING,
+		],
+		'useragent_last_checkin' => [
+			'type' => Model::ATT_TYPE_STRING,
+		],
+		'referrer_last_checkin' => [
+			'type' => Model::ATT_TYPE_STRING,
+		],
 	];
 
 	/**
@@ -118,12 +130,13 @@ class PackageRepositoryLicenseModel extends Model {
 	 * @return string
 	 */
 	public function getLabel(){
-		// @todo Have a particular key to use as the label for this model?
-		// If so, have the following as necessary.
-		// return $this->get('blah');
-
-		// Otherwise, the default is fine or simply remove the method on this child.
-		return parent::getLabel();
+		$id = $this->get('id');
+		if(strlen($id) == 32){
+			return wordwrap($id, 4, '-', true);
+		}
+		else{
+			return $id;
+		}
 	}
 
 	/**

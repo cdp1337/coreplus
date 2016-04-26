@@ -9,51 +9,196 @@ use Core\Filestore\Factory;
  */
 class PackageRepositoryController extends Controller_2_1 {
 
-	public function index(){
+	/**
+	 * @todo what should this view have?... 
+	 * 
+	 * @return int
+	 */
+	public function admin(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+		
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
+	}
+	
+	public function rebuild(){
 		$request = $this->getPageRequest();
 		$view    = $this->getView();
 
-		$error = $this->_checkPermissions('browse');
+		if(!\Core\user()->checkAccess('g:admin')){
+			return View::ERROR_ACCESSDENIED;
+		}
 
-		if(!$error){
-			// Only proceed with the application if no errors were thrown.
-			if($request->ctype == 'application/xml'){
+		$changes = PackageRepositoryPackageModel::RebuildPackages();
+		
+		$msgs = [];
+		if($changes['updated']){
+			$msgs[] = 'Updated ' . $changes['updated'] . ' packages.';
+		}
+		if($changes['skipped']){
+			$msgs[] = 'Skipped ' . $changes['skipped'] . ' packages.';
+		}
+		if($changes['failed']){
+			$msgs[] = 'Ignored ' . $changes['failed'] . ' corrupt packages.';
+		}
+		
+		\Core\set_message(implode(' ', $msgs), 'success');
+		\Core\go_back();
+	}
 
-				$cached = \Core\Cache::Get('packagerepository-repo-xml');
-				if(!$cached){
-					$cached = $this->_getRepoXML();
-					\Core\Cache::Set('packagerepository-repo-xml', $cached, (86400*14));
-				}
+	public function index(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+		
+		$isAdmin = \Core\user()->checkAccess('g:admin');
+		
+		$serverid = isset($_SERVER['HTTP_X_CORE_SERVER_ID']) ? $_SERVER['HTTP_X_CORE_SERVER_ID'] : null;
+		// If the server ID is set, it should be a 32-digit character.
+		// Anything else and omit.
+		if(strlen($serverid) != 32){
+			$serverid = null;
+		}
+		elseif(!preg_match('/^[A-Z0-9]*$/', $serverid)){
+			// Invalid string.
+			$serverid = null;
+		}
+		
+		$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 
-				$view->mode = View::MODE_NOOUTPUT;
-				$view->contenttype = 'application/xml';
-				$view->render();
-				echo $cached;
-				return;
-			}
-			elseif($request->ext == 'xml.gz'){
-				$cached = \Core\Cache::Get('packagerepository-repo-xml');
-				if(!$cached){
-					$cached = $this->_getRepoXML();
-					\Core\Cache::Set('packagerepository-repo-xml', $cached, (86400*14));
-				}
+		if(strpos($ua, '(http://corepl.us)') !== false) {
+			/** @var string $uav ex: "Core Plus 1.2.3" */
+			$uav = str_replace(' (http://corepl.us)', '', $ua);
+			/** @var string $version Just the version, ex: "1.2.3" */
+			$version = str_replace('Core Plus ', '', $uav);
 
-				$view->mode = View::MODE_NOOUTPUT;
-				$view->contenttype = 'application/gzip';
-				$view->render();
+			// The set of logic to compare the current version of Core against the version connecting.
+			// This is used primarily to set a class name onto the graphs so that they can be coloured specifically.
+			$v = Core::VersionSplit($version);
 
-				echo gzencode($cached);
-			}
+			// These two values are used in the historical map, (as revision may be a bit useless at this scale).
+			$briefVersion = $v['major'] . '.' . $v['minor'];
+		}
+		elseif($request->getParameter('packager')){
+			$briefVersion = $request->getParameter('packager');
 		}
 		else{
-			$view->error = $error['status'];
-			$view->allowerrors = true;
+			$briefVersion = null;
+		}
+		
+		// Record this key as connected.
+		if($serverid){
+			$licmod = PackageRepositoryLicenseModel::Construct($serverid);
+			$licmod->set('datetime_last_checkin', Core\Date\DateTime::NowGMT());
+			$licmod->set('ip_last_checkin', REMOTE_IP);
+			$licmod->set('referrer_last_checkin', isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
+			$licmod->set('useragent_last_checkin', isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '');
+			$licmod->save();
+		}
+
+		if($request->ctype == 'application/xml'){
+			// This is a repo.xml request, usually for debugging purposes, (as the app requests gz compressed versions).
+			$xml = PackageRepositoryPackageModel::GetAsRepoXML($serverid, $briefVersion);
+			$view->mode = View::MODE_NOOUTPUT;
+			$view->contenttype = 'application/xml';
+			$view->render();
+			echo $xml->asMinifiedXML();
+			return;
+		}
+		elseif($request->ext == 'xml.gz'){
+			// This is a normal from-client request; a compressed repo.xml structure.
+			$xml = PackageRepositoryPackageModel::GetAsRepoXML($serverid, $briefVersion);
+			$view->mode = View::MODE_NOOUTPUT;
+			$view->contenttype = 'application/gzip';
+			$view->render();
+			$c = $xml->asMinifiedXML();
+			echo gzencode($c);
+			return;
+		}
+		else{
+			// This is a browse request.
+			$packages = [];
+			$where = [];
+			if($briefVersion){
+				$where[] = 'packager LIKE ' . $briefVersion . '%';
+			}
+			$allPackages = PackageRepositoryPackageModel::Find($where);
+			
+			foreach($allPackages as $pkg){
+				/** @var PackageRepositoryPackageModel $pkg */
+				
+				$pkgKey = $pkg->get('type') . '-' . $pkg->get('key');
+				$pkgPackager = $pkg->get('packager');
+				$pkgVersion = $pkg->get('version');
+				
+				if(!isset($packages[$pkgKey])){
+					$packages[$pkgKey] = [
+						'package' => $pkg,
+						'check'   => $pkgVersion,
+						'min'     => $pkgPackager,
+						'max'     => $pkgPackager,
+					];
+				}
+				
+				if(\Core\version_compare($pkgPackager, $packages[$pkgKey]['min'], 'lt')){
+					// Record the lowest supported Core version for this package
+					$packages[$pkgKey]['min'] = $pkgPackager;
+				}
+				if(\Core\version_compare($pkgPackager, $packages[$pkgKey]['max'], 'gt')){
+					// Record the higest supported Core version for this package
+					$packages[$pkgKey]['max'] = $pkgPackager;
+				}
+				if(\Core\version_compare($pkgVersion, $packages[$pkgKey]['check'], 'gt')){
+					// Save the newest component as the reference package for all the display data.
+					$packages[$pkgKey]['check'] = $pkgVersion;
+					$packages[$pkgKey]['package'] = $pkg;
+				}
+				
+			}
+			
+			
+			
+			// Build a list of all supported versions of Core in the database.
+			$allCoreVersions = [];
+			$packagerVersions = \Core\Datamodel\Dataset::Init()
+				->unique(true)
+				->select('packager')
+				->table('package_repository_package')
+				->order('packager')
+				->executeAndGet();
+			
+			foreach($packagerVersions as $pkg){
+				$pkgObject = new \Core\VersionString($pkg);
+				$pkgBase = $pkgObject->major . '.' . $pkgObject->minor;
+				
+				if(!isset($allCoreVersions[$pkgBase])){
+					$allCoreVersions[$pkgBase] = 'Core Plus ' . $pkgBase;
+				}
+			}
+			krsort($allCoreVersions, SORT_NATURAL);
+			$allCoreVersions = array_merge(['' => '-- All Versions --'], $allCoreVersions);
+			
+			$versionSelector = new Form();
+			$versionSelector->set('method', 'get');
+			$versionSelector->addElement('select', ['name' => 'packager', 'options' => $allCoreVersions, 'value' => $briefVersion]);
+			$versionSelector->addElement('submit', ['value' => 'Filter']);
+			
+			$view->assign('version_selector', $versionSelector);
+			$view->assign('packages', $packages);
+			$view->assign('version_selected', $briefVersion);
+		}
+		
+		if($isAdmin){
+			$view->addControl([
+				'title' => t('STRING_PACKAGE_REPOSITORY_REBUILD'),
+				'link' => '/packagerepository/rebuild',
+			]);
 		}
 
 		$view->title = 'Package Repository';
 		$view->templatename = 'pages/packagerepository/index.tpl';
-		$view->assign('error', $error);
-		$view->assign('is_admin', \Core\user()->checkAccess('g:admin'));
+		$view->assign('is_admin', $isAdmin);
 	}
 
 	public function download(){
