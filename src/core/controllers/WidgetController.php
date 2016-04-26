@@ -197,7 +197,7 @@ class WidgetController extends Controller_2_1 {
 
 		$factory = new ModelFactory('WidgetInstanceModel');
 		$factory->order('weight');
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			$factory->whereGroup('or', ['site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()]);
 		}
 

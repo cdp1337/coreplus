@@ -67,7 +67,7 @@ function smarty_function_widgetarea($params, $smarty) {
 	// Given support for page-level widgets, this logic gets slightly more difficult...
 	$factory = new ModelFactory('WidgetInstanceModel');
 	$factory->order('weight');
-	if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+	if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 		$factory->whereGroup('or', ['site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()]);
 	}
 

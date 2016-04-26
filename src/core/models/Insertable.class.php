@@ -62,7 +62,7 @@ class InsertableModel extends Model {
 		// HOWEVER, construction of the model should still be allowed to be performed with simply the baseurl.
 		// The first part of the key can be assumed.
 		if(func_num_args() == 2){
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 				$site = MultiSiteHelper::GetCurrentSiteID();
 			}
 			else{

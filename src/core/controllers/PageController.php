@@ -113,7 +113,7 @@ class PageController extends Controller_2_1 {
 		$factory->where('indexable = 1');
 		$factory->order('title');
 		// Multisite?
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			$factory->whereGroup(
 				'OR',
 				array(

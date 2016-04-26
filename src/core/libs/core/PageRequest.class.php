@@ -359,7 +359,7 @@ class PageRequest {
 		// Additional security logic for existing pages in multi-site mode.
 		// If this exact URL is registered to another site, then
 		// don't allow this site to display it.
-		if(!$page->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(!$page->exists() && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			$site = MultiSiteHelper::GetCurrentSiteID();
 
 			$anypage = PageModel::Find(['baseurl = ' . $page->get('baseurl')], 1);
@@ -940,7 +940,7 @@ class PageRequest {
 			$pagefac->where('rewriteurl = ' . $uri);
 			//$pagefac->where('fuzzy = 0');
 			$pagefac->limit(1);
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 				$pagefac->whereGroup('OR', array('site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID()));
 			}
 

@@ -376,7 +376,7 @@ class PageModel extends Model {
 		// HOWEVER, construction of the model should still be allowed to be performed with simply the baseurl.
 		// The first part of the key can be assumed.
 		if(func_num_args() == 1){
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 				$site = MultiSiteHelper::GetCurrentSiteID();
 			}
 			else{
@@ -467,14 +467,14 @@ class PageModel extends Model {
 		if ($this->exists()) $ds->where('baseurl != ' . $this->_data['baseurl']);
 
 		// Enterprise/multisite mode anyone?
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			$ds->whereGroup('OR', 'site = -1', 'site = ' . MultiSiteHelper::GetCurrentSiteID());
 		}
 
 		$ds->execute();
 
 		if ($ds->num_rows > 0) {
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 				foreach($ds as $row){
 					if($row['site'] == $this->get('site') || $row['site'] == '-1'){
 						// Only trigger the URL taken error if it's on the same site or it's a global page.
@@ -981,7 +981,7 @@ class PageModel extends Model {
 	public function addToFormPost(Form $form, $prefix){
 
 		// If the user has access to manage sites globally, then enable that option!
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
 			$form->switchElementType($prefix . '[site]', 'select');
 			$el = $form->getElement($prefix . '[site]');
 
@@ -1064,7 +1064,7 @@ class PageModel extends Model {
 
 		// If enterprise // multisite mode is enabled and this page model is NOT the current site...
 		// I need to lookup THAT site's root url and use that instead.
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			if($this->get('site') == -1){
 				// "-1" pages exist on every site as a relative page.
 				$base = ROOT_URL;
@@ -1250,7 +1250,7 @@ class PageModel extends Model {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
 				}
-				elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				elseif(!$p->exists() && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 					// Perform the same check with a "-1" for the site ID.
 					// This is because many admin pages are global.
 					// Reset the Page and re-perform the check.
@@ -1276,7 +1276,7 @@ class PageModel extends Model {
 					// I need the array merge because getParentTree only returns << parents >>.
 					return array_merge($p->getParentTree(), array($p));
 				}
-				elseif(!$p->exists() && Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+				elseif(!$p->exists() && Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 					// Perform the same check with a "-1" for the site ID.
 					// This is because many admin pages are global.
 					// Reset the Page and re-perform the check.
@@ -1810,7 +1810,7 @@ class PageModel extends Model {
 		//     ctype: 'text/html'
 
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			if($site === null){
 				$site = MultiSiteHelper::GetCurrentSiteID();
 			}
@@ -2030,7 +2030,7 @@ class PageModel extends Model {
 			$s->select('site, rewriteurl, baseurl, fuzzy');
 			$s->table('page');
 
-			if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 				if($site === null){
 					$site = MultiSiteHelper::GetCurrentSiteID();
 				}
@@ -2116,7 +2116,7 @@ class PageModel extends Model {
 	 */
 	private static function _LookupReverseUrl($url, $site = null) {
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			if($site === null){
 				$site = MultiSiteHelper::GetCurrentSiteID();
 			}
@@ -2158,7 +2158,13 @@ class PageModel extends Model {
 			}
 		}
 		else{
-			$tries = array_merge(self::$_FuzzyCache['_GLOBAL_'], self::$_FuzzyCache[$site]);
+			$tries = [];
+			if(isset(self::$_FuzzyCache['_GLOBAL_'])){
+				$tries = array_merge($tries, self::$_FuzzyCache['_GLOBAL_']);
+			}
+			if(isset(self::$_FuzzyCache[$site])){
+				$tries = array_merge($tries, self::$_FuzzyCache[$site]);
+			}
 		}
 
 		while($try != '' && $try != '/') {
@@ -2204,7 +2210,7 @@ class PageModel extends Model {
 			$f->where($where);
 		}
 
-		if(Core::IsComponentAvailable('enterprise') && MultiSiteHelper::IsEnabled()){
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
 			$g = new Core\Datamodel\DatasetWhereClause();
 			$g->setSeparator('OR');
 			$g->addWhere('site = -1');
