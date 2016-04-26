@@ -15,6 +15,11 @@
 	&.formuserinput.user-invalid .user-valid-indicator{
 		display: none;
 	}
+	
+	&.formelement-disabled {
+		// Lighten disabled form elements a bit to make them more notable.
+		opacity: 0.4;
+	}
 
 	.form-element-description {
 		color: lighten($dark-gray, 16%);
@@ -48,4 +53,10 @@
 			width: 30%;
 		}
 	}
+}
+
+// Lighten up the readonly overlay a bit.
+body .readonly_overlay {
+	background-color: rgba(230, 230, 230, 0.4);
+	opacity: 1;
 }

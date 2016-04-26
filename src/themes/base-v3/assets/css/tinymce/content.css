@@ -709,28 +709,32 @@ html {
   display: none;
 }
 /* line 19, ../../scss/_form_elements.scss */
+.formelement.formelement-disabled {
+  opacity: 0.4;
+}
+/* line 24, ../../scss/_form_elements.scss */
 .formelement .form-element-description {
   color: #5c5c5c;
   font-size: 0.9em;
 }
 
-/* line 26, ../../scss/_form_elements.scss */
+/* line 31, ../../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput,
 .formelement.formuserinput {
   /* Meta-Author input styles */
 }
-/* line 29, ../../scss/_form_elements.scss */
+/* line 34, ../../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value,
 .formelement.formuserinput .form-element-value {
   position: relative;
 }
-/* line 32, ../../scss/_form_elements.scss */
+/* line 37, ../../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value input,
 .formelement.formuserinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 36, ../../scss/_form_elements.scss */
+/* line 41, ../../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator,
 .formelement.formpagemetaauthorinput .form-element-value .user-indicator,
 .formelement.formuserinput .form-element-value .meta-author-indicator,
@@ -740,9 +744,15 @@ html {
   top: 4px;
 }
 
-/* line 47, ../../scss/_form_elements.scss */
+/* line 52, ../../scss/_form_elements.scss */
 .formelement.formfileinput table.form-element-value .formfileinput-selector {
   width: 30%;
+}
+
+/* line 59, ../../scss/_form_elements.scss */
+body .readonly_overlay {
+  background-color: rgba(230, 230, 230, 0.4);
+  opacity: 1;
 }
 
 /*****************************************************************************
