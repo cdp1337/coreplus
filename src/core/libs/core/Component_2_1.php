@@ -260,6 +260,10 @@ class Component_2_1 {
 		// It must be here because it can't be loaded inline, as Core may not have been ready at that stage.
 		$supplementals = $this->getSupplementalModelList();
 		foreach($supplementals as $supplemental => $filename){
+			if($supplemental == 'modelsupplemental'){
+				// Skip the root class itself.
+				continue;
+			}
 			$classname = substr($supplemental, strpos($supplemental, '_') + 1, -12);
 
 			// Grab the original class so I can override it.
