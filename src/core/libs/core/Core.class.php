@@ -946,6 +946,23 @@ class Core implements ISingleton {
 		else return true;
 	}
 
+	/**
+	 * Get the version for a loaded library or NULL if not loaded.
+	 * 
+	 * @param string $library
+	 *
+	 * @return string|null
+	 */
+	public static function GetLibraryVersion($library){
+		$s = self::Singleton();
+		return isset($s->_libraries[$library]) ? $s->_libraries[$library] : null;
+	}
+
+	/**
+	 * @param string $library
+	 *
+	 * @return null|array
+	 */
 	public static function GetJSLibrary($library) {
 		$library = strtolower($library);
 		return self::Singleton()->_scriptlibraries[$library];
