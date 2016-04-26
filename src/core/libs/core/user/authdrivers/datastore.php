@@ -110,9 +110,9 @@ class datastore implements AuthDriverInterface{
 		$password = $hasher->hashPassword($password);
 
 		// Still here?  Then try to set it.
-		$status = $this->_usermodel->set('password', $password);
+		$this->_usermodel->set('password', $password);
 		$this->_usermodel->set('last_password', DateTime::NowGMT());
-		return $status;
+		return true;
 	}
 
 	/**
