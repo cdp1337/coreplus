@@ -429,15 +429,33 @@ elseif(EXEC_MODE == 'WEB' && SSL_MODE == SSL_MODE_DISABLED && SSL){
 // If there is a "lock.message" file, open that and stop page execution immediately.
 // This is useful for automatic upgrades.
 if(file_exists(TMP_DIR . 'lock.message')){
+
+	$logo = ConfigHandler::Get('/theme/site_logo') ? ConfigHandler::Get('/theme/site_logo') : "files/assets/images/logo.png";
+	$html  = "<!DOCTYPE html>
+				<html>
+					<head>
+						<style>
+							body{text-align:center;background:#eee;}
+							.site-logo{margin-top:2em;}
+							p{padding:1em;color:#555;font-family:sans-serif;}
+						</style>
+					</head>
+					<body>
+						<p><img class='site-logo' src='".$logo."'/></p>";
+
 	$contents = file_get_contents(TMP_DIR . 'lock.message');
 
 	$adminmsg = '(Site is currently locked via ' . TMP_DIR . 'lock.message.  If this is in error, simply remove that file).';
 	if(DEVELOPMENT_MODE){
-		echo $adminmsg . "<br/>\n";
+		$html .= "<p>" .$adminmsg . "</p>";
 	}
 	error_log($adminmsg);
 
-	die($contents);
+	$html .= "<p>" . $contents . "</p>";
+	$html .= "		</body>
+				</html>";
+
+	die($html);
 }
 
 
