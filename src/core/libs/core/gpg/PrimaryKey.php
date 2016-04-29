@@ -64,6 +64,9 @@ class PrimaryKey extends Key {
 	 * @var array Array of sub keys on this primary key
 	 */
 	public $subkeys = [];
+	
+	/** @var null|array Cache of photos on the filesystem for this primary key. */
+	private $_photos = null;
 
 	/**
 	 * Check and see if this key is currently valid and not expired nor revoked.
@@ -128,6 +131,33 @@ class PrimaryKey extends Key {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Get an array containing all the photos for this public key
+	 * 
+	 * @return array
+	 */
+	public function getPhotos(){
+		if($this->_photos === null){
+			$this->_photos = [];
+			// By specifying these options, the contents are extracted automatically and the filename is rendered.
+			$gpg = new GPG();
+			$o = $gpg->_exec('--list-keys --list-options show-photos --photo-viewer "echo %I >&2" ' . $this->fingerprint . ' 1>/dev/null ');
+			
+			if($o['return'] === 0){
+				// In this case, stderr should contain the output.
+				$files = explode("\n", $o['error']);
+
+				foreach($files as $f){
+					if($f){
+						$this->_photos[] = \Core\Filestore\Factory::File($f);
+					}
+				}
+			}
+		}
+		
+		return $this->_photos;
 	}
 
 	/**

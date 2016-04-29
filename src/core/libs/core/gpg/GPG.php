@@ -610,7 +610,7 @@ EOD;
 	 *
 	 * @throws \Exception
 	 */
-	private function _exec($arguments, $inputData = null){
+	public function _exec($arguments, $inputData = null){
 		$cmd = $this->_executable .
 			' --homedir ' . escapeshellarg($this->homedir);
 
