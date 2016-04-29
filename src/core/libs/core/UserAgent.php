@@ -307,7 +307,7 @@ class UserAgent {
 			if($c !== null){
 				$this->browser = $c['name'];
 				$this->version = $c['version'];
-				$this->browser_short_name = $c['short_name'];
+				$this->browser_short_name = isset($c['short_name']) ? $c['short_name'] : null;
 				$this->rendering_engine_name = isset($c['engine']) ? $c['engine'] : null;
 				if($this->rendering_engine_name == 'Text-based' && $this->browser == 'Lynx'){
 					$this->rendering_engine_name = 'libwww-FM';
@@ -744,75 +744,22 @@ class UserAgent {
 	 * @return string HTML String
 	 */
 	public function getAsHTML(){
-		if(\Core::IsComponentAvailable('piwik-analytics')){
-			// Piwik can provide pretty icons!
-			$osIcon      = $this->platform_short_name ? 'assets/images/os/' . $this->platform_short_name . '.gif' : null;
-			$browserIcon = $this->browser_short_name ? 'assets/images/browsers/' . $this->browser_short_name . '.gif' : null;
-			$deviceIcon = $this->device_maker ? 'assets/images/brand/' . $this->device_maker . '.gif' : null;
+		$parts = [];
+		$browser = $this->_getAsHTMLBrowser();
+		$platform = $this->_getAsHTMLPlatform();
+		$device = $this->_getAsHTMLDevice();
+		
+		if($browser){
+			$parts[] = $browser;	
 		}
-		else{
-			$osIcon = null;
-			$browserIcon = null;
-			$deviceIcon = null;
+		if($device){
+			$parts[] = $device;
+		}
+		if($platform){
+			$parts[] = $platform;
 		}
 		
-		$browserFull = '';
-		$browserFull .= $this->browser;
-		if($this->version){
-			$browserFull .= ' ' . $this->version;
-		}
-		
-		$osFull = '';
-		$osFull .= $this->platform;
-		if($this->platform_version){
-			$osFull .= ' ' . $this->platform_version;
-		}
-		
-		$deviceFull = '';
-		if($this->device_maker && $this->device_name){
-			$deviceFull .= $this->device_maker . ' ' . $this->device_name;
-		}
-		elseif($this->device_maker){
-			$deviceFull .= $this->device_maker;
-		}
-
-		if($this->platform_architecture && $this->platform_bits){
-			$osFull .= ' (' . $this->platform_architecture . '_' . $this->platform_bits . ')';
-		}
-		
-		$out = '';
-		// Start with the browser itself
-		$out .= '<span class="useragent-pretty-browser" title="' . $browserFull . '">';
-		if($browserIcon){
-			$out .= '<img src="' . \Core\resolve_asset($browserIcon) . '"/> ';
-		}
-		$out .= $this->browser . ' ' . $this->major_ver;
-		$out .= '</span>';
-
-		// Spacer between them.
-		$out .= '&nbsp;&nbsp;';
-		
-		// and render the OS
-		$out .= '<span class="useragent-pretty-platform" title="' . $osFull . '">';
-		if($osIcon){
-			$out .= '<img src="' . \Core\resolve_asset($osIcon) . '"/> ';
-		}
-		$out .= $this->platform . ($this->platform_version ? ' ' . $this->platform_version : '');
-		$out .= '</span>';
-		
-		if($this->device_maker || $this->device_name){
-			// Spacer between them.
-			$out .= '&nbsp;&nbsp;';
-			
-			$out .= '<span class="useragent-pretty-device" title="' . $deviceFull . '">';
-			if($deviceIcon){
-				$out .= '<img src="' . \Core\resolve_asset($deviceIcon) . '"/> ';
-			}
-			$out .= $this->device_name ? $this->device_name : $this->device_maker;
-			$out .= '</span>';
-		}
-		
-		return $out;
+		return implode('&nbsp;&nbsp;', $parts);
 	}
 
 	/**
@@ -860,6 +807,111 @@ class UserAgent {
 				$this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
 			}
 		}
+	}
+
+	/**
+	 * Get the browser component of this useragent as pretty HTML.
+	 * 
+	 * @return string
+	 */
+	private function _getAsHTMLBrowser(){
+		// Piwik can provide pretty icons!
+		$icon  = (\Core::IsComponentAvailable('piwik-analytics') && $this->browser_short_name) ? 'assets/images/browsers/' . $this->browser_short_name . '.gif' : null; 
+		$title = '';
+		$text  = '';
+		$out   = '';
+		$class = 'useragent-pretty-browser';
+		
+		// The text is just browser and version if set.
+		$text .= $this->browser;
+		if($this->version){
+			$text .= ' ' . $this->version;
+		}
+		
+		// The browser title should have the full UA attached to it.
+		$title .= $this->useragent;
+		
+		// Start compiling this attribute together.
+		$out .= '<span class="' . $class . '" title="' . $title . '">';
+		if($icon){
+			$out .= '<img src="' . \Core\resolve_asset($icon) . '"/> ';
+		}
+		$out .= $text;
+		$out .= '</span>';
+		
+		return $out;
+	}
+
+	/**
+	 * Get the platform/OS component of this useragent as pretty HTML.
+	 *
+	 * @return string
+	 */
+	private function _getAsHTMLPlatform(){
+		// Piwik can provide pretty icons!
+		$icon  = (\Core::IsComponentAvailable('piwik-analytics') && $this->platform_short_name) ? 'assets/images/os/' . $this->platform_short_name . '.gif' : null;
+		$title = '';
+		$text  = '';
+		$out   = '';
+		$class = 'useragent-pretty-platform';
+		
+		if($this->platform == 'unknown'){
+			// Instead of rendering 'unknown!', simply do not render anything for the OS.
+			return '';
+		}
+
+		$title .= $this->platform;
+		$text .= $this->platform;
+		if($this->platform_version){
+			$title .= ' ' . $this->platform_version;
+			$text .= ' ' . $this->platform_version;
+		}
+		if($this->platform_architecture && $this->platform_bits){
+			$title .= ' (' . $this->platform_architecture . '_' . $this->platform_bits . ')';
+		}
+
+		// Start compiling this attribute together.
+		$out .= '<span class="' . $class . '" title="' . $title . '">';
+		if($icon){
+			$out .= '<img src="' . \Core\resolve_asset($icon) . '"/> ';
+		}
+		$out .= $text;
+		$out .= '</span>';
+
+		return $out;
+	}
+
+	/**
+	 * Get the device component of this useragent as pretty HTML.
+	 *
+	 * @return string
+	 */
+	private function _getAsHTMLDevice(){
+		// Piwik can provide pretty icons!
+		$icon  = (\Core::IsComponentAvailable('piwik-analytics') && $this->device_maker) ? 'assets/images/brand/' . $this->device_maker . '.gif' : null;
+		$title = '';
+		$text  = '';
+		$out   = '';
+		$class = 'useragent-pretty-device';
+		
+		if($this->device_maker && $this->device_name){
+			$title .= $this->device_maker . ' ' . $this->device_name;
+			$text .= $this->device_name;
+		}
+		elseif($this->device_maker){
+			$title .= $this->device_maker;
+			$text .= $this->device_maker;
+		}
+
+		// Start compiling this attribute together.
+		$out .= '<span class="' . $class . '" title="' . $title . '">';
+		if($icon){
+			$out .= '<img src="' . \Core\resolve_asset($icon) . '"/> ';
+		}
+		$out .= $text;
+		$out .= '</span>';
+
+		return $out;
 	}
 
 	/**
