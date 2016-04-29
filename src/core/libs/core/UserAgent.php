@@ -147,6 +147,9 @@ class UserAgent {
 	 * @var string The name of the user agent, ie: "Firefox", "Chrome", etc.
 	 */
 	public $browser                      = null;
+	
+	/** @var null|string Short (2-character) code for this browser */
+	public $browser_short_name           = null;
 
 	/**
 	 * @var float Full version of the user agent
@@ -183,6 +186,9 @@ class UserAgent {
 	 * @var string bit address space, generally 8, 16, 32, or 64.
 	 */
 	public $platform_bits                = null;
+	
+	/** @var null|string Platform short name (3-characters) */
+	public $platform_short_name          = null;
 
 	/**
 	 * @var bool true/false if frames are supported.
@@ -297,9 +303,11 @@ class UserAgent {
 			
 			$this->useragent = $useragent;
 			$c = $dd->getClient();
+			
 			if($c !== null){
 				$this->browser = $c['name'];
 				$this->version = $c['version'];
+				$this->browser_short_name = $c['short_name'];
 				$this->rendering_engine_name = isset($c['engine']) ? $c['engine'] : null;
 				if($this->rendering_engine_name == 'Text-based' && $this->browser == 'Lynx'){
 					$this->rendering_engine_name = 'libwww-FM';
@@ -328,6 +336,7 @@ class UserAgent {
 				$this->platform = $os['name'];
 				$this->platform_architecture = $os['platform'];
 				$this->platform_version = $os['version'];
+				$this->platform_short_name = $os['short_name'];
 			}
 			
 			// Expand OSX versions to the full version string.
@@ -727,6 +736,83 @@ class UserAgent {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * Get the info for this user agent as a pretty HTML string.
+	 * 
+	 * @return string HTML String
+	 */
+	public function getAsHTML(){
+		if(\Core::IsComponentAvailable('piwik-analytics')){
+			// Piwik can provide pretty icons!
+			$osIcon      = $this->platform_short_name ? 'assets/images/os/' . $this->platform_short_name . '.gif' : null;
+			$browserIcon = $this->browser_short_name ? 'assets/images/browsers/' . $this->browser_short_name . '.gif' : null;
+			$deviceIcon = $this->device_maker ? 'assets/images/brand/' . $this->device_maker . '.gif' : null;
+		}
+		else{
+			$osIcon = null;
+			$browserIcon = null;
+			$deviceIcon = null;
+		}
+		
+		$browserFull = '';
+		$browserFull .= $this->browser;
+		if($this->version){
+			$browserFull .= ' ' . $this->version;
+		}
+		
+		$osFull = '';
+		$osFull .= $this->platform;
+		if($this->platform_version){
+			$osFull .= ' ' . $this->platform_version;
+		}
+		
+		$deviceFull = '';
+		if($this->device_maker && $this->device_name){
+			$deviceFull .= $this->device_maker . ' ' . $this->device_name;
+		}
+		elseif($this->device_maker){
+			$deviceFull .= $this->device_maker;
+		}
+
+		if($this->platform_architecture && $this->platform_bits){
+			$osFull .= ' (' . $this->platform_architecture . '_' . $this->platform_bits . ')';
+		}
+		
+		$out = '';
+		// Start with the browser itself
+		$out .= '<span class="useragent-pretty-browser" title="' . $browserFull . '">';
+		if($browserIcon){
+			$out .= '<img src="' . \Core\resolve_asset($browserIcon) . '"/> ';
+		}
+		$out .= $this->browser . ' ' . $this->major_ver;
+		$out .= '</span>';
+
+		// Spacer between them.
+		$out .= '&nbsp;&nbsp;';
+		
+		// and render the OS
+		$out .= '<span class="useragent-pretty-platform" title="' . $osFull . '">';
+		if($osIcon){
+			$out .= '<img src="' . \Core\resolve_asset($osIcon) . '"/> ';
+		}
+		$out .= $this->platform . ($this->platform_version ? ' ' . $this->platform_version : '');
+		$out .= '</span>';
+		
+		if($this->device_maker || $this->device_name){
+			// Spacer between them.
+			$out .= '&nbsp;&nbsp;';
+			
+			$out .= '<span class="useragent-pretty-device" title="' . $deviceFull . '">';
+			if($deviceIcon){
+				$out .= '<img src="' . \Core\resolve_asset($deviceIcon) . '"/> ';
+			}
+			$out .= $this->device_name ? $this->device_name : $this->device_maker;
+			$out .= '</span>';
+		}
+		
+		return $out;
 	}
 
 	/**
