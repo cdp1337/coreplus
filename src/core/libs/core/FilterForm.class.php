@@ -48,11 +48,10 @@ class FilterForm {
 	 */
 	private $_sortdir = 'down';
 
-	/**
-	 * The limit for this filterset, only takes effect if $haspagination is set to true.
-	 *
-	 * @var int
-	 */
+	/** @var array Array of limit options to render to the user agent, (gives the options of selecting different options). */
+	private $_limitOptions = [25, 50, 100, 250, 500];
+	
+	/** @var int The limit for this filterset, only takes effect if $haspagination is set to true.  */
 	private $_limit = 50;
 
 	/**
@@ -216,10 +215,18 @@ class FilterForm {
 			}
 		}
 		// How 'bout the pagination?
-		elseif($this->haspagination && $request->getParameter('page')){
-			$this->setPage($request->getParameter('page'));
-			$p['page'] = $this->_currentpage;
-
+		elseif($this->haspagination){
+			if($request->getParameter('page')){
+				$this->setPage($request->getParameter('page'));
+				$p['page'] = $this->_currentpage;
+			}
+			elseif($request->getParameter('limit')){
+				$this->setPage(1);
+				$p['page'] = 1;
+				
+				$this->setLimit($request->getParameter('limit'));
+				$p['limit'] = $this->_limit;
+			}
 			// Don't change the filter sets, those have been cached and are fine as-is.
 		}
 		else{
@@ -262,8 +269,12 @@ class FilterForm {
 			$this->_sortdir = \Core\Session::Get('filtersort/' . $this->_name)['sortdir'];
 		}
 
-		if(\Core\Session::Get('filterpage/' . $this->_name) !== null){
+		$cachedPageData = \Core\Session::Get('filterpage/' . $this->_name);
+		if($cachedPageData !== null && isset($cachedPageData['page'])) {
 			$this->_currentpage = \Core\Session::Get('filterpage/' . $this->_name)['page'];
+		}
+		if($cachedPageData !== null && isset($cachedPageData['limit'])){
+			$this->setLimit(\Core\Session::Get('filterpage/' . $this->_name)['limit']);
 		}
 	}
 
@@ -391,6 +402,8 @@ class FilterForm {
 		$tpl->assign('records_current', $records_current);
 		$tpl->assign('records_start', $records_start);
 		$tpl->assign('records_end', $records_end);
+		$tpl->assign('limit', $this->_limit);
+		$tpl->assign('limit_options', $this->_limitOptions);
 		return $tpl->fetch();
 	}
 
@@ -539,6 +552,11 @@ class FilterForm {
 	 * @param int $limit
 	 */
 	public function setLimit($limit){
+		if(array_search($limit, $this->_limitOptions) === false){
+			// Ensure that the limit requested is a valid limit option!
+			$limit = $this->_limitOptions[0];
+		}
+		
 		$this->_limit = (int) $limit;
 	}
 

@@ -41,7 +41,22 @@
 	{/if}
 </div>
 
-	{t 'STRING_DISPLAYING_N_THROUGH_N_OF_N_RECORDS' $records_start $records_end $records_total}
+	{if sizeof($limit_options)}
+		{* Limit qty changing is enabled! *}
+		{t 'STRING_DISPLAYING'}
+		
+		<select class="pagination-limit-selector" onchange="window.location.search = '?limit=' + this.options[this.selectedIndex].value;">
+			{foreach $limit_options as $k}
+				<option value="{$k}"{if $k == $limit} selected="selected"{/if}>{$k}</option>
+			{/foreach}
+		</select>
+		
+		{t 'STRING_OF_N_RECORDS' $records_total}
+	{else}
+		{* Limit qty changing is disabled, render the read-only view instead. *}
+		{t 'STRING_DISPLAYING_N_THROUGH_N_OF_N_RECORDS' $records_start $records_end $records_total}
+	{/if}
+	
 
 
 	<div class="pagination-list">
