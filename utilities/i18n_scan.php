@@ -161,13 +161,14 @@ if($comp){
 		if($class->isSubclassOf('Model')){
 			$modelName = strtoupper($key);
 			$schema = $class->getMethod('GetSchema')->invoke(null);
+			$isSupplemental = false;
 		}
 		else{
 			// This model name needs some trimming performed to chop off the dynamic prefix and "modelsupplemental" suffix.
 			$modelName = strtoupper(substr($key, strpos($key, '_')+1, -17)) . 'MODEL';
 			$schema = $class->getStaticPropertyValue('Schema', []);
+			$isSupplemental = true;
 		}
-		
 
 		// Schema now contains the schema for this model!
 		// These should support translation strings
@@ -182,15 +183,16 @@ if($comp){
 				$formType = 'text';
 			}
 
-			if($formType == 'system' || $formType == 'disabled' || $formType == 'hidden'){
-				continue;
-			}
-
 			if(
 				$dat['type'] == Model::ATT_TYPE_ALIAS || $dat['type'] == Model::ATT_TYPE_CREATED || $dat['type'] == Model::ATT_TYPE_UPDATED ||
 				$dat['type'] == Model::ATT_TYPE_DELETED || $dat['type'] == Model::ATT_TYPE_ID || $dat['type'] == Model::ATT_TYPE_ID_FK ||
 				$dat['type'] == Model::ATT_TYPE_UUID || $dat['type'] == Model::ATT_TYPE_UUID_FK
 			){
+				continue;
+			}
+			
+			// Skip supplementally defined attributes, they should only be present on the source component.
+			if(!$isSupplemental && isset($dat['_is_supplemental']) && $dat['_is_supplemental']){
 				continue;
 			}
 

@@ -2528,6 +2528,10 @@ class Model implements ArrayAccess {
 				}
 
 				$schema[$k] = self::_StandardizeSchemaDefinition($schema[$k]);
+				
+				// Attach where this schema index came from, useful for some supplemental scripts like i18n scanner.
+				$schema[$k]['_defining_model'] = $classname;
+				$schema[$k]['_is_supplemental'] = false;
 			}
 
 			// Allow all supplemental models to tap into the schema too!
@@ -2541,6 +2545,10 @@ class Model implements ArrayAccess {
 
 							foreach($s as $k => $dat){
 								$schema[$k] = self::_StandardizeSchemaDefinition($dat);
+
+								// Attach where this schema index came from, useful for some supplemental scripts like i18n scanner.
+								$schema[$k]['_defining_model'] = $supplemental;
+								$schema[$k]['_is_supplemental'] = true;
 							}
 						}
 					}
