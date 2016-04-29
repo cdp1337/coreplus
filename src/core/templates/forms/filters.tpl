@@ -22,14 +22,14 @@
 
 					<div class="clear"></div>
 					<a href="#" class="button reset-filters">
-						<i class="icon-remove"></i>
-						<span>{t 'STRING_RESET_FILTERS'}</span>
+						<i class="icon-times"></i>
+						<span>{t 'STRING_RESET'}</span>
 					</a>
 					<!-- Render a submit button so 'Enter' works... -->
 					<input type="submit" style="display:none;"/>
 					<a href="#" class="button apply-filters">
 						<i class="icon-ok"></i>
-						<span>{t 'STRING_APPLY_FILTERS'}</span>
+						<span>{t 'STRING_APPLY'}</span>
 					</a>
 				</form>
 			{/if}
