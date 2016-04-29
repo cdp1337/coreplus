@@ -26,6 +26,7 @@
 		</td>
 		<td>{date $entry.datetime format='SDT'}</td>
 		<td>
+			{$entry.useragent|user_agent}<br/>
 			{geoiplookup $entry.ip_addr}<br/>
 			{$entry.ip_addr}
 		</td>

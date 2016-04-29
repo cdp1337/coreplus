@@ -114,12 +114,11 @@ $(function(){
 	$hist_dstart = $('#hist-dstart');
 	$hist_dend = $('#hist-dend');
 
-	userheader = '<tr><th>User Name</th><th>IP Address</th><th>Browser</th><th>Operating System</th><th>Count</th><th>Last Page</th></tr>';
+	userheader = '<tr><th>User Name</th><th>IP Address</th><th>Browser</th><th>Count</th><th>Last Page</th></tr>';
 	usertemplate = '<tr>' +
 			'<td>[%%username%%]</td>' +
 			'<td>[%%ip%%]</td>' +
 			'<td>[%%browser%%]</td>' +
-			'<td>[%%os%%]</td>' +
 			'<td>[%%count%%]</td>' +
 			'<td>[%%lastpage%%]</td>' +
 			'</tr>';
