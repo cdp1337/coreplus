@@ -69,6 +69,12 @@ aside.markdown-toc {
 	}
 }
 
+.useragent-pretty-browser, .useragent-pretty-platform, .useragent-pretty-device {
+	// These include icons and should be rendered on one line if at all possible.
+	// inline-block will provide that.
+	display: inline-block;
+}
+
 footer.page-footer {
 
 	padding-top: 2em;

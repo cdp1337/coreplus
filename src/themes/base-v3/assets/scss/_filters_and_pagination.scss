@@ -12,14 +12,19 @@
 	.disabled {
 		color: #999;
 	}
-}
 
-.pagination-pager {
-	float: left;
-}
+	.pagination-pager {
+		float: left;
+	}
+	
+	.pagination-limit-selector {
+		// This is a select object which usually renders as a block element.
+		display: inline;
+	}
 
-.pagination-list {
-	float: right;
+	.pagination-list {
+		float: right;
+	}
 }
 
 .listing-filters {
@@ -30,11 +35,12 @@
 
 	.reset-filters {
 		float: right;
-		color: rgb(168, 27, 38);
+		color: rgb(245, 159, 165);
 	}
 
 	.apply-filters {
 		float: right;
-		color: rgb(33, 99, 31);
+		color: rgb(156, 237, 154);
+		margin-right: 1em;
 	}
 }

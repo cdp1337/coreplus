@@ -967,31 +967,34 @@ ul.controls.context-menu-many-links {
 .pagination .disabled {
   color: #999;
 }
-
-/* line 17, ../scss/_filters_and_pagination.scss */
-.pagination-pager {
+/* line 16, ../scss/_filters_and_pagination.scss */
+.pagination .pagination-pager {
   float: left;
 }
-
-/* line 21, ../scss/_filters_and_pagination.scss */
-.pagination-list {
+/* line 20, ../scss/_filters_and_pagination.scss */
+.pagination .pagination-limit-selector {
+  display: inline;
+}
+/* line 25, ../scss/_filters_and_pagination.scss */
+.pagination .pagination-list {
   float: right;
 }
 
-/* line 26, ../scss/_filters_and_pagination.scss */
+/* line 31, ../scss/_filters_and_pagination.scss */
 .listing-filters .formelement {
   float: left;
   margin-right: 1em;
 }
-/* line 31, ../scss/_filters_and_pagination.scss */
+/* line 36, ../scss/_filters_and_pagination.scss */
 .listing-filters .reset-filters {
   float: right;
-  color: #a81b26;
+  color: #f59fa5;
 }
-/* line 36, ../scss/_filters_and_pagination.scss */
+/* line 41, ../scss/_filters_and_pagination.scss */
 .listing-filters .apply-filters {
   float: right;
-  color: #21631f;
+  color: #9ced9a;
+  margin-right: 1em;
 }
 
 /*****************************************************************************
@@ -1505,18 +1508,23 @@ aside.markdown-toc ul {
 }
 
 /* line 72, ../scss/_content.scss */
+.useragent-pretty-browser, .useragent-pretty-platform, .useragent-pretty-device {
+  display: inline-block;
+}
+
+/* line 78, ../scss/_content.scss */
 footer.page-footer {
   padding-top: 2em;
 }
-/* line 76, ../scss/_content.scss */
+/* line 82, ../scss/_content.scss */
 footer.page-footer .listing-schema-information {
   font-size: 75%;
 }
-/* line 79, ../scss/_content.scss */
+/* line 85, ../scss/_content.scss */
 footer.page-footer .listing-schema-information .listing-schema-address-address {
   display: block;
 }
-/* line 84, ../scss/_content.scss */
+/* line 90, ../scss/_content.scss */
 footer.page-footer .legal-notice {
   font-size: 75%;
 }
