@@ -74,11 +74,10 @@ class UserSocial_UserModelSupplemental implements ModelSupplemental {
 	 * Validate a username
 	 * 
 	 * @param                     $username
-	 * @param UserUserConfigModel $userconfig
 	 *
 	 * @return bool|string
 	 */
-	public static function ValidateUsername($username, UserUserConfigModel $userconfig){
+	public static function ValidateUsername($username){
 		// Usernames need to be unique across the system, since they will be used as URL identifiers.
 
 		// However, blank usernames are acceptable.
@@ -97,7 +96,8 @@ class UserSocial_UserModelSupplemental implements ModelSupplemental {
 
 		// Search the database for the same username.  Remember, THERE CAN ONLY BE ONE!
 		$match = UserUserConfigModel::Find(array('key' => 'username', 'value' => $username), 1);
-		if($match && $match->get('user_id') != $userconfig->get('user_id')){
+		//if($match && $match->get('user_id') != $userconfig->get('user_id')){
+		if($match){
 			return 'Requested username is already taken!';
 		}
 
