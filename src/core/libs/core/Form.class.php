@@ -589,7 +589,13 @@ class FormElement {
 	 * @return string|boolean String if an error was encountered, otherwise TRUE if no errors.
 	 */
 	public function validate($value){
+		// System fields are always assumed to be valid, as they can only be set by the controller.
+		if($this->get('type') == 'system'){
+			return true;
+		}
+		
 		if ($this->get('required') && !$value) {
+			// This form element is marked as required but does not have a value assigned!
 			return $this->get('label') . ' is required.';
 		}
 
