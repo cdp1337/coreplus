@@ -109,10 +109,6 @@ abstract class Helper{
 
 			// setFromForm will handle all attributes and custom values.
 			$user->setFromForm($form);
-
-			// Remember, this password field is ONLY meant to be a generated password!
-			// Do NOT send the user's assigned password via email.
-			$password = ($form->getElement('password')) ? $form->getElementValue('password') : null;
 		}
 		catch(\ModelValidationException $e){
 			// Make a note of this!
@@ -135,44 +131,17 @@ abstract class Helper{
 			return false;
 		}
 
-		// Check if there are no users already registered on the system.
-		// This determines how the admin and active flags are handled.
-		if(\UserModel::Count() == 0){
-			// If none, register this user as an admin automatically.
-			$user->set('admin', true);
-			$user->set('active', true);
+		if( \Core\user()->checkAccess('g:admin') ) {
+			$active = ($form->getElementValue('active') === "on" ? 1 : 0);
+			$user->set('active', $active);
 		}
-		else{
-			// There is at least one user on the system, use the standard logic.
-
-			// if a super admin is registering an account, it should use the value of the active checkbox!
-			if( \Core\user()->checkAccess('g:admin') ) {
-				$activeElement = $form->getElement('active')->get('value');
-				$active = ($activeElement === "on" ? 1 : 0);
-				$user->set('active', $active);
-			}
-			elseif(\ConfigHandler::Get('/user/register/requireapproval')){
-				$user->set('active', false);
-			}
-			else{
-				$user->set('active', true);
-			}
+		else {
+			$user->setDefaultActiveStatuses();
 		}
-
-		// Set the default group on new accounts, if a default is set.
-		$defaultgroups = \UserGroupModel::Find(array("default = 1"));
-		$gs = [];
-		foreach($defaultgroups as $g){
-			/** @var \UserGroupModel $g */
-			$gs[] = $g->get('id');
-		}
-		$user->setGroups($gs);
-
-		// Record some more meta information about this user.
-		$user->set('registration_ip', REMOTE_IP);
-		$user->set('registration_source', \Core\user()->exists() ? 'admin' : 'self');
-		$user->set('registration_invitee', \Core\user()->get('id'));
-
+		
+		$user->setDefaultGroups();
+		$user->setDefaultMetaFields();
+		$user->generateNewApiKey();
 		$user->save();
 
 		// User created... make a log of this!
@@ -180,19 +149,7 @@ abstract class Helper{
 
 		// Send a thank you for registering email to the user.
 		try{
-			$email = new \Email();
-			$email->assign('user', $user);
-			$email->assign('password', $password);
-			$email->assign('sitename', SITENAME);
-			$email->assign('rooturl', ROOT_URL);
-			$email->assign('loginurl', \Core\resolve_link('/user/login'));
-			$email->setSubject('Welcome to ' . SITENAME);
-			$email->templatename = 'emails/user/registration.tpl';
-			$email->to($user->get('email'));
-
-			// TESTING
-			//error_log($email->renderBody());
-			$email->send();
+			$user->sendWelcomeEmail();
 		}
 		catch(\Exception $e){
 			\Core\ErrorManagement\exception_handler($e);
@@ -201,13 +158,6 @@ abstract class Helper{
 
 		// "login" this user if not already logged in.
 		if(!\Core\user()->exists()){
-
-			// If the user came from the registration page, get the page before that.
-			//if(REL_REQUEST_PATH == '/user/register2') $url = \Core::GetHistory(2);
-			// else the registration link is now on the same page as the 403 handler.
-			//else $url = REL_REQUEST_PATH;
-
-			//$url = Core::GetHistory(2);
 			if($user->get('active')){
 				$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
 				$user->save();
@@ -318,71 +268,6 @@ abstract class Helper{
 
 
 		return true;
-	}
-
-	/**
-	 * Get the control links for a given user based on the current user's access permissions.
-	 *
-	 * @param \UserModel|int $user
-	 * @return array
-	 */
-	public static function GetControlLinks($user){
-		$a = array();
-
-		if(is_scalar($user)){
-			// Transpose the ID to a user backend object.
-			$user = \UserModel::Construct($user);
-		}
-		elseif($user instanceof \UserModel){
-			// NO change needed :)
-		}
-		else{
-			// Umm, wtf was it?
-			return array();
-		}
-
-		// still nothing?
-		if(!$user) return array();
-
-
-		$usersudo    = \Core\user()->checkAccess('p:/user/users/sudo');
-		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');
-		$selfaccount = \Core\user()->get('id') == $user->get('id');
-
-		if($usersudo && !$selfaccount){
-			$a[] = array(
-				'title' => 'Switch To User',
-				'icon' => 'bullseye',
-				'link' => '/user/sudo/' . $user->get('id'),
-				'confirm' => 'By switching, (or SUDOing), to a user, you inherit that user permissions.',
-			);
-		}
-
-		if($usermanager || $selfaccount){
-			$a[] = array(
-				'title' => 'Edit',
-				'icon' => 'edit',
-				'link' => '/user/edit/' . $user->get('id'),
-			);
-
-			$a[] = array(
-				'title' => 'Public Profiles',
-				'icon' => 'link',
-				'link' => '/user/connectedprofiles/' . $user->get('id'),
-			);
-
-			// Even though this user has admin access, he/she cannot remove his/her own account!
-			if(!$selfaccount){
-				$a[] = array(
-					'title' => 'Delete',
-					'icon' => 'remove',
-					'link' => '/user/delete/' . $user->get('id'),
-					'confirm' => 'Are you sure you want to delete user ' . $user->getDisplayName() . '?',
-				);
-			}
-		}
-
-		return $a;
 	}
 
 	/**
@@ -512,7 +397,10 @@ abstract class Helper{
 			);
 		}
 		
-		if($type == 'registration'){
+		if($usermanager){
+			$elements = array_keys($user->getKeySchemas());
+		}
+		elseif($type == 'registration'){
 			$elements = explode('|', \ConfigHandler::Get('/user/register/form_elements'));
 		}
 		else{
@@ -528,7 +416,9 @@ abstract class Helper{
 			if($k){
 				// Skip blank elements that can be caused by string|param|foo| or empty strings.
 				$el = $user->getColumn($k)->getAsFormElement();
-				$form->addElement($el);	
+				if($el){
+					$form->addElement($el);	
+				}
 			}
 		}
 
@@ -536,9 +426,10 @@ abstract class Helper{
 		if($groupmanager){
 			// Find all the groups currently on the site.
 
-			$where = ['context = '];
+			$where = new DatasetWhereClause();
+			$where->addWhere('context = ');
 			if(\Core::IsComponentAvailable('multisite') && \MultiSiteHelper::IsEnabled()){
-				$where['site'] = \MultiSiteHelper::GetCurrentSiteID();
+				$where->addWhereSub('OR', ['site = ' . \MultiSiteHelper::GetCurrentSiteID(), 'site = -1']);
 			}
 
 			$groups = \UserGroupModel::Find($where, null, 'name');

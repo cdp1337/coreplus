@@ -279,23 +279,22 @@ class UserActivityController extends Controller_2_1 {
 	public function details(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
+		
+		$listing = new Core\ListingTable\Table();
+		$listing->setName('useractivity-details');
+		$listing->setLimit(100);
 
-		$filters = new FilterForm();
-		$filters->haspagination = true;
-		$filters->setLimit(100);
-		$filters->setName('useractivity-details');
-
-		$filters->addElement(
+		$listing->addFilter(
 			'text',
 			['name' => 'user_id', 'title' => 'User ID', 'link' => FilterForm::LINK_TYPE_STANDARD]
 		);
 
-		$filters->addElement(
+		$listing->addFilter(
 			'text',
 			['name' => 'ip_addr', 'title' => 'IP Address', 'link' => FilterForm::LINK_TYPE_STANDARD]
 		);
 
-		$filters->addElement(
+		$listing->addFilter(
 			'text',
 			['name' => 'session_id', 'title' => 'Session ID', 'link' => FilterForm::LINK_TYPE_STANDARD]
 		);
@@ -306,7 +305,7 @@ class UserActivityController extends Controller_2_1 {
 			/** @var PageModel $p */
 			$allPages[$p->get('baseurl')] = $p->get('baseurl');
 		}
-		$filters->addElement(
+		$listing->addFilter(
 			'select',
 			[
 				'name' => 'baseurl',
@@ -315,18 +314,26 @@ class UserActivityController extends Controller_2_1 {
 			    'link' => FilterForm::LINK_TYPE_STANDARD,
 			]
 		);
+		
+		$listing->addColumn('Time', 'datetime');
+		$listing->addColumn('User & Browser');
+		$listing->addColumn('Type', 'type');
+		$listing->addColumn('URL & Referrer', 'request');
+		$listing->addColumn('Referrer', 'referrer', false);
+		$listing->addColumn('Session', 'session_id', false);
+		$listing->addColumn('IP Address', 'ip_addr', false);
+		$listing->addColumn('User Agent', 'useragent', false);
+		$listing->addColumn('Generation', 'processing_time', false);
+		$listing->addColumn('DB Reads', 'db_reads', false);
+		$listing->addColumn('DB Writes', 'db_writes', false);
+		
+		$listing->setModelName('UserActivityModel');
+		$listing->setDefaultSort('datetime', 'DESC');
 
-		$filters->load($request);
-
-
-		$factory = new ModelFactory('UserActivityModel');
-		$factory->order('datetime DESC');
-
-		$filters->applyToFactory($factory);
+		$listing->loadFiltersFromRequest($request);
 
 		$view->title = 'User Activity Details';
-		$view->assign('filters', $filters);
-		$view->assign('listings', $factory->get());
+		$view->assign('listings', $listing);
 	}
 
 	/**

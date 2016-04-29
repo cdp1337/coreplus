@@ -396,6 +396,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			if($form->getElement('pwgen') && $form->getElementValue('pwgen')){
 				$password = $auth->pwgen();
 				$auth->setPassword($password);
+				$user->set('password_raw', $password);
 			}
 
 			// Users can be created with no password.  They will be prompted to set it on first login.
@@ -414,6 +415,8 @@ class DatastoreAuthController extends Controller_2_1 {
 					$p2->set('value', '');
 					return false;
 				}
+				
+				// Do not set the password_raw value here as we do not wish for it to be sent to the user via email.
 			}
 		}
 		catch(\ModelValidationException $e){
@@ -438,7 +441,6 @@ class DatastoreAuthController extends Controller_2_1 {
 			null,
 			[
 				'user' => $user,
-				'password' => $password,
 				'redirect' => $form->getElementValue('redirect'),
 			]
 		);

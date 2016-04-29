@@ -1,19 +1,18 @@
 <div id="user-edit-listing">
 	{img src="`$user->get('avatar')`" placeholder="person" width="150" height="300"}
-
-
+	
 	<ul>
 		<li>User Name: {$user->getDisplayName()}</li>
 		<li>Email: {$user.email}</li>
 		<li>Member Since: {date format="FD" $user.created}</li>
-		{if $user->get('gpgauth_pubkey')}
+		{if $user.gpgauth_pubkey}
 			<li>
-				GPG Public Key: {$user->get('gpgauth_pubkey')|gpg_fingerprint}
+				GPG Key: {gpg_fingerprint $user.gpgauth_pubkey short=true}
 			</li>
 		{/if}
 		<li>
 			API Key:
-			<a href="#" class="reveal-hidden-value" data-target="user-apikey">
+			<a href="#user-apikey" class="reveal-hidden-value">
 				Show
 				<i class="icon-lock" title="Show API Key"></i>
 			</a>
@@ -77,7 +76,7 @@
 		});
 
 		$('.reveal-hidden-value').click(function() {
-			$('#' + $(this).data('target')).toggle();
+			$($(this).attr('href')).toggle();
 			return false;
 		});
 	});

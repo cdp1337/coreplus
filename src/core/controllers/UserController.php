@@ -475,14 +475,65 @@ class UserController extends Controller_2_1{
 		$user = $data['user'];
 
 		$form = \Core\User\Helper::GetForm($user);
-		$form->addElement('hidden', ['name' => 'redirect', 'value' => $data['redirect']]);
-		if(isset($data['password'])){
-			// Password should ONLY set by a generate password system.
-			// This is NOT the user's password they entered into the system.
-			// The reason for this is so that the form handler has the original generated password available to send with the welcome email.
-			$form->addElement('system', ['name' => 'password', 'value' => $data['password']]);
-		}
+		
+		// If the total number of form elements here are only 2, then only the user object and submit button are present.
+		// Instead of showing the form, auto-submit to that destination.
+		if(sizeof($form->getElements()) <= 2){
+			$user->setDefaultGroups();
+			$user->setDefaultMetaFields();
+			$user->setDefaultActiveStatuses();
+			$user->generateNewApiKey();
+			$user->save();
 
+			// User created... make a log of this!
+			\SystemLogModel::LogSecurityEvent('/user/register', 'User registration successful', null, $user->get('id'));
+
+			// Send a thank you for registering email to the user.
+			try{
+				$user->sendWelcomeEmail();
+			}
+			catch(\Exception $e){
+				\Core\ErrorManagement\exception_handler($e);
+				\Core\set_message('t:MESSAGE_ERROR_CANNOT_SEND_WELCOME_EMAIL');
+			}
+
+			// "login" this user if not already logged in.
+			if(!\Core\user()->exists()){
+				if($user->get('active')){
+					$user->set('last_login', \CoreDateTime::Now('U', \Time::TIMEZONE_GMT));
+					$user->save();
+					\Core\Session::SetUser($user);
+				}
+				\Core\set_message('t:MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
+
+				if(($overrideurl = \HookHandler::DispatchHook('/user/postlogin/getredirecturl'))){
+					// Allow an external script to override the redirecting URL.
+					$url = $overrideurl;
+				}
+				elseif($form->getElementValue('redirect')){
+					// The preferred default redirect method.
+					// This is set from /user/register2, which is in turn passed in, (hopefully), by the original callee registration page.
+					$url = $form->getElementValue('redirect');
+				}
+				elseif(strpos(REL_REQUEST_PATH, '/user/register') === 0){
+					// If the user came from the registration page, get the page before that.
+					$url = '/';
+				}
+				else{
+					// else the registration link is now on the same page as the 403 handler.
+					$url = REL_REQUEST_PATH;
+				}
+
+				\Core\redirect($url);
+			}
+			// It was created administratively; redirect there instead.
+			else{
+				\Core\set_message('t:MESSAGE_SUCCESS_CREATED_USER_ACCOUNT');
+				\Core\redirect('/user/admin');
+			}
+		}
+		
+		$form->addElement('hidden', ['name' => 'redirect', 'value' => $data['redirect']]);
 
 		$view->title = 'Complete Registration';
 		$view->assign('form', $form);

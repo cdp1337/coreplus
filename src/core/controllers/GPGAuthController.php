@@ -148,6 +148,62 @@ EOD;
 	}
 
 	/**
+	 * Second page for GPG registration; should be called automatically.
+	 * 
+	 * This happens after the user uploads the GPG public key and is meant to allow the user to select the email to use based on the key's data.
+	 */
+	public function register2(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		/** @var NonceModel $nonce */
+		$nonce = NonceModel::Construct($request->getParameter(0));
+		$nonce->decryptData();
+		
+		if($nonce->isUsed()){
+			$data = $nonce->get('data');
+			
+			$form = new Form();
+			$form->set('callsmethod', 'GPGAuthController::RegisterHandler');
+			$form->addElement('system', ['name' => 'redirect', 'value' => $data['original_redirect']]);
+			$form->addElement('system', ['name' => 'keyid', 'value' => $data['key']]);
+			
+			// Extract out the emails on this key and present the user with the option to select the correct one.
+			$gpg = new \Core\GPG\GPG();
+			$key = $gpg->getKey($data['key']);
+			
+			$emailOpts = [];
+			
+			foreach($key->uids as $uid){
+				/** @var \Core\GPG\UID $uid */
+				if($uid->isValid() && $uid->email){
+					$emailOpts[] = $uid->email;
+				}
+			}
+			
+			if(!sizeof($emailOpts)){
+				\Core\set_message('No valid emails found on the uploaded key!', 'error');
+				\Core\go_back();
+			}
+			
+			$form->addElement('radio', [
+				'name' => 'email', 
+				'required' => true, 
+				'title' => 'Select Your Email', 
+				'options' => $emailOpts, 
+				'description' => 'Select the email address you would like to use to login and which you would like to receive notifications to.'
+			]);
+			$form->addElement('submit', ['value' => 'Continue With GPG']);
+			
+			$view->assign('form', $form);
+		}
+		else{
+			\Core\set_message('Invalid nonce requested!', 'error');
+			\Core\go_back();
+		}
+	}
+
+	/**
 	 * Method to be expected to be called from the command line to upload a key.
 	 * 
 	 * This is used from the reset+configure page.
@@ -187,18 +243,24 @@ EOD;
 			return;
 		}
 
-		$user = UserModel::Construct($data['user']);
+		if(isset($data['user']) && $data['user']){
+			$user = UserModel::Construct($data['user']);
 
-		if(!$user->exists()){
-			echo "Invalid user requested!\n";
-			return;
+			if(!$user->exists()){
+				echo "Invalid user requested!\n";
+				return;
+			}
 		}
-
+		else{
+			// It's a new user!
+			$user = null;
+		}
+		
 		try{
 			$gpg = new Core\GPG\GPG();
 			$key = $gpg->importKey($input);
 
-			if(($newnonce = \Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint))){
+			if($user && ($newnonce = \Core\User\AuthDrivers\gpg::SendVerificationEmail($user, $key->fingerprint))){
 				// Record the new nonce so that the other process checking for a status update has more metainformation to pull from.
 				// This is because there are two separate connections going on;
 				// This one and the web connection.
@@ -206,6 +268,15 @@ EOD;
 				$nonce->set('data', $data);
 				$nonce->markUsed();
 				echo "Step 1 of 2 complete!  Please check your email for further instructions to verify this key!\n";
+				return;
+			}
+			elseif(!$user){
+				// It's a registration!
+				$data['redirect'] = \Core\resolve_link('/gpgauth/register2/' . $nonce->get('key'));
+				$data['key'] = $key->fingerprint;
+				$nonce->set('data', $data);
+				$nonce->markUsed();
+				echo "Step 1 complete!  Please check the website to continue.\n";
 				return;
 			}
 		}
@@ -812,36 +883,40 @@ EOD;
 	 */
 	public static function RegisterHandler(Form $form) {
 		$keyid = $form->getElement('keyid');
+		$key   = $form->getElement('key');
 		$email = $form->getElement('email');
 
 		// Search for that email address on the remote servers.
 		$gpg = new \Core\GPG\GPG();
-		$keys = $gpg->searchRemoteKeys($email->get('value'));
-		if(!sizeof($keys)){
-			$email->setError('No public keys were found with this email address, have you uploaded your key to ' . $gpg->keyserver . '?');
+		
+		if($key){
+			// Was there a key manually uploaded?
+			$pubKey = $gpg->importKey($key->get('value'));
+		}
+		elseif($keyid){
+			// If uploaded automatically from a script, the value will simply be the key ID.
+			$pubKey = $gpg->getKey($keyid->get('value'));
+		}
+		else{
+			\Core\set_message('Please either upload a key or run the command to automatically upload one!', 'error');
 			return false;
 		}
 
-		if(!in_array($keyid->get('value'), $keys)){
-			$keyid->setError('Email address has keys associated on ' . $gpg->keyserver . ', but the key you provided does not match any of them!');
-			return false;
-		}
-
-		// Ok, there was a key on the keyserver with that email, time to actually load in the key so I can examine it closer.
-		$key = $gpg->importKey($keyid->get('value'));
-
-		if(!$key){
-			$keyid->setError('Unable to load key from keyserver ' . $gpg->keyserver . ', hmmm.');
-			return false;
-		}
-
-		if(!$key->isValid()){
+		if(!$pubKey->isValid()){
+			\SystemLogModel::LogSecurityEvent('/user/register', 'FAILED GPG register - revoked or expired public key');
 			$keyid->setError('Key is not valid, is it revoked or expired?');
 			return false;
 		}
-
-		if(!$key->isValid($email->get('value'))){
-			$email->setError('UID subkey containing that email address is not valid, is it revoked or expired?');
+		
+		if(!$pubKey->getUID($email->get('value'))){
+			$email->setError('That email address was not listed in for your key!');
+			\SystemLogModel::LogSecurityEvent('/user/register', 'FAILED GPG register - Email not included in public key');
+			return false;
+		}
+		
+		if(!$pubKey->isValid($email->get('value'))){
+			$email->setError('That email address is either revoked or expired!');
+			\SystemLogModel::LogSecurityEvent('/user/register', 'FAILED GPG register - Email marked as expired or revoked');
 			return false;
 		}
 
@@ -850,7 +925,19 @@ EOD;
 			$user = new \UserModel();
 			$user->set('email', $email->get('value'));
 			$user->enableAuthDriver('gpg');
-			$user->set('gpgauth_pubkey', $keyid->get('value'));
+			$user->set('gpgauth_pubkey', $pubKey->fingerprint);
+			
+			// Was there a photo attached to this public key?
+			if(sizeof($pubKey->getPhotos()) > 0){
+				$p = $pubKey->getPhotos();
+				// I just want the first.
+				/** @var Core\Filestore\File $p */
+				$p = $p[0];
+				
+				$localFile = \Core\Filestore\Factory::File('public/user/avatar/' . $pubKey->fingerprint . '.' . $p->getExtension());
+				$p->copyTo($localFile);
+				$user->set('avatar', $localFile->getFilename(false));
+			}
 		}
 		catch(\ModelValidationException $e){
 			// Make a note of this!

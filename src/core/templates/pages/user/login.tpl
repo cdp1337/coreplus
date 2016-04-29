@@ -1,39 +1,52 @@
 <div id="user-login-center" class="user-login-center">
-	{if sizeof($drivers) > 1}
-		{assign var='column_count' value='col-2'}
-		{assign var='form_orientation' value='vertical'}
-	{else}
-		{assign var='column_count' value='col-1'}
-		{assign var='form_orientation' value='horizontal'}
+	{**
+	 * An alternative to this if you so please is to do:
+	 *
+	 * {$drivers.datastore->renderLogin()}
+	 * <some-markup/>
+	 * {$drivers.facebook->renderLogin()}
+	 *
+	 * The default will simply render every authentication driver enabled on the system.
+	 *}
+	{assign var='jqueryAvailable' value=Core::IsLibraryAvailable('jquery-full')}
+
+	{if $jqueryAvailable}
+		{*
+		 * Only display the UI tabs if jQuery is available.
+		 *}
+		<ul>
+			{foreach $drivers as $name => $d}
+				<li>
+					<a href="#login-auth-{$name}">
+						<i class="icon-{$d->getAuthIcon()}"></i>
+						<span>{$d->getAuthTitle()}</span>
+					</a>
+				</li>
+			{/foreach}
+		</ul>
 	{/if}
 
-	<fieldset id="user-login-existing" class="user-login-existing clearfix {$column_count}">
-		<div class="user-login-section-heading clearfix">
-			Existing Account
+	{foreach $drivers as $name => $d}
+		<div class="user-login-include user-authdriver-{$name}" id="login-auth-{$name}">
+			{$d->renderLogin()}
 		</div>
-
-		{**
-		 * An alternative to this if you so please is to do:
-		 *
-		 * {$drivers.datastore->renderLogin()}
-		 * <some-markup/>
-		 * {$drivers.facebook->renderLogin()}
-		 *
-		 * The default will simply render every authentication driver enabled on the system.
-		 *}
-
-		{foreach $drivers as $name => $d}
-			<div class="user-login-include user-authdriver-{$name}">
-				<div class="user-authdriver-title">{$d->getAuthTitle()}</div>
-				{$d->renderLogin(['orientation' => {$form_orientation}])}
-			</div>
-		{/foreach}
-	</fieldset>
+	{/foreach}
 
 	{if $allowregister}
+
+		<hr/>
+		
 		<fieldset id="user-login-register" class="user-login-register">
 			{a class="register-account button" href="/user/register"}Sign up for an account!{/a}
 		</fieldset>
 	{/if}
-
 </div>
+
+{if $jqueryAvailable}
+	{script library="jqueryui"}{/script}
+	{script location="foot"}<script>
+		$(function() {
+			$('#user-login-center').tabs();
+		});
+	</script>{/script}
+{/if}

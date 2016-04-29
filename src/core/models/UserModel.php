@@ -40,7 +40,7 @@ class UserModel extends Model {
 		'backend'              => [
 			'type'     => Model::ATT_TYPE_STRING,
 			'formtype' => 'disabled',
-			'default'  => 'datastore',
+			'default'  => '',
 			'comment'  => 'Pipe-delimited list of authentication drivers on this user'
 		],
 		'password'             => [
@@ -168,10 +168,6 @@ class UserModel extends Model {
 	protected $_authdriver = [];
 
 	public function __construct($id = null) {
-		$this->_linked['UserUserConfig'] = [
-			'link' => Model::LINK_HASMANY,
-			'on'   => ['user_id' => 'id'],
-		];
 		$this->_linked['UserUserGroup']  = [
 			'link' => Model::LINK_HASMANY,
 			'on'   => ['user_id' => 'id'],
@@ -179,34 +175,6 @@ class UserModel extends Model {
 
 		parent::__construct($id);
 	}
-
-	/**
-	 * Get a key from this current user either from the core
-	 * user table or from the config options.
-	 *
-	 * Will try the core table first, then check for a config key name
-	 * that matches.
-	 *
-	 * @since 2011.08
-	 *
-	 * @param string $key
-	 *
-	 * @return mixed String, boolean, int or float if exists, null if otherwise.
-	 */
-	/*public function get($key) {
-		if($this->getKeySchema($key) !== null){
-			return parent::get($key);
-		}
-		elseif(($c = $this->getConfigObject($key)) !== null) {
-			return $c->get('value');
-		}
-		elseif(array_key_exists($key, $this->_dataother)) {
-			return $this->_dataother[ $key ];
-		}
-		else {
-			return null;
-		}
-	}*/
 
 	/**
 	 * Get the human-readable label for this record.
@@ -249,90 +217,6 @@ class UserModel extends Model {
 	}
 
 	/**
-	 * Get all user configs for this given user.
-	 *
-	 * These options will be populated with the default values if none exist.
-	 *
-	 * @since 2011.08
-	 * @return array Key/value pair for each config option.
-	 */
-	public function getConfigs() {
-		if($this->_configs === null) {
-			$this->_configs = [];
-			$uucrecords     = $this->getLink('UserUserConfig');
-
-			$fac = UserConfigModel::Find();
-			foreach($fac as $f) {
-				/** @var UserConfigModel $f */
-				$key     = $f->get('key');
-				$default = $f->get('default_value');
-
-				// Look for this UUC from the list of records.
-				foreach($uucrecords as $uuc) {
-					/** @var UserUserConfigModel $uuc */
-					if($uuc->get('key') == $key) {
-						// Yay, it exists and is ready to go.
-						$this->_configs[ $key ] = $uuc;
-						// Skip to the next UserConfig object!
-						continue 2;
-					}
-				}
-
-				// If it's still here, the previous UUC logic didn't break out,
-				// which means the uuc doesn't exist.... yet :p
-				try {
-					$uuc = new UserUserConfigModel($this->get('id'), $key);
-					$uuc->set('value', $default);
-					// Add this object to the list set of child models, just in case it's saved.
-					$this->setLink('UserUserConfig', $uuc);
-					// And add to the stack.
-					$this->_configs[ $key ] = $uuc;
-				}
-				catch(Exception $e) {
-					trigger_error('Invalid UserConfig [' . $f->get('key') . '], ' . $e->getMessage(), E_USER_NOTICE);
-					// And simply don't add this one onto the user stack.
-					// This is allowed because if the default isn't valid, then the user config itself isn't valid.
-				}
-			}
-		}
-
-		// Iterate over each set and just return a simple array.
-		$ret = [];
-		foreach($this->_configs as $k => $obj) {
-			/** @var UserUserConfigModel $obj */
-			$ret[ $k ] = $obj->get('value');
-		}
-
-		return $ret;
-	}
-
-	/**
-	 * Get a single user config object
-	 *
-	 * @param string $key The UserConfig key to lookup
-	 *
-	 * @return UserUserConfigModel|null
-	 */
-	public function getConfigObject($key) {
-		// Ensure the cache is populated.
-		$this->getConfigs();
-
-		return (isset($this->_configs[ $key ])) ? $this->_configs[ $key ] : null;
-	}
-
-	/**
-	 * Get all the config objects associated to this user.
-	 *
-	 * @return array Array of UserUserConfigModels.
-	 */
-	public function getConfigObjects() {
-		// Ensure the cache is populated.
-		$this->getConfigs();
-
-		return $this->_configs;
-	}
-
-	/**
 	 * Get an array of the group IDs this user is a member of.
 	 *
 	 * This will only return standard groups, context groups WILL NOT BE RETURNED.
@@ -352,7 +236,7 @@ class UserModel extends Model {
 			if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 				// Only return this site's groups if in multisite mode
 				$g = $uug->getLink('UserGroup');
-				if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()) {
+				if($g->get('site') == MultiSiteHelper::GetCurrentSiteID() || $g->get('site') == -1) {
 					$out[] = $g->get('id');
 				}
 			}
@@ -530,8 +414,8 @@ class UserModel extends Model {
 	 * @return boolean
 	 */
 	public function enableAuthDriver($driver) {
-		$enabled = explode('|', $this->get('backend'));
-
+		$enabled = $this->get('backend') == '' ? [] : explode('|', $this->get('backend'));
+		
 		$drivers = \Core\User\Helper::GetEnabledAuthDrivers();
 		if(!isset($drivers[ $driver ])) {
 			return false;
@@ -582,41 +466,6 @@ class UserModel extends Model {
 	}
 
 	/**
-	 * Get a textual representation of this Model as a flat string.
-	 *
-	 * Used by the search systems to index the model, (or multiple models into one).
-	 *
-	 * @return string
-	 */
-	public function getSearchIndexString() {
-		// The default behaviour is to sift through the records on this model itself.
-		$strs = [];
-
-		// The user account only has an email address
-		$strs[] = $this->get('email');
-
-		// I also need to sift over the user config options, since they relate to this object too.
-		$opts = UserConfigModel::Find();
-		foreach($opts as $uc) {
-			/** @var UserConfigModel $uc */
-			if($uc->get('searchable')) {
-				$val = $this->get($uc->get('key'));
-
-				if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
-					// If this is a numeric-based value, compress all the numbers without formatting.
-					// This is to support phone numbers that may have arbitrary formatting applied.
-					$val = preg_replace('/[ \-\.\(\)]/', '', $val);
-				}
-				if($val){
-					$strs[] = $val;
-				}
-			}
-		}
-
-		return implode(' ', $strs);
-	}
-
-	/**
 	 * Validate a new email for this user account.
 	 *
 	 * Emails must be unique on the system and valid.  This method checks both.
@@ -662,30 +511,6 @@ class UserModel extends Model {
 			return false;
 		}
 	}
-
-
-	/**
-	 * Set a key or config option on this user.
-	 *
-	 * @param string $k
-	 * @param mixed  $v
-	 *
-	 * @return bool
-	 */
-	/*public function set($k, $v) {
-		if(array_key_exists($k, $this->_data)) {
-			// The key exists, it's a standard set.
-			return parent::set($k, $v);
-		}
-		elseif(($c = $this->getConfigObject($k)) !== null) {
-			return $c->set('value', $v);
-		}
-		else {
-			$this->_dataother[ $k ] = $v;
-
-			return true;
-		}
-	}*/
 
 	/**
 	 * Set all groups for a given user on the current site from a set of IDs.
@@ -811,6 +636,59 @@ class UserModel extends Model {
 	}
 
 	/**
+	 * Set the default/initial active statuses for new user accounts.
+	 * 
+	 * If called on an existing user, it'll be overwritten also!
+	 */
+	public function setDefaultActiveStatuses(){
+		// Check if there are no users already registered on the system.
+		// This determines how the admin and active flags are handled.
+		if(\UserModel::Count() == 0){
+			// If none, register this user as an admin automatically.
+			$this->set('admin', true);
+			$this->set('active', true);
+		}
+		else{
+			// There is at least one user on the system, use the standard logic.
+
+			if(\ConfigHandler::Get('/user/register/requireapproval')){
+				$this->set('active', false);
+			}
+			else{
+				$this->set('active', true);
+			}
+		}
+	}
+
+	/**
+	 * Set the default/initial groups for new user accounts.
+	 * 
+	 * If called on an existing user, it'll be overwritten also!
+	 */
+	public function setDefaultGroups(){
+		// Set the default group on new accounts, if a default is set.
+		$defaultgroups = \UserGroupModel::Find(array("default = 1"));
+		$gs = [];
+		foreach($defaultgroups as $g){
+			/** @var \UserGroupModel $g */
+			$gs[] = $g->get('id');
+		}
+		$this->setGroups($gs);
+	}
+
+	/**
+	 * Set the default meta fields for this user registration.
+	 *
+	 * If called on an existing user, it'll be overwritten also!
+	 */
+	public function setDefaultMetaFields(){
+		// Record some more meta information about this user.
+		$this->set('registration_ip', REMOTE_IP);
+		$this->set('registration_source', \Core\user()->exists() ? 'admin' : 'self');
+		$this->set('registration_invitee', \Core\user()->get('id'));
+	}
+
+	/**
 	 * Generate a new secure API key for this user.
 	 *
 	 * This is a built-in function that can be used for automated access to
@@ -919,47 +797,35 @@ class UserModel extends Model {
 			elseif($type == 'g' && $dat == 'anonymous') {
 				if(!$loggedin) {
 					$cache = $ret;
-
 					return $ret;
 				}
 			}
 			elseif($type == 'g' && $dat == 'authenticated') {
 				if($loggedin && $isactive) {
 					$cache = $ret;
-
 					return $ret;
 				}
 			}
 			elseif($type == 'g' && $dat == 'admin') {
 				if($isadmin) {
 					$cache = $ret;
-
 					return $ret;
 				}
 			}
-			elseif($type == 'g') {
+			elseif($type == 'g' && in_array($dat, $this->getGroups())) {
 				// All the other groups will be ID based, yayz!
-				if(in_array($dat, $this->getGroups())) {
-					$cache = $ret;
-
-					return $ret;
-				}
+				$cache = $ret;
+				return $ret;
 			}
-			elseif($type == 'p') {
-				if(in_array($dat, $this->_getResolvedPermissions($context))) {
-					$cache = $ret;
-
-					return $ret;
-				}
+			elseif($type == 'p' && in_array($dat, $this->_getResolvedPermissions($context))) {
+				$cache = $ret;
+				return $ret;
 			}
-			elseif($type == 'u') {
-				var_dump($type, $dat, $ret);
-				die('@todo Finish the user lookup logic in User::checkAccess()');
+			elseif($type == 'u' && $dat == $this->get('id')) {
+				$cache = $ret;
+				return $ret;
 			}
-			else {
-				var_dump($type, $dat, $ret);
-				die('Implement that access string check!');
-			}
+			// No else required, strings didn't match this iteration.
 		}
 
 		// Not found... return the default, (which is deny by default).
@@ -1031,6 +897,26 @@ class UserModel extends Model {
 
 		// Merge any parent links.
 		return array_merge($a, parent::getControlLinks());
+	}
+
+	/**
+	 * Send the user's welcome email
+	 * 
+	 * @throw \Exception
+	 */
+	public function sendWelcomeEmail(){
+		$email = new \Email();
+		$email->templatename = 'emails/user/registration.tpl';
+		$email->assign('user', $this);
+		$email->assign('sitename', SITENAME);
+		$email->assign('rooturl', ROOT_URL);
+		$email->assign('loginurl', \Core\resolve_link('/user/login'));
+		$email->setSubject('Welcome to ' . SITENAME);
+		$email->to($this->get('email'));
+
+		// TESTING
+		//error_log($email->renderBody());
+		$email->send();
 	}
 
 	/**
@@ -1208,87 +1094,6 @@ class UserModel extends Model {
 		else {
 			throw new Exception('Invalid context provided for _getResolvedPermissions!');
 		}
-	}
-
-	/**
-	 * Search for a user based on a search criteria.  This has functionality above and beyond just a simple Find
-	 * because it will search the email and any custom fields that are marked as searchable.
-	 *
-	 * @param string $query The term to search for
-	 * @param array  $where Any additional where clause to tack on.
-	 *
-	 * @return array An array of UserModel objects
-	 */
-	public static function Search($query, $where = []) {
-
-		$ret          = [];
-		$schema       = self::GetSchema();
-		$configwheres = [];
-
-		// If this object does not support searching, simply return an empty array.
-		$ref = new ReflectionClass(get_called_class());
-
-		if(!$ref->getProperty('HasSearch')->getValue()) {
-			return $ret;
-		}
-
-		$fac = new ModelFactory(get_called_class());
-
-		if(sizeof($where)) {
-			$clause = new \Core\Datamodel\DatasetWhereClause();
-			$clause->addWhere($where);
-			// If this isn't actually a column present, maybe it's a user user config option instead.
-			foreach($clause->getStatements() as $statement) {
-				/** @var \Core\Datamodel\DatasetWhere $statement */
-				if(isset($schema[ $statement->field ])) {
-					$fac->where($statement);
-				}
-				else {
-					$configwheres[] = $statement;
-				}
-			}
-		}
-
-		if($ref->getProperty('HasDeleted')->getValue()) {
-			$fac->where('deleted = 0');
-		}
-
-		$fac->where(\Core\Search\Helper::GetWhereClause($query));
-		foreach($fac->get() as $m) {
-			/** @var UserModel $m */
-
-			$add = true;
-
-			// If this user has configs that don't match the userconfig where requested, skip it.
-			foreach($configwheres as $statement) {
-				/** @var \Core\Datamodel\DatasetWhere $statement */
-				if(($config = $m->getConfigObject($statement->field))) {
-					switch($statement->op) {
-						case '=':
-							if($config->get('value') != $statement->value) {
-								$add = false;
-								break 2;
-							}
-							break;
-						default:
-							// @todo.
-					}
-				}
-			}
-
-			if($add) {
-				$sr = new \Core\Search\ModelResult($query, $m);
-
-				// This may happen since the where clause can be a little open-ended.
-				if($sr->relevancy < 1) continue;
-				$sr->title = $m->getLabel();
-				$sr->link  = $m->get('baseurl');
-
-				$ret[] = $sr;
-			}
-		}
-
-		return $ret;
 	}
 
 	/**

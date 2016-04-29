@@ -11,11 +11,6 @@
 				GPG Public Key: {$user->get('gpgauth_pubkey')|gpg_fingerprint}
 			</li>
 		{/if}
-		{foreach $user->getConfigObjects() as $c}
-			{if $c.value && !$c.UserConfig.hidden}
-				<li>{$c.UserConfig.name}: {$c.value}</li>
-			{/if}
-		{/foreach}
 
 		{if $profiles}
 			{foreach $profiles as $profile}

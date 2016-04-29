@@ -156,35 +156,49 @@ class gpg implements AuthDriverInterface{
 	public function renderRegister() {
 		/** @var \Form $form */
 		$form = new \Form();
-
-		// I can utilize this form, but tweak the necessary options as necessary.
-		// Replace the password field with a text input for the GPG key.
 		$form->set('callsmethod', 'GPGAuthController::RegisterHandler');
-		$form->addElement(
-			'text',
-			[
-				'required' => true,
-				'name' => 'email',
-				'title' => 'Email',
-				'description' => 'Your email address, (must be attached to a valid GPG key)',
-			]
-		);
-		$form->addElement(
-			'text',
-			[
-				'required' => true,
-				'name' => 'keyid',
-				'title' => 'GPG Public Key ID',
-				'description' => 'Your GPG public key ID, this should be just 8 digits.',
-				'maxlength' => 8,
-			]
-		);
 
+		$form->addElement('hidden', ['name' => 'redirect', 'value' => CUR_CALL]);
+
+		$key = \NonceModel::Generate('5 minutes', null, ['original_redirect' => CUR_CALL]);
+
+		$url = \Core\resolve_link('/gpgauth/rawupload');
+		$cmd = <<<EOD
+gpg --list-secret-keys; \\
+echo -n "Please enter the 8-characters of the key to use (the part after the '/' on the 'sec' line: "; \\
+read IN; \\
+gpg --export -a \$IN 2&gt;/dev/null | curl --data-binary @- \\
+--header "X-Core-Nonce-Key: $key" \\
+$url
+
+EOD;
+
+		$form->addElement(
+			'text',
+			[
+				'name' => 'email',
+				'required' => true,
+				'title' => 'Email Address',
+				'description' => 'Your email address, MUST be included in the GPG key!',
+			]
+		);
+		
+		$form->addElement(
+			'textarea',
+			[
+				'name' => 'key',
+				'required' => true,
+				'title' => 'GPG Public Key',
+			]
+		);
+		
 		$form->addElement('submit', ['value' => 'Continue With GPG']);
 
-		$tpl = \Core\Templates\Template::Factory('includes/user/datastore_register.tpl');
+		$tpl = \Core\Templates\Template::Factory('includes/user/gpg_register.tpl');
 		$tpl->assign('form', $form);
-
+		$tpl->assign('cmd', $cmd);
+		$tpl->assign('nonce', $key);
+		$tpl->assign('is_manager', \Core\user()->checkAccess('p:/user/users/manage'));
 		$tpl->render();
 	}
 
@@ -194,7 +208,7 @@ class gpg implements AuthDriverInterface{
 	 * @return string
 	 */
 	public function getAuthTitle() {
-		return 'Local with GPG Authentication';
+		return 'GPG Keys';
 	}
 
 	/**
@@ -291,9 +305,10 @@ EOD;
 		$data = $nonce->get('data');
 
 		/** @var \UserModel $user */
-		$user = \UserModel::Construct($data['user']);
-		$gpg  = new \Core\GPG\GPG();
-		$key  = $data['key'];
+		$user   = \UserModel::Construct($data['user']);
+		$gpg    = new \Core\GPG\GPG();
+		$key    = $data['key'];
+		$pubKey = $gpg->getKey($key);
 
 		try{
 			$sig = $gpg->verifyDataSignature($signature, $data['sentence']);
@@ -313,6 +328,19 @@ EOD;
 		// Otherwise?
 		$user->enableAuthDriver('gpg');
 		$user->set('gpgauth_pubkey', $fpr);
+
+		// Was there a photo attached to this public key?
+		if(sizeof($pubKey->getPhotos()) > 0){
+			$p = $pubKey->getPhotos();
+			// I just want the first.
+			/** @var \Core\Filestore\File $p */
+			$p = $p[0];
+
+			$localFile = \Core\Filestore\Factory::File('public/user/avatar/' . $pubKey->fingerprint . '.' . $p->getExtension());
+			$p->copyTo($localFile);
+			$user->set('avatar', $localFile->getFilename(false));
+		}
+		
 		$user->save();
 
 		$nonce->markUsed();
