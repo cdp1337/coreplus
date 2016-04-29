@@ -85,18 +85,48 @@ class UserActivityController extends Controller_2_1 {
 			}
 
 			$ua = new \Core\UserAgent($log['useragent']);
+			
+			if(class_exists('\\geocode\\IPLookup')){
+				// If the geo library is available, use that to resolve the IP to something more meaningful than just a number.
+				$lookup = new \geocode\IPLookup($log['ip_addr']);
+
+				$file = \Core\Filestore\Factory::File('assets/images/iso-country-flags/' . strtolower($lookup->country) . '.png');
+				
+				if($lookup->province && $lookup->city){
+					$title = $lookup->city . ', ' . $lookup->province . ', ' . $lookup->getCountryName();
+				}
+				elseif($lookup->province){
+					$title = $lookup->province . ', ' . $lookup->getCountryName();
+				}
+				elseif($lookup->city){
+					$title = $lookup->city . ' ' . $lookup->getCountryName();
+				}
+				else{
+					$title =  $lookup->getCountryName();
+				}
+
+				$ip = '<span title="' . $title . '">';
+				if($file->exists()){
+					$ip .= '<img src="' . $file->getPreviewURL('20x20') . '" alt="' . $lookup->country . '"/> ';
+				}
+				$ip .= $log['ip_addr'];
+				$ip .= '</span>';
+			}
+			else{
+				$ip = $log['ip_addr'];
+			}
 
 			// Bots have their own data, because, well... they're bots.
 			// Damn bots!
 			if($ua->isBot()){
 				if(!isset($bots[ $log['ip_addr'] ])){
 					$bots[ $log['ip_addr'] ] = array(
-						'ip'        => $log['ip_addr'],
+						'ip'        => $ip,
 						'useragent' => $log['useragent'],
 						'lastpage'  => $log['request'],
 						'status'    => $log['status'],
 						//'type'      => $ua->,
-						'browser'   => $ua->browser,
+						'browser'   => $ua->getAsHTML(),
 						'count'     => 1,
 					);
 				}
@@ -111,14 +141,14 @@ class UserActivityController extends Controller_2_1 {
 
 					$users[ $log['session_id'] ] = array(
 						'session'   => $log['session_id'],
-						'ip'        => $log['ip_addr'],
+						'ip'        => $ip,
 						'user_id'   => $log['user_id'],
 						'username'  => ($thisuser ? $thisuser->getDisplayName() : $guestname),
 						'useragent' => $log['useragent'],
 						'lastpage'  => $log['request'],
 						//'type'      => $ua->type,
-						'browser'   => $ua->browser . ' ' . $ua->version,
-						'os'        => $ua->platform,
+						'browser'   => $ua->getAsHTML(),
+						'os'        => '',
 						'count'     => 1,
 					);
 				}

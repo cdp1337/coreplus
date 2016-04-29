@@ -39,16 +39,18 @@
 		Latest Security Logs<br/>
 		<table class="listing">
 			<tr>
-				<th>Date</th>
-				<th>IP</th>
-				<th>Location</th>
+				<th>Date &amp; Time</th>
+				<th>Source</th>
 				<th>Notes</th>
 			</tr>
 			{foreach $logins as $login}
 				<tr>
 					<td>{date format="SDT" $login.datetime}</td>
-					<td>{$login.ip_addr}</td>
-					<td>{geoiplookup $login.ip_addr}</td>
+					<td>
+						{$login.useragent|user_agent}<br/>
+						{geoiplookup $login.ip_addr}<br/>
+						{$login.ip_addr}
+					</td>
 					<td>{($login.message) ? $login.message : $login.code}</td>
 				</tr>
 			{/foreach}
