@@ -763,52 +763,63 @@ function GetExtensionFromString($str){
  */
 function CheckEmailValidity($email){
 	$atIndex = strrpos($email, "@");
-	if (is_bool($atIndex) && !$atIndex) return false;
+	if (is_bool($atIndex) && !$atIndex) {
+		return 'Email is missing @ symbol.';
+		//return false;
+	}
 
-	$domain = substr($email, $atIndex+1);
-	$local = substr($email, 0, $atIndex);
-	$localLen = strlen($local);
+	$domain    = substr($email, $atIndex + 1);
+	$local     = substr($email, 0, $atIndex);
+	$localLen  = strlen($local);
 	$domainLen = strlen($domain);
 	if ($localLen < 1 || $localLen > 64) {
 		// local part length exceeded
-		return false;
+		return 'Email user is too long.';
+		//return false;
 	}
 
 	if ($domainLen < 1 || $domainLen > 255) {
 		// domain part length exceeded
-		return false;
+		//return false;
+		return 'Email domain is too long.';
 	}
 
-	if ($local[0] == '.' || $local[$localLen-1] == '.') {
+	if ($local[0] == '.' || $local[$localLen - 1] == '.') {
 		// local part starts or ends with '.'
-		return false;
+		//return false;
+		return 'Email user can not start or end with a period.';
 	}
 
 	if (preg_match('/\\.\\./', $local)) {
 		// local part has two consecutive dots
-		return false;
+		//return false;
+		return 'Email user can not have two consecutive periods.';
 	}
 	if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
 		// character not valid in domain part
-		return false;
+		//return false;
+		return 'Email domain contains invalid characters.';
 	}
 
 	if (preg_match('/\\.\\./', $domain)) {
 		// domain part has two consecutive dots
-		return false;
+		//return false;
+		return 'Email domain can not have two consecutive periods.';
 	}
 
-	if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local))) {
+	if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\", "", $local))) {
 		// character not valid in local part unless local part is quoted
-		if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local))) {
-			return false;
+		if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\", "", $local))) {
+			//return false;
+			return 'Email user contains special characters and must be quoted.';
 		}
 	}
 
 	// Allow the admin to skip DNS checks via config.
-	if (\ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
+	if (\ConfigHandler::Get('/core/email/verify_with_dns') && !(checkdnsrr($domain, "MX") || checkdnsrr($domain, "A"))) {
 		// domain not found in DNS
-		return false;
+		//return false;
+		return 'Email domain does not seem to exist.';
 	}
 
 	// All checks passed?

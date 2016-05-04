@@ -480,8 +480,8 @@ class UserModel extends Model {
 			return true;
 		}
 
-		if(!Core::CheckEmailValidity($email)) {
-			return 'Does not appear to be a valid email address';
+		if(($msg = Core::CheckEmailValidity($email)) !== true) {
+			return $msg;
 		}
 
 		// Try to retrieve the user data from the database based on the email.

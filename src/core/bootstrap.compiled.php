@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 26 Apr 2016 13:32:46 -0400
+ * @compiled Wed, 04 May 2016 19:37:21 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -462,36 +462,38 @@ return substr($str, strrpos($str, '.') + 1 );
 }
 function CheckEmailValidity($email){
 $atIndex = strrpos($email, "@");
-if (is_bool($atIndex) && !$atIndex) return false;
-$domain = substr($email, $atIndex+1);
-$local = substr($email, 0, $atIndex);
-$localLen = strlen($local);
+if (is_bool($atIndex) && !$atIndex) {
+return 'Email is missing @ symbol.';
+}
+$domain    = substr($email, $atIndex + 1);
+$local     = substr($email, 0, $atIndex);
+$localLen  = strlen($local);
 $domainLen = strlen($domain);
 if ($localLen < 1 || $localLen > 64) {
-return false;
+return 'Email user is too long.';
 }
 if ($domainLen < 1 || $domainLen > 255) {
-return false;
+return 'Email domain is too long.';
 }
-if ($local[0] == '.' || $local[$localLen-1] == '.') {
-return false;
+if ($local[0] == '.' || $local[$localLen - 1] == '.') {
+return 'Email user can not start or end with a period.';
 }
 if (preg_match('/\\.\\./', $local)) {
-return false;
+return 'Email user can not have two consecutive periods.';
 }
 if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
-return false;
+return 'Email domain contains invalid characters.';
 }
 if (preg_match('/\\.\\./', $domain)) {
-return false;
+return 'Email domain can not have two consecutive periods.';
 }
-if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\","",$local))) {
-if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\","",$local))) {
-return false;
+if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\", "", $local))) {
+if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\", "", $local))) {
+return 'Email user contains special characters and must be quoted.';
 }
 }
-if (\ConfigHandler::Get('/core/email/verify_with_dns') &&  !(checkdnsrr($domain,"MX") || checkdnsrr($domain,"A"))) {
-return false;
+if (\ConfigHandler::Get('/core/email/verify_with_dns') && !(checkdnsrr($domain, "MX") || checkdnsrr($domain, "A"))) {
+return 'Email domain does not seem to exist.';
 }
 return true;
 }
@@ -3688,6 +3690,8 @@ throw new Exception('Model [' . $classname . '] has alias key [' . $k . '] that 
 }
 }
 $schema[$k] = self::_StandardizeSchemaDefinition($schema[$k]);
+$schema[$k]['_defining_model'] = $classname;
+$schema[$k]['_is_supplemental'] = false;
 }
 if(isset(self::$_ModelSupplementals[$classname])){
 foreach(self::$_ModelSupplementals[$classname] as $supplemental){
@@ -3697,6 +3701,8 @@ if($ref->hasProperty('Schema')) {
 $s = $ref->getProperty('Schema')->getValue();
 foreach($s as $k => $dat){
 $schema[$k] = self::_StandardizeSchemaDefinition($dat);
+$schema[$k]['_defining_model'] = $supplemental;
+$schema[$k]['_is_supplemental'] = true;
 }
 }
 }
@@ -6553,10 +6559,16 @@ $this->_ua = new \Core\UserAgent($this->get('useragent'));
 return $this->_ua;
 }
 public function save($defer = false){
+if(Core::IsComponentAvailable('core')){
 $isnew = !$this->exists();
 $ret = parent::save($defer);
-if(!$ret) return $ret;
-if(!$isnew) return $ret;
+if(!$ret){
+return $ret;
+}
+if(!$isnew){
+return $ret;
+}
+}
 if(
 ($this->get('type') == 'error' || $this->get('type') == 'security') &&
 $this->get('details')
@@ -6644,7 +6656,7 @@ public static $Schema = [
 'backend'              => [
 'type'     => Model::ATT_TYPE_STRING,
 'formtype' => 'disabled',
-'default'  => 'datastore',
+'default'  => '',
 'comment'  => 'Pipe-delimited list of authentication drivers on this user'
 ],
 'password'             => [
@@ -6741,10 +6753,6 @@ protected $_resolvedpermissions = null;
 protected $_configs = null;
 protected $_authdriver = [];
 public function __construct($id = null) {
-$this->_linked['UserUserConfig'] = [
-'link' => Model::LINK_HASMANY,
-'on'   => ['user_id' => 'id'],
-];
 $this->_linked['UserUserGroup']  = [
 'link' => Model::LINK_HASMANY,
 'on'   => ['user_id' => 'id'],
@@ -6771,45 +6779,6 @@ return strstr($this->get('email'), '@', true);
 public function getDisplayName() {
 return $this->getLabel();
 }
-public function getConfigs() {
-if($this->_configs === null) {
-$this->_configs = [];
-$uucrecords     = $this->getLink('UserUserConfig');
-$fac = UserConfigModel::Find();
-foreach($fac as $f) {
-$key     = $f->get('key');
-$default = $f->get('default_value');
-foreach($uucrecords as $uuc) {
-if($uuc->get('key') == $key) {
-$this->_configs[ $key ] = $uuc;
-continue 2;
-}
-}
-try {
-$uuc = new UserUserConfigModel($this->get('id'), $key);
-$uuc->set('value', $default);
-$this->setLink('UserUserConfig', $uuc);
-$this->_configs[ $key ] = $uuc;
-}
-catch(Exception $e) {
-trigger_error('Invalid UserConfig [' . $f->get('key') . '], ' . $e->getMessage(), E_USER_NOTICE);
-}
-}
-}
-$ret = [];
-foreach($this->_configs as $k => $obj) {
-$ret[ $k ] = $obj->get('value');
-}
-return $ret;
-}
-public function getConfigObject($key) {
-$this->getConfigs();
-return (isset($this->_configs[ $key ])) ? $this->_configs[ $key ] : null;
-}
-public function getConfigObjects() {
-$this->getConfigs();
-return $this->_configs;
-}
 public function getGroups() {
 $out  = [];
 $uugs = $this->getLink('UserUserGroup');
@@ -6817,7 +6786,7 @@ foreach($uugs as $uug) {
 if($uug->get('context')) continue;
 if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()) {
 $g = $uug->getLink('UserGroup');
-if($g->get('site') == MultiSiteHelper::GetCurrentSiteID()) {
+if($g->get('site') == MultiSiteHelper::GetCurrentSiteID() || $g->get('site') == -1) {
 $out[] = $g->get('id');
 }
 }
@@ -6915,7 +6884,7 @@ catch(Exception $e) {
 return $ret;
 }
 public function enableAuthDriver($driver) {
-$enabled = explode('|', $this->get('backend'));
+$enabled = $this->get('backend') == '' ? [] : explode('|', $this->get('backend'));
 $drivers = \Core\User\Helper::GetEnabledAuthDrivers();
 if(!isset($drivers[ $driver ])) {
 return false;
@@ -6943,29 +6912,12 @@ $enabled = ['datastore'];
 $this->set('backend', implode('|', $enabled));
 return true;
 }
-public function getSearchIndexString() {
-$strs = [];
-$strs[] = $this->get('email');
-$opts = UserConfigModel::Find();
-foreach($opts as $uc) {
-if($uc->get('searchable')) {
-$val = $this->get($uc->get('key'));
-if(preg_match('/^[0-9\- \.\(\)]*$/', $val) && trim($val) != ''){
-$val = preg_replace('/[ \-\.\(\)]/', '', $val);
-}
-if($val){
-$strs[] = $val;
-}
-}
-}
-return implode(' ', $strs);
-}
 public function validateEmail($email) {
 if($email == $this->get('email')) {
 return true;
 }
-if(!Core::CheckEmailValidity($email)) {
-return 'Does not appear to be a valid email address';
+if(($msg = Core::CheckEmailValidity($email)) !== true) {
+return $msg;
 }
 if(UserModel::Find(['email' => $email], 1)) {
 return 'Requested email is already registered';
@@ -7043,6 +6995,33 @@ $this->set($name, $value);
 }
 } // foreach(elements)
 }
+public function setDefaultActiveStatuses(){
+if(\UserModel::Count() == 0){
+$this->set('admin', true);
+$this->set('active', true);
+}
+else{
+if(\ConfigHandler::Get('/user/register/requireapproval')){
+$this->set('active', false);
+}
+else{
+$this->set('active', true);
+}
+}
+}
+public function setDefaultGroups(){
+$defaultgroups = \UserGroupModel::Find(array("default = 1"));
+$gs = [];
+foreach($defaultgroups as $g){
+$gs[] = $g->get('id');
+}
+$this->setGroups($gs);
+}
+public function setDefaultMetaFields(){
+$this->set('registration_ip', REMOTE_IP);
+$this->set('registration_source', \Core\user()->exists() ? 'admin' : 'self');
+$this->set('registration_invitee', \Core\user()->get('id'));
+}
 public function generateNewApiKey() {
 $this->set('apikey', Core::RandomHex(64, true));
 }
@@ -7108,25 +7087,17 @@ $cache = $ret;
 return $ret;
 }
 }
-elseif($type == 'g') {
-if(in_array($dat, $this->getGroups())) {
+elseif($type == 'g' && in_array($dat, $this->getGroups())) {
 $cache = $ret;
 return $ret;
 }
-}
-elseif($type == 'p') {
-if(in_array($dat, $this->_getResolvedPermissions($context))) {
+elseif($type == 'p' && in_array($dat, $this->_getResolvedPermissions($context))) {
 $cache = $ret;
 return $ret;
 }
-}
-elseif($type == 'u') {
-var_dump($type, $dat, $ret);
-die('@todo Finish the user lookup logic in User::checkAccess()');
-}
-else {
-var_dump($type, $dat, $ret);
-die('Implement that access string check!');
+elseif($type == 'u' && $dat == $this->get('id')) {
+$cache = $ret;
+return $ret;
 }
 }
 $cache = $default;
@@ -7181,6 +7152,17 @@ $a[] = array(
 }
 }
 return array_merge($a, parent::getControlLinks());
+}
+public function sendWelcomeEmail(){
+$email = new \Email();
+$email->templatename = 'emails/user/registration.tpl';
+$email->assign('user', $this);
+$email->assign('sitename', SITENAME);
+$email->assign('rooturl', ROOT_URL);
+$email->assign('loginurl', \Core\resolve_link('/user/login'));
+$email->setSubject('Welcome to ' . SITENAME);
+$email->to($this->get('email'));
+$email->send();
 }
 protected function _getResolvedPermissions($context = null) {
 if(!$this->isActive()) {
@@ -7288,56 +7270,6 @@ return substr(get_class($context), 0, -5) . ':' . $context->getPrimaryKeyString(
 else {
 throw new Exception('Invalid context provided for _getResolvedPermissions!');
 }
-}
-public static function Search($query, $where = []) {
-$ret          = [];
-$schema       = self::GetSchema();
-$configwheres = [];
-$ref = new ReflectionClass(get_called_class());
-if(!$ref->getProperty('HasSearch')->getValue()) {
-return $ret;
-}
-$fac = new ModelFactory(get_called_class());
-if(sizeof($where)) {
-$clause = new \Core\Datamodel\DatasetWhereClause();
-$clause->addWhere($where);
-foreach($clause->getStatements() as $statement) {
-if(isset($schema[ $statement->field ])) {
-$fac->where($statement);
-}
-else {
-$configwheres[] = $statement;
-}
-}
-}
-if($ref->getProperty('HasDeleted')->getValue()) {
-$fac->where('deleted = 0');
-}
-$fac->where(\Core\Search\Helper::GetWhereClause($query));
-foreach($fac->get() as $m) {
-$add = true;
-foreach($configwheres as $statement) {
-if(($config = $m->getConfigObject($statement->field))) {
-switch($statement->op) {
-case '=':
-if($config->get('value') != $statement->value) {
-$add = false;
-break 2;
-}
-break;
-default:
-}
-}
-}
-if($add) {
-$sr = new \Core\Search\ModelResult($query, $m);
-if($sr->relevancy < 1) continue;
-$sr->title = $m->getLabel();
-$sr->link  = $m->get('baseurl');
-$ret[] = $sr;
-}
-}
-return $ret;
 }
 public static function Import($data, $options, $output_realtime = false) {
 $log = new \Core\ModelImportLogger('User Importer', $output_realtime);
@@ -8542,6 +8474,9 @@ $this->_permissions[$el->getAttribute('key')] = [
 public function loadSupplementalModels(){
 $supplementals = $this->getSupplementalModelList();
 foreach($supplementals as $supplemental => $filename){
+if($supplemental == 'modelsupplemental'){
+continue;
+}
 $classname = substr($supplemental, strpos($supplemental, '_') + 1, -12);
 $original = new ReflectionClass($classname);
 $original->getMethod('AddSupplemental')->invoke(null, $supplemental);
@@ -9142,7 +9077,8 @@ $results[] = $check;
 break;
 case 'phpextension':
 $v = phpversion($r['name']);
-if($v === false){
+$l = extension_loaded($r['name']);
+if($l === false){
 $check['result']['message'] = 'Missing PHP Extension ' . $r['name'];
 }
 elseif($r['version'] && !version_compare($v, $r['version'], $r['operation'])){
@@ -14768,7 +14704,9 @@ foreach(ThemeHandler::GetAllThemes() as $theme){
 $theme->load();
 }
 }
+if(class_exists('\\Core\\Templates\\Template')){
 \Core\Templates\Template::RequeryPaths();
+}
 }
 public function _registerComponent(Component_2_1 $c) {
 $name = str_replace(' ', '-', strtolower($c->getName()));
@@ -15090,39 +15028,7 @@ error_log(__FUNCTION__ . ' is deprecated, please use \Core\Utilities\Profiler\Pr
 return \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime();
 }
 public static function CheckEmailValidity($email) {
-$atIndex = strrpos($email, "@");
-if (is_bool($atIndex) && !$atIndex) return false;
-$domain    = substr($email, $atIndex + 1);
-$local     = substr($email, 0, $atIndex);
-$localLen  = strlen($local);
-$domainLen = strlen($domain);
-if ($localLen < 1 || $localLen > 64) {
-return false;
-}
-if ($domainLen < 1 || $domainLen > 255) {
-return false;
-}
-if ($local[0] == '.' || $local[$localLen - 1] == '.') {
-return false;
-}
-if (preg_match('/\\.\\./', $local)) {
-return false;
-}
-if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
-return false;
-}
-if (preg_match('/\\.\\./', $domain)) {
-return false;
-}
-if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\", "", $local))) {
-if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\", "", $local))) {
-return false;
-}
-}
-if (ConfigHandler::Get('/core/email/verify_with_dns') && !(checkdnsrr($domain, "MX") || checkdnsrr($domain, "A"))) {
-return false;
-}
-return true;
+return \Core\CheckEmailValidity($email);
 }
 public static function CheckIntGT0Validity($val){
 if(!(is_int($val) || ctype_digit($val))){
@@ -15604,13 +15510,285 @@ header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
 die('This site has SSL disabled, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
 }
 if(file_exists(TMP_DIR . 'lock.message')){
+$logo = "data:image/png;base64,
+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";
+$html  = "<!DOCTYPE html>
+<html>
+<head>
+<style>
+body{text-align:center;background:#eee;}
+.site-logo{margin-top:2em;}
+p{padding:1em;color:#555;font-family:sans-serif;}
+</style>
+</head>
+<body>
+<p><img class='site-logo' src='".$logo."'/></p>";
 $contents = file_get_contents(TMP_DIR . 'lock.message');
 $adminmsg = '(Site is currently locked via ' . TMP_DIR . 'lock.message.  If this is in error, simply remove that file).';
 if(DEVELOPMENT_MODE){
-echo $adminmsg . "<br/>\n";
+$html .= "<p>" .$adminmsg . "</p>";
 }
 error_log($adminmsg);
-die($contents);
+$html .= "<p>" . $contents . "</p>";
+$html .= "		</body>
+</html>";
+die($html);
 }
 if (!defined('GPG_HOMEDIR')) {
 define('GPG_HOMEDIR', ($gnupgdir) ? $gnupgdir : ROOT_PDIR . 'gnupg');
@@ -18033,6 +18211,7 @@ public $useragent                    = null;
 public $parent                       = null;
 public $comment                      = null;
 public $browser                      = null;
+public $browser_short_name           = null;
 public $version                      = 0.0;
 public $major_ver                    = 0;
 public $minor_ver                    = 0;
@@ -18040,6 +18219,7 @@ public $platform                     = null;
 public $platform_version             = null;
 public $platform_architecture        = null;
 public $platform_bits                = null;
+public $platform_short_name          = null;
 public $frames                       = false;
 public $iframes                      = false;
 public $tables                       = false;
@@ -18067,7 +18247,9 @@ public $crawler                      = false;
 public $aol_version                  = null;
 protected static $_Cache = [];
 public function __construct($useragent = null) {
-if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+if($useragent === null){
+$useragent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+}
 if(class_exists('DeviceDetector\\DeviceDetector')){
 $dd = new \DeviceDetector\DeviceDetector($useragent);
 $dd->parse();
@@ -18076,6 +18258,7 @@ $c = $dd->getClient();
 if($c !== null){
 $this->browser = $c['name'];
 $this->version = $c['version'];
+$this->browser_short_name = isset($c['short_name']) ? $c['short_name'] : null;
 $this->rendering_engine_name = isset($c['engine']) ? $c['engine'] : null;
 if($this->rendering_engine_name == 'Text-based' && $this->browser == 'Lynx'){
 $this->rendering_engine_name = 'libwww-FM';
@@ -18102,6 +18285,7 @@ if($os !== null && sizeof($os)){
 $this->platform = $os['name'];
 $this->platform_architecture = $os['platform'];
 $this->platform_version = $os['version'];
+$this->platform_short_name = $os['short_name'];
 }
 if($this->platform == 'Mac'){
 $this->platform = 'MacOSX';
@@ -18436,6 +18620,22 @@ $ret[$v] = $this->$v;
 }
 return $ret;
 }
+public function getAsHTML(){
+$parts = [];
+$browser = $this->_getAsHTMLBrowser();
+$platform = $this->_getAsHTMLPlatform();
+$device = $this->_getAsHTMLDevice();
+if($browser){
+$parts[] = $browser;
+}
+if($device){
+$parts[] = $device;
+}
+if($platform){
+$parts[] = $platform;
+}
+return implode('&nbsp;&nbsp;', $parts);
+}
 public function getPseudoIdentifier($as_array = false){
 $a = [];
 $a[] = 'ua-browser-' . $this->browser;
@@ -18466,6 +18666,73 @@ if(strpos($this->minor_ver, '.') !== false){
 $this->minor_ver = substr($this->minor_ver, 0, strpos($this->minor_ver, '.'));
 }
 }
+}
+private function _getAsHTMLBrowser(){
+$icon  = (\Core::IsComponentAvailable('piwik-analytics') && $this->browser_short_name) ? 'assets/images/browsers/' . $this->browser_short_name . '.gif' : null;
+$title = '';
+$text  = '';
+$out   = '';
+$class = 'useragent-pretty-browser';
+$text .= $this->browser;
+if($this->version){
+$text .= ' ' . $this->version;
+}
+$title .= $this->useragent;
+$out .= '<span class="' . $class . '" title="' . $title . '">';
+if($icon){
+$out .= '<img src="' . \Core\resolve_asset($icon) . '"/> ';
+}
+$out .= $text;
+$out .= '</span>';
+return $out;
+}
+private function _getAsHTMLPlatform(){
+$icon  = (\Core::IsComponentAvailable('piwik-analytics') && $this->platform_short_name) ? 'assets/images/os/' . $this->platform_short_name . '.gif' : null;
+$title = '';
+$text  = '';
+$out   = '';
+$class = 'useragent-pretty-platform';
+if($this->platform == 'unknown'){
+return '';
+}
+$title .= $this->platform;
+$text .= $this->platform;
+if($this->platform_version){
+$title .= ' ' . $this->platform_version;
+$text .= ' ' . $this->platform_version;
+}
+if($this->platform_architecture && $this->platform_bits){
+$title .= ' (' . $this->platform_architecture . '_' . $this->platform_bits . ')';
+}
+$out .= '<span class="' . $class . '" title="' . $title . '">';
+if($icon){
+$out .= '<img src="' . \Core\resolve_asset($icon) . '"/> ';
+}
+$out .= $text;
+$out .= '</span>';
+return $out;
+}
+private function _getAsHTMLDevice(){
+$icon  = (\Core::IsComponentAvailable('piwik-analytics') && $this->device_maker) ? 'assets/images/brand/' . $this->device_maker . '.gif' : null;
+$title = '';
+$text  = '';
+$out   = '';
+$class = 'useragent-pretty-device';
+if($this->device_maker && $this->device_name){
+$title .= $this->device_maker . ' ' . $this->device_name;
+$text .= $this->device_name;
+}
+elseif($this->device_maker){
+$title .= $this->device_maker;
+$text .= $this->device_maker;
+}
+$out .= '<span class="' . $class . '" title="' . $title . '">';
+if($icon){
+$out .= '<img src="' . \Core\resolve_asset($icon) . '"/> ';
+}
+$out .= $text;
+$out .= '</span>';
+return $out;
 }
 private static function _LoadData() {
 $cachekey = 'useragent-browsecap-data';
@@ -18541,7 +18808,9 @@ $cachetime
 return Cache::Get($cachekey, $cachetime);
 }
 public static function Construct($useragent = null){
-if($useragent === null) $useragent = $_SERVER['HTTP_USER_AGENT'];
+if($useragent === null){
+$useragent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+}
 $cachekey = 'useragent-constructor-' . md5($useragent);
 $cache = Cache::Get($cachekey);
 if(!$cache){
@@ -19882,6 +20151,9 @@ $this->_attributes['value'] = $value;
 return true;
 }
 public function validate($value){
+if($this->get('type') == 'system'){
+return true;
+}
 if ($this->get('required') && !$value) {
 return $this->get('label') . ' is required.';
 }
