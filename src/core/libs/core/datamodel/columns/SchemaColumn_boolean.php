@@ -71,6 +71,14 @@ class SchemaColumn_boolean extends SchemaColumn {
 		$na = parent::getFormElementAttributes();
 
 		$na['options'] = ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')];
+		
+		// The application is expecting true/false, but those don't translate too well to html :p
+		if($this->valueTranslated === null){
+			$na['value'] = null;
+		}
+		else{
+			$na['value'] = $this->valueTranslated ? 'yes' : 'no';	
+		}
 
 		return $na;
 	}
