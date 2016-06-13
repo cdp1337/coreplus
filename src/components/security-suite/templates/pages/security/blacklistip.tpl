@@ -29,13 +29,13 @@
 			<ul class="controls">
 				<li>
 					{a href="/security/blacklistip/edit/`$l.id`"}
-						<i class="icon-edit"></i>
+						<i class="icon icon-edit"></i>
 						<span>Edit</span>
 					{/a}
 				</li>
 				<li>
 					{a href="/security/blacklistip/delete/`$l.id`" confirm="Are you sure you want to unban this IP?"}
-						<i class="icon-thumbs-up"></i>
+						<i class="icon icon-thumbs-up"></i>
 						<span>Un-Ban</span>
 					{/a}
 				</li>

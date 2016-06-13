@@ -44,9 +44,9 @@
 
 					</span>
 					{if $revision && $revision.id == $r.id}
-						<i class="icon-star"></i>
+						<i class="icon icon-star"></i>
 					{else}
-						{a href="?`$activefile`=`$file`&revision=`$r.id`" title="Load File"}<i class="icon-view"></i>{/a}
+						{a href="?`$activefile`=`$file`&revision=`$r.id`" title="Load File"}<i class="icon icon-view"></i>{/a}
 					{/if}
 				</li>
 			{/foreach}

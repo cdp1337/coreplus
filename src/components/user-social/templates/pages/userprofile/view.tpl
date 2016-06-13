@@ -26,7 +26,7 @@
 			{foreach $profiles as $profile}
 				<li>
 					<a href="{$profile.url}" rel="me">
-						<i class="icon-{$profile.type}"></i>{if $profile.title}{$profile.title}{else}{$profile.url}{/if}
+						<i class="icon icon-{$profile.type}"></i>{if $profile.title}{$profile.title}{else}{$profile.url}{/if}
 					</a>
 				</li>
 			{/foreach}

@@ -7,9 +7,9 @@
 	<tr>
 		<td class="cron-status-{$entry.status}">
 			{if $entry.status == 'pass'}
-				<i class="icon-ok"></i>
+				<i class="icon icon-ok"></i>
 			{else}
-				<i class="icon-remove"></i>
+				<i class="icon icon-remove"></i>
 			{/if}
 			{$entry.cron}
 		</td>
@@ -25,7 +25,7 @@
 			<ul class="controls">
 				<li>
 					{a href="/cron/view/`$entry.id`" title="View Details" class="ajax-link"}
-						<i class="icon-view"></i>
+						<i class="icon icon-view"></i>
 						<span>View Details</span>
 					{/a}
 				</li>

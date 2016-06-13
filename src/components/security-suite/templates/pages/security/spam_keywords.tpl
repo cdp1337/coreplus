@@ -5,7 +5,7 @@
 		<div class="view">
 			Spam Score Threshold: {$threshold}
 
-			<a href="#" class="control-edit-toggle"><i class="icon-pencil"></i></a>
+			<a href="#" class="control-edit-toggle"><i class="icon icon-pencil"></i></a>
 		</div>
 		<div class="edit">
 		{add_form_element
@@ -40,7 +40,7 @@
 <tr>
 	<td>
 		<div class="view">
-			<a href="#" class="control-edit-toggle"><i class="icon-add"></i> Add New Keyword</a>
+			<a href="#" class="control-edit-toggle"><i class="icon icon-add"></i> Add New Keyword</a>
 		</div>
 		<div class="edit">
 			{add_form_element

@@ -95,22 +95,22 @@
 					</td>
 					<td>
 						{if $template.default}
-							<i class="icon-star"></i>
+							<i class="icon icon-star"></i>
 							<span>Current Default</span>
 						{else}
 							{a href="/theme/setdefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default?"}
-								<i class="icon-ok"></i>
+								<i class="icon icon-ok"></i>
 								<span>Set As Default</span>
 							{/a}
 						{/if}
 					</td>
 					<td>
 						{if $template.admindefault}
-							<i class="icon-star"></i>
+							<i class="icon icon-star"></i>
 							<span>Current Default</span>
 						{else}
 							{a href="/theme/setadmindefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default for admin pages?"}
-								<i class="icon-ok"></i>
+								<i class="icon icon-ok"></i>
 								<span>Set As Default</span>
 							{/a}
 						{/if}
@@ -119,7 +119,7 @@
 						<ul class="controls controls-hover">
 							<li>
 								{a href="/admin/widgets?skin=`$template.file`"}
-									<i class="icon-cogs"></i>
+									<i class="icon icon-cogs"></i>
 									<span>Widgets</span>
 								{/a}
 							</li>
@@ -127,7 +127,7 @@
 							{if $template.has_stylesheets}
 								<li>
 									{a href="/theme/selectstylesheets/?template=skins/`$template.file`"}
-										<i class="icon-strikethrough"></i>
+										<i class="icon icon-strikethrough"></i>
 										<span>Optional Stylesheets</span>
 									{/a}
 								</li>
@@ -135,7 +135,7 @@
 	
 							<li>
 								{a href="/theme/editor?template=skins/`$template.file`"}
-									<i class="icon-pencil"></i>
+									<i class="icon icon-pencil"></i>
 									<span>Editor</span>
 								{/a}
 							</li>
@@ -192,11 +192,11 @@
 						</td>
 						<td>
 							{if $template.default}
-								<i class="icon-star"></i>
+								<i class="icon icon-star"></i>
 								<span>Current Default</span>
 							{else}
 								{a href="/theme/setemaildefault/`$current->getKeyName()`?template=`$template.file`" confirm="Set `$template.file` as default?"}
-									<i class="icon-ok"></i>
+									<i class="icon icon-ok"></i>
 									<span>Set As Default</span>
 								{/a}
 							{/if}
@@ -206,7 +206,7 @@
 								{if $template.file}
 									<li>
 										{a href="/theme/editor?template=emailskins/`$template.file`"}
-											<i class="icon-pencil"></i>
+											<i class="icon icon-pencil"></i>
 											<span>Editor</span>
 										{/a}
 									</li>
@@ -267,10 +267,10 @@
 				{if isset($item.obj)}
 					{*<img src="{$item.obj->getMimetypeIconURL('24x24')}"/>*}
 					<span>{$key}</span>
-					<a href="{$url_themeeditor}?file={$item.file}" title="Edit Asset"><i class="icon-pencil"></i></a>
+					<a href="{$url_themeeditor}?file={$item.file}" title="Edit Asset"><i class="icon icon-pencil"></i></a>
 				{else}
-					<i class="icon-folder-close collapsed-hint"></i>
-					<i class="icon-folder-open expanded-hint"></i>
+					<i class="icon icon-folder-close collapsed-hint"></i>
+					<i class="icon icon-folder-open expanded-hint"></i>
 					<span>{$key}</span>
 					{call name=printAssetList items=$item}
 				{/if}
@@ -289,23 +289,23 @@
 					<span class="filename" title="{$key|escape}">{$key}</span>
 					{if $item.haswidgets}
 						<a class="inline-control" href="{$url_themewidgets}?page={$item.file}" title="Manage Widgets">
-							<i class="icon-cogs"></i>
+							<i class="icon icon-cogs"></i>
 							<span>Manage Widgets</span>
 						</a>
 					{/if}
 					{if $item.has_stylesheets}
 						<a class="inline-control" href="{$url_themestylesheets}?template=skins/{$item.file}" title="Optional Stylesheets">
-							<i class="icon-strikethrough"></i>
+							<i class="icon icon-strikethrough"></i>
 							<span>Optional Stylesheets</span>
 						</a>
 					{/if}
 					<a class="inline-control" href="{$url_themeeditor}?template={$item.file}" title="Edit Template">
-						<i class="icon-pencil"></i>
+						<i class="icon icon-pencil"></i>
 						<span>Edit Template</span>
 					</a>
 				{else}
-					<i class="icon-folder-close collapsed-hint" title="Click to expand"></i>
-					<i class="icon-folder-open expanded-hint" title="Click to close"></i>
+					<i class="icon icon-folder-close collapsed-hint" title="Click to expand"></i>
+					<i class="icon icon-folder-open expanded-hint" title="Click to close"></i>
 					<span>{$key}</span>
 					{call name=printTemplateList items=$item}
 				{/if}
@@ -318,8 +318,8 @@
 	<fieldset class="collapsed collapsible theme-section">
 		<h3 class="fieldset-title">
 			Assets
-			<i class="icon-chevron-down expandable-hint"></i>
-			<i class="icon-chevron-up collapsible-hint"></i>
+			<i class="icon icon-chevron-down expandable-hint"></i>
+			<i class="icon icon-chevron-up collapsible-hint"></i>
 		</h3>
 		<p class="message-tutorial">
 			Assets are stylesheets, javascript files, and other static resources used by components that get installed to your CDN.
@@ -335,8 +335,8 @@
 	<fieldset class="collapsed collapsible theme-section">
 		<h3 class="fieldset-title">
 			Templates
-			<i class="icon-chevron-down expandable-hint"></i>
-			<i class="icon-chevron-up collapsible-hint"></i>
+			<i class="icon icon-chevron-down expandable-hint"></i>
+			<i class="icon icon-chevron-up collapsible-hint"></i>
 		</h3>
 		<p class="message-tutorial">
 			Templates are pages, emails, widgets, and other views that are used throughout your site.

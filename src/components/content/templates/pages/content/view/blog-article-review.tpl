@@ -48,18 +48,18 @@
 			Rating:
 			<span class="rating-stars" title="{$rating} out of 5 stars">
 				{for $x=1; $x<=$rating; $x++}
-					<i class="icon-star"></i>
+					<i class="icon icon-star"></i>
 				{/for}
 				{if $x - $rating == 0.5}
-					<i class="icon-star-half"></i>
+					<i class="icon icon-star-half"></i>
 					{* A half a star won't trigger a full step, so this logic tries to add an extra star :/ *}
 					{for $x=$rating; $x<4; $x++}
-						<i class="icon-star-empty"></i>
+						<i class="icon icon-star-empty"></i>
 					{/for}
 				{else}
 					{* Full star stepping plays nicely. *}
 					{for $x=$rating; $x<5; $x++}
-						<i class="icon-star-empty"></i>
+						<i class="icon icon-star-empty"></i>
 					{/for}
 				{/if}
 			</span>

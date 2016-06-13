@@ -31,7 +31,7 @@
 			<div class="user-badge-profiles">
 				{foreach $profiles as $profile}
 					<a itemprop="url"  href="{$profile.url}" rel="me" title="{if $profile.title}{$profile.title}{else}{$profile.url}{/if}">
-						<i class="icon-{$profile.type}"></i>
+						<i class="icon icon-{$profile.type}"></i>
 					</a>
 				{/foreach}
 			</div>

@@ -14,7 +14,7 @@
 <div class="mediamanagernavigator mediamanagernavigator-list" location="{$location}" mode="list">
 	<div class="mediamanagernavigator-addressbar">
 		<span class="bargraph-inner"></span>
-		<a href="{$baseurl}&dir=/"><i class="icon-home"></i></a>
+		<a href="{$baseurl}&dir=/"><i class="icon icon-home"></i></a>
 		{foreach $location_tree as $dir}
 			<a href="{$dir.href}">/{$dir.name}</a>
 		{/foreach}
@@ -41,7 +41,7 @@
 					<td>
 						<div class="directory-image-wrapper">
 							<a href="{$uplink}">
-								<i class="icon-angle-double-up" style="font-size:36px;"></i>
+								<i class="icon icon-angle-double-up" style="font-size:36px;"></i>
 							</a>
 						</div>
 					</td>
@@ -84,20 +84,20 @@
 							<ul class="controls">
 								<li>
 									<a href="{$dir.href}" title="Open">
-										<i class="icon-folder-open"></i>
+										<i class="icon icon-folder-open"></i>
 										<span>Open</span>
 									</a>
 								</li>
 								{if $canupload}
 									<li>
 										<a href="#" class="directory-rename" browsename="{$dir.browsename}" title="Rename">
-											<i class="icon-font"></i>
+											<i class="icon icon-font"></i>
 											<span>Rename</span>
 										</a>
 									</li>
 									<li>
 										<a href="#" class="directory-delete" browsename="{$dir.browsename}" title="Delete">
-											<i class="icon-trash"></i>
+											<i class="icon icon-trash"></i>
 											<span>Delete</span>
 										</a>
 									</li>
@@ -136,26 +136,26 @@
 							<ul class="controls">
 								<li>
 									<a href="{$file.object->getURL()}" class="defaultaction" target="_BLANK" title="Download">
-										<i class="icon-download"></i>
+										<i class="icon icon-download"></i>
 										<span>Download</span>
 									</a>
 								</li>
 								{if $canupload}
 									<li>
 										{a href="/mediamanagernavigator/file/metadata?file=`$file.browsename`" class="file-meta ajax-link" title="Manage Metadata"}
-											<i class="icon-bullseye"></i>
+											<i class="icon icon-bullseye"></i>
 											<span>Metadata</span>
 										{/a}
 									</li>
 									<li>
 										<a href="#" class="file-rename" browsename="{$file.object->getBasename()}" title="Rename">
-											<i class="icon-font"></i>
+											<i class="icon icon-font"></i>
 											<span>Rename</span>
 										</a>
 									</li>
 									<li>
 										<a href="#" class="file-delete" browsename="{$file.object->getBasename()}" title="Delete">
-											<i class="icon-trash"></i>
+											<i class="icon icon-trash"></i>
 											<span>Delete</span>
 										</a>
 									</li>

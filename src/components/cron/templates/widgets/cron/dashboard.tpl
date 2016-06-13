@@ -21,9 +21,9 @@
 			<tr>
 				<td class="cron-status-{$cron.status}">
 					{if $cron.status == 'pass'}
-						<i class="icon-ok" title="Cron Succeeded"></i>
+						<i class="icon icon-ok" title="Cron Succeeded"></i>
 					{else}
-						<i class="icon-remove" title="Cron Failed"></i>
+						<i class="icon icon-remove" title="Cron Failed"></i>
 					{/if}
 				</td>
 				<td>{$cron.cron}</td>
@@ -41,7 +41,7 @@
 					<ul class="controls">
 						<li>
 							{a href="/cron/view/`$cron.id`" title="View Details" class="ajax-link"}
-								<i class="icon-view"></i>
+								<i class="icon icon-view"></i>
 								<span>View Details</span>
 							{/a}
 						</li>
@@ -51,7 +51,7 @@
 		{/foreach}
 	</table>
 <br/>
-	{a href="/cron/admin" class="button"}<i class="icon-view"></i> View All Crons{/a}
+	{a href="/cron/admin" class="button"}<i class="icon icon-view"></i> View All Crons{/a}
 {else}
 	<p class="message-info">No cron information is available!</p>
 {/if}

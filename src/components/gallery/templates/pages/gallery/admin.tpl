@@ -32,17 +32,17 @@
 			<ul class="controls">
 				<li class="view">
 					{a href="/gallery/view/`$album->get('id')`" title="View"}
-						<i class="icon-eye-open"></i><span>View</span>
+						<i class="icon icon-eye-open"></i><span>View</span>
 					{/a}
 				</li>
 				<li class="edit">
 					{a href="/gallery/edit/`$album->get('id')`" title="Edit"}
-						<i class="icon-edit"></i><span>Edit</span>
+						<i class="icon icon-edit"></i><span>Edit</span>
 					{/a}
 				</li>
 				<li class="delete">
 					{a href="/gallery/delete/`$album->get('id')`" title="Delete" confirm="Are you sure you want to delete `$album->get('title')`?"}
-						<i class="icon-remove"></i><span>Delete</span>
+						<i class="icon icon-remove"></i><span>Delete</span>
 					{/a}
 				</li>
 			</ul>

@@ -9,7 +9,7 @@
     <div class="directory-browser-previewarea" style="display:none;"></div>
     <div class="directory-browser-addressbar">
 		<span class="bargraph-inner"></span>
-        <a href="?"><i class="icon-home"></i></a>
+        <a href="?"><i class="icon icon-home"></i></a>
 		{foreach $location_tree as $dir}
 	        <a href="?dir={$dir.stack}">/{$dir.name}</a>
 		{/foreach}
@@ -38,13 +38,13 @@
 				</div>
 				<ul class="contextmenu">
 					<li>
-						<a href="#directory-open"><i class="icon-folder-open"></i>Open</a>
+						<a href="#directory-open"><i class="icon icon-folder-open"></i>Open</a>
 					</li>
 					<li>
-						<a href="#directory-rename"><i class="icon-font"></i>Rename</a>
+						<a href="#directory-rename"><i class="icon icon-font"></i>Rename</a>
 					</li>
 					<li>
-						<a href="#directory-delete"><i class="icon-trash"></i>Delete</a>
+						<a href="#directory-delete"><i class="icon icon-trash"></i>Delete</a>
 					</li>
 				</ul>
 			</div>
@@ -63,13 +63,13 @@
 				</div>
 				<ul class="contextmenu">
 					<li>
-						<a href="#file-download"><i class="icon-download"></i>Download</a>
+						<a href="#file-download"><i class="icon icon-download"></i>Download</a>
 					</li>
 					<li>
-						<a href="#file-rename"><i class="icon-font"></i>Rename</a>
+						<a href="#file-rename"><i class="icon icon-font"></i>Rename</a>
 					</li>
 					<li>
-						<a href="#file-delete"><i class="icon-trash"></i>Delete</a>
+						<a href="#file-delete"><i class="icon icon-trash"></i>Delete</a>
 					</li>
 				</ul>
 			</div>
@@ -81,13 +81,13 @@
 
 		<ul class="contextmenu">
 			<li>
-				<a href="#mkdir"><i class="icon-folder-close"></i>Create Directory</a>
+				<a href="#mkdir"><i class="icon icon-folder-close"></i>Create Directory</a>
 			</li>
 			<!--<li>
-				<a href="#rename"><i class="icon-font"></i>Rename</a>
+				<a href="#rename"><i class="icon icon-font"></i>Rename</a>
 			</li>
 			<li>
-				<a href="#delete"><i class="icon-trash"></i>Delete</a>
+				<a href="#delete"><i class="icon icon-trash"></i>Delete</a>
 			</li>-->
 		</ul>
     </div>

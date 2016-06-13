@@ -15,17 +15,17 @@
 			<!-- The fileinput-button span is used to style the file input field as button -->
 			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
 				<span class="button btn-success fileinput-button" style="min-width:90px;">
-					<i class="icon-plus"></i>
+					<i class="icon icon-plus"></i>
 					<span>Add files...</span>
 					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
 				</span>
 			</label>
 			<!--<button type="submit" class="button btn-primary start">
-				<i class="icon-upload icon-white"></i>
+				<i class="icon icon-upload icon-white"></i>
 				<span>Start uploads</span>
 			</button>-->
 			<button type="reset" class="button btn-warning cancel">
-				<i class="icon-ban-circle"></i>
+				<i class="icon icon-ban-circle"></i>
 				<span>Cancel uploads</span>
 			</button>
 		</div>
@@ -41,7 +41,7 @@
 	</div>
 
 	<div class="multiupload-drag-notice">
-		<i class="icon-upload"></i>Drop files here to upload
+		<i class="icon icon-upload"></i>Drop files here to upload
 	</div>
 
 	<!-- The loading indicator is shown during file processing -->
@@ -75,7 +75,7 @@
 			{% if (!o.options.autoUpload) { %}
 			<td class="start">
 				<button class="button btn-primary">
-					<i class="icon-upload icon-white"></i>
+					<i class="icon icon-upload icon-white"></i>
 					<span>Start</span>
 				</button>
 			</td>
@@ -85,7 +85,7 @@
 		{% } %}
 		<td class="cancel">{% if (!i) { %}
 			<button class="button btn-warning">
-				<i class="icon-ban-circle icon-white"></i>
+				<i class="icon icon-ban-circle icon-white"></i>
 				<span>Cancel</span>
 			</button>
 		{% } %}</td>
@@ -117,7 +117,7 @@
 			{% } %}
 			<td class="delete">
 				<button class="button remove-uploaded-file-link" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
-					<i class="icon-trash icon-white"></i>
+					<i class="icon icon-trash icon-white"></i>
 					<span>Remove File</span>
 				</button>
 			</td>

@@ -22,7 +22,7 @@
 				<span class="draft-page-preview">{$page->getTeaser(true)|truncate:200}</span>
 				*}
 				{a href="`$page.deleteurl`" confirm="Really delete `$page.title|escape`?" title="Delete Draft"}
-					<i class="icon-times"></i>
+					<i class="icon icon-times"></i>
 				{/a}
 			</div>
 		{/foreach}

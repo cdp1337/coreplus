@@ -46,13 +46,13 @@
 				<ul class="controls">
 					<li>
 						{a href="/security/view/`$entry.id`" title="View Details" class="ajax-link"}
-							<i class="icon-view"></i>
+							<i class="icon icon-view"></i>
 							<span>View Details</span>
 						{/a}
 					</li>
 					<li>
 						{a href="/security/blacklistip/add?ip_addr=`$entry.ip_addr`/32"}
-							<i class="icon-thumbs-down"></i>
+							<i class="icon icon-thumbs-down"></i>
 							<span>Ban IP</span>
 						{/a}
 					</li>

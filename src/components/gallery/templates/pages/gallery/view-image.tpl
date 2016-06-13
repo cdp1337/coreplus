@@ -9,7 +9,7 @@
 	<div class="gallery-previous-image">
 		{a href="`$prev->getRewriteURL()`" title="`$prev.title`"}
 			{img file=$prev->getFile() width="75" height="75" title="`$prev.title`"}
-			<i class="icon-chevron-left"></i>
+			<i class="icon icon-chevron-left"></i>
 		{/a}
 	</div>
 {/if}
@@ -18,7 +18,7 @@
 	<div class="gallery-next-image">
 		{a href="`$next->getRewriteURL()`" title="`$next.title`"}
 			{img file=$next->getFile() width="75" height="75" title="`$next.title`"}
-			<i class="icon-chevron-right"></i>
+			<i class="icon icon-chevron-right"></i>
 		{/a}
 	</div>
 {/if}

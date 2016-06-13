@@ -7,7 +7,7 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 
 		<a class="reload-captcha" href="#" onclick="$(this).closest('div').find('img').attr('src', '{link href='/simplecaptcha.png'}?date=' + (new Date()).getTime()); return false;">
-			<i class="icon-refresh"></i>
+			<i class="icon icon-refresh"></i>
 			<span>Reload Image</span>
 		</a>
 

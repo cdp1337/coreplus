@@ -10,7 +10,7 @@
 		{$uploadform->render()}
 	{else}
 		<a class="button update-link" title="Upload New Image">
-			<i class="icon-upload"></i>
+			<i class="icon icon-upload"></i>
 			<span>Upload New Image</span>
 		</a>
 	{/if}
@@ -48,28 +48,28 @@
 						<ul class="controls" data-proxy-text="Image Controls">
 							<li class="control-edit">
 								{a href="gallery/images/update/`$album.id`?image=`$i.id`" title="Edit {$i->getFileType()}" class="ajax-link" image="`$i.id`"}
-									<i class="icon-edit"></i>
+									<i class="icon icon-edit"></i>
 									<span>Edit {$i->getFileType()}</span>
 								{/a}
 							</li>
 							{if ($i->getFileType() == 'image')}
 								<li class="control-rotate-ccw">
 									<a href="#" title="Rotate Image CCW" class="rotate-link" image="{$i.id}" rotate="ccw">
-										<i class="icon-undo"></i>
+										<i class="icon icon-undo"></i>
 										<span>Rotate Image CCW</span>
 									</a>
 								</li>
 
 								<li class="control-rotate-cw">
 									<a href="#" title="Rotate Image CW" class="rotate-link" image="{$i.id}" rotate="cw">
-										<i class="icon-repeat"></i>
+										<i class="icon icon-repeat"></i>
 										<span>Rotate Image CW</span>
 									</a>
 								</li>
 							{/if}
 							<li class="control-remove">
 								{a href="gallery/images/delete/`$album.id`?image=`$i.id`" title="Remove `$i->getFileType()`" confirm="Confirm deleting `$i->getFileType()`?"}
-									<i class="icon-remove"></i>
+									<i class="icon icon-remove"></i>
 									<span>Remove {$i->getFileType()}</span>
 								{/a}
 							</li>
