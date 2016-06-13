@@ -166,6 +166,12 @@ class WidgetController extends Controller_2_1 {
 		}
 		elseif($request->getParameter('template')){
 			$selected = $request->getParameter('template');
+			
+			// Ensure that it does not start with a '/'.
+			// This is because the query is without one.
+			if($selected{0} == '/'){
+				$selected = substr($selected, 1);
+			}
 
 			if(isset($pages[ $selected ])){
 				$selectedtype = 'page';
