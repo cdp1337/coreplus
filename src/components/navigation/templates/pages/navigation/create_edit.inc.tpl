@@ -2,14 +2,7 @@
 {script name="jqueryui"}{/script}
 {script name="jqueryui.nestedSortable"}{/script}
 {script src="js/navigation/manager.js"}{/script}
-
-{css}<style>
-	#entry-listings ol {
-		margin-left: 2em;
-		border-left: 2px solid black;
-		padding-left: 0.5em;
-	}
-</style>{/css}
+{css src="assets/css/navigation.css"}{/css}
 
 {$form->render('head')}
 
@@ -18,12 +11,12 @@
 <fieldset>
 	<legend> Entries</legend>
 
-	<a class="button add-entry-int-btn" href="#" title="Add Internal Link"><i class="icon-add"></i> Add Internal Link</a>
-	<a class="button add-entry-ext-btn" href="#" title="Add External Link"><i class="icon-add"></i> Add External Link</a>
-	<a class="button add-entry-none-btn" href="#" title="Add Text Label"><i class="icon-add"></i> Add Text Label</a>
+	<a class="button add-entry-int-btn" href="#" title="Add Internal Link"><i class="icon icon-add"></i> Add Internal Link</a>
+	<a class="button add-entry-ext-btn" href="#" title="Add External Link"><i class="icon icon-add"></i> Add External Link</a>
+	<a class="button add-entry-none-btn" href="#" title="Add Text Label"><i class="icon icon-add"></i> Add Text Label</a>
 
 	<!-- Create new entry heading -->
-	<ol class="sortable-listing" id="entry-listings"></ol>
+	<ol class="sortable-listing navigation-edit-entries" id="entry-listings"></ol>
 
 </fieldset>
 
@@ -78,7 +71,7 @@
 	</div>
 
 	<div class="formelement">
-		<a href="#" class="button submit-btn"><i class="icon-add"></i> Add/Update Entry</a>
+		<a href="#" class="button submit-btn"><i class="icon icon-add"></i> Add/Update Entry</a>
 	</div>
 </div>
 
@@ -106,7 +99,7 @@
 	</div>
 
 	<div class="formelement">
-		<a href="#" class="button submit-btn"><i class="icon-add"></i> Add/Update Entry</a>
+		<a href="#" class="button submit-btn"><i class="icon icon-add"></i> Add/Update Entry</a>
 	</div>
 </div>
 
@@ -122,6 +115,6 @@
 	</div>
 
 	<div class="formelement">
-		<a href="#" class="button submit-btn"><i class="icon-add"></i> Add/Update Entry</a>
+		<a href="#" class="button submit-btn"><i class="icon icon-add"></i> Add/Update Entry</a>
 	</div>
 </div>

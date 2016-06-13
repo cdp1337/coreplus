@@ -27,12 +27,12 @@ var NavigationManager = null;
 		return s.replace(/ \(.*\)$/, '').replace(/.*» (.*)$/, '$1')
 	};
 
-	controlshtml = '<ul class="controls" style="display:inline-block; margin-left:1em;">' +
+	controlshtml = '<ul class="controls" style="">' +
 		'<li>' +
-		'<a href="#" class="edit-entry-link control control-edit"><i class="icon-edit"></i><span>edit entry</span></a>' +
+		'<a href="#" class="edit-entry-link control control-edit"><i class="icon icon-edit"></i><span>edit entry</span></a>' +
 		'</li>' +
 		'<li>' +
-		'<a href="#" class="delete-entry-link control control-delete"><i class="icon-remove"></i><span>delete entry</span></a>' +
+		'<a href="#" class="delete-entry-link control control-delete"><i class="icon icon-remove"></i><span>delete entry</span></a>' +
 		'</li>' +
 		'</ul>';
 
@@ -50,7 +50,7 @@ var NavigationManager = null;
 		 */
 		this.beforesave = function () {
 			return true;
-		}
+		};
 
 		this.open = function ($el) {
 			var id, title, url, target, $div, windowtitle;
@@ -122,6 +122,8 @@ var NavigationManager = null;
 		// This is the trigger for opening this dialog.
 		$('.add-entry-' + type + '-btn').click(function () {
 			self.open();
+
+			return false;
 		});
 
 		// Save button of course

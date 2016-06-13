@@ -1,0 +1,23 @@
+.navigation-edit-entries {
+
+	ol {
+		margin-left: 2em;
+		border-left: 2px solid black;
+		padding-left: 0.5em;
+	}
+	
+	ul.controls {
+		display: inline-block;
+		
+		li {
+			list-style: none;
+			display: inline-block;
+			font-size: 125%;
+			margin-right: 0.5em;
+			
+			span {
+				display: none;
+			}
+		}
+	}
+}

@@ -1,0 +1,23 @@
+/* line 3, ../scss/navigation.scss */
+.navigation-edit-entries ol {
+  margin-left: 2em;
+  border-left: 2px solid black;
+  padding-left: 0.5em;
+}
+/* line 9, ../scss/navigation.scss */
+.navigation-edit-entries ul.controls {
+  display: inline-block;
+}
+/* line 12, ../scss/navigation.scss */
+.navigation-edit-entries ul.controls li {
+  list-style: none;
+  display: inline-block;
+  font-size: 125%;
+  margin-right: 0.5em;
+}
+/* line 18, ../scss/navigation.scss */
+.navigation-edit-entries ul.controls li span {
+  display: none;
+}
+
+/*# sourceMappingURL=navigation.css.map */

@@ -9,9 +9,11 @@
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="e1a91efdb94a4d2957f6615cd0554011"/>
+		<file filename="assets/scss/navigation.scss" md5="3f29639d48c98bf8b1c441e0bd35672d"/>
 		<file filename="controllers/NavigationController.php" md5="3e42bd3226383516717b5ae29467b058">
 			<controller name="NavigationController"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="cc216c0980d987e5790e2b56afc57c6d"/>
 		<file filename="models/Navigation.model.php" md5="db2eaa2b12f64a3128b014bd0c1c8dfc">
 			<class name="NavigationModel"/>
 		</file>
@@ -25,10 +27,10 @@
 	</files>
 	<view>
 		<file filename="templates/pages/navigation/create.tpl" md5="75c1c4157d0b64b0f5e05fa3a0ee9846"/>
-		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="57d170ffdb0eeef720a1861874507088"/>
+		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="d8bf610108f2baf2c64a7010a318553c"/>
 		<file filename="templates/pages/navigation/delete.tpl" md5="0caa8ffa5c92843faae19fbdec593da5"/>
 		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
-		<file filename="templates/pages/navigation/index.tpl" md5="8fbbccd35a3cbc609cc8845b6a3a45ee"/>
+		<file filename="templates/pages/navigation/index.tpl" md5="48cd76b0860f828bd2aaa2475c16eb61"/>
 		<file filename="templates/pages/navigation/view.tpl" md5="44b506f0e3ca0a1bfef9d5f4b992a8c0"/>
 		<file filename="templates/widgets/navigation/_menu.inc.tpl" md5="d64446108dff7be324ae96c683b7b04e"/>
 		<file filename="templates/widgets/navigation/children.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
@@ -43,6 +45,9 @@
 		<widgetcreate title="Navigation Menu" baseurl="/navigation/create"/>
 	</widgets>
 	<assets>
+		<file filename="assets/css/navigation.css" md5="cdaf5b15ab95e8ae14b2a38a693af51e"/>
+		<file filename="assets/css/navigation.css.map" md5="4a077dc93c5143aa6cb89da5e10c51bc"/>
+		<file filename="assets/css/navigation.min.css" md5="43fc45ce2ac7d6d2f11ee9c5c6367897"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-140.png" md5="b802371dccad4efd732bc4d64fc6a6fc"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-210.png" md5="0707ae53fa3b89eecc1f2624abd366f3"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children-140.png" md5="a825bcc2dbed754cb091d733233acf88"/>
@@ -55,8 +60,8 @@
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings-210.png" md5="4e29f372ac875463ba69775015ae2473"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings.png" md5="761d4dbc6447ef141b489e66b86749c2"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation.png" md5="5e7c947318ea439be1c066c6b578f106"/>
-		<file filename="assets/js/navigation/manager.js" md5="d328d065a3112868ef914999072f77e0"/>
-		<file filename="assets/js/navigation/manager.min.js" md5="f2fd31e0aa29eeb560c52c665c466116"/>
+		<file filename="assets/js/navigation/manager.js" md5="cb0abbd6ad70374c33b62251ca61963f"/>
+		<file filename="assets/js/navigation/manager.min.js" md5="a28d6a4f7d8a088265758b55a52155fe"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>

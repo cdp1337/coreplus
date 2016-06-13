@@ -103,6 +103,7 @@ class NavigationController extends Controller_2_1 {
 		// Save the widget too
 		$widget = $m->getLink('Widget');
 		$widget->set('title', $m->get('name'));
+		$widget->set('baseurl', '/navigation/view/' . $m->get('id'));
 		$widget->set('editurl', '/navigation/edit/' . $m->get('id'));
 		$widget->set('deleteurl', '/navigation/delete/' . $m->get('id'));
 		$widget->save();

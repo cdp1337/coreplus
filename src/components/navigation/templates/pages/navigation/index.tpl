@@ -15,13 +15,13 @@
 			<ul class="controls">
 				<li class="edit">
 					{a href="/Navigation/Edit/`$nav->get('id')`"}
-						<i class="icon-edit"></i>
+						<i class="icon icon-edit"></i>
 						<span>Edit</span>
 					{/a}
 				</li>
 				<li class="delete">
 					{a confirm="Are you sure you want to delete {$nav.name}?" href="/Navigation/Delete/`$nav->get('id')`"}
-						<i class="icon-remove"></i>
+						<i class="icon icon-remove"></i>
 						<span>Delete</span>
 					{/a}
 				</li>
