@@ -769,7 +769,7 @@ class View {
 
 				// If the viewmode is regular and DEVELOPMENT_MODE is enabled, show some possibly useful information now that everything's said and done.
 				if (DEVELOPMENT_MODE) {
-					$legend = '<div class="fieldset-title">%s<i class="icon-chevron-down expandable-hint"></i><i class="icon-chevron-up collapsible-hint"></i></div>' . "\n";
+					$legend = '<div class="fieldset-title">%s<i class="icon icon-chevron-down expandable-hint"></i><i class="icon icon-chevron-up collapsible-hint"></i></div>' . "\n";
 
 					$debug = '';
 					$debug .= '<pre class="xdebug-var-dump screen">';
@@ -1042,13 +1042,23 @@ class View {
 		if(SSL_MODE != SSL_MODE_DISABLED){
 			// If SSL is required by the controller and it's available, redirect there!
 			if($this->ssl && !SSL){
-				header('Location: ' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1));
-				die('This page requires SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+				$u = ROOT_URL_SSL . substr(REL_REQUEST_PATH, 1);
+				
+				// Smarty likes to be over zealous and send headers prematurely...
+				if(!headers_sent()){
+					header('Location: ' . $u );	
+				}
+				die('<html><body onload="window.location = \'' . $u . '\'" >This page requires SSL, please <a href="' . $u . '">Click Here to continue</a>.</body></html>');
 			}
 			// If SSL is set to be ondemand and the page does not have it set but it's enabled, redirect to the non-SSL version.
 			elseif(!$this->ssl && SSL && SSL_MODE == SSL_MODE_ONDEMAND){
-				header('Location: ' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1));
-				die('This page does not require SSL, if it does not redirect you automatically, please <a href="' . ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1) . '">Click Here</a>.');
+				$u = ROOT_URL_NOSSL . substr(REL_REQUEST_PATH, 1);
+
+				// Smarty likes to be over zealous and send headers prematurely...
+				if(!headers_sent()){
+					header('Location: ' . $u );
+				}
+				die('<html><body onload="window.location = \'' . $u . '\'" >This page does not require SSL, please <a href="' . $u . '">Click Here to continue</a>.</body></html>');
 			}
 			// Else, SSL_MODE_ALLOWED doesn't care if SSL is enabled or not!
 		}
