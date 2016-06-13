@@ -509,8 +509,10 @@ class Model implements ArrayAccess {
 	 */
 	public function save($defer = false) {
 
+		$classname = strtolower(get_called_class());
+
 		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-			'Issuing save() on ' . $this->get('__CLASS__') . ' ' . $this->getLabel()
+			'Issuing save() on ' . $classname . ' ' . $this->getLabel()
 		);
 
 		// Only do the same operation if it's been changed.
@@ -549,7 +551,6 @@ class Model implements ArrayAccess {
 
 		// Dispatch the pre-save hook for models.
 		// This allows utilities to hook in and modify the model or perform some other action.
-		$classname = get_called_class();
 		// Allow all supplemental models to tap into this too!
 		if(isset(self::$_ModelSupplementals[$classname])){
 			foreach(self::$_ModelSupplementals[$classname] as $supplemental){
@@ -707,7 +708,6 @@ class Model implements ArrayAccess {
 		}
 
 		if($changed){
-			$classname = get_called_class();
 			// Allow all supplemental models to tap into this too!
 			if(isset(self::$_ModelSupplementals[$classname])){
 				foreach(self::$_ModelSupplementals[$classname] as $supplemental){
@@ -995,7 +995,7 @@ class Model implements ArrayAccess {
 	public function getControlLinks(){
 		$ret = [];
 
-		$classname = get_class($this);
+		$classname = strtolower(get_class($this));
 
 		// Allow all supplemental models to tap into the schema too!
 		if(isset(self::$_ModelSupplementals[$classname])){
@@ -1003,7 +1003,15 @@ class Model implements ArrayAccess {
 				if(class_exists($supplemental)){
 					$ref = new ReflectionClass($supplemental);
 					if($ref->hasMethod('GetControlLinks')){
-						$ret = array_merge($ret, $ref->getMethod('GetControlLinks')->invoke(null, $this));
+						$supplementalRet = $ref->getMethod('GetControlLinks')->invoke(null, $this);
+						
+						// Include some error handling for supplemental models that are not setup fully.
+						if(!is_array($supplementalRet)){
+							trigger_error($supplemental . '::GetControlLinks must return an array!', E_USER_NOTICE);
+						}
+						else{
+							$ret = array_merge($ret, $supplementalRet);	
+						}
 					}
 				}
 			}
@@ -1044,7 +1052,7 @@ class Model implements ArrayAccess {
 	 */
 	public function delete() {
 
-		$classname = get_called_class();
+		$classname = strtolower(get_called_class());
 		// Allow all supplemental models to tap into this too!
 		if(isset(self::$_ModelSupplementals[$classname])){
 			foreach(self::$_ModelSupplementals[$classname] as $supplemental){
@@ -1491,7 +1499,7 @@ class Model implements ArrayAccess {
 
 			if(is_array($linkset['records'])){
 				foreach($linkset['records'] as $k => $rec){
-					if($rec == $link){
+					if($rec === $link){
 						if(!isset($this->_linked[$idx]['purged'])){
 							$this->_linked[$idx]['purged'] = [];
 						}
@@ -1501,7 +1509,7 @@ class Model implements ArrayAccess {
 					}
 				}
 			}
-			elseif($linkset['records'] == $link){
+			elseif($linkset['records'] === $link){
 				if(!isset($this->_linked[$idx]['purged'])){
 					$this->_linked[$idx]['purged'] = [];
 				}
@@ -1649,6 +1657,10 @@ class Model implements ArrayAccess {
 			else{
 				return false;
 			}
+		}
+		elseif(isset($this->_dataother[$key])){
+			// I have no ability to know if this field was changed, but it's set!
+			return true;
 		}
 		else{
 			return false;
@@ -2416,7 +2428,7 @@ class Model implements ArrayAccess {
 	 */
 	public static function GetSchema() {
 		/** @var string $classname The class name of the extending class. */
-		$classname = get_called_class();
+		$classname = strtolower(get_called_class());
 
 		if(!isset(self::$_ModelSchemaCache[$classname])){
 
@@ -2564,21 +2576,19 @@ class Model implements ArrayAccess {
 	 *
 	 * Used to allow components to append the database of another component!
 	 *
-	 * @param string $class
+	 * @param string $original
+	 * @param string $supplemental
 	 */
-	public static function AddSupplemental($class){
-		/** @var string $classname The class name of the extending class. */
-		$classname = get_called_class();
-
-		if(!isset(self::$_ModelSupplementals[$classname])){
-			self::$_ModelSupplementals[$classname] = [];
+	public static function AddSupplemental($original, $supplemental){
+		if(!isset(self::$_ModelSupplementals[$original])){
+			self::$_ModelSupplementals[$original] = [];
 		}
 
-		self::$_ModelSupplementals[$classname][] = $class;
+		self::$_ModelSupplementals[$original][] = $supplemental;
 		
 		// Clear the cache so that the next check for this model contains the supplemental data.
-		if(isset(self::$_ModelSchemaCache[$classname])){
-			self::$_ModelSchemaCache[$classname] = null;
+		if(isset(self::$_ModelSchemaCache[$original])){
+			self::$_ModelSchemaCache[$original] = null;
 		}
 	}
 
