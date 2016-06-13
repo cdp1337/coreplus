@@ -69,7 +69,7 @@
 				// The keyword span
 				'<span class="keywords-multi-select-option-keyword">' + title + '</span>' +
 				// The remove icon
-				' <a href="#" title="Click to remove keyword" class="keywords-multi-select-remove-link"><i class="icon-times-circle"></i></a>' +
+				' <a href="#" title="Click to remove keyword" class="keywords-multi-select-remove-link"><i class="icon icon-times-circle"></i></a>' +
 				// The hidden inputs, necessary for the form since it is a form after all :p
 				'<input type="hidden" name="' + keywordsinputname + '[' + keyword + ']" value="' + title + '"/>' +
 				// Closing the div.

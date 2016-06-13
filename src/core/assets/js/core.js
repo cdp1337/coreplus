@@ -193,7 +193,7 @@ if(typeof jQuery != 'undefined'){
 
 	for(i in types){
 		jQuery('.message-' + types[i].msgclass).each(function(){
-			jQuery(this).prepend('<span class="message-background-icon"><i class="icon-' + types[i].icon + '"></i></span>');
+			jQuery(this).prepend('<span class="message-background-icon"><i class="icon icon-' + types[i].icon + '"></i></span>');
 		});
 	}
 }

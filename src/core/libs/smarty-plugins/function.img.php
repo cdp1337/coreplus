@@ -65,6 +65,8 @@
  *    * int "1" or "0", (default "0")
  *    * New in Core 4.2.0
  *    * Request that the resized image be encoded as base64 and inserted inline in the markdown instead of returned as the URL.
+ *  * includemeta
+ *    * Set to "1" to include extra markup for the metadata
  *  * placeholder
  *    * string
  *    * placeholder image if the requested image is blank or not found.  Useful for optional fields that should still display something.

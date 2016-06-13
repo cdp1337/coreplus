@@ -435,7 +435,7 @@ class ViewControl implements ArrayAccess {
 		}
 
 		if($this->icon){
-			$html .= '<i class="icon-' . $this->icon . '"></i> ';
+			$html .= '<i class="icon icon-' . $this->icon . '"></i> ';
 		}
 
 		$html .= '<span>' . $title . '</span>';

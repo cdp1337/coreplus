@@ -8,10 +8,10 @@
 		{if $can_lookup}
 			<div class="user-indicator">
 				<span class="user-valid-indicator" title="User is valid!">
-					<i class="icon-ok"></i>
+					<i class="icon icon-ok"></i>
 				</span>
 				<span class="user-invalid-indicator" title="No user account linked.">
-					<i class="icon-exclamation-circle"></i>
+					<i class="icon icon-exclamation-circle"></i>
 				</span>
 			</div>
 

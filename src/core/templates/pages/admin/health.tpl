@@ -2,13 +2,13 @@
 	{foreach $checks as $check}
 		<li class="health-check health-check-{$check->result|strtolower}">
 			{if $check->result == 'GOOD'}
-				<i class="icon-check"></i>
+				<i class="icon icon-check"></i>
 			{elseif $check->result == 'SKIP'}
-				<i class="icon-ban"></i>
+				<i class="icon icon-ban"></i>
 			{elseif $check->result == 'WARN'}
-				<i class="icon-exclamation-triangle"></i>
+				<i class="icon icon-exclamation-triangle"></i>
 			{elseif $check->result == 'ERRR'}
-				<i class="icon-times-circle-o"></i>
+				<i class="icon icon-times-circle-o"></i>
 			{/if}
 			
 			{if $check->link}

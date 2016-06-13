@@ -1,5 +1,5 @@
 <fieldset class="collapsible collapsed">
-	<legend> <i class="icon-question-circle"></i> Template Help </legend>
+	<legend> <i class="icon icon-question-circle"></i> Template Help </legend>
 	<div>
 		<p class="message-tutorial">
 			You can use the following phrases for automatic text replacement.

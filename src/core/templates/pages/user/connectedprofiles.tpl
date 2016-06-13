@@ -43,16 +43,16 @@
 		<tr class="record">
 
 			<td>
-				<i class="icon-reorder"></i>
+				<i class="icon icon-reorder"></i>
 			</td>
 
 			<td>
-				<a href="#" class="icon-change-link">
-					<span class="icon-none">
+				<a href="#" class="icon icon-change-link">
+					<span class="icon icon-none">
 						Pick Icon
 					</span>
-					<span class="icon-set" style="display:none;">
-						<span class="icon-current"></span>
+					<span class="icon icon-set" style="display:none;">
+						<span class="icon icon-current"></span>
 						(Change Icon)
 					</span>
 				</a>
@@ -69,11 +69,11 @@
 
 			<td>
 				<a href="#" class="remove-button button" title="Remove Record">
-					<i class="icon-remove"></i>
+					<i class="icon icon-remove"></i>
 				</a>
 
 				<a href="#" class="add-button button" title="Add Record">
-					<i class="icon-add"></i>
+					<i class="icon icon-add"></i>
 				</a>
 			</td>
 		</tr>
@@ -81,8 +81,8 @@
 </table>
 
 <template id="icon">
-	<a href="#" data-icon="%ICON%" class="icon-selector-icon">
-		<i class="icon-%ICON%"></i>
+	<a href="#" data-icon="%ICON%" class="icon icon-selector-icon">
+		<i class="icon icon-%ICON%"></i>
 	</a>
 </template>
 
@@ -97,7 +97,7 @@
 			icontmpl = $('#icon').html(),
 			counter = 0,
 			$dest = $('#dest'),
-			$icons = $('<div class="icon-selector"/>'),
+			$icons = $('<div class="icon icon-selector"/>'),
 			$icontarget = null,
 			setIcon,
 			icons = [
@@ -137,7 +137,7 @@
 				$target.find('.input-type').val(icon);
 				$target.find('.icon-none').hide();
 				$target.find('.icon-set').show();
-				$target.find('.icon-current').html('<i class="icon-' + icon + '"></i>');
+				$target.find('.icon-current').html('<i class="icon icon-' + icon + '"></i>');
 			}
 		};
 

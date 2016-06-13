@@ -16,9 +16,9 @@
 			{if $entry.type == "info"}
 				<!-- No icon needed -->
 			{elseif $entry.type == "error"}
-				<i class="icon-exclamation" title="Error Entry"></i>
+				<i class="icon icon-exclamation" title="Error Entry"></i>
 			{elseif $entry.type == "security"}
-				<i class="icon-exclamation-triangle" title="Security Entry"></i>
+				<i class="icon icon-exclamation-triangle" title="Security Entry"></i>
 			{else}
 				[ {$entry.type} ]
 			{/if}
@@ -45,26 +45,26 @@
 			<ul class="controls" data-proxy-force="1">
 				<li>
 					{a href="/admin/log/details/`$entry.id`" title="View Details" class="ajax-link"}
-						<i class="icon-view"></i>
+						<i class="icon icon-view"></i>
 						<span>View Details</span>
 					{/a}
 				</li>
 				<li>
 					{a href="/security/blacklistip/add?ip_addr=`$entry.ip_addr`/32"}
-						<i class="icon-thumbs-down"></i>
+						<i class="icon icon-thumbs-down"></i>
 						<span>Ban IP</span>
 					{/a}
 				</li>
 				<li>
 					{a href="/useractivity/details?filter[ip_addr]=`$entry.ip_addr`" title="Track User Activity"}
-						<i class="icon-list-alt"></i>
+						<i class="icon icon-list-alt"></i>
 						<span>View Activity by IP</span>
 					{/a}
 				</li>
 				{if $entry.user_id}
 					<li>
 						{a href="/useractivity/details?filter[user_id]=`$entry.user_id`" title="Track User Activity"}
-							<i class="icon-list-alt"></i>
+							<i class="icon icon-list-alt"></i>
 							<span>View Activity by User</span>
 						{/a}
 					</li>	

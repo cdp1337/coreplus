@@ -48,13 +48,13 @@
 					<ul class="controls">
 						<li class="edit">
 							{a href="/usergroupadmin/update/`$group.id`"}
-								<i class="icon-edit"></i>
+								<i class="icon icon-edit"></i>
 								<span>Edit</span>
 							{/a}
 						</li>
 						<li class="delete">
 							{a href="/usergroupadmin/delete/`$group.id`" confirm="Delete `$group.name|escape`?"}
-								<i class="icon-remove"></i>
+								<i class="icon icon-remove"></i>
 								<span>Delete</span>
 							{/a}
 						</li>

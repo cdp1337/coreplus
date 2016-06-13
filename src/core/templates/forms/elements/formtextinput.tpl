@@ -27,7 +27,7 @@
 				{foreach $values as $v => $l}
 					<div class="autocomplete-value">
 						<input type="hidden" name="{$element->get('name')}" value="{$v|escape}"/>
-						<a href="#" class="remove-autocomplete-entry" title="Remove Entry"><i class="icon-trash-o"></i></a>
+						<a href="#" class="remove-autocomplete-entry" title="Remove Entry"><i class="icon icon-trash-o"></i></a>
 						{$l}
 					</div>
 				{/foreach}
@@ -94,7 +94,7 @@
 				select: function( event, ui ) {
 					if(ui.item){
 						if(multiple){
-							$hidden.append('<div class="autocomplete-value"><input type="hidden" name="' + name + '" value="' + ui.item.value + '"/><a href="#" class="remove-autocomplete-entry" title="Remove Entry"><i class="icon-trash-o"></i></a> ' + ui.item.label + '</div>');
+							$hidden.append('<div class="autocomplete-value"><input type="hidden" name="' + name + '" value="' + ui.item.value + '"/><a href="#" class="remove-autocomplete-entry" title="Remove Entry"><i class="icon icon-trash-o"></i></a> ' + ui.item.label + '</div>');
 							$element.val('');
 						}
 						else{

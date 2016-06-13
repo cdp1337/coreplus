@@ -2,8 +2,8 @@
 	<fieldset class="listing-filters collapsible {if !$filtersset}collapsed screen{/if}">
 		<div class="fieldset-title">
 			{t 'STRING_FILTERS'}
-			<i class="icon-chevron-down expandable-hint"></i>
-			<i class="icon-chevron-up collapsible-hint"></i>
+			<i class="icon icon-chevron-down expandable-hint"></i>
+			<i class="icon icon-chevron-up collapsible-hint"></i>
 		</div>
 
 		<div class="collapsible-contents screen">
@@ -22,13 +22,13 @@
 
 					<div class="clear"></div>
 					<a href="#" class="button reset-filters">
-						<i class="icon-times"></i>
+						<i class="icon icon-times"></i>
 						<span>{t 'STRING_RESET'}</span>
 					</a>
 					<!-- Render a submit button so 'Enter' works... -->
 					<input type="submit" style="display:none;"/>
 					<a href="#" class="button apply-filters">
-						<i class="icon-ok"></i>
+						<i class="icon icon-ok"></i>
 						<span>{t 'STRING_APPLY'}</span>
 					</a>
 				</form>
@@ -90,11 +90,11 @@
 			if(!$th.attr('title')) $th.attr('title', 'Sort by ' + $th.html());
 
 			if($th.attr('sortkey') == sortkey){
-				$th.append('<i class="icon-sort-' + sortdir + ' current"></i>');
-				$th.append('<i class="icon-sort-' + sortother + ' other"></i>');
+				$th.append('<i class="icon icon-sort-' + sortdir + ' current"></i>');
+				$th.append('<i class="icon icon-sort-' + sortother + ' other"></i>');
 			}
 			else{
-				$th.append('<i class="icon-sort other"></i>');
+				$th.append('<i class="icon icon-sort other"></i>');
 			}
 		});
 

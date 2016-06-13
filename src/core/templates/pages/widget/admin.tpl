@@ -79,14 +79,14 @@
 									<ul class="controls">
 										<li>
 											{a href="/widget/instance/update/{$widget.id}" class="control control-edit" title="Edit Options"}
-												<i class="icon-edit"></i>
+												<i class="icon icon-edit"></i>
 												<span>Edit Installed Options</span>
 											{/a}
 										</li>
 										{if $widget.Widget.editurl}
 											<li>
 												{a href="`$widget.Widget.editurl`"}
-													<i class="icon-wrench"></i>
+													<i class="icon icon-wrench"></i>
 													<span>Edit Widget Settings</span>
 												{/a}
 											</li>
@@ -94,7 +94,7 @@
 										{if !$smarty.foreach.widgets.last}
 											<li>
 												{a href="/widget/instance/movedown/`$widget.id`" class="control control-delete" title="Move Widget Instance Down" confirm=""}
-													<i class="icon-arrow-down"></i>
+													<i class="icon icon-arrow-down"></i>
 													<span>Move Down</span>
 												{/a}
 											</li>
@@ -102,14 +102,14 @@
 										{if !$smarty.foreach.widgets.first}
 											<li>
 												{a href="/widget/instance/moveup/`$widget.id`" class="control control-delete" title="Move Widget Instance Up" confirm=""}
-													<i class="icon-arrow-up"></i>
+													<i class="icon icon-arrow-up"></i>
 													<span>Move Up</span>
 												{/a}
 											</li>
 										{/if}
 										<li>
 											{a href="/widget/instance/remove/`$widget.id`" class="control control-delete" title="Remove Widget Instance" confirm="Confirm removing the widget from this area?"}
-												<i class="icon-trash-o"></i>
+												<i class="icon icon-trash-o"></i>
 												<span>Uninstall Instance</span>
 											{/a}
 										</li>
@@ -147,7 +147,7 @@
 					{if $widget.editurl}
 						<li>
 							{a href="`$widget.editurl`"}
-								<i class="icon-wrench"></i>
+								<i class="icon icon-wrench"></i>
 								<span>Edit Widget Settings</span>
 							{/a}
 						</li>
@@ -155,7 +155,7 @@
 					{if $widget.deleteurl}
 						<li>
 							{a href="`$widget.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
-								<i class="icon-remove"></i>
+								<i class="icon icon-remove"></i>
 								<span>Delete Widget</span>
 							{/a}
 						</li>
@@ -205,7 +205,7 @@
 					{img width="210" src="`$l.preview`"}
 				{/if}
 				{a href="`$l.baseurl`" title="Register New `$l.title` Widget" class="button"}
-					<i class="icon-add"></i>
+					<i class="icon icon-add"></i>
 					<span>Register New</span>
 				{/a}
 			</div>

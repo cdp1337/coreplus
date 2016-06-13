@@ -23,7 +23,7 @@
 	Generic Button/Link
 </a>
 <a class="button" href="#">
-	<i class="icon-ok"></i>
+	<i class="icon icon-ok"></i>
 	<span>Generic Button/Link (Now with 100% more icons!)</span>
 </a>
 <br/>
@@ -32,13 +32,13 @@
 <ul class="controls">
 	<li>
 		<a href="#">
-			<i class="icon-edit"></i>
+			<i class="icon icon-edit"></i>
 			<span>Edit Something</span>
 		</a>
 	</li>
 	<li>
 		<a href="#">
-			<i class="icon-delete"></i>
+			<i class="icon icon-delete"></i>
 			<span>Delete Something</span>
 		</a>
 	</li>
@@ -64,8 +64,8 @@
 <fieldset class="collapsible collapsed">
 	<div class="fieldset-title">
 		Collapsed Fieldset w/.fieldset-title (click me!)
-		<i class="icon-chevron-down expandable-hint"></i>
-		<i class="icon-chevron-up collapsible-hint"></i>
+		<i class="icon icon-chevron-down expandable-hint"></i>
+		<i class="icon icon-chevron-up collapsible-hint"></i>
 	</div>
 	<div>
 		Content!

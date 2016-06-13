@@ -12,13 +12,13 @@ function update_user_table (){
 			$status = $tr.find('.active-status');
 
 		if($status.attr('data-useractive') == '1'){
-			$status.html('<a href="#" class="user-activate-link" title="Activated"><i class="icon-ok"></i></a>');
+			$status.html('<a href="#" class="user-activate-link" title="Activated"><i class="icon icon-ok"></i></a>');
 		}
 		else if($status.attr('data-useractive') == '-1'){
-			$status.html('<a href="#" class="user-activate-link" title="Deactivated"><i class="icon-times"></i></a>');
+			$status.html('<a href="#" class="user-activate-link" title="Deactivated"><i class="icon icon-times"></i></a>');
 		}
 		else{
-			$status.html('<a href="#" class="user-activate-link" title="Not Activated"><i class="icon-exclamation-sign"></i></a>');
+			$status.html('<a href="#" class="user-activate-link" title="Not Activated"><i class="icon icon-exclamation-sign"></i></a>');
 		}
 	});
 }

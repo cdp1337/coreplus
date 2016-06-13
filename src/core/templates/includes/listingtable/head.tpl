@@ -18,7 +18,7 @@
 
 			{* One extra column for the control links. *}
 			<th>
-				<a href="#" class="control-column-selection" title="Show / Hide Columns"><i class="icon-columns"></i></a>
+				<a href="#" class="control-column-selection" title="Show / Hide Columns"><i class="icon icon-columns"></i></a>
 
 				{$controls->fetch()}
 

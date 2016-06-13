@@ -1,10 +1,10 @@
 <p>
 	{if $entry.type == "info"}
-		<i class="icon-info-circle" title="Informative Entry"></i>
+		<i class="icon icon-info-circle" title="Informative Entry"></i>
 	{elseif $entry.type == "error"}
-		<i class="icon-exclamation" title="Error Entry"></i>
+		<i class="icon icon-exclamation" title="Error Entry"></i>
 	{elseif $entry.type == "security"}
-		<i class="icon-exclamation-triangle" title="Security Entry"></i>
+		<i class="icon icon-exclamation-triangle" title="Security Entry"></i>
 	{else}
 		[ {$entry.type} ]
 	{/if}

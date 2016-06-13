@@ -36,7 +36,7 @@
 				{foreach $on_register_elements as $config}
 					<tr class="sortable">
 						<td width="50">
-							<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
+							<i class="icon icon-move" title="Drag to Rearrange" style="display:none;"></i>
 						</td>
 						<td>
 							<label>
@@ -61,7 +61,7 @@
 				{foreach $on_edit_elements as $config}
 					<tr class="sortable">
 						<td width="50">
-							<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
+							<i class="icon icon-move" title="Drag to Rearrange" style="display:none;"></i>
 						</td>
 						<td>
 							<label>
@@ -85,7 +85,7 @@
 				{foreach $auth_backends as $backend}
 					<tr class="sortable">
 						<td width="50">
-							<i class="icon-move" title="Drag to Rearrange" style="display:none;"></i>
+							<i class="icon icon-move" title="Drag to Rearrange" style="display:none;"></i>
 						</td>
 						<td>
 							<label>

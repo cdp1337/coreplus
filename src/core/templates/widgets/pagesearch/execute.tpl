@@ -8,7 +8,7 @@
 		<div class="formelement formelementtext">
 			<div class="form-element-value">
 				<input type="text" name="q" value="{$query}" placeholder="Search Site"/>
-				<i class="icon-search"></i>
+				<i class="icon icon-search"></i>
 			</div>
 		</div>
 		<input type="submit" value="Search" class="submit-button"/>

@@ -3,7 +3,7 @@
 {/if}
 
 <p class="message-tutorial">
-	{a href="http://www.gnupg.org/" target="_BLANK"}GPG Keys <i class="icon-external-link"></i>{/a} are used extensively
+	{a href="http://www.gnupg.org/" target="_BLANK"}GPG Keys <i class="icon icon-external-link"></i>{/a} are used extensively
 	in Core to ensure that the contents of a package are exactly as the publisher expects.  This is done by the publisher
 	signing their package with their private key at the time of creation.  That signature can be used to cryptographically
 	verify that the file is byte for byte verbatim what it is expected to be.  This ensures that what is being installed

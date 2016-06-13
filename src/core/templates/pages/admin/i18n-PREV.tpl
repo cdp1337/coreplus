@@ -1,8 +1,8 @@
 <fieldset class="collapsible {if !$show_strings}collapsed{/if}">
 	<div class="fieldset-title">
 		{t 'STRING_ALL_TRANSLATION_STRINGS'}
-		<i class="icon-chevron-down expandable-hint"></i>
-		<i class="icon-chevron-up collapsible-hint"></i>
+		<i class="icon icon-chevron-down expandable-hint"></i>
+		<i class="icon icon-chevron-up collapsible-hint"></i>
 	</div>
 	<div>
 		<p class="message-tutorial">
@@ -19,8 +19,8 @@
 <fieldset class="collapsible {if !$show_form}collapsed{/if}">
 	<div class="fieldset-title">
 		{t 'STRING_ALL_TRANSLATION_STRINGS'}
-		<i class="icon-chevron-down expandable-hint"></i>
-		<i class="icon-chevron-up collapsible-hint"></i>
+		<i class="icon icon-chevron-down expandable-hint"></i>
+		<i class="icon icon-chevron-up collapsible-hint"></i>
 	</div>
 	<div>
 		<p class="message-tutorial">

@@ -69,9 +69,9 @@
 				<td>{$c->getVersion()}</td>
 				<td>
 					{if $c->isEnabled()}
-						<i title="Yes" style="color:green;" class="icon-ok"></i>
+						<i title="Yes" style="color:green;" class="icon icon-ok"></i>
 					{else}
-						<i title="No" style="color:red;" class="icon-remove"></i>
+						<i title="No" style="color:red;" class="icon icon-remove"></i>
 					{/if}
 				</td>
 				<td>

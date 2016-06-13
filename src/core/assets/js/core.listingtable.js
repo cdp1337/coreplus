@@ -60,13 +60,13 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 		
 		if(self.currentsort.key === sortkey){
 			// One of these is active!
-			icons += '<i title="Sort ASC" data-key="' + sortkey + '" data-dir="up" class="sort-icon icon-sort-up icon-sort-' + (self.currentsort.dir === 'up' ? 'current' : 'other') + '"></i>';
-			icons += '<i title="Sort DESC" data-key="' + sortkey + '" data-dir="down" class="sort-icon icon-sort-down icon-sort-' + (self.currentsort.dir === 'down' ? 'current' : 'other') + '"></i>';
+			icons += '<i title="Sort ASC" data-key="' + sortkey + '" data-dir="up" class="icon sort-icon icon-sort-up icon-sort-' + (self.currentsort.dir === 'up' ? 'current' : 'other') + '"></i>';
+			icons += '<i title="Sort DESC" data-key="' + sortkey + '" data-dir="down" class="icon sort-icon icon-sort-down icon-sort-' + (self.currentsort.dir === 'down' ? 'current' : 'other') + '"></i>';
 		}
 		else{
 			// Both of these are inactive.
-			icons += '<i title="Sort ASC" data-key="' + sortkey + '" data-dir="up" class="sort-icon icon-sort-up"></i>';
-			icons += '<i title="Sort DESC" data-key="' + sortkey + '" data-dir="down" class="sort-icon icon-sort-down"></i>';
+			icons += '<i title="Sort ASC" data-key="' + sortkey + '" data-dir="up" class="icon sort-icon icon-sort-up"></i>';
+			icons += '<i title="Sort DESC" data-key="' + sortkey + '" data-dir="down" class="icon sort-icon icon-sort-down"></i>';
 		}
 		
 		// Finish the div.

@@ -18,7 +18,7 @@
 			{foreach $drivers as $name => $d}
 				<li>
 					<a href="#login-auth-{$name}">
-						<i class="icon-{$d->getAuthIcon()}"></i>
+						<i class="icon icon-{$d->getAuthIcon()}"></i>
 						<span>{$d->getAuthTitle()}</span>
 					</a>
 				</li>

@@ -3,8 +3,8 @@
 
 	<div style="float:right;" class="control-panel">
 		Last Refresh: <span id="last-refresh-date"></span>
-		<a href="#" id="now-pause" class="button"><i class="icon-pause"></i></a>
-		<a href="#" id="now-play" class="button" disabled="disabled"><i class="icon-play"></i></a>
+		<a href="#" id="now-pause" class="button"><i class="icon icon-pause"></i></a>
+		<a href="#" id="now-play" class="button" disabled="disabled"><i class="icon icon-play"></i></a>
 	</div>
 
 	Average Speed (GET) : <span id="now-speed-get"></span><br/>

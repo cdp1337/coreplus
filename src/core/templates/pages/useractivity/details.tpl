@@ -19,9 +19,9 @@
 		<td>{$l.type}</td>
 		<td>
 			{if $l.status == 200}
-				<i class="icon-ok" style="color:green;" title="Request OK"></i>
+				<i class="icon icon-ok" style="color:green;" title="Request OK"></i>
 			{else}
-				<i class="icon-remove" style="color:red;" title="{$l.status}"></i>
+				<i class="icon icon-remove" style="color:red;" title="{$l.status}"></i>
 			{/if}
 			{$l.request}
 			
@@ -43,7 +43,7 @@
 				<a
 					href="{$smarty.const.SERVERNAME}/xhprof/index.php?run={$l.xhprof_run}&source={$l.xhprof_source}"
 					target="_blank"
-					title="View XHprof Profiler Report"><i class="icon-view"></i></a>
+					title="View XHprof Profiler Report"><i class="icon icon-view"></i></a>
 			{/if}
 			{$l->getTimeFormatted()}
 		</td>

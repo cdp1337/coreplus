@@ -20,10 +20,10 @@
 		<tr data-userid="{$user.id}" class="user-entry">
 			<td>
 				{if $user->get('admin')}
-					<i class="icon-key" title="Admin Account"></i>
+					<i class="icon icon-key" title="Admin Account"></i>
 				{/if}
 				{foreach $user->getEnabledAuthDrivers() as $auth}
-					<i class="icon-{$auth->getAuthIcon()}" title="{$auth->getAuthTitle()}"></i>
+					<i class="icon icon-{$auth->getAuthIcon()}" title="{$auth->getAuthTitle()}"></i>
 				{/foreach}
 			</td>
 
@@ -38,11 +38,11 @@
 			<td class="active-status" data-useractive="{$user.active}">
 				<noscript>
 					{if $user.active == 1}
-						<i class="icon-ok" title="Activated"></i>
+						<i class="icon icon-ok" title="Activated"></i>
 					{elseif $user.active == -1}
-						<i class="icon-times" title="Deactivated"></i>
+						<i class="icon icon-times" title="Deactivated"></i>
 					{else}
-						<i class="icon-exclamation-sign" title="Not Activated Yet"></i>
+						<i class="icon icon-exclamation-sign" title="Not Activated Yet"></i>
 					{/if}
 				</noscript>
 			</td>
@@ -64,6 +64,6 @@
 
 <br/>
 {a href="/user/admin?sortkey=created&sortdir=down" class="button"}
-	<i class="icon-view"></i>
+	<i class="icon icon-view"></i>
 	<span>View All Recent Registrations</span>
 {/a}

@@ -9,7 +9,7 @@
 	{$form->render('head')}
 	{$form->render('body')}
 	<button>
-		<i class="icon-lock"></i>
+		<i class="icon icon-lock"></i>
 		<span>Sign in with GPG</span>
 	</button>
 

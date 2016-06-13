@@ -4,18 +4,18 @@
 
 		{if $page_current > 1}
 			<a href="?page=1" title="First Page">
-				<i class="icon-fast-backward"></i>
+				<i class="icon icon-fast-backward"></i>
 			</a>
 			<a href="?page={$page_current-1}" title="Page {$page_current-1}">
-				<i class="icon-backward"></i>
+				<i class="icon icon-backward"></i>
 			</a>
 			{*
 		{else}
 			<a href="#" title="First Page" class="disabled" onclick="return false;">
-				<i class="icon-fast-backward"></i>
+				<i class="icon icon-fast-backward"></i>
 			</a>
 			<a href="#" title="Page 1" class="disabled" onclick="return false;">
-				<i class="icon-backward"></i>
+				<i class="icon icon-backward"></i>
 			</a>
 			*}
 		{/if}
@@ -24,18 +24,18 @@
 
 		{if $page_current < $page_max}
 			<a href="?page={$page_current+1}" title="{t 'STRING_PAGE_N' $page_current+1}">
-				<i class="icon-forward"></i>
+				<i class="icon icon-forward"></i>
 			</a>
 			<a href="?page={$page_max}" title="Last Page">
-				<i class="icon-fast-forward"></i>
+				<i class="icon icon-fast-forward"></i>
 			</a>
 			{*
 		{else}
 		<a href="#" title="Page {$page_current+1}" class="disabled" onclick="return false;">
-			<i class="icon-forward"></i>
+			<i class="icon icon-forward"></i>
 		</a>
 		<a href="#" title="Last Page" class="disabled" onclick="return false;">
-			<i class="icon-fast-forward"></i>
+			<i class="icon icon-fast-forward"></i>
 		</a>
 			*}
 	{/if}
