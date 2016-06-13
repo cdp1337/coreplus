@@ -32,12 +32,24 @@ This proxy element will have an icon and optionally a text label.
 
 Context controls do support a few options, which are specified in the &lt;ul/&gt; markup as data-* attributes.
 
-* data-proxy-icon
-	* Set to the string of the icon name (sans-"icon"), to use for the proxy.
-* data-proxy-text
-	* Set to the string of the proxy to use beside the icon.
-* data-proxy-force
-	* Set to "0" to force no proxy, or "1" to force the proxy.
-* data-proxy-icon-animation
-	* Set to "spin", "bounce", "float", or any of the other supported font-awesome animations
-	to make the proxy icon animated on page load and mouse over.
+### data-proxy-icon
+
+Set to the string of the icon name (sans-"icon"), to use for the proxy.
+
+### data-proxy-text
+
+Set to the string of the proxy to use beside the icon.
+
+### data-proxy-force
+
+Set to "0" to force no proxy, or "1" to force the proxy.
+
+### data-proxy-icon-animation
+
+Set to "spin", "bounce", "float", or any of the other supported font-awesome animations
+to make the proxy icon animated on page load and mouse over.
+
+### data-only-icons
+
+Set to 1 to enable only displaying of icons instead of the default icons+text.
+Also available with the class name "only-icons".

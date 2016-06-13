@@ -25,6 +25,7 @@ $(function(){
 				proxyIcon: $original.data('proxy-icon'),
 				proxyText: $original.data('proxy-text'),
 				proxyForce: $original.data('proxy-force'),
+				onlyIcons: $original.data('only-icons'),
 				position: $original.data('position'),
 				proxyIconAnimation: $original.data('proxy-icon-animation')
 			}, i, proxyclass, useProxy;
@@ -95,10 +96,19 @@ $(function(){
 				$clone.addClass('controls-animated');
 			}
 
-			$clone.addClass('controls-proxy proxy').html('<li><i class="' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
+			$clone.addClass('controls-proxy proxy').html('<li><i class="icon ' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
+
+			// No icons?
+			if(options.onlyIcons == 1){
+				$clone.addClass('only-icons');
+			}
 		}
 		else{
 			$original.addClass('no-proxy');
+			// No icons?
+			if(options.onlyIcons == 1){
+				$original.addClass('only-icons');
+			}
 		}
 
 		if(options.proxyIconAnimation){
