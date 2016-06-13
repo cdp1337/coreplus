@@ -236,6 +236,12 @@ class CLI {
 		}
 	}
 
+	/**
+	 * Print a stylized header to stdout
+	 * 
+	 * @param string $line   The header string to output
+	 * @param int    $maxlen Maximum length of the line
+	 */
 	public static function PrintHeader($line, $maxlen = 90) {
 		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 
@@ -282,22 +288,55 @@ class CLI {
 		}
 	}
 
+	/**
+	 * Print an error to stdout
+	 * 
+	 * @param string $line
+	 */
 	public static function PrintError($line) {
 		self::PrintLine($line, COLOR_ERROR);
 	}
 
+	/**
+	 * Print a success message to stdout
+	 * 
+	 * @param string $line
+	 */
 	public static function PrintSuccess($line) {
 		self::PrintLine($line, COLOR_SUCCESS);
 	}
 
+	/**
+	 * Print a warning to stdout
+	 * 
+	 * @param string $line
+	 */
 	public static function PrintWarning($line) {
 		self::PrintLine($line, COLOR_WARNING);
 	}
 
+	/**
+	 * Print a debug message to stdout
+	 * 
+	 * @param string $line
+	 */
 	public static function PrintDebug($line) {
 		self::PrintLine($line, COLOR_DEBUG);
 	}
 
+	/**
+	 * Print an action start line
+	 * 
+	 * This is usually rendered in the format of 
+	 * 
+	 * ```
+	 * Performing Some Action ...           [ OK ]
+	 * ```
+	 * 
+	 * @param        $line
+	 * @param int    $maxlen
+	 * @param string $suffix
+	 */
 	public static function PrintActionStart($line, $maxlen = 90, $suffix = '...'){
 		$flen = strlen($line) + strlen($suffix) + 8;
 		echo "$line..." . str_repeat(NBSP, max($maxlen - $flen, 1));
@@ -308,6 +347,15 @@ class CLI {
 		}
 	}
 
+	/**
+	 * Print the result of a previous "ActionStart" command.
+	 * 
+	 * If the param is TRUE, 1, or 'OK', then '[  OK  ]' is rendered.
+	 * If the param is FALSE, 0, or 'fail', then '[  !!  ]' is rendered.
+	 * If the param is 'skip', then '[ SKIP ]' is rendered.
+	 * 
+	 * @param string|int|bool $status
+	 */
 	public static function PrintActionStatus($status){
 		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 
@@ -347,36 +395,54 @@ class CLI {
 		}
 	}
 
+	/**
+	 * Print a progress bar and/or a status update on an existing progress bar.
+	 * 
+	 * If an absolute value is set, then the bar is jumped to that new value.
+	 * Any absolute value less than the current will reset the progress bar to a new line.
+	 * 
+	 * A relative percentage can be set via the prefix '+'.
+	 * For example, '+1' will bump the progress bar up by 1%.
+	 * 
+	 * @param $percent
+	 */
 	public static function PrintProgressBar($percent) {
-		static $last = -1;
+		static $last = 0;
+		static $pos  = -1;
+		
+		// Allow "+1" to be sent, to indicate 1 percent more.
+		if(strpos($percent, '+') === 0){
+			$percent = substr($percent, 1);
+			$percent += $last;
+		}
 
 		// This progress bar displays up to 90 characters.
 		// (Which taken into account the 3 characters before, that makes it 87 in length.)
-		$percent = ceil($percent / 100 * 87);
+		$newPos = ceil($percent / 100 * 87);
 
 		// Allow the bar to be reset on a new pass too!
 		if($percent < $last){
-			$last = -1;
+			$pos = -1;
 		}
 
-		if($last === -1){
+		if($pos === -1){
 			echo COLOR_LINE . '| ' . COLOR_RESET . COLOR_SUCCESS . '>' . COLOR_RESET;
-			$last++;
+			$pos++;
+		}
+		
+		// Echo the change in position!
+		if($newPos > $pos){
+			echo COLOR_SUCCESS . str_repeat('=', $newPos - $pos) . COLOR_RESET;
 		}
 
-		if($last == $percent || $last == 87){
-			return;
-		}
-
-		while($last < $percent){
-			++$last;
-			echo COLOR_SUCCESS . '=' . COLOR_RESET;
-		}
-
-		if($percent == 87){
+		if($newPos == 87 && $pos != $newPos){
 			// FIN!
 			echo (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 		}
+		
+		// Record this new position for the next run.
+		$pos = $newPos;
+		$last = $percent;
 
 		if(self::_FlushRequired()){
 			ob_flush();
