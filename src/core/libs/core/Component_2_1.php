@@ -260,10 +260,6 @@ class Component_2_1 {
 		// It must be here because it can't be loaded inline, as Core may not have been ready at that stage.
 		$supplementals = $this->getSupplementalModelList();
 		foreach($supplementals as $supplemental => $filename){
-			if($supplemental == 'modelsupplemental'){
-				// Skip the root class itself.
-				continue;
-			}
 			$classname = substr($supplemental, strpos($supplemental, '_') + 1, -12);
 
 			// Grab the original class so I can override it.
@@ -495,6 +491,32 @@ class Component_2_1 {
 	 *
 	 * These are usually admin-only pages, (but may not be).
 	 *
+	 * Each page is returned with some of its info as a nested array with the
+	 * baseurl of the page as the index.
+	 * 
+	 * The keys returned are:
+	 * 
+	 * title
+	 * : The title of the page, usually a "t:STRING_..." string.
+	 *
+	 * group
+	 * : The parent link this page falls under, usually a "t:STRING_..." string.
+	 * 
+	 * baseurl
+	 * : The relative base URL of this link
+	 * 
+	 * rewriteurl
+	 * : The pretty URL of this link
+	 * 
+	 * admin
+	 * : 1/0 whether this page is marked as an admin page
+	 * 
+	 * selectable
+	 * : 1/0 whether this page is marked as a "user-selectable" page.
+	 * 
+	 * access
+	 * : Access string for this page.
+	 *
 	 * @return array
 	 */
 	public function getPagesDefined(){
@@ -520,7 +542,6 @@ class Component_2_1 {
 			}
 			$title = $subnode->getAttribute('title');
 			$access = $subnode->getAttribute('access');
-			$parent = $subnode->getAttribute('parenturl');
 
 			// Toss this page onto the stack :)
 			$pages[$baseurl] = [
@@ -528,10 +549,34 @@ class Component_2_1 {
 				'group' => $group,
 				'baseurl' => $baseurl,
 				'rewriteurl' => $rewriteurl,
-				'parent' => $parent,
 				'admin' => $admin,
 				'selectable' => $selectable,
 				'access' => $access,
+			];
+		}
+
+		return $pages;
+	}
+
+	public function getPageCreatesDefined(){
+		$pages = [];
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('pages');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('pagecreate') as $subnode) {
+			/** @var DOMElement $subnode */
+
+			$title = $subnode->getAttribute('title');
+			$baseurl = $subnode->getAttribute('baseurl');
+			$description = $subnode->getAttribute('description');
+
+			// Toss this page onto the stack :)
+			$pages[] = [
+				'title'      => $title,
+				'baseurl'    => $baseurl,
+				'description' => $description,
 			];
 		}
 
@@ -736,7 +781,7 @@ class Component_2_1 {
 	public function getSupplementalModelList(){
 		$classes = $this->getClassList();
 		foreach ($classes as $k => $v) {
-			if($k == 'model'){
+			if($k == 'model' || $k == 'modelsupplemental'){
 				// Anything named "Model" is the actual Model object... the base object doesn't have an associated table!
 				unset($classes[$k]);
 			}
