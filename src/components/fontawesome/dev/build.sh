@@ -21,7 +21,7 @@ else
 fi
 
 
-if [ ! -e "$COMPONENTDIR/assets/css/_icons-original.scss" ]; then
+if [ ! -e "$COMPONENTDIR/assets/scss/_icons-original.scss" ]; then
 	# If the icons original isn't present, force a re-download.
 	PVERSION=""
 fi

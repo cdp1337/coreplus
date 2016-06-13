@@ -1,0 +1,9 @@
+.#{$fa-css-prefix}-add:before { content: $fa-var-plus; }
+.#{$fa-css-prefix}-delete:before { content: $fa-var-minus; }
+.#{$fa-css-prefix}-remove:before { content: $fa-var-minus; }
+.#{$fa-css-prefix}-view:before { content: $fa-var-eye; }
+.#{$fa-css-prefix}-directory:before { content: $fa-var-folder; }
+.#{$fa-css-prefix}-move:before { content: $fa-var-bars; }
+.#{$fa-css-prefix}-ok:before { content: $fa-var-check; }
+.#{$fa-css-prefix}-folder-close:before { content: $fa-var-folder; }
+.#{$fa-css-prefix}-exclamation-sign:before { content: $fa-var-exclamation-triangle; }
