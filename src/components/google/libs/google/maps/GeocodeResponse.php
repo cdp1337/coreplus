@@ -178,4 +178,138 @@ class GeocodeResponse {
 	public function getLng($result = 0){
 		return $this->getLatLng($result)[1];
 	}
+
+	/**
+	 * Get the address 1 line from this geocoded result.
+	 * 
+	 * @param int $result
+	 *
+	 * @return null|string
+	 */
+	public function getAddress1($result = 0){
+		if(!isset($this->results[$result])){
+			return null;
+		}
+		
+		$streetNumber = null;
+		$streetName = null;
+		foreach($this->results[$result]['address_components'] as $c){
+			// This is a combination of 'street_number' and 'route'.
+			if(in_array('street_number', $c['types'])){
+				$streetNumber = $c['long_name'];
+			}
+			
+			if(in_array('route', $c['types'])){
+				$streetName = $c['long_name'];
+			}
+		}
+		
+		return $streetNumber . ' ' . $streetName;
+	}
+
+	/**
+	 * Get the address 2 line from this geocoded result.
+	 *
+	 * @param int $result
+	 *
+	 * @return null|string
+	 */
+	public function getAddress2($result = 0){
+		if(!isset($this->results[$result])){
+			return null;
+		}
+
+		foreach($this->results[$result]['address_components'] as $c){
+			if(in_array('subpremise', $c['types'])){
+				// @todo apt, ste, #, WHAT?!?
+				return '#' . $c['long_name'];
+			}
+		}
+		
+		return null;
+	}
+
+	/**
+	 * Get the City from this geocoded result.
+	 *
+	 * @param int $result
+	 *
+	 * @return null|string
+	 */
+	public function getCity($result = 0){
+		if(!isset($this->results[$result])){
+			return null;
+		}
+
+		foreach($this->results[$result]['address_components'] as $c){
+			if(in_array('locality', $c['types'])){
+				return $c['long_name'];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the province/state from this geocoded result.
+	 *
+	 * @param int $result
+	 *
+	 * @return null|string
+	 */
+	public function getProvince($result = 0){
+		if(!isset($this->results[$result])){
+			return null;
+		}
+
+		foreach($this->results[$result]['address_components'] as $c){
+			if(in_array('administrative_area_level_1', $c['types'])){
+				return $c['short_name'];
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the country from this geocoded result.
+	 *
+	 * @param int $result
+	 *
+	 * @return null|string
+	 */
+	public function getCountry($result = 0){
+		if(!isset($this->results[$result])){
+			return null;
+		}
+
+		foreach($this->results[$result]['address_components'] as $c){
+			if(in_array('country', $c['types'])){
+				return $c['short_name'];
+			}
+		}
+
+		return null;
+	}
+	
+	/**
+	 * Get the postal code from this geocoded result.
+	 *
+	 * @param int $result
+	 *
+	 * @return null|string
+	 */
+	public function getPostal($result = 0){
+		if(!isset($this->results[$result])){
+			return null;
+		}
+
+		foreach($this->results[$result]['address_components'] as $c){
+			if(in_array('postal_code', $c['types'])){
+				return $c['short_name'];
+			}
+		}
+
+		return null;
+	}
 }
