@@ -102,6 +102,9 @@ class PageRequest {
 
 	/** @var PageModel The cached pagemodel for this request. */
 	private $_pagemodel = null;
+	
+	/** @var array Cache of the raw page data as returned from the underlying PageModel + Routing system. */
+	private $_rawPageData = [];
 
 	/**
 	 * The view that will be used to render the page.
@@ -136,16 +139,16 @@ class PageRequest {
 		}
 
 		// Split this URL, it'll be used somewhere.
-		$pagedat = PageModel::SplitBaseURL($uri);
+		$this->_rawPageData = PageModel::SplitBaseURL($uri);
 
 		$this->host = SERVERNAME;
 		$this->uri = $uri;
 
-		$this->uriresolved = $pagedat['rewriteurl'];
+		$this->uriresolved = $this->_rawPageData['rewriteurl'];
 		$this->protocol    = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';
-		$this->ext         = $pagedat['extension'];
-		$this->ctype       = $pagedat['ctype'];
-		$this->parameters  = ($pagedat['parameters'] === null) ? [] : $pagedat['parameters'];
+		$this->ext         = $this->_rawPageData['extension'];
+		$this->ctype       = $this->_rawPageData['ctype'];
+		$this->parameters  = ($this->_rawPageData['parameters'] === null) ? [] : $this->_rawPageData['parameters'];
 		$this->referrer    = (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '');
 
 		$this->_resolveMethod();
@@ -224,7 +227,6 @@ class PageRequest {
 	 * Execute the controller and method this page request points to.
 	 */
 	public function execute() {
-
 		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->execute()');
 
 		if($this->isCacheable()){
@@ -245,20 +247,26 @@ class PageRequest {
 		// This includes widgets, script addons, and anything else that needs a CurrentPage.
 		HookHandler::DispatchHook('/core/page/preexecute');
 
-		// Load the underlying controller.
-		$pagedat   = $this->splitParts();
-
 		/** @var View $view The valid view object for this page */
 		$view = $this->getView();
-
-		// The controller must exist first!
-		// (note, the SplitParts logic already takes care of the "Is this a valid controller" logic)
-		if (!(isset($pagedat['controller']) && $pagedat['controller'])) {
+		
+		// If the PageModel + Routing system did not return a valid object, then nothing to do.
+		if($this->_rawPageData === null){
 			$view->error = View::ERROR_NOTFOUND;
 			return;
 		}
+		
+		// Only allow access to pages via their proper rewrite URL.
+		// This is not strictly required, but would be confusing for users who set the rewrite URL to something new,
+		// but can still access the content via the old URL.
+		// This way, the site will redirect them to the new URL and they'll realize that something actually happened.
+		if($this->uriresolved && urldecode($this->uri) != $this->uriresolved){
+			// Indicates that it's access via the rewrite map or base url.
+			\Core\redirect($this->uriresolved);
+			return;
+		}
 
-		$component = Core::GetComponentByController($pagedat['controller']);
+		$component = Core::GetComponentByController($this->_rawPageData['controller']);
 
 		//////////////////////////////////////////////////////////////////////////////
 		///  In this block of logic, either the page is executed and a view returned,
@@ -275,20 +283,20 @@ class PageRequest {
 		}
 
 		// Any method that starts with a "_" is an internal-only method!
-		if ($pagedat['method']{0} == '_') {
+		if ($this->_rawPageData['method']{0} == '_') {
 			$view->error = View::ERROR_NOTFOUND;
 			return;
 		}
 
 		// It also must be a part of the class... obviously
-		if (!method_exists($pagedat['controller'], $pagedat['method'])) {
+		if (!method_exists($this->_rawPageData['controller'], $this->_rawPageData['method'])) {
 			$view->error = View::ERROR_NOTFOUND;
 			return;
 		}
 
 
 		/** @var $controller Controller_2_1 This will be a Controller object. */
-		$controller = Controller_2_1::Factory($pagedat['controller']);
+		$controller = Controller_2_1::Factory($this->_rawPageData['controller']);
 
 		$view->baseurl = $this->getBaseURL();
 		$controller->setView($view);
@@ -350,7 +358,7 @@ class PageRequest {
 		// that shouldn't be called from the public web!
 		foreach(get_class_methods('Controller_2_1') as $parentmethod){
 			$parentmethod = strtolower($parentmethod);
-			if($parentmethod == $pagedat['method']){
+			if($parentmethod == $this->_rawPageData['method']){
 				$view->error = View::ERROR_BADREQUEST;
 				return;
 			}
@@ -382,7 +390,7 @@ class PageRequest {
 			}
 		}
 
-		$return = call_user_func(array($controller, $pagedat['method']));
+		$return = call_user_func(array($controller, $this->_rawPageData['method']));
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
 			$view->error = $return;
@@ -547,16 +555,16 @@ class PageRequest {
 		){
 			// Try to guess the templatename if it wasn't set.
 			// This
-			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
-			$view->templatename = strtolower('/pages/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+			$cnameshort           = (strpos($this->_rawPageData['controller'], 'Controller') == strlen($this->_rawPageData['controller']) - 10) ? substr($this->_rawPageData['controller'], 0, -10) : $this->_rawPageData['controller'];
+			$view->templatename = strtolower('/pages/' . $cnameshort . '/' . $this->_rawPageData['method'] . '.tpl');
 		}
 		elseif(
 			$view->error == View::ERROR_NOERROR &&
 			$view->contenttype == View::CTYPE_XML &&
 			$view->templatename === null
 		){
-			$cnameshort           = (strpos($pagedat['controller'], 'Controller') == strlen($pagedat['controller']) - 10) ? substr($pagedat['controller'], 0, -10) : $pagedat['controller'];
-			$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $pagedat['method'] . '.xml.tpl'));
+			$cnameshort           = (strpos($this->_rawPageData['controller'], 'Controller') == strlen($this->_rawPageData['controller']) - 10) ? substr($this->_rawPageData['controller'], 0, -10) : $this->_rawPageData['controller'];
+			$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $this->_rawPageData['method'] . '.xml.tpl'));
 		}
 
 		// In addition to the autogeneration, also support the page_template from the datastore.
