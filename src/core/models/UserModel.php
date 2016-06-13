@@ -33,7 +33,7 @@ class UserModel extends Model {
 			'type'       => Model::ATT_TYPE_STRING,
 			'maxlength'  => 64,
 			'null'       => false,
-			'formtype' => 'disabled',
+			'formtype' => 'text',
 			'validation' => ['this', 'validateEmail'],
 			'required'   => true,
 		],
@@ -917,6 +917,66 @@ class UserModel extends Model {
 		// TESTING
 		//error_log($email->renderBody());
 		$email->send();
+	}
+
+	/**
+	 * Get an array of the editable columns, as per the site configuration
+	 * 
+	 * @return array
+	 */
+	public function getEditableFields(){
+		$e = \ConfigHandler::Get('/user/edit/form_elements');
+		if(trim($e) == ''){
+			$elements = [];
+		}
+		else{
+			$elements = explode('|', $e);	
+		}
+
+		$r = [];
+		foreach($elements as $k){
+			if(!$k){
+				// Skip blank elements that can be caused by string|param|foo| or empty strings.
+				continue;
+			}
+			
+			$r[$k] = [
+				'title' => t('STRING_MODEL_USERMODEL_' . strtoupper($k)),
+				'value' => $this->get($k),
+				'column' => $this->getColumn($k),
+			];
+		}
+		
+		// If the current user is an admin, also tack on any additional field.
+		if(\Core\user()->checkAccess('/user/users/manage')){
+			$userSchema = UserModel::GetSchema();
+			foreach($userSchema as $k => $dat){
+				if(
+					$dat['type'] == Model::ATT_TYPE_UUID ||
+					$dat['type'] == Model::ATT_TYPE_UUID_FK ||
+					$dat['type'] == Model::ATT_TYPE_ID ||
+					$dat['type'] == Model::ATT_TYPE_ID_FK ||
+					(isset($dat['formtype']) && $dat['formtype'] == 'disabled') ||
+					(isset($dat['form']) && isset($dat['form']['type']) && $dat['form']['type'] == 'disabled')
+				){
+					// Skip these columns.
+					continue;
+				}
+				
+				if(isset($r[$k])){
+					// Skip anything already added to the return array.
+					continue;
+				}
+				
+				// Add it to the bottom of the return stack!
+				$r[$k] = [
+					'title' => t('STRING_MODEL_USERMODEL_' . strtoupper($k)),
+					'value' => $this->get($k),
+					'column' => $this->getColumn($k),
+				];
+			}
+		}
+		return $r;
 	}
 
 	/**
