@@ -358,7 +358,7 @@ class MarkdownBrowserController extends Controller_2_1{
 		}
 		
 		// Append the file extension if one was requested.
-		if($request->ext == ''){
+		if($request->ext == '' || $request->ext == 'html'){
 			$return['url'] = $requestedFile;
 			$file = \Core\Filestore\Factory::File($topPath . $requestedFile . '.md');
 		}

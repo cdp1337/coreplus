@@ -21,7 +21,7 @@
 		<page baseurl="/markdownbrowser/admin" title="t:STRING_MARKDOWNBROWSER_ADMIN" admin="1" access="g:admin" group="Content"/>
 	</pages>
 	<hooks>
-		<hook name="/cron/hourly" call="MarkdownBrowserController::_AutoRegisterFiles"/>
+		<hook name="/cron/5-minute" call="MarkdownBrowserController::_AutoRegisterFiles"/>
 	</hooks>
 	<files>
 		<file filename="CHANGELOG" md5="ae5052b9cf15e8ec16797df8c09238ef"/>
