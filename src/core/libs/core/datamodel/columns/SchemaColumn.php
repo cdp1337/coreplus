@@ -297,6 +297,11 @@ class SchemaColumn {
 		
 		$el = \FormElement::Factory($type, $attributes);
 		
+		// Ensure that the form element's "parent" is the same as this column's parent.
+		// If it's null, then it'll be null there! (which is fine.)
+		// Remember since this is an object, only the REFERENCE will be used.
+		$el->parent = $this->parent;
+		
 		return $el;
 	}
 
