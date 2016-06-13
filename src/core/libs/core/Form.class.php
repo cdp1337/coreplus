@@ -458,6 +458,9 @@ class FormElement {
 	public $persistent = true;
 
 	public $classnames = array();
+	
+	/** @var null|Model If this form element comes from a Model, this is a link back to that model. */
+	public $parent = null;
 
 	public function __construct($atts = null) {
 
@@ -516,6 +519,13 @@ class FormElement {
 		}
 	}
 
+	/**
+	 * Get the requested attribute from this form element.
+	 * 
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
 	public function get($key) {
 		$key = strtolower($key);
 
@@ -641,14 +651,33 @@ class FormElement {
 		else return $v;
 	}
 
+	/**
+	 * Simple check to see if there is an error set on this form element.
+	 * 
+	 * True: there is an error.
+	 * False: no error present.
+	 * 
+	 * @return bool
+	 */
 	public function hasError() {
 		return ($this->_error);
 	}
 
+	/**
+	 * Get the error string, or null if there is no error.
+	 * 
+	 * @return string|false
+	 */
 	public function getError() {
 		return $this->_error;
 	}
 
+	/**
+	 * Set the error message for this form element, optionally displaying it to the browser.
+	 * 
+	 * @param string $err
+	 * @param bool   $displayMessage
+	 */
 	public function setError($err, $displayMessage = true) {
 		$this->_error = $err;
 		if ($err && $displayMessage){
@@ -664,6 +693,11 @@ class FormElement {
 		return 'forms/elements/' . strtolower(get_class($this)) . '.tpl';
 	}
 
+	/**
+	 * Render this form element and return the resulting HTML as a string
+	 * 
+	 * @return string
+	 */
 	public function render() {
 
 		// If multiple is set, but the name does not have a [] at the end.... add it.
@@ -735,26 +769,6 @@ class FormElement {
 	 */
 	public function getInputAttributes() {
 		$out = '';
-
-		if(isset($this->_attributes['source']) && !isset($this->_attributes['options'])){
-			// Validation exists... check it.
-			$source = $this->_attributes['source'];
-
-
-			if(
-				// Allow an array of object, method to be called.
-				// This is generally only used with the Model's "this::foo" construct.
-				(is_array($source) && sizeof($source) == 2) ||
-
-				// Allow the source to be specified as a static public function
-				strpos($source, '::') !== false
-			){
-				// the method can either be true, false or a string.
-				// Only if true is returned will that be triggered as success.
-				$this->_attributes['options'] = call_user_func($source);
-			}
-		}
-
 		foreach ($this->_validattributes as $k) {
 			if (
 				$k == 'required' ||
@@ -1249,7 +1263,10 @@ class Form extends FormGroup {
 		}
 
 		foreach ($s as $k => $v) {
-			$el = $model->getColumn($k)->getAsFormElement();
+			$c = $model->getColumn($k);
+			// The column may not exist if this key is an alias to another column!
+			$el = $c ? $c->getAsFormElement() : null;
+			
 			if($el !== null){
 				// Update the name as it will need to be prefixed with this model's prefix.
 				$el->set('name', $prefix . '[' . $k . ']');
