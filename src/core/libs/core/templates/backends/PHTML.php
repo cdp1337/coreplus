@@ -157,6 +157,15 @@ class PHTML implements Templates\TemplateInterface {
 	}
 
 	/**
+	 * Get the full filename of this template
+	 *
+	 * @return string|null
+	 */
+	public function getFilename(){
+		return $this->_filename;
+	}
+
+	/**
 	 * Scan through this template file and see if it has optional stylesheets that the admin can select to enable.
 	 *
 	 * @return boolean

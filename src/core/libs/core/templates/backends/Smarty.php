@@ -104,7 +104,8 @@ class Smarty implements Templates\TemplateInterface {
 		//if (strpos($template, ROOT_PDIR) !== 0 && $template{0} == '/') $template = substr($template, 1);
 
 		try{
-			return $this->getSmarty()->fetch($file, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+			// $template = null, $cache_id = null, $compile_id = null, $parent = null
+			return $this->getSmarty()->fetch($file, $cache_id, $compile_id, $parent);
 		}
 		catch(\SmartyException $e){
 			throw $e;
@@ -124,9 +125,6 @@ class Smarty implements Templates\TemplateInterface {
 		$cache_id = null;
 		$compile_id = null;
 		$parent = null;
-		$display = true;
-		$merge_tpl_vars = true;
-		$no_output_filter = false;
 
 		// Resolve this template.
 		if($template === null){
@@ -137,7 +135,7 @@ class Smarty implements Templates\TemplateInterface {
 		}
 
 		try{
-			return $this->getSmarty()->fetch($template, $cache_id, $compile_id, $parent, $display, $merge_tpl_vars, $no_output_filter);
+			return $this->getSmarty()->display($template, $cache_id, $compile_id, $parent);
 		}
 		catch(\SmartyException $e){
 			throw new Templates\Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
@@ -244,6 +242,15 @@ class Smarty implements Templates\TemplateInterface {
 	 */
 	public function getBasename(){
 		return basename($this->_filename);
+	}
+
+	/**
+	 * Get the full filename of this template
+	 *
+	 * @return string|null
+	 */
+	public function getFilename(){
+		return $this->_filename;
 	}
 
 	/**

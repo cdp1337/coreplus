@@ -46,25 +46,6 @@ interface TemplateInterface {
 	public function getVariable($varname);
 
 	/**
-	 * Assign a variable into the template
-	 *
-	 * This is required because templates are sandboxed from the rest of the application.
-	 *
-	 * @param array|string $tpl_var the template variable name(s)
-	 * @param mixed        $value   the value to assign
-	 */
-	public function assign($tpl_var, $value = null);
-
-	/**
-	 * Set a template filename to be remembered if fetch or render are called with null parameters.
-	 *
-	 * @param string $template Filename to remember for this template.
-	 *
-	 * @return void
-	 */
-	public function setFilename($template);
-
-	/**
 	 * Get the basename of this template
 	 *
 	 * @return string
@@ -72,11 +53,11 @@ interface TemplateInterface {
 	public function getBasename();
 
 	/**
-	 * Scan through this template file and see if it has optional stylesheets that the admin can select to enable.
-	 *
-	 * @return boolean
+	 * Get the full filename of this template
+	 * 
+	 * @return string|null
 	 */
-	public function hasOptionalStylesheets();
+	public function getFilename();
 
 	/**
 	 * Get the list of optional stylesheets in this template.
@@ -86,13 +67,6 @@ interface TemplateInterface {
 	 * @return array
 	 */
 	public function getOptionalStylesheets();
-
-	/**
-	 * Scan through this template file and see if it has widgetareas contained within.
-	 *
-	 * @return boolean
-	 */
-	public function hasWidgetAreas();
 
 	/**
 	 * Get an array of widget areas defined on this template.
@@ -122,6 +96,39 @@ interface TemplateInterface {
 	 * @return \View
 	 */
 	public function getView();
+
+	/**
+	 * Scan through this template file and see if it has optional stylesheets that the admin can select to enable.
+	 *
+	 * @return boolean
+	 */
+	public function hasOptionalStylesheets();
+
+	/**
+	 * Scan through this template file and see if it has widgetareas contained within.
+	 *
+	 * @return boolean
+	 */
+	public function hasWidgetAreas();
+
+	/**
+	 * Assign a variable into the template
+	 *
+	 * This is required because templates are sandboxed from the rest of the application.
+	 *
+	 * @param array|string $tpl_var the template variable name(s)
+	 * @param mixed        $value   the value to assign
+	 */
+	public function assign($tpl_var, $value = null);
+
+	/**
+	 * Set a template filename to be remembered if fetch or render are called with null parameters.
+	 *
+	 * @param string $template Filename to remember for this template.
+	 *
+	 * @return void
+	 */
+	public function setFilename($template);
 
 	/**
 	 * Set the registered view for this template, usually set from the View.
