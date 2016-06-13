@@ -33,4 +33,73 @@ class FormSelectInput extends FormElement {
 		$this->_attributes['class'] = 'formelement formselect';
 		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'tabindex', 'rows', 'cols');
 	}
+
+	/**
+	 * Get the requested attribute from this form element.
+	 *
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function get($key) {
+		$key = strtolower($key);
+		
+		// Allow options to be pulled dynamically from the source when set.
+		if($key == 'options' && !isset($this->_attributes['options']) && isset($this->_attributes['source'])){
+			// Store this output as the options value so that it doesn't need to be called multiple times.
+			$this->_attributes['options'] = $this->_parseSourceAttribute();
+		}
+		
+		// Carry on!
+		return parent::get($key);
+	}
+
+	/**
+	 * Parse the source string and return the resulting output from the method/function set.
+	 * 
+	 * @return array
+	 */
+	private function _parseSourceAttribute(){
+		// Select options support a source attribute to be used if there are no options otherwise.
+		// this allows the options to be pulled from a dynamic function.
+		if(isset($this->_attributes['source'])){
+			$source = $this->_attributes['source'];
+
+			if( is_array($source) && sizeof($source) == 2 ){
+				// Allow an array of object, method to be called.
+				$options = call_user_func($source);
+			}
+			elseif(strpos($source, 'this::') === 0){
+				// This object starts with "this", which should point back to the original Model.
+				// This link is now established with the parent object.
+				if($this->parent instanceof Model){
+					$m = substr($source, 6);
+					$options = call_user_func([$this->parent, $m]);
+				}
+				else{
+					trigger_error('"source => ' . $source . '" requested on ' . $this->get('name') . ' when parent was not defined!  Please only use source when creating a form element from a valid model object.');
+					$options = false;
+				}
+			}
+			elseif(strpos($source, '::') !== false){
+				// This is a static binding to some model otherwise, great!
+				$options = call_user_func($source);
+			}
+			else{
+				// ..... umm
+				trigger_error('Invalid source attribute for ' . $this->get('name') . ', please ensure it is set to a callback of a valid class::method!');
+				$options = false;
+			}
+
+			if($options === false){
+				$options = [];
+			}
+		}
+		else{
+			// ???......
+			$options = [];
+		}
+		
+		return $options;
+	}
 }
