@@ -17,6 +17,9 @@
 		<hook name="/cron/daily" call="SecuritySuite\StopForumSpam::HookDaily"/>
 		<hook name="/cron/daily" call="SecuritySuite\IpBlacklistHelper::CleanupHook"/>
 	</hooks>
+	<widgets>
+		<widget baseurl="/security/userlogins" installable="User" title="User Login Attempts"/>
+	</widgets>
 	<pages>
 		<page baseurl="/security/sitepassword" title="t:STRING_SIMPLE_SITE_PASSWORD" access="g:admin" group="t:STRING_CONFIGURE" admin="1"/>
 		<page access="p:/security/viewlog" admin="1" baseurl="/security/log" title="t:STRING_SECURITY_LOG" group="t:STRING_SECURITY"/>
@@ -29,17 +32,18 @@
 		<permission key="/security/viewlog"/>
 	</permissions>
 	<view searchdir="templates">
-		<file filename="templates/pages/security/blacklistip.tpl" md5="4b6c59eaa6f0fed5578af32b0c5b4ba9"/>
+		<file filename="templates/pages/security/blacklistip.tpl" md5="bdd942e386231f5b71e29f540700d461"/>
 		<file filename="templates/pages/security/blacklistip_add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/blacklistip_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/security/log.tpl" md5="a1b15c4ff3c1937fbf9916c1e6a44f72"/>
+		<file filename="templates/pages/security/log.tpl" md5="22ea4fc32aae7f54374a235bef45ab50"/>
 		<file filename="templates/pages/security/sitepassword.tpl" md5="44e8ee8b73a89a53209e8d39f066c352"/>
-		<file filename="templates/pages/security/spam_keywords.tpl" md5="e55ac368f605fc2a2f386f29d335e86d"/>
+		<file filename="templates/pages/security/spam_keywords.tpl" md5="0964226c8dad6dae37d7566aac367ca5"/>
 		<file filename="templates/pages/security/spam_train_1.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/spam_train_2.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
 		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="0982690d45c188345c5a9537305d7ace"/>
 		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="f2a77ed2fd85a8daceaf2111ef044278"/>
+		<file filename="templates/widgets/security/userlogins.tpl" md5="b184c2462058eaa5c37c6943b39f0c85"/>
 	</view>
 	<description>
 		Collection of security utilities for your site.
@@ -47,7 +51,7 @@
 	</description>
 	<files>
 		<file filename="CHANGELOG" md5="eba030d357d20f4c3cb531047693a81e"/>
-		<file filename="controllers/SecurityController.php" md5="4f31078a130714a4a1e7d4a43991e9f8">
+		<file filename="controllers/SecurityController.php" md5="f20afeff9fe1057fba042c50b56133e8">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="controllers/WPHoneypotController.php" md5="3acd01b4e34da133ad7b433b1c8b2ac2">
@@ -85,6 +89,9 @@
 			<class name="sfsBlacklistModel"/>
 		</file>
 		<file filename="upgrades/120_to_130.php" md5="b7175159159ee66569a68c74b782d528"/>
+		<file filename="widgets/SecurityWidget.php" md5="7d8283d7bac7fe5cc1ca8490f3719a8f">
+			<class name="SecurityWidget"/>
+		</file>
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
