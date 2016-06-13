@@ -339,7 +339,7 @@ class Widget_2_1 {
 		}
 
 		// Otherwise...
-		$view->addControl('Page Widgets', '/admin/widgets?baseurl=' . $page->get('baseurl'), 'cog');
+		$view->addControl('Page Widgets', '/widget/admin?template=' . $tmplName, 'cubes');
 		return true;
 	}
 
