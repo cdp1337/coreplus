@@ -16,7 +16,8 @@ $('body').on('click', '.ajax-link', function(){
 		modal: true,
 		title: title,
 		width: width + 'px',
-		position: 'center',
+		// This has been moved up here because it's breaking on the newest version of jQuery when on load. 
+		position: { my: "center top", at: "center top+50", of: window },
 		close: function(){ $(this).remove(); }
 	});
 
@@ -24,7 +25,9 @@ $('body').on('click', '.ajax-link', function(){
 		$link.attr('href'),
 		function(responseText){
 			// This is required to recenter the window.
-			$window.dialog('option', 'position', { my: "center", at: "center", of: window });
+			//$window.dialog('option', 'position', { my: "center", at: "center", of: window });
+			// This is commented out because it seems to be breaking on the newest version of jQuery,
+			// at least when on the /mediamanagernavigator system.
 		}
 	);
 
