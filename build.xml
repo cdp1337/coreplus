@@ -126,7 +126,7 @@
 	</target>
 
 	<target name="phploc" depends="clean_src" description="Measure project size using PHPLOC">
-		<exec executable="phploc">
+		<exec executable="/opt/php/phploc">
 			<arg value="--log-csv"/>
 			<arg value="${basedir}/build/logs/phploc.csv"/>
 			<arg path="${basedir}/src"/>
@@ -181,7 +181,7 @@
 	</target>
 
 	<target name="phpcpd" depends="clean_src" description="Find duplicate code using PHPCPD">
-		<exec executable="phpcpd">
+		<exec executable="/opt/php/phpcpd.phar">
 			<arg value="--log-pmd"/>
 			<arg value="${basedir}/build/logs/pmd-cpd.xml"/>
 			<arg path="${basedir}/src"/>
@@ -210,7 +210,7 @@
 	</target>
 	
 	<target name="phpdoc" depends="prepare_build,clean_src" description="Generate phpDoc Documentation on the product">
-		<exec executable="phpdoc" failonerror="false">
+		<exec executable="/opt/php/phpDocumentor.phar" failonerror="false">
 			<!-- Scan this directory (source code) -->
 			<arg value="-d"/>
 			<arg value="${basedir}/src"/>
@@ -235,7 +235,7 @@
 		</exec>
 	</target>
 	<target name="phpdoc-ci" depends="clean_build,prepare_build,clean_src" description="Generate phpDoc Documentation on the product (CI Compatible version)">
-		<exec executable="phpdoc" failonerror="false">
+		<exec executable="/opt/php/phpDocumentor.phar" failonerror="false">
 			<!-- Scan this directory (source code) -->
 			<arg value="-d"/>
 			<arg value="${basedir}/src"/>
