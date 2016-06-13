@@ -1,6 +1,9 @@
 <?php
 /**
  * Class file for the model GeoAddressModel
+ * 
+ * Will automatically try to geocode the result to get the most updated lat/lng.
+ * If this is undesirable, set "__skip_geocode" to true and that process will be skipped completely.
  *
  * @package Geographic Codes
  * @author Charlie Powell <charlie@evalagency.com>
@@ -79,11 +82,6 @@ class GeoAddressModel extends Model {
 				'type' => 'select',
 			),
 		),
-		'beansbooks_id' => [
-			'type' => Model::ATT_TYPE_INT,
-			'comment' => 'If the beansbooks module is installed, this may be the beans ID of the customer',
-			'formtype' => 'disabled',
-		],
 		'lat' => array(
 			'type' => Model::ATT_TYPE_FLOAT,
 			'precision' => '17,11',
@@ -137,10 +135,10 @@ class GeoAddressModel extends Model {
 
 	public function save($defer = false){
 		// Quick check to see if this address is actually populated or not.
-		if( $this->_data['address1'] == '' && $this->_data['postal'] == '' ){
+		if( $this->get('address1') == '' && $this->get('postal') == '' ){
 			if($this->exists()){
 				$ret = $this->delete();
-				$this->_data['id'] = null;
+				$this->set('id', null);
 				return $ret;
 			}
 			else{
@@ -150,7 +148,7 @@ class GeoAddressModel extends Model {
 		}
 		elseif($this->changed()){
 
-			if(Core::IsLibraryAvailable('GoogleMaps')){
+			if(Core::IsLibraryAvailable('GoogleMaps') && !$this->get('__skip_geocoding')){
 				// If google maps are available, use that to geocode this address.
 				$req = new Google\Maps\GeocodeRequest();
 				$req->address1 = $this->get('address1');
@@ -271,100 +269,5 @@ class GeoAddressModel extends Model {
 		$lines[] = $this->getCPPFormatted();
 
 		return implode("<br/>\n", $lines);
-	}
-
-	/**
-	 * Get the BeansBooks keys for this object
-	 */
-	public function getBeansKeys(){
-		return [
-			'standard' => 'label',
-			'address1' => 'address1',
-			'address2' => 'address2',
-			'city'     => 'city',
-			'state'    => 'province',
-			'zip'      => 'postal',
-			'country'  => 'country',
-			'id'       => 'beansbooks_id',
-		];
-	}
-
-	/**
-	 * Populate this model with data directly from BeansBooks
-	 *
-	 * @param $address
-	 *
-	 * @throws Exception
-	 */
-	public function setFromBeansObject($address) {
-		/** @noinspection PhpUndefinedNamespaceInspection This method is only available if the BeansBooks module is installed. */
-		if(!(
-			$address instanceof \BeansBooks\Objects\CustomerAddress ||
-			$address instanceof \BeansBooks\Objects\VendorAddress
-		)){
-			throw new Exception('Please only set an address from a BeansBooks CustomerAddress or VendorAddress.');
-		}
-
-		$keys = $this->getBeansKeys();
-
-		foreach($keys as $rk => $lk){
-			$rv = $address->get($rk);
-
-			if($lk == 'state'){
-				if(strlen($rv) > 3){
-					// They typed in the state name here?
-					// This needs to be the state code.
-					$province = GeoProvinceModel::Find(['country = ' . $address->get('country'), 'name = ' . $rv], 1);
-					if($province){
-						$rv = $province->get('code');
-					}
-				}
-			}
-
-			$this->set($lk, $rv);
-		}
-	}
-
-	/**
-	 * Populate BeansBooks with data from this model, (and sync back any changes afterwards too).
-	 *
-	 * This requires an additional array because beans has additional metainfo about the address than the GeoAddressModel stores,
-	 * such as customer or vendor associated with the address.
-	 *
-	 * As such, a second array is required to be passed in to provide any of this metadata.
-	 *
-	 * @param $address \BeansBooks\Objects\CustomerAddress|\BeansBooks\Objects\VendorAddress
-	 * @param $additionalData array
-	 *
-	 * @throws Exception
-	 */
-	public function setToBeansObject($address, $additionalData = []){
-		/** @noinspection PhpUndefinedNamespaceInspection This method is only available if the BeansBooks module is installed. */
-		if(!(
-			$address instanceof \BeansBooks\Objects\CustomerAddress ||
-			$address instanceof \BeansBooks\Objects\VendorAddress
-		)){
-			throw new Exception('Please only set an address to a BeansBooks CustomerAddress or VendorAddress.');
-		}
-
-		if($this->changed() || $this->get('beansbooks_id') == ''){
-			// Something changed or it just doesn't exist in Beans, save it!
-			// This is to save page execution time for saves that are saving something other than this field.
-			$data = $additionalData;
-			$keys = $this->getBeansKeys();
-
-			foreach($keys as $rk => $lk){
-				$data[$rk] = $this->get($lk);
-			}
-
-			$address->setFromArray($data);
-			if($address->exists()){
-				$address->update();
-			}
-			else{
-				$address->create();
-				$this->set('beansbooks_id', $address->get('id'));
-			}
-		}
 	}
 }

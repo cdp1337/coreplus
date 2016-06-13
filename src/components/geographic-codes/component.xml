@@ -6,17 +6,24 @@
 	</description>
 	<forms>
 		<formelement name="geoaddress" class="GeoAddressFormInput"/>
+		<formelement name="geoprovince" class="GeoProvinceFormInput"/>
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
 		<file filename="CHANGELOG" md5="6b4b7fb9bf2d40a93d517a92ba66b37c"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
+		<file filename="assets/scss/geographic-codes.scss" md5="3f365b9b9738e830d8fa81cf03d87aa8"/>
 		<file filename="classes/GeoAddressFormInput.php" md5="70d2051369a72c2309fdbfd64de550e0">
 			<class name="GeoAddressFormInput"/>
+		</file>
+		<file filename="classes/GeoProvinceFormInput.php" md5="e8678cb121501bf6dffbace6cc414cf6">
+			<class name="GeoProvinceFormInput"/>
 		</file>
 		<file filename="controllers/GeoAddressController.php" md5="91792353e30098794c50b62a13a930e3">
 			<controller name="GeoAddressController"/>
 		</file>
+		<file filename="datafiles/cities_bulk_ca.sql" md5="adf8ca71d11458748402d2056e345fa3"/>
+		<file filename="datafiles/cities_bulk_us.sql" md5="fda8d150d356544dc57fab033702a5e7"/>
 		<file filename="datafiles/countries.sql" md5="a48225d34a0eaeac9d43a391449af8f4"/>
 		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
@@ -24,6 +31,7 @@
 		<file filename="geocode/IPLookup.php" md5="7e5765098bc146091e884467cba6b79b">
 			<class name="geocode\IPLookup"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="e0413b837b6f3822c0f91913ae3b37fc"/>
 		<file filename="libs/GeoIp2/CHANGELOG.md" md5="15e498e9e60e23fc6cad82a7c8b6962a"/>
 		<file filename="libs/GeoIp2/LICENSE" md5="fbc093901857fcd118f065f900982c24"/>
 		<file filename="libs/GeoIp2/README.md" md5="6a41f6a99dac9c2e1e003e388f9b4871"/>
@@ -162,8 +170,11 @@
 		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
 		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
 		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="e0ac2127075e2f37af831f198802ab46">
+		<file filename="models/GeoAddressModel.php" md5="a0da281cb23f9f4ac674c8a7ca335829">
 			<class name="GeoAddressModel"/>
+		</file>
+		<file filename="models/GeoCiyModel.php" md5="b3c12fecc2c9700ed05d5fef0e6748c4">
+			<class name="GeoCityModel"/>
 		</file>
 		<file filename="models/GeoCountryModel.php" md5="c64d35d1b532b3b1666b676c4a94289a">
 			<class name="GeoCountryModel"/>
@@ -173,7 +184,11 @@
 		</file>
 		<file filename="smarty-plugins/function.geoiplookup.php" md5="617dfb67780551203eb56260d702c99f"/>
 	</files>
-	<assets/>
+	<assets>
+		<file filename="assets/css/geographic-codes.css" md5="487b7f3d62f0b4ac7095921ee0c827f4"/>
+		<file filename="assets/css/geographic-codes.css.map" md5="115900926f461af9bded0ea0038da843"/>
+		<file filename="assets/css/geographic-codes.min.css" md5="48e52d7aac6cf8114d325f2bd09a91e4"/>
+	</assets>
 	<install>
 		<sql file="datafiles/countries_bulk.sql"/>
 		<sql file="datafiles/provinces_bulk.sql"/>
@@ -197,6 +212,7 @@
 	</upgrades>
 	<view>
 		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>
+		<file filename="templates/forms/elements/geoprovinceforminput.tpl" md5="81293c83083068a69db2dedf7b4db16c"/>
 	</view>
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
