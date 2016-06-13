@@ -7,27 +7,18 @@
 
 ROOTPDIR="$(readlink -f $(dirname $0))"
 
-
-
-# Set this to 1 if you are currently developing the build system.
-# This will skip the download, (since you are working on those files...)
-BUILDDEV=0
-
-
 if [ "$(whoami)" != "root" ]; then
 	echo "Please run this script with sudo"
 	exit 1
 fi
 
 
-if [ "$BUILDDEV" == "0" ]; then
-	# Download a new version!
-	echo "Retrieving basescript bootstrap script..."
-	if [ ! -e "/opt/eval" ]; then
-		mkdir -p "/opt/eval"
-	fi
-	wget -q http://eval.bz/resources/basescript.sh -O "/opt/eval/basescript.sh"
+# Download a new version!
+echo "Retrieving basescript bootstrap script..."
+if [ ! -e "/opt/eval" ]; then
+	mkdir -p "/opt/eval"
 fi
+wget -q https://eval.agency/resources/basescript.sh -O "/opt/eval/basescript.sh"
 echo "Loading basescript..."
 source "/opt/eval/basescript.sh"
 
@@ -48,23 +39,25 @@ if [ "$OS" == "ubuntu" ]; then
 elif [ "$OSFAMILY" == "debian" ]; then
 	if [ "$OSVERSIONMAJ" -ge 9 ]; then
 		# Use the native driver in stretch and above.
-		install ant php-pear php5-xsl php5-dev libxml-xpath-perl ruby pngcrush php5-mysqlnd php5-mcrypt php5-curl php5-gd \
-		    libapache2-mod-php5 mariadb-client-10.0 mariadb-server-10.0 php5-xdebug graphviz
+		# Also install PHP 7.x instead of 5.x by default!
+		install ant php-pear php7.0-xsl php7.0-dev libxml-xpath-perl ruby pngcrush php7.0-mysql php7.0-mcrypt php7.0-curl php7.0-gd \
+		    libapache2-mod-php7.0 mariadb-client-10.0 mariadb-server-10.0 php-xdebug graphviz
 		a2enmod rewrite
-		a2enmod php5
+		a2enmod php7.0
 
-		if [ ! -e "/etc/php5/apache2/conf.d/20-xdebug.ini" ]; then
+		if [ ! -e "/etc/php/7.0/mods-available/xdebug.ini" ]; then
 			# Ensure that xdebug is linked to the correct directory, (it wasn't there by default)
-			cat > /etc/php5/mods-available/xdebug.ini << EOD
+			cat > /etc/php/7.0/mods-available/xdebug.ini << EOD
 zend_extension=xdebug.so
 xdebug.remote_enable=true
 xdebug.remote_port=9000
 xdebug.remote_autostart=1
 EOD
-			ln -s /etc/php5/mods-available/xdebug.ini /etc/php5/apache2/conf.d/20-xdebug.ini
-			ln -s /etc/php5/mods-available/xdebug.ini /etc/php5/cli/conf.d/20-xdebug.ini
+			ln -s /etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/apache2/conf.d/20-xdebug.ini
+			ln -s /etc/php/7.0/mods-available/xdebug.ini /etc/php/7.0/cli/conf.d/20-xdebug.ini
 		fi
 	else
+		# Debian 8 (Jessie) and lower.
 		install ant php-pear php5-xsl php5-dev libxml-xpath-perl rubygems pngcrush
 	fi
 
@@ -112,8 +105,9 @@ pear channel-update pear.php.net
 pear channel-discover pear.pdepend.org
 pear channel-discover pear.phpmd.org
 #pear channel-discover pear.phpqatools.org
-pear channel-discover pear.phpdoc.org
-pear channel-update pear.phpdoc.org
+#pear channel-discover pear.phpdoc.org
+#pear channel-update pear.phpdoc.org
+
 
 printheader "Installing PEAR packages"
 
@@ -146,51 +140,52 @@ if [ "$?" == "0" ]; then
 	pear uninstall pear.phpunit.de/phpcpd
 fi
 
+
+## XHProf has not been supported in some time, removing from all deployments!
 # Check and see if xhprof is installed.
 # This is extremely useful in development!
-pecl info xhprof 1>/dev/null
-if [ "$?" == "1" ]; then
-	pecl install channel://pecl.php.net/xhprof-0.9.4
-	if [ ! -e "/etc/php5/mods-available/xhprof.ini" ]; then
-		cat > /etc/php5/mods-available/xhprof.ini << EOD
-[xhprof]
-extension=xhprof.so
-xhprof.output_dir="/var/tmp/xhprof"
-EOD
-		cat > /etc/apache2/conf-available/xhprof.conf << EOD
-Alias /xhprof /usr/share/php/xhprof_html
-
-<Directory /usr/share/php/xhprof_html>
-    DirectoryIndex index.php
-
-    <IfModule mod_php5.c>
-        <IfModule mod_mime.c>
-            AddType application/x-httpd-php .php
-        </IfModule>
-        <FilesMatch ".+\.php$">
-            SetHandler application/x-httpd-php
-        </FilesMatch>
-
-        php_flag magic_quotes_gpc Off
-        php_flag track_vars On
-        php_flag register_globals Off
-    </IfModule>
-
-</Directory>
-EOD
-		ln -s /etc/php5/mods-available/xhprof.ini /etc/php5/apache2/conf.d/20-xhprof.ini
-		ln -s /etc/php5/mods-available/xhprof.ini /etc/php5/cli/conf.d/20-xhprof.ini
-		ln -s /etc/apache2/conf-available/xhprof.conf /etc/apache2/conf-enabled/xhprof.conf
-	fi
-fi
+#pecl info xhprof 1>/dev/null
+#if [ "$?" == "1" ]; then
+#	pecl install channel://pecl.php.net/xhprof-0.9.4
+#	if [ ! -e "/etc/php5/mods-available/xhprof.ini" ]; then
+#		cat > /etc/php5/mods-available/xhprof.ini << EOD
+#[xhprof]
+#extension=xhprof.so
+#xhprof.output_dir="/var/tmp/xhprof"
+#EOD
+#		cat > /etc/apache2/conf-available/xhprof.conf << EOD
+#Alias /xhprof /usr/share/php/xhprof_html
+#
+#<Directory /usr/share/php/xhprof_html>
+#    DirectoryIndex index.php
+#
+#    <IfModule mod_php5.c>
+#        <IfModule mod_mime.c>
+#            AddType application/x-httpd-php .php
+#        </IfModule>
+#        <FilesMatch ".+\.php$">
+#            SetHandler application/x-httpd-php
+#        </FilesMatch>
+#
+#        php_flag magic_quotes_gpc Off
+#        php_flag track_vars On
+#        php_flag register_globals Off
+#    </IfModule>
+#
+#</Directory>
+#EOD
+#		ln -s /etc/php5/mods-available/xhprof.ini /etc/php5/apache2/conf.d/20-xhprof.ini
+#		ln -s /etc/php5/mods-available/xhprof.ini /etc/php5/cli/conf.d/20-xhprof.ini
+#		ln -s /etc/apache2/conf-available/xhprof.conf /etc/apache2/conf-enabled/xhprof.conf
+#	fi
+#fi
 
 # Install the phpunit libraries.
 for i in \
 	pdepend/PHP_Depend-beta \
 	phpmd/PHP_PMD \
 	pear.php.net/Text_Highlighter-0.7.3 \
-	PHP_CodeSniffer-1.5.0RC1 \
-	phpdoc/phpDocumentor;
+	PHP_CodeSniffer-1.5.0RC1;
 do
 	pear info $i 1>/dev/null
 	if [ "$?" == "0" ]; then
@@ -208,63 +203,19 @@ done
 # Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
 # Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
 # @todo Make this logic a function, (or a part of the download utility), so that I don't have to repeat code here.
-printheader "Checking for PHPUnit..."
 safemkdir "/opt/php"
-if [ -e "/opt/php/phpunit.phar" ]; then
-	REMSIZE="$(wget -S --spider https://phar.phpunit.de/phpunit.phar 2>&1 | grep 'Content-Length' | sed 's#^[ ]*Content-Length: ##')"
-	LOCSIZE="$(stat -c "%s" /opt/php/phpunit.phar)"
-	if [ $REMSIZE -eq $LOCSIZE ]; then
-		printline "Skipping download, files are the same size."
-	else
-		printline "Downloading replacement version"
-		wget https://phar.phpunit.de/phpunit.phar -O /opt/php/phpunit.phar
-		chmod a+x /opt/php/phpunit.phar
-	fi
-else
-	printline "Downloading PHPUnit"
-	wget https://phar.phpunit.de/phpunit.phar -O /opt/php/phpunit.phar
-	chmod a+x /opt/php/phpunit.phar
-fi
 
-# Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
-# Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
-printheader "Checking for PHPloc..."
-safemkdir "/opt/php"
-if [ -e "/opt/php/phploc.phar" ]; then
-	REMSIZE="$(wget -S --spider https://phar.phpunit.de/phploc.phar 2>&1 | grep 'Content-Length' | sed 's#^[ ]*Content-Length: ##')"
-	LOCSIZE="$(stat -c "%s" /opt/php/phploc.phar)"
-	if [ $REMSIZE -eq $LOCSIZE ]; then
-		printline "Skipping download, files are the same size."
-	else
-		printline "Downloading replacement version"
-		wget https://phar.phpunit.de/phploc.phar -O /opt/php/phploc.phar
-		chmod a+x /opt/php/phploc.phar
-	fi
-else
-	printline "Downloading PHPloc"
-	wget https://phar.phpunit.de/phploc.phar -O /opt/php/phploc.phar
-	chmod a+x /opt/php/phploc.phar
-fi
+download http://phpdoc.org/phpDocumentor.phar /opt/php/phpDocumentor.phar --smart-overwrite
+download https://phar.phpunit.de/phpunit.phar /opt/php/phpunit.phar --smart-overwrite
+download https://phar.phpunit.de/phploc.phar /opt/php/phploc.phar --smart-overwrite
+download https://phar.phpunit.de/phpcpd.phar /opt/php/phpcpd.phar --smart-overwrite
 
-# Here, we use a subdirectory so that developers' IDEs can be pointed to /opt/php for the file include to pick up these dependencies.
-# Since editors like a full path instead of specific libraries, (this isn't Java 'yo).
-printheader "Checking for phpcpd..."
-safemkdir "/opt/php"
-if [ -e "/opt/php/phpcpd.phar" ]; then
-	REMSIZE="$(wget -S --spider https://phar.phpunit.de/phpcpd.phar 2>&1 | grep 'Content-Length' | sed 's#^[ ]*Content-Length: ##')"
-	LOCSIZE="$(stat -c "%s" /opt/php/phpcpd.phar)"
-	if [ $REMSIZE -eq $LOCSIZE ]; then
-		printline "Skipping download, files are the same size."
-	else
-		printline "Downloading replacement version"
-		wget https://phar.phpunit.de/phpcpd.phar -O /opt/php/phpcpd.phar
-		chmod a+x /opt/php/phpcpd.phar
-	fi
-else
-	printline "Downloading phpcpd"
-	wget https://phar.phpunit.de/phpcpd.phar -O /opt/php/phpcpd.phar
-	chmod a+x /opt/php/phpcpd.phar
-fi
+
+# Make these all executable!
+chmod a+x /opt/php/phpDocumentor.phar
+chmod a+x /opt/php/phpunit.phar
+chmod a+x /opt/php/phploc.phar
+chmod a+x /opt/php/phpcpd.phar
 
 printheader "Installing GEM packages"
 gem install sass
