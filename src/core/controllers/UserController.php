@@ -122,13 +122,13 @@ class UserController extends Controller_2_1{
 
 		$form = \Core\User\Helper::GetEditForm($user);
 
-		// Grab the login attempts for this user
-		$logins = SystemLogModel::Find(
-		//['affected_user_id = ' . $user->get('id'), 'code = /user/login'],
-			['affected_user_id = ' . $user->get('id')],
-			20,
-			'datetime DESC'
-		);
+		// Pull the user groups for this user to display on the page.
+		$groupIDs = $user->getGroups();
+		$groups = [];
+		foreach($groupIDs as $gid){
+			$groups[] = UserGroupModel::Construct($gid);
+		}
+		
 
 		$view->controls = ViewControls::DispatchModel($user);
 
@@ -136,8 +136,8 @@ class UserController extends Controller_2_1{
 		$view->title = 't:STRING_MY_PROFILE';
 		$view->assign('user', $user);
 		$view->assign('form', $form);
-		$view->assign('logins', $logins);
 		$view->assign('profiles', $user->get('external_profiles'));
+		$view->assign('groups', $groups);
 
 		return null;
 	}
@@ -166,25 +166,23 @@ class UserController extends Controller_2_1{
 			return View::ERROR_NOTFOUND;
 		}
 
-		// Grab the login attempts for this user
-		$logins = SystemLogModel::Find(
-		//['affected_user_id = ' . $user->get('id'), 'code = /user/login'],
-			['affected_user_id = ' . $user->get('id')],
-			20,
-			'datetime DESC'
-		);
-
 		if($request->isJSON()){
 			$view->mode = View::MODE_PAGEORAJAX;
 			$view->contenttype = View::CTYPE_JSON;
 
 			$view->jsondata['user'] = $user->getAsArray();
-			$view->jsondata['logins'] = $logins;
 
 			// Massage some user data a bit, and remove things that don't need to be exported.
 			unset($view->jsondata['user']['password']);
 
 			return;
+		}
+		
+		// Pull the user groups for this user to display on the page.
+		$groupIDs = $user->getGroups();
+		$groups = [];
+		foreach($groupIDs as $gid){
+			$groups[] = UserGroupModel::Construct($gid);
 		}
 
 		if(!$user->isActive()){
@@ -198,8 +196,8 @@ class UserController extends Controller_2_1{
 		$view->addBreadcrumb('User Administration', '/user/admin');
 		$view->title = $user->getLabel() . ' Profile';
 		$view->assign('user', $user);
-		$view->assign('logins', $logins);
 		$view->assign('profiles', $user->get('external_profiles'));
+		$view->assign('groups', $groups);
 	}
 
 
