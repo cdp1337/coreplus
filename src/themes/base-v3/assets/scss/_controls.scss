@@ -88,12 +88,22 @@ ul.controls {
 		}
 		
 		i {
+			// Icons do not get displayed if there is no proxy.
 			display: none;
 		}
 		span {
 			display: inline;
 		}
-		
+	}
+	
+	&.only-icons {
+		// An option to display ONLY the icons instead of text + icons.
+		i.icon {
+			display: inline-block;
+		}
+		span {
+			display: none;
+		}
 	}
 }
 

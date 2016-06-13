@@ -31,3 +31,27 @@
 		opacity: 0.6;
 	}
 }
+
+
+/**
+ * Styles just for user/view and user/me (they mimic each other generally).
+ */
+body.page-user-view, body.page-user-me {
+	.user-side-info {
+		float: left;
+		width: 24%;
+		
+		ul {
+			list-style: none;
+		}
+		
+		li {
+			font-size: 90%;
+		}
+	}
+
+	.user-primary-info {
+		float: left;
+		width: 75%;
+	}
+}

@@ -845,30 +845,38 @@ ul.controls.no-proxy li:last-child:after {
 ul.controls.no-proxy i {
   display: none;
 }
-/* line 93, ../../scss/_controls.scss */
+/* line 94, ../../scss/_controls.scss */
 ul.controls.no-proxy span {
   display: inline;
 }
+/* line 101, ../../scss/_controls.scss */
+ul.controls.only-icons i.icon {
+  display: inline-block;
+}
+/* line 104, ../../scss/_controls.scss */
+ul.controls.only-icons span {
+  display: none;
+}
 
 /** Spruce up FA with some color :) **/
-/* line 101, ../../scss/_controls.scss */
+/* line 111, ../../scss/_controls.scss */
 ul.controls li i.icon-remove,
 ul.controls li i.icon-delete {
   color: #7a0200;
 }
 
-/* line 103, ../../scss/_controls.scss */
+/* line 113, ../../scss/_controls.scss */
 ul.controls li i.icon-edit {
   color: blue;
 }
 
-/* line 104, ../../scss/_controls.scss */
+/* line 114, ../../scss/_controls.scss */
 ul.controls li i.icon-plus,
 ul.controls li i.icon-add {
   color: green;
 }
 
-/* line 106, ../../scss/_controls.scss */
+/* line 116, ../../scss/_controls.scss */
 ul.controls li i.icon-rss {
   color: #e99700;
 }
@@ -877,7 +885,7 @@ ul.controls li i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 112, ../../scss/_controls.scss */
+/* line 122, ../../scss/_controls.scss */
 ul.controls.context-menu {
   background: #eee;
   border: 1px solid #999;
@@ -887,7 +895,7 @@ ul.controls.context-menu {
   text-align: left;
   z-index: 9999;
 }
-/* line 121, ../../scss/_controls.scss */
+/* line 131, ../../scss/_controls.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -896,24 +904,24 @@ ul.controls.context-menu li {
   /* This will get overwritten by a's */
   color: #555;
 }
-/* line 129, ../../scss/_controls.scss */
+/* line 139, ../../scss/_controls.scss */
 ul.controls.context-menu li a {
   padding: 0.15em;
   display: block;
   color: #000;
 }
-/* line 135, ../../scss/_controls.scss */
+/* line 145, ../../scss/_controls.scss */
 ul.controls.context-menu li a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
-/* line 141, ../../scss/_controls.scss */
+/* line 151, ../../scss/_controls.scss */
 ul.controls.context-menu li i {
   line-height: 1.5em;
   padding-left: 4px;
 }
-/* line 146, ../../scss/_controls.scss */
+/* line 156, ../../scss/_controls.scss */
 ul.controls.context-menu li span {
   line-height: 1.9em;
   padding: 0 2px;
@@ -921,7 +929,7 @@ ul.controls.context-menu li span {
 }
 
 /* The many links have a bit different styles. */
-/* line 155, ../../scss/_controls.scss */
+/* line 165, ../../scss/_controls.scss */
 ul.controls.context-menu-many-links {
   box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
   opacity: 0.9;
