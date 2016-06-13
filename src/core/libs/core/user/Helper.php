@@ -265,9 +265,8 @@ abstract class Helper{
 		else{
 			\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_USER_ACCOUNT');
 		}
-
-
-		return true;
+		
+		return 'back';
 	}
 
 	/**
@@ -369,12 +368,6 @@ abstract class Helper{
 		// Because the user system may not use a traditional Model for the backend, (think LDAP),
 		// I cannot simply do a setModel() call here.
 
-		// Only enable email changes if the current user is an admin or it's new.
-		// (Unless the admin allows it via the site config)
-		if($type != 'registration' && ( $usermanager || $allowemailchanging)){
-			$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true, 'value' => $user->get('email')));
-		}
-
 		// Tack on the active option if the current user is an admin.
 		if($usermanager){
 			$form->addElement(
@@ -407,15 +400,10 @@ abstract class Helper{
 			$elements = explode('|', \ConfigHandler::Get('/user/edit/form_elements'));
 		}
 		
-		// If avatars are disabled globally, remove that from the list if it's set.
-		if(!\ConfigHandler::Get('/user/enableavatar') && in_array('avatar', $elements)){
-			array_splice($elements, array_search('avatar', $elements), 1);
-		}
-		
 		foreach($elements as $k){
-			if($k){
+			if($k && ($c = $user->getColumn($k))){
 				// Skip blank elements that can be caused by string|param|foo| or empty strings.
-				$el = $user->getColumn($k)->getAsFormElement();
+				$el = $c->getAsFormElement();
 				if($el){
 					$form->addElement($el);	
 				}
