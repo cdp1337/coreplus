@@ -207,84 +207,111 @@ $matches = array_unique($matches);
 
 // If this is a component, then load Core's strings so that this script knows which strings are NOT required.
 // Anything in Core is assumed to be present already, as that's the basis for every package!
-if($configKey != 'core'){
-	$fallback = \Core\i18n\I18NLoader::GetFallbackLanguage();
-	$file = \Core\Filestore\Factory::File(ROOT_PDIR . 'core/i18n/' . $fallback . '.ini');
-	$contents = $file->getContents();
+if($configKey != 'core' && file_exists(ROOT_PDIR . 'core/i18n/strings.yml')){
+	$spyc = new Spyc();
+	$coreTrans = $spyc->loadFile(ROOT_PDIR . 'core/i18n/strings.yml');
 
 	foreach($matches as $k => $m){
 		// For each match, skim through Core's i18n file for this same string.
 		// If found, remove from array.
-		if(preg_match('/^' . $m . ' = .*/m', $contents) === 1){
+		if(isset($coreTrans[$m])){
 			unset($matches[$k]);
 		}
 	}
 }
-
-// Sort them
-sort($matches);
 
 if(!sizeof($matches)){
 	\Core\CLI\CLI::PrintError($dir . ' does not seem to contain any translation strings!');
 	exit;
 }
 
-// Get a list of languages currently available on the system.
-$locales = \Core\i18n\I18NLoader::GetLocalesEnabled();
-$bases = [];
-foreach($locales as $lang => $dat){
-	$base = substr($lang, 0, strpos($lang, '_'));
-	
-	if(!isset($bases[$base])){
-		$bases[$base] = [
-			'base' => $base,
-		    'dialects' => [],
-		];
+$translations = [];
+$current = [];
+
+// Load any legacy ini files from this source.
+// If so, load that ini into a new array to preserve legacy data.
+$legacyFiles = [];
+if(is_dir($dir . '/i18n/')){
+	$dh = opendir($dir . '/i18n/');
+	if($dh){
+		while (($file = readdir($dh)) !== false) {
+
+			// I only want ini files here.
+			if(substr($file, -4) != '.ini'){
+				continue;
+			}
+			$legacyFiles[] = $dir . '/i18n/' . $file;
+		}
+		closedir($dh);
 	}
-	
-	$bases[$base]['dialects'][] = $lang;
 }
 
-foreach($bases as $baseData){
-	// The first base will contain all common strings for this language, (such as "en").
-	$lang = $baseData['base'];
-	$output = '[' . $lang . ']' . "\n";
-	foreach($matches as $m){
-		$keyData = \Core\i18n\I18NLoader::Get($m, $lang);
-		$output .= "; DEFAULT: \"";
-		$default = str_replace('"', '\\"', $keyData['results']['FALLBACK']);
-		$output .= implode("\n;", explode("\n", $default)) . "\";\n";
-		if($keyData['found']){
-			$output .= $keyData['key'] . " = \"" . str_replace('"', '\\"', $keyData['match_str']) . "\";\n";
+foreach($legacyFiles as $f){
+	$ini = parse_ini_file($f, true);
+
+	foreach($ini as $lang => $dat){
+		foreach($dat as $k => $s){
+			if($s == ''){
+				// Skip processing any keys that do not have anything set!
+				continue;
+			}
+			
+			if(!isset($current[$k])){
+				$current[$k] = [];
+			}
+
+			$current[$k][$lang] = $s;
+		}
+	}
+}
+
+
+// Is there a current version of the file?
+// If so, load the current settings to preserve data.
+if(file_exists($dir . '/i18n/strings.yml')){
+	$existing = new Spyc();
+	$r = $existing->loadFile($dir . '/i18n/strings.yml');
+	
+	foreach($r as $k => $dat){
+		if(isset($translations[$k])){
+			$current[$k] = array_merge($translations[$k], $dat);
 		}
 		else{
-			$output .= $keyData['key'] . " = \"\";\n";
+			$current[$k] = $dat;
 		}
-		$output .= "\n";
-	}
-	
-	// Now generate any dialect-specific keys.
-	foreach($baseData['dialects'] as $dialect){
-		$output .= "; Dialect-specific overrides for " . $dialect . "\n[" . $dialect . "]\n";
-		foreach($matches as $m){
-			$keyData = \Core\i18n\I18NLoader::Get($m, $dialect);
-			if($keyData['found'] && $keyData['match_key'] == $dialect){
-				// This specific dialect has an override.
-				$output .= $keyData['key'] . " = \"" . str_replace('"', '\\"', $keyData['match_str']) . "\";\n";
-			}
-		}
-		$output .= "\n";
-	}
-
-	if($arguments->getArgumentValue('dry-run')){
-		echo $output;
-	}
-	else{
-		// Write this output to the requested ini file!
-		$file = \Core\Filestore\Factory::File($dir . '/i18n/' . $lang . '.ini');
-		$file->putContents($output);
-
-		\Core\CLI\CLI::PrintSuccess('Updated ' . $file->getFilename() . ' successfully!');
 	}
 }
 
+
+/*
+ * SO NOW...
+ * $current contains all the current + legacy translations in the system, (if any).
+ * $matches is the list of current string keys in the system.
+ * 
+ * I need to merge all string keys, ($matches), with the current translations and remove any that are unused.
+ */
+foreach($matches as $m){
+	$translations[$m] = isset($current[$m]) ?
+		// Set to the current value OR
+		$current[$m] :
+		// An empty string for the user's default language if not set yet.
+		[ \Core\i18n\I18NLoader::GetUsersLanguage() => '' ];
+}
+
+// Sort the translations!
+ksort($translations);
+
+// Dump this file back to a flat version!
+$yml = new Spyc();
+$output = $yml->dump($translations, 2, 80);
+
+if($arguments->getArgumentValue('dry-run')){
+	echo $output;
+}
+else{
+	// Write this output to the requested ini file!
+	$file = \Core\Filestore\Factory::File($dir . '/i18n/strings.yml');
+	$file->putContents($output);
+
+	\Core\CLI\CLI::PrintSuccess('Updated ' . $file->getFilename() . ' successfully!');
+}

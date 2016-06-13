@@ -1,0 +1,33 @@
+---
+MESSAGE_CONFIG_MARKDOWNBROWSER_AUTOREGISTER:
+  en: >
+    Check to auto-create pages from new markdown files uploaded to the base
+    directory.
+MESSAGE_CONFIG_MARKDOWNBROWSER_BASEDIR:
+  en: Fully resolved physical path of the directory to contain markdown files.
+MESSAGE_CONFIG_MARKDOWNBROWSER_SOURCE:
+  en: Option to allow end-users to download the original .md sourcecode.
+MESSAGE_ERROR_MARKDOWNBROWSER_DIRECTORY_DOES_NOT_EXIST:
+  en: The configured physical directory does not seem to exist!
+MESSAGE_ERROR_MARKDOWNBROWSER_NO_CONFIGURED_DIRECTORY:
+  en: There is no configured physical directory, please set that first.
+MESSAGE_TUTORIAL_MARKDOWNBROWSER_REGISTER_UPDATE_PAGE_NOTICE:
+  en: >
+    This allows you to change the URL and some of the permissions for markdown
+    files.  To edit the actual content, please edit the raw md file on disk!
+STRING_CONFIG_MARKDOWNBROWSER_AUTOREGISTER:
+  en: Auto-Register Markdown Files
+STRING_CONFIG_MARKDOWNBROWSER_BASEDIR:
+  en: Markdown Base Directory
+STRING_CONFIG_MARKDOWNBROWSER_SOURCE:
+  en: Enable Source Viewing
+STRING_MARKDOWNBROWSER_ADMIN:
+  en: Markdown Browser Administration
+STRING_MARKDOWNBROWSER_VIEW_SOURCE:
+  en: View Source Markdown
+STRING_MARKDOWNBROWSER_WARNING_FILE_HAS_CAPITALS:
+  en: File has capital letters in it!
+STRING_MARKDOWNBROWSER_WARNING_FILE_HAS_SPACES:
+  en: File has spaces in it!
+STRING_REGISTER_PAGE:
+  en: Register Page

@@ -307,63 +307,29 @@ class I18NLoader {
 		$dirChecks[] = ROOT_PDIR . 'themes/custom/i18n/';
 
 		foreach($dirChecks as $dir){
-			if(!is_dir($dir)){
-				// No i18n directory defined in this component, simply skip over.
-				continue;
+			if( is_dir($dir) && file_exists($dir . 'strings.yml') && is_readable($dir . 'strings.yml')){
+				$files[] = $dir . 'strings.yml';
 			}
-
-			$dh = opendir($dir);
-			if(!$dh){
-				// Couldn't open directory, skip.
-				continue;
-			}
-
-			while (($file = readdir($dh)) !== false) {
-
-				// I only want ini files here.
-				if(substr($file, -4) != '.ini'){
-					continue;
-				}
-				$files[] = $dir . $file;
-			}
-			closedir($dh);
 		}
-
-
-
 
 		self::$Strings = [];
 
 		foreach($files as $f){
-			$ini = parse_ini_file($f, true);
-
-			foreach($ini as $lang => $dat){
-				if(!isset(self::$Strings[$lang])){
-					self::$Strings[$lang] = $dat;
-				}
-				else{
-					self::$Strings[$lang] = array_merge(self::$Strings[$lang], $dat);
+			$yml = new \Spyc();
+			$r = $yml->loadFile($f);
+			foreach($r as $k => $dat){
+				foreach($dat as $lang => $s){
+					// k is the string KEY
+					// lang is the language it's set to
+					// s is the string's value for this language.
+					if(!isset(self::$Strings[$lang])){
+						self::$Strings[$lang] = [];
+					}
+					
+					self::$Strings[$lang][$k] = $s;
 				}
 			}
 		}
-
-		// Make sure that each language set has all base directives set too!
-		/*foreach(self::$Strings as $k => $dat){
-			//if(strpos($k, '_') === false){
-				// Skip the root language setting itself.
-			//	continue;
-			//}
-
-			$base = substr($k, 0, strpos($k, '_'));
-			if(!isset(self::$Strings[$base])){
-				self::$Strings[$base] = [];
-			}
-			foreach($dat as $s => $t){
-				if(!isset(self::$Strings[$base][$s])){
-					self::$Strings[$base][$s] = $t;
-				}
-			}
-		}*/
 
 		Cache::Set($cachekey, self::$Strings, 604800); // Cache here is good for one week.
 	}
