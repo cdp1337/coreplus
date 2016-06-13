@@ -397,130 +397,129 @@ class Core implements ISingleton {
 		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component metadata loaded, starting registration');
 		Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
 
-		// The core component at a minimum needs to be loaded and registered.
-		//		$this->_registerComponent($list['core']);
-		//		$this->_components['core']->loadFiles();
-		//		unset($list['core']);
+		// Move any disabled component over to the disabled array.
+		foreach($list as $n => $c){
+			/** @var $c Component_2_1 */
 
-		// Now that I have a list of components available, copy them into a list of 
-		//	components that are installed.
+			// Disabled components don't get recognized.
+			if($c->isInstalled() && !$c->isEnabled()){
+				// But they do get sent to the disabled list!
+				$this->_componentsDisabled[$n] = $c;
+				unset($list[$n]);
+			}
+		}
+
+		// Clear out the temporary class list
+		// This is used for the autoloader while the components are being loaded into memory.
+		$this->_tmpclasses = [];
+		
+		// Will contain a list of all supplemental models on the system, with the base class as the key.
+		// This is so that when the model is actually loaded, the corresponding supplemental data can be loaded along with it. 
+		$modelSupplementals = [];
+		
+		foreach($list as $n => $c){
+			/** @var $c Component_2_1 */
+			$supplementals = $c->getSupplementalModelList();
+			foreach($supplementals as $class => $file){
+				$base = substr($class, strpos($class, '_') + 1, -12);
+				
+				if(!isset($modelSupplementals[$base])){
+					$modelSupplementals[$base] = [];
+				}
+
+				$modelSupplementals[$base][] = $class;
+				$this->_tmpclasses[$class] = $file;
+			}
+		}
+		
+		// Sort them, (to at least give them a reliable order).
+		// Otherwise, they're pulled in by whatever order the filesystem gives them.
+		// this could cause issues with the database because the column order would differ.
+		foreach($modelSupplementals as $k => $dat){
+			sort($modelSupplementals[$k]);
+		}
 
 		do {
 			$size = sizeof($list);
-			foreach ($list as $n => $c) {
+			foreach($list as $n => $c) {
 				/** @var $c Component_2_1 */
 
-				// Disabled components don't get recognized.
-				if($c->isInstalled() && !$c->isEnabled()){
-					// But they do get sent to the disabled list!
-					$this->_componentsDisabled[$n] = $c;
+				// If this component can be loaded, (ie: all dependencies are met),
+				// scan its supplementals and try to install/upgrade as necessary, followed by registration.
+				if($c->isLoadable()) {
+					$cClassList = $c->getClassList();
+					$cModelList = $c->getModelList();
 
-					unset($list[$n]);
-					continue;
-				}
+					// Merge any models found with the list of supplemental models by other components.
+					foreach($cModelList as $k => $file) {
+						if(isset($modelSupplementals[ $k ])) {
+							// This model has supplemental functionality!
+							foreach($modelSupplementals[ $k ] as $e) {
+								Model::AddSupplemental($k, $e);
+							}
+						}
+					}
 
-				// Clear out the temporary class list
-				$this->_tmpclasses = [];
+					if(// This component is installed and needs a version upgrade
+						($c->isInstalled() && $c->needsUpdated()) || // OR this component has not been installed yet.
+						(!$c->isInstalled())
+					) {
+						// Allow for on-the-fly package upgrading+installing!
+						// Now that the models and supplemental models are loaded for everything, the models contained should have the full functionality of the system.
+						$failCode = '/core/component/failed' . ($c->isInstalled() ? 'upgrade' : 'register');
 
-				// If it's loaded, register it and remove it from the list!
-				if ($c->isInstalled() && $c->isLoadable() && $c->loadFiles()) {
-
-					try{
-						// Allow for on-the-fly package upgrading regardless of DEV mode or not.
-						if ($c->needsUpdated()) {
-
+						try {
 							// Load this component's classes in case an upgrade operation requires one.
 							// This allows a component to be loaded partially without completely being loaded.
-							$this->_tmpclasses = $c->getClassList();
+							$this->_tmpclasses = array_merge($this->_tmpclasses, $cClassList);
 
 							// Lock the site first!
 							// This is because some upgrade procedures take a long time to upgrade.
-							file_put_contents(TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. ');
-							$c->upgrade();
+							file_put_contents(
+								TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. '
+							);
+
+							// This is the only part that changes really!
+							if($c->isInstalled()) {
+								$c->upgrade();
+							}
+							else {
+								$c->install();
+								$c->enable();
+							}
+
 							unlink(TMP_DIR . 'lock.message');
 						}
-					}
-					catch(Exception $e){
-						SystemLogModel::LogErrorEvent('/core/component/failedupgrade', 'Ignoring component [' . $n . '] due to an error during upgrading!', $e->getMessage());
+						catch(Exception $e) {
+							unlink(TMP_DIR . 'lock.message');
+							SystemLogModel::LogErrorEvent(
+								$failCode, 'Ignoring component [' . $n . '] due to an error during registration!',
+								$e->getMessage()
+							);
+							$this->_componentsDisabled[ $n ] = $c;
+							unset($list[ $n ]);
 
-						unlink(TMP_DIR . 'lock.message');
-						//$c->disable();
-						$this->_componentsDisabled[$n] = $c;
-						unset($list[$n]);
-						continue;
-					}
-
-					try{
-						$this->_components[$n] = $c;
-						$this->_registerComponent($c);
-						$c->loadSupplementalModels();
-					}
-					catch(Exception $e){
-						SystemLogModel::LogErrorEvent('/core/component/failedregister', 'Ignoring component [' . $n . '] due to an error during registration!', $e->getMessage());
-
-						//$c->disable();
-						$this->_componentsDisabled[$n] = $c;
-						unset($list[$n]);
-						continue;
+							// Remove the tmp classes.
+							foreach($cClassList as $class => $file) {
+								if(isset($this->_tmpclasses[ $class ])) {
+									unset($this->_tmpclasses[ $class ]);
+								}
+							}
+							continue;
+						}
 					}
 
-					unset($list[$n]);
-					continue;
-				}
-
-
-				// Allow for on-the-fly package upgrading regardless of DEV mode or not.
-				// Guess this is needed for the loadFiles part...
-				if ($c->isInstalled() && $c->needsUpdated() && $c->isLoadable()) {
-					// Lock the site first!
-					// This is because some upgrade procedures take a long time to upgrade.
-					file_put_contents(TMP_DIR . 'lock.message', 'Core Plus is being upgraded, please try again in a minute. ');
-
-					$c->upgrade();
 					$c->loadFiles();
-					$this->_components[$n] = $c;
-					$this->_registerComponent($c);
-					unlink(TMP_DIR . 'lock.message');
-
-					unset($list[$n]);
-					continue;
-				}
-
-				// Allow packages to be auto-installed if in DEV mode.
-				// If DEV mode is not enabled, just install the new component, do not enable it.
-				if (!$c->isInstalled() && $c->isLoadable()) {
-					// Load this component's classes in case an install operation requires one.
-					// This allows a component to be loaded partially without completely being loaded.
-					$this->_tmpclasses = $c->getClassList();
-
-					// w00t
-					$c->install();
-					// BLAH, until I fix the disabled-packages-not-viewable bug...
-					$c->enable();
-					$c->loadFiles();
-					$this->_components[$n] = $c;
+					$this->_components[ $n ] = $c;
 					$this->_registerComponent($c);
 
-					/*
-					if(!DEVELOPMENT_MODE){
-						$c->disable();
-					}
-					else{
-						$c->enable();
-						$c->loadFiles();
-						$this->_components[$n] = $c;
-						$this->_registerComponent($c);
-					}
-					*/
-					unset($list[$n]);
-					continue;
-				}
-			}
-		}
-		while ($size > 0 && ($size != sizeof($list)));
+					// Successful registration removes the component from the working list.
+					unset($list[ $n ]);
+				} // END if($c->isLoadable())
+			} // END foreach($tempcomponents);
+		} while ($size > 0 && ($size != sizeof($list)));
 
 		// If dev mode is enabled, display a list of components installed but not loadable.
-
 		foreach ($list as $n => $c) {
 
 			//$this->_components[$n] = $c;
@@ -541,6 +540,9 @@ class Core implements ISingleton {
 				$theme->load();
 			}
 		}
+		
+		// Cleanup
+		$this->_tmpclasses = [];
 
 		// Lastly, make sure that the template path cache is updated!
 		if(class_exists('\\Core\\Templates\\Template')){
