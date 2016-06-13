@@ -37,6 +37,10 @@ require_once(ROOT_PDIR . 'core/libs/core/InstallArchiveAPI.class.php');
 
 // The PHP elements of the MVC framework.
 require_once(ROOT_PDIR . 'core/libs/core/Exceptions.php');
+
+require_once(ROOT_PDIR . 'core/libs/core/date/Timezone.php');
+require_once(ROOT_PDIR . 'core/libs/core/date/DateTime.php');
+
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Model.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/datamodel/Schema.php');
