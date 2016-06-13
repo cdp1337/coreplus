@@ -72,7 +72,7 @@ else {
  */
 define('EXEC_MODE', $em);
 /**
- * The physical directory of the CAE2 installation.
+ * The physical directory of the Core Plus installation.
  * DOES have a trailing slash.
  *
  * Example: /home/someone/public_html/myinstall/
