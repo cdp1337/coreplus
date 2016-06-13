@@ -541,8 +541,8 @@ class AdminController extends Controller_2_1 {
 				'linkname' => [
 					'affected_user_id',
 					'user_id',
-				]
-				//'link' => FilterForm::LINK_TYPE_STANDARD,
+				],
+				'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
 		$listings->addFilter(
@@ -613,9 +613,17 @@ class AdminController extends Controller_2_1 {
 		$componentopts = ['' => '-- ' . t('STRING_VIEW_ALL_COMPONENTS') . ' --'];
 		foreach($components as $c){
 			/** @var Component_2_1 $c */
-			foreach($c->getXML()->getElements('/pages/pagecreate') as $node){
-				/** @var DOMElement $node */
-				$links[] = ['baseurl' => $node->getAttribute('baseurl'), 'title' => $node->getAttribute('title')];
+			
+			$pageCreates = $c->getPageCreatesDefined();
+			foreach($pageCreates as $dat){
+				// Support i18n.
+				if(strpos($dat['title'], 't:') === 0){
+					$dat['title'] = t(substr($dat['title'], 2));
+				}
+				if(strpos($dat['description'], 't:') === 0){
+					$dat['description'] = t(substr($dat['description'], 2));
+				}
+				$links[] = $dat;
 			}
 
 			$componentopts[$c->getKeyName()] = $c->getName();
