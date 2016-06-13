@@ -34,5 +34,9 @@ foreach($sources as $s){
 // Now save each user loaded into the array.
 foreach($users as $u){
 	/** @var UserModel $u */
-	$u->save();
+	
+	// Only save users that actually exist!
+	if($u->exists()){
+		$u->save();	
+	}
 }
