@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="1.2.4">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.0">
 	<description>
 		A simple component to display a favicon for various browsers and mobile devices.
 	</description>
 	<configs>
 		<config key="/favicon/image" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
-		
 		<config key="/favicon/image-196" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
 		<config key="/favicon/image-180" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
 		<config key="/favicon/image-152" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
@@ -26,17 +25,18 @@
 		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="19ddb07c384e3abd39d337a19935df42"/>
+		<file filename="CHANGELOG" md5="47fd2d42b952222f2b3460a1c3e44dec"/>
 		<file filename="README.md" md5="e758db0d8cb23bbfe0b3132575fed948"/>
-		<file filename="controllers/FaviconController.php" md5="7ed60cd421725bbf7863c71155c1b2cf">
+		<file filename="controllers/FaviconController.php" md5="41dbfd6e22ed3a2a2151c8be5e638177">
 			<controller name="FaviconController"/>
 		</file>
-		<file filename="libs/favicon/ViewMeta_favicon.php" md5="014e3652508f0f3c769e47c64222c7af">
+		<file filename="i18n/strings.yml" md5="5d0c49480d54a4255ba67fa89a14e223"/>
+		<file filename="libs/favicon/ViewMeta_favicon.php" md5="13220ac07868f95b9f612c6edecf1cc5">
 			<class name="ViewMeta_favicon"/>
 		</file>
 	</files>
 	<view>
-		<file filename="templates/pages/favicon/admin.tpl" md5="5c251fc5544fc3b92244e15012d2c821"/>
+		<file filename="templates/pages/favicon/admin.tpl" md5="31d862a2c15a4cd07b6d182f1312ac77"/>
 	</view>
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
@@ -49,6 +49,7 @@
 		<upgrade from="1.2.1" to="1.2.2"/>
 		<upgrade from="1.2.2" to="1.2.3"/>
 		<upgrade from="1.2.3" to="1.2.4"/>
+		<upgrade from="1.2.4" to="2.0.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
