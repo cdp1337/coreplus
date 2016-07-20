@@ -1,3 +1,8 @@
+jQuery-File-Upload 8.5.0-5
+
+	* Classname fix for new font-awesome.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:11:56 -0400
+
 jQuery-File-Upload 8.5.0-4
 
 	* Standardize some namespace functions and migrate all SESSION operations to \Core\Session.

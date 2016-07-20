@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="8.5.0-4" name="jQuery-File-Upload" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="8.5.0-5" name="jQuery-File-Upload" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="JQuery" type="library" version="1.6" operation="ge"/>
@@ -19,6 +19,7 @@
 		<upgrade from="8.5.0~core1" to="8.5.0~core2"/>
 		<upgrade from="8.5.0~core2" to="8.5.0~core3"/>
 		<upgrade from="8.5.0~core3" to="8.5.0-4"/>
+		<upgrade from="8.5.0-4" to="8.5.0-5"/>
 	</upgrades>
 	<description>
 		File Upload widget with multiple file selection, drag and drop support, progress bar, validation and preview images,
@@ -30,7 +31,7 @@
 		<formelement name="multifile" class="MultiFileInput"/>
 	</forms>
 	<files>
-		<file filename="CHANGELOG" md5="13af9e343050e4a3a9dad01edf36417a"/>
+		<file filename="CHANGELOG" md5="6353d3f338e2ad5ce3172386c6270728"/>
 		<file filename="README.md" md5="cb22a03a2f5fc8aaf6dcf5a9c2180a66"/>
 		<file filename="classes/MultiFileInput.class.php" md5="cb2baf65201c1cc38bda2d9346c5de7a">
 			<class name="MultiFileInput"/>
@@ -78,7 +79,7 @@
 		<file filename="assets/libs/jquery-file-upload/js/vendor/jquery.ui.widget.min.js" md5="614b1fa5a49a21383f8e7800f6422b23"/>
 	</assets>
 	<view searchdir="templates">
-		<file filename="templates/forms/elements/multifileinput.tpl" md5="87944a23eadb9a72580de9c0cb75156c"/>
+		<file filename="templates/forms/elements/multifileinput.tpl" md5="99a97f85bbedf7d547754c30d6222c4d"/>
 	</view>
 </component>
 
