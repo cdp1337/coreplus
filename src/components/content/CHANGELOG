@@ -1,3 +1,11 @@
+Content 3.0.0
+
+	* Minor i18n fixes.
+	* Classname fix for new font-awesome.
+	* Migrate i18n logic from .ini to .yml.
+	* Minor fix on Content to support 5.1.0 Model structures.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:09:05 -0400
+
 Content 2.5.2
 
 	* Copyright update from 2015 to 2016.

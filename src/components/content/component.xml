@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.2" name="Content" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="Content" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -12,11 +12,12 @@
 		<widgetcreate title="Content Area" class="ContentWidget"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="f486dcdbc2cff58371f470372163155d"/>
+		<file filename="CHANGELOG" md5="1d854e149d58f1335505d4482cbd7c1a"/>
 		<file filename="controllers/ContentController.php" md5="f94f55b8ddbef7d7edc6b64c41f52dab">
 			<controller name="ContentController"/>
 		</file>
-		<file filename="models/ContentModel.php" md5="bef1298b9fc787a1b02fa70c7d638691">
+		<file filename="i18n/strings.yml" md5="5758446c3dcb60864861d1640fe52885"/>
+		<file filename="models/ContentModel.php" md5="7016dfb4633fe65a5fdf4e4f692a090d">
 			<class name="ContentModel"/>
 		</file>
 		<file filename="upgrades/310_page_updates.php" md5="549b9de9daba51cff04fe6c2cd6d6db1"/>
@@ -38,12 +39,12 @@
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/view.tpl" md5="f9a40b24658d333da22f7726de3d032e"/>
-		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="e1e5c9eecae297583fb1b91f9a6a6bd8"/>
+		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="e674fc01f91355940c0386e71ec8f89f"/>
 		<file filename="templates/pages/content/view/blog-article.tpl" md5="d29f440cd4e863e00d963d9cd5c34bac"/>
 		<file filename="templates/pages/content/view/markdown.tpl" md5="6d535f0b3cb7bbabdd70b9e1935bf034"/>
 		<file filename="templates/pages/content/view/option1.tpl" md5="4c8037182441dcac26d7f31496ac2a1a"/>
 		<file filename="templates/widgets/content/execute.tpl" md5="0db0ff3eae107a310d9b9fe853452575"/>
-		<file filename="templates/widgets/contentadmin/quickdraft.tpl" md5="3cecd393584eb3ddc9684b9f4196fe5d"/>
+		<file filename="templates/widgets/contentadmin/quickdraft.tpl" md5="c97347fb8b98c3dfd8df2430db7572ef"/>
 	</view>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
@@ -72,6 +73,7 @@
 		<upgrade from="2.4.2" to="2.5.0"/>
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
+		<upgrade from="2.5.2" to="3.0.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-140.png" md5="673cfa327007694704fe95e47dcc9ec0"/>
