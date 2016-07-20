@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 10 Jun 2016 12:34:30 -0400
+ * @compiled Wed, 20 Jul 2016 00:40:54 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15346,39 +15346,7 @@ error_log(__FUNCTION__ . ' is deprecated, please use \Core\Utilities\Profiler\Pr
 return \Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->getTime();
 }
 public static function CheckEmailValidity($email) {
-$atIndex = strrpos($email, "@");
-if (is_bool($atIndex) && !$atIndex) return false;
-$domain    = substr($email, $atIndex + 1);
-$local     = substr($email, 0, $atIndex);
-$localLen  = strlen($local);
-$domainLen = strlen($domain);
-if ($localLen < 1 || $localLen > 64) {
-return false;
-}
-if ($domainLen < 1 || $domainLen > 255) {
-return false;
-}
-if ($local[0] == '.' || $local[$localLen - 1] == '.') {
-return false;
-}
-if (preg_match('/\\.\\./', $local)) {
-return false;
-}
-if (!preg_match('/^[A-Za-z0-9\\-\\.]+$/', $domain)) {
-return false;
-}
-if (preg_match('/\\.\\./', $domain)) {
-return false;
-}
-if (!preg_match('/^(\\\\.|[A-Za-z0-9!#%&`_=\\/$\'*+?^{}|~.-])+$/', str_replace("\\\\", "", $local))) {
-if (!preg_match('/^"(\\\\"|[^"])+"$/', str_replace("\\\\", "", $local))) {
-return false;
-}
-}
-if (ConfigHandler::Get('/core/email/verify_with_dns') && !(checkdnsrr($domain, "MX") || checkdnsrr($domain, "A"))) {
-return false;
-}
-return true;
+return \Core\CheckEmailValidity($email);
 }
 public static function CheckIntGT0Validity($val){
 if(!(is_int($val) || ctype_digit($val))){
