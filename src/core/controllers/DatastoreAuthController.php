@@ -495,7 +495,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			/** @var \Core\User\AuthDrivers\datastore $auth */
 			$auth = $u->getAuthDriver('datastore');
 		}
-		catch(Exception $e){
+		catch(Exception $err){
 			$e->setError('t:MESSAGE_ERROR_USER_LOGIN_PASSWORD_AUTH_DISABLED');
 			return false;
 		}
