@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.7" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Gallery" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.2.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -21,23 +21,23 @@
 		Gallery browsing system for core+
 	</description>
 	<view searchdir="templates">
-		<file filename="templates/pages/gallery/admin.tpl" md5="b4534548e52eff48e49a87f2ba046fbb"/>
+		<file filename="templates/pages/gallery/admin.tpl" md5="a9e6c9e4bcdf763bf472b3e02c00ee17"/>
 		<file filename="templates/pages/gallery/images_update.tpl" md5="32f2630482b423fd776cfa15b8079155"/>
 		<file filename="templates/pages/gallery/index.tpl" md5="08e7390f13bfe3bbdaf9558e04d4f508"/>
 		<file filename="templates/pages/gallery/order.tpl" md5="d70de8d8ac304055362ba640df6f0e3c"/>
 		<file filename="templates/pages/gallery/update.tpl" md5="5db5bf97680ec52e8ee5b5580af17daa"/>
 		<file filename="templates/pages/gallery/updatelisting.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/gallery/view-audio.tpl" md5="6c4f441f3a72c5734a2e3153a39a67d7"/>
-		<file filename="templates/pages/gallery/view-file.tpl" md5="3a50e3ea955d4086c354169afb1c55cd"/>
-		<file filename="templates/pages/gallery/view-image.tpl" md5="ed6a73c03584b8536951616f8d9ca71e"/>
-		<file filename="templates/pages/gallery/view-video.tpl" md5="f5d62cac8985b8a9432600f8277ea1f0"/>
-		<file filename="templates/pages/gallery/view.tpl" md5="c7b18b33d739700c7ac05eb4ea6807b8"/>
-		<file filename="templates/pages/gallerywidget/admin.tpl" md5="9e3ce12b55f81d1643903ab35411c9f3"/>
+		<file filename="templates/pages/gallery/view-audio.tpl" md5="1feec2a73a61e58cc812c5ee3106adfc"/>
+		<file filename="templates/pages/gallery/view-file.tpl" md5="5921c8d1617d5f599fe5dab06acb686e"/>
+		<file filename="templates/pages/gallery/view-image.tpl" md5="29a4a5ef38ae6de565e470eadbc9d0f4"/>
+		<file filename="templates/pages/gallery/view-video.tpl" md5="9f81030e6586e441e1898f52dac71732"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="aad9d14c52bee27c422039f9af875047"/>
+		<file filename="templates/pages/gallerywidget/admin.tpl" md5="71bbd8c87b269337e47f6e7ee126d59d"/>
 		<file filename="templates/pages/gallerywidget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="91e4d2bd7a0323ca646fd777387b5d90"/>
+		<file filename="CHANGELOG" md5="2a037b137a7cad7ba9a5aa0f13a085a7"/>
 		<file filename="controllers/GalleryController.php" md5="fcc0907fc6b91edcd7797231b793afa9">
 			<controller name="GalleryController"/>
 		</file>
@@ -47,6 +47,7 @@
 		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
 			<class name="GalleryFormHandler"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="71f7b10abf27df1b17a528d60e3d9d40"/>
 		<file filename="models/GalleryAlbumModel.php" md5="1183b08ffeb8637e71a310c2cf88319e">
 			<class name="GalleryAlbumModel"/>
 		</file>
@@ -101,6 +102,7 @@
 		<upgrade from="1.5.4" to="1.5.5"/>
 		<upgrade from="1.5.5" to="1.5.6"/>
 		<upgrade from="1.5.6" to="1.5.7"/>
+		<upgrade from="1.5.7" to="2.0.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
