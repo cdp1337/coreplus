@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.5-2">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-1">
 	<provides>
 		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="b0140e9e7077028d2c3f9e8f7ae6c4c2"/>
+		<file filename="CHANGELOG" md5="026aef75ea69966ad38cba0e0112adb8"/>
 		<file filename="CHANGELOG.md" md5="e13af389bde5daa8ceb3d1c0d4403264"/>
 		<file filename="CODINGSTYLE.md" md5="be72d83bc148e1ad9874d889a109307d"/>
 		<file filename="CONTRIBUTING.md" md5="d5ac0fe9972fbaa49c539e28f8c61487"/>
 		<file filename="LICENSE" md5="f312a7c4d02230e8f2b537295d375c69"/>
 		<file filename="README.md" md5="6695ece78f524617fe6459701c7489a2"/>
-		<file filename="libs/chartistjs/ChartistJS.php" md5="00432aeef7b47de937c52d9e20924dfa">
+		<file filename="assets/scss/chartist.scss" md5="9099a49ebd8cc95b97cd0c7bcda3db2f"/>
+		<file filename="assets/scss/settings/_chartist-settings.scss" md5="4db461394a4a1b9962cecb2e7fdf4e2f"/>
+		<file filename="libs/chartistjs/ChartistJS.php" md5="15334ced7d79e367d6db5d273395c71f">
 			<class name="ChartistJS"/>
 		</file>
 	</files>
@@ -21,14 +23,16 @@
 	<pages/>
 	<widgets/>
 	<assets>
-		<file filename="assets/css/chartist.css" md5="b9a91a1e35ddaa5c9f333d725fdf91cf"/>
-		<file filename="assets/css/chartist.min.css" md5="b9a91a1e35ddaa5c9f333d725fdf91cf"/>
-		<file filename="assets/js/chartist.js" md5="4e688387f6663d5a4eea99bbfa1c3975"/>
-		<file filename="assets/js/chartist.min.js" md5="cc4ba68c611dd83bc5f9d8b54bcc30ff"/>
+		<file filename="assets/css/chartist.css" md5="a9ed5f0eee5b5fcef1ad10262e6445f8"/>
+		<file filename="assets/css/chartist.css.map" md5="2a679b081b6650f1006910ccf30d542f"/>
+		<file filename="assets/css/chartist.min.css" md5="82d5df30b8d173ec308859d6f5f966d3"/>
+		<file filename="assets/js/chartist.js" md5="cb31f9aa596227ba6ad01d5b88711798"/>
+		<file filename="assets/js/chartist.min.js" md5="0111fc3cd9cbde06b8bfe48c99e738a5"/>
 		<file filename="assets/js/chartist.min.js.map" md5="8a475158f2f74c33a010c325263f19c4"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.9.5-1" to="0.9.5-2"/>
+		<upgrade from="0.9.5-2" to="0.9.8-1"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
