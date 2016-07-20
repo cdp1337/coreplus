@@ -1,3 +1,11 @@
+Blog 2.0.0
+
+	* [Bug] Fix another instance of Dataset not being namespaced correctly.
+	* Minor i18n fixes.
+	* Classname fix for new font-awesome.
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:08:09 -0400
+
 Blog 1.6.7
 
 	* Copyright update from 2015 to 2016.
