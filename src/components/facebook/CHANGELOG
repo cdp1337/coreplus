@@ -1,3 +1,10 @@
+Facebook 3.2.3-7
+
+	* Classname fix for new font-awesome.
+	* Migrate i18n logic from .ini to .yml.
+	* Utilize the new in-line options for user metadata.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:10:09 -0400
+
 Facebook 3.2.3-6
 
 	* Copyright update from 2015 to 2016.

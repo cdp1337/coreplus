@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3-6" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3-7" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/usermodel" call="FacebookController::GetUserControlLinks"/>
@@ -28,19 +28,20 @@
 	</users>
 	<view searchdir="templates">
 		<file filename="templates/emails/facebook/enable_confirmation.tpl" md5="bb92457d47699f47892941267c00f83b"/>
-		<file filename="templates/includes/user/facebook_login.tpl" md5="0e46264f35b41cfc4908ef2f599ab16a"/>
+		<file filename="templates/includes/user/facebook_login.tpl" md5="7546e92c592e0d7f1910a447c83f9ef5"/>
 		<file filename="templates/pages/facebook/enable.tpl" md5="ef5061ca42ad0ad233b0b1db5175d96b"/>
 		<file filename="templates/pages/facebook/login.tpl" md5="3271d46acd1a48dd6aec8c71dcc07862"/>
 		<file filename="templates/widgets/facebook/login.tpl" md5="d2c35fdad4e78240358e39c4c4ee3db1"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="e9c163ed762aa7de96b4ed5e9733d121"/>
+		<file filename="CHANGELOG" md5="68d5381e829793e4a43f1ad5d47666b9"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="controllers/FacebookController.php" md5="017e2b9f4ea2e44b60580b80347425e2">
 			<controller name="FacebookController"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="87b83d0ec84e6d05e62a718dd2e035d2"/>
 		<file filename="libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
 		<file filename="libs/facebook-php-sdk/composer.json" md5="5d17b681de9984e9af98629c2404f0a4"/>
 		<file filename="libs/facebook-php-sdk/examples/example.php" md5="21f296ecba4b310c889ad661de54328d"/>
@@ -70,7 +71,7 @@
 			<class name="FBPublicGetAccessTokenFromCode"/>
 			<class name="FBPublicState"/>
 		</file>
-		<file filename="libs/facebook/UserAuth.php" md5="4d542dece339e188238a369a9355af3f">
+		<file filename="libs/facebook/UserAuth.php" md5="e5194d9bf27d63f65a5ebcf37b3a1144">
 			<class name="Facebook\UserAuth"/>
 		</file>
 		<file filename="widgets/FacebookWidget.php" md5="fdb60f6c5cfefd6d5d52db5182f51fbd">
@@ -92,6 +93,7 @@
 		<upgrade from="3.2.3~core3" to="3.2.3~core4"/>
 		<upgrade from="3.2.3~core4" to="3.2.3~core5"/>
 		<upgrade from="3.2.3~core5" to="3.2.3-6"/>
+		<upgrade from="3.2.3-6" to="3.2.3-7"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
