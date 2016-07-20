@@ -205,7 +205,8 @@ done
 # @todo Make this logic a function, (or a part of the download utility), so that I don't have to repeat code here.
 safemkdir "/opt/php"
 
-download http://phpdoc.org/phpDocumentor.phar /opt/php/phpDocumentor.phar --smart-overwrite
+#download http://phpdoc.org/phpDocumentor.phar /opt/php/phpDocumentor.phar --smart-overwrite
+download https://github.com/phpDocumentor/phpDocumentor2/releases/download/v2.9.0/phpDocumentor.phar /opt/php/phpDocumentor.phar --smart-overwrite
 download https://phar.phpunit.de/phpunit.phar /opt/php/phpunit.phar --smart-overwrite
 download https://phar.phpunit.de/phploc.phar /opt/php/phploc.phar --smart-overwrite
 download https://phar.phpunit.de/phpcpd.phar /opt/php/phpcpd.phar --smart-overwrite

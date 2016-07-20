@@ -64,6 +64,7 @@
 		<mkdir dir="${basedir}/build/phpdoc"/>
 		<mkdir dir="${basedir}/build/phpunit"/>
 		<mkdir dir="${basedir}/build/changelogs"/>
+		<mkdir dir="${basedir}/docs/phpdoc"/>
 	</target>
 
 	<target name="purge_src" depends="clean_src" description="Purge the configuration, htaccess, data, and everything for a given site.">
@@ -210,7 +211,7 @@
 	</target>
 	
 	<target name="phpdoc" depends="prepare_build,clean_src" description="Generate phpDoc Documentation on the product">
-		<exec executable="/opt/php/phpDocumentor.phar" failonerror="false">
+		<exec executable="/opt/php/phpDocumentor.phar" failonerror="true">
 			<!-- Scan this directory (source code) -->
 			<arg value="-d"/>
 			<arg value="${basedir}/src"/>
@@ -220,7 +221,7 @@
 
 			<!-- Ignore files -->
 			<arg value="-i"/>
-			<arg value="${basedir}/src/core/bootstrap.compiled.php,${basedir}/src/core/libs/smarty/*,${basedir}/src/core/libs/phpmailer/*,${basedir}/src/core/libs/aws-sdk/*"/>
+			<arg value="${basedir}/src/core/bootstrap.compiled.php,${basedir}/src/core/libs/smarty/*,${basedir}/src/core/libs/phpmailer/*,${basedir}/src/core/libs/aws-sdk/*,${basedir}/src/components/*"/>
 
 			<!-- Page title -->
 			<arg value="--title"/>
@@ -228,10 +229,15 @@
 
 			<!-- Scan and log private and @internal methods too -->
 			<arg value="--parseprivate"/>
-
-			<!-- Include Sourcecode -->
-			<arg value="--sourcecode"/>
-
+			
+			<arg value="--template"/>
+			<arg value="xml"/>
+		</exec>
+		
+		<!-- Now, run the markdown converter. -->
+		<exec executable="${basedir}/vendor/phpdoc-md-master/bin/phpdocmd">
+			<arg value="${basedir}/build/phpdoc/structure.xml"/>
+			<arg value="${basedir}/docs/phpdoc"/>
 		</exec>
 	</target>
 	<target name="phpdoc-ci" depends="clean_build,prepare_build,clean_src" description="Generate phpDoc Documentation on the product (CI Compatible version)">
@@ -259,11 +265,6 @@
 
 			<!-- SSSH -->
 			<arg value="--quiet"/>
-
-			<!-- Set the template to Core's phpdoc template. -->
-			<!--<arg value="- -template"/>
-			<arg value="phpdoc-templates/coreplus"/>-->
-
 		</exec>
 	</target>
 
