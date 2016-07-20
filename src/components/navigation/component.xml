@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5.2" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.0" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="3.4.0"/>
 	</requires>
@@ -8,13 +8,13 @@
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="t:STRING_CONTENT" access="g:admin" admin="1"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="e1a91efdb94a4d2957f6615cd0554011"/>
-		<file filename="assets/scss/navigation.scss" md5="3f29639d48c98bf8b1c441e0bd35672d"/>
-		<file filename="controllers/NavigationController.php" md5="3e42bd3226383516717b5ae29467b058">
+		<file filename="CHANGELOG" md5="b6db58c5521f8ccfb59bcd363f1dc65a"/>
+		<file filename="assets/scss/navigation.scss" md5="271eb2ce6a8d6329b27d67e25dda8a33"/>
+		<file filename="controllers/NavigationController.php" md5="41c3ab9c23116ebbaccaead3a7795b74">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="cc216c0980d987e5790e2b56afc57c6d"/>
-		<file filename="models/Navigation.model.php" md5="db2eaa2b12f64a3128b014bd0c1c8dfc">
+		<file filename="models/Navigation.model.php" md5="73779a6c198f0fe90a9fcbdf7e17cfd0">
 			<class name="NavigationModel"/>
 		</file>
 		<file filename="models/NavigationEntry.model.php" md5="7ffd8b1caa8a10b3ed018984ea2b5c7a">
@@ -45,9 +45,9 @@
 		<widgetcreate title="Navigation Menu" baseurl="/navigation/create"/>
 	</widgets>
 	<assets>
-		<file filename="assets/css/navigation.css" md5="cdaf5b15ab95e8ae14b2a38a693af51e"/>
-		<file filename="assets/css/navigation.css.map" md5="4a077dc93c5143aa6cb89da5e10c51bc"/>
-		<file filename="assets/css/navigation.min.css" md5="43fc45ce2ac7d6d2f11ee9c5c6367897"/>
+		<file filename="assets/css/navigation.css" md5="524609c4329abb8375ff4d5b033393ed"/>
+		<file filename="assets/css/navigation.css.map" md5="7e4208c06ec35b93a8f8a74cfad68b06"/>
+		<file filename="assets/css/navigation.min.css" md5="6da274abebbf23ae72dc4f016e946c14"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-140.png" md5="b802371dccad4efd732bc4d64fc6a6fc"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-210.png" md5="0707ae53fa3b89eecc1f2624abd366f3"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children-140.png" md5="a825bcc2dbed754cb091d733233acf88"/>
@@ -60,8 +60,8 @@
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings-210.png" md5="4e29f372ac875463ba69775015ae2473"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-siblings.png" md5="761d4dbc6447ef141b489e66b86749c2"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation.png" md5="5e7c947318ea439be1c066c6b578f106"/>
-		<file filename="assets/js/navigation/manager.js" md5="cb0abbd6ad70374c33b62251ca61963f"/>
-		<file filename="assets/js/navigation/manager.min.js" md5="a28d6a4f7d8a088265758b55a52155fe"/>
+		<file filename="assets/js/navigation/manager.js" md5="54e036e92e3e82c8c1cad44749dbcc26"/>
+		<file filename="assets/js/navigation/manager.min.js" md5="4e21888da86c3931029d03866f5bb315"/>
 	</assets>
 	<upgrades>
 		<upgrade from="0.0.1-dev1" to="1.9.0"/>
@@ -87,6 +87,7 @@
 		<upgrade from="2.4.1" to="2.5.0"/>
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
+		<upgrade from="2.5.2" to="2.6.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

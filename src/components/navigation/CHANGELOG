@@ -1,3 +1,9 @@
+Navigation 2.6.0
+
+	* Various navigation admin fixes.
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:13:06 -0400
+
 Navigation 2.5.2
 
 	* Copyright update from 2015 to 2016.
