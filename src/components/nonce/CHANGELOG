@@ -1,3 +1,8 @@
+Nonce 1.2.0
+
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:13:19 -0400
+
 Nonce 1.1.0
 
 	* New functionality on Nonces; markUsed now triggers the nonce as "used" (and thus invalid), but still
