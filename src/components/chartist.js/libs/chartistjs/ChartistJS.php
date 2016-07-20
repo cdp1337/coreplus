@@ -9,7 +9,7 @@
 class ChartistJS {
 	public static function IncludeJS(){
 		\Core\view()->addScript('js/chartist.js');
-		\Core\view()->addStyle('css/chartist.css');
+		\Core\view()->addStylesheet('css/chartist.css');
 
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
