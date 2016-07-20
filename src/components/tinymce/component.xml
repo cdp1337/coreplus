@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.4-1" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.4-2" name="TinyMCE" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.0.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -20,11 +20,11 @@
 	<pages/>
 	<view>
 		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="feb3be1d78680691f20449d716935242"/>
-		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="e9e783cbc75b5dbe1d7618e5e4e41ebe"/>
+		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="7b14d6788d1b568fb8423480c1ac155e"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="16f8682d627e691a9e9839a426d042b4"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="82f03dba77da71422aecdd54b1e69b82"/>
+		<file filename="CHANGELOG" md5="ff330fe3504eb49f24b27231c6975d1c"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
 		<file filename="TinyMCEFormElement.class.php" md5="25fe067d2771ea7890082146e0dab789">
 			<class name="TinyMCEFormElement"/>
@@ -34,7 +34,7 @@
 			<controller name="TinyMCEController"/>
 		</file>
 		<file filename="libs/smarty-plugins/function.tinymce_custom_plugin.php" md5="ab35140082f30d8646c827094e827e63"/>
-		<file filename="libs/tinymce/TinyMCE.php" md5="f23bd6e76dfbc925a19f9df3fcfbd441">
+		<file filename="libs/tinymce/TinyMCE.php" md5="603b1fe5a0095dfbcfa41138d682215f">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
@@ -258,6 +258,7 @@
 		<upgrade from="4.0.1~core6" to="4.2.4~core1"/>
 		<upgrade from="4.2.4~core1" to="4.2.4-2"/>
 		<upgrade from="4.2.4-2" to="4.3.4-1"/>
+		<upgrade from="4.3.4-1" to="4.3.4-2"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
