@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 20 Jul 2016 00:40:54 -0400
+ * @compiled Wed, 20 Jul 2016 02:02:26 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -675,6 +675,59 @@ $m = round($time_in_seconds - $h*3600, 0);
 return $h . ' h ' . $m . ' m';
 }
 return number_format(round($time, $round), $round)  . ' ' . $suffix;
+}
+function is_ip_private($ip){
+$privates = [
+[
+'net' => '10.0.0.0',
+'cidr' => 8,
+],
+[
+'net' => '100.64.0.0',
+'cidr' => 10,
+],
+[
+'net' => '127.0.0.0',
+'cidr' => 8,
+],
+[
+'net' => '169.254.0.0',
+'cidr' => 16,
+],
+[
+'net' => '172.16.0.0',
+'cidr' => 12,
+],
+[
+'net' => '192.0.2.0',
+'cidr' => 24,
+],
+[
+'net' => '192.168.0.0',
+'cidr' => 16,
+],
+[
+'net' => '198.18.0.0',
+'cidr' => 15,
+],
+[
+'net' => '198.51.100.0',
+'cidr' => 24,
+],
+[
+'net' => '203.0.113.0',
+'cidr' => 24,
+],
+];
+$ip = ip2long($ip);
+foreach($privates as $dat){
+$ipNet = $ip >> 32 - $dat['cidr'];
+$checkNet = ip2long($dat['net']) >> 32 - $dat['cidr'];
+if($ipNet == $checkNet){
+return true;
+}
+}
+return false;
 }
 } // ENDING NAMESPACE Core
 
@@ -2131,7 +2184,7 @@ const MODE_INSERTUPDATE = 'insertupdate';
 const MODE_DELETE = 'delete';
 const MODE_COUNT = 'count';
 public $_table;
-public $_selects = array();
+public $_selects = null;
 public $_where = null;
 public $_mode = Dataset::MODE_GET;
 public $_sets = array();
@@ -2141,15 +2194,29 @@ public $_limit = false;
 public $_order = false;
 public $_data = null;
 public $num_rows = null;
-public $_renames = array();
+private $_inserts = null;
+private $_updates = null;
+private $_deletes = null;
+private $_isBulk = false;
+public $_renames = null;
 public $uniquerecords = false;
 public function __construct(){
 }
+public function __clone() {
+if($this->_where){
+$this->_where = clone $this->_where;
+}
+}
 public function select(){
 $n = func_num_args();
-if($n == 0) throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+if($n == 0){
+throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+}
+if($this->_selects === null){
+$this->_selects = [];
+}
 if($n == 1 && func_get_arg(0) === null){
-$this->_selects = array();
+$this->_selects = [];
 return $this;
 }
 $this->_mode = Dataset::MODE_GET;
@@ -2172,34 +2239,58 @@ $this->_selects = array_unique($this->_selects);
 return $this;
 }
 public function insert(){
-call_user_func_array(array($this, '_set'), func_get_args());
+$n = func_num_args();
+if($n == 0 || $n > 2){
+throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::insert(), ' . $n . ' provided, exactly 1 or 2 expected');
+}
+elseif($n == 1){
+$a = func_get_arg(0);
+if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::insert()');
+foreach($a as $k => $v){
+$this->_sets[$k] = $v;
+$this->_inserts[$k] = $v;
+}
+}
+else{
+$k = func_get_arg(0);
+$v = func_get_arg(1);
+$this->_sets[$k] = $v;
+$this->_inserts[$k] = $v;
+}
 $this->_mode = Dataset::MODE_INSERT;
 return $this;
 }
+public function bulkInsert($data){
+$this->_isBulk = true;
+if($this->_inserts === null){
+$this->_inserts = [];
+}
+$this->_inserts[] = $data;
+return $this;
+}
 public function update(){
-call_user_func_array(array($this, '_set'), func_get_args());
+$n = func_num_args();
+if($n == 0 || $n > 2){
+throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::update(), ' . $n . ' provided, exactly 1 or 2 expected');
+}
+elseif($n == 1){
+$a = func_get_arg(0);
+if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::update()');
+foreach($a as $k => $v){
+$this->_sets[$k] = $v;
+$this->_updates[$k] = $v;
+}
+}
+else{
+$k = func_get_arg(0);
+$v = func_get_arg(1);
+$this->_sets[$k] = $v;
+$this->_updates[$k] = $v;
+}
 $this->_mode = Dataset::MODE_UPDATE;
 return $this;
 }
 public function set(){
-call_user_func_array(array($this, '_set'), func_get_args());
-$this->_mode = Dataset::MODE_INSERTUPDATE;
-return $this;
-}
-public function renameColumn(){
-call_user_func_array(array($this, '_renameColumn'), func_get_args());
-$this->_mode = Dataset::MODE_ALTER;
-return $this;
-}
-public function delete(){
-$this->_mode = Dataset::MODE_DELETE;
-return $this;
-}
-public function count(){
-$this->_mode = Dataset::MODE_COUNT;
-return $this;
-}
-private function _set(){
 $n = func_num_args();
 if($n == 0 || $n > 2){
 throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set(), ' . $n . ' provided, exactly 1 or 2 expected');
@@ -2216,15 +2307,57 @@ $k = func_get_arg(0);
 $v = func_get_arg(1);
 $this->_sets[$k] = $v;
 }
+$this->_mode = Dataset::MODE_INSERTUPDATE;
+return $this;
 }
-private function _renameColumn(){
+public function renameColumn(){
 $n = func_num_args();
 if($n != 2){
 throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::renameColumn(), ' . $n . ' provided, exactly 2 expected');
 }
 $oldname = func_get_arg(0);
 $newname = func_get_arg(1);
+if($this->_renames === null){
+$this->_renames = [];
+}
 $this->_renames[$oldname] = $newname;
+$this->_mode = Dataset::MODE_ALTER;
+return $this;
+}
+public function delete(){
+$n = func_num_args();
+if($this->_deletes === null){
+$this->_deletes = [];
+}
+if($n == 0 ){
+$this->_deletes['*'] = '*';
+}
+elseif($n == 1){
+$a = func_get_arg(0);
+if(is_array($a)){
+foreach($a as $k => $v){
+$this->_deletes[$k] = $v;
+}
+}
+else{
+$this->_deletes[$a] = '*';
+}
+}
+elseif($n > 2){
+throw new \DMI_Exception('Unsupported number of arguments for Dataset::delete!  Please issue with none, an array of values, or a single key and value.');
+}
+else{
+$k = func_get_arg(0);
+$v = func_get_arg(1);
+$this->_deletes[$k] = $v;
+}
+$this->_mode = Dataset::MODE_DELETE;
+return $this;
+}
+public function count(){
+$this->_mode = Dataset::MODE_COUNT;
+$this->_selects = ['__COUNT__'];
+return $this;
 }
 public function setID($key, $val = null){
 $this->_idcol = $key;
@@ -2233,6 +2366,51 @@ if($val) $this->where("$key = $val");
 }
 public function getID(){
 return $this->_idval;
+}
+public function getMode(){
+if($this->_isBulk && $this->_inserts !== null){
+return self::MODE_BULK_INSERT;
+}
+if(
+($this->_inserts !== null && $this->_updates !== null && $this->_deletes !== null) ||
+($this->_inserts !== null && $this->_updates !== null) ||
+($this->_inserts !== null && $this->_deletes !== null) ||
+($this->_updates !== null && $this->_deletes !== null)
+){
+return self::MODE_INSERTUPDATE;
+}
+if($this->_selects !== null && sizeof($this->_selects) == 1 && $this->_selects[0] == '__COUNT__'){
+return self::MODE_COUNT;
+}
+if($this->_selects !== null){
+return self::MODE_GET;
+}
+if($this->_inserts !== null){
+return self::MODE_INSERT;
+}
+if($this->_updates !== null){
+return self::MODE_UPDATE;
+}
+if($this->_renames !== null){
+return self::MODE_ALTER;
+}
+if($this->_deletes !== null){
+if(sizeof($this->_deletes) == 1 && isset($this->_deletes['*']) && $this->_deletes['*'] == '*'){
+return self::MODE_DELETE;
+}
+else{
+return self::MODE_INSERTUPDATE;
+}
+}
+}
+public function getInserts(){
+return $this->_inserts;
+}
+public function getUpdates(){
+return $this->_updates;
+}
+public function getDeletes(){
+return $this->_deletes;
 }
 public function table($tablename){
 if(DB_PREFIX && strpos($tablename, DB_PREFIX) === false){
@@ -2516,6 +2694,7 @@ namespace  {
 ### REQUIRE_ONCE FROM core/libs/core/datamodel/DatasetStream.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Datamodel {
+use Core\User\AuthDrivers\datastore;
 class DatasetStream{
 private $_dataset;
 private $_totalcount;
@@ -2524,9 +2703,8 @@ private $_startlimit = 0;
 public $bufferlimit = 100;
 public function __construct(Dataset $ds){
 $this->_dataset = $ds;
-$mode = $this->_dataset->_mode;
-$this->_totalcount = $this->_dataset->count()->execute()->num_rows;
-$this->_dataset->_mode = $mode;
+$cloned = clone $this->_dataset;
+$this->_totalcount = $cloned->count()->executeAndGet();
 }
 public function getRecord(){
 ++$this->_counter;
@@ -3337,6 +3515,31 @@ $this->_linked[$idx]['purged'] = [];
 }
 $this->_linked[$idx]['purged'][] = $link;
 $this->_linked[$idx]['records'] = null;
+return true;
+}
+}
+return false;
+}
+public function changedLink($linkname){
+$idx = $this->_getLinkIndex($linkname);
+if($idx === null){
+return false; // @todo Error Handling
+}
+if($this->_linked[$idx]['records'] === null){
+return false;
+}
+if(isset($this->_linked[$idx]['deleted']) && $this->_linked[$idx]['deleted'] !== null){
+return true;
+}
+if(is_array($this->_linked[$idx]['records'])){
+foreach($this->_linked[$idx]['records'] as $subm){
+if($subm->changed()){
+return true;
+}
+}
+}
+elseif($this->_linked[$idx]['records'] instanceof Model){
+if($this->_linked[$idx]['records']->changed()){
 return true;
 }
 }
@@ -4617,8 +4820,11 @@ $this->formAttributes['type'] = 'select';
 }
 public function setSchema($schema){
 parent::setSchema($schema);
-if(!\Core\is_numeric_array($schema['options'])){
-$this->options = array_keys($schema['options']);
+if(\Core\is_numeric_array($schema['options'])){
+$this->options = [];
+foreach($schema['options'] as $k){
+$this->options[ $k ] = $k;
+}
 }
 else{
 $this->options = $schema['options'];
@@ -7007,6 +7213,14 @@ $this->_linked['UserUserGroup']  = [
 ];
 parent::__construct($id);
 }
+public function get($key){
+if($key == 'groups'){
+return $this->getGroups();
+}
+else{
+return parent::get($key);
+}
+}
 public function getLabel() {
 if(!$this->exists()) {
 return ConfigHandler::Get('/user/displayname/anonymous');
@@ -7183,8 +7397,18 @@ else {
 return false;
 }
 }
+public function set($key, $value){
+if($key == 'groups'){
+$this->setGroups($value);
+}
+else{
+parent::set($key, $value);
+}
+}
 public function setGroups($groups) {
-if(!is_array($groups)) $groups = [];
+if(!is_array($groups)){
+$groups = [];
+}
 $this->_setGroups($groups, false);
 }
 public function setContextGroups($groups, $context = null) {
@@ -7269,6 +7493,14 @@ public function setDefaultMetaFields(){
 $this->set('registration_ip', REMOTE_IP);
 $this->set('registration_source', \Core\user()->exists() ? 'admin' : 'self');
 $this->set('registration_invitee', \Core\user()->get('id'));
+}
+public function changed($key = null){
+if($key == 'groups'){
+return $this->changedLink('UserUserGroup');
+}
+else{
+return parent::changed($key);
+}
 }
 public function generateNewApiKey() {
 $this->set('apikey', Core::RandomHex(64, true));
@@ -21161,12 +21393,12 @@ return $timezones[$timezone];
 
 if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Database\\Reader')){
 try{
-if(REMOTE_IP == '127.0.0.1'){
-$geocity     = 'Columbus';
-$geoprovince = 'OH';
-$geocountry  = 'US';
-$geotimezone = 'America/New_York';
-$geopostal   = '43215';
+if(\Core\is_ip_private(REMOTE_IP)){
+$geocity     = 'LOCAL';
+$geoprovince = '';
+$geocountry  = 'INTL';
+$geotimezone = TIME_DEFAULT_TIMEZONE;
+$geopostal   = '';
 }
 else{
 $reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
