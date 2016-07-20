@@ -759,7 +759,7 @@ function GetExtensionFromString($str){
  * Copied (almost) verbatim from http://www.linuxjournal.com/article/9585?page=0,3
  * @author Douglas Lovell @ Linux Journal
  *
- * @return boolean
+ * @return boolean|string
  */
 function CheckEmailValidity($email){
 	$atIndex = strrpos($email, "@");
@@ -1156,4 +1156,70 @@ function time_duration_format($time_in_seconds, $round = 4){
 	}
 
 	return number_format(round($time, $round), $round)  . ' ' . $suffix;
+}
+
+function is_ip_private($ip){
+	$privates = [
+		[
+			// Private IPv4 addresses (rfc1918)
+			'net' => '10.0.0.0',
+			'cidr' => 8,
+		],
+		[
+			// Carrier NAT (rfc6598)
+			'net' => '100.64.0.0',
+			'cidr' => 10,
+		],
+		[
+			// Loop-back Only
+			'net' => '127.0.0.0',
+			'cidr' => 8,
+		],
+		[
+			// Private local-only
+			'net' => '169.254.0.0',
+			'cidr' => 16,
+		],
+		[
+			// Private IPv4 addresses (rfc1918)
+			'net' => '172.16.0.0',
+			'cidr' => 12,
+		],
+		[
+			// Test Networks (rfc5735)
+			'net' => '192.0.2.0',
+			'cidr' => 24,
+		],
+		[
+			// Private IPv4 addresses (rfc1918)
+			'net' => '192.168.0.0',
+			'cidr' => 16,
+		],
+		[
+			// Private IPv4 addresses (rfc1918)
+			'net' => '198.18.0.0',
+			'cidr' => 15,
+		],
+		[
+			// Test Networks (rfc5735)
+			'net' => '198.51.100.0',
+			'cidr' => 24,
+		],
+		[
+			// Test Networks (rfc5735)
+			'net' => '203.0.113.0',
+			'cidr' => 24,
+		],
+	];
+
+	$ip = ip2long($ip);
+	foreach($privates as $dat){
+		$ipNet = $ip >> 32 - $dat['cidr'];
+		$checkNet = ip2long($dat['net']) >> 32 - $dat['cidr'];
+		if($ipNet == $checkNet){
+			return true;
+		}
+	}
+	
+	return false;
 }
