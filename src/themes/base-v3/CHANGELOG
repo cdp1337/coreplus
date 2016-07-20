@@ -1,3 +1,16 @@
+Theme/Base V3 3.0.0
+
+	* New styles for a few various changes in Core.
+	* Classname fix for new font-awesome.
+	* Style updates for the user activity rework, user agent outputing, and new inline selection of
+	  pagination limits.
+	* Use the ConfigHandler for retrieving options in the site schema and site social links.
+	* Make disabled form elements lighter than the non-disabled form elements to render a noticeable
+	  difference between them.
+	* Switch to ConfigHandler instead of static defines to support multi-site configuration scenarios.
+	* Licensed footer and pre code styling
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:16:08 -0400
+
 Theme/Base V3 2.1.1
 
 	* [Bug] Rolling back work on the admin dashboard page that breaks functionality for non-default sites.

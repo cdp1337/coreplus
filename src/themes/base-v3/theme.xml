@@ -1,23 +1,23 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.1" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="Base V3">
 	<assets>
-		<file filename="assets/css/print.css" md5="f9e2244b2d427f9c5104e63055b6a055"/>
-		<file filename="assets/css/print.css.map" md5="27006773d93382d6e8036f7081571452"/>
-		<file filename="assets/css/print.min.css" md5="75736c845100387d6e874fc6de1b8d61"/>
-		<file filename="assets/css/styles.css" md5="2231b045d52b1434912550794d99df60"/>
-		<file filename="assets/css/styles.css.map" md5="6a04e9d13f63a42b407ec3d883384b41"/>
-		<file filename="assets/css/styles.min.css" md5="694befd7d4292b52d41987a11fef1b9f"/>
-		<file filename="assets/css/tinymce/content.css" md5="ed7226458bd0a4ffbcc8d537a994b2b9"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="173c7d60e6749ac236b8869166c53685"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="ed2f40bf121b7f47b902eef0a072910d"/>
+		<file filename="assets/css/print.css" md5="f032b2a8bb0e1edfc6a407ed1347db59"/>
+		<file filename="assets/css/print.css.map" md5="169c45ea7e6ad8c38597af03b109b5d8"/>
+		<file filename="assets/css/print.min.css" md5="f10cfb6f782d88f0ed6c38431c82d350"/>
+		<file filename="assets/css/styles.css" md5="a23e886e026c2c665031cc271456d57e"/>
+		<file filename="assets/css/styles.css.map" md5="390b24b04a5c9e4a5f4f793167e30367"/>
+		<file filename="assets/css/styles.min.css" md5="e62b27d4bcda609245d481beafe90420"/>
+		<file filename="assets/css/tinymce/content.css" md5="2680a73e936565f3536cc40f0de0d1fc"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="80e2f3fa639798d04a2980ca0a4d8eab"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="0d6c8ad8cb74a2f870586a8685f097e4"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
-		<file filename="basic.tpl" md5="f46f9bd07703f36154fc36ff8359a008" title=""/>
+		<file filename="basic.tpl" md5="763f4af38987c9ec8facd6b086e5eaf7" title=""/>
 		<file filename="blank.tpl" md5="e0fe07062c844b9a1353d71edf5cc025" title=""/>
-		<file filename="wide.tpl" md5="316ce2d576e183cdd9255b3b8bfe4387" title=""/>
-		<file filename="print.tpl" md5="f82af65b975d46d94be3bbcba910a1c5" title=""/>
-		<file filename="email_basic.tpl" md5="c7ecebc5fb09b70840373e0577ac03d7" title="basic"/>
+		<file filename="wide.tpl" md5="487014e9e82437b52ebdb82e411ab99b" title=""/>
+		<file filename="print.tpl" md5="38f36714a7365dde0917707bd2bcedcb" title=""/>
+		<file filename="email_basic.tpl" md5="c102d84135deec5a75449f04e6228bcd" title="basic"/>
 	</skins>
 	<configs>
 		<config key="/theme/site_logo" mapto="THEME_SITE_LOGO" form-attributes="type:file;basedir:public/logo/;accept:image/*;"/>
@@ -53,13 +53,13 @@
 		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="cd5cc0299b1f4e24a229a9865617e42f"/>
+		<file filename="CHANGELOG" md5="cf5155836df5b35303934d71714352a3"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
-		<file filename="assets/scss/_content.scss" md5="e6265d8e793f893d8ea50c361dfa008d"/>
-		<file filename="assets/scss/_controls.scss" md5="bd76b95f098ebf71b68de573c2ee31ed"/>
-		<file filename="assets/scss/_debugging.scss" md5="c1198bfbb9dfde4845b95f855ab3d6a1"/>
-		<file filename="assets/scss/_filters_and_pagination.scss" md5="b5eada7f048b7e236099bc6fa2b79ef0"/>
-		<file filename="assets/scss/_form_elements.scss" md5="fbeffbc3e985af3b98d1dc2f9726cf4a"/>
+		<file filename="assets/scss/_content.scss" md5="18e00da409fa99734b17d5fc9e24037e"/>
+		<file filename="assets/scss/_controls.scss" md5="9ef44e36323a75fe4e895ce9c61146a4"/>
+		<file filename="assets/scss/_debugging.scss" md5="1b0978ef99dfd17c0e2df59dbea683e4"/>
+		<file filename="assets/scss/_filters_and_pagination.scss" md5="ddfe81dc89f8bd282ebf4c86576b8132"/>
+		<file filename="assets/scss/_form_elements.scss" md5="2f0e1cf42d8deb9b2641a629cf2932f2"/>
 		<file filename="assets/scss/_layout.scss" md5="42c07a5ecf89d6bf6c0806435c615674"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="2e8e9d6be0b82a493d0b7429d1732af8"/>
 		<file filename="assets/scss/_messages.scss" md5="002d7e2910f33c36ff9bcccb9a49e2ed"/>
@@ -69,7 +69,7 @@
 		<file filename="assets/scss/pages/_admin_health.scss" md5="8f5e2f2aab639df930a16c8804e123a5"/>
 		<file filename="assets/scss/pages/_theme.scss" md5="1039df69f0df35e4c7c9883a109ef103"/>
 		<file filename="assets/scss/pages/_updater.scss" md5="071f9f71dda94d07e8423f02e811e72b"/>
-		<file filename="assets/scss/pages/_user.scss" md5="bb3fdf298ed68cf238227e583a7cca6c"/>
+		<file filename="assets/scss/pages/_user.scss" md5="fb9196cfc019cdcd6a68cbe9508003aa"/>
 		<file filename="assets/scss/pages/_widgets.scss" md5="13db361c6afd511138cf054c9cafebab"/>
 		<file filename="assets/scss/print.scss" md5="d1d80005e0cff66c29a89e531ad2b56a"/>
 		<file filename="assets/scss/styles.scss" md5="dfdf7bccc347ef946b24b38479281711"/>
@@ -186,8 +186,8 @@
 		<file filename="dev/vendor-patches/20141101-bitters.diff" md5="279d56dbbe7496341de17aed922b942a"/>
 		<file filename="dev/vendor-patches/20141101_buttons_use_default_colors.diff" md5="f034c099c68df89b68f99f954957df06"/>
 		<file filename="i18n/en.ini" md5="534a74cfed6d80143fd5ae07071f1624"/>
-		<file filename="includes/site_schema_information.tpl" md5="770ef16a169dec239a03dd56f6ba1267"/>
-		<file filename="includes/site_social_links.tpl" md5="c907bdb3584069ed7da29be6d7b64489"/>
+		<file filename="includes/site_schema_information.tpl" md5="b783054b1f788ff65839017f10e755c1"/>
+		<file filename="includes/site_social_links.tpl" md5="857986798e435826d3598295d6cc5aa8"/>
 		<file filename="pages/admin/index.tpl.DISABLED" md5="1b74b999765e7b32ca23d4c966709e38"/>
 		<file filename="screenshots/screen1.png" md5="4f252b897e118f4c320245142b5381e2"/>
 	</otherfiles>
@@ -200,6 +200,7 @@
 		<upgrade from="1.3.0" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
+		<upgrade from="2.1.1" to="3.0.0"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png" title="Home Page"/>
