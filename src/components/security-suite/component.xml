@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6.1" name="Security-Suite" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Security-Suite" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
@@ -43,14 +43,14 @@
 		<file filename="templates/pages/security/view.tpl" md5="ff23af3634c04a9a1d46076d6b5fadf2"/>
 		<file filename="templates/pages/wphoneypot/wpadmin.phtml" md5="0982690d45c188345c5a9537305d7ace"/>
 		<file filename="templates/pages/wphoneypot/wplogin.phtml" md5="f2a77ed2fd85a8daceaf2111ef044278"/>
-		<file filename="templates/widgets/security/userlogins.tpl" md5="b184c2462058eaa5c37c6943b39f0c85"/>
+		<file filename="templates/widgets/security/userlogins.tpl" md5="39a696babb9737db4dad467285164e35"/>
 	</view>
 	<description>
 		Collection of security utilities for your site.
 		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="eba030d357d20f4c3cb531047693a81e"/>
+		<file filename="CHANGELOG" md5="8124fafdeaed5a7b6d0e6d69ffd02326"/>
 		<file filename="controllers/SecurityController.php" md5="f20afeff9fe1057fba042c50b56133e8">
 			<controller name="SecurityController"/>
 		</file>
@@ -61,6 +61,7 @@
 		<file filename="i18n/de.ini" md5="3013c421e24d6903b69251f135e0d3b6"/>
 		<file filename="i18n/en.ini" md5="7371ee8c0de4e64e0b2f2509c0becdf1"/>
 		<file filename="i18n/fr.ini" md5="0ce04f05d4a7bbfc0fb46889fa33aeb7"/>
+		<file filename="i18n/strings.yml" md5="b093cc11c4dbb03831f8ef0ebdc2bf09"/>
 		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="f6d430efc682249e34a1af82d4ae999b">
 			<class name="SecuritySuite\IpBlacklistHelper"/>
 		</file>
@@ -89,7 +90,7 @@
 			<class name="sfsBlacklistModel"/>
 		</file>
 		<file filename="upgrades/120_to_130.php" md5="b7175159159ee66569a68c74b782d528"/>
-		<file filename="widgets/SecurityWidget.php" md5="7d8283d7bac7fe5cc1ca8490f3719a8f">
+		<file filename="widgets/SecurityWidget.php" md5="941b2fca17e291f460f790c0d03befc4">
 			<class name="SecurityWidget"/>
 		</file>
 	</files>
@@ -112,6 +113,7 @@
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.6.0"/>
 		<upgrade from="1.6.0" to="1.6.1"/>
+		<upgrade from="1.6.1" to="2.0.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>
