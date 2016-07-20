@@ -1,3 +1,36 @@
+{if $chart_data}
+	<div id="orders-chart" class="top-page-chart top-page-chart-linegraph">
+	</div>
+	{script library="chartist.js"}{/script}
+	{script library="jqueryui"}{/script}
+	{script location="foot"}<script>
+		$(function() {
+			var chart = new Chartist.Line('#orders-chart', {
+				labels: {$chart_data.labels},
+				series: {$chart_data.series}
+			}, {
+				fullWidth: true,
+				chartPadding: {
+					right: 80
+				},
+				axisY: {
+					offset: 80,
+					scaleMinSpace: 15
+				}
+			});
+
+			chart.on('created', function() {
+				$('#orders-chart').tooltip({
+					items: '.ct-point',
+					content: function(){
+						return this.getAttribute('ct:meta');
+					}
+				});
+			});
+		});
+	</script>{/script}
+{/if}
+
 {$listings->render('head')}
 {foreach $listings as $l}
 	<tr>

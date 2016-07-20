@@ -361,9 +361,74 @@ class UserActivityController extends Controller_2_1 {
 		$listing->setDefaultSort('datetime', 'DESC');
 
 		$listing->loadFiltersFromRequest($request);
+		$listing->getFilters()->applyToFactory($listing->getModelFactory());
+		
+		if(Core::IsComponentAvailable('chartist.js')){
+			// Build a graph of user activity over the last 18-months.
+			$data = [];
+			$ds = clone $listing->getModelFactory()->getDataset();
+			$ds->limit(null);
+			$ds->order(null);
+
+			$cutoff = new Core\Date\DateTime();
+			$cutoff->prevMonth(17);
+			
+			// Given this potentially massive dataset, let the database do the heavy lifting if possible.
+			for($i = 0; $i< 17; $i++){
+				$key = $cutoff->format('Y-m');
+				$min = $cutoff->format('U');
+				$date = $cutoff->format('M Y');
+				$fullDate = $cutoff->format('F Y');
+				$cutoff->nextMonth();
+				$max = $cutoff->format('U');
+
+				$clone = clone $ds;
+				$clone->where('datetime >= ' . $min);
+				$clone->where('datetime < ' . $max);
+				$count = $clone->count()->executeAndGet();
+
+				if(sizeof($data) == 0 && $count == 0){
+					// Nothing rendered yet, go ahead and skip.
+					// this is to only show relevant data.
+					continue;
+				}
+				
+				$data[ $key ] = [
+					'count' => $count,
+					'min' => $min,
+					'max' => $max,
+					'date' => $date,
+					'full_date' => $fullDate,
+				];
+			}
+
+			// Order these by date ordered descending.
+			ksort($data);
+
+			// Now build the list of labels as pretty values
+			$labels = [];
+			$views = [];
+			foreach($data as $k => $v){
+				$labels[] = $v['date'];
+				
+				$views[] = [
+					'value' => $v['count'],
+					'meta' => number_format($v['count']) . ' Views for ' . $v['full_date'],
+				];
+			}
+
+			$chartData = [
+				'labels' => json_encode($labels),
+				'series' => json_encode([$views]),
+			];
+		}
+		else{
+			$chartData = null;
+		}
 
 		$view->title = 'User Activity Details';
 		$view->assign('listings', $listing);
+		$view->assign('chart_data', $chartData);
 	}
 
 	/**
