@@ -1,3 +1,9 @@
+CoolPHPCaptcha 2.0.0
+
+	* Classname fix for new font-awesome.
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:09:31 -0400
+
 CoolPHPCaptcha 1.1.3
 
 	* Copyright update from 2015 to 2016.
