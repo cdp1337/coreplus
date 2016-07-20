@@ -22,6 +22,7 @@
  */
 
 namespace Core\Datamodel;
+use Core\User\AuthDrivers\datastore;
 
 
 /**
@@ -65,13 +66,9 @@ class DatasetStream{
 	public function __construct(Dataset $ds){
 		$this->_dataset = $ds;
 
-		$mode = $this->_dataset->_mode;
-
 		// I need to know how many are records are present.
-		$this->_totalcount = $this->_dataset->count()->execute()->num_rows;
-
-		// And reset the mode back... damn count
-		$this->_dataset->_mode = $mode;
+		$cloned = clone $this->_dataset;
+		$this->_totalcount = $cloned->count()->executeAndGet();
 	}
 
 	/**

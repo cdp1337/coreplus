@@ -65,7 +65,7 @@ class Dataset implements \Iterator{
 
 	public $_table;
 
-	public $_selects = array();
+	public $_selects = null;
 
 	/**
 	 * The root where clause for this dataset
@@ -73,8 +73,16 @@ class Dataset implements \Iterator{
 	 */
 	public $_where = null;
 
+	/**
+	 * @deprecated 201607
+	 * @var string
+	 */
 	public $_mode = Dataset::MODE_GET;
 
+	/**
+	 * @deprecated 201607
+	 * @var array
+	 */
 	public $_sets = array();
 
 	public $_idcol = null;
@@ -88,12 +96,21 @@ class Dataset implements \Iterator{
 	public $_data = null;
 
 	public $num_rows = null;
+	
+	private $_inserts = null;
+	
+	private $_updates = null;
+	
+	private $_deletes = null;
+	
+	/** @var bool Tracker for if this is a bulk operation, (not all DMIs may support this!) */
+	private $_isBulk = false;
 
 	/**
 	 * Column renames used in the alter mode
-	 * @var array
+	 * @var null|array
 	 */
-	public $_renames = array();
+	public $_renames = null;
 
 	/**
 	 * Set to true to return only unique records, ala SELECT DISTINCT
@@ -104,6 +121,18 @@ class Dataset implements \Iterator{
 
 	public function __construct(){
 
+	}
+
+	/**
+	 * On clone, make a deep copy of this object!
+	 * 
+	 * This is required so that the WHERE clause does not get copied by memory space.
+	 * Otherwise altering the clone dataset will modify the original dataset!
+	 */
+	public function __clone() {
+		if($this->_where){
+			$this->_where = clone $this->_where;
+		}
 	}
 
 	/**
@@ -122,11 +151,17 @@ class Dataset implements \Iterator{
 
 		$n = func_num_args();
 
-		if($n == 0) throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+		if($n == 0){
+			throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::set()');
+		}
+		
+		if($this->_selects === null){
+			$this->_selects = [];
+		}
 
 		// Allow null to clear out the selects.
 		if($n == 1 && func_get_arg(0) === null){
-			$this->_selects = array();
+			$this->_selects = [];
 			return $this;
 		}
 
@@ -160,69 +195,106 @@ class Dataset implements \Iterator{
 	}
 
 	/**
+	 * @throws \DMI_Exception
+	 * 
 	 * @return Dataset
 	 */
 	public function insert(){
-		call_user_func_array(array($this, '_set'), func_get_args());
+		$n = func_num_args();
+
+		if($n == 0 || $n > 2){
+			throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::insert(), ' . $n . ' provided, exactly 1 or 2 expected');
+		}
+		elseif($n == 1){
+			$a = func_get_arg(0);
+			if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::insert()');
+
+			foreach($a as $k => $v){
+				// Supported for legacy systems.
+				$this->_sets[$k] = $v;
+				$this->_inserts[$k] = $v;
+			}
+		}
+		else{
+			$k = func_get_arg(0);
+			$v = func_get_arg(1);
+			// Supported for legacy systems.
+			$this->_sets[$k] = $v;
+			$this->_inserts[$k] = $v;
+		}
+
+		// Supported for legacy systems.
 		$this->_mode = Dataset::MODE_INSERT;
 
+		// Allow chaining
 		return $this;
 	}
 
 	/**
+	 * Request a bulk insert.
+	 * 
+	 * @param array $data Key/Value array of the data to bulk insert as a new record
+	 *                    
+	 * @return Dataset
+	 */
+	public function bulkInsert($data){
+		$this->_isBulk = true;
+		
+		if($this->_inserts === null){
+			$this->_inserts = [];
+		}
+		
+		// Push this data to the stack of inserts to perform.
+		$this->_inserts[] = $data;
+
+		// Allow chaining
+		return $this;
+	}
+
+	/**
+	 * @throws \DMI_Exception
+	 * 
 	 * @return Dataset
 	 */
 	public function update(){
-		call_user_func_array(array($this, '_set'), func_get_args());
+		$n = func_num_args();
+
+		if($n == 0 || $n > 2){
+			throw new \DMI_Exception ('Invalid amount of parameters requested for Dataset::update(), ' . $n . ' provided, exactly 1 or 2 expected');
+		}
+		elseif($n == 1){
+			$a = func_get_arg(0);
+			if(!is_array($a)) throw new \DMI_Exception ('Invalid parameter sent for Dataset::update()');
+
+			foreach($a as $k => $v){
+				// Supported for legacy systems.
+				$this->_sets[$k] = $v;
+				$this->_updates[$k] = $v;
+			}
+		}
+		else{
+			$k = func_get_arg(0);
+			$v = func_get_arg(1);
+			// Supported for legacy systems.
+			$this->_sets[$k] = $v;
+			$this->_updates[$k] = $v;
+		}
+
+		// Supported for legacy systems.
 		$this->_mode = Dataset::MODE_UPDATE;
 
+		// Allow chaining
 		return $this;
 	}
 
 	/**
+	 * @deprecated 201607
+	 * 
+	 * @throws \DMI_Exception
+	 * 
 	 * @return Dataset
 	 */
 	public function set(){
-		call_user_func_array(array($this, '_set'), func_get_args());
-		$this->_mode = Dataset::MODE_INSERTUPDATE;
-
-		return $this;
-	}
-
-	/**
-	 * Rename a column in this dataset, primarlly an administrative / installer function.
-	 * @return Dataset
-	 */
-	public function renameColumn(){
-		call_user_func_array(array($this, '_renameColumn'), func_get_args());
-		$this->_mode = Dataset::MODE_ALTER;
-
-		return $this;
-	}
-
-	/**
-	 * @return Dataset
-	 */
-	public function delete(){
-		// Just a simple function that doesn't actually delete anything,
-		// but it needs to be called to set the correct flag.
-		$this->_mode = Dataset::MODE_DELETE;
-
-		return $this;
-	}
-
-	/**
-	 * Set this dataset to only return the count of records.
-	 *
-	 * @return Dataset
-	 */
-	public function count(){
-		$this->_mode = Dataset::MODE_COUNT;
-
-		return $this;
-	}
-
-	private function _set(){
 		$n = func_num_args();
 
 		if($n == 0 || $n > 2){
@@ -241,9 +313,21 @@ class Dataset implements \Iterator{
 			$v = func_get_arg(1);
 			$this->_sets[$k] = $v;
 		}
+
+		// Supported for legacy systems.
+		$this->_mode = Dataset::MODE_INSERTUPDATE;
+
+		return $this;
 	}
 
-	private function _renameColumn(){
+	/**
+	 * Rename a column in this dataset, primarlly an administrative / installer function.
+	 * 
+	 * @throws \DMI_Exception
+	 * 
+	 * @return Dataset
+	 */
+	public function renameColumn(){
 		$n = func_num_args();
 
 		if($n != 2){
@@ -253,7 +337,81 @@ class Dataset implements \Iterator{
 		$oldname = func_get_arg(0);
 		$newname = func_get_arg(1);
 
+		if($this->_renames === null){
+			$this->_renames = [];
+		}
+		
 		$this->_renames[$oldname] = $newname;
+
+		// Supported for legacy systems.
+		$this->_mode = Dataset::MODE_ALTER;
+
+		// Allow chaining
+		return $this;
+	}
+
+	/**
+	 * Delete an entire record or specific key from the store, (on supported DMIs).
+	 * 
+	 * For noSQL type databases, (LDAP, Mongo), this operation can delete a specific key from an object.
+	 * Otherwise, simply calling it will request the entire record/object to be deleted.
+	 * 
+	 * @throws \DMI_Exception
+	 * 
+	 * @return Dataset
+	 */
+	public function delete(){
+		$n = func_num_args();
+		
+		if($this->_deletes === null){
+			$this->_deletes = [];	
+		}
+		
+		if($n == 0 ){
+			// Simple call, allowed to delete an entire object/record.
+			$this->_deletes['*'] = '*';
+		}
+		elseif($n == 1){
+			$a = func_get_arg(0);
+			
+			if(is_array($a)){
+				foreach($a as $k => $v){
+					$this->_deletes[$k] = $v;
+				}
+			}
+			else{
+				// Delete all values that match this key
+				$this->_deletes[$a] = '*';
+			}
+		}
+		elseif($n > 2){
+			throw new \DMI_Exception('Unsupported number of arguments for Dataset::delete!  Please issue with none, an array of values, or a single key and value.');
+		}
+		else{
+			$k = func_get_arg(0);
+			$v = func_get_arg(1);
+			$this->_deletes[$k] = $v;
+		}
+
+		// Supported for legacy systems.
+		$this->_mode = Dataset::MODE_DELETE;
+
+		// Allow chaining
+		return $this;
+	}
+
+	/**
+	 * Set this dataset to only return the count of records.
+	 *
+	 * @return Dataset
+	 */
+	public function count(){
+		// Supported for legacy systems.
+		$this->_mode = Dataset::MODE_COUNT;
+		
+		$this->_selects = ['__COUNT__'];
+
+		return $this;
 	}
 
 	public function setID($key, $val = null){
@@ -263,8 +421,100 @@ class Dataset implements \Iterator{
 		if($val) $this->where("$key = $val");
 	}
 
+	/**
+	 * Get the ID of the inserted column; useful for auto-incs.
+	 * 
+	 * Will return null if there is no ID set.
+	 * 
+	 * @return null|int
+	 */
 	public function getID(){
 		return $this->_idval;
+	}
+
+	/**
+	 * Get the mode for this query
+	 * 
+	 * Pulled dynamically based on what parameters have been requested.
+	 * 
+	 * @return string
+	 */
+	public function getMode(){
+		if($this->_isBulk && $this->_inserts !== null){
+			// Bulk insert mode!
+			return self::MODE_BULK_INSERT;
+		}
+		
+		if(
+			($this->_inserts !== null && $this->_updates !== null && $this->_deletes !== null) ||
+			($this->_inserts !== null && $this->_updates !== null) ||
+			($this->_inserts !== null && $this->_deletes !== null) ||
+			($this->_updates !== null && $this->_deletes !== null)
+		){
+			// This is a combined operation which includes at least two of: delete, insert, or update.
+			return self::MODE_INSERTUPDATE;
+		}
+		
+		if($this->_selects !== null && sizeof($this->_selects) == 1 && $this->_selects[0] == '__COUNT__'){
+			// Simple count mode.
+			return self::MODE_COUNT;
+		}
+		
+		if($this->_selects !== null){
+			// Simple select mode
+			return self::MODE_GET;
+		}
+		
+		if($this->_inserts !== null){
+			// Simple insert mode
+			return self::MODE_INSERT;
+		}
+		
+		if($this->_updates !== null){
+			// Simple update mode
+			return self::MODE_UPDATE;
+		}
+		
+		if($this->_renames !== null){
+			return self::MODE_ALTER;
+		}
+		
+		if($this->_deletes !== null){
+			// Is this a full delete or a key delete?
+			if(sizeof($this->_deletes) == 1 && isset($this->_deletes['*']) && $this->_deletes['*'] == '*'){
+				return self::MODE_DELETE;
+			}
+			else{
+				// It's a complex delete, (unsupported by traditional SQL engines).
+				return self::MODE_INSERTUPDATE;
+			}
+		}
+	}
+
+	/**
+	 * Get the columns to insert
+	 * @return null|array
+	 */
+	public function getInserts(){
+		return $this->_inserts;
+	}
+
+	/**
+	 * Get the columns to update along with their new values.
+	 * 
+	 * @return null|array
+	 */
+	public function getUpdates(){
+		return $this->_updates;
+	}
+
+	/**
+	 * Get the columns to delete and/or the values on the key to delete.
+	 * 
+	 * @return null|array
+	 */
+	public function getDeletes(){
+		return $this->_deletes;
 	}
 
 	/**
