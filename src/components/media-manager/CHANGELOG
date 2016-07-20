@@ -1,3 +1,9 @@
+Media Manager 1.1.0
+
+	* Classname fix for new font-awesome.
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:12:48 -0400
+
 Media Manager 1.0.7
 
 	* Copyright update from 2015 to 2016.

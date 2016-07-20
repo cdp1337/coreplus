@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.7" name="Media Manager">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.0" name="Media Manager">
 	<requires>
 		<require name="core" type="component" version="3.4.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -18,15 +18,16 @@
 	<view>
 		<file filename="templates/pages/mediamanagernavigator/file_metadata.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/mediamanagernavigator/index.tpl" md5="d41d8cd98f00b204e9800998ecf8427e"/>
-		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="0f3b966fafb5b5fbf4269f76ffae47ee"/>
-		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ed6aca75262c6e48847adb6a9178d6ed"/>
+		<file filename="templates/pages/mediamanagernavigator/index/icons.tpl" md5="3a510fad4c994f7304a15a8ed6a99864"/>
+		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ad6f9a103c4be9d3bb9b491082a388a5"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="aa0b056a3fdb77de2e649ef61c0882e8"/>
+		<file filename="CHANGELOG" md5="ed1d57897e39fab95efd12d69588fd7a"/>
 		<file filename="assets/scss/mediamanager/navigator.scss" md5="396c6a0e76af12591512d543ae638e5b"/>
 		<file filename="controllers/MediaManagerNavigatorController.php" md5="093d0fdbe1a7dcb59ef84149b4ad9a3a">
 			<controller name="MediaManagerNavigatorController"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="8ef45762b247f9bc2a5bc3f5e8c3862b"/>
 		<file filename="libs/mediamanager/Navigator.php" md5="77e70c56e3f05c0972e30811f5ea89f1">
 			<class name="MediaManager\Navigator"/>
 		</file>
@@ -46,6 +47,7 @@
 		<upgrade from="1.0.4" to="1.0.5"/>
 		<upgrade from="1.0.5" to="1.0.6"/>
 		<upgrade from="1.0.6" to="1.0.7"/>
+		<upgrade from="1.0.7" to="1.1.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
