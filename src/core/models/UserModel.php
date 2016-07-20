@@ -175,6 +175,15 @@ class UserModel extends Model {
 
 		parent::__construct($id);
 	}
+	
+	public function get($key){
+		if($key == 'groups'){
+			return $this->getGroups();
+		}
+		else{
+			return parent::get($key);
+		}
+	}
 
 	/**
 	 * Get the human-readable label for this record.
@@ -511,6 +520,15 @@ class UserModel extends Model {
 			return false;
 		}
 	}
+	
+	public function set($key, $value){
+		if($key == 'groups'){
+			$this->setGroups($value);
+		}
+		else{
+			parent::set($key, $value);
+		}
+	}
 
 	/**
 	 * Set all groups for a given user on the current site from a set of IDs.
@@ -520,7 +538,9 @@ class UserModel extends Model {
 	 * @param array $groups
 	 */
 	public function setGroups($groups) {
-		if(!is_array($groups)) $groups = [];
+		if(!is_array($groups)){
+			$groups = [];
+		}
 		$this->_setGroups($groups, false);
 	}
 
@@ -686,6 +706,15 @@ class UserModel extends Model {
 		$this->set('registration_ip', REMOTE_IP);
 		$this->set('registration_source', \Core\user()->exists() ? 'admin' : 'self');
 		$this->set('registration_invitee', \Core\user()->get('id'));
+	}
+	
+	public function changed($key = null){
+		if($key == 'groups'){
+			return $this->changedLink('UserUserGroup');
+		}
+		else{
+			return parent::changed($key);
+		}
 	}
 
 	/**
