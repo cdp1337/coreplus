@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Markdown Browser" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Markdown Browser" execmode="web">
 	<requires>
 		<require name="core" type="component" version="4.9" operation="ge"/>
 	</requires>
@@ -24,9 +24,9 @@
 		<hook name="/cron/5-minute" call="MarkdownBrowserController::_AutoRegisterFiles"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="ae5052b9cf15e8ec16797df8c09238ef"/>
+		<file filename="CHANGELOG" md5="b5a7ed954827acbc8a83c25347dea94f"/>
 		<file filename="README.md" md5="f4f72d72499902599c77b0e065712f0a"/>
-		<file filename="controllers/MarkdownBrowserController.php" md5="65e7231e785c35643179c2099d74be4f">
+		<file filename="controllers/MarkdownBrowserController.php" md5="bbab0d27bab01a114f3a26973816ac45">
 			<controller name="MarkdownBrowserController"/>
 			<class name="MarkdownBrowserUrlHelper"/>
 		</file>
@@ -34,9 +34,10 @@
 		<file filename="i18n/de.ini" md5="7ee24fe19d3916db8b649a176fba537b"/>
 		<file filename="i18n/en.ini" md5="567a45f02dbef4435a852a8b4c58739a"/>
 		<file filename="i18n/fr.ini" md5="a9a71c151f3671cb0a7299c68194eaa0"/>
+		<file filename="i18n/strings.yml" md5="448866c4cc9803c7c32e2a739162efcd"/>
 	</files>
 	<view searchdir="templates">
-		<file filename="templates/pages/markdownbrowser/admin.tpl" md5="d13aab0a07c041db8dcec507e69990fa"/>
+		<file filename="templates/pages/markdownbrowser/admin.tpl" md5="bf2fc7bce0a2a7954c5ae599692b41e7"/>
 		<file filename="templates/pages/markdownbrowser/index.tpl" md5="2dfc8f64c4fe06140d998bc39464bbcf"/>
 		<file filename="templates/pages/markdownbrowser/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/markdownbrowser/view-file.tpl" md5="35d194b1b49f068ad8df448098ed7f7c"/>
@@ -46,6 +47,7 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.1.0"/>
+		<upgrade from="2.1.0" to="2.2.0"/>
 	</upgrades>
 	<users/>
 	<widgets/>

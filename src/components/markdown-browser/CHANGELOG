@@ -1,3 +1,10 @@
+Markdown Browser 2.2.0
+
+	* [Bug] Fix to ensure that html files are translated correctly to the md source.
+	* Font awesome classname fix.
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:12:27 -0400
+
 Markdown Browser 2.1.0
 
 	* Add documentation for the markdown browser project.
