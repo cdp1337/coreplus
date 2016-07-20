@@ -610,11 +610,11 @@ class BlogController extends Controller_2_1 {
 				$view->addControl('Import Feed', '/blog/import/' . $blog->get('id'), 'exchange');
 			}
 			else{
-				$view->addControl('Add Article', '/content/create?page_template=blog-article.tpl&parenturl=' . $blog->get('baseurl'), 'add');
+				$view->addControl(t('STRING_ADD_ARTICLE'), '/content/create?page_template=blog-article.tpl&parenturl=' . $blog->get('baseurl'), 'add');
 			}
 		}
 		if ($manager) {
-			$view->addControl('Edit Blog', '/blog/update/' . $blog->get('id'), 'edit');
+			$view->addControl(t('STRING_EDIT_BLOG'), '/blog/update/' . $blog->get('id'), 'edit');
 			$view->addControl('All Articles', '/admin/pages/?filter[parenturl]=' . $blog->get('baseurl'), 'tasks');
 		}
 		$view->addControl('RSS Feed', \Core\resolve_link($blog->get('baseurl')) . '.rss', 'rss');

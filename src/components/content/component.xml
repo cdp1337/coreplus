@@ -28,7 +28,7 @@
 		</file>
 	</files>
 	<pages>
-		<pagecreate title="Content" baseurl="/content/create"/>
+		<pagecreate title="t:STRING_CONTENT_PAGE" baseurl="/content/create" description="t:MESSAGE_CONTENT_PAGE"/>
 	</pages>
 	<description>
 		Provides basic HTML page functionality.
