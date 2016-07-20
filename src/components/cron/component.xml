@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.3.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.0">
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
@@ -30,16 +30,16 @@
 		<page access="p:/cron/viewlog" admin="1" baseurl="/cron/admin" title="t:STRING_CRON_RESULTS"/>
 	</pages>
 	<view searchdir="templates">
-		<file filename="templates/pages/cron/admin.tpl" md5="f88f82a8597b2865dcc8153bcc2b4ef7"/>
+		<file filename="templates/pages/cron/admin.tpl" md5="1367917aa4bac1d30d3d8a030abbdc8b"/>
 		<file filename="templates/pages/cron/howto.tpl" md5="2e383dac65fc8c90dfbeb215234c1c83"/>
 		<file filename="templates/pages/cron/view.tpl" md5="85a11c600e0df17c5eec99df61b508d4"/>
-		<file filename="templates/widgets/cron/dashboard.tpl" md5="529c9f4d014a4a59e40d20eea6265d1c"/>
+		<file filename="templates/widgets/cron/dashboard.tpl" md5="bd387d484de1a2e0e9a553b15b702080"/>
 	</view>
 	<widgets>
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="840e4dfa787a864a84b863ca473d43d6"/>
+		<file filename="CHANGELOG" md5="8802e635a68468eec2b7221e926da0a6"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
 		<file filename="classes/CronHelper.php" md5="592a77bef59ee2d228cc91687b668511">
 			<class name="CronHelper"/>
@@ -47,6 +47,7 @@
 		<file filename="controllers/CronController.php" md5="74fff9c8b42b3e1f11a340d14c7ba397">
 			<controller name="CronController"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="d46c679607b2cc51eaa756a6aa57e7de"/>
 		<file filename="models/CronLogModel.php" md5="a009f692f5f5485638c0ed1257f1550c">
 			<class name="CronLogModel"/>
 		</file>
@@ -70,6 +71,7 @@
 		<upgrade from="1.2.2" to="1.2.3"/>
 		<upgrade from="1.2.3" to="1.2.4"/>
 		<upgrade from="1.2.4" to="1.3.0"/>
+		<upgrade from="1.3.0" to="2.0.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
