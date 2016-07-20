@@ -17,19 +17,45 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 	/**
 	 * @var Core\Datamodel\BackendInterface
 	 */
-	public $dmi;
+	public static $DMI;
 
-	public $dminame;
+	public static $DMIName;
+	
+	public static $Schema;
+
+	public function testCreateTable(){
+		// This should be a DMI_Backend object!
+		$this->assertInstanceOf('Core\\Datamodel\\BackendInterface', self::$DMI, '\Core\db() did not return a valid Core\\Datamodel\\BackendInterface object!');
+
+		if(self::$DMI->tableExists('test_table_create')){
+			// Delete it first!
+			$this->assertTrue(self::$DMI->dropTable('test_table_create'));
+		}
+
+		$this->assertTrue(self::$DMI->createTable('test_table_create', self::$Schema));
+
+		$this->assertTrue(self::$DMI->tableExists('test_table_create'));
+	}
 
 	/**
-	 * Ensure that a valid DMI object can be created in the system.
+	 * @depends testCreateTable
 	 */
-	protected function setUp(){
-		$this->dmi = \Core\db();
-		$this->dminame = get_class($this->dmi);
+	public function testModifyTable(){
+		// Modify the table now.
+		$newcol = new \Core\Datamodel\Columns\SchemaColumn();
+		$newcol->field = 'foo';
+		$newcol->type = Model::ATT_TYPE_TEXT;
+		$newcol->maxlength = 45;
+		self::$Schema->definitions['foo'] = $newcol;
+		self::$Schema->order[] = 'foo';
 
-		// This should be a DMI_Backend object!
-		$this->assertInstanceOf('Core\\Datamodel\\BackendInterface', $this->dmi, '\Core\db() did not return a valid Core\\Datamodel\\BackendInterface object!');
+		$ret = self::$DMI->modifyTable('test_table_create', self::$Schema);
+		$this->assertTrue(is_array($ret));
+
+		// Ensure that the new column exists.
+		$describe = self::$DMI->describeTable('test_table_create');
+		$this->assertInstanceOf('Core\\Datamodel\\Schema', $describe);
+		$this->assertEquals(8, sizeof($describe->definitions));
 	}
 
 	/**
@@ -40,7 +66,7 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 			->select('*')
 			->table('component');
 
-		$this->dmi->execute($ds);
+		self::$DMI->execute($ds);
 
 		$this->assertGreaterThan(0, sizeof($ds->num_rows));
 	}
@@ -51,7 +77,7 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 	public function testTableExists(){
 		$tablethatexists = 'component';
 
-		$this->assertTrue($this->dmi->tableExists($tablethatexists));
+		$this->assertTrue(self::$DMI->tableExists($tablethatexists));
 	}
 
 	/**
@@ -59,16 +85,53 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 	 */
 	public function testTableExistsNot(){
 		$tablethatdoesnot = 'something_completely_random_and_hopefully_does_not_exist';
-		$this->assertFalse($this->dmi->tableExists($tablethatdoesnot));
+		$this->assertFalse(self::$DMI->tableExists($tablethatdoesnot));
 	}
 
 	/**
-	 * Test the Create, Modify, and Drop table methods.
-	 *
-	 * This is the simplest way to handle these, since they all depend on each other.
+	 * Test the showTables method of the interface
 	 */
-	public function testCreateModifyDropTable1(){
-		$schema = new \Core\Datamodel\Schema();
+	public function testShowTables(){
+		$tables = self::$DMI->showTables();
+		$this->assertGreaterThan(1, sizeof($tables));
+	}
+
+	/**
+	 * @depends testModifyTable
+	 */
+	public function testDropTable(){
+		if(self::$DMI->tableExists('test_table_create')){
+			// Delete it last!
+			$this->assertTrue(self::$DMI->dropTable('test_table_create'));
+		}
+	}
+
+	/**
+	 * By this stage, there should be some read count
+	 */
+	public function testReadCount(){
+		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->readCount());
+	}
+
+	/**
+	 * By this stage, there should be some write count
+	 */
+	public function testWriteCount(){
+		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->writeCount());
+	}
+
+	public function testQueryLog(){
+		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->getEvents());
+	}
+
+	/**
+	 * Ensure that a valid DMI object can be created in the system.
+	 */
+	public static function setUpBeforeClass(){
+		self::$DMI = \Core\db();
+		self::$DMIName = get_class(self::$DMI);
+
+		self::$Schema = new \Core\Datamodel\Schema();
 
 		$cols = array(
 			'id'                         => array(
@@ -116,59 +179,10 @@ class BackendInterfaceTest extends PHPUnit_Framework_TestCase{
 			if(isset($dat['null']))      $col->null = $dat['null'];
 			if(isset($dat['maxlength'])) $col->maxlength = $dat['maxlength'];
 			if(isset($dat['autoinc']))   $col->autoinc = $dat['autoinc'];
-			$schema->definitions[$key] = $col;
-			$schema->order[] = $key;
+			self::$Schema->definitions[$key] = $col;
+			self::$Schema->order[] = $key;
 		}
 
-		$schema->indexes['primary'] = ['id'];
-
-		$this->assertFalse(\Core\db()->tableExists('test_table_create'));
-
-		$this->assertTrue(\Core\db()->createTable('test_table_create', $schema));
-
-		$this->assertTrue(\Core\db()->tableExists('test_table_create'));
-
-		// Modify the table now.
-		$newcol = new \Core\Datamodel\Columns\SchemaColumn();
-		$newcol->field = 'foo';
-		$newcol->type = Model::ATT_TYPE_TEXT;
-		$newcol->maxlength = 45;
-		$schema->definitions['foo'] = $newcol;
-		$schema->order[] = 'foo';
-
-		$this->assertTrue(\Core\db()->modifyTable('test_table_create', $schema));
-
-		// Ensure that the new column exists.
-		$describe = \Core\db()->describeTable('test_table_create');
-		$this->assertInstanceOf('Core\\Datamodel\\Schema', $describe);
-		$this->assertEquals(8, sizeof($describe->definitions));
-
-		$this->assertTrue(\Core\db()->dropTable('test_table_create'));
-	}
-
-	/**
-	 * Test the showTables method of the interface
-	 */
-	public function testShowTables(){
-		$tables = \Core\db()->showTables();
-		$this->assertGreaterThan(1, sizeof($tables));
-	}
-
-	/**
-	 * By this stage, there should be some read count
-	 */
-	public function testReadCount(){
-		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->readCount());
-	}
-
-	/**
-	 * By this stage, there should be some write count
-	 */
-	public function testWriteCount(){
-		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->writeCount());
-	}
-
-	public function testQueryLog(){
-		$this->assertGreaterThan(1, \Core\Utilities\Profiler\DatamodelProfiler::GetDefaultProfiler()->getEvents());
+		self::$Schema->indexes['primary'] = ['id'];
 	}
 }

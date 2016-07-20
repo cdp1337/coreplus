@@ -122,7 +122,6 @@ class PageModelTest extends PHPUnit_Framework_TestCase {
 			$this->assertArrayHasKey('encrypted', $schema[$k], 'PageModel schema ' . $k . ' does not contain an encrypted field');
 			$this->assertArrayHasKey('required', $schema[$k], 'PageModel schema ' . $k . ' does not contain a required field');
 			$this->assertArrayHasKey('options', $schema[$k], 'PageModel schema ' . $k . ' does not contain an options field');
-			$this->assertArrayHasKey('title', $schema[$k], 'PageModel schema ' . $k . ' does not contain a title');
 
 			// If the default is null, then null must be true.
 			if($schema[$k]['default'] === null){
