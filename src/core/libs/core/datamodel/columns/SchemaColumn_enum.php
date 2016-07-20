@@ -30,8 +30,11 @@ class SchemaColumn_enum extends SchemaColumn {
 		parent::setSchema($schema);
 		
 		// And this one has options!
-		if(!\Core\is_numeric_array($schema['options'])){
-			$this->options = array_keys($schema['options']);
+		if(\Core\is_numeric_array($schema['options'])){
+			$this->options = [];
+			foreach($schema['options'] as $k){
+				$this->options[ $k ] = $k;
+			}
 		}
 		else{
 			$this->options = $schema['options'];
