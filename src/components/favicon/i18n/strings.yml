@@ -1,0 +1,49 @@
+---
+MESSAGE_CONFIG_FAVICON_IMAGE:
+  en: "The default favicon image if no other size is uploaded.  It is best to have this be at least 228x228px in size."
+MESSAGE_CONFIG_FAVICON_IMAGE-196:
+  en: "Favicon image at 196x196px, usually used for Chrome on Android."
+MESSAGE_CONFIG_FAVICON_IMAGE-180:
+  en: "Favicon image at 180x180px, usually used for iPhone 6 Plus IOS 8+"
+MESSAGE_CONFIG_FAVICON_IMAGE-152:
+  en: "Favicon image at 152x152px, usually used for iPad w/Retina IOS 7"
+MESSAGE_CONFIG_FAVICON_IMAGE-120:
+  en: "Favicon image at 120x120px, usually used for iPhone w/Retina IOS 7"
+MESSAGE_CONFIG_FAVICON_IMAGE-96:
+  en: "Favicon image at 96x96px, usually used for Google TV"
+MESSAGE_CONFIG_FAVICON_IMAGE-76:
+  en: "Favicon image at 76x76px, usually used for iPad IOS 7"
+MESSAGE_CONFIG_FAVICON_IMAGE-64:
+  en: "Favicon image at 64x64px, usually used for Nix Desktop"
+MESSAGE_CONFIG_FAVICON_IMAGE-60:
+  en: "Favicon image at 60x60px, usually used for iPhone IOS 7"
+MESSAGE_CONFIG_FAVICON_IMAGE-48:
+  en: "Favicon image at 48x48px, usually used for Win Desktop"
+MESSAGE_CONFIG_FAVICON_IMAGE-32:
+  en: "Favicon image at 32x32px, usually used for Win Task Bar Icon"
+MESSAGE_CONFIG_FAVICON_IMAGE-16:
+  en: "Favicon image at 16x16px, usually used for Chrome,IE,FF Tab Icon"
+STRING_CONFIG_FAVICON_IMAGE:
+  en: "Default Favicon Image"
+STRING_CONFIG_FAVICON_IMAGE-196:
+  en: "Favicon Image @196x196"
+STRING_CONFIG_FAVICON_IMAGE-180:
+  en: "Favicon Image @180x180"
+STRING_CONFIG_FAVICON_IMAGE-152:
+  en: "Favicon Image @152x152"
+STRING_CONFIG_FAVICON_IMAGE-120:
+  en: "Favicon Image @120x120"
+STRING_CONFIG_FAVICON_IMAGE-96:
+  en: "Favicon Image @96x96"
+STRING_CONFIG_FAVICON_IMAGE-76:
+  en: "Favicon Image @76x76"
+STRING_CONFIG_FAVICON_IMAGE-64:
+  en: "Favicon Image @64x64"
+STRING_CONFIG_FAVICON_IMAGE-60:
+  en: "Favicon Image @60x60"
+STRING_CONFIG_FAVICON_IMAGE-48:
+  en: "Favicon Image @48x48"
+STRING_CONFIG_FAVICON_IMAGE-32:
+  en: "Favicon Image @32x32"
+STRING_CONFIG_FAVICON_IMAGE-16:
+  en: "Favicon Image @16x16"

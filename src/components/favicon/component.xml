@@ -6,6 +6,18 @@
 	</description>
 	<configs>
 		<config key="/favicon/image" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		
+		<config key="/favicon/image-196" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-180" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-152" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-120" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-96" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-76" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-64" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-60" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-48" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-32" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
+		<config key="/favicon/image-16" type="string" description="Filename of the favicon" form-attributes="type:file;accept:image/*;basedir:public/favicon/;"/>
 	</configs>
 	<pages>
 		<page baseurl="/favicon/admin" title="Site Favicon" access="g:admin" admin="1" group="t:STRING_CONFIGURE"/>

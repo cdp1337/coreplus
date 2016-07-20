@@ -55,24 +55,50 @@ class ViewMeta_favicon extends ViewMeta {
 
 		$image = ConfigHandler::Get('/favicon/image');
 		if($image){
-			$file = \Core\Filestore\Factory::File($image);
+			$closestLargest = \Core\Filestore\Factory::File($image);
 		}
 		else{
 			// Check the theme default.
-			$file = \Core\Filestore\Factory::File('asset/images/favicon.png');
-			//return [];
+			$closestLargest = \Core\Filestore\Factory::File('asset/images/favicon.png');
 		}
-
-		if(!$file->exists()){
-			return [];
+		
+		if(!($closestLargest->exists() && $closestLargest->isReadable())){
+			// Ensure that the no-page-available icon doesn't show if there is no favicon set!
+			$closestLargest = null;
 		}
+		
+		$sizes = [
+			'196', // Android Chrome
+			'180', // iPhone 6 Plus IOS 8+
+			'152', // iPad w/Retina IOS 7
+			'120', // iPhone w/Retina IOS 7
+			'96', // Google TV
+			'76', // iPad IOS 7
+			'64', // Nix Desktop
+			'60', // iPhone IOS 7
+			'48', // Win Desktop
+			'32', // Win Task Bar Icon
+			'16', // Chrome,IE,FF Tab Icon
+		];
+		
+		foreach($sizes as $s){
+			// Get the specific image for this device and this size, (if it exists).
+			if(($val = ConfigHandler::Get('/favicon/image-' . $s))){
+				$img = \Core\Filestore\Factory::File($val);
+				if($img->exists() && $img->isReadable()){
+					// This image is good!
+					$closestLargest = $img;
+				}
+			}
 
-		$data['favicon'] = '<link rel="icon" type="image/png" href="' . $file->getPreviewURL('32x32!') . '"/>';
-		$data['favicon-apple-touch-icon'] = '<link rel="apple-touch-icon" type="image/png" sizes="72x72" href="' . $file->getPreviewURL('72x72!') . '"/>';
-		$data['favicon-apple-touch-icon-2'] = '<link rel="apple-touch-icon" type="image/png" sizes="114x114" href="' . $file->getPreviewURL('114x114!') . '"/>';
-		$data['favicon-apple-touch-icon-retina'] = '<link rel="apple-touch-icon" sizes="512x512" type="image/png" href="' . $file->getPreviewURL('512x512!') . '"/>';
-		$data['favicon-windows-8'] = '<meta name="msapplication-TileImage" content="' . $file->getPreviewURL('270x270!') . '"/>';
-
+			if($closestLargest){
+				$sxs = $s . 'x' . $s;
+				$url = $closestLargest->getPreviewURL($sxs . '!');
+				$data['favicon-' . $s] = '<link rel="shortcut icon" sizes="' . $sxs . '" href="' . $url . '"/>';
+				$data['apple-touch-icon-' . $s] = '<link rel="apple-touch-icon" sizes="' . $sxs . '" href="' . $url . '"/>';
+			}
+		}
+		
 		return $data;
 	}
 } 

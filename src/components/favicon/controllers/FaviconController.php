@@ -23,7 +23,26 @@ class FaviconController extends Controller_2_1 {
 
 		$form = new Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
-		$form->addElement(ConfigHandler::GetConfig('/favicon/image')->getAsFormElement());
+		
+		$basic = new FormTabsGroup(['name' => 'basic', 'title' => 'Basic Settings']);
+		$advanced = new FormTabsGroup(['name' => 'advanced', 'title' => 'Advanced Settings']);
+
+		$basic->addElement(ConfigHandler::GetConfig('/favicon/image')->getAsFormElement());
+		
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-196')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-180')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-120')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-96')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-76')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-64')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-60')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-48')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-32')->getAsFormElement());
+		$advanced->addElement(ConfigHandler::GetConfig('/favicon/image-16')->getAsFormElement());
+		
+		$form->addElement($basic);
+		$form->addElement($advanced);
+		
 		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
 
 		$view->title = 'Site Favicon';

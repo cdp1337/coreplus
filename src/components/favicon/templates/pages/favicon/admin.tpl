@@ -10,14 +10,14 @@
 	The favicon is an image that is used heavily alongside your site's identity.
 	It is displayed in the tab bar of browsers, on bookmark links, and on mobile devices.
 	<br/><br/>
-	An ideal image to use is a square PNG or JPG at least 512x512 pixels in size.
+	An ideal image to use is a square PNG or JPG at least 228x228 pixels in size.
 </p>
 
 {if $current}
 	<fieldset class="collapsible collapsed">
 		<div class="fieldset-title">
 			How does this look on different devices?
-			<i class="icon-chevron-down expandable-hint"></i><i class="icon-chevron-up collapsible-hint"></i>
+			<i class="icon icon-chevron-down expandable-hint"></i><i class="icon icon-chevron-up collapsible-hint"></i>
 		</div>
 		<div class="preview-tile">
 			i[Pad/Phone] with Retina Display<br/>
