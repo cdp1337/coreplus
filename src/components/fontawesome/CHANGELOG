@@ -1,3 +1,8 @@
+FontAwesome 4.6.1-1
+
+	* Upgrade font awesome from 4.0.3 to 4.6.1
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:10:44 -0400
+
 FontAwesome 4.0.3~core4
 
 	* Repackage a number of components to fix a minor packaging bug.

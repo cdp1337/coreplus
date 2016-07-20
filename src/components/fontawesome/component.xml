@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.0.3~core4" name="FontAwesome" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-1" name="FontAwesome" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 	</requires>
@@ -13,39 +13,40 @@
 		This package contains the Core-optimized version of FA.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="b74144afc9c2f512c2048390985ba453"/>
-		<file filename="FontAwesome-Vectors.pdf" md5="cab0c66ed6cd83eec4d2e844619703b4"/>
+		<file filename="CHANGELOG" md5="877c36e40dc05ea9d1a4a34422cb6f64"/>
 		<file filename="FontAwesome.lib.php" md5="0bd12edc9c443d9a1e5ad44828f0601a">
 			<class name="FontAwesome"/>
 		</file>
 		<file filename="README.md" md5="bcb91e0d16d1f010effa565d0c7980d2"/>
-		<file filename="assets/css/_bordered-pulled.scss" md5="e4f85472a1f6ed0e23a473b8e00ef071"/>
-		<file filename="assets/css/_core.scss" md5="460139739224bc62d9957837978c4e22"/>
-		<file filename="assets/css/_extras.scss" md5="053aed1a3705922cea94741681034652"/>
-		<file filename="assets/css/_fixed-width.scss" md5="9277ab6964a434d499873687b00be906"/>
-		<file filename="assets/css/_icons-original.scss" md5="691e5398b8513cd310e847aae3112b27"/>
-		<file filename="assets/css/_icons.scss" md5="633bfb25362f00580eacc93cd58ac71a"/>
-		<file filename="assets/css/_larger.scss" md5="e95931566f6fc6ad5685c4fa9802e206"/>
-		<file filename="assets/css/_list.scss" md5="7107e80b053928271d5fcf422dc29490"/>
-		<file filename="assets/css/_mixins.scss" md5="e77fa4281a32902337cb56cda0b15a69"/>
-		<file filename="assets/css/_path.scss" md5="ac2a848f68cffed328272615bfca2500"/>
-		<file filename="assets/css/_rotated-flipped.scss" md5="9d894281a3b1c265abdd5abd11f9af5d"/>
-		<file filename="assets/css/_spinning.scss" md5="8e6c7988f40f123aedd96a668c56582a"/>
-		<file filename="assets/css/_stacked.scss" md5="5594237226aedfbca2fa1c7f4604c214"/>
-		<file filename="assets/css/_variables.scss" md5="9d4f23eacae6690aa140e51d42550e5b"/>
-		<file filename="assets/css/font-awesome.scss" md5="4201fdd32cc7a7d2f6ed2706800faf75"/>
+		<file filename="assets/scss/_animated.scss" md5="39ff4f359a7b81d6585075715f41e5dc"/>
+		<file filename="assets/scss/_bordered-pulled.scss" md5="4cad0df17bf40327feae33fa9a6c6ba2"/>
+		<file filename="assets/scss/_core.scss" md5="ef059a98cf9de6ca5b77ee6850771cf0"/>
+		<file filename="assets/scss/_coreplus.scss" md5="6f3faccb6fa76afe8645f3c9e3912af2"/>
+		<file filename="assets/scss/_fixed-width.scss" md5="9277ab6964a434d499873687b00be906"/>
+		<file filename="assets/scss/_icons.scss" md5="91b046d558eaca9f641b8d48a4db7d06"/>
+		<file filename="assets/scss/_larger.scss" md5="e95931566f6fc6ad5685c4fa9802e206"/>
+		<file filename="assets/scss/_list.scss" md5="7107e80b053928271d5fcf422dc29490"/>
+		<file filename="assets/scss/_mixins.scss" md5="aa2b8f32b403733713d8885f14ab86cc"/>
+		<file filename="assets/scss/_path.scss" md5="ab5a9e8388563e097b5ce835601f01d2"/>
+		<file filename="assets/scss/_rotated-flipped.scss" md5="9f5d4bc6fadea89328d2aac26574a9d8"/>
+		<file filename="assets/scss/_screen-reader.scss" md5="8907bd7dbf4799e8120bda5568d76fea"/>
+		<file filename="assets/scss/_stacked.scss" md5="5594237226aedfbca2fa1c7f4604c214"/>
+		<file filename="assets/scss/_variables.scss" md5="44e534202b9f40532148f736fae8dd69"/>
+		<file filename="assets/scss/font-awesome.scss" md5="e5ae09005974241ba8947f652f6f1ab7"/>
+		<file filename="fontawesome.pdf" md5="9a251b8d451138e739e7200ed25391f4"/>
 	</files>
 	<assets>
 		<file filename="assets/CONTRIBUTING.md" md5="51163d4979d1e0371aab27b8d29ea4b9"/>
 		<file filename="assets/README.md" md5="deabcf1bd585dd4a6462173928247612"/>
-		<file filename="assets/css/font-awesome.css" md5="9693c97eb1832debee48f90814988047"/>
-		<file filename="assets/css/font-awesome.css.map" md5="55abc3dd5d42bef0db17f52169887680"/>
-		<file filename="assets/css/font-awesome.min.css" md5="2da14727794f7199ef2986aad8fd9ca5"/>
-		<file filename="assets/fonts/FontAwesome.otf" md5="3f3a623e88cb5c62eaa2367195e98b67"/>
-		<file filename="assets/fonts/fontawesome-webfont.eot" md5="8b27bc96115c2d24350f0d09e6a9433f"/>
-		<file filename="assets/fonts/fontawesome-webfont.svg" md5="0a799148a50bb02c6f380eabd8d97559"/>
-		<file filename="assets/fonts/fontawesome-webfont.ttf" md5="dcb26c7239d850266941e80370e207c1"/>
-		<file filename="assets/fonts/fontawesome-webfont.woff" md5="3293616ec0c605c7c2db25829a0a509e"/>
+		<file filename="assets/css/font-awesome.css" md5="1cd9f82c3c2adeb22e11058dd8d707bc"/>
+		<file filename="assets/css/font-awesome.css.map" md5="683475919c2f8a3112cc7929c6849db6"/>
+		<file filename="assets/css/font-awesome.min.css" md5="b081fa4645631b0e930c7eb244b6fa87"/>
+		<file filename="assets/fonts/FontAwesome.otf" md5="9ccfa32dd4cd1b8e83f68899d85bd5e6"/>
+		<file filename="assets/fonts/fontawesome-webfont.eot" md5="404a525502f8e5ba7e93b9f02d9e83a9"/>
+		<file filename="assets/fonts/fontawesome-webfont.svg" md5="bae4a87c1e5dff40baa3f49d52f5347a"/>
+		<file filename="assets/fonts/fontawesome-webfont.ttf" md5="fb650aaf10736ffb9c4173079616bf01"/>
+		<file filename="assets/fonts/fontawesome-webfont.woff" md5="891e3f340c1126b4c7c142e5f6e86816"/>
+		<file filename="assets/fonts/fontawesome-webfont.woff2" md5="926c93d201fe51c8f351e858468980c3"/>
 	</assets>
 	<upgrades>
 		<upgrade from="2.0" to="2.0~core2"/>
@@ -55,6 +56,7 @@
 		<upgrade from="4.0.3~core1" to="4.0.3~core2"/>
 		<upgrade from="4.0.3~core2" to="4.0.3~core3"/>
 		<upgrade from="4.0.3~core3" to="4.0.3~core4"/>
+		<upgrade from="4.0.3~core4" to="4.6.1-1"/>
 	</upgrades>
 	<authors>
 		<author name="Dave Gandy" email="dave@davegandy.com"/>
