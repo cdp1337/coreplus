@@ -1,3 +1,12 @@
+User-Social 2.0.0
+
+	* Minor fix to a user-social upgrade script for users that do not exist.
+	* Classname fix for new font-awesome.
+	* Migrate i18n logic from .ini to .yml.
+	* UserUserConfigs will no longer exist, cannot rely on them for validation.
+	* Switch to supplemental models for the user social user parameters.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:15:50 -0400
+
 User-Social 1.2.3
 
 	* Set the user-social "bio" flag to use markdown instead of tinymce.

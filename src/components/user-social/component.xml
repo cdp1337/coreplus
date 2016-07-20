@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="1.2.3">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="2.0.0">
 	<requires>
 		<require name="Core" type="component" version="5.0.0"/>
 	</requires>
-	<hooks>
-	</hooks>
+	<hooks></hooks>
 	<files>
-		<file filename="CHANGELOG" md5="b53c97a6b1708f613b41143c3190fca2"/>
+		<file filename="CHANGELOG" md5="311377bc120a52dfbb7b3f50d23a6aed"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
 		<file filename="controllers/UserProfileController.php" md5="66853e201317d6ef72b0925f6f298fc2">
 			<controller name="UserProfileController"/>
 		</file>
-		<file filename="helpers/UserSocialHelper.class.php" md5="f76a1418a7b97ace4d798aa5b7637486">
+		<file filename="helpers/UserSocialHelper.class.php" md5="17e15c95ad67ecf10ca506267b0b22c7">
 			<class name="UserSocialHelper"/>
 		</file>
-		<file filename="models/UserSocial_UserModelSupplemental.php" md5="f9a82159fa528eb3cceb38c93429d326">
+		<file filename="i18n/en.ini" md5="873c051db4281d5088d1617a4ef2e42e"/>
+		<file filename="models/UserSocial_UserModelSupplemental.php" md5="c3cd42143f7fd598af12d2a8d46fa729">
 			<class name="UserSocial_UserModelSupplemental"/>
 		</file>
-		<file filename="upgrades/123_user_config_migration.php" md5="64d7198dd20afaf598be06b5cc87f2c8"/>
+		<file filename="upgrades/123_user_config_migration.php" md5="242140d3faf6585e0addd0d918381b6f"/>
 		<file filename="widgets/UserProfileWidget.php" md5="d3439ef919e587370e2daa7aa00fd567">
 			<class name="UserProfileWidget"/>
 		</file>
@@ -27,8 +27,8 @@
 		<file filename="assets/css/usersocial.css" md5="4cf64ea147f88e890f4c79d8c7c5f7e3"/>
 	</assets>
 	<view searchdir="templates">
-		<file filename="templates/pages/userprofile/view.tpl" md5="536e622b31e96058a91581ea662bda5d"/>
-		<file filename="templates/widgets/userprofile/badge.tpl" md5="721768468480ec97e806fdfd3fe47a2f"/>
+		<file filename="templates/pages/userprofile/view.tpl" md5="7bb69de945b1919b56aede1ec39e6a02"/>
+		<file filename="templates/widgets/userprofile/badge.tpl" md5="42338b49cf81ccf1978e37795664887c"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
@@ -41,7 +41,7 @@
 		<upgrade from="1.2.0" to="1.2.1"/>
 		<upgrade from="1.2.1" to="1.2.2"/>
 		<upgrade from="1.2.2" to="1.2.3"/>
-		<upgrade from="next" to="next">
+		<upgrade from="1.2.3" to="2.0.0">
 			<php file="upgrades/123_user_config_migration.php"/>
 		</upgrade>
 	</upgrades>
