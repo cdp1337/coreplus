@@ -902,14 +902,13 @@ require_once(__DIR__ . '/bootstrap_postincludes.php');
 // If the geo-location libraries are available, load the user's location!
 if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Database\\Reader')){
 	try{
-		if(REMOTE_IP == '127.0.0.1'){
-			// Load local connections up with Columbus, OH.
-			// Why?  ;)
-			$geocity     = 'Columbus';
-			$geoprovince = 'OH';
-			$geocountry  = 'US';
-			$geotimezone = 'America/New_York';
-			$geopostal   = '43215';
+		if(\Core\is_ip_private(REMOTE_IP)){
+			// Private connections generally do not geocode well, as they are not registered with any geo database.
+			$geocity     = 'LOCAL';
+			$geoprovince = '';
+			$geocountry  = 'INTL';
+			$geotimezone = TIME_DEFAULT_TIMEZONE;
+			$geopostal   = '';
 		}
 		else{
 			$reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
