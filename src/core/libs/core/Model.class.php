@@ -1291,6 +1291,8 @@ class Model implements ArrayAccess {
 		$c->setValueFromApp($v);
 	}
 
+	///////////////////////////////////////////////////////////////////////////
+	////                      LINK SPECIFIC METHODS                        //// 
 
 	/**
 	 * Get the model factory for a given link.
@@ -1519,6 +1521,51 @@ class Model implements ArrayAccess {
 			}
 		}
 
+		return false;
+	}
+
+	/**
+	 * Get if the given link by name has changed.
+	 * 
+	 * This accounts for a newly created one, deleted one, or simply modified link.
+	 * 
+	 * Also handles 1-M and 1-1 links
+	 * 
+	 * @param string $linkname The link, (by name), to get if changed. 
+	 *
+	 * @return bool
+	 */
+	public function changedLink($linkname){
+		$idx = $this->_getLinkIndex($linkname);
+		if($idx === null){
+			return false; // @todo Error Handling
+		}
+
+		if($this->_linked[$idx]['records'] === null){
+			// If this link is not even loaded, then it can't have been changed.
+			return false;
+		}
+		if(isset($this->_linked[$idx]['deleted']) && $this->_linked[$idx]['deleted'] !== null){
+			// If there is a deleted IDX and it's set to an array, then at least one link was deleted, CHANGE!
+			return true;
+		}
+
+		if(is_array($this->_linked[$idx]['records'])){
+			foreach($this->_linked[$idx]['records'] as $subm){
+				if($subm->changed()){
+					// There is at least one changed sub model!  CHANGE!
+					return true;
+				}
+			}
+		}
+		elseif($this->_linked[$idx]['records'] instanceof Model){
+			if($this->_linked[$idx]['records']->changed()){
+				// I think this can happen.... :/
+				return true;
+			}
+		}
+		
+		// Shrugs!
 		return false;
 	}
 
