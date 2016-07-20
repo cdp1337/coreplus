@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="3.5.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,14 +10,14 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="14282342ce81a7b85efc2e98376f4acd"/>
+		<file filename="CHANGELOG" md5="c8ae9a66e6bc1f2a834e381da077af81"/>
 		<file filename="assets/scss/theme/admin.scss" md5="96790afec6f515911a7e9ffa915262d0"/>
 		<file filename="assets/scss/theme/widgets.scss" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
-		<file filename="controllers/ThemeController.class.php" md5="e45d19265af2636b4146378cabdfd2d9">
+		<file filename="controllers/ThemeController.class.php" md5="0aba32530282b63cfbf859cb0bb3c109">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="afa487e826070f15bbecff618cad6d4c">
+		<file filename="libs/Theme/Theme.php" md5="ff2607816a8e409def4d2ca89dfa0557">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="4360132aa1f405d144f9330cb1083176">
@@ -28,8 +28,8 @@
 		</file>
 	</files>
 	<view>
-		<file filename="templates/pages/theme/editor.tpl" md5="533b2423a66182e692136eefa142f081"/>
-		<file filename="templates/pages/theme/index.tpl" md5="a77fe053fe2a4ecbd275f288de9bb7f0"/>
+		<file filename="templates/pages/theme/editor.tpl" md5="248d7fcb4adf06ca56b4e7095ad34623"/>
+		<file filename="templates/pages/theme/index.tpl" md5="710916665278d0f768e1505494b24d4e"/>
 		<file filename="templates/pages/theme/selectstylesheets.tpl" md5="47956fc42e0954353264ab3d2f5c0e59"/>
 		<file filename="templates/pages/theme/setdefault.tpl" md5="835a5142fdb7c580502a6413909a89e0"/>
 	</view>
@@ -80,6 +80,7 @@
 		<upgrade from="2.4.3" to="2.4.4"/>
 		<upgrade from="2.4.4" to="3.0.0"/>
 		<upgrade from="3.0.0" to="3.1.0"/>
+		<upgrade from="3.1.0" to="3.2.0"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>

@@ -1,3 +1,10 @@
+Theme 3.2.0
+
+	* Classname fix for new font-awesome.
+	* Some multisite fixes for the theme manager.
+	* Add support for themes to have screenshots.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:15:16 -0400
+
 Theme 3.1.0
 
 	* Switch to 5.0 version of function namespaces for set_message.
