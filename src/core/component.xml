@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.1" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.0" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -108,10 +108,10 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="7bbc6209159b24778f7b3673127bf90f"/>
+		<file filename="core/CHANGELOG" md5="24a6e6f63466f9744100aaf7e521fff4"/>
 		<file filename="core/LICENSER.php" md5="22bee0e2215980e57231428bfe7907ee"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
-		<file filename="core/bootstrap.php" md5="e19d6a8d879cd03d556bf8bc961194a8"/>
+		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
 		<file filename="core/bootstrap_postincludes.php" md5="ad5edc4ca5372e9245fa6c4af1b5db7a"/>
 		<file filename="core/bootstrap_predefines.php" md5="19c03f50f1de46a41681c26a3af7f23f"/>
 		<file filename="core/bootstrap_preincludes.php" md5="c3deceae3d39082ed940dcf6aea27061"/>
@@ -142,7 +142,7 @@
 		<file filename="core/controllers/UpdaterController.class.php" md5="4bb0c769bf33b16582005f232013c1c6">
 			<controller name="UpdaterController"/>
 		</file>
-		<file filename="core/controllers/UserActivityController.php" md5="0bb0f0e27c8d46a2b2c801d9fa4a1930">
+		<file filename="core/controllers/UserActivityController.php" md5="bca7232fefa3aea2d7f1a31d4746ddaa">
 			<controller name="UserActivityController"/>
 		</file>
 		<file filename="core/controllers/UserConfigController.php" md5="1b01735cd28b9f4e9f94b00e5e81d787">
@@ -236,7 +236,7 @@
 		<file filename="core/forms/FormUserInput.php" md5="a5a8123902decd9cb3635b85be3bbb51">
 			<class name="FormUserInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="758aa02a3a7199884ced9a0c2b621d85"/>
+		<file filename="core/functions/Core.functions.php" md5="6974b6ed1b83dd77c37da88b021f1e3a"/>
 		<file filename="core/functions/global.php" md5="15b9b245993725c6ae969bab22239f17"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="75a21a9412e2a01a9b7b123410bf2fd1">
 			<class name="RewriteMapHelper"/>
@@ -420,7 +420,7 @@
 		<file filename="core/libs/core/CAEDirectoryIterator.class.php" md5="b1b906ca0b590f7e608c9e132f7bea08">
 			<class name="CAEDirectoryIterator"/>
 		</file>
-		<file filename="core/libs/core/CSVImporter.php" md5="ff482b7f550de2f4e26a9f4585921741">
+		<file filename="core/libs/core/CSVImporter.php" md5="e9e5ad9296afadff45eed071b2006b51">
 			<class name="Core\CSVImporter"/>
 		</file>
 		<file filename="core/libs/core/Cache.php" md5="f62cf15a837e69696f27453a2d0cd118">
@@ -441,7 +441,7 @@
 		<file filename="core/libs/core/Controller_2_1.class.php" md5="dc3a8431d3658bc6b2030677ae263f81">
 			<class name="Controller_2_1"/>
 		</file>
-		<file filename="core/libs/core/Core.class.php" md5="92682e631926a431e204c8fcb6cd23ba">
+		<file filename="core/libs/core/Core.class.php" md5="bc88c7e7fc10e7f8c76420cd00a7efae">
 			<class name="Core"/>
 		</file>
 		<file filename="core/libs/core/CoreDateTime.php" md5="3213bb356fb936d95d1411d922ff7859">
@@ -492,7 +492,7 @@
 		<file filename="core/libs/core/MarkdownProcessor.php" md5="f11ed3bdcc9ed6e265710db2f3c371b6">
 			<class name="Core\MarkdownProcessor"/>
 		</file>
-		<file filename="core/libs/core/Model.class.php" md5="40b84095900a2b19c0e6ccacd58e5b38">
+		<file filename="core/libs/core/Model.class.php" md5="350c623a22cd9e838e3bcdb620d3e9b2">
 			<class name="Model"/>
 			<class name="ModelFactory"/>
 		</file>
@@ -508,7 +508,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c8739443809534d8340bc7080037d01c">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="7dc090e2b830c90f857016c5ecef7f8f">
+		<file filename="core/libs/core/PageRequest.class.php" md5="eb40f7efb845c2a0387690f303fd5b6c">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="cc87c13386363cd5779730a0cfbded45">
@@ -579,7 +579,7 @@
 		<file filename="core/libs/core/cli/Arguments.php" md5="fcc7b82536005e9d3deb94cb3050af0a">
 			<class name="Core\CLI\Arguments"/>
 		</file>
-		<file filename="core/libs/core/cli/CLI.class.php" md5="4edd219d55354b26ba94c66d77028136">
+		<file filename="core/libs/core/cli/CLI.class.php" md5="9657efa2c8d301471486bffdf0ab1b5f">
 			<class name="Core\CLI\CLI"/>
 		</file>
 		<file filename="core/libs/core/datamodel/BackendInterface.php" md5="80b76dd86c66f9a734f24bbc11dbd806">
@@ -588,10 +588,10 @@
 		<file filename="core/libs/core/datamodel/DMI.class.php" md5="9a6ad514e02dc0b908b8dceb2df44c56">
 			<class name="DMI"/>
 		</file>
-		<file filename="core/libs/core/datamodel/Dataset.php" md5="4d85af091792e5b2b9c1ec66cec077d7">
+		<file filename="core/libs/core/datamodel/Dataset.php" md5="d41bb205bd3b4b165cbcaa267b8ce022">
 			<class name="Core\Datamodel\Dataset"/>
 		</file>
-		<file filename="core/libs/core/datamodel/DatasetStream.php" md5="10d3bcfcd05ff74dc1b856826b6a2341">
+		<file filename="core/libs/core/datamodel/DatasetStream.php" md5="f44d60e2e7cc820e9df8f64d93430c87">
 			<class name="Core\Datamodel\DatasetStream"/>
 		</file>
 		<file filename="core/libs/core/datamodel/DatasetWhere.php" md5="7239fc314c9cb82dadc4a9821f4769ab">
@@ -645,7 +645,7 @@
 		<file filename="core/libs/core/datamodel/columns/SchemaColumn_data.php" md5="95b8da14cd1fa0cc3872cdf04437da82">
 			<class name="Core\Datamodel\Columns\SchemaColumn_data"/>
 		</file>
-		<file filename="core/libs/core/datamodel/columns/SchemaColumn_enum.php" md5="7a405263eb499bb6fc4777da3525e11d">
+		<file filename="core/libs/core/datamodel/columns/SchemaColumn_enum.php" md5="9cdb61c0dafe0f36a2b08b7418c105fd">
 			<class name="Core\Datamodel\Columns\SchemaColumn_enum"/>
 		</file>
 		<file filename="core/libs/core/datamodel/columns/SchemaColumn_float.php" md5="eca0c6f2243b63a6046b6035b64204d1">
@@ -660,7 +660,7 @@
 		<file filename="core/libs/core/datamodel/columns/SchemaColumn_text.php" md5="5cc873e554d0e09e28bb2cb90896d395">
 			<class name="Core\Datamodel\Columns\SchemaColumn_text"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="28f2b867a94709d3480847090dd466d4">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="ce77d2ba72060ee1c290b68b7fe5b141">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="3791b7314ca141094c468a48edab3b94">
@@ -721,7 +721,7 @@
 		<file filename="core/libs/core/filestore/contents/ContentASC.php" md5="a3efc3c8d538f4905c9587a50de5fde6">
 			<class name="Core\Filestore\Contents\ContentASC"/>
 		</file>
-		<file filename="core/libs/core/filestore/contents/ContentCSV.php" md5="4510fedc1df62b1c3bcbb390b67e0fe4">
+		<file filename="core/libs/core/filestore/contents/ContentCSV.php" md5="5275a1810a5fd6ded89f6bac1a262be8">
 			<class name="Core\Filestore\Contents\ContentCSV"/>
 		</file>
 		<file filename="core/libs/core/filestore/contents/ContentGZ.php" md5="765d9ad51fdb3e0d6729cfbeb83535c1">
@@ -1630,7 +1630,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="291caa358a9d8df5dc806d3e66b3a8dd">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="627008708b850f57df929315387137db">
+		<file filename="core/models/UserModel.php" md5="056f0d1e64850ec95385d484db1f93f8">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="b6891787a7d623fd0918b8fdabcdf364">
@@ -1678,7 +1678,7 @@
 			<class name="UserWidget"/>
 		</file>
 		<file filename="htaccess.example" md5="180a2e73554496c5a0e7d8a033a0fd49"/>
-		<file filename="index.php" md5="de3a1c1134df965cb1f2254ca00680f5"/>
+		<file filename="index.php" md5="738c3a2741d308bf4c5c7b217a20685c"/>
 		<file filename="install/InstallPage.class.php" md5="2987f4e8cf94c5fb78ebae74e3ef22ea">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1787,6 +1787,9 @@
 		<file filename="core/templates/forms/groups/pagemetas.tpl" md5="f8def8d34a18483bb59dddba141e5645"/>
 		<file filename="core/templates/forms/groups/tabs.tpl" md5="7fa8235d668d17b2f1514a7e009aea4a"/>
 		<file filename="core/templates/halt_pages/fatal_error.inc.html" md5="b0703745203c27829c3d0617ac24e6e4"/>
+		<file filename="core/templates/includes/csvimporter/import1.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/includes/csvimporter/import2.tpl" md5="9ad5c19329622d6e8359460bf1f191b6"/>
+		<file filename="core/templates/includes/csvimporter/import3.tpl" md5="f5a6eaa51231b5b706a461fd639d9640"/>
 		<file filename="core/templates/includes/listingtable/head.tpl" md5="5f8251e518d4aaf9e52daa213ac0d82b"/>
 		<file filename="core/templates/includes/user/datastore_login.tpl" md5="d831309192db1db50caeeb37f4d44743"/>
 		<file filename="core/templates/includes/user/datastore_register.tpl" md5="c4e41f20ce32bd95e232b96406003804"/>
@@ -1864,7 +1867,7 @@
 		<file filename="core/templates/pages/user/register.tpl" md5="ddca9cd390bfab439a0e0fc1ecbd1083"/>
 		<file filename="core/templates/pages/user/register2.tpl" md5="3e437be080512b86c2c9f24c1cdcaf5b"/>
 		<file filename="core/templates/pages/user/view.tpl" md5="a6af483b40072f1a59acda73a7bc07d6"/>
-		<file filename="core/templates/pages/useractivity/details.tpl" md5="01d769837d2102ecce7e5fc12a9bd851"/>
+		<file filename="core/templates/pages/useractivity/details.tpl" md5="a0c76eb715574a8f690704fb29b2ccd4"/>
 		<file filename="core/templates/pages/useractivity/index.tpl" md5="33ea91acad278e19693777cad16fc071"/>
 		<file filename="core/templates/pages/userconfig/admin.tpl" md5="ddb0b2244edc6285dbcb45d222f1bb88"/>
 		<file filename="core/templates/pages/usergroupadmin/create_update.tpl" md5="7d72552f0b0f003af068eb7693834e4e"/>
@@ -2545,7 +2548,7 @@
 		<upgrade from="4.2.0" to="4.9.0"/>
 		<upgrade from="4.9.0" to="5.0.0"/>
 		<upgrade from="5.0.0" to="5.0.1"/>
-		<upgrade from="next" to="next">
+		<upgrade from="5.0.1" to="6.0.0">
 			<php file="core/upgrades/500_user_config_migration.php"/>
 		</upgrade>
 	</upgrades>

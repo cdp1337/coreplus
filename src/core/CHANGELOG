@@ -1,3 +1,119 @@
+Core Plus 6.0.0
+
+	* [Bug] Fix options with labels defined in Models.
+	* [Bug] Fix in the widgets to correctly trim '/' off template names for widgets.
+	* [Bug] Fix the URL for editing page widgets.
+	* [Bug] Fix for blank config options on user register and edit.
+	* [Bug] Include mbstring as a pre-install check, addresses Bug #1983
+	* [Bug] Fix the server ID not showing on the management page, (it included formatting which I wasn't
+	  taking into consideration).
+	* [Bug] Fix supplemental models not clearing the schema cache after loading new schemas.
+	* [Bug] Fix VersionString to use the global C-based version_compare instead of the namespaced version,
+	* [Bug] Fix a fringe bug where filenames with a dot in a parent directory were not resolving to the
+	  correct extension.
+	* [Performance] Add a debugging line in Configs to assist with performance tracking.
+	* [Performance] Improve performance of the Search helper by not running the DoubleMetaPhone logic if
+	  the string index didn't change.
+	* [Feature] New feature on controls to specify only-icons.
+	* [Feature] New feature to display dynamic elements on /user/me and /user/view.
+	* [Feature] Most instances of user agent output I can find; Feature #1975
+	* [Feature] A few tweaks to Feature #1975
+	* Compiler
+	* New tests.
+	* Display a pretty graph on user details!
+	* Slight overhaul to the Dataset to allow for more advanced operations with some backends.
+	* Shortcut helpers for handlings groups on users.
+	* Utilize the private IP checker for users geo data.
+	* New method for detecting a changed link on a model.
+	* New function to calculate internal/private IP addresses.
+	* Compiler.
+	* Classname fix for new font-awesome.
+	* Internal fixes to strtolower all ModelSupplemental registrations.
+	* Change the functionality of ajaxlinks slightly to fix a disappearing window problem.
+	* Backend logic to display groups for users.
+	* Minor SystemLog and View All Pages fixes
+	* Move the form 'source' logic to the actual FormSelectInput.
+	* Better support for SSL redirects when headers have been sent.
+	* Migrate several rewrite logics from the 404 handler to the PageRequest.
+	* Include the form element's parent as the column's parent.
+	* Refactor the automatic upgrade process in Core.
+	* Overhaul the routing and Page system a bit.
+	* Include a couple internal files in the Bootstrapper.
+	* Internal fix for an upgrade file to not save a user that does not exist.
+	* New system, CSVImporter!
+	* Migrate i18n logic from .ini to .yml.
+	* New functionality on ContentCSV.
+	* Internal fixes for ModelSupplemental checks.
+	* User edit is now dynamic based on options set for edit/reg.
+	* Add getFilename method to templates.
+	* Upgrade smarty from 3.1.27 to 3.1.29.
+	* Include value translation logic for Boolean schema columns.
+	* CLI Progress bars now support relative values.
+	* Upgrade Spyc to newest version from development.
+	* More verbose email validation messages.
+	* site logo on lock.message is now base64 encoded. The image file and the theme configs may not exist,
+	  so, base64 zee image!
+	* More overhauls to the User subsystem in Core.
+	* Add support for GPG photos! Fix #101
+	* Reduce the sizes of the buttons on filters by removing the word 'Filters'.
+	* Allow the limit to be user changeable for FilterForms.
+	* Allow system form elements to skip validation; they are set from the controller so they're expected
+	  to be valid.
+	* Smarty modifier for #1972.
+	* New method, UserAgent->getAsHTML(); addresses User Story #1972
+	* Add gpg_fingerprint as a smarty function; provides more flexibility over the in-line modifier when
+	  necessary.
+	* Include supplemental metadata for schemas; useful to ensure that i18n scanning propagates the
+	  correct component for specific keys.
+	* Styled "Core Plus is upgrading" message that displays when lock.message exists
+	* Catch _tmptable existing on a prior installation run and drop it if so.
+	* Wrap this in an if to alleviate strange installer issues.
+	* Use extension_loaded instead of phpversion?...
+	* eh?
+	* Allow for blank user agent strings on the UserAgent class.
+	* Skip the model supplemental class itself when pulling the list of supplemental models.
+	* Better handling of the display of multisite groups.
+	* Retool how user configuration options are enabled/disabled to work with 5.1.0.
+	* Use the new detailed requirement checks provided by Core on the system health report instead of
+	  manual checks for php extensions.
+	* Move the 'asFormElement' logic from the form parent class to the individual SchemaColumn class.
+	* Ensure that the UserModel returns correctly types for the various keys.
+	* Disable configuration options when on children sites and that config is not set as overrideable.
+	* New method to return the version of the library currently installed.
+	* Expand the Component requirement check logic to include more information when requested.
+	* Models no longer return true/false on set; the user password changer should return true always on
+	  good passwords.
+	* Remove an unnecessary functional file for Core\Configs, (all the functionality was already included
+	  elsewhere).
+	* Code reformat for SQL_Parser_Lexer to not throw warnings on PHP 7.0.
+	* Multisite fix.
+	* Include the city+state on GPG key change email notifications.
+	* Display the short date+time on the log listing table.
+	* Better UX assisting for configuring email sending options.
+	* Improve reinstallation speeds by performing a RENAME instead of copy and fix the schema comparison
+	  logic.
+	* Remove datamodel backends, these have been migrated to drivers as of 2.7.0.
+	* Support "t:" strings in the ViewControls system for the title attribute.
+	* Add support for NTLM authentication to Exchange servers.
+	* More major changes!
+	* Other supplemental changes for the Model/DMI rewrite.
+	* Important include changes for the new Schema system.
+	* Majority of work on the model refactoring, it should work now...
+	* Implement caching for the internal method SearchForString to save some lookup calls.
+	* Enable Xdebug profiling when XHPROF is enabled, (but not available).
+	* Standardize the time_duration_format function into one source.
+	* Auto-generate the server ID on installation.
+	* New support for displaying the server license key to administrators.
+	* Do not enforce templates nor master templates when the View mode is set to MODE_NOOUTPUT.
+	* Include the new global UUID server ID in the data along with update checks.
+	* Changelog\Section methods getReleasedDateUTC, getPackagerName, getPackagerEmail, and fetchAsHTML
+	* Switch the server ID to a global UUID instead of local.
+	* New method to delete the private keys in a GPG keychain.
+	* New support for custom request headers on remote files.
+	* Increase UUID length from 21 to 32 characters to allow for global UUIDs, (not just local UUIDs).
+	* Ensure that \Core\version_compare behaves similarly as the rest of the namespaced functions.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:05:46 -0400
+
 Core Plus 5.0.1
 
 	* [Bug] Fix for the broken GPG auth signature verification
