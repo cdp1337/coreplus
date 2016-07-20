@@ -990,7 +990,7 @@ class mysqli_backend implements BackendInterface {
 				}
 
 				$opts = [];
-				foreach($column->options as $opt){
+				foreach($column->options as $opt => $title){
 					// Ensure that any single quotes are escaped out.
 					$opts[] = str_replace("'", "\\'", $opt);
 				}
