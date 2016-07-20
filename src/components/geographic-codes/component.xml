@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7.0" name="Geographic Codes" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Geographic Codes" execmode="both">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -10,7 +10,7 @@
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="6b4b7fb9bf2d40a93d517a92ba66b37c"/>
+		<file filename="CHANGELOG" md5="f649c76b9388c728e035521731ccfe7d"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
 		<file filename="assets/scss/geographic-codes.scss" md5="3f365b9b9738e830d8fa81cf03d87aa8"/>
 		<file filename="classes/GeoAddressFormInput.php" md5="70d2051369a72c2309fdbfd64de550e0">
@@ -170,7 +170,7 @@
 		<file filename="libs/maxmind-geolite-db/GeoLite2-City.mmdb" md5="4db1f8e0219eabffa5ed2293f480f45d"/>
 		<file filename="libs/maxmind-geolite-db/LICENSE" md5="85eefaa2cbb8581ef26edbdbc7e4f926"/>
 		<file filename="libs/maxmind-geolite-db/SUPPORT" md5="2831aedc85a165bf7db688c39233366c"/>
-		<file filename="models/GeoAddressModel.php" md5="a0da281cb23f9f4ac674c8a7ca335829">
+		<file filename="models/GeoAddressModel.php" md5="d267548ddef8dcd71295f479bd559da1">
 			<class name="GeoAddressModel"/>
 		</file>
 		<file filename="models/GeoCiyModel.php" md5="b3c12fecc2c9700ed05d5fef0e6748c4">
@@ -182,7 +182,7 @@
 		<file filename="models/GeoProvinceModel.php" md5="95a1e0afccc24541473b6afdb03683dd">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="smarty-plugins/function.geoiplookup.php" md5="617dfb67780551203eb56260d702c99f"/>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="0c798c3fe45d336e77d82a647c06e717"/>
 	</files>
 	<assets>
 		<file filename="assets/css/geographic-codes.css" md5="487b7f3d62f0b4ac7095921ee0c827f4"/>
@@ -209,6 +209,7 @@
 		<upgrade from="1.6.0" to="1.6.1"/>
 		<upgrade from="1.6.1" to="1.6.2"/>
 		<upgrade from="1.6.2" to="1.7.0"/>
+		<upgrade from="1.7.0" to="2.0.0"/>
 	</upgrades>
 	<view>
 		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>

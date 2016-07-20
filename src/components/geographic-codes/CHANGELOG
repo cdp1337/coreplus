@@ -1,3 +1,10 @@
+Geographic Codes 2.0.0
+
+	* Better logic for internal/private IP addresses on geolookup widgets.
+	* NEW GEO FEATURES!
+	* Migrate i18n logic from .ini to .yml.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 20 Jul 2016 02:11:16 -0400
+
 Geographic Codes 1.7.0
 
 	* [Performance] Better performance on IP lookups and added country methods for retrieving the flag and
