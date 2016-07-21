@@ -917,6 +917,17 @@ function get_resized_key_components($dimensions, $file){
 	if(!$ext){
 		$ext = mimetype_to_extension($file->getMimetype());
 	}
+	$fileBase = \Core\str_to_url($file->getBasename(true));
+	
+	// If this file already has a dimension hash attached, drop that off the end.
+	if(preg_match('/-[0-9]*x[0-9]*$/', $fileBase)){
+		$fileBase = preg_replace('/-[0-9]*x[0-9]*$/', '', $fileBase);
+	}
+	
+	// Ensure this isn't too long, just in case.
+	if(strlen($fileBase) > 42){
+		$fileBase = substr($fileBase, 0, 42);
+	}
 
 	// The basename is for SEO purposes, that way even resized images still contain the filename.
 	// The hash is just to ensure that no two files conflict, ie: /public/a/file1.png and /public/b/file1.png
@@ -925,7 +936,7 @@ function get_resized_key_components($dimensions, $file){
 	//  touch to the file. :p
 	// Also, keep the original file extension, this way PNGs remain PNGs, GIFs remain GIFs, JPEGs remain JPEGs.
 	// This is critical particularly when it comes to animated GIFs.
-	$key = str_replace(' ', '-', $file->getBasename(true)) . '-' . $file->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
+	$key = $fileBase . '-' . $file->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
 
 	// The directory can be used with the new File backend to create this file in a correctly nested subdirectory.
 	$dir = dirname($file->getFilename(false)) . '/';
