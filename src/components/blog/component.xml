@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Blog" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
@@ -150,13 +150,5 @@
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>
 		<file filename="assets/js/blog-waypoint-scroll.min.js" md5="7b9efd6a0e44144b4ebc9e4f3a97a601"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
-		</license>
-	</licenses>
 </component>
 
