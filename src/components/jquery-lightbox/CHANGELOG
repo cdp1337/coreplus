@@ -1,3 +1,8 @@
+JQuery-lightbox 2.8.2-1
+
+	* New version of Lightbox from upstream.
+	-- Charlie Powell <charlie@evalagency.com>  Mon, 25 Jul 2016 18:49:40 -0400
+
 JQuery-lightbox 0.5~core3
 
 	* Support the new FontAwesome names.
