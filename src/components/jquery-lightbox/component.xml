@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core3" name="JQuery-lightbox" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="0.5~core3" name="JQuery-lightbox" execmode="web" logo="picture.png">
 	<requires>
-		<require name="core" type="component" version="2.1.0" operation="ge"/>
-		<require name="jquery" type="library" version="1.4" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="jquery" type="library" version="1.9" operation="ge"/>
 		<require name="fontawesome" type="library" version="4.0.0" operation="ge"/>
 	</requires>
 	<provides>
@@ -11,37 +11,35 @@
 		<scriptlibrary name="jquery.lightbox" call="JQueryLightbox::Load"/>
 	</provides>
 	<assets>
-		<file filename="assets/css/images/lightbox-blank.gif" md5="fc94fb0c3ed8a8f909dbc7630a0987ff"/>
-		<file filename="assets/css/images/lightbox-btn-close.gif" md5="2c38ae5be85141bf8867c9523f4bc357"/>
-		<file filename="assets/css/images/lightbox-btn-next.gif" md5="23414965ebe526012e473c1d4d65d4e7"/>
-		<file filename="assets/css/images/lightbox-btn-prev.gif" md5="5a9118de4ef6226473190d6e82f6d80d"/>
-		<file filename="assets/css/images/lightbox-ico-loading.gif" md5="b5fe8df97005341f898e2cf84e68de01"/>
-		<file filename="assets/css/jquery.lightbox-0.5.css" md5="96ffc5ef3f274ad20bc77e293a8b0722"/>
-		<file filename="assets/js/jquery.lightbox-0.5.js" md5="1ef2f8dd5868dc9571821afc7ca7da27"/>
-		<file filename="assets/js/jquery.lightbox-0.5.min.js" md5="392188831ef280bf9d4e71cdd12d4f17"/>
+		<file filename="assets/css/lightbox.css" md5="4866e40e3a559b9c8e94508762ebfca8"/>
+		<file filename="assets/css/lightbox.min.css" md5="27f0f165135c7f2e26c94cb7a5ac5533"/>
+		<file filename="assets/js/lightbox.js" md5="cb589d2b8f529e516b28ae1de503818b"/>
+		<file filename="assets/js/lightbox.min.js" md5="f5319f94376ab89ab6b436fb44dee106"/>
+		<file filename="assets/js/lightbox.min.map" md5="0a5381055046172bf2de96363361d5e1"/>
 	</assets>
 	<files>
-		<file filename="CHANGELOG" md5="d8a552afc35aa7cd068a7869b9dc02ac"/>
-		<file filename="JQueryLightbox.lib.php" md5="5a1333e1703f65954cf15c6fe723bd8d">
+		<file filename="CHANGELOG" md5="43fb0108601257908812eb91bbba875f"/>
+		<file filename="JQueryLightbox.lib.php" md5="a2b7a4cc41e8d7330709ccc6e4ba8e88">
 			<class name="JQueryLightbox"/>
 		</file>
+		<file filename="LICENSE" md5="5debb370f50e1dfd24ff5144233a2ef6"/>
+		<file filename="lightbox2-screen.jpg" md5="379d36f3b6398fd90c95f9bb6c70593b"/>
+		<file filename="picture.png" md5="8ddf202913b8a9938d6305bbce39d8fe"/>
 	</files>
 	<description>
-		Query lightBox plugin is simple, elegant, unobtrusive, no need extra markup and is used to overlay images on the current page through the power and flexibility of jQuery&#xB4;s selector.
-		lightBox is a plugin for jQuery. It was inspired in Lightbox JS by Lokesh Dhakar.
-		Visit http://leandrovieira.com/projects/jquery/lightbox/ for more informations about this jQuery plugin
+		Lightbox is small javascript library used to overlay images on top of the current page.
+		It's a snap to setup and works on all modern browsers.
+		For demos and usage instructions, visit lokeshdhakar.com/projects/lightbox2/.
 	</description>
 	<upgrades>
 		<upgrade from="0.5~core1" to="0.5~core2"/>
 		<upgrade from="0.5~core2" to="0.5~core3"/>
 	</upgrades>
-	<authors>
-		<author name="Leandro Vieira Pinho"/>
-	</authors>
+	<screenshots>
+		<screenshot file="lightbox2-screenshot.jpg"/>
+	</screenshots>
 	<licenses>
-		<license url="http://creativecommons.org/licenses/by-sa/2.5/br/deed.en_US">
-			CCAttribution-ShareAlike 2.5 Brazil
-		</license>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
 	</licenses>
 </component>
 
