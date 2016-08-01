@@ -30,6 +30,12 @@ class PackageRepositoryController extends Controller_2_1 {
 		if(!\Core\user()->checkAccess('g:admin')){
 			return View::ERROR_ACCESSDENIED;
 		}
+		
+		if(!$request->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$view->mode = View::MODE_NOOUTPUT;
 
 		$changes = PackageRepositoryPackageModel::RebuildPackages();
 		
@@ -44,8 +50,9 @@ class PackageRepositoryController extends Controller_2_1 {
 			$msgs[] = 'Ignored ' . $changes['failed'] . ' corrupt packages.';
 		}
 		
-		\Core\set_message(implode(' ', $msgs), 'success');
-		\Core\go_back();
+		echo implode('<br/>', $msgs);
+		//\Core\set_message(implode(' ', $msgs), 'success');
+		//\Core\go_back();
 	}
 
 	public function index(){
@@ -187,13 +194,6 @@ class PackageRepositoryController extends Controller_2_1 {
 			$view->assign('version_selector', $versionSelector);
 			$view->assign('packages', $packages);
 			$view->assign('version_selected', $briefVersion);
-		}
-		
-		if($isAdmin){
-			$view->addControl([
-				'title' => t('STRING_PACKAGE_REPOSITORY_REBUILD'),
-				'link' => '/packagerepository/rebuild',
-			]);
 		}
 
 		$view->title = 'Package Repository';

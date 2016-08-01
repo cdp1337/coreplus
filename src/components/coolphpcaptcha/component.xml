@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="CoolPHPCaptcha" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="CoolPHPCaptcha" execmode="web" logo="captcha.jpeg">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide type="library" name="captcha" version="1.0.0"/>
@@ -78,9 +78,8 @@
 		<author name="Jose Rodriguez" email="jose.rodriguez@exec.cl"/>
 	</authors>
 	<licenses>
-		<license>GPLv3</license>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
 	</licenses>
 </component>

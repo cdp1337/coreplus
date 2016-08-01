@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0-4" name="PHPWhois" execmode="both">
 	<requires>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
 	</requires>
 	<configs/>
@@ -433,10 +433,10 @@
 		<author name="Dmitry Lukashin &lt;http://lukashin.ru/en/&gt;"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
-		<license>GPLv2</license>
+		<license url="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License</license>
 	</licenses>
 </component>
 

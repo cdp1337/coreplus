@@ -6,20 +6,14 @@
 {/if}
 
 {script library="facebook"}{/script}
-{script src="assets/js/facebook/login.js"}{/script}
 {css src="assets/css/facebook.css"}{/css}
 
 
 <div class="user-login">
 	<div id="fb-root"></div>
-	<div id="facebook-connecting-section" style="display:none;"></div>
-	<a href="#" scope="email" style="display:none" id="facebook-login-button">
-		<i class="icon icon-facebook"></i> Login with Facebook
+	<a href="{$facebooklink}" id="facebook-login-button" class="button">
+		Login with Facebook
 	</a>
-
-	<noscript>
-		<a href="{$facebooklink}">Login with Facebook</a>
-	</noscript>
 
 	<form action="{link link='/facebook/login'}" method="POST" id="facebook-login-form">
 		<input type="hidden" name="redirect"/>

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Google" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Google" execmode="web" logo="google.png">
 	<requires>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide version="3.12" name="GoogleMaps" type="library"/>
@@ -78,8 +78,8 @@
 		<author name="Nicholas Hinsch" email="nicholas@evalagency.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
 	</licenses>
 </component>

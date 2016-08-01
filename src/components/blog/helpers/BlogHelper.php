@@ -1,10 +1,6 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: powellc
- * Date: 7/29/12
- * Time: 10:13 PM
- * To change this template use File | Settings | File Templates.
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  */
 abstract class BlogHelper {
 

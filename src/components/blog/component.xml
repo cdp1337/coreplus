@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Blog" execmode="web" logo="blog.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="tags" type="component"/>
@@ -15,18 +15,18 @@
 	<files>
 		<file filename="CHANGELOG" md5="405dc6c87e623be1f7cc6230a6746cf4"/>
 		<file filename="assets/scss/blog.scss" md5="633b1b43c66a5bdd53ca9b26da8c7f7c"/>
-		<file filename="controllers/BlogController.php" md5="44c91d9375cfd3ac9232b8a603d6c498">
+		<file filename="controllers/BlogController.php" md5="2e88eb2cf41b330ca1dbcc7d1545294c">
 			<controller name="BlogController"/>
 		</file>
-		<file filename="helpers/BlogHelper.php" md5="d1635a44109c2934e6380bb79ad0ef8c">
+		<file filename="helpers/BlogHelper.php" md5="bdbe8c93c6b9961a59113750da418b0d">
 			<class name="BlogHelper"/>
 		</file>
 		<file filename="i18n/en.ini" md5="033a5d71241a8b609d2af90689697c49"/>
 		<file filename="i18n/strings.yml" md5="b74967b9e40c4dedb4837617ad19d69a"/>
-		<file filename="models/BlogArticleModel.php" md5="23596463d537a11705010ff36c706e02">
+		<file filename="models/BlogArticleModel.php" md5="bc7593d890b49e65cca1257710d792fa">
 			<class name="BlogArticleModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="076d5995d59b01910e8e478aafe0a1e2">
+		<file filename="models/BlogModel.php" md5="b02c3b2d852cd9ba78109de563456a19">
 			<class name="BlogModel"/>
 		</file>
 		<file filename="upgrades/121_to_130.php" md5="74f9e19bffde5be37788a696b7790b46"/>
@@ -150,5 +150,13 @@
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>
 		<file filename="assets/js/blog-waypoint-scroll.min.js" md5="7b9efd6a0e44144b4ebc9e4f3a97a601"/>
 	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

@@ -2,9 +2,9 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="2.0.0">
 	<requires>
-		<require name="Core" type="component" version="5.0.0"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
-	<hooks></hooks>
+	<hooks/>
 	<files>
 		<file filename="CHANGELOG" md5="311377bc120a52dfbb7b3f50d23a6aed"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>

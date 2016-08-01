@@ -1,9 +1,9 @@
 ---
 MESSAGE_CONFIG_FACEBOOK_APPID:
-  en: ""
+  en: Facebook App ID from https://developers.facebook.com/apps
 MESSAGE_CONFIG_FACEBOOK_APPSECRET:
-  en: ""
+  en: Facebook App Secret from https://developers.facebook.com/apps
 STRING_CONFIG_FACEBOOK_APPID:
-  en: ""
+  en: Facebook App ID
 STRING_CONFIG_FACEBOOK_APPSECRET:
-  en: ""
+  en: Facebook App Secret

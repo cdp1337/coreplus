@@ -1,12 +1,14 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-4" name="CodeMirror" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-4" name="CodeMirror" execmode="web" logo="logo.png">
 	<requires>
-		<require name="core" type="component" version="3.1.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
 	<files>
 		<file filename="CHANGELOG" md5="a25e9b066fc37c314119de049f45f6dc"/>
-		<file filename="classes/codemirror/Utils.php" md5="95d3d9f4ce9f05c49623c1b3729209a7">
+		<file filename="LICENSE" md5="9b220ffd4c5ac8f2dd268ac13493a602"/>
+		<file filename="README.md" md5="0f08084b2e14a8ae88004b4cc635bc3d"/>
+		<file filename="classes/codemirror/Utils.php" md5="8efb018357372248ccbfa009f0370974">
 			<class name="CodeMirror\Utils"/>
 		</file>
 	</files>
@@ -40,8 +42,6 @@
 		<file filename="assets/css/codemirror.css" md5="81c74138a50b07e3d86973fa4be3da0b"/>
 		<file filename="assets/libs/codemirror/AUTHORS" md5="dae54d0ba943da7adb0cd9cc83d8caeb"/>
 		<file filename="assets/libs/codemirror/CONTRIBUTING.md" md5="89dd65bf9084fce69e3701baaffe1de8"/>
-		<file filename="assets/libs/codemirror/LICENSE" md5="9b220ffd4c5ac8f2dd268ac13493a602"/>
-		<file filename="assets/libs/codemirror/README.md" md5="0f08084b2e14a8ae88004b4cc635bc3d"/>
 		<file filename="assets/libs/codemirror/addon/comment/comment.js" md5="e1233ff2b2428c5078ecfafbea23b7a0"/>
 		<file filename="assets/libs/codemirror/addon/comment/comment.min.js" md5="bc67a681b43f185ba39dfed341d67d63"/>
 		<file filename="assets/libs/codemirror/addon/comment/continuecomment.js" md5="2bad52d5a0b57d8f43e0e5b90bb25725"/>
@@ -722,22 +722,16 @@
 		<file filename="assets/libs/codemirror/theme/zenburn.css" md5="94ad50bf3d048ed92cc513cd901dc685"/>
 	</assets>
 	<authors>
-		<author name="Marijn Haverbeke" email="marijnh@gmail.com"/>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
-		<author name="Hans Engel"/>
-		<author name="Nick Hinsch &lt;nicholas@evalagency.com"/>
-		<author name="Gautam Mehta"/>
-		<author name="Stas Kobzar" email="stas@modulis.ca"/>
-		<author name="Author: Mike Brevoort" email="mike@brevoort.com"/>
-		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
 		<author name="Nick Hinsch" email="nicholas@evalagency.com"/>
+		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
+		<author name="Stas Kobzar" email="stas@modulis.ca"/>
+		<author name="Hans Engel"/>
+		<author name="Gautam Mehta"/>
+		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
 	</authors>
 	<licenses>
-		<license>MIT</license>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
-		</license>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
 	</licenses>
 </component>
 

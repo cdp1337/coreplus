@@ -3,7 +3,7 @@
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.2.0">
 	<requires>
 		<require name="Core" type="component" version="2.5.1"/>
-		<require name="core" type="component" version="3.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
 	<hooks>
 		<hook name="/cron/hourly" call="NonceModel::Cleanup"/>
@@ -32,8 +32,8 @@
 		<author name="Charlie Powell &lt;charlie@evalagency.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
 	</licenses>
 </component>

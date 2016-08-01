@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0" name="Theme" execmode="web">
 	<requires>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
 		<require name="jqueryui" type="library" version="1.8.0" operation="ge"/>
 	</requires>
@@ -17,7 +17,7 @@
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="ff2607816a8e409def4d2ca89dfa0557">
+		<file filename="libs/Theme/Theme.php" md5="a236b526cce850bc999578245fec22c8">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="4360132aa1f405d144f9330cb1083176">
@@ -83,13 +83,12 @@
 		<upgrade from="3.1.0" to="3.2.0"/>
 	</upgrades>
 	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Nick Hinsch &lt;nicholas@evalagency.com"/>
 		<author name="Nick Hinsch" email="nicholas@evalagency.com"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl.html">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
 	</licenses>
 </component>

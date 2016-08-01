@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-1" name="FontAwesome" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-1" name="FontAwesome" execmode="web" logo="fontawesome.png">
 	<requires>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
 	<provides>
 		<scriptlibrary name="fontawesome" call="FontAwesome::Load"/>
@@ -17,6 +17,7 @@
 		<file filename="FontAwesome.lib.php" md5="0bd12edc9c443d9a1e5ad44828f0601a">
 			<class name="FontAwesome"/>
 		</file>
+		<file filename="LICENSE" md5="5debb370f50e1dfd24ff5144233a2ef6"/>
 		<file filename="README.md" md5="bcb91e0d16d1f010effa565d0c7980d2"/>
 		<file filename="assets/scss/_animated.scss" md5="39ff4f359a7b81d6585075715f41e5dc"/>
 		<file filename="assets/scss/_bordered-pulled.scss" md5="4cad0df17bf40327feae33fa9a6c6ba2"/>
@@ -58,11 +59,8 @@
 		<upgrade from="4.0.3~core3" to="4.0.3~core4"/>
 		<upgrade from="4.0.3~core4" to="4.6.1-1"/>
 	</upgrades>
-	<authors>
-		<author name="Dave Gandy" email="dave@davegandy.com"/>
-	</authors>
 	<licenses>
-		<license url="http://creativecommons.org/licenses/by/3.0/">CC BY 3.0</license>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
 	</licenses>
 </component>
 

@@ -50,6 +50,9 @@ class PackageRepositoryPackageModel extends Model {
 		'gpg_key' => [
 			'type' => Model::ATT_TYPE_STRING,
 		],
+		'logo' => [
+			'type' => Model::ATT_TYPE_STRING,
+		],
 		'packager' => [
 			'type' => Model::ATT_TYPE_STRING,
 		],
@@ -73,15 +76,19 @@ class PackageRepositoryPackageModel extends Model {
 		],
 		'requires' => [
 			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
 		],
 		'provides' => [
 			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
 		],
 		'screenshots' => [
 			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
 		],
 		'upgrades' => [
 			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
 		],
 	];
 	
@@ -90,32 +97,28 @@ class PackageRepositoryPackageModel extends Model {
 		'unique:type_key_version' => ['type', 'key', 'version'],
 	];
 	
-	public function set($key, $value){
-		if($key == 'requires' || $key == 'provides' || $key == 'screenshots' || $key == 'upgrades'){
-			return parent::set($key, serialize($value));
-		}
-		else{
-			return parent::set($key, $value);
-		}
-	}
-	
-	public function get($key){
-		if($key == 'requires' || $key == 'provides' || $key == 'screenshots' || $key == 'upgrades'){
-			return unserialize(parent::get($key));
-		}
-		else{
-			return parent::get($key);
-		}
-	}
-	
-	public function getScreenshot(){
+
+	/**
+	 * Get all the screenshots associated with this package.
+	 * 
+	 * Will return an array of Files.
+	 * 
+	 * @return array
+	 */
+	public function getScreenshots(){
 		$screens = $this->get('screenshots');
+		
 		if(!sizeof($screens)){
-			return '';
+			return [];
 		}
 		
-		// Return the first screenshot found.
-		return $screens[0];
+		$ret = [];
+		
+		foreach($screens as $s){
+			$ret[] = \Core\Filestore\Factory::File($s);
+		}
+		
+		return $ret;
 	}
 
 	/**
@@ -184,7 +187,11 @@ class PackageRepositoryPackageModel extends Model {
 	
 	public static function RebuildPackages(){
 		$dir = \Core\Filestore\Factory::Directory(\ConfigHandler::Get('/package_repository/base_directory'));
-
+		
+		if($dir->getPath() == '/'){
+			trigger_error('Base directory is set to "/", this is probably not what you want!');
+			return false;
+		}
 		$coredir      = $dir->getPath() . 'core/';
 		$componentdir = $dir->getPath() . 'components/';
 		$themedir     = $dir->getPath() . 'themes/';
@@ -198,6 +205,7 @@ class PackageRepositoryPackageModel extends Model {
 
 		$ls = $dir->ls('asc', true);
 
+		\Core\CLI\CLI::PrintHeader('Rebuilding Packages');
 		\Core\CLI\CLI::PrintProgressBar(0);
 		$totalPackages = sizeof($ls);
 		$percentEach = 100 / $totalPackages;
@@ -212,6 +220,8 @@ class PackageRepositoryPackageModel extends Model {
 			$fullpath   = $file->getFilename();
 			$relpath    = substr($file->getFilename(), strlen($dir->getPath()));
 			$tmpdirpath = $tmpdir->getPath();
+			
+			\Core\CLI\CLI::PrintLine('Processing ' . $file->getBasename());
 
 			// Drop the .asc extension.
 			$basename = $file->getBasename(true);
@@ -310,6 +320,8 @@ class PackageRepositoryPackageModel extends Model {
 					$model->set('changelog', $chsec->fetchAsHTML(null));
 				}
 				catch(Exception $e){
+					Core\CLI\CLI::PrintWarning('Unable to read CHANGELOG for ' . $chngName);
+					Core\CLI\CLI::PrintWarning($e->getMessage());
 					// meh, we just won't have a changelog.
 				}
 				finally{
@@ -326,6 +338,29 @@ class PackageRepositoryPackageModel extends Model {
 				try{
 					$images = [];
 					$c = new Component_2_1($tmpdirpath . 'comp.xml');
+					
+					
+					$logo = $c->getXML()->getRootDOM()->getAttribute('logo');
+					if($logo){
+						// Extract out this logo and save it to the filesystem.
+						$archivedFile = './data/' . $logo;
+						$localFile = \Core\Filestore\Factory::File('public/packagerepo-logos/' . $model->get('type') . '-' . $model->get('key') . '-' . $model->get('version') . '/' . basename($logo));
+
+						// Write something into the file so that it exists on the filesystem.
+						$localFile->putContents('');
+
+						// And now tar can extract directly to that destination!
+						exec('tar -xzf "' . $tgz->getFilename() . '" -O ' . $archivedFile . ' > "' . $localFile->getFilename() . '"', $output, $ret);
+						if(!$ret) {
+							// Return code should be 0 on a successful write.
+							$model->set('logo', $localFile->getFilename(false));
+						}
+						else{
+							Core\CLI\CLI::PrintWarning('Unable to read logo file ' . $archivedFile . ' from ' . $chngName);
+						}
+					}
+					
+					
 					$screens = $c->getScreenshots();
 
 					if(sizeof($screens)){
@@ -349,6 +384,7 @@ class PackageRepositoryPackageModel extends Model {
 					$model->set('screenshots', $images);
 				}
 				catch(Exception $e){
+					Core\CLI\CLI::PrintWarning($e->getMessage());
 					// meh, we just won't have images..
 				}
 				finally{
@@ -375,7 +411,21 @@ class PackageRepositoryPackageModel extends Model {
 		}
 
 		// Commit everything!
+		\Core\CLI\CLI::PrintLine('Committing Model Changes');
 		PackageRepositoryPackageModel::CommitSaves();
+
+		$msgs = [];
+		if($addedpackages){
+			$msgs[] = 'Updated ' . $addedpackages . ' packages.';
+		}
+		if($skippedpackages){
+			$msgs[] = 'Skipped ' . $skippedpackages . ' packages.';
+		}
+		if($failedpackages){
+			$msgs[] = 'Ignored ' . $failedpackages . ' corrupt packages.';
+		}
+		
+		\Core\CLI\CLI::PrintLine((sizeof($msgs) > 0 ? implode('; ', $msgs) : 'No changes detected.'));
 		
 		return [
 			'updated' => $addedpackages,

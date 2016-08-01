@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.0" logo="cron.png">
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
@@ -18,7 +18,7 @@
 		<hook name="/cron/hourly" call="CronLogModel::_CleanupDatabase"/>
 	</hooks>
 	<requires>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
@@ -76,8 +76,5 @@
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
 </component>
 

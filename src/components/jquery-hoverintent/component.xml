@@ -2,15 +2,16 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core3" name="JQuery-hoverIntent" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.1.0" operation="ge"/>
-		<require name="jquery" type="library" version="1.7.2" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="jquery" type="library" version="1.9.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide version="r7" name="JQuery.hoverIntent" type="library"/>
 		<scriptlibrary name="jquery.hoverIntent" call="JQueryHoverIntent::Load"/>
 	</provides>
 	<assets>
-		<file filename="assets/js/jquery.hoverIntent.min.js" md5="66de76b355f11c339085a2ac27621816"/>
+		<file filename="assets/js/jquery.hoverIntent.js" md5="63a0e483781bd61181a5123dc4ec65f0"/>
+		<file filename="assets/js/jquery.hoverIntent.min.js" md5="b5fecb7687d51f2f352afd8d1485faf8"/>
 	</assets>
 	<upgrades>
 		<upgrade from="r6~core1" to="r7~core1"/>
@@ -18,10 +19,12 @@
 		<upgrade from="r7~core2" to="r7~core3"/>
 	</upgrades>
 	<files>
-		<file filename="CHANGELOG" md5="b0322590dab2555fa1f04d8a5bd833ab"/>
-		<file filename="JQueryHoverIntent.lib.php" md5="e6a4fe9f9f530ba8a308508b280a0280">
+		<file filename="CHANGELOG" md5="bba300602ef11d5e305b6d868c1359a2"/>
+		<file filename="JQueryHoverIntent.lib.php" md5="179a6b20474f80f5d057d037b91149fc">
 			<class name="JQueryHoverIntent"/>
 		</file>
+		<file filename="LICENSE" md5="5debb370f50e1dfd24ff5144233a2ef6"/>
+		<file filename="README.md" md5="867efa8b755347613afe82aad87f4795"/>
 	</files>
 	<description>
 		hoverIntent is a plug-in that attempts to determine the user's intent...
@@ -29,11 +32,8 @@
 		jQuery's built-in hover. However, instead of immediately calling the onMouseOver function,
 		it waits until the user's mouse slows down enough before making the call.
 	</description>
-	<authors>
-		<author name="Brian Cherne"/>
-	</authors>
 	<licenses>
-		<license url="http://opensource.org/licenses/MIT">MIT and GPL licenses</license>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
 	</licenses>
 </component>
 

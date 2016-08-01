@@ -1,5 +1,13 @@
 {css src="css/package-repository.css"}{/css}
 
+{if $is_admin}
+	<form id="progress-log-form" name="progress-log-form" target="progress-log" method="POST" action="{link '/packagerepository/rebuild'}">
+		<input type="submit" value="{t 'STRING_PACKAGE_REPOSITORY_REBUILD'}"/>
+	</form>
+
+	{progress_log_iframe}
+{/if}
+
 {if $version_selector}
 	{$version_selector->render()}
 {/if}
@@ -7,13 +15,21 @@
 <div class="package-list">
 	{foreach $packages as $pkg}
 		<div class="package">
-			{img src=$pkg.package->getScreenshot() dimensions="175x175" class="package-screenshot" placeholder="generic"}
+			{img src=$pkg.package.logo dimensions="128x128" class="package-screenshot" placeholder="generic"}
 			<span class="package-name">{$pkg.package.name}</span>
+
 			{if $pkg.package.description}
 				<p class="package-description">
-					{$pkg.package.description|truncate:300}		
+					{$pkg.package.description|truncate:300}
 				</p>
 			{/if}
+			
+			{foreach $pkg.package->getScreenshots() as $screen}
+				{a class="screenshot-previewer" href="`$screen->getPreviewURL('800x480')`" data-lightbox="pkg-`$pkg.package.id`"}
+					{img file=$screen dimensions="32x32" class="package-screenshot"}
+				{/a}
+			{/foreach}
+			
 			<span class="package-release-date">
 				Released 
 				{date $pkg.package.datetime_released format="FD"}	
@@ -27,3 +43,5 @@
 		</div>
 	{/foreach}
 </div>
+
+{script library="jquery.lightbox"}{/script}

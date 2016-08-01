@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-1">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-1" logo="chartistjs.png">
 	<provides>
 		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
 	</provides>
@@ -13,7 +13,7 @@
 		<file filename="README.md" md5="6695ece78f524617fe6459701c7489a2"/>
 		<file filename="assets/scss/chartist.scss" md5="9099a49ebd8cc95b97cd0c7bcda3db2f"/>
 		<file filename="assets/scss/settings/_chartist-settings.scss" md5="4db461394a4a1b9962cecb2e7fdf4e2f"/>
-		<file filename="libs/chartistjs/ChartistJS.php" md5="15334ced7d79e367d6db5d273395c71f">
+		<file filename="libs/chartistjs/ChartistJS.php" md5="b35b2815ae65f0f169458389372a7c8f">
 			<class name="ChartistJS"/>
 		</file>
 	</files>
@@ -34,14 +34,14 @@
 		<upgrade from="0.9.5-1" to="0.9.5-2"/>
 		<upgrade from="0.9.5-2" to="0.9.8-1"/>
 	</upgrades>
+	<requires>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+	</requires>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Sam Hocevar" email="sam@hocevar.net"/>
 	</authors>
 	<licenses>
-		<license url="http://www.wtfpl.net/">
-			DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
-		</license>
+		<license url="http://www.wtfpl.net/">WTFPL</license>
 	</licenses>
 </component>
 

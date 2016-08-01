@@ -37,7 +37,7 @@
 		<upgrade from="0.5~core3" to="2.8.2-1"/>
 	</upgrades>
 	<screenshots>
-		<screenshot file="lightbox2-screenshot.jpg"/>
+		<screenshot file="lightbox2-screen.jpg"/>
 	</screenshots>
 </component>
 

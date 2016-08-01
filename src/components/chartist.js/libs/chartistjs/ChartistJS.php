@@ -1,10 +1,7 @@
 <?php
 
 /**
- * Created by PhpStorm.
- * User: charlie
- * Date: 12/7/15
- * Time: 9:32 PM
+ * @author Charlie Powell <charlie@evalagency.com>
  */
 class ChartistJS {
 	public static function IncludeJS(){

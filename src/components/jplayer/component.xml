@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-5" name="jPlayer" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-5" name="jPlayer" execmode="web" logo="jplayer_logo.png">
 	<requires>
 		<require name="core" type="component"/>
 		<require name="JQuery" type="library" version="1.4" operation="ge"/>

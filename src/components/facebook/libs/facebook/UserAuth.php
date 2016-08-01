@@ -83,25 +83,32 @@ class UserAuth implements AuthDriverInterface {
 	 */
 	public function renderLogin($form_options = []) {
 
-		if(!FACEBOOK_APP_ID){
+		if(!\FACEBOOK_APP_ID){
 			echo 'Please configure Facebook with your APP_ID.';
 			return;
 		}
 
-		if(!FACEBOOK_APP_SECRET){
+		if(!\FACEBOOK_APP_SECRET){
 			echo 'Please configure Facebook with your APP_SECRET.';
 			return;
 		}
 
-		$facebook = new \Facebook([
-			'appId'  => FACEBOOK_APP_ID,
-			'secret' => FACEBOOK_APP_SECRET,
+		$fb = new Facebook([
+			'app_id'  => \FACEBOOK_APP_ID,
+			'app_secret' => \FACEBOOK_APP_SECRET,
 		]);
 
 
+		$helper = $fb->getRedirectLoginHelper();
+		$perms = [
+			'public_profile',
+			'email',
+			'user_about_me',
+		];
+		$loginUrl = $helper->getLoginUrl(\Core\resolve_link('/facebook/login'), $perms);
 
 		// User was already logged in.
-		try{
+		/*try{
 			$user = $facebook->getUser();
 			if($user){
 				$user_profile = $facebook->api('/me');
@@ -114,12 +121,12 @@ class UserAuth implements AuthDriverInterface {
 		}
 		catch(\Exception $c){
 			$facebooklink = $facebook->getLoginUrl();
-		}
+		}*/
 
 		// $logoutUrl = $facebook->getLogoutUrl();
 
 		$tpl = \Core\Templates\Template::Factory('includes/user/facebook_login.tpl');
-		$tpl->assign('facebooklink', $facebooklink);
+		$tpl->assign('facebooklink', $loginUrl);
 		$tpl->render();
 	}
 
@@ -154,71 +161,92 @@ class UserAuth implements AuthDriverInterface {
 	/**
 	 * Sync the user back to the linked Facebook account.
 	 *
-	 * <h3>Usage:</h3>
-	 * <pre class="code">
-	 * $auth->syncUser($_POST['access-token']);
-	 * </pre>
 	 *
-	 * @param string $access_token A valid access token for the user to sync up.
+	 * @param array $data All the data from Facebook
 	 *
 	 * @return bool True or false on success.
 	 */
-	public function syncUser($access_token){
-		try{
-			$facebook = new \Facebook([
-				'appId'  => FACEBOOK_APP_ID,
-				'secret' => FACEBOOK_APP_SECRET,
-			]);
-			$facebook->setAccessToken($access_token);
-			/** @var array $user_profile The array of user data from Facebook */
-			$user_profile = $facebook->api('/me');
-		}
-		catch(\Exception $e){
-			return false;
-		}
-
-
+	public function syncUser($data){
+		
 		$user = $this->_usermodel;
-
-		if(!$user->exists()){
-			// Some config options for new accounts only.
-			
-			$profiles = $user->get('external_profiles');
-			if(!is_array($profiles)){
-				$profiles = [];
+		
+		$profiles = $user->get('external_profiles');
+		if(!is_array($profiles)){
+			$profiles = [];
+		}
+		
+		if(isset($data['link'])){
+			$new = true;
+			foreach($profiles as $p){
+				if($p['type'] == 'facebook'){
+					$new = false;
+					break;
+				}
 			}
-			
-			$profiles[] = [
-				[
+			if($new){
+				$profiles[] = [
 					'type' => 'facebook',
-					'url' => $user_profile['link'],
+					'url' => $data['link'],
 					'title' => 'Facebook Profile',
-				]
-			];
-			$user->set('external_profiles', $profiles);
-
-			// Another component from the user-social component.
-			// This needs to be unique, so do a little fudging if necessary.
-			try{
-				$user->set('username', $user_profile['username']);
+				];
 			}
-			catch(\ModelValidationException $e){
-				$user->set('username', $user_profile['username'] . '-' . \Core\random_hex(3));
+		}
+		
+		if(isset($data['website'])){
+			// Ensure it's resolved.
+			if(strpos($data['website'], '://') === false){
+				$data['website'] = 'http://' . $data['website'];
 			}
 			
+			$new = true;
+			foreach($profiles as $p){
+				if($p['type'] == 'link'){
+					$new = false;
+					break;
+				}
+			}
+			if($new){
+				$profiles[] = [
+					'type' => 'link',
+					'url' => $data['website'],
+					'title' => $data['website'],
+				];
+			}
+		}
+		
+		$user->set('external_profiles', $profiles);
+		
+		if(isset($data['picture'])){
 			// Sync the user avatar.
-			$f = new \Core\Filestore\Backends\FileRemote('http://graph.facebook.com/' . $user_profile['id'] . '/picture?type=large');
+			$f = new \Core\Filestore\Backends\FileRemote($data['picture']['data']['url']);
 			$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
 			$f->copyTo($dest);
 			$user->set('avatar', 'public/user/avatar/' . $dest->getBaseFilename());
 		}
 
-		// Get all user configs and load in anything possible.
-		$user->set('first_name', $user_profile['first_name']);
-		$user->set('last_name', $user_profile['last_name']);
-		$user->set('gender', ucwords($user_profile['gender']));
-		$user->set('facebook_id', $user_profile['id']);
-		$user->set('facebook_link', $user_profile['link']);
-		$user->set('facebook_access_token', $facebook->getAccessToken());
+		if(isset($data['first_name'])){
+			$user->set('first_name', $data['first_name']);	
+		}
+
+		if(isset($data['last_name'])) {
+			$user->set('last_name', $data['last_name']);
+		}
+		if(isset($data['gender'])) {
+			$user->set('gender', ucwords($data['gender']));
+		}
+		if(isset($data['id'])) {
+			$user->set('facebook_id', $data['id']);
+		}
+		if(isset($data['bio'])) {
+			$user->set('bio', $data['bio']);
+		}
+		
+		if(isset($data['public_key'])){
+			$gpg = new \Core\GPG\GPG();
+			$key = $gpg->importKey($data['public_key']);
+			
+			$user->enableAuthDriver('gpg');
+			$user->set('gpgauth_pubkey', $key->fingerprint);
+		}
 	}
 }

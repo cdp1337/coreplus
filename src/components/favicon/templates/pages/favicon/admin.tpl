@@ -7,44 +7,14 @@
 </style>{/css}
 
 <p class="message-tutorial">
-	The favicon is an image that is used heavily alongside your site's identity.
-	It is displayed in the tab bar of browsers, on bookmark links, and on mobile devices.
+	The favicon is an image that is used to represent your site in browsers, desktop shortcuts, and mobile icons.
+	It is the only icon that appears to users when your site is not active, so branding on this element is critical!
 	<br/><br/>
-	An ideal image to use is a square PNG or JPG at least 228x228 pixels in size.
+	An ideal image to use is a square PNG at least <strong>228x228</strong> pixels in size.
+	<br/><br/>
+	Under "Advanced", you can upload custom images for each common size used by devices.
+	This allows the 16x16 favicon to be a tiny pixel-art image while 
+	the mobile devices get a pretty 140x140 PNG with rounded edges, gradients, and the works.
 </p>
-
-{if $current}
-	<fieldset class="collapsible collapsed">
-		<div class="fieldset-title">
-			How does this look on different devices?
-			<i class="icon icon-chevron-down expandable-hint"></i><i class="icon icon-chevron-up collapsible-hint"></i>
-		</div>
-		<div class="preview-tile">
-			i[Pad/Phone] with Retina Display<br/>
-			{img src="$current" dimensions="512x512!"}
-		</div>
-
-		<div class="preview-tile">
-			Windows 8 Metro<br/>
-			{img src="$current" dimensions="270x270!"}
-		</div>
-
-		<div class="preview-tile">
-			i[Pad/Phone] 2nd Gen<br/>
-			{img src="$current" dimensions="114x114!"}
-		</div>
-
-		<div class="preview-tile">
-			i[Pad/Phone] 1st Gen<br/>
-			{img src="$current" dimensions="72x72!"}
-		</div>
-
-		<div class="preview-tile">
-			Web<br/>
-			{img src="$current" dimensions="32x32!"}
-		</div>
-	</fieldset>
-
-{/if}
 
 {$form->render()}

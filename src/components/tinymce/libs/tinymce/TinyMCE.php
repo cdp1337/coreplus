@@ -2,10 +2,10 @@
 /**
  * Handles all the integration of the TinyMCE plugin.
  *
- * @package TinyMCE-Enterprise
+ * @package TinyMCE
  * @author Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (C) 2009-2016  Charlie Powell
- * @license All rights reserved
+ * @license GNU Library or "Lesser" General Public License version 2.1
  */
 
 namespace TinyMCE;

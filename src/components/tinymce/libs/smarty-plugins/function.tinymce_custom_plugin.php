@@ -1,10 +1,10 @@
 <?php
 /**
- * @package Core\Templates\Smarty
+ * @package TinyMCE
  * @since 2.1.3
  * @author Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (C) 2009-2016  Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ * @license GNU Library or "Lesser" General Public License version 2.1
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as

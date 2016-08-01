@@ -534,6 +534,36 @@ class Theme{
 	}
 
 	/**
+	 * Set a require in the XML
+	 *
+	 * This is used by the packager.
+	 *
+	 * @param string      $name
+	 * @param string      $type
+	 * @param null|string $version
+	 * @param null|string $op
+	 */
+	public function setRequires($name, $type, $version = null, $op = null){
+		// Get the node, (and auto-create if it doesn't exist).
+		$node = $this->_xmlloader->getElement('/requires/require[@name="' . $name . '"][@type="' . $type . '"]');
+
+		// Set the new version and operation for it.
+		if($version){
+			$node->setAttribute('version', $version);
+			if($op){
+				$node->setAttribute('operation', $op);
+			}
+			else{
+				$node->removeAttribute('operation');
+			}
+		}
+		else{
+			$node->removeAttribute('version');
+			$node->removeAttribute('operation');
+		}
+	}
+
+	/**
 	 * Get this theme's version
 	 *
 	 * @return string

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.1" logo="favicon-204x204.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.1" logo="screenshots/favicon-204x204.png">
 	<description>
 		A simple component to display a favicon for various browsers and mobile devices.
 	</description>
@@ -30,14 +30,16 @@
 		<file filename="controllers/FaviconController.php" md5="41dbfd6e22ed3a2a2151c8be5e638177">
 			<controller name="FaviconController"/>
 		</file>
-		<file filename="favicon-204x204.png" md5="65b24afa1d7a7b8593f77da51e72651b"/>
 		<file filename="i18n/strings.yml" md5="5d0c49480d54a4255ba67fa89a14e223"/>
 		<file filename="libs/favicon/ViewMeta_favicon.php" md5="13220ac07868f95b9f612c6edecf1cc5">
 			<class name="ViewMeta_favicon"/>
 		</file>
+		<file filename="screenshots/favicon-204x204.png" md5="65b24afa1d7a7b8593f77da51e72651b"/>
+		<file filename="screenshots/source-view.png" md5="287d68f5a1f4b07bfeaa4bb82bd57b94"/>
+		<file filename="screenshots/ui-view.png" md5="40578cdee8dfa7b71aae75769c82d407"/>
 	</files>
 	<view>
-		<file filename="templates/pages/favicon/admin.tpl" md5="31d862a2c15a4cd07b6d182f1312ac77"/>
+		<file filename="templates/pages/favicon/admin.tpl" md5="e3f088332a0988dea016f681cb5af413"/>
 	</view>
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
@@ -53,5 +55,9 @@
 		<upgrade from="1.2.4" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
+	<screenshots>
+		<screenshot file="screenshots/ui-view.png" title="Frontend UI View"/>
+		<screenshot file="screenshots/source-view.png" title="Source Code View"/>
+	</screenshots>
 </component>
 

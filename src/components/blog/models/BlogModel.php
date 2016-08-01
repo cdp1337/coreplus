@@ -1,4 +1,9 @@
 <?php
+/**
+ * Class BlogModel
+ * 
+ * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ */
 
 class BlogModel extends Model {
 	public static $Schema = array(
@@ -62,7 +67,7 @@ class BlogModel extends Model {
 		$k = strtolower($k);
 		switch ($k) {
 			case 'baseurl':
-				return '/blog/view/' . $this->_data['id'];
+				return '/blog/view/' . parent::get('id');
 			case 'access':
 			case 'created':
 			case 'title':

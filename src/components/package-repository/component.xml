@@ -22,27 +22,31 @@
 		<file filename="CHANGELOG" md5="5ac4d200e4fe09e6cdc16e5a7f3ad8fb"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
 		<file filename="assets/scss/package-repository.scss" md5="c0ec0d8ad35fac327622b3a1c4be6565"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="cd37eeb937e34767328651e8868e9bf1">
+		<file filename="controllers/PackageRepositoryController.php" md5="4b387e189fcbc7d16c274f520f94dac4">
 			<controller name="PackageRepositoryController"/>
 		</file>
-		<file filename="controllers/PackageRepositoryLicenseController.php" md5="afc10a65d1a2d8b261afab6813fac66d">
+		<file filename="controllers/PackageRepositoryLicenseController.php" md5="1a056be2e16272be70048bc6f1e618ec">
 			<controller name="PackageRepositoryLicenseController"/>
 		</file>
 		<file filename="i18n/ar.ini" md5="a8b41ec7ee76f305ca4b3372cbf25f6d"/>
 		<file filename="i18n/de.ini" md5="992527fd785e95a33a94bc426b9dc94c"/>
 		<file filename="i18n/en.ini" md5="268b07bba4b3a0fb3202cb569164c2a6"/>
 		<file filename="i18n/fr.ini" md5="2e54ae729dd18fc82a460f349834a5e8"/>
+		<file filename="i18n/strings.yml" md5="e89c0e2487f2ee188670f279aa51a55b"/>
+		<file filename="models/PackageRepositoryFeatureModel.php" md5="1dbf954333f6de29c6ec4b8f28e2dd1b">
+			<class name="PackageRepositoryFeatureModel"/>
+		</file>
 		<file filename="models/PackageRepositoryLicenseModel.php" md5="b546b3d44b6c41408f8194dd86c36e06">
 			<class name="PackageRepositoryLicenseModel"/>
 		</file>
-		<file filename="models/PackageRepositoryPackageModel.php" md5="7263e3c6ffe8c63409fd1ec599df3f06">
+		<file filename="models/PackageRepositoryPackageModel.php" md5="9a3704284e2002128bfe2ea6b7cbfc01">
 			<class name="PackageRepositoryPackageModel"/>
 		</file>
 	</files>
 	<view>
 		<file filename="templates/pages/packagerepository/analytics.tpl" md5="193308b38899c4eea4c5ed997ef028fc"/>
 		<file filename="templates/pages/packagerepository/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/packagerepository/index.tpl" md5="63462b391d3ed0da59dc0bc17fd930bf"/>
+		<file filename="templates/pages/packagerepository/index.tpl" md5="6b7731431ccb59507a33763f8aa2cf23"/>
 		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="bbca812e43ef1e85d0eb9e9ea42291fd"/>
 		<file filename="templates/pages/packagerepositorylicense/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -62,5 +66,8 @@
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
+	<requires>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+	</requires>
 </component>
 

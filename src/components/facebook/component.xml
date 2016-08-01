@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3-7" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3-7" name="Facebook" execmode="web" logo="facebook.png">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/usermodel" call="FacebookController::GetUserControlLinks"/>
@@ -11,8 +11,11 @@
 	</provides>
 	<requires>
 		<require name="user" type="library" version="2.8.0"/>
-		<require name="core" type="component" version="3.5.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
+	<description>
+		Facebook login and other API integration support.
+	</description>
 	<configs>
 		<config key="/facebook/appid" mapto="FACEBOOK_APP_ID" type="string" default="" description="If you want to enable facebook connectivity, you need to create an &quot;app&quot; and enter that app's appid here."/>
 		<!--<config key="/facebook/secretid" mapto="FACEBOOK_SECRET_ID" type="string" default="" description="The Facebook app secret, also required for connectivity to facebook apps."/>
@@ -38,42 +41,237 @@
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
+		<file filename="LICENSE" md5="2b909e60ceb7fd50466e9268b55a3410"/>
 		<file filename="controllers/FacebookController.php" md5="017e2b9f4ea2e44b60580b80347425e2">
 			<controller name="FacebookController"/>
 		</file>
-		<file filename="i18n/strings.yml" md5="87b83d0ec84e6d05e62a718dd2e035d2"/>
-		<file filename="libs/facebook-php-sdk/changelog.md" md5="31fce8336dd5a3f061686f19e19bd56d"/>
-		<file filename="libs/facebook-php-sdk/composer.json" md5="5d17b681de9984e9af98629c2404f0a4"/>
-		<file filename="libs/facebook-php-sdk/examples/example.php" md5="21f296ecba4b310c889ad661de54328d"/>
-		<file filename="libs/facebook-php-sdk/examples/with_js_sdk.php" md5="555e738cb8c6b42834a5c5a2083bd3e6"/>
-		<file filename="libs/facebook-php-sdk/readme.md" md5="b732598f748027abede8be4ef245bdb4"/>
-		<file filename="libs/facebook-php-sdk/src/base_facebook.php" md5="8a5ce0443a3e1fa3634565fbe31badf9">
-			<class name="FacebookApiException"/>
-			<class name="BaseFacebook"/>
+		<file filename="facebook.png" md5="a6143066f20ed05942ef66b3b53f2ccd"/>
+		<file filename="i18n/strings.yml" md5="786b028b60fcdaaeeff698e0f2658703"/>
+		<file filename="libs/facebook/Authentication/AccessToken.php" md5="451414ef968667fc50d5b3bb5c513ecf">
+			<class name="Facebook\Authentication\AccessToken"/>
 		</file>
-		<file filename="libs/facebook-php-sdk/src/facebook.php" md5="439079e5184c24758e08f08313b8b659">
-			<class name="Facebook"/>
+		<file filename="libs/facebook/Authentication/AccessTokenMetadata.php" md5="f6cb525e421a0009d472fbc87a152de1">
+			<class name="Facebook\Authentication\AccessTokenMetadata"/>
 		</file>
-		<file filename="libs/facebook-php-sdk/src/fb_ca_chain_bundle.crt" md5="c4290b9deb70d0bef2f88b67fc68c8ec"/>
-		<file filename="libs/facebook-php-sdk/tests/bootstrap.php" md5="b8bd1937c8d639841949a24e2fcdf983"/>
-		<file filename="libs/facebook-php-sdk/tests/tests.php" md5="7d445aa0f8b042c65ddd9e703fe081c3">
-			<class name="PHPSDKTestCase"/>
-			<class name="TransientFacebook"/>
-			<class name="FBRecordURL"/>
-			<class name="FBRecordMakeRequest"/>
-			<class name="FBPublic"/>
-			<class name="PersistentFBPublic"/>
-			<class name="FBCode"/>
-			<class name="FBAccessToken"/>
-			<class name="FBGetCurrentURLFacebook"/>
-			<class name="FBPublicCookie"/>
-			<class name="FBRewrite"/>
-			<class name="FBPublicGetAccessTokenFromCode"/>
-			<class name="FBPublicState"/>
+		<file filename="libs/facebook/Authentication/OAuth2Client.php" md5="741584e746d5cc0e4c94c0d62332a718">
+			<class name="Facebook\Authentication\OAuth2Client"/>
 		</file>
-		<file filename="libs/facebook/UserAuth.php" md5="e5194d9bf27d63f65a5ebcf37b3a1144">
+		<file filename="libs/facebook/Exceptions/FacebookAuthenticationException.php" md5="964dd78953e411441347878aea1e8dd9">
+			<class name="Facebook\Exceptions\FacebookAuthenticationException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookAuthorizationException.php" md5="d10e57a5f7d00cc645be1ba106e4fc21">
+			<class name="Facebook\Exceptions\FacebookAuthorizationException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookClientException.php" md5="419df73136c372e6acd59d3f50e01d53">
+			<class name="Facebook\Exceptions\FacebookClientException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookOtherException.php" md5="34a8533e035def51841f7a478fd0f7a0">
+			<class name="Facebook\Exceptions\FacebookOtherException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookResponseException.php" md5="e949cf71d8f20d475bf2562d8797ca3b">
+			<class name="Facebook\Exceptions\FacebookResponseException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookResumableUploadException.php" md5="9f24e031413879dae441577b1316c6a3">
+			<class name="Facebook\Exceptions\FacebookResumableUploadException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookSDKException.php" md5="e8c5f1af22b79da6076b476021d6e117">
+			<class name="Facebook\Exceptions\FacebookSDKException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookServerException.php" md5="40830c8865a90b83947bb8189cede58e">
+			<class name="Facebook\Exceptions\FacebookServerException"/>
+		</file>
+		<file filename="libs/facebook/Exceptions/FacebookThrottleException.php" md5="8bab2952bee9709db8f3fed1dc37c766">
+			<class name="Facebook\Exceptions\FacebookThrottleException"/>
+		</file>
+		<file filename="libs/facebook/Facebook.php" md5="07f00a7894cdfa13fb708e88f18c5ccc">
+			<class name="Facebook\Facebook"/>
+		</file>
+		<file filename="libs/facebook/FacebookApp.php" md5="95295f21335dd762ec2a6e7931d54dad">
+			<class name="Facebook\FacebookApp"/>
+		</file>
+		<file filename="libs/facebook/FacebookBatchRequest.php" md5="5275958d78d974017591e1860fc344e8">
+			<class name="Facebook\FacebookBatchRequest"/>
+		</file>
+		<file filename="libs/facebook/FacebookBatchResponse.php" md5="18f0e88ae428eacfdbd29fda5b16f6b4">
+			<class name="Facebook\FacebookBatchResponse"/>
+		</file>
+		<file filename="libs/facebook/FacebookClient.php" md5="9f5312f4f63740876f1b97f4c18c1ef7">
+			<class name="Facebook\FacebookClient"/>
+		</file>
+		<file filename="libs/facebook/FacebookRequest.php" md5="4a5c31662b69dda750c96954fc04e60f">
+			<class name="Facebook\FacebookRequest"/>
+		</file>
+		<file filename="libs/facebook/FacebookResponse.php" md5="cde506368b3013b67c4d970891c9b52a">
+			<class name="Facebook\FacebookResponse"/>
+		</file>
+		<file filename="libs/facebook/FileUpload/FacebookFile.php" md5="f84807c66c025a587d4fcefac12f5c42">
+			<class name="Facebook\FileUpload\FacebookFile"/>
+		</file>
+		<file filename="libs/facebook/FileUpload/FacebookResumableUploader.php" md5="555890304092df9580910df8e8aad8d0">
+			<class name="Facebook\FileUpload\FacebookResumableUploader"/>
+		</file>
+		<file filename="libs/facebook/FileUpload/FacebookTransferChunk.php" md5="b24e8fd89d1041f4dbd9b6d00cacd2f6">
+			<class name="Facebook\FileUpload\FacebookTransferChunk"/>
+		</file>
+		<file filename="libs/facebook/FileUpload/FacebookVideo.php" md5="14f086a5845fe2b0cd793135545e556f">
+			<class name="Facebook\FileUpload\FacebookVideo"/>
+		</file>
+		<file filename="libs/facebook/FileUpload/Mimetypes.php" md5="152b5697d7ddcb50729a726e343cac69">
+			<class name="Facebook\FileUpload\Mimetypes"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/Birthday.php" md5="81292a81b817ecb0b1fa520d94bfa379">
+			<class name="Facebook\GraphNodes\Birthday"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/Collection.php" md5="2637c307afe3ba0fc971b66478805ee3">
+			<class name="Facebook\GraphNodes\Collection"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphAchievement.php" md5="17e0af7fdfbfaf25df3aeac11f5703f0">
+			<class name="Facebook\GraphNodes\GraphAchievement"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphAlbum.php" md5="f5ce6a14d1612fd1d5d19176ce1de656">
+			<class name="Facebook\GraphNodes\GraphAlbum"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphApplication.php" md5="6e5937e4e8f92caa2acf9fd3f510fce0">
+			<class name="Facebook\GraphNodes\GraphApplication"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphCoverPhoto.php" md5="2ec874459d9d404bc9a143001c74b158">
+			<class name="Facebook\GraphNodes\GraphCoverPhoto"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphEdge.php" md5="e0da74717ec39b2e4c5ac42d35d23fa6">
+			<class name="Facebook\GraphNodes\GraphEdge"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphEvent.php" md5="8b476c152cb9e14ded4fd1fd5f89d83d">
+			<class name="Facebook\GraphNodes\GraphEvent"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphGroup.php" md5="6354d91852920797a113e193f43ae94a">
+			<class name="Facebook\GraphNodes\GraphGroup"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphList.php" md5="6f0648cd5bdc48173f4ecb2c60b7fd5e">
+			<class name="Facebook\GraphNodes\GraphList"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphLocation.php" md5="f690f14e39918b704e0636a7a611522b">
+			<class name="Facebook\GraphNodes\GraphLocation"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphNode.php" md5="874ecedabdc1f5b18c34443f2be02690">
+			<class name="Facebook\GraphNodes\GraphNode"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphNodeFactory.php" md5="61729108ad6d47680865b14b6cd57bfa">
+			<class name="Facebook\GraphNodes\GraphNodeFactory"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphObject.php" md5="7a5afec12b52cee24fd2a51fbb9693e0">
+			<class name="Facebook\GraphNodes\GraphObject"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphObjectFactory.php" md5="ae75b7a7d1f1cc3f3dfe13bc08cb8749">
+			<class name="Facebook\GraphNodes\GraphObjectFactory"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphPage.php" md5="563a83a8ffe2b8f91c48de7305294de6">
+			<class name="Facebook\GraphNodes\GraphPage"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphPicture.php" md5="5fa6e2f25c50b9b81ba663130147b988">
+			<class name="Facebook\GraphNodes\GraphPicture"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphSessionInfo.php" md5="060b406b0a4c68acf8dd04dfe8a16db9">
+			<class name="Facebook\GraphNodes\GraphSessionInfo"/>
+		</file>
+		<file filename="libs/facebook/GraphNodes/GraphUser.php" md5="3f7e7fd955fbd7584aa65eae1f74601b">
+			<class name="Facebook\GraphNodes\GraphUser"/>
+		</file>
+		<file filename="libs/facebook/Helpers/FacebookCanvasHelper.php" md5="98b13e3ff31b064734656b5e5848a22e">
+			<class name="Facebook\Helpers\FacebookCanvasHelper"/>
+		</file>
+		<file filename="libs/facebook/Helpers/FacebookJavaScriptHelper.php" md5="6164ad46b91851161c2c0f40e95d7c1c">
+			<class name="Facebook\Helpers\FacebookJavaScriptHelper"/>
+		</file>
+		<file filename="libs/facebook/Helpers/FacebookPageTabHelper.php" md5="1bc20caf4722a720a5ee86a8d8a40c58">
+			<class name="Facebook\Helpers\FacebookPageTabHelper"/>
+		</file>
+		<file filename="libs/facebook/Helpers/FacebookRedirectLoginHelper.php" md5="01ac5bcf41ec3ffb8aadcdaebf74752c">
+			<class name="Facebook\Helpers\FacebookRedirectLoginHelper"/>
+		</file>
+		<file filename="libs/facebook/Helpers/FacebookSignedRequestFromInputHelper.php" md5="997e38547e3c6d26bfe1989848e51343">
+			<class name="Facebook\Helpers\FacebookSignedRequestFromInputHelper"/>
+		</file>
+		<file filename="libs/facebook/Http/GraphRawResponse.php" md5="100992a74c9704b8ec0c03cca8971802">
+			<class name="Facebook\Http\GraphRawResponse"/>
+		</file>
+		<file filename="libs/facebook/Http/RequestBodyInterface.php" md5="ff8e1246aa11a45ef6acdf66b4bb8d8b">
+			<interface name="Facebook\Http\RequestBodyInterface"/>
+		</file>
+		<file filename="libs/facebook/Http/RequestBodyMultipart.php" md5="4abbf8fc21fe7fa2b97653f5ae9bf723">
+			<class name="Facebook\Http\RequestBodyMultipart"/>
+		</file>
+		<file filename="libs/facebook/Http/RequestBodyUrlEncoded.php" md5="6c2129362453da96080017a32350d921">
+			<class name="Facebook\Http\RequestBodyUrlEncoded"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/FacebookCurl.php" md5="39af55a11bd950e9f98820c0684b9323">
+			<class name="Facebook\HttpClients\FacebookCurl"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/FacebookCurlHttpClient.php" md5="21cd688778091abe3db8322489f2fe6f">
+			<class name="Facebook\HttpClients\FacebookCurlHttpClient"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/FacebookGuzzleHttpClient.php" md5="1632a6fb368bb75f426645698e1f23f5">
+			<class name="Facebook\HttpClients\FacebookGuzzleHttpClient"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/FacebookHttpClientInterface.php" md5="2ec1da4415807c95976a3f4143745b3e">
+			<interface name="Facebook\HttpClients\FacebookHttpClientInterface"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/FacebookStream.php" md5="12899ad3bfd3746fbaae795f7caab841">
+			<class name="Facebook\HttpClients\FacebookStream"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/FacebookStreamHttpClient.php" md5="13bb31d272e7e44845d21857ce3b0b5c">
+			<class name="Facebook\HttpClients\FacebookStreamHttpClient"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/HttpClientsFactory.php" md5="8ab09fc1acde3fd974f89439c3d4a1ba">
+			<class name="Facebook\HttpClients\HttpClientsFactory"/>
+		</file>
+		<file filename="libs/facebook/HttpClients/certs/DigiCertHighAssuranceEVRootCA.pem" md5="3b92857df75558b2466d31a45b9c64f8"/>
+		<file filename="libs/facebook/PersistentData/FacebookMemoryPersistentDataHandler.php" md5="22b39134c9b99421fea3f9256b3e44c9">
+			<class name="Facebook\PersistentData\FacebookMemoryPersistentDataHandler"/>
+		</file>
+		<file filename="libs/facebook/PersistentData/FacebookSessionPersistentDataHandler.php" md5="1edbb51e7ac5c911feaede7c6a26527f">
+			<class name="Facebook\PersistentData\FacebookSessionPersistentDataHandler"/>
+		</file>
+		<file filename="libs/facebook/PersistentData/PersistentDataFactory.php" md5="3b45b3979248a2de34690d5bbfe2d057">
+			<class name="Facebook\PersistentData\PersistentDataFactory"/>
+		</file>
+		<file filename="libs/facebook/PersistentData/PersistentDataInterface.php" md5="a465de1d2950e06c701b6fc89a5d93b1">
+			<interface name="Facebook\PersistentData\PersistentDataInterface"/>
+		</file>
+		<file filename="libs/facebook/PseudoRandomString/McryptPseudoRandomStringGenerator.php" md5="50ba57a52908edf789e0fff785333019">
+			<class name="Facebook\PseudoRandomString\McryptPseudoRandomStringGenerator"/>
+		</file>
+		<file filename="libs/facebook/PseudoRandomString/OpenSslPseudoRandomStringGenerator.php" md5="493b76615b19ead83d4f9d733959fa53">
+			<class name="Facebook\PseudoRandomString\OpenSslPseudoRandomStringGenerator"/>
+		</file>
+		<file filename="libs/facebook/PseudoRandomString/PseudoRandomStringGeneratorFactory.php" md5="a9fb7279e61315c6d0e0f11d6fe0f4ec">
+			<class name="Facebook\PseudoRandomString\PseudoRandomStringGeneratorFactory"/>
+		</file>
+		<file filename="libs/facebook/PseudoRandomString/PseudoRandomStringGeneratorInterface.php" md5="6e61a34b2c02e04bb58e608577c4f9ec">
+			<interface name="Facebook\PseudoRandomString\PseudoRandomStringGeneratorInterface"/>
+		</file>
+		<file filename="libs/facebook/PseudoRandomString/PseudoRandomStringGeneratorTrait.php" md5="7931ddf58dcff30d3cda22a4326588d3">
+			<trait name="Facebook\PseudoRandomString\PseudoRandomStringGeneratorTrait"/>
+		</file>
+		<file filename="libs/facebook/PseudoRandomString/UrandomPseudoRandomStringGenerator.php" md5="c9a75c0630fea47c184e3fba7c3a358d">
+			<class name="Facebook\PseudoRandomString\UrandomPseudoRandomStringGenerator"/>
+		</file>
+		<file filename="libs/facebook/SignedRequest.php" md5="172a1fc68101f537548aba7114b69da2">
+			<class name="Facebook\SignedRequest"/>
+		</file>
+		<file filename="libs/facebook/Url/FacebookUrlDetectionHandler.php" md5="e4513f07b1d0b9914fc7bd517aedc70f">
+			<class name="Facebook\Url\FacebookUrlDetectionHandler"/>
+		</file>
+		<file filename="libs/facebook/Url/FacebookUrlManipulator.php" md5="485e7e440ecb146774f91a63819eda98">
+			<class name="Facebook\Url\FacebookUrlManipulator"/>
+		</file>
+		<file filename="libs/facebook/Url/UrlDetectionInterface.php" md5="65cffad292da68accb2e6fcfeded6492">
+			<interface name="Facebook\Url\UrlDetectionInterface"/>
+		</file>
+		<file filename="libs/facebook/UserAuth.php" md5="6cc8499631cda7b537a54e3adc31ce56">
 			<class name="Facebook\UserAuth"/>
 		</file>
+		<file filename="libs/facebook/autoload.php" md5="c04d2b9ddf706e44582d8ba40b47e8b2"/>
+		<file filename="libs/facebook/polyfills.php" md5="4fc8e0222629eb59925be0ba7ae58539"/>
 		<file filename="widgets/FacebookWidget.php" md5="fdb60f6c5cfefd6d5d52db5182f51fbd">
 			<class name="FacebookWidget"/>
 		</file>
@@ -101,12 +299,11 @@
 		<file filename="assets/js/facebook/login.min.js" md5="47160cc5f84a321aba41e44d4e786d22"/>
 	</assets>
 	<authors>
-		<author name="Naitik Shah" email="naitik@facebook.com"/>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
 	</licenses>
 </component>

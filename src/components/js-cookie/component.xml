@@ -28,5 +28,8 @@
 	<licenses>
 		<license>Released under the MIT license</license>
 	</licenses>
+	<requires>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+	</requires>
 </component>
 
