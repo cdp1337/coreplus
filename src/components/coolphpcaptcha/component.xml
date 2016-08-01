@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="CoolPHPCaptcha" execmode="web" logo="captcha.jpeg">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="CoolPHPCaptcha" execmode="web" logo="captcha.jpeg">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
@@ -31,13 +31,14 @@
 		<page baseurl="/simplecaptcha/admin" title="Captcha Tweaks" access="g:admin" admin="1" group="t:STRING_CONFIGURE"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="3e1aaba66e4f4dae5a63f1469ec7d04b"/>
+		<file filename="CHANGELOG" md5="1b7189cd2817ce5eda7eed9a75f1f6d6"/>
 		<file filename="FormCaptchaInput.class.php" md5="750307f4192a489e39add94a348d6afd">
 			<class name="FormCaptchaInput"/>
 		</file>
 		<file filename="SimpleCaptchaController.class.php" md5="5c163716318125f456fa87831a2eb510">
 			<controller name="SimpleCaptchaController"/>
 		</file>
+		<file filename="captcha.jpeg" md5="c43a4ccb03c2ab8d5daaad15e0c93192"/>
 		<file filename="i18n/strings.yml" md5="9a44b3f9ab8bfa3a4d687229fca2e153"/>
 		<file filename="libs/cool-php-captcha/LICENSE.txt" md5="d32239bcb673463ab874e80d47fae504"/>
 		<file filename="libs/cool-php-captcha/SimpleCaptcha.class.php" md5="e6602ee4530ba1f73cd7de049bcb1f4d">
@@ -72,15 +73,7 @@
 		<upgrade from="1.1.1" to="1.1.2"/>
 		<upgrade from="1.1.2" to="1.1.3"/>
 		<upgrade from="1.1.3" to="2.0.0"/>
+		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Jose Rodriguez" email="jose.rodriguez@exec.cl"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
