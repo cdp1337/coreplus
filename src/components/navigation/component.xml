@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.0" name="Navigation" execmode="web" logo="navigation.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.1" name="Navigation" execmode="web" logo="navigation.png">
 	<requires>
 		<require name="core" type="component" operation="ge" version="6.0.0"/>
 	</requires>
@@ -8,7 +8,7 @@
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="t:STRING_CONTENT" access="g:admin" admin="1"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="b6db58c5521f8ccfb59bcd363f1dc65a"/>
+		<file filename="CHANGELOG" md5="62a306c3229234a1c48ee11ef19498da"/>
 		<file filename="assets/scss/navigation.scss" md5="271eb2ce6a8d6329b27d67e25dda8a33"/>
 		<file filename="controllers/NavigationController.php" md5="41c3ab9c23116ebbaccaead3a7795b74">
 			<controller name="NavigationController"/>
@@ -20,6 +20,7 @@
 		<file filename="models/NavigationEntry.model.php" md5="7ffd8b1caa8a10b3ed018984ea2b5c7a">
 			<class name="NavigationEntryModel"/>
 		</file>
+		<file filename="navigation.png" md5="15107b97e4f5b4d5fe1636d7fc2d0835"/>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="d7b466a521859a4670ce8e0d98b7fa5c"/>
 		<file filename="widgets/NavigationWidget.php" md5="baf6e2333225d963b55c40d1c139d269">
 			<class name="NavigationWidget"/>
@@ -88,14 +89,7 @@
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="2.6.0"/>
+		<upgrade from="2.6.0" to="2.6.1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
