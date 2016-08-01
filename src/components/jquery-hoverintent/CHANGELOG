@@ -1,3 +1,8 @@
+JQuery-hoverIntent 1.8.1-1
+
+	* More images throughout everything!
+	-- Charlie Powell <charlie@evalagency.com>  Mon, 01 Aug 2016 00:33:11 -0400
+
 JQuery-hoverIntent r7~core3
 
 	* Make use of the namespace versions of View instead of static.

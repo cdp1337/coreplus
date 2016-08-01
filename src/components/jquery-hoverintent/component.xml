@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="r7~core3" name="JQuery-hoverIntent" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.8.1-1" name="JQuery-hoverIntent" execmode="web">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.9.0" operation="ge"/>
@@ -17,9 +17,10 @@
 		<upgrade from="r6~core1" to="r7~core1"/>
 		<upgrade from="r7~core1" to="r7~core2"/>
 		<upgrade from="r7~core2" to="r7~core3"/>
+		<upgrade from="r7~core3" to="1.8.1-1"/>
 	</upgrades>
 	<files>
-		<file filename="CHANGELOG" md5="bba300602ef11d5e305b6d868c1359a2"/>
+		<file filename="CHANGELOG" md5="f4128f9494578207c5bb9bc6bd44aee9"/>
 		<file filename="JQueryHoverIntent.lib.php" md5="179a6b20474f80f5d057d037b91149fc">
 			<class name="JQueryHoverIntent"/>
 		</file>
@@ -32,8 +33,5 @@
 		jQuery's built-in hover. However, instead of immediately calling the onMouseOver function,
 		it waits until the user's mouse slows down enough before making the call.
 	</description>
-	<licenses>
-		<license url="http://opensource.org/licenses/MIT">MIT License</license>
-	</licenses>
 </component>
 
