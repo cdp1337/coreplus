@@ -679,7 +679,11 @@ class FileLocal implements Filestore\File {
 
 			// If the image won't be resized, then just return the same image also!
 			$currentdata = getimagesize($this->getFilename());
-			if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
+			if(
+				($mode == '' || $mode == '<') && 
+				$currentdata[0] <= $width &&
+				($this->_type == 'private' || $this->_type == 'public')
+			){
 				return $this;
 			}
 
@@ -749,7 +753,11 @@ class FileLocal implements Filestore\File {
 
 			// if this file was smaller than the requested size, (and the mode isn't set to force the size)...
 			$currentdata = getimagesize($this->getFilename());
-			if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
+			if(
+				($mode == '' || $mode == '<') && 
+				$currentdata[0] <= $width &&
+				($this->_type == 'private' || $this->_type == 'public')
+			){
 				return $this;
 			}
 			//var_dump($currentdata, $width, $mode); die();
