@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.0" name="Base V3">
 	<assets>
 		<file filename="assets/css/print.css" md5="1e75d61c2c5c7ab10538e4c5f7f45897"/>
 		<file filename="assets/css/print.css.map" md5="9925f7d7ea074210b7e3e37329472f68"/>
@@ -53,7 +53,7 @@
 		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="cf5155836df5b35303934d71714352a3"/>
+		<file filename="CHANGELOG" md5="6823f2f04b8307644d157d21be295089"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
 		<file filename="assets/scss/_content.scss" md5="18e00da409fa99734b17d5fc9e24037e"/>
 		<file filename="assets/scss/_controls.scss" md5="9ef44e36323a75fe4e895ce9c61146a4"/>
@@ -202,6 +202,7 @@
 		<upgrade from="2.0.0" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.1.1"/>
 		<upgrade from="2.1.1" to="3.0.0"/>
+		<upgrade from="3.0.0" to="3.1.0"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
