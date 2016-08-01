@@ -12,8 +12,15 @@
 <hr/>
 
 {foreach ['note', 'info', 'success', 'deprecated', 'warning', 'error', 'tutorial'] as $class}
-	<p class="message-{$class}">This is a "message-{$class}" type message box!</p>
+	<p class="message-{$class}">This is a "message-{$class}" type message box with <a href="#">a link somewhere</a>!</p>
 {/foreach}
+
+
+<form id="progress-log-form" name="progress-log-form" target="progress-log" method="POST" action="">
+	<input type="submit" value="Perform Long Progress Test"/>
+</form>
+
+{progress_log_iframe}
 
 
 <a href="#">

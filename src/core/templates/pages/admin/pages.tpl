@@ -44,6 +44,9 @@
 			</td>
 		{/if}
 		<td>
+			{if $entry->getLogoURL()}
+				<img src="{$entry->getLogoURL()}"/>
+			{/if}
 			{if $entry->getParent()}
 				{$entry->getParent()->get('title')} &raquo;<br/>
 			{/if}

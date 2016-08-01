@@ -36,6 +36,7 @@
 
 <table class="listing" id="core-list">
 	<tr data-type="core">
+		<td><img src="{$core->getLogo()->getPreviewURL('64x64')}"/></td>
 		<td>Core {$core->getVersion()}</td>
 		<td>
 			<a href="#" class="update-link perform-update" style="display:none;">Update</a>
@@ -65,7 +66,12 @@
 			</tr>
 		{else}
 			<tr data-name="{$c->getKeyName()}" data-type="components">
-				<td>{$c->getName()}</td>
+				<td>
+					{if $c->getLogo()}
+						<img src="{$c->getLogo()->getPreviewURL('64x64')}"/>
+					{/if}
+					{$c->getName()}
+				</td>
 				<td>{$c->getVersion()}</td>
 				<td>
 					{if $c->isEnabled()}

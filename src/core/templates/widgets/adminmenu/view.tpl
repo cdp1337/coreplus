@@ -17,7 +17,14 @@
 					<ul class="sub-menu">
 						{foreach $gdat.children as $title => $page}
 							<li>
-								{a href=$page->get('baseurl') title="`$title|escape`"}{$title}{/a}
+								{if $page->getLogoURL()}
+									{a href=$page->get('baseurl') title="`$title|escape`"}
+										<img src="{$page->getLogoURL()}"/>
+										{$title}
+									{/a}
+								{else}
+									{a href=$page->get('baseurl') title="`$title|escape`"}{$title}{/a}
+								{/if}
 							</li>
 						{/foreach}
 					</ul>
