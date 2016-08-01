@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.1" logo="screenshots/favicon-204x204.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.2" logo="screenshots/favicon-204x204.png">
 	<description>
 		A simple component to display a favicon for various browsers and mobile devices.
 	</description>
@@ -25,7 +25,7 @@
 		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="71fadc814202d06b8322f7eb1fbd5d69"/>
+		<file filename="CHANGELOG" md5="dd680db862816aa65aa7588d6ed2d4c2"/>
 		<file filename="README.md" md5="e758db0d8cb23bbfe0b3132575fed948"/>
 		<file filename="controllers/FaviconController.php" md5="41dbfd6e22ed3a2a2151c8be5e638177">
 			<controller name="FaviconController"/>
@@ -54,6 +54,7 @@
 		<upgrade from="1.2.3" to="1.2.4"/>
 		<upgrade from="1.2.4" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
+		<upgrade from="2.0.1" to="2.0.2"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/ui-view.png" title="Frontend UI View"/>
