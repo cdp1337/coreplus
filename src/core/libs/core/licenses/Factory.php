@@ -72,15 +72,78 @@ class Factory {
 	}
 
 	/**
-	 * Get a specific license by its key
+	 * Get a specific license by its key, title, URL, ?or alias?
 	 *
-	 * @param $key
+	 * @param string $key
 	 *
 	 * @return null|array
 	 */
 	public static function GetLicense($key) {
 		$all = self::GetLicenses();
-		return isset($all[$key]) ? $all[$key] : null;
+		$match = null;
+		
+		if(isset($all[ $key ])){
+			// EASY!
+			$match = $key;
+		}
+		
+		// Otherwise I need to search for it.
+		if(!$match){
+			foreach($all as $k => $dat){
+				if($dat['title'] == $key){
+					$match = $k;
+					break;
+				}
+				if($dat['url'] == $key){
+					$match = $k;
+					break;
+				}
+				if(isset($dat['aliases'])){
+					foreach($dat['aliases'] as $a){
+						if($a == $key){
+							$match = $k;
+							break 2;
+						}
+					}
+				}
+			}	
+		}
+		
+		return $match ? array_merge($all[ $match ], ['key' => $match]) : null;
+	}
+
+	/**
+	 * Try to detect a license based on its contents.
+	 * 
+	 * @param string $contents The full contents of the license to autodetect from.
+	 * 
+	 * @return array|null
+	 */
+	public static function DetectLicense($contents) {
+		// Load in just 2kb of the file, that should be enough to detect the license.
+		$explodedContents = array_map('trim', explode("\n", substr($contents, 0, 2048)));
+		$lics = self::GetLicenses();
+
+		$lic = null;
+		foreach($lics as $key => $ldat){
+			if(isset($ldat['matches'])){
+				$g = true;
+				foreach($ldat['matches'] as $lm){
+					if(!in_array($lm, $explodedContents)){
+						$g = false;
+						break;
+					}
+				}
+
+				if($g){
+					// All lines match!
+					return array_merge($ldat, ['key' => $key ]);
+				}
+			}
+		}
+		
+		// no?
+		return null;
 	}
 
 
@@ -108,11 +171,25 @@ class Factory {
 				'title'    => 'Creative Commons Attribution-ShareAlike',
 				'opttitle' => '[CC BY-SA v3] Creative Commons - Attribution-ShareAlike 3.0',
 				'url'      => 'http://creativecommons.org/licenses/by-sa/3.0/',
+				'aliases' => [
+					'CCAttribution-ShareAlike 3.0'
+				],
+			],
+			'cc-by-sa-2.5' => [
+				'title'    => 'Creative Commons Attribution-ShareAlike',
+				'opttitle' => '[CC BY-SA v2] Creative Commons - Attribution-ShareAlike 2.5',
+				'url'      => 'http://creativecommons.org/licenses/by-sa/2.5/',
+				'aliases' => [
+					'CCAttribution-ShareAlike 2.5'
+				],
 			],
 			'cc-by-sa-2.0' => [
 				'title'    => 'Creative Commons Attribution-ShareAlike',
 				'opttitle' => '[CC BY-SA v2] Creative Commons - Attribution-ShareAlike 2.0',
 				'url'      => 'http://creativecommons.org/licenses/by-sa/2.0/',
+				'aliases' => [
+					'CCAttribution-ShareAlike 2.0'
+				],
 			],
 
 			// Creative Commons - Attribution-NoDerivs
@@ -168,16 +245,34 @@ class Factory {
 				'title'    => 'GNU General Public License',
 				'opttitle' => '[GNU GPLv3] GNU - General Public License v3',
 				'url'      => 'http://www.gnu.org/licenses/gpl-3.0.html',
+				'matches' => [
+					'GNU GENERAL PUBLIC LICENSE',
+					'Version 3, 29 June 2007',
+				],
+				'aliases' => [
+					'GPLv3',
+				],
 			],
 			'gnu-gpl-2' => [
 				'title'    => 'GNU General Public License',
 				'opttitle' => '[GNU GPLv2] GNU - General Public License v2',
 				'url'      => 'http://www.gnu.org/licenses/gpl-2.0.html',
+				'matches' => [
+					'GNU GENERAL PUBLIC LICENSE',
+					'Version 2, June 1991',
+				],
+				'aliases' => [
+					'GPLv2',
+				],
 			],
 			'gnu-gpl-1' => [
 				'title'    => 'GNU General Public License',
 				'opttitle' => '[GNU GPLv1] GNU - General Public License v1',
 				'url'      => 'http://www.gnu.org/licenses/gpl-1.0.html',
+				'matches' => [
+					'GNU GENERAL PUBLIC LICENSE',
+					'Version 1, February 1989',
+				]
 			],
 
 			// GNU LGPL
@@ -185,11 +280,22 @@ class Factory {
 				'title'    => 'GNU Lesser General Public License',
 				'opttitle' => '[GNU LGPLv3] GNU - Lesser General Public License v3',
 				'url'      => 'http://www.gnu.org/licenses/lgpl-3.0.html',
+				'matches' => [
+					'GNU LESSER GENERAL PUBLIC LICENSE',
+					'Version 3, 29 June 2007',
+				]
 			],
 			'gnu-lgpl-2.1' => [
 				'title'    => 'GNU Lesser General Public License',
 				'opttitle' => '[GNU LGPLv2.1] GNU - Lesser General Public License v2.1',
 				'url'      => 'http://www.gnu.org/licenses/lgpl-2.1.html',
+				'matches' => [
+					'GNU LESSER GENERAL PUBLIC LICENSE',
+					'Version 2.1, February 1999',
+				],
+				'aliases' => [
+					'GNU Library or "Lesser" General Public License version 2.1',
+				]
 			],
 
 			// GNU AGPL
@@ -197,6 +303,13 @@ class Factory {
 				'title' => 'GNU Affero General Public License',
 				'opttitle' => '[GNU AGPLv3] GNU - Affero General Public License v3',
 				'url' => 'http://www.gnu.org/licenses/agpl-3.0.html',
+				'matches' => [
+					'"This License" refers to version 3 of the GNU Affero General Public License.',
+				],
+				'aliases' => [
+					'http://www.gnu.org/licenses/agpl-3.0.txt',
+					'GNU Affero General Public License v3',
+				],
 			],
 
 			// GNU FDL
@@ -221,6 +334,14 @@ class Factory {
 				'title'    => 'Apache License',
 				'opttitle' => 'Apache License, Version 2.0',
 				'url'      => 'http://www.apache.org/licenses/LICENSE-2.0',
+				'matches' => [
+					'Apache License',
+					'Version 2.0, January 2004',
+					'http://www.apache.org/licenses/',
+				],
+				'aliases' => [
+					'APL',
+				],
 			],
 
 			// Mozilla license
@@ -228,6 +349,9 @@ class Factory {
 				'title'    => 'Mozilla Public License',
 				'opttitle' => '[MPL] Mozilla Public License, Version 2.0',
 				'url'      => 'http://www.mozilla.org/MPL/2.0/',
+				'aliases' => [
+					'MPL',
+				],
 			],
 
 			// MIT
@@ -235,6 +359,27 @@ class Factory {
 				'title'    => 'MIT License',
 				'opttitle' => '[MIT] MIT License',
 				'url'      => 'http://opensource.org/licenses/MIT',
+				'matches' => [
+					'Permission is hereby granted, free of charge, to any person obtaining a copy',
+					'in the Software without restriction, including without limitation the rights',
+					'The above copyright notice and this permission notice shall be included in',
+					'all copies or substantial portions of the Software.',
+					'THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR',
+					'IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,',
+				],
+				'aliases' => [
+					'MIT',
+				]
+			],
+			
+			// The DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE!
+			[
+				'title' => 'WTFPL',
+				'opttitle' => 'DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE',
+				'url' => 'http://www.wtfpl.net/',
+				'matches' => [
+					'DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE'
+				]
 			]
 		);
 	}
