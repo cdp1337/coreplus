@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.0" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.1" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="24a6e6f63466f9744100aaf7e521fff4"/>
+		<file filename="core/CHANGELOG" md5="5dc8948346d4f6e5a6d6119aba521351"/>
 		<file filename="core/LICENSER.php" md5="22bee0e2215980e57231428bfe7907ee"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -858,7 +858,7 @@
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="3387c52211ba82ac696d20c5daf85ee4">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
-		<file filename="core/libs/core/utilities/Packager.php" md5="6c272cfaba028073bf60aab2921a2ce2">
+		<file filename="core/libs/core/utilities/Packager.php" md5="8de916c50c203457c04cdbd3d3317189">
 			<class name="Core\Utilities\Packager"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="68449b47ea43aee8918263e19d41efec">
@@ -1602,7 +1602,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="c4b1d1cf9bff6994b3af1fd788fec6bd">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="bc7fad8c6ae92072f11e0583f7354927">
+		<file filename="core/models/PageModel.class.php" md5="590a6dc12f7c4e5d7b0be8fdeba30b95">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1677,7 +1677,7 @@
 			<class name="UserWidget"/>
 		</file>
 		<file filename="htaccess.example" md5="180a2e73554496c5a0e7d8a033a0fd49"/>
-		<file filename="index.php" md5="de3a1c1134df965cb1f2254ca00680f5"/>
+		<file filename="index.php" md5="738c3a2741d308bf4c5c7b217a20685c"/>
 		<file filename="install/InstallPage.class.php" md5="2987f4e8cf94c5fb78ebae74e3ef22ea">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -3203,7 +3203,7 @@
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.base64.min.js" md5="f5ad50e340c30409e5a0542c3b6a085d"/>
 		<file filename="core/assets/js/core.context-controls.js" md5="d497d3a1aa368191040e6b090ef17bc6"/>
-		<file filename="core/assets/js/core.context-controls.min.js" md5="2cc21d30e11c2c912783d4bc74f2ebb6"/>
+		<file filename="core/assets/js/core.context-controls.min.js" md5="d6a7fc5171ca1f92989c5f80052e04a7"/>
 		<file filename="core/assets/js/core.email.js" md5="b5f2a018dd9a739e19bba3b9c34ef862"/>
 		<file filename="core/assets/js/core.email.min.js" md5="20aea3e7761dbdf2817f121cf0d702ae"/>
 		<file filename="core/assets/js/core.example.js" md5="ec13d9b71ef0e3fa4a60d063b6ce805b"/>
@@ -3215,6 +3215,7 @@
 		<file filename="core/assets/js/core.listingtable.min.js" md5="9cd834cd8f2f1c341ac46cd8c323de5a"/>
 		<file filename="core/assets/js/core.min.js" md5="fe3c341c3b3409f706009a35ebe1f883"/>
 		<file filename="core/assets/js/core.progress-log-iframe.js" md5="5ddf799e85a9fc1f24f0b29085e8e51a"/>
+		<file filename="core/assets/js/core.progress-log-iframe.min.js" md5="654b3a0343778801980178bd50b7c762"/>
 		<file filename="core/assets/js/core.strings.js" md5="26903a589fd8be5d6ab6d205601eacc3"/>
 		<file filename="core/assets/js/core.strings.min.js" md5="9f909a453c62314c3a3d9d6ea6807bcf"/>
 		<file filename="core/assets/js/html5shiv.js" md5="2079db7476a330b2d0edee6210a81534"/>
@@ -3377,55 +3378,7 @@
 		<upgrade from="5.0.1" to="6.0.0">
 			<php file="core/upgrades/500_user_config_migration.php"/>
 		</upgrade>
+		<upgrade from="6.0.0" to="6.0.1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Brent Cook" email="busterbcook@yahoo.com"/>
-		<author name="John Griffin" email="jgriffin316@netscape.net"/>
-		<author name="John Millaway"/>
-		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
-		<author name="Andy Prevost"/>
-		<author name="Marcus Bointon"/>
-		<author name="Rodney Rehm"/>
-		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
-		<author name="Andrei Zmievski"/>
-		<author name="Thue Kristensen"/>
-		<author name="Erich Enke" email="erich.Enke@gmail.com"/>
-		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
-		<author name="Lauren Matheson" email="inan@canada.com"/>
-		<author name="Solar Designer" email="solar at openwall.com"/>
-		<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
-		<author name="Pete Nelson" email="@GunGeekATX"/>
-		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
-		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
-		<author name="Catalin Constantin" email="catalin@dazoot.ro"/>
-		<author name="liqwei" email="liqwei@liqwei.com"/>
-		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
-		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
-		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
-		<author name="Duda" email="duda@big.hu"/>
-		<author name="Roberto Berto" email="roberto@berto.net"/>
-		<author name="Monte Ohrt" email="monte AT ohrt DOT com"/>
-		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
-		<author name="Gerard" email="gerard@interfold.com"/>
-		<author name="Jason Sweat" email="jsweat_php@yahoo.com"/>
-		<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
-		<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
-		<author name="boots" email="boots dot smarty at yahoo dot com"/>
-		<author name="Ralf Strehle (minor optimization)" email="ralf dot strehle at yahoo dot de"/>
-		<author name="Ralf Strehle" email="ralf dot strehle at yahoo dot de"/>
-		<author name="Uwe Tews" email="uwe.tews@googlemail.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-		<license>Public Domain</license>
-		<license url="http://opensource.org/licenses/MIT">MIT License</license>
-		<license>
-			See the included NOTICE.md file for more information.
-		</license>
-	</licenses>
 </component>
 

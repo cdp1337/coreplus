@@ -1,3 +1,28 @@
+Core Plus 6.0.1
+
+	* [Bug] Fixes for previewing images that are not inside public directories.
+	* [Bug] Fix error handling when logging in with a disabled auth driver.
+	* Restrict the requires directive to only components.
+	* New logo for Core!
+	* A test suite for the XMLLoader!
+	* Comment.
+	* Render page logos throughout the system when appropriate.
+	* New support for logos on a per-page basis.
+	* Major (regression?) fixes in the XML system to support PHP 7.
+	* Support for component logos!
+	* Better support for licence detection in packages.
+	* Support simple and named/associative arrays for ENUM options.
+	* Advanced javascript support for metadata when running CLI operations in WEB mode.
+	* New license detection support.
+	* Overhaul the progress log to be more user friendly.
+	* Migrate i18n to YML formats.
+	* Tweak the reinstall to be more javasript friendly.
+	* Javsacript for the new progress frame system.
+	* Minor standardizing of some of the Core javascript formats.
+	* Include all the icons from the Oxygen KDE theme by default.
+	* Filename fixes for resized raster images.
+	-- Charlie Powell <charlie@evalagency.com>  Mon, 01 Aug 2016 00:27:03 -0400
+
 Core Plus 6.0.0
 
 	* [Bug] Fix options with labels defined in Models.
