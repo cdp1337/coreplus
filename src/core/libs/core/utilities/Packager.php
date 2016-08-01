@@ -523,7 +523,7 @@ EOD;
 
 
 		// If this is not Core, set the required version to the current Core version.
-		if($this->_type != 'core'){
+		if($this->_type == 'component'){
 			$vers = \Core::GetComponent('core')->getVersion();
 			// Split it up into pieces
 			$versParts = new \Core\VersionString($vers);
