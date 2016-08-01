@@ -4,39 +4,30 @@ function smarty_function_progress_log_iframe($params, $smarty){
 
 	$logname = isset($params['name']) ? $params['name'] : 'progress-log';
 	$formid = isset($params['form']) ? $params['form'] : 'progress-log-form';
+	/** @var View $view */
+	$view   = \Core\view();
 
 	$html = <<<EOD
-<iframe id="$logname" name="$logname" style="display: none; width:90%; height:30em;"></iframe>
+<div id="$logname-container" style="display:none;" class="progress-log-wrapper">
+	<div class="progress-log-title"></div>
+	<a href="#" class="progress-log-view-details">View Details</a>
+	<div class="progress-log-progressbar">
+		<div class="progress-log-progressbar-inner"></div>
+	</div>
+	<p class="progress-log-message"></p>
+	
+	<iframe id="$logname-frame" name="$logname" class="progress-log-iframe" style="display:none;"></iframe>
+</div>
 EOD;
 
 	$script = <<<EOD
 <script>
-\$(function(){
-	var go = null,
-			log = document.getElementById('$logname'),
-			\$log = $('#$logname');
-
-		// Fix the width of the iframe.
-		//log.width = $('body').width() * .8;
-
-		$('#$formid').submit(function() {
-			\$log.show();
-			go = setInterval(
-				function(){
-					log.contentWindow.scrollBy(0,100);
-				}, 25
-			);
-		});
-
-		\$log.load(function(){
-			clearInterval(go);
-			log.contentWindow.scrollBy(0,5000);
-		});
-	});
+\$(function(){ Core.ProgressLogIframe('$logname', '$formid'); });
 </script>
 EOD;
 
-	\Core\view()->addScript('jquery');
-	\Core\view()->addScript($script, 'foot');
+	\JQuery::IncludeJQuery();
+	$view->addScript('assets/js/core.progress-log-iframe.js', 'head');
+	$view->addScript($script, 'foot');
 	return $html;
 }
