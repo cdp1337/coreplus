@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-1" logo="chartistjs.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-2" logo="chartistjs.png">
 	<provides>
 		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="026aef75ea69966ad38cba0e0112adb8"/>
+		<file filename="CHANGELOG" md5="2ad715ae941e15d28b8301d0efec53ec"/>
 		<file filename="CHANGELOG.md" md5="e13af389bde5daa8ceb3d1c0d4403264"/>
 		<file filename="CODINGSTYLE.md" md5="be72d83bc148e1ad9874d889a109307d"/>
 		<file filename="CONTRIBUTING.md" md5="d5ac0fe9972fbaa49c539e28f8c61487"/>
@@ -13,6 +13,7 @@
 		<file filename="README.md" md5="6695ece78f524617fe6459701c7489a2"/>
 		<file filename="assets/scss/chartist.scss" md5="9099a49ebd8cc95b97cd0c7bcda3db2f"/>
 		<file filename="assets/scss/settings/_chartist-settings.scss" md5="4db461394a4a1b9962cecb2e7fdf4e2f"/>
+		<file filename="chartistjs.png" md5="77f67582ccec539e358d88c19a8c0fd9"/>
 		<file filename="libs/chartistjs/ChartistJS.php" md5="b35b2815ae65f0f169458389372a7c8f">
 			<class name="ChartistJS"/>
 		</file>
@@ -33,15 +34,10 @@
 	<upgrades>
 		<upgrade from="0.9.5-1" to="0.9.5-2"/>
 		<upgrade from="0.9.5-2" to="0.9.8-1"/>
+		<upgrade from="0.9.8-1" to="0.9.8-2"/>
 	</upgrades>
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.wtfpl.net/">WTFPL</license>
-	</licenses>
 </component>
 
