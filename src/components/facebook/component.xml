@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.3-7" name="Facebook" execmode="web" logo="facebook.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.2.0-1" name="Facebook" execmode="web" logo="facebook.png">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/usermodel" call="FacebookController::GetUserControlLinks"/>
@@ -31,18 +31,18 @@
 	</users>
 	<view searchdir="templates">
 		<file filename="templates/emails/facebook/enable_confirmation.tpl" md5="bb92457d47699f47892941267c00f83b"/>
-		<file filename="templates/includes/user/facebook_login.tpl" md5="7546e92c592e0d7f1910a447c83f9ef5"/>
+		<file filename="templates/includes/user/facebook_login.tpl" md5="98491e84515cc3565c619043d00a5b52"/>
 		<file filename="templates/pages/facebook/enable.tpl" md5="ef5061ca42ad0ad233b0b1db5175d96b"/>
 		<file filename="templates/pages/facebook/login.tpl" md5="3271d46acd1a48dd6aec8c71dcc07862"/>
-		<file filename="templates/widgets/facebook/login.tpl" md5="d2c35fdad4e78240358e39c4c4ee3db1"/>
+		<file filename="templates/widgets/facebook/login.tpl" md5="fb44935d9343da1710b81e00ae3b9e2e"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="68d5381e829793e4a43f1ad5d47666b9"/>
-		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
+		<file filename="CHANGELOG" md5="265daee15901c2df1d16379b338008fc"/>
+		<file filename="FacebookHelper.class.php" md5="8f8bf7d81c0aa3fbf41eb3fb6e058b2c">
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="LICENSE" md5="2b909e60ceb7fd50466e9268b55a3410"/>
-		<file filename="controllers/FacebookController.php" md5="017e2b9f4ea2e44b60580b80347425e2">
+		<file filename="controllers/FacebookController.php" md5="65c521bf86751543da77d3fb5b2949cb">
 			<controller name="FacebookController"/>
 		</file>
 		<file filename="facebook.png" md5="a6143066f20ed05942ef66b3b53f2ccd"/>
@@ -267,7 +267,7 @@
 		<file filename="libs/facebook/Url/UrlDetectionInterface.php" md5="65cffad292da68accb2e6fcfeded6492">
 			<interface name="Facebook\Url\UrlDetectionInterface"/>
 		</file>
-		<file filename="libs/facebook/UserAuth.php" md5="6cc8499631cda7b537a54e3adc31ce56">
+		<file filename="libs/facebook/UserAuth.php" md5="231bf5da0ed4f5a270637a67df949c4d">
 			<class name="Facebook\UserAuth"/>
 		</file>
 		<file filename="libs/facebook/autoload.php" md5="c04d2b9ddf706e44582d8ba40b47e8b2"/>
@@ -292,19 +292,12 @@
 		<upgrade from="3.2.3~core4" to="3.2.3~core5"/>
 		<upgrade from="3.2.3~core5" to="3.2.3-6"/>
 		<upgrade from="3.2.3-6" to="3.2.3-7"/>
+		<upgrade from="3.2.3-7" to="5.2.0-1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
 		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
 		<file filename="assets/js/facebook/login.min.js" md5="47160cc5f84a321aba41e44d4e786d22"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
