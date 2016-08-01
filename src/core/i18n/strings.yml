@@ -683,9 +683,17 @@ MESSAGE_TUTORIAL_GPGAUTH_LOGIN2_ALT_UPLOAD:
 MESSAGE_TUTORIAL_GPGAUTH_LOGIN2_COPY_PASTE_COMMAND_TO_LOGIN:
   en: ""
 MESSAGE_TUTORIAL_GPGAUTH_REGISTER_ALT_UPLOAD:
-  en: ""
+  en: >
+    Instead of pasting commands into a terminal, you can also manually upload your GPG public key with the form below.
+    <br/><br/>
+    Simply export your public key in ASCII mode and paste the text respresentation below along with your email address.
 MESSAGE_TUTORIAL_GPGAUTH_REGISTER_COPY_PASTE_COMMAND:
-  en: ""
+  en: >
+    To register an account on this site, start by running the following command in a local terminal
+    where your public and private GPG keys are available.  <em>(Hint, copy/paste works well here)</em>
+    <br/><br/>
+    You will be prompted for the 8-digit public key fingerprint which will be displayed in the format similar to:
+    "sec   4096R/1234ABCD", in that case, enter 1234ABCD.
 MESSAGE_TUTORIAL_MANUALLY_UPLOAD_PACKAGE:
   en: >
     You can use this form to upload a TGZ file to manually install a package. Please
