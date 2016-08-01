@@ -40,8 +40,12 @@ $_SERVER['HTTP_USER_AGENT'] = 'Core Plus phpunit Tester Script';
 unset($path, $settingsxml, $siteurl, $node);
 
 
+// When working on the core, it's best to switch this back to core/bootstrap.php!
+// Set this to true to skip checking for the compiled version.
+$skipcompiled = true;
 
-require(ROOT_PDIR . 'core/bootstrap.compiled.php');
+if(!$skipcompiled && file_exists(ROOT_PDIR . 'core/bootstrap.compiled.php')) require_once(ROOT_PDIR . 'core/bootstrap.compiled.php');
+else require_once(ROOT_PDIR . 'core/bootstrap.php');
 
 // quiet!
 // CLI mode shouldn't have HTML error reporting.
