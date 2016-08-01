@@ -20,16 +20,28 @@
 	Component is the main container for everything for a given... well, component.
 	It's the root node, and each component can only contain one component.xml, which contains only one component directive.
 
-	The component directive MUST have a name and version attribute.
-	The name MUST match the component's directory, (capitalization is optional).
-	The version SHOULD start with a number, and ideally have minor and point revisions, optionally with a third party flag at the end.
+	The component directive MUST have the following keys:
+		name: The human-readable name for this component, spaces and capitals are allowed
+			This name must match the directory that it is in, when converted to a URL
+			eg: 'My Widget' converts to 'my-widget', so the component must reside inside components/my-widget.
+		version: The full version number of this component, (gets updated automatically by the packager)
+			The version SHOULD start with a number, and ideally have minor and point revisions, 
+			optionally with a third party flag at the end.
+		
+	The component directive MAY have the following keys:
+		execmode: Pretty sure this can be safely dropped now; no longer used.
+		logo: A path (relative to inside the component), for an icon for this component, 
+			should be at least 32x32 in size, 128x128 would probably be better.
+		isready: A method to call to check if this component "is ready", eg: necessary configuration options are set, etc.
+	
 -->
-<!ELEMENT component (licenses|authors|files|install|(otherfiles|requires|provides|hooks|smartyplugins|includes|pages|view|description|configs|users|userconfigs|assets|upgrades|forms|widgets|permissions)?)>
+<!ELEMENT component (licenses|authors|files|install|(otherfiles|requires|provides|hooks|smartyplugins|includes|pages|view|description|configs|users|userconfigs|assets|upgrades|forms|widgets|permissions|screenshots)?)>
 <!ATTLIST component
+	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
 	execmode (web|cli|both) "web"
 	name CDATA #REQUIRED
 	version CDATA #REQUIRED
-	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
+	logo CDATA #IMPLIED
 	isready CDATA #IMPLIED
 >
 
@@ -147,6 +159,7 @@ type (component|library) "library"
 	selectable (0|1) "1"
 	indexable (0|1) "1"
 	editurl CDATA #IMPLIED
+	image CDATA #IMPLIED
 >
 
 <!-- Link to create new admin-definable pages -->
@@ -331,3 +344,11 @@ Execute a low-level dataset operation on the installation or upgrade.
 
 <!--- Put your DTDDoc comment here. -->
 <!ELEMENT otherfiles (file)*>
+
+<!-- Components support Screenshots for the packager and update system to preview. -->
+<!ELEMENT screenshots (screenshot)*>
+<!ELEMENT screenshot EMPTY>
+<!ATTLIST screenshot
+	file CDATA #REQUIRED
+	title CDATA #IMPLIED
+>
