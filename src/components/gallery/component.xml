@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Gallery" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Gallery" execmode="web" logo="gallery.png">
 	<requires>
-		<require name="core" type="component" version="3.2.0" operation="ge"/>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="user" type="library"/>
 	</requires>
 	<permissions>
@@ -18,7 +18,7 @@
 		<widgetcreate title="Gallery" baseurl="/gallerywidget/create"/>
 	</widgets>
 	<description>
-		Gallery browsing system for core+
+		Gallery browsing system capable of building rich albums for images, video, audio, and other media!
 	</description>
 	<view searchdir="templates">
 		<file filename="templates/pages/gallery/admin.tpl" md5="a9e6c9e4bcdf763bf472b3e02c00ee17"/>
@@ -108,8 +108,8 @@
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
 	</licenses>
 </component>
