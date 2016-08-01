@@ -137,9 +137,22 @@ class AdminController extends Controller_2_1 {
 			$changes  = array();
 			$errors   = array();
 			$allpages = [];
+			
+			// Get a total count of the work to do for the progress bar.
+			$components = [];
+			foreach(Core::GetComponents() as $c){
+				/** @var $c Component_2_1 */
+				
+				if($c->isInstalled() && $c->isEnabled()){
+					$components[] = $c;
+				}
+			}
+			
+			$progressEach = '+' . (100 / (sizeof($components) + 2));
 
 			$t = ThemeHandler::GetTheme();
 
+			CLI::PrintProgressBar($progressEach);
 			CLI::PrintHeader('Reinstalling Theme ' . $t->getName());
 			if (($change = $t->reinstall(1)) !== false) {
 
@@ -148,13 +161,10 @@ class AdminController extends Controller_2_1 {
 				$changes[] = '<b>Changes to theme [' . $t->getName() . ']:</b><br/>' . "\n" . implode("<br/>\n", $change) . "<br/>\n<br/>\n";
 			}
 
-			foreach (Core::GetComponents() as $c) {
+			foreach ($components as $c) {
 				/** @var $c Component_2_1 */
-
 				try{
-					if(!$c->isInstalled()) continue;
-					if(!$c->isEnabled()) continue;
-
+					CLI::PrintProgressBar($progressEach);
 					CLI::PrintHeader('Reinstalling Component ' . $c->getName());
 					// Request the reinstallation
 					$change = $c->reinstall(1);
@@ -195,6 +205,7 @@ class AdminController extends Controller_2_1 {
 			// Flush any non-existent admin page.
 			// These can be created from developers changing their page URLs after the page is already registered.
 			// Purging admin-only pages is relatively safe because these are defined in component metafiles anyway.
+			CLI::PrintProgressBar($progressEach);
 			CLI::PrintHeader('Cleaning up non-existent pages');
 			$pageremovecount = 0;
 			foreach(
@@ -230,13 +241,13 @@ class AdminController extends Controller_2_1 {
 					CLI::PrintError('Error while processing ' . $e['type'] . ' ' . $e['name'] . ': ' . $e['message']);
 				}
 			}
-			else{
+			/*else{
 				CLI::PrintHeader('DONE!');
 			}
 
 			foreach($changes as $str){
 				echo $str;
-			}
+			}*/
 
 			// Flush the system cache, just in case
 			\Core\Cache::Flush();
@@ -1001,6 +1012,29 @@ class AdminController extends Controller_2_1 {
 		}
 		else{
 			$skin = $admindefault;
+		}
+		
+		if($request->isPost()){
+			// Test output for CLI modes.
+			$view->mode = View::MODE_NOOUTPUT;
+			$view->render();
+			CLI::PrintHeader('Doing Something Important');
+			for($i = 0; $i < 4; $i++){
+				sleep(1);
+				CLI::PrintProgressBar('+10');
+			}
+			sleep(1);
+			CLI::PrintWarning('Something unexpected happened!');
+			sleep(1);
+			CLI::PrintProgressBar('+10'); // 50% now
+			sleep(1);
+			CLI::PrintError('Something bad happened!');
+			for($i = 0; $i < 5; $i++){
+				sleep(1);
+				CLI::PrintProgressBar('+10');
+			}
+			
+			return;
 		}
 
 		$view->mastertemplate = $skin;
