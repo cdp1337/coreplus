@@ -139,7 +139,7 @@ class Theme{
 			$currenttheme = true;
 		}
 
-		foreach($this->_xmlloader->getElements('//skins/file') as $f){
+		foreach($this->_xmlloader->getElements('/skins/file') as $f){
 			$basefilename = $f->getAttribute('filename');
 			$filename = $this->getBaseDir() . 'skins/' . $basefilename;
 
@@ -185,7 +185,7 @@ class Theme{
 			$currenttheme = true;
 		}
 
-		foreach($this->_xmlloader->getElements('//emailskins/file') as $f){
+		foreach($this->_xmlloader->getElements('/emailskins/file') as $f){
 			$basefilename = $f->getAttribute('filename');
 			$filename = $this->getBaseDir() . 'emailskins/' . $basefilename;
 
@@ -357,7 +357,7 @@ class Theme{
 	 */
 	public function setAssetFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//theme/assets/file');
+		$this->_xmlloader->removeElements('/theme/assets/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = [];
@@ -378,7 +378,7 @@ class Theme{
 	 * @param array $file The array is expected to be an associative array with attributes "file" and "md5".
 	 */
 	public function addAssetFile($file){
-		$this->_xmlloader->createElement('//theme/assets/file[@filename="' . $file['file'] . '"][@md5="' . $file['md5'] . '"]');
+		$this->_xmlloader->createElement('/theme/assets/file[@filename="' . $file['file'] . '"][@md5="' . $file['md5'] . '"]');
 	}
 
 	/**
@@ -402,7 +402,7 @@ class Theme{
 
 		$used = [];
 		// Instead, I'm checking each existing one.
-		foreach($this->_xmlloader->getElements('//theme/skins/file') as $el){
+		foreach($this->_xmlloader->getElements('/theme/skins/file') as $el){
 			$att_file = $el->getAttribute('filename');
 			if(isset($newarray[$att_file])){
 				$used[] = $att_file;
@@ -410,7 +410,7 @@ class Theme{
 			}
 			else{
 				// Remove it!
-				$this->_xmlloader->getElement('//theme/skins', false)->removeChild($el);
+				$this->_xmlloader->getElement('/theme/skins', false)->removeChild($el);
 			}
 		}
 
@@ -419,7 +419,7 @@ class Theme{
 			if(!in_array($f['file'], $used)){
 				// Make the title something generic.
 				$title = substr($f['file'], 6, -4);
-				$this->_xmlloader->createElement('//theme/skins/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"][@title="' . $title . '"]');
+				$this->_xmlloader->createElement('/theme/skins/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"][@title="' . $title . '"]');
 			}
 		}
 	}
@@ -431,7 +431,7 @@ class Theme{
 	 */
 	public function setViewFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//theme/view/file');
+		$this->_xmlloader->removeElements('/theme/view/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = [];
@@ -442,7 +442,7 @@ class Theme{
 
 		// And recreate them all.
 		foreach ($newarray as $f) {
-			$this->_xmlloader->createElement('//theme/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+			$this->_xmlloader->createElement('/theme/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 		}
 	}
 
@@ -453,7 +453,7 @@ class Theme{
 	 */
 	public function setOtherFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//theme/otherfiles/file');
+		$this->_xmlloader->removeElements('/theme/otherfiles/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = [];
@@ -464,7 +464,7 @@ class Theme{
 
 		// And recreate them all.
 		foreach ($newarray as $f) {
-			$this->_xmlloader->createElement('//theme/otherfiles/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+			$this->_xmlloader->createElement('/theme/otherfiles/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 		}
 	}
 
@@ -525,10 +525,10 @@ class Theme{
 		// Now I can add the ones in the authors array.
 		foreach ($authors as $a) {
 			if (isset($a['email']) && $a['email']) {
-				$this->_xmlloader->getElement('//theme/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
+				$this->_xmlloader->getElement('/theme/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
 			}
 			else {
-				$this->_xmlloader->getElement('//theme/author[@name="' . $a['name'] . '"]');
+				$this->_xmlloader->getElement('/theme/author[@name="' . $a['name'] . '"]');
 			}
 		}
 	}
@@ -609,7 +609,7 @@ class Theme{
 	 */
 	public function getDescription() {
 		if ($this->_description === null) {
-			$this->_description = trim($this->_xmlloader->getElement('//description')->nodeValue);
+			$this->_description = trim($this->_xmlloader->getElement('/description')->nodeValue);
 		}
 
 		return $this->_description;
@@ -623,7 +623,7 @@ class Theme{
 		// Set the cache first.
 		$this->_description = $desc;
 		// And set the data in the original DOM.
-		$this->_xmlloader->getElement('//description')->nodeValue = $desc;
+		$this->_xmlloader->getElement('/description')->nodeValue = $desc;
 	}
 
 	public function getViewSearchDir(){
@@ -1117,7 +1117,7 @@ class Theme{
 	 * @return array
 	 */
 	public function getScreenshot(){
-		$s = $this->_xmlloader->getElement('//screenshots/screenshot', false);
+		$s = $this->_xmlloader->getElement('/screenshots/screenshot', false);
 
 		if(!$s){
 			return [
@@ -1142,7 +1142,7 @@ class Theme{
 	 * @return array
 	 */
 	public function getScreenshots(){
-		$s = $this->_xmlloader->getElements('//screenshots/screenshot');
+		$s = $this->_xmlloader->getElements('/screenshots/screenshot');
 
 		if(!$s){
 			return [ ];
