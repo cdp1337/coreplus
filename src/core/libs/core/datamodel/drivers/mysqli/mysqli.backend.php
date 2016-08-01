@@ -990,10 +990,20 @@ class mysqli_backend implements BackendInterface {
 				}
 
 				$opts = [];
-				foreach($column->options as $opt => $title){
-					// Ensure that any single quotes are escaped out.
-					$opts[] = str_replace("'", "\\'", $opt);
+				if(\Core\is_numeric_array($column->options)){
+					// Legacy versions of defining the options without any titles.
+					foreach($column->options as $opt){
+						// Ensure that any single quotes are escaped out.
+						$opts[] = str_replace("'", "\\'", $opt);
+					}
 				}
+				else{
+					foreach($column->options as $opt => $title){
+						// Ensure that any single quotes are escaped out.
+						$opts[] = str_replace("'", "\\'", $opt);
+					}
+				}
+				
 				$type = "enum('" . implode("','", $opts) . "')";
 				$isString = true;
 				break;
