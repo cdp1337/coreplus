@@ -198,10 +198,16 @@ class XMLLoader implements Serializable {
 	 * @return bool
 	 */
 	public function loadFromNode(DOMNode $node) {
+		if(!$this->_rootname){
+			// I need a root node name.
+			return false;
+		}
+		
 		// Save the DOM object so I have it in the future.
 		$this->_DOM = new DOMDocument();
 
 		// we want a nice output
+		$this->_DOM->encoding = 'UTF-8';
 		$this->_DOM->formatOutput = true;
 
 		$nn = $this->_DOM->importNode($node, true);
@@ -260,7 +266,15 @@ class XMLLoader implements Serializable {
 		$this->_schema = $url;
 
 		// Update the document if it was already loaded!
-		if($this->_DOM !== null && $this->_schema != $this->_DOM->doctype->systemId){
+		if(
+			$this->_DOM !== null &&
+			(
+				// Doctype was never set to begin with
+				$this->_DOM->doctype === null ||
+				// Or it was and it just doesn't match.
+				$this->_schema != $this->_DOM->doctype->systemId
+			)
+		){
 			$implementation = new DOMImplementation();
 			$dtd = $implementation->createDocumentType($this->_rootname, 'SYSTEM', $this->_schema);
 			$newdom = $implementation->createDocument('', '', $dtd);
@@ -369,6 +383,8 @@ class XMLLoader implements Serializable {
 	 * @return DOMElement
 	 */
 	public function getElement($path, $autocreate = true) {
+		$path = $this->_translatePath($path);
+		
 		return $this->getElementFrom($path, false, $autocreate);
 	}
 
@@ -389,15 +405,19 @@ class XMLLoader implements Serializable {
 	 */
 	public function getElementFrom($path, $el = false, $autocreate = true) {
 		// I need something to start from...
-		if (!$el) $el = $this->getRootDOM();
-
-		$path = $this->_translatePath($path);
+		if (!$el){
+			$el = $this->getRootDOM();
+		}
 
 		$list = $this->getElementsFrom($path, $el);
-		if ($list->item(0)) return $list->item(0);
+		if ($list->item(0)){
+			return $list->item(0);
+		}
 
 		// Not found and autocreate is set to false.
-		if (!$autocreate) return null;
+		if (!$autocreate){
+			return null;
+		}
 
 		// User choose to create it if it didn't exist.... so fire it up!
 		return $this->createElement($path, $el);
@@ -410,17 +430,26 @@ class XMLLoader implements Serializable {
 	 * @return string
 	 */
 	private function _translatePath($path) {
-
-		// Translate a single prepending slash to double slash, (means root path).
-		if (preg_match(':^/[^/]:', $path)) {
-			if(strpos($path,  '/' . $this->getRootDOM()->tagName) === 0){
-				// Path already has the root node before it, do not add another, (it just needs another slash).
-				$path = '/' . $path;
-			}
-			else{
-				$path = '//' . $this->getRootDOM()->tagName . $path;
-			}
+		
+		if(strlen($path) > 3 && $path{0} == '/' && $path{1} == '/' && strpos($path, '//' . $this->_rootname) !== 0){
+			// User requested //blah without the initial path being included.
+			// Translate this to /ROOT//blah to preserve backwards compatibility.
+			$path = '/' . $this->_rootname . $path;
 		}
+		
+		if($path{0} == '/' && strpos($path, '/' . $this->_rootname) !== 0){
+			// The user requested /blah,
+			// Translate this to /ROOT/blah.
+			$path = '/' . $this->_rootname . $path;
+		}
+		
+		if($path{0} != '/'){
+			// The user requested something without absolutely requesting its position.
+			// Prepend the "FIND-ANYWHERE" prefix here.
+			// Translate this to /ROOT//blah
+			$path = '/' . $this->_rootname . '//' . $path;
+		}
+		
 		return $path;
 	}
 
@@ -448,22 +477,19 @@ class XMLLoader implements Serializable {
 			$path = $this->_translatePath($path);
 
 			// The path should be absolutely resolved, but not necessarily required.
-			if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
+			if(strpos($path, '/' . $this->getRootDOM()->nodeName) === 0){
 				// I can safely trim that part off.
-				$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+				$path = substr($path, strlen($this->getRootDOM()->nodeName) + 2);
 			}
 		}
 		else{
-			// I need to verify that the two are compatible.
-			$path = $this->_translatePath($path);
-
 			// In this case, (an element was requested), it cannot be fully resolved!
 			// Unless of course it was the root node to begin with.
 			if($el == $this->getRootDOM()){
 				// The path should be absolutely resolved, but not necessarily required.
-				if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
+				if(strpos($path, '/' . $this->getRootDOM()->nodeName) === 0){
 					// I can safely trim that part off.
-					$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+					$path = substr($path, strlen($this->getRootDOM()->nodeName) + 2);
 				}
 			}
 			elseif($path{0} == '/'){
@@ -524,6 +550,10 @@ class XMLLoader implements Serializable {
 				elseif ($chr == ']') {
 					$inatt = false;
 					$curstr .= $chr;
+				}
+				elseif($chr == '/' && !$inatt && $curstr == '' && sizeof($patharray) == 0){
+					// The first character of the first attribute was '/', this can be safely ignored.
+					continue;
 				}
 				else {
 					$curstr .= $chr;
@@ -605,6 +635,9 @@ class XMLLoader implements Serializable {
 	 * @return DOMNodeList
 	 */
 	public function getElements($path) {
+		// This is designed to get elements from the root path ONLY, so ensure that it's resolved as such!
+		$path = $this->_translatePath($path);
+		
 		return $this->getElementsFrom($path, $this->getRootDOM());
 	}
 
@@ -615,14 +648,10 @@ class XMLLoader implements Serializable {
 	 * @return DOMNodeList
 	 */
 	public function getElementsFrom($path, $el = false) {
-		if (!$el) $el = $this->getRootDOM();
-
-		$path = $this->_translatePath($path);
-
-		// First thing's first, trim the prepending and trailing '/'s... they're unneeded.
-		//$path = trim($path, '/');
-		// Starting element, can be the root node or the current element it's at.
-		//$el = $this->getRootDOM();
+		if (!$el){
+			$el = $this->getRootDOM();
+		}
+		
 		$xpath   = new DOMXPath($this->_DOM);
 		$entries = $xpath->query($path, $el);
 		return $entries;
@@ -639,6 +668,8 @@ class XMLLoader implements Serializable {
 	 * @return bool
 	 */
 	public function removeElements($path) {
+		$path = $this->_translatePath($path);
+		
 		return $this->removeElementsFrom($path, $this->getRootDOM());
 	}
 
@@ -651,10 +682,6 @@ class XMLLoader implements Serializable {
 	 * @return bool
 	 */
 	public function removeElementsFrom($path, $el) {
-		$path = $this->_translatePath($path);
-
-		// Starting element, can be the root node or the current element it's at.
-		//$el = $this->getRootDOM();
 		$xpath   = new DOMXPath($this->_DOM);
 		$entries = $xpath->query($path, $el);
 		foreach ($entries as $e) {
@@ -665,43 +692,50 @@ class XMLLoader implements Serializable {
 
 	/**
 	 * Converts a given element and its children into an associative array
-	 * Much like the simplexml function.
+	 * containing all the values, attributes, and optionally children.
 	 *
-	 * @param string $el
+	 * @param DOMNode $el
 	 * @param bool   $nesting
 	 *
 	 * @return array
 	 */
 	public function elementToArray($el, $nesting = true) {
-		$ret = array();
-		foreach ($this->getElementsFrom('*', $el, false) as $node) {
-			$c           = $node->childNodes->item(0);
-			$haschildren = ($c instanceof DOMElement);
-
-			if (isset($ret[$node->tagName])) {
-				// More than one element... needs to be an array!
-				if (!is_array($ret[$node->tagName])) {
-					$v                   = $ret[$node->tagName];
-					$ret[$node->tagName] = array($v);
-				}
-				if ($haschildren && $nesting) {
-					$ret[$node->tagName][] = $this->elementToArray($node, true);
-				}
-				else {
-					$ret[$node->tagName][] = ($node->getAttribute('xsi:nil') == 'true') ? null : $node->nodeValue;
-				}
+		$tagName     = $el->nodeName;
+		$tagVal      = $el->getAttribute('xsi:nil') == 'true' ? null : $el->nodeValue;
+		$atts        = [];
+		$attLength   = $el->attributes->length;
+		$childLength = $el->childNodes->length;
+		
+		for($i = 0; $i < $attLength; $i++) {
+			/** @var DOMAttr $item */
+			$item = $el->attributes->item($i);
+			$itemName = ($item->prefix ? $item->prefix . ':' : '') . $item->name;
+			
+			if($itemName != 'xsi:nil'){
+				$atts[ $itemName ] = $item->value;
 			}
-			else {
-				if ($haschildren && $nesting) {
-					$ret[$node->tagName] = $this->elementToArray($node, true);
-				}
-				else {
-					$ret[$node->tagName] = ($node->getAttribute('xsi:nil') == 'true') ? null : $node->nodeValue;
+		}
+		
+		if($nesting && $childLength){
+			$children = [];
+			
+			for($i = 0; $i < $childLength; $i++){
+				$child = $el->childNodes->item($i);
+				if(!$child instanceof DOMText){
+					$children[] = $this->elementToArray($child, $nesting);	
 				}
 			}
 		}
-
-		return $ret;
+		else{
+			$children = null;
+		}
+		
+		return [
+			'#NAME' => $tagName,
+			'#VALUE' => $tagVal,
+			'#ATTRIBUTES' => $atts,
+			'#CHILDREN' => $children,
+		];
 	}
 
 	/**
@@ -846,38 +880,5 @@ class XMLLoader implements Serializable {
 		}
 
 		return $out;
-
-		$xml_obj = simplexml_import_dom($this->getDOM());
-		//$xml_obj = new SimpleXMLElement($xml);
-		$xml_lines    = explode("\n", $xml_obj->asXML());
-		$indent_level = 0;
-		$tab          = "\t"; // Optionally, have this be "    " for a space'd version.
-
-		$new_xml_lines = array();
-		foreach ($xml_lines as $xml_line) {
-			if (preg_match('#^(<[a-z0-9_:-]+((s+[a-z0-9_:-]+="[^"]+")*)?>.*<s*/s*[^>]+>)|(<[a-z0-9_:-]+((s+[a-z0-9_:-]+="[^"]+")*)?s*/s*>)#i', ltrim($xml_line))) {
-				$new_line        = str_repeat($tab, $indent_level) . ltrim($xml_line);
-				$new_xml_lines[] = $new_line;
-			} elseif (preg_match('#^<[a-z0-9_:-]+((s+[a-z0-9_:-]+="[^"]+")*)?>#i', ltrim($xml_line))) {
-				$new_line = str_repeat($tab, $indent_level) . ltrim($xml_line);
-				$indent_level++;
-				$new_xml_lines[] = $new_line;
-			} elseif (preg_match('#<s*/s*[^>/]+>#i', $xml_line)) {
-				$indent_level--;
-				if (trim($new_xml_lines[sizeof($new_xml_lines) - 1]) == trim(str_replace("/", "", $xml_line))) {
-					$new_xml_lines[sizeof($new_xml_lines) - 1] .= $xml_line;
-				} else {
-					if ($indent_level < 0) $indent_level = 0;
-					$new_line        = str_repeat($tab, $indent_level) . $xml_line;
-					$new_xml_lines[] = $new_line;
-				}
-			} else {
-				$new_line        = str_repeat($tab, $indent_level) . $xml_line;
-				$new_xml_lines[] = $new_line;
-			}
-		}
-
-		$xml = join("\n", $new_xml_lines);
-		return ($html_output) ? '<pre>' . htmlentities($xml) . '</pre>' : $xml;
 	}
 }
