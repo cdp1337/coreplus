@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 20 Jul 2016 02:02:26 -0400
+ * @compiled Mon, 01 Aug 2016 00:16:52 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1198,7 +1198,11 @@ $this->_file = \Core\Filestore\Factory::File($file);
 return $this->load();
 }
 public function loadFromNode(DOMNode $node) {
+if(!$this->_rootname){
+return false;
+}
 $this->_DOM = new DOMDocument();
+$this->_DOM->encoding = 'UTF-8';
 $this->_DOM->formatOutput = true;
 $nn = $this->_DOM->importNode($node, true);
 $this->_DOM->appendChild($nn);
@@ -1219,7 +1223,13 @@ $this->_rootname = $name;
 }
 public function setSchema($url){
 $this->_schema = $url;
-if($this->_DOM !== null && $this->_schema != $this->_DOM->doctype->systemId){
+if(
+$this->_DOM !== null &&
+(
+$this->_DOM->doctype === null ||
+$this->_schema != $this->_DOM->doctype->systemId
+)
+){
 $implementation = new DOMImplementation();
 $dtd = $implementation->createDocumentType($this->_rootname, 'SYSTEM', $this->_schema);
 $newdom = $implementation->createDocument('', '', $dtd);
@@ -1257,24 +1267,31 @@ public function getElementByTagName($name) {
 return $this->_DOM->getElementsByTagName($name)->item(0);
 }
 public function getElement($path, $autocreate = true) {
+$path = $this->_translatePath($path);
 return $this->getElementFrom($path, false, $autocreate);
 }
 public function getElementFrom($path, $el = false, $autocreate = true) {
-if (!$el) $el = $this->getRootDOM();
-$path = $this->_translatePath($path);
+if (!$el){
+$el = $this->getRootDOM();
+}
 $list = $this->getElementsFrom($path, $el);
-if ($list->item(0)) return $list->item(0);
-if (!$autocreate) return null;
+if ($list->item(0)){
+return $list->item(0);
+}
+if (!$autocreate){
+return null;
+}
 return $this->createElement($path, $el);
 }
 private function _translatePath($path) {
-if (preg_match(':^/[^/]:', $path)) {
-if(strpos($path,  '/' . $this->getRootDOM()->tagName) === 0){
-$path = '/' . $path;
+if(strlen($path) > 3 && $path{0} == '/' && $path{1} == '/' && strpos($path, '//' . $this->_rootname) !== 0){
+$path = '/' . $this->_rootname . $path;
 }
-else{
-$path = '//' . $this->getRootDOM()->tagName . $path;
+if($path{0} == '/' && strpos($path, '/' . $this->_rootname) !== 0){
+$path = '/' . $this->_rootname . $path;
 }
+if($path{0} != '/'){
+$path = '/' . $this->_rootname . '//' . $path;
 }
 return $path;
 }
@@ -1282,15 +1299,14 @@ public function createElement($path, $el = false, $forcecreate = 0) {
 if (!$el){
 $el = $this->getRootDOM();
 $path = $this->_translatePath($path);
-if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
-$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+if(strpos($path, '/' . $this->getRootDOM()->nodeName) === 0){
+$path = substr($path, strlen($this->getRootDOM()->nodeName) + 2);
 }
 }
 else{
-$path = $this->_translatePath($path);
 if($el == $this->getRootDOM()){
-if(strpos($path, '//' . $this->getRootDOM()->nodeName) === 0){
-$path = substr($path, strlen($this->getRootDOM()->nodeName) + 3);
+if(strpos($path, '/' . $this->getRootDOM()->nodeName) === 0){
+$path = substr($path, strlen($this->getRootDOM()->nodeName) + 2);
 }
 }
 elseif($path{0} == '/'){
@@ -1338,6 +1354,9 @@ elseif ($chr == ']') {
 $inatt = false;
 $curstr .= $chr;
 }
+elseif($chr == '/' && !$inatt && $curstr == '' && sizeof($patharray) == 0){
+continue;
+}
 else {
 $curstr .= $chr;
 }
@@ -1381,20 +1400,22 @@ $el = $entries->item(0);
 return $el;
 }
 public function getElements($path) {
+$path = $this->_translatePath($path);
 return $this->getElementsFrom($path, $this->getRootDOM());
 }
 public function getElementsFrom($path, $el = false) {
-if (!$el) $el = $this->getRootDOM();
-$path = $this->_translatePath($path);
+if (!$el){
+$el = $this->getRootDOM();
+}
 $xpath   = new DOMXPath($this->_DOM);
 $entries = $xpath->query($path, $el);
 return $entries;
 }
 public function removeElements($path) {
+$path = $this->_translatePath($path);
 return $this->removeElementsFrom($path, $this->getRootDOM());
 }
 public function removeElementsFrom($path, $el) {
-$path = $this->_translatePath($path);
 $xpath   = new DOMXPath($this->_DOM);
 $entries = $xpath->query($path, $el);
 foreach ($entries as $e) {
@@ -1403,32 +1424,36 @@ $e->parentNode->removeChild($e);
 return true;
 }
 public function elementToArray($el, $nesting = true) {
-$ret = array();
-foreach ($this->getElementsFrom('*', $el, false) as $node) {
-$c           = $node->childNodes->item(0);
-$haschildren = ($c instanceof DOMElement);
-if (isset($ret[$node->tagName])) {
-if (!is_array($ret[$node->tagName])) {
-$v                   = $ret[$node->tagName];
-$ret[$node->tagName] = array($v);
-}
-if ($haschildren && $nesting) {
-$ret[$node->tagName][] = $this->elementToArray($node, true);
-}
-else {
-$ret[$node->tagName][] = ($node->getAttribute('xsi:nil') == 'true') ? null : $node->nodeValue;
+$tagName     = $el->nodeName;
+$tagVal      = $el->getAttribute('xsi:nil') == 'true' ? null : $el->nodeValue;
+$atts        = [];
+$attLength   = $el->attributes->length;
+$childLength = $el->childNodes->length;
+for($i = 0; $i < $attLength; $i++) {
+$item = $el->attributes->item($i);
+$itemName = ($item->prefix ? $item->prefix . ':' : '') . $item->name;
+if($itemName != 'xsi:nil'){
+$atts[ $itemName ] = $item->value;
 }
 }
-else {
-if ($haschildren && $nesting) {
-$ret[$node->tagName] = $this->elementToArray($node, true);
-}
-else {
-$ret[$node->tagName] = ($node->getAttribute('xsi:nil') == 'true') ? null : $node->nodeValue;
+if($nesting && $childLength){
+$children = [];
+for($i = 0; $i < $childLength; $i++){
+$child = $el->childNodes->item($i);
+if(!$child instanceof DOMText){
+$children[] = $this->elementToArray($child, $nesting);
 }
 }
 }
-return $ret;
+else{
+$children = null;
+}
+return [
+'#NAME' => $tagName,
+'#VALUE' => $tagVal,
+'#ATTRIBUTES' => $atts,
+'#CHILDREN' => $children,
+];
 }
 public function asMinifiedXML() {
 $string = $this->getDOM()->saveXML();
@@ -1508,35 +1533,6 @@ $out .= str_repeat($tab, $indent) . trim($line) . NL;
 }
 }
 return $out;
-$xml_obj = simplexml_import_dom($this->getDOM());
-$xml_lines    = explode("\n", $xml_obj->asXML());
-$indent_level = 0;
-$tab          = "\t"; // Optionally, have this be "    " for a space'd version.
-$new_xml_lines = array();
-foreach ($xml_lines as $xml_line) {
-if (preg_match('#^(<[a-z0-9_:-]+((s+[a-z0-9_:-]+="[^"]+")*)?>.*<s*/s*[^>]+>)|(<[a-z0-9_:-]+((s+[a-z0-9_:-]+="[^"]+")*)?s*/s*>)#i', ltrim($xml_line))) {
-$new_line        = str_repeat($tab, $indent_level) . ltrim($xml_line);
-$new_xml_lines[] = $new_line;
-} elseif (preg_match('#^<[a-z0-9_:-]+((s+[a-z0-9_:-]+="[^"]+")*)?>#i', ltrim($xml_line))) {
-$new_line = str_repeat($tab, $indent_level) . ltrim($xml_line);
-$indent_level++;
-$new_xml_lines[] = $new_line;
-} elseif (preg_match('#<s*/s*[^>/]+>#i', $xml_line)) {
-$indent_level--;
-if (trim($new_xml_lines[sizeof($new_xml_lines) - 1]) == trim(str_replace("/", "", $xml_line))) {
-$new_xml_lines[sizeof($new_xml_lines) - 1] .= $xml_line;
-} else {
-if ($indent_level < 0) $indent_level = 0;
-$new_line        = str_repeat($tab, $indent_level) . $xml_line;
-$new_xml_lines[] = $new_line;
-}
-} else {
-$new_line        = str_repeat($tab, $indent_level) . $xml_line;
-$new_xml_lines[] = $new_line;
-}
-}
-$xml = join("\n", $new_xml_lines);
-return ($html_output) ? '<pre>' . htmlentities($xml) . '</pre>' : $xml;
 }
 }
 
@@ -5687,6 +5683,24 @@ public function getParameter($key) {
 $p = $this->getParameters();
 return (array_key_exists($key, $p)) ? $p[$key] : null;
 }
+public function getLogoURL(){
+if(($img = $this->getImage())){
+$logo = $img->getPreviewURL('24x24');
+}
+elseif($this->get('component')){
+$c = Core::GetComponent($this->get('component'));
+if(($logo = $c->getLogo())){
+$logo = $logo->getPreviewURL('24x24');
+}
+else{
+$logo = null;
+}
+}
+else{
+$logo = null;
+}
+return $logo;
+}
 public function setParameter($key, $val) {
 $this->_params[$key] = $val;
 }
@@ -9007,7 +9021,7 @@ public function save($minified = false) {
 $this->_xmlloader->setSchema('http://corepl.us/api/2_4/component.dtd');
 $this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
 if(!$this->getSmartyPluginDirectory()){
-$this->_xmlloader->removeElements('//smartyplugins');
+$this->_xmlloader->removeElements('/smartyplugins');
 }
 $XMLFilename = $this->_file->getFilename();
 if ($minified) {
@@ -9031,7 +9045,7 @@ return $out;
 public function getRequires() {
 if($this->_requires === null){
 $this->_requires = array();
-foreach ($this->_xmlloader->getElements('//component/requires/require') as $r) {
+foreach ($this->_xmlloader->getElements('/requires/require') as $r) {
 $t  = $r->getAttribute('type');
 $n  = $r->getAttribute('name');
 $v  = @$r->getAttribute('version');
@@ -9080,19 +9094,33 @@ return $this->_requires;
 }
 public function getDescription() {
 if ($this->_description === null) {
-$this->_description = trim($this->_xmlloader->getElement('//description')->nodeValue);
+$this->_description = trim($this->_xmlloader->getElement('/description')->nodeValue);
 }
 return $this->_description;
 }
+public function getLogo(){
+if($this->_xmlloader->getRootDOM()->hasAttribute('logo')){
+$icon = $this->_xmlloader->getRootDOM()->getAttribute('logo');
+if(strpos($icon, '://') !== false){
+return null;
+}
+$full = $this->getBaseDir() . $icon;
+$file = Core\Filestore\Factory::File($full);
+return $file;
+}
+else{
+return null;
+}
+}
 public function setDescription($desc) {
 $this->_description = $desc;
-$this->_xmlloader->getElement('//description')->nodeValue = $desc;
+$this->_xmlloader->getElement('/description')->nodeValue = $desc;
 }
 public function getPermissions(){
 return $this->_permissions;
 }
 public function getScreenshots(){
-$s = $this->_xmlloader->getElements('//screenshots/screenshot');
+$s = $this->_xmlloader->getElements('/screenshots/screenshot');
 if(!$s){
 return [];
 }
@@ -9152,16 +9180,16 @@ public function setAuthors($authors) {
 $this->_xmlloader->removeElements('/authors');
 foreach ($authors as $a) {
 if (isset($a['email']) && $a['email']) {
-$this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
+$this->_xmlloader->getElement('/authors/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
 }
 else {
-$this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] . '"]');
+$this->_xmlloader->getElement('/authors/author[@name="' . $a['name'] . '"]');
 }
 }
 }
 public function setLicenses($licenses) {
-$this->_xmlloader->removeElements('//component/licenses');
-$path = '//component/licenses/';
+$this->_xmlloader->removeElements('/licenses');
+$path = '/licenses/';
 foreach ($licenses as $lic) {
 $el = 'license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
 $l  = $this->_xmlloader->createElement($path . $el, false, 1);
@@ -9229,6 +9257,10 @@ $n           = strtolower($p->getAttribute('name'));
 $this->_classlist[$n] = $filename;
 }
 foreach ($f->getElementsByTagName('interface') as $p) {
+$n           = strtolower($p->getAttribute('name'));
+$this->_classlist[$n] = $filename;
+}
+foreach ($f->getElementsByTagName('trait') as $p) {
 $n           = strtolower($p->getAttribute('name'));
 $this->_classlist[$n] = $filename;
 }
@@ -9463,14 +9495,14 @@ $this->_version = $vers;
 $this->_xmlloader->getRootDOM()->setAttribute('version', $vers);
 }
 public function setFiles($files) {
-$this->_xmlloader->removeElements('//component/files/file');
+$this->_xmlloader->removeElements('/files/file');
 $newarray = array();
 foreach ($files as $f) {
 $newarray[$f['file']] = $f;
 }
 ksort($newarray);
 foreach ($newarray as $f) {
-$el = $this->_xmlloader->createElement('//component/files/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+$el = $this->_xmlloader->createElement('/files/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 if (isset($f['controllers'])) {
 foreach ($f['controllers'] as $c) {
 $this->_xmlloader->createElement('controller[@name="' . $c . '"]', $el);
@@ -9486,28 +9518,49 @@ foreach ($f['interfaces'] as $i) {
 $this->_xmlloader->createElement('interface[@name="' . $i . '"]', $el);
 }
 }
+if (isset($f['traits'])) {
+foreach ($f['traits'] as $i) {
+$this->_xmlloader->createElement('trait[@name="' . $i . '"]', $el);
+}
+}
 }
 }
 public function setAssetFiles($files) {
-$this->_xmlloader->removeElements('//component/assets/file');
+$this->_xmlloader->removeElements('/assets/file');
 $newarray = array();
 foreach ($files as $f) {
 $newarray[$f['file']] = $f;
 }
 ksort($newarray);
 foreach ($newarray as $f) {
-$el = $this->_xmlloader->createElement('//component/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+$el = $this->_xmlloader->createElement('/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 }
 }
 public function setViewFiles($files) {
-$this->_xmlloader->removeElements('//component/view/file');
+$this->_xmlloader->removeElements('/view/file');
 $newarray = array();
 foreach ($files as $f) {
 $newarray[$f['file']] = $f;
 }
 ksort($newarray);
 foreach ($newarray as $f) {
-$el = $this->_xmlloader->createElement('//component/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+$el = $this->_xmlloader->createElement('/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+}
+}
+public function setRequires($name, $type, $version = null, $op = null){
+$node = $this->_xmlloader->getElement('/requires/require[@name="' . $name . '"][@type="' . $type . '"]');
+if($version){
+$node->setAttribute('version', $version);
+if($op){
+$node->setAttribute('operation', $op);
+}
+else{
+$node->removeAttribute('operation');
+}
+}
+else{
+$node->removeAttribute('version');
+$node->removeAttribute('operation');
 }
 }
 public function getRawXML() {
@@ -10236,6 +10289,9 @@ else $m->set('rewriteurl', $subnode->getAttribute('baseurl'));
 if (!$m->get('title')) $m->set('title', $subnode->getAttribute('title'));
 if($access !== null){
 $m->set('access', $access);
+}
+if($subnode->hasAttribute('image')){
+$m->setMeta('image', $subnode->getAttribute('image'));
 }
 if(!$m->exists()) $m->set('parenturl', $subnode->getAttribute('parenturl'));
 $m->set('admin', $admin);
@@ -11054,7 +11110,14 @@ $ext = $file->getExtension();
 if(!$ext){
 $ext = mimetype_to_extension($file->getMimetype());
 }
-$key = str_replace(' ', '-', $file->getBasename(true)) . '-' . $file->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
+$fileBase = \Core\str_to_url($file->getBasename(true));
+if(preg_match('/-[0-9]*x[0-9]*$/', $fileBase)){
+$fileBase = preg_replace('/-[0-9]*x[0-9]*$/', '', $fileBase);
+}
+if(strlen($fileBase) > 42){
+$fileBase = substr($fileBase, 0, 42);
+}
+$key = $fileBase . '-' . $file->getHash() . '-' . $width . 'x' . $height . $mode . '.' . $ext;
 $dir = dirname($file->getFilename(false)) . '/';
 if(substr($dir, 0, 7) == 'public/'){
 $dir = 'public/tmp/' . substr($dir, 7);
@@ -11702,7 +11765,11 @@ $preview = $file->getPreviewFile($dimensions);
 elseif ($this->isPreviewable()) {
 if($width === false) return $this;
 $currentdata = getimagesize($this->getFilename());
-if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
+if(
+($mode == '' || $mode == '<') &&
+$currentdata[0] <= $width &&
+($this->_type == 'private' || $this->_type == 'public')
+){
 return $this;
 }
 $preview = Factory::File($bits['dir'] . $bits['key']);
@@ -11744,7 +11811,11 @@ return $file->getPreviewFile($dimensions);
 elseif ($this->isPreviewable()) {
 if($width === false) return $file;
 $currentdata = getimagesize($this->getFilename());
-if(($mode == '' || $mode == '<') && $currentdata[0] <= $width){
+if(
+($mode == '' || $mode == '<') &&
+$currentdata[0] <= $width &&
+($this->_type == 'private' || $this->_type == 'public')
+){
 return $this;
 }
 if (!$file->exists()) {

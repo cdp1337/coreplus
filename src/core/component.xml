@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.0" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.0" name="core" logo="core/coreplus-rounded-border-128x128.png">
+	<description>
+		The core application, including all libraries required for a base application.
+	</description>
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -81,18 +84,18 @@
 	</includes>
 	<pages>
 		<page baseurl="/admin" admin="1" access="g:admin" title="t:STRING_ADMIN"/>
-		<page baseurl="/admin/reinstallall" admin="1" access="g:admin" title="t:STRING_REINSTALL_ALL_COMPONENTS"/>
-		<page baseurl="/admin/config" admin="1" access="g:admin" title="t:STRING_SYSTEM_CONFIGURATION" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/updater" admin="1" access="g:admin" title="t:STRING_SYSTEM_UPDATER"/>
+		<page baseurl="/admin/reinstallall" admin="1" access="g:admin" title="t:STRING_REINSTALL_ALL_COMPONENTS" image="assets/images/apps/package_system.png"/>
+		<page baseurl="/admin/config" admin="1" access="g:admin" title="t:STRING_SYSTEM_CONFIGURATION" group="t:STRING_CONFIGURE" image="assets/images/apps/package_development.png"/>
+		<page baseurl="/updater" admin="1" access="g:admin" title="t:STRING_SYSTEM_UPDATER" image="assets/images/apps/package_other.png"/>
 		<page baseurl="/admin/syncsearchindex" admin="1" access="g:admin" title="t:STRING_SYNC_SEARCHABLE_INDEX"/>
 		<page baseurl="/user/login" admin="0" access="!g:authenticated" selectable="0" title="t:STRING_LOGIN"/>
 		<page baseurl="/user/register" admin="0" access="!g:authenticated" selectable="0" title="t:STRING_REGISTER"/>
 		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="t:STRING_LOGOUT"/>
-		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="t:STRING_USER_ADMIN" group="t:STRING_USER"/>
-		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="t:STRING_USER_GROUP_ADMIN" group="t:STRING_USER"/>
+		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="t:STRING_USER_ADMIN" group="t:STRING_USER" image="assets/images/apps/personal.png"/>
+		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="t:STRING_USER_GROUP_ADMIN" group="t:STRING_USER" image="assets/images/apps/system_users.png"/>
 		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_OVERVIEW" group="t:STRING_REPORTING"/>
 		<page baseurl="/useractivity/details" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_DETAILS" group="t:STRING_REPORTING"/>
-		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="t:STRING_USER_OPTIONS" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="t:STRING_USER_OPTIONS" group="t:STRING_CONFIGURE" image="assets/images/apps/personal.png"/>
 		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="t:STRING_SYSTEM_LOG" group="t:STRING_REPORTING"/>
 		<page baseurl="/form/testui" admin="1" access="g:admin" title="t:STRING_TEST_FORM_ELEMENT_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="t:STRING_ALL_PAGES" group="t:STRING_CONTENT"/>
@@ -101,9 +104,9 @@
 		<page baseurl="/page/sitemap" admin="0" access="*" title="t:STRING_SITEMAP" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="t:STRING_SEO_OPTIONS" group="t:STRING_CONFIGURE"/>
 		<page baseurl="/admin/performance/config" admin="1" access="g:admin" title="t:STRING_PERFORMANCE_OPTIONS" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/admin/email/config" admin="1" access="g:admin" title="t:STRING_EMAIL_OPTIONS_AND_DIAGNOSTICS" group="t:STRING_CONFIGURE"/>
+		<page baseurl="/admin/email/config" admin="1" access="g:admin" title="t:STRING_EMAIL_OPTIONS_AND_DIAGNOSTICS" group="t:STRING_CONFIGURE" image="assets/images/apps/kmail.png"/>
 		<page baseurl="/admin/i18n" admin="1" access="g:admin" title="t:STRING_I18N_LANGUAGES" group="t:STRING_CONFIGURE"/>
-		<page baseurl="/admin/health" admin="1" access="g:admin" title="t:STRING_SYSTEM_HEALTH" group="t:STRING_ADMIN"/>
+		<page baseurl="/admin/health" admin="1" access="g:admin" title="t:STRING_SYSTEM_HEALTH" group="t:STRING_ADMIN" image="assets/images/apps/package_utilities.png"/>
 		<page baseurl="/admin/serverid" admin="1" access="g:admin" title="t:STRING_SERVER_ID" group="t:STRING_ADMIN"/>
 	</pages>
 	<files>
@@ -115,10 +118,10 @@
 		<file filename="core/bootstrap_postincludes.php" md5="ad5edc4ca5372e9245fa6c4af1b5db7a"/>
 		<file filename="core/bootstrap_predefines.php" md5="19c03f50f1de46a41681c26a3af7f23f"/>
 		<file filename="core/bootstrap_preincludes.php" md5="c3deceae3d39082ed940dcf6aea27061"/>
-		<file filename="core/controllers/AdminController.php" md5="7a6c7d427edf957e3b5083d9c901b9ad">
+		<file filename="core/controllers/AdminController.php" md5="75136ce14e5296df4d324176b83b6e67">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="fb712b4b15093f4cb7bf0a300a229f1a">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="1926f241215b0b84a06bdbba29b26f11">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="523e0d1f142094fb39bb3e1eb8c2cf9d">
@@ -157,6 +160,7 @@
 		<file filename="core/controllers/WidgetController.php" md5="07730bce410933d0fc19c478afd80d27">
 			<controller name="WidgetController"/>
 		</file>
+		<file filename="core/coreplus-rounded-border-128x128.png" md5="e34f36a88c71cb512d75df60896551d5"/>
 		<file filename="core/forms/FormAccessStringInput.php" md5="e152001c72ed81c072e1d356dd39614b">
 			<class name="FormAccessStringInput"/>
 		</file>
@@ -247,12 +251,7 @@
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
 		<file filename="core/htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
-		<file filename="core/i18n/ar.ini" md5="4ea64b352aa1a9e3316cee1a2b8b3ee5"/>
-		<file filename="core/i18n/de.ini" md5="520ac83e16a3baeb1bcbf62b0f9d9d87"/>
-		<file filename="core/i18n/en.ini" md5="a794332d2a07d2dd2080782589a30bfe"/>
-		<file filename="core/i18n/es.ini" md5="e3fd11cd9ca5b0b8fe55cec42cfd3813"/>
-		<file filename="core/i18n/fr.ini" md5="eb77d602204d539f22b01ae45753af21"/>
-		<file filename="core/i18n/strings.yml" md5="cb6b8b4ce615ae7e502bff995d4011ae"/>
+		<file filename="core/i18n/strings.yml" md5="6320b8326f8bf9979d0fc370293fd9ce"/>
 		<file filename="core/libs/Michelf/License.md" md5="171ec084d03465cd4148b8298a8dfe11"/>
 		<file filename="core/libs/Michelf/Markdown.inc.php" md5="724fb43c68d63fbbc24024ef6e91e456"/>
 		<file filename="core/libs/Michelf/Markdown.php" md5="455f66e6c0931c51b5c1ae95e323f2ab">
@@ -432,7 +431,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="aca17a836efbe8c477af0e63ada255bb">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="566cd25e2f76c9548a9aec718c3fdf47">
+		<file filename="core/libs/core/Component_2_1.php" md5="7d75a5747c382734b9207aab835ed66a">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="7d8ac639a955983f6e39021956dad720">
@@ -549,7 +548,7 @@
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
-		<file filename="core/libs/core/XMLLoader.class.php" md5="5e18eee798e66abdd8317606cb4e4915">
+		<file filename="core/libs/core/XMLLoader.class.php" md5="a6f91497dceae310b4949bf802811bd3">
 			<class name="XMLLoader"/>
 		</file>
 		<file filename="core/libs/core/cache/CacheInterface.php" md5="996ea4d2f1059aeea423e85a602c0fa3">
@@ -579,7 +578,7 @@
 		<file filename="core/libs/core/cli/Arguments.php" md5="fcc7b82536005e9d3deb94cb3050af0a">
 			<class name="Core\CLI\Arguments"/>
 		</file>
-		<file filename="core/libs/core/cli/CLI.class.php" md5="9657efa2c8d301471486bffdf0ab1b5f">
+		<file filename="core/libs/core/cli/CLI.class.php" md5="16dc4b6fcededc6240f9b5a923bcfbdf">
 			<class name="Core\CLI\CLI"/>
 		</file>
 		<file filename="core/libs/core/datamodel/BackendInterface.php" md5="80b76dd86c66f9a734f24bbc11dbd806">
@@ -660,7 +659,7 @@
 		<file filename="core/libs/core/datamodel/columns/SchemaColumn_text.php" md5="5cc873e554d0e09e28bb2cb90896d395">
 			<class name="Core\Datamodel\Columns\SchemaColumn_text"/>
 		</file>
-		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="ce77d2ba72060ee1c290b68b7fe5b141">
+		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.backend.php" md5="77566330016417a5736d213f5ea988c7">
 			<class name="Core\Datamodel\Drivers\mysqli\mysqli_backend"/>
 		</file>
 		<file filename="core/libs/core/datamodel/drivers/mysqli/mysqli.schema.php" md5="3791b7314ca141094c468a48edab3b94">
@@ -709,7 +708,7 @@
 		<file filename="core/libs/core/filestore/backends/FileFTP.php" md5="68662fbb8b644c8d8674299769d85703">
 			<class name="Core\Filestore\Backends\FileFTP"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="ad70ba925c1e6020de167ad2a06af3ed">
+		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="582406ae122fab91ab3d3b7796633c53">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="e28683f2f6203eb9ab1016da6fa0a2d0">
@@ -745,7 +744,7 @@
 		<file filename="core/libs/core/filestore/ftp/FTPMetaFile.php" md5="1b4f685baf1945ceafcab837fcfb1049">
 			<class name="Core\Filestore\FTP\FTPMetaFile"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="3f66bb5b366697a9b7e4957709f71be8"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="c9d225493199316cabef259b4241178f"/>
 		<file filename="core/libs/core/gpg/GPG.php" md5="df2b3ba96f46bb5d7c26b0b9639d54c9">
 			<class name="Core\GPG\GPG"/>
 		</file>
@@ -805,7 +804,7 @@
 		<file filename="core/libs/core/i18n/I18NString.php" md5="4db8cc30c0b8f538fbf097f432c7c2ad">
 			<class name="Core\i18n\I18NString"/>
 		</file>
-		<file filename="core/libs/core/licenses/Factory.php" md5="da0ee50aeb1ee70c3193b130a470478c">
+		<file filename="core/libs/core/licenses/Factory.php" md5="9b1a9918b6b40c81a6d507af06abb7c0">
 			<class name="Core\Licenses\Factory"/>
 		</file>
 		<file filename="core/libs/core/listingtable/Column.php" md5="f4a37d0de8f2f11c70e20b8a1d5aa9f8">
@@ -859,7 +858,7 @@
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="3387c52211ba82ac696d20c5daf85ee4">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
-		<file filename="core/libs/core/utilities/Packager.php" md5="e3d3f16ea4ee1bccde749886d0c06939">
+		<file filename="core/libs/core/utilities/Packager.php" md5="6c272cfaba028073bf60aab2921a2ce2">
 			<class name="Core\Utilities\Packager"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="68449b47ea43aee8918263e19d41efec">
@@ -1068,7 +1067,7 @@
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="6e6a609416698cabc3276e5599d48f1a"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="1a7f0ae3bc571b3f64811360c6457976"/>
 		<file filename="core/libs/smarty-plugins/function.multisite.php" md5="08475ba5487015440f4db8844111c78a"/>
-		<file filename="core/libs/smarty-plugins/function.progress_log_iframe.php" md5="82ea26ab3eac02fd41e2d720e8c4db90"/>
+		<file filename="core/libs/smarty-plugins/function.progress_log_iframe.php" md5="be5ca08392f569311fd16fc750fa1b58"/>
 		<file filename="core/libs/smarty-plugins/function.t.php" md5="ce6b1683d6c3d47907f3f4403c2c5c9a"/>
 		<file filename="core/libs/smarty-plugins/function.user.php" md5="f8d0b10c7c0be23640ebfe79e47b4e59"/>
 		<file filename="core/libs/smarty-plugins/function.widget.php" md5="7e4b3cd8a8f078e84dd390cf6f4084fd"/>
@@ -1603,7 +1602,7 @@
 		<file filename="core/models/PageMetaModel.class.php" md5="c4b1d1cf9bff6994b3af1fd788fec6bd">
 			<class name="PageMetaModel"/>
 		</file>
-		<file filename="core/models/PageModel.class.php" md5="6257ac4c67d27691ce5452e42ab417af">
+		<file filename="core/models/PageModel.class.php" md5="bc7fad8c6ae92072f11e0583f7354927">
 			<class name="PageModel"/>
 		</file>
 		<file filename="core/models/RewriteMapModel.php" md5="3791a151027c417603c48e3a3c59a4d3">
@@ -1656,7 +1655,7 @@
 		<file filename="core/upgrades/270_to_280_user_avatar_paths.php" md5="4c150b7517de79a4e3f29bb343f5ddc5"/>
 		<file filename="core/upgrades/300_page_published.php" md5="63080ee9ed1e2cb9d3724bb4812f286d"/>
 		<file filename="core/upgrades/500_user_config_migration.php" md5="4344c06c6f1eb5e4e85707fec58dae05"/>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="c1a201737f77beb5ca0dc8177f704730">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="3b21cfd275354a4c0e96effe64e05fae">
 			<class name="AdminMenuWidget"/>
 		</file>
 		<file filename="core/widgets/PageSearchWidget.php" md5="c6543a0d2f5d54141a7a286078e2608b">
@@ -1678,7 +1677,7 @@
 			<class name="UserWidget"/>
 		</file>
 		<file filename="htaccess.example" md5="180a2e73554496c5a0e7d8a033a0fd49"/>
-		<file filename="index.php" md5="738c3a2741d308bf4c5c7b217a20685c"/>
+		<file filename="index.php" md5="de3a1c1134df965cb1f2254ca00680f5"/>
 		<file filename="install/InstallPage.class.php" md5="2987f4e8cf94c5fb78ebae74e3ef22ea">
 			<class name="_InstallTemplate"/>
 			<class name="_InstallSkin"/>
@@ -1806,13 +1805,13 @@
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="f0ff3c9884a0acc313e5b067f0eb0188"/>
 		<file filename="core/templates/pages/admin/log_details.tpl" md5="194679bb89f669a7e49d82b454ad6685"/>
-		<file filename="core/templates/pages/admin/pages.tpl" md5="018dd722873603c9fe02aa8bf34a8afe"/>
+		<file filename="core/templates/pages/admin/pages.tpl" md5="00eadd35f87f53f53770878d2e467cfb"/>
 		<file filename="core/templates/pages/admin/performance_config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/reinstallall.tpl" md5="b6b67110d1883d5a44a37ba06e4c17b6"/>
 		<file filename="core/templates/pages/admin/seo_config.tpl" md5="87989a5ce0632ef57170a9121ccee314"/>
 		<file filename="core/templates/pages/admin/serverid.tpl" md5="9c7769c76853c03be1475db98f84ea73"/>
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
-		<file filename="core/templates/pages/admin/testui.tpl" md5="4513d36263bdcb5f1bfb6547ac6955ff"/>
+		<file filename="core/templates/pages/admin/testui.tpl" md5="7854fa5292a1f3910be158559e591386"/>
 		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="ed40e9f26a0782f1185c46dce4d5cc4c"/>
 		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
@@ -1846,7 +1845,7 @@
 		<file filename="core/templates/pages/page/sitemap.tpl" md5="0519486ddf51fb11b0541b6d92cb63bb"/>
 		<file filename="core/templates/pages/page/sitemap.xml.tpl" md5="a27828e243dfaac4a261b28567b49fad"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="b926750d7336ee782a65ceb4890dde76"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="f2217af60dae2793c13d2913c9302605"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="d2208b9bd00c14d6d96fa1ec6cbe1cf2"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="98f43f644f6d5f457652a1aa874cbb9f"/>
@@ -1882,7 +1881,7 @@
 		<file filename="core/templates/skins/blank.tpl" md5="146bffe4e34902618630cbeb5a2709d1"/>
 		<file filename="core/templates/skins/print.tpl" md5="81dbbdb562e3e2f2db1c1e5d9d43c44b"/>
 		<file filename="core/templates/widgetcontainers/default/container.tpl" md5="9b8dc6c967f41316dd40df39993efea4"/>
-		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="c0d5a257de0db058b1209f8e58a28688"/>
+		<file filename="core/templates/widgets/adminmenu/view.tpl" md5="13909749fac74119ef02def4759eed2c"/>
 		<file filename="core/templates/widgets/pagesearch/execute.tpl" md5="41200fd420a94cb71f90c41efcef38c7"/>
 		<file filename="core/templates/widgets/updater/check.tpl" md5="72e3def2db04a820ebc32d3659e15f76"/>
 		<file filename="core/templates/widgets/user/login.tpl" md5="6035f684691a3fd0ed393ef637184f31"/>
@@ -1892,9 +1891,6 @@
 		<file filename="core/templates/widgets/userlogin/execute.tpl" md5="a582b5e30910cf9c4e07a4f3d0c88c6e"/>
 	</view>
 	<install/>
-	<description>
-		The core application, including all libraries required for a base application.
-	</description>
 	<configs>
 		<config key="/core/aws/key" type="string" default=""/>
 		<config key="/core/aws/secretkey" type="string" default=""/>
@@ -1985,6 +1981,834 @@
 		<file filename="core/assets/css/reset.min.css" md5="44b43a8b1471320ee192b0938fab3372"/>
 		<file filename="core/assets/css/updater.css" md5="771975b286bac4ea1f55785d6ca1a5eb"/>
 		<file filename="core/assets/images/404.jpg" md5="815cb4116bbbec081a645e85de74025c"/>
+		<file filename="core/assets/images/actions/1day.png" md5="7c07944103ef061bb49cd78a49ab8ee3"/>
+		<file filename="core/assets/images/actions/1downarrow.png" md5="56c743f1b9a62839ed29dbeaedbbb487"/>
+		<file filename="core/assets/images/actions/1leftarrow.png" md5="f709ed2b826ffc086866017854e8ff9c"/>
+		<file filename="core/assets/images/actions/1rightarrow.png" md5="52c1b0ff61f7354e224305fe00e795f6"/>
+		<file filename="core/assets/images/actions/1uparrow.png" md5="cbff10ea03124ce2d0f5700a559fafa5"/>
+		<file filename="core/assets/images/actions/2downarrow.png" md5="2905b381b6e4f299de01163291abd678"/>
+		<file filename="core/assets/images/actions/2leftarrow.png" md5="2cc9c7cf7f3df0eb071da6aeaa8cd958"/>
+		<file filename="core/assets/images/actions/2rightarrow.png" md5="5a2a6f157be55b9564d85df843a749f9"/>
+		<file filename="core/assets/images/actions/2uparrow.png" md5="4d83378d2d466218ebba011104887807"/>
+		<file filename="core/assets/images/actions/5days.png" md5="476bff8b7209150603b86d7db7efdfe6"/>
+		<file filename="core/assets/images/actions/7days.png" md5="ac491dbadf6da2ab611b7c3d06e98fb5"/>
+		<file filename="core/assets/images/actions/about_kde.png" md5="6a387cf10835ccb1df56eaad7cffddf5"/>
+		<file filename="core/assets/images/actions/add.png" md5="0578f46cb0063708685f110cb5ae15be"/>
+		<file filename="core/assets/images/actions/add_user.png" md5="aabca46f14379d712256bae33744157e"/>
+		<file filename="core/assets/images/actions/alarmclock.png" md5="dce7b73133563b3925f87f2acc2668de"/>
+		<file filename="core/assets/images/actions/application_exit.png" md5="3ccd73cbc4f0af6c02f9444b232f9166"/>
+		<file filename="core/assets/images/actions/apply.png" md5="a92813e1b07a89c8070148e13889f846"/>
+		<file filename="core/assets/images/actions/archive_extract.png" md5="41c3d787c263b89422f0f940daa4d701"/>
+		<file filename="core/assets/images/actions/archive_insert.png" md5="96750754016e1d0473b614d6ff15ff7d"/>
+		<file filename="core/assets/images/actions/archive_insert_directory.png" md5="bbc63582d78d204c6e689c0d5051e097"/>
+		<file filename="core/assets/images/actions/archive_remove.png" md5="e4203bcc9928ce4695890035b9ed60d5"/>
+		<file filename="core/assets/images/actions/ark_adddir.png" md5="802478bf49a3c5a5ad6c7af4ef223cee"/>
+		<file filename="core/assets/images/actions/ark_addfile.png" md5="56867cb8c141afcb125cea249f766478"/>
+		<file filename="core/assets/images/actions/ark_delete.png" md5="9f95df585eb679a703bf67d212ff469f"/>
+		<file filename="core/assets/images/actions/ark_extract.png" md5="e58b1020c8f33da9c38c119d827d00a8"/>
+		<file filename="core/assets/images/actions/ark_view.png" md5="941a0fbf13d39ddcbea9ee7f93120639"/>
+		<file filename="core/assets/images/actions/attach.png" md5="fd3b87d4fd3dd7bf62bdefe7315380a4"/>
+		<file filename="core/assets/images/actions/back.png" md5="48fddf7d2bac6d451a4ae555b481e629"/>
+		<file filename="core/assets/images/actions/battery.png" md5="d82e017129014c73b821e9686ec3c3f1"/>
+		<file filename="core/assets/images/actions/battery_charging_000.png" md5="21c109d00635e6f9fcbf8bb71501a521"/>
+		<file filename="core/assets/images/actions/battery_charging_020.png" md5="66394eebb1bd6e11415e3b88c466bfed"/>
+		<file filename="core/assets/images/actions/battery_charging_040.png" md5="c40fdd0903f83566bcfe77e9a53ccb64"/>
+		<file filename="core/assets/images/actions/battery_charging_060.png" md5="2e6dc44f49f965c5e8c78819d209c3b5"/>
+		<file filename="core/assets/images/actions/battery_charging_080.png" md5="e492cff064314368435a89f72d82b5fc"/>
+		<file filename="core/assets/images/actions/battery_charging_100.png" md5="31994951a80e9b04cee98a35eb68b257"/>
+		<file filename="core/assets/images/actions/battery_discharging_000.png" md5="aefdd085977e4a3ed50241647b356192"/>
+		<file filename="core/assets/images/actions/battery_discharging_020.png" md5="e5e76e40e932ffd571487d2f99d7b154"/>
+		<file filename="core/assets/images/actions/battery_discharging_040.png" md5="29ae9f6667e34b010c5d6c7e734d9bd9"/>
+		<file filename="core/assets/images/actions/battery_discharging_060.png" md5="06093d0ffda1ba4c8c1c382400b4328c"/>
+		<file filename="core/assets/images/actions/battery_discharging_080.png" md5="5840f18468469091a477147ad9af8a70"/>
+		<file filename="core/assets/images/actions/battery_discharging_100.png" md5="d297be6e992a7495a113138c63d41e1c"/>
+		<file filename="core/assets/images/actions/bell.png" md5="6ade68c851b7106c308a7213fcf1db6d"/>
+		<file filename="core/assets/images/actions/book.png" md5="aedea8f23d8914f937ffbc01c22a49d4"/>
+		<file filename="core/assets/images/actions/book2.png" md5="0faf32442693a488422a0782988d1431"/>
+		<file filename="core/assets/images/actions/bookmark.png" md5="737d7549b71c1ea3f817b5fe9dbcb126"/>
+		<file filename="core/assets/images/actions/bookmark_add.png" md5="b47dfec249a6eba54e03b61dec4d7f91"/>
+		<file filename="core/assets/images/actions/bookmark_folder.png" md5="8e3343e217a7730c8fde1c7252bcb117"/>
+		<file filename="core/assets/images/actions/bookmark_toolbar.png" md5="64987c9d041ba896004c38382b787d59"/>
+		<file filename="core/assets/images/actions/bookmarks_list_add.png" md5="53f6119bf2d0683daa3f523ccffd88ad"/>
+		<file filename="core/assets/images/actions/bottom.png" md5="9060db8f0fa22c21ce9da59e1ac454bc"/>
+		<file filename="core/assets/images/actions/button_cancel.png" md5="0454b79371be3878c5d47802e4b9d15c"/>
+		<file filename="core/assets/images/actions/button_ok.png" md5="a92813e1b07a89c8070148e13889f846"/>
+		<file filename="core/assets/images/actions/camera_test.png" md5="caae643604489c2f3c9e430da1e1398f"/>
+		<file filename="core/assets/images/actions/cd.png" md5="9ced7cbe3fa10750b39949c0e3a8c8c7"/>
+		<file filename="core/assets/images/actions/cd_data.png" md5="324a4fcbe5a701597a5b1099dc0d2cd2"/>
+		<file filename="core/assets/images/actions/cdburn.png" md5="78b2e8f8debeca4ac2137847c3f4a8e9"/>
+		<file filename="core/assets/images/actions/cdcopy.png" md5="8711b347b2cce7415d4451c28140bf0c"/>
+		<file filename="core/assets/images/actions/cdsmall_kscd.png" md5="e68603e947c090461b22fe11b7820c6d"/>
+		<file filename="core/assets/images/actions/centrejust.png" md5="fbca9e67c3c7f96a6c00b2cc0a21bd8f"/>
+		<file filename="core/assets/images/actions/charset.png" md5="bbbee8e40e15fe3eb572696102ba4b9b"/>
+		<file filename="core/assets/images/actions/checkmark_korganizer.png" md5="a92813e1b07a89c8070148e13889f846"/>
+		<file filename="core/assets/images/actions/chronometer.png" md5="6e359d9d7931ccbfc5635924ec5dba03"/>
+		<file filename="core/assets/images/actions/clear_left.png" md5="1a6c2aca02782b3f59f0fa3450ed8d19"/>
+		<file filename="core/assets/images/actions/color_fill.png" md5="82cf42ba8720db68be2ce54d10a6d6fe"/>
+		<file filename="core/assets/images/actions/color_line.png" md5="5599f2e53c63f645a049c22e4e7ae713"/>
+		<file filename="core/assets/images/actions/colorpicker.png" md5="d00e6250439cb8ff695e61dacd52a4a4"/>
+		<file filename="core/assets/images/actions/commandprompt.png" md5="86e0e11299988c252e89154cab1a20cd"/>
+		<file filename="core/assets/images/actions/compfile.png" md5="9eeec414f0898642c09c9a69689f3ea0"/>
+		<file filename="core/assets/images/actions/configure.png" md5="21e4d4709586abb64ac561644a14faa4"/>
+		<file filename="core/assets/images/actions/configure_shortcuts.png" md5="e0eecf7da5b6dbf5afe5d78620614f37"/>
+		<file filename="core/assets/images/actions/configure_toolbars.png" md5="5a941450da173cdbdea069a510b218d1"/>
+		<file filename="core/assets/images/actions/connect_established.png" md5="ec4bd1976fd76cee9c6d16fed5010def"/>
+		<file filename="core/assets/images/actions/connect_no.png" md5="1ebecdcf1733ee7be4940ce94ea78539"/>
+		<file filename="core/assets/images/actions/contact_new.png" md5="d12ad1b98c55378605058736ce1124e8"/>
+		<file filename="core/assets/images/actions/contents.png" md5="85bc038e5a9b67767160a9f57a821a76"/>
+		<file filename="core/assets/images/actions/contexthelp.png" md5="e4e7af5eb9e9916e4e474bca3c4574ec"/>
+		<file filename="core/assets/images/actions/datashow.png" md5="e80c573f2ae6a546bbc07fa87ccafe06"/>
+		<file filename="core/assets/images/actions/datashowchart.png" md5="2970b35775358150428ce59dc19ba606"/>
+		<file filename="core/assets/images/actions/decrypted.png" md5="a23ec903d2558d368abd42ad0e29c13e"/>
+		<file filename="core/assets/images/actions/delete_user.png" md5="3aa0c97444420bcb9824bfd5055c59fe"/>
+		<file filename="core/assets/images/actions/dialog_close.png" md5="678267467cbe6636009f7fcf2bce455d"/>
+		<file filename="core/assets/images/actions/dialog_ok.png" md5="addc2335ea17c07e4a712fdb8d95e71b"/>
+		<file filename="core/assets/images/actions/dialog_ok_apply.png" md5="5722d2950aa278b3a6ea75ea91be3d57"/>
+		<file filename="core/assets/images/actions/document_decrypt.png" md5="b3be8fd182f71c4e761ee20122e1712f"/>
+		<file filename="core/assets/images/actions/document_encrypt.png" md5="05cd234e687449398af14f79a0eb4299"/>
+		<file filename="core/assets/images/actions/document_export.png" md5="d082840d56f8582836cb2b41a84801e4"/>
+		<file filename="core/assets/images/actions/document_import.png" md5="1f823cd4b4f4aa582577a48eb0696f4f"/>
+		<file filename="core/assets/images/actions/document_open_folder.png" md5="68bed01fb985750a5af49fddbbbddc99"/>
+		<file filename="core/assets/images/actions/document_open_recent.png" md5="eccde7794ccf9cba52e71a7596ed7107"/>
+		<file filename="core/assets/images/actions/document_open_remote.png" md5="b6780a145587ac889d590e6ae71ddb49"/>
+		<file filename="core/assets/images/actions/document_preview.png" md5="692d2aa6cd17b1e49bd284d6c7b6f8bf"/>
+		<file filename="core/assets/images/actions/document_preview_archive.png" md5="1c22db159b702e9587ca307975a8fc0f"/>
+		<file filename="core/assets/images/actions/document_print_frame.png" md5="ad7b89d85b1a8bb6e0b11a62c649071b"/>
+		<file filename="core/assets/images/actions/document_properties.png" md5="6ea67be6e416efdb68541e0660368184"/>
+		<file filename="core/assets/images/actions/document_revert.png" md5="e076076a74c3183c024ea519e6d90c02"/>
+		<file filename="core/assets/images/actions/document_save_all.png" md5="542560b8304fc62856f69b9a55c326d6"/>
+		<file filename="core/assets/images/actions/document_start_presentation.png" md5="2318787252dec98a36202c53981798d6"/>
+		<file filename="core/assets/images/actions/documentinfo_koffice.png" md5="4fddbef690d06440083d6a973d49a6e6"/>
+		<file filename="core/assets/images/actions/domtreeviewer.png" md5="412bf6f64c9a4791138f26fb4e3cd8ab"/>
+		<file filename="core/assets/images/actions/down.png" md5="f1de558940f22db86e74dbf541c04680"/>
+		<file filename="core/assets/images/actions/draw_brush.png" md5="ba9d3cb6601b20c68fbb85687989a30b"/>
+		<file filename="core/assets/images/actions/draw_eraser.png" md5="fac0d56d28b095d11d22412fccfd0b66"/>
+		<file filename="core/assets/images/actions/draw_freehand.png" md5="30fc62515b0a3696eb7f1d15f500c127"/>
+		<file filename="core/assets/images/actions/edit.png" md5="a90a48a2504485b911b24ca9bace25b8"/>
+		<file filename="core/assets/images/actions/edit_add.png" md5="7072b468557ac3960b2974ffaa054329"/>
+		<file filename="core/assets/images/actions/edit_clear_history.png" md5="4eff21cc69feb3188cce027a270d8958"/>
+		<file filename="core/assets/images/actions/edit_clear_list.png" md5="0b499efc77797d1af427edafd8fd49a1"/>
+		<file filename="core/assets/images/actions/edit_clear_locationbar.png" md5="e93910f1e6ae046e5b5180dab95a5c93"/>
+		<file filename="core/assets/images/actions/edit_clear_locationbar_rtl.png" md5="cbf9ba5b66825dc851f09f48832b9375"/>
+		<file filename="core/assets/images/actions/edit_delete_mail.png" md5="835c9c4809a4300149b6eaf9c3bbf173"/>
+		<file filename="core/assets/images/actions/edit_delete_shred.png" md5="5163c5a25dc6880e426f2a8ba7501c6e"/>
+		<file filename="core/assets/images/actions/edit_find_mail.png" md5="944396aaabdba9f2543d05c7c6c7fc35"/>
+		<file filename="core/assets/images/actions/edit_find_next.png" md5="e794f510494602e7390d0b520197e061"/>
+		<file filename="core/assets/images/actions/edit_find_previous.png" md5="d0ba6da9545a326d15d2d9e9a0766d9d"/>
+		<file filename="core/assets/images/actions/edit_find_user.png" md5="382a126894b37527bbd974303edb933d"/>
+		<file filename="core/assets/images/actions/edit_user.png" md5="ffe191339685be658c479407c992fa86"/>
+		<file filename="core/assets/images/actions/editclear.png" md5="9b5a8581a8135cb4f978d1c2ab9cdf5b"/>
+		<file filename="core/assets/images/actions/editcopy.png" md5="bc37e0ea60d415adbf3258f7abb40b83"/>
+		<file filename="core/assets/images/actions/editcut.png" md5="f40e5720c38b32e3d505764639461936"/>
+		<file filename="core/assets/images/actions/editdelete.png" md5="48942706ed50e0c0247a01dbc4632039"/>
+		<file filename="core/assets/images/actions/editinput.png" md5="f8f213c66c42c6e23a1d132e6fabef4d"/>
+		<file filename="core/assets/images/actions/editpaste.png" md5="818daec44ef7885b4e77a1a543ce1d6f"/>
+		<file filename="core/assets/images/actions/editshred.png" md5="389135a5d14b44d055657c798143e843"/>
+		<file filename="core/assets/images/actions/edittrash.png" md5="53144b2ac51350465b3efed41f1ecd21"/>
+		<file filename="core/assets/images/actions/emptytrash.png" md5="2316efbebfff94af7414fe4a82bc9c60"/>
+		<file filename="core/assets/images/actions/encrypted.png" md5="fc54bb674584f5ec494340825991f657"/>
+		<file filename="core/assets/images/actions/eraser.png" md5="fac0d56d28b095d11d22412fccfd0b66"/>
+		<file filename="core/assets/images/actions/exec.png" md5="2b19e3bbcabbf696f51f5f9981be56ae"/>
+		<file filename="core/assets/images/actions/exit.png" md5="df261e9e3f09debd1dc768a873b73efd"/>
+		<file filename="core/assets/images/actions/favorites.png" md5="b41ffdcd06dfb9e95d8b611c82c42f3d"/>
+		<file filename="core/assets/images/actions/file_export.png" md5="d082840d56f8582836cb2b41a84801e4"/>
+		<file filename="core/assets/images/actions/fileclose.png" md5="678267467cbe6636009f7fcf2bce455d"/>
+		<file filename="core/assets/images/actions/filefind.png" md5="9b2430baf7cd111f80308b0d27f3be65"/>
+		<file filename="core/assets/images/actions/fileimport.png" md5="1f823cd4b4f4aa582577a48eb0696f4f"/>
+		<file filename="core/assets/images/actions/filenew.png" md5="f12b1fe964b919ba43ebccff7800246b"/>
+		<file filename="core/assets/images/actions/fileopen.png" md5="fda28afe8a7593d79144ba68250c9e4b"/>
+		<file filename="core/assets/images/actions/fileprint.png" md5="5c5567c63a5fdb6781b36fc79781077c"/>
+		<file filename="core/assets/images/actions/filequickprint.png" md5="0756e89a778e8002e44e9abb71c666e2"/>
+		<file filename="core/assets/images/actions/filesave.png" md5="7ff24f15d24726119a8a66cf60ad4e79"/>
+		<file filename="core/assets/images/actions/filesaveas.png" md5="6f694b6a94d10417ec947e6501908a13"/>
+		<file filename="core/assets/images/actions/fileview_close_left.png" md5="05299ecd747b8f1996190c1b62a87bb9"/>
+		<file filename="core/assets/images/actions/fileview_close_right.png" md5="c6b4789fd44a19ea85bfa4b56eb31999"/>
+		<file filename="core/assets/images/actions/fileview_column.png" md5="c547ea4d2f4929cbe6d54adb3264e16b"/>
+		<file filename="core/assets/images/actions/fileview_icon.png" md5="f9cf84f939e44ac8a2b87772c2744d43"/>
+		<file filename="core/assets/images/actions/fileview_join.png" md5="d9bbfeeae8984c2611a61ecfa5d369d2"/>
+		<file filename="core/assets/images/actions/fileview_preview.png" md5="cd02fe7d27b4e04612ac9eb8c14948f8"/>
+		<file filename="core/assets/images/actions/fileview_split.png" md5="d5fd4849897fd1fdbb0699ea46c05601"/>
+		<file filename="core/assets/images/actions/fill.png" md5="2232cb4cc99d69b89133121e34db7cf4"/>
+		<file filename="core/assets/images/actions/filter.png" md5="77a3713a62349bfb8b19fad1acd0c9eb"/>
+		<file filename="core/assets/images/actions/find.png" md5="989645bd3ad9386b0272d2e4f87c2f22"/>
+		<file filename="core/assets/images/actions/finish.png" md5="9205c6dcda4442d9ea842a2c7ddf4094"/>
+		<file filename="core/assets/images/actions/flag.png" md5="ecd9f964f041d027aa9414c107da9e97"/>
+		<file filename="core/assets/images/actions/flag_black.png" md5="9c064c31a61fe5b43f5cb3f6bbdf5904"/>
+		<file filename="core/assets/images/actions/flag_blue.png" md5="6b3672de875b7f02d62beaab31a83f0a"/>
+		<file filename="core/assets/images/actions/flag_green.png" md5="ecd9f964f041d027aa9414c107da9e97"/>
+		<file filename="core/assets/images/actions/flag_red.png" md5="08ebd793e81a7ab0a655e937fe371842"/>
+		<file filename="core/assets/images/actions/flag_yellow.png" md5="163d7ee60940e1cb2cdb4023c1138403"/>
+		<file filename="core/assets/images/actions/folder_new.png" md5="2867affa27c066b6c7e5d859a3ecd56b"/>
+		<file filename="core/assets/images/actions/folder_open.png" md5="a9e00f51ac0dd90656c2bd9fd54852d5"/>
+		<file filename="core/assets/images/actions/fontsizedown_koffice.png" md5="e232512846052309897809cb23ae3dc8"/>
+		<file filename="core/assets/images/actions/fontsizeup_koffice.png" md5="2cc1f8febfc0dcc9553cbb20535fcfa6"/>
+		<file filename="core/assets/images/actions/footprint.png" md5="10f1925ddfb95675380a6dcc8aa24602"/>
+		<file filename="core/assets/images/actions/fork.png" md5="18beacc55660d8d37bf659ebe4d411be"/>
+		<file filename="core/assets/images/actions/format_font_size_less.png" md5="f7972822cc153849d6753c98f911d4aa"/>
+		<file filename="core/assets/images/actions/format_font_size_more.png" md5="30ff1b3d36ccdb8b538ce79822676de1"/>
+		<file filename="core/assets/images/actions/format_line_spacing_double.png" md5="0ed90ce4599353f3a491661c8de34791"/>
+		<file filename="core/assets/images/actions/format_line_spacing_normal.png" md5="647e97e3ea6173be8d6c557414f6d122"/>
+		<file filename="core/assets/images/actions/format_line_spacing_triple.png" md5="b45a31513092d1dc783f0c92e102d00b"/>
+		<file filename="core/assets/images/actions/format_list_ordered.png" md5="0deacbd23c3d48ed9077f138ec1af7df"/>
+		<file filename="core/assets/images/actions/format_list_unordered.png" md5="56a51b18cadf5e1fbef8957a80355ea4"/>
+		<file filename="core/assets/images/actions/format_text_direction_ltr.png" md5="1590bf787acc508c4c0af07d699426b9"/>
+		<file filename="core/assets/images/actions/format_text_direction_rtl.png" md5="5e9b1846144db65567788c8eef36b924"/>
+		<file filename="core/assets/images/actions/format_text_subscript.png" md5="11fbf160a5236fe0ce88b5909a9e14b1"/>
+		<file filename="core/assets/images/actions/format_text_superscript.png" md5="98b7ca94e0bd7c4c27ff3198f78b105c"/>
+		<file filename="core/assets/images/actions/forward.png" md5="4ad0a0ecfb1ca1f8d7137c46a603f8de"/>
+		<file filename="core/assets/images/actions/frame_edit.png" md5="e869807f6056c71845e785677728830d"/>
+		<file filename="core/assets/images/actions/frame_image.png" md5="c2f92e6108c2b3d2c59a26a823759902"/>
+		<file filename="core/assets/images/actions/frameprint.png" md5="ad7b89d85b1a8bb6e0b11a62c649071b"/>
+		<file filename="core/assets/images/actions/games_config_background.png" md5="6ea5d310061047c848cfacd3c047c16f"/>
+		<file filename="core/assets/images/actions/games_config_board.png" md5="5413e8d51a78a09665b8df7eb9bc82f8"/>
+		<file filename="core/assets/images/actions/games_config_custom.png" md5="e2a3b2101490adaed2fdfa31e4a80775"/>
+		<file filename="core/assets/images/actions/games_config_options.png" md5="772970f11956eebe3084fb47c924539c"/>
+		<file filename="core/assets/images/actions/games_config_theme.png" md5="dde5e0c82f091617be17c00711c69a3b"/>
+		<file filename="core/assets/images/actions/games_config_tiles.png" md5="2284abc8fc2bbd5e1db2e270a8791bde"/>
+		<file filename="core/assets/images/actions/games_difficult.png" md5="443ba45b6cc98b5aa944e41fbade22ca"/>
+		<file filename="core/assets/images/actions/games_endturn.png" md5="a92813e1b07a89c8070148e13889f846"/>
+		<file filename="core/assets/images/actions/games_highscores.png" md5="e966ab532d0feea4130c9213f680bdd8"/>
+		<file filename="core/assets/images/actions/games_solve.png" md5="323945df7721650d3b4ca221aa880228"/>
+		<file filename="core/assets/images/actions/gear.png" md5="69ec464e50378f1f014c8c770c4419e2"/>
+		<file filename="core/assets/images/actions/go_first_rtl.png" md5="f24122436b0366999378a37cf84e7bd4"/>
+		<file filename="core/assets/images/actions/go_jump.png" md5="20edffaeccacf10888096de861c5d2c8"/>
+		<file filename="core/assets/images/actions/go_jump_locationbar.png" md5="8f157da1d8924ff96ea7f453c29f2106"/>
+		<file filename="core/assets/images/actions/go_jump_today.png" md5="3f4bf9399179ae632faa35b8f094aa1e"/>
+		<file filename="core/assets/images/actions/go_last_rtl.png" md5="283311f7640983749ed8fc6611d6a5bd"/>
+		<file filename="core/assets/images/actions/go_next_rtl.png" md5="76ac15d4f14c1f3bfd5e4b14f1dc72e7"/>
+		<file filename="core/assets/images/actions/go_previous_rtl.png" md5="bb4fe9205121b8df0a24777d16ebedda"/>
+		<file filename="core/assets/images/actions/gohome.png" md5="96eb106b640c171170c17731e34e60f0"/>
+		<file filename="core/assets/images/actions/goto.png" md5="20edffaeccacf10888096de861c5d2c8"/>
+		<file filename="core/assets/images/actions/halfencrypted.png" md5="80c0a689b971bc74d5a15199b9eb8165"/>
+		<file filename="core/assets/images/actions/help_about.png" md5="585294ed7135f7b36379a090d94beba6"/>
+		<file filename="core/assets/images/actions/help_about_kde.png" md5="bbf40075cdb4313d3110a586405d694e"/>
+		<file filename="core/assets/images/actions/help_contextual.png" md5="f79741994b338292845d74d540475d0b"/>
+		<file filename="core/assets/images/actions/history.png" md5="f0dcd8a9dd431c7e5c942063200088fb"/>
+		<file filename="core/assets/images/actions/history_clear.png" md5="07ac0a7a8f1d42288310e1d2c7d8b8ae"/>
+		<file filename="core/assets/images/actions/history_kdeprint.png" md5="7fe4014e23bc5456df18c1ad3a4ac9cb"/>
+		<file filename="core/assets/images/actions/identity.png" md5="95410be17cffe54122139ec74c8e8fe7"/>
+		<file filename="core/assets/images/actions/images_display.png" md5="92b598d7d76c517c66c0888c67ea4c6f"/>
+		<file filename="core/assets/images/actions/indent.png" md5="14eb27403e639c407520d80acc21aae7"/>
+		<file filename="core/assets/images/actions/inktube.png" md5="d1c43e3084ae12416c71977f04270eaf"/>
+		<file filename="core/assets/images/actions/insert_table.png" md5="5e700fd84fc166dda21473ef88a7ce18"/>
+		<file filename="core/assets/images/actions/insert_text.png" md5="67d60dccfce73e4a836fcf93113ea93c"/>
+		<file filename="core/assets/images/actions/java.png" md5="865d8e7992612d2e9e138ad293df0189"/>
+		<file filename="core/assets/images/actions/java_kjava.png" md5="865d8e7992612d2e9e138ad293df0189"/>
+		<file filename="core/assets/images/actions/kdeprint_addprinter.png" md5="2577d2ab3eceb30a9dda8c29b4943c27"/>
+		<file filename="core/assets/images/actions/kdeprint_addpseudo.png" md5="bd3f88e88aff687800ad4065527aad55"/>
+		<file filename="core/assets/images/actions/kdeprint_enableprinter_kdeprint.png" md5="e56653cb7a8b78e439802ae4e327d474"/>
+		<file filename="core/assets/images/actions/kdeprint_printer_infos.png" md5="6ea67be6e416efdb68541e0660368184"/>
+		<file filename="core/assets/images/actions/kdeprint_queuestate_kdeprint.png" md5="439efe3be82ba3bf4b5dcd973747abfd"/>
+		<file filename="core/assets/images/actions/kdeprint_stopprinter_kdeprint.png" md5="8f4a186ddee2f17272ce46f6bd9f51f7"/>
+		<file filename="core/assets/images/actions/kdeprint_testprinter.png" md5="5883cb83f703357edc5462f526139e7e"/>
+		<file filename="core/assets/images/actions/key_enter.png" md5="8f157da1d8924ff96ea7f453c29f2106"/>
+		<file filename="core/assets/images/actions/kgpg_export_kgpg.png" md5="567b7f7468a69f9343d0c0afd429bea7"/>
+		<file filename="core/assets/images/actions/kgpg_identity_kgpg.png" md5="eb6deebd3d56c10afe1dabc6362ec553"/>
+		<file filename="core/assets/images/actions/kgpg_import_kgpg.png" md5="d2df9808e1fd929058bb7216aed43e3b"/>
+		<file filename="core/assets/images/actions/kgpg_info_kgpg.png" md5="f6ae643052fbf170385afd13e873d6f5"/>
+		<file filename="core/assets/images/actions/kgpg_key1_kgpg.png" md5="e8ac2bb022e8ca060a31560de5db357f"/>
+		<file filename="core/assets/images/actions/kgpg_key1_kopete.png" md5="366e7486565d86dae0cdf0c2c1daa504"/>
+		<file filename="core/assets/images/actions/kgpg_key2_kgpg.png" md5="533d52495a365f60f0caf6e8390f0f21"/>
+		<file filename="core/assets/images/actions/kgpg_key2_kopete.png" md5="fb39282d5467bef30c0e583e9539342e"/>
+		<file filename="core/assets/images/actions/kgpg_key3_kgpg.png" md5="661acef6e6160fce61a319c7568a9885"/>
+		<file filename="core/assets/images/actions/kgpg_key3_kopete.png" md5="e0970d430c85d39baaa8dd02f6d99224"/>
+		<file filename="core/assets/images/actions/kgpg_key4_kgpg.png" md5="6512b63471dd648c122bcd30babac750"/>
+		<file filename="core/assets/images/actions/kgpg_sign_kgpg.png" md5="6a1627ef63f0216f1ef6dbdaa81685d7"/>
+		<file filename="core/assets/images/actions/kgpg_term_kgpg.png" md5="f0948fbc397f555ff9a7e3e115f696e0"/>
+		<file filename="core/assets/images/actions/knewstuff.png" md5="e00722f06cf7b0a72fdca5ce24abd708"/>
+		<file filename="core/assets/images/actions/knotes_delete_knotes.png" md5="ff6a5e04e9aaa45964ec0444e9c0b44a"/>
+		<file filename="core/assets/images/actions/kontact_contacts.png" md5="f0e9b964fb0324424aea70220dc4c35e"/>
+		<file filename="core/assets/images/actions/kontact_date.png" md5="c233e6f5b832b3fe0d7020e74a53c05b"/>
+		<file filename="core/assets/images/actions/kontact_journal.png" md5="132fd971639d99c1341d82015e70ef95"/>
+		<file filename="core/assets/images/actions/kontact_mail.png" md5="cba5708a71cc49031d3fe21258b523cb"/>
+		<file filename="core/assets/images/actions/kontact_news.png" md5="fcf2462892987df7ad11ac6b9eedea38"/>
+		<file filename="core/assets/images/actions/kontact_notes.png" md5="e22f0940fc007170250149b0dd516340"/>
+		<file filename="core/assets/images/actions/kontact_summary.png" md5="72c667b1b481bc4d06a7568663b47977"/>
+		<file filename="core/assets/images/actions/kontact_todo.png" md5="c013d0377c188c3a2eb25f9f8687ac03"/>
+		<file filename="core/assets/images/actions/konv_message.png" md5="60cd05cd3154d694be1275bdd73e522c"/>
+		<file filename="core/assets/images/actions/konv_message2.png" md5="9a737ce9668c9b56738979476200bc3c"/>
+		<file filename="core/assets/images/actions/kscd_dock.png" md5="44a7f11655b8b2e4ed7587d0ef0c0841"/>
+		<file filename="core/assets/images/actions/laptop_charge_klaptopdaemon.png" md5="31994951a80e9b04cee98a35eb68b257"/>
+		<file filename="core/assets/images/actions/laptop_nobattery_klaptopdaemon.png" md5="636a7595b56f19cda11278ce615e7ed5"/>
+		<file filename="core/assets/images/actions/laptop_nocharge_klaptopdaemon.png" md5="9d0cdcd8442a065711f2a0f69c4005a5"/>
+		<file filename="core/assets/images/actions/launch.png" md5="e339480386c63201d262149d74a343b6"/>
+		<file filename="core/assets/images/actions/list.png" md5="f226818b27d3104f727e9db4e8f06a53"/>
+		<file filename="core/assets/images/actions/list_add_font.png" md5="717a67649c16290e7633c959ee9c272b"/>
+		<file filename="core/assets/images/actions/list_add_user.png" md5="49ead588ec1d755efab76b26775661df"/>
+		<file filename="core/assets/images/actions/list_remove.png" md5="b636c93654455e4ca53757f64277e302"/>
+		<file filename="core/assets/images/actions/list_remove_user.png" md5="5b93007ec46440722b8c0b299357924d"/>
+		<file filename="core/assets/images/actions/locationbar_erase.png" md5="99a1912350c1078c795e03e41095db2a"/>
+		<file filename="core/assets/images/actions/lock.png" md5="faadfbfbd22d9a53d50e58c25b413a68"/>
+		<file filename="core/assets/images/actions/love.png" md5="778b5e28fd33d9235fbceaaab17bb7f5"/>
+		<file filename="core/assets/images/actions/mail_delete.png" md5="835c9c4809a4300149b6eaf9c3bbf173"/>
+		<file filename="core/assets/images/actions/mail_find.png" md5="80d95a4baee572cfafaf4191feac143f"/>
+		<file filename="core/assets/images/actions/mail_flag.png" md5="cbda91748b35a55db13a1818ac8cf367"/>
+		<file filename="core/assets/images/actions/mail_forward.png" md5="7f0f2c7e51ea2364377cc344403c62c2"/>
+		<file filename="core/assets/images/actions/mail_generic.png" md5="e31183f685fb785bc8d62b9573f65f90"/>
+		<file filename="core/assets/images/actions/mail_get.png" md5="95026183de2b1ac85806da4f2804269d"/>
+		<file filename="core/assets/images/actions/mail_ham.png" md5="a92813e1b07a89c8070148e13889f846"/>
+		<file filename="core/assets/images/actions/mail_mark_task.png" md5="c007e657e8974735e638c642b0b7de58"/>
+		<file filename="core/assets/images/actions/mail_mark_unread_new.png" md5="98928b8de37d830d168a0abff0196551"/>
+		<file filename="core/assets/images/actions/mail_message_new.png" md5="73f5fd34380421b0f8bf5ed649bf4e84"/>
+		<file filename="core/assets/images/actions/mail_new.png" md5="e1139aeffe5ebc76c886207b5207f4bc"/>
+		<file filename="core/assets/images/actions/mail_queue.png" md5="f7034a172765c809c044e5d011dc083a"/>
+		<file filename="core/assets/images/actions/mail_receive.png" md5="42557adb05efea07148ccf7bd1fe2650"/>
+		<file filename="core/assets/images/actions/mail_reply.png" md5="0018b6ef357425b444ace448115eb6c0"/>
+		<file filename="core/assets/images/actions/mail_reply_all.png" md5="a10699a0b3bb88e7a80495a92b6d25bf"/>
+		<file filename="core/assets/images/actions/mail_reply_list.png" md5="133ed6f54f1d0365d5b13c147d252e61"/>
+		<file filename="core/assets/images/actions/mail_reply_sender.png" md5="f50af2668a62f6b05b5399134ea7bf25"/>
+		<file filename="core/assets/images/actions/mail_replyall.png" md5="100753b2cd8b379187c6841c8cb24c4e"/>
+		<file filename="core/assets/images/actions/mail_replylist.png" md5="f258ef2bfec483bd661ea2844d9cda52"/>
+		<file filename="core/assets/images/actions/mail_send.png" md5="5869bf88791c0b0264eda4324fb6d4f4"/>
+		<file filename="core/assets/images/actions/make_kdevelop.png" md5="ee522ebbdaa27d08fa5ffa81f3a97946"/>
+		<file filename="core/assets/images/actions/matrix.png" md5="bebf6223e020ff8d3c76f094cf0c9b9c"/>
+		<file filename="core/assets/images/actions/media_equalizer.png" md5="17c5d9578972ef05dc571c189adf91c7"/>
+		<file filename="core/assets/images/actions/media_playlist.png" md5="f13255c3da42a320aa64f0c6342977b2"/>
+		<file filename="core/assets/images/actions/media_playlist_clear.png" md5="0b499efc77797d1af427edafd8fd49a1"/>
+		<file filename="core/assets/images/actions/media_playlist_refresh.png" md5="bafd7ae5959aa0a9aa01408b43c10f2b"/>
+		<file filename="core/assets/images/actions/media_podcast.png" md5="2ca6e480b374f42912fb7c077e79b33b"/>
+		<file filename="core/assets/images/actions/media_scripts.png" md5="8be7ef49ce20ea852cbe9ac1b305f33a"/>
+		<file filename="core/assets/images/actions/messagebox_critical.png" md5="bd1548d560439016541df8b8f97547b9"/>
+		<file filename="core/assets/images/actions/messagebox_info.png" md5="bef72d136384b1b691568999e12b6890"/>
+		<file filename="core/assets/images/actions/messagebox_warning.png" md5="0e5699a3db6b409652d82dd90df56cd0"/>
+		<file filename="core/assets/images/actions/month.png" md5="ee4324265682529620e9fc6ab47e6cef"/>
+		<file filename="core/assets/images/actions/network.png" md5="2487cc555a1702a23718a95c9bcccbef"/>
+		<file filename="core/assets/images/actions/newfont.png" md5="fae025511b65f1af9b0791afcd953257"/>
+		<file filename="core/assets/images/actions/news_subscribe.png" md5="809e64842509b2cdc0fded59d37ccb24"/>
+		<file filename="core/assets/images/actions/news_unsubscribe.png" md5="3d77e8d7280a9b03f4530e5190d868ee"/>
+		<file filename="core/assets/images/actions/next.png" md5="e794f510494602e7390d0b520197e061"/>
+		<file filename="core/assets/images/actions/no.png" md5="6c9464a235f9b83d75208e547aa9f796"/>
+		<file filename="core/assets/images/actions/note.png" md5="45fd5fd8c4b901ff40cdbf575e314fe5"/>
+		<file filename="core/assets/images/actions/note2.png" md5="bde61f18cfb59d07c01c82479350ab77"/>
+		<file filename="core/assets/images/actions/object_edit.png" md5="a90a48a2504485b911b24ca9bace25b8"/>
+		<file filename="core/assets/images/actions/ok.png" md5="73decdc8ddeb8557c5489ba320038f89"/>
+		<file filename="core/assets/images/actions/openterm.png" md5="86e0e11299988c252e89154cab1a20cd"/>
+		<file filename="core/assets/images/actions/paintbrush.png" md5="ba9d3cb6601b20c68fbb85687989a30b"/>
+		<file filename="core/assets/images/actions/paperbag.png" md5="d370c61f27281a05e2fd7cf2d0915ca7"/>
+		<file filename="core/assets/images/actions/paperclipreal.png" md5="01aa9b2832f9aa3a50c6bc26ee8c1568"/>
+		<file filename="core/assets/images/actions/password.png" md5="63aefc3335d7fd5b72b7118a02bb2f0c"/>
+		<file filename="core/assets/images/actions/pen.png" md5="2f5ff298ba2ccf0de8212d93e69ed98b"/>
+		<file filename="core/assets/images/actions/pencil.png" md5="75d5f4558d1c72a1ed43078e4469e52b"/>
+		<file filename="core/assets/images/actions/pencil2.png" md5="c1dcf79d47da085b7d5daf7c68132778"/>
+		<file filename="core/assets/images/actions/player_eject.png" md5="8426b7906171e32cc2c637a5f1f74269"/>
+		<file filename="core/assets/images/actions/player_end.png" md5="9f76b6539ecb2aebc09d06e488d7d69a"/>
+		<file filename="core/assets/images/actions/player_fwd.png" md5="75c3c4c70e7809910db1213c65b7ecad"/>
+		<file filename="core/assets/images/actions/player_pause.png" md5="dc419783e8e70aa957360c1a73e63823"/>
+		<file filename="core/assets/images/actions/player_play.png" md5="e1749fc70ac5e5662fabd127511dfa1c"/>
+		<file filename="core/assets/images/actions/player_record.png" md5="49320074ac9039884c01b86cba3b6962"/>
+		<file filename="core/assets/images/actions/player_rew.png" md5="6b5e30af5b50060ec38332ddfdb4bbc7"/>
+		<file filename="core/assets/images/actions/player_start.png" md5="54a0124c7f3507e7b5c744af811d51fa"/>
+		<file filename="core/assets/images/actions/player_stop.png" md5="ec89f24509da9f370a117dba2c471baa"/>
+		<file filename="core/assets/images/actions/player_time.png" md5="9e8482ec3c5ab39e935733fdc7cb96b7"/>
+		<file filename="core/assets/images/actions/player_volume.png" md5="71889341a97b1034354d10978fef3681"/>
+		<file filename="core/assets/images/actions/plus.png" md5="85d5af4e3b374e3d9f926c710721327b"/>
+		<file filename="core/assets/images/actions/previous.png" md5="d0ba6da9545a326d15d2d9e9a0766d9d"/>
+		<file filename="core/assets/images/actions/project_open.png" md5="358d0636bf161be0a5f1a484d5d9eb7e"/>
+		<file filename="core/assets/images/actions/rating.png" md5="cffc7fda5be5e4bf72cea7d7662e4706"/>
+		<file filename="core/assets/images/actions/rebuild.png" md5="8d80570ef2ffceed9c2287e0f7f1c1b9"/>
+		<file filename="core/assets/images/actions/redo.png" md5="3b31356c21eea80a6f34b0bda892d605"/>
+		<file filename="core/assets/images/actions/reload.png" md5="60f1245886c56e4b2a90d695fc1bbd21"/>
+		<file filename="core/assets/images/actions/remove.png" md5="3a7c14eb098b3f99b3129cc8a6f30d29"/>
+		<file filename="core/assets/images/actions/revert.png" md5="88c7362664b275f420b9f66204fb231c"/>
+		<file filename="core/assets/images/actions/roll.png" md5="1c4e3c2ac73cd3f35595b8810b8dcc58"/>
+		<file filename="core/assets/images/actions/rotate.png" md5="abe6155395928b43df2cb8c57f12d334"/>
+		<file filename="core/assets/images/actions/rotate_ccw.png" md5="abe6155395928b43df2cb8c57f12d334"/>
+		<file filename="core/assets/images/actions/rotate_cw.png" md5="148d7479c4e459adfce00e17497a8d31"/>
+		<file filename="core/assets/images/actions/rss.png" md5="67d0652d2be6f6e28d8ced76f8b83224"/>
+		<file filename="core/assets/images/actions/rss_tag.png" md5="d6890e4ad875a0bca9d0e6833135038b"/>
+		<file filename="core/assets/images/actions/ruler.png" md5="774ed83754074d7c165deb657db59ac0"/>
+		<file filename="core/assets/images/actions/run.png" md5="6cb3f0c3f8c9cbadf126546848b2aef2"/>
+		<file filename="core/assets/images/actions/run_build.png" md5="6ce0778aca2cbd18c389a9537f9e2b22"/>
+		<file filename="core/assets/images/actions/run_build_file.png" md5="9eeec414f0898642c09c9a69689f3ea0"/>
+		<file filename="core/assets/images/actions/save_all.png" md5="aa3e57e49e9effdde27855089395faa5"/>
+		<file filename="core/assets/images/actions/search_user.png" md5="54e41abb1e25b7c0d3a00880e155775e"/>
+		<file filename="core/assets/images/actions/services.png" md5="6b3672de875b7f02d62beaab31a83f0a"/>
+		<file filename="core/assets/images/actions/show_offliners.png" md5="79eb87e1a72af4504c475835937d6641"/>
+		<file filename="core/assets/images/actions/signature.png" md5="bd546b185ba0636b3d769c21069892f7"/>
+		<file filename="core/assets/images/actions/smiley.png" md5="080cf4d7b9a5db2f98e5f113dfb5a1f0"/>
+		<file filename="core/assets/images/actions/spacedouble_koffice.png" md5="888789a7d401025aac99b8fdf0541ae5"/>
+		<file filename="core/assets/images/actions/spacesimple_koffice.png" md5="a09ce1d8999052f54800a2d9cc1980ec"/>
+		<file filename="core/assets/images/actions/spacetriple_koffice.png" md5="15e93204441436ee8be02d6e0bec4300"/>
+		<file filename="core/assets/images/actions/speaker.png" md5="58faa0436c8a39f62c5c65a0ce7e08d9"/>
+		<file filename="core/assets/images/actions/spellcheck.png" md5="5b8116f1e35d2fb2cd641c0e86e14fa9"/>
+		<file filename="core/assets/images/actions/spread.png" md5="a849701dd01c9e846f34ffe45013b593"/>
+		<file filename="core/assets/images/actions/stamp.png" md5="5a706975b639c6c112791221eed68662"/>
+		<file filename="core/assets/images/actions/start.png" md5="b15283bd620abac2834aea0fe4e24c33"/>
+		<file filename="core/assets/images/actions/stop.png" md5="3fa24ba7117e456627bae7c9ebf98fe7"/>
+		<file filename="core/assets/images/actions/switchuser.png" md5="fb527d8e0e5744fa0fdbf093e2cf591b"/>
+		<file filename="core/assets/images/actions/system_lock_screen.png" md5="e5c800638d57228b739471ec0e101d31"/>
+		<file filename="core/assets/images/actions/system_log_out.png" md5="e6a223a8453b06561c198c1da02ac871"/>
+		<file filename="core/assets/images/actions/system_restart.png" md5="139537f31bc726441c49f04aa593e925"/>
+		<file filename="core/assets/images/actions/system_run.png" md5="e326dceed9a42d9ae6f9ecdca9350814"/>
+		<file filename="core/assets/images/actions/system_search.png" md5="084bf47ba5e5bbdbdf1a18a9552d4aed"/>
+		<file filename="core/assets/images/actions/system_suspend.png" md5="8cff238578773a87130548676efb1371"/>
+		<file filename="core/assets/images/actions/system_suspend_hibernate.png" md5="a88e9cbd3373a819da74c13f5a545d40"/>
+		<file filename="core/assets/images/actions/system_switch_user.png" md5="45bfb69101885b3d33756c1335821018"/>
+		<file filename="core/assets/images/actions/tab_breakoff.png" md5="8b3b82cda09c5bc4ec5a92d46b742a1d"/>
+		<file filename="core/assets/images/actions/tab_close.png" md5="0fb49758048d6d62a3703e2f9f688496"/>
+		<file filename="core/assets/images/actions/tab_detach.png" md5="dab451f258bbd65f99ed855e4902bbaf"/>
+		<file filename="core/assets/images/actions/tab_duplicate.png" md5="cdc874a6e0980385d0b2d3d44bc00cc9"/>
+		<file filename="core/assets/images/actions/tab_new.png" md5="5a37655a06cd8942a75dd55bfe35e71d"/>
+		<file filename="core/assets/images/actions/tab_new_background.png" md5="80e95323ca0c2a7e6dacd08a810a261d"/>
+		<file filename="core/assets/images/actions/tab_new_raised.png" md5="c8c960bdd1ce019a36c4d507e3277903"/>
+		<file filename="core/assets/images/actions/tab_remove.png" md5="5bcdcaee268f45c1c6b251f02a781aeb"/>
+		<file filename="core/assets/images/actions/table.png" md5="d3cf5a0b1e1c295eaa3f4f341f2feda1"/>
+		<file filename="core/assets/images/actions/text.png" md5="dcf06b2affa49ba02383dfb3726d05fb"/>
+		<file filename="core/assets/images/actions/text_block.png" md5="26767f73b1f782773f08657c16d0e7d7"/>
+		<file filename="core/assets/images/actions/text_bold.png" md5="41f5b9885582aaaaf6a7a4bd3145ddaa"/>
+		<file filename="core/assets/images/actions/text_center.png" md5="eb190ec0c71d46e54620111fdff9b6f9"/>
+		<file filename="core/assets/images/actions/text_italic.png" md5="351dd3411a17b7f8be569c13aa3f0f8d"/>
+		<file filename="core/assets/images/actions/text_left.png" md5="dee2ba8e80c557d9637ab7acb726ee2d"/>
+		<file filename="core/assets/images/actions/text_right.png" md5="55b232ef271307022945c908e052903a"/>
+		<file filename="core/assets/images/actions/text_speak.png" md5="9360f6e2e691e59a5a0d329c64482f99"/>
+		<file filename="core/assets/images/actions/text_strike.png" md5="a57a48e4bd2b7a6a75161a151a93d19c"/>
+		<file filename="core/assets/images/actions/text_sub.png" md5="dc0b972dfc5c747b42c8eb6caee1b771"/>
+		<file filename="core/assets/images/actions/text_super.png" md5="bc6d9271028fe2826aaf0e5148ffa0c9"/>
+		<file filename="core/assets/images/actions/text_under.png" md5="96fe3c09355ce620d37ba4bbec2f6fa8"/>
+		<file filename="core/assets/images/actions/thumbnail.png" md5="c181b5dbd8731ff346c684007aaf9729"/>
+		<file filename="core/assets/images/actions/today.png" md5="2c61eeed3a976eb11cf8639bad72d1cf"/>
+		<file filename="core/assets/images/actions/todo.png" md5="a39b9c1eed5db88a11517258158d22d8"/>
+		<file filename="core/assets/images/actions/tool.png" md5="62c40eb76a9bd670cf803c7328e0ab99"/>
+		<file filename="core/assets/images/actions/tool2.png" md5="5cebd6a51b22b638bfdbe67acf75b8cb"/>
+		<file filename="core/assets/images/actions/tools_media_optical_burn.png" md5="78b2e8f8debeca4ac2137847c3f4a8e9"/>
+		<file filename="core/assets/images/actions/tools_media_optical_copy.png" md5="e6052bca9d6e0641c9e0cfb2d49e2c33"/>
+		<file filename="core/assets/images/actions/tools_report_bug.png" md5="b218fe8be26fc217b45e4a27892586d3"/>
+		<file filename="core/assets/images/actions/tools_wizard.png" md5="44b89bd30206dd317c032a8595e1ddeb"/>
+		<file filename="core/assets/images/actions/top.png" md5="79777f50b45256ea05dfd1b57a0ed3a9"/>
+		<file filename="core/assets/images/actions/transform_move.png" md5="c1aa78856cc766a9ee054db9268132ce"/>
+		<file filename="core/assets/images/actions/transform_rotate.png" md5="abe6155395928b43df2cb8c57f12d334"/>
+		<file filename="core/assets/images/actions/trash_empty.png" md5="77adb387c38bf56d4d9d716bb16b6fda"/>
+		<file filename="core/assets/images/actions/underconstruction.png" md5="d6ebdd172023630d31a8e296927217e0"/>
+		<file filename="core/assets/images/actions/undo.png" md5="a20ff22c3b6764cdbe8e4b170f45d478"/>
+		<file filename="core/assets/images/actions/unindent.png" md5="38d36621a530528d1e0c3c90a8084959"/>
+		<file filename="core/assets/images/actions/up.png" md5="51452e2a3c9829d18f86da58d5b81046"/>
+		<file filename="core/assets/images/actions/user.png" md5="581c84e18a5eec026b014d4e8f10f792"/>
+		<file filename="core/assets/images/actions/user_female.png" md5="9161cc351305d33fc5c4dfca4856480e"/>
+		<file filename="core/assets/images/actions/user_group_new.png" md5="63257d9843d379e058c681dad1c40b25"/>
+		<file filename="core/assets/images/actions/users.png" md5="3d2dd133ee00b712d4d0cc96d54e5587"/>
+		<file filename="core/assets/images/actions/view_calendar_day.png" md5="ac41573757903d48a84f2b6fba03dcfe"/>
+		<file filename="core/assets/images/actions/view_calendar_list.png" md5="87de31048aedb98455e858825b1d92bf"/>
+		<file filename="core/assets/images/actions/view_calendar_month.png" md5="473f0bd03593b2d71669d5ccd8f22acf"/>
+		<file filename="core/assets/images/actions/view_calendar_tasks.png" md5="f536c1ce84e3479876c52b44c78e2319"/>
+		<file filename="core/assets/images/actions/view_calendar_time_spent.png" md5="93de6b1c54757937054c340ee4d18469"/>
+		<file filename="core/assets/images/actions/view_calendar_timeline.png" md5="a4e777836f8e0b948623499aacb5e6bd"/>
+		<file filename="core/assets/images/actions/view_calendar_upcoming_days.png" md5="f6461b1d1bd58d79a1910d23cff97b62"/>
+		<file filename="core/assets/images/actions/view_calendar_upcoming_events.png" md5="e470f99cdc9ad27662efab482c7a7715"/>
+		<file filename="core/assets/images/actions/view_calendar_week.png" md5="fe9f99af8268713e31dbeeafc0371800"/>
+		<file filename="core/assets/images/actions/view_calendar_workweek.png" md5="44cfbe645846c7b117191e128f6f255d"/>
+		<file filename="core/assets/images/actions/view_choose.png" md5="f97f0d6cce24828e22a23453ca4106c4"/>
+		<file filename="core/assets/images/actions/view_close.png" md5="1c672cc64ce835c1ec7cad021d9e3a66"/>
+		<file filename="core/assets/images/actions/view_detailed.png" md5="1bfd6c806bc3187a561fe90a025c4350"/>
+		<file filename="core/assets/images/actions/view_filter.png" md5="77a3713a62349bfb8b19fad1acd0c9eb"/>
+		<file filename="core/assets/images/actions/view_history.png" md5="f0dcd8a9dd431c7e5c942063200088fb"/>
+		<file filename="core/assets/images/actions/view_icon.png" md5="74bb54498bae50b34ebed202719945dd"/>
+		<file filename="core/assets/images/actions/view_left_right.png" md5="d4a3aa3558b13bcbe32d6ba2b7465153"/>
+		<file filename="core/assets/images/actions/view_media_artist.png" md5="9161cc351305d33fc5c4dfca4856480e"/>
+		<file filename="core/assets/images/actions/view_media_equalizer.png" md5="97d52dd30e59666f42491f33e1c0a55c"/>
+		<file filename="core/assets/images/actions/view_media_lyrics.png" md5="5587bf84af9a41cf9a8a1553ae2daf55"/>
+		<file filename="core/assets/images/actions/view_media_playlist.png" md5="5e54142c6e9b771fff2bfe7e79b9d0e3"/>
+		<file filename="core/assets/images/actions/view_media_visualization.png" md5="82cf42ba8720db68be2ce54d10a6d6fe"/>
+		<file filename="core/assets/images/actions/view_multicolumn.png" md5="b2ad48a3a79c231e04fd6796403d0c93"/>
+		<file filename="core/assets/images/actions/view_pim_calendar.png" md5="c233e6f5b832b3fe0d7020e74a53c05b"/>
+		<file filename="core/assets/images/actions/view_pim_contacts.png" md5="dad5fc2a5fbee76d9f29cae0eb8403f0"/>
+		<file filename="core/assets/images/actions/view_pim_journal.png" md5="42eec950cf8a71b5534c1ec7ef6c708b"/>
+		<file filename="core/assets/images/actions/view_pim_mail.png" md5="2f8058a8bd66a1b648d4d7f0f9ffa6ba"/>
+		<file filename="core/assets/images/actions/view_pim_news.png" md5="5e39db07622ff278c1fca327f2c5a7f5"/>
+		<file filename="core/assets/images/actions/view_pim_notes.png" md5="e22f0940fc007170250149b0dd516340"/>
+		<file filename="core/assets/images/actions/view_pim_summary.png" md5="a9898539c3cecdea8a00b60942306ff9"/>
+		<file filename="core/assets/images/actions/view_pim_tasks.png" md5="ba6b014c0e9e07f5505a2c9b66af49c4"/>
+		<file filename="core/assets/images/actions/view_presentation.png" md5="c933d32103207a77faa131f33f8dc7da"/>
+		<file filename="core/assets/images/actions/view_preview.png" md5="6a4a911b0965d4cdaab7fb018a8337f9"/>
+		<file filename="core/assets/images/actions/view_remove.png" md5="1c672cc64ce835c1ec7cad021d9e3a66"/>
+		<file filename="core/assets/images/actions/view_sidetree.png" md5="b5896fbed69cf366e3569ba385061787"/>
+		<file filename="core/assets/images/actions/view_statistics.png" md5="0ba68e3b22a9989a38bcc1760039978d"/>
+		<file filename="core/assets/images/actions/view_text.png" md5="533edb60b2591c947217ed1eafdae616"/>
+		<file filename="core/assets/images/actions/view_top_bottom.png" md5="803eac2610054336f082ad6b89d98617"/>
+		<file filename="core/assets/images/actions/view_tree.png" md5="e16b12b57a4fc23ce3718817a77b315b"/>
+		<file filename="core/assets/images/actions/viewmag+.png" md5="04879975152d8c22d4b57ec03b9f1701"/>
+		<file filename="core/assets/images/actions/viewmag-.png" md5="c65227c0966133f9fbb5620ff66f4d5b"/>
+		<file filename="core/assets/images/actions/viewmag.png" md5="6727020ed79558921b1f5192054990d1"/>
+		<file filename="core/assets/images/actions/viewmag1.png" md5="406cd34829b1272d467805832fc277bb"/>
+		<file filename="core/assets/images/actions/viewmag_.png" md5="7b3e9fcd04566ca009641773f7525494"/>
+		<file filename="core/assets/images/actions/viewmagfit.png" md5="3bbe88a63a29fd9b54f643c396e96302"/>
+		<file filename="core/assets/images/actions/wallet_closed.png" md5="d2da3f8bea16220fae71f3b5ca5d46f6"/>
+		<file filename="core/assets/images/actions/wallet_open.png" md5="280ddc7e2a7887bf5355b40291e7f895"/>
+		<file filename="core/assets/images/actions/whatsnext.png" md5="8b5b84863a178a0e6bffe3ae450aef87"/>
+		<file filename="core/assets/images/actions/window_duplicate.png" md5="68dd37c626b30c1f5a042536a9b5b159"/>
+		<file filename="core/assets/images/actions/window_fullscreen.png" md5="224c7f091a4e4aa9f7eb14a4ca8fc8b0"/>
+		<file filename="core/assets/images/actions/window_new.png" md5="8b0bae9b8d2f23db4b536bb61c58366e"/>
+		<file filename="core/assets/images/actions/window_nofullscreen.png" md5="e9c1919b6f92c5f75135852ff06db894"/>
+		<file filename="core/assets/images/actions/window_suppressed.png" md5="1776411810a23662c4927ccc6ded7b6f"/>
+		<file filename="core/assets/images/actions/world.png" md5="1b7e71a08c22dc5cd9bad611f8bf3d3a"/>
+		<file filename="core/assets/images/actions/xdays.png" md5="fcd9c963b668de24e695c5a3dcdcf86f"/>
+		<file filename="core/assets/images/apps/abiword.png" md5="d660ff9b8bbe168335f6e7c0aaf4d087"/>
+		<file filename="core/assets/images/apps/access.png" md5="81e35474e7a14e92c1b803029d46fc84"/>
+		<file filename="core/assets/images/apps/accessories_calculator.png" md5="8b5bf3d94b84d709844429fd763e297b"/>
+		<file filename="core/assets/images/apps/accessories_character_map.png" md5="d486f367fb5588c5c21f2bc8255fb68d"/>
+		<file filename="core/assets/images/apps/accessories_dictionary.png" md5="bd4dc2e82eb2b793bdd79bc09e9e9f90"/>
+		<file filename="core/assets/images/apps/accessories_text_editor.png" md5="86beb406ad3daac3eabb800366fc1bb7"/>
+		<file filename="core/assets/images/apps/acroread.png" md5="f2df205f4f2c66119e650932eef1ac6a"/>
+		<file filename="core/assets/images/apps/adobe_reader.png" md5="4ff61444b3f53c338a74bedecc04d09e"/>
+		<file filename="core/assets/images/apps/akregator.png" md5="ac1c1b821f637fbb4b3a601035109acf"/>
+		<file filename="core/assets/images/apps/alacarte.png" md5="15107b97e4f5b4d5fe1636d7fc2d0835"/>
+		<file filename="core/assets/images/apps/amarok.png" md5="92b792418fd4d9f26a60dc9f70d8a234"/>
+		<file filename="core/assets/images/apps/ark.png" md5="e20f069001369c517ee48b5a14305e54"/>
+		<file filename="core/assets/images/apps/arts.png" md5="a939c7ec4a84f3cb436daa184fac802b"/>
+		<file filename="core/assets/images/apps/avant_window_navigator.png" md5="2fcac6a69442b92bf1ef9a783ad63134"/>
+		<file filename="core/assets/images/apps/azureus.png" md5="346e00ed20d7507454d134df0137ef8e"/>
+		<file filename="core/assets/images/apps/background.png" md5="8607ed7ddce1f94e830293aa83335da7"/>
+		<file filename="core/assets/images/apps/banshee.png" md5="9bdb396545911ec635ffb72f7b7e850c"/>
+		<file filename="core/assets/images/apps/basket.png" md5="fd02f215279da4706cfd83741a725283"/>
+		<file filename="core/assets/images/apps/beagle.png" md5="297c21dacc913be1a779c2e7f44b492f"/>
+		<file filename="core/assets/images/apps/beryl_manager.png" md5="bc3426648ced5659ccbb751af4e25366"/>
+		<file filename="core/assets/images/apps/blender.png" md5="67532c03849e5db08fc96bbcd577e523"/>
+		<file filename="core/assets/images/apps/bluefish.png" md5="f4165cbbcf2ce21b6a4f852ee23fab87"/>
+		<file filename="core/assets/images/apps/book.png" md5="ba468b4f81be5264328d0de29f921f33"/>
+		<file filename="core/assets/images/apps/bovo.png" md5="cdbe26eb639a7c2c26952fd63f6c0a22"/>
+		<file filename="core/assets/images/apps/brasero.png" md5="c4c7723c7c2b80597d36eee1a2725826"/>
+		<file filename="core/assets/images/apps/cowbell.png" md5="135f58f32ba7003516c8204f4cae855a"/>
+		<file filename="core/assets/images/apps/cup.png" md5="849eda60c46da4a061adef361bdc2998"/>
+		<file filename="core/assets/images/apps/d4x.png" md5="57f9e0e3808c7bdad23eccaa596c31e8"/>
+		<file filename="core/assets/images/apps/deluge.png" md5="a9b9b8fa02f6bf9bf5c579df08da7f6d"/>
+		<file filename="core/assets/images/apps/digikam.png" md5="64f9ffac0384a9fa9b56df86a3509753"/>
+		<file filename="core/assets/images/apps/epiphany.png" md5="94f0d59f5f0c3bbb977af3238b55dc11"/>
+		<file filename="core/assets/images/apps/esd.png" md5="ffe075e01019c2aa1560fa7308a78e57"/>
+		<file filename="core/assets/images/apps/evince.png" md5="68f055e3eac2dc9360535731bcc5ed9b"/>
+		<file filename="core/assets/images/apps/evolution.png" md5="90704a812f0579548903d06d894d8062"/>
+		<file filename="core/assets/images/apps/exaile.png" md5="c5e06f2b4bf0c3676aa8b5f049cb90f3"/>
+		<file filename="core/assets/images/apps/exfalso.png" md5="f0dc1f724ed5fead8d451d000ead132a"/>
+		<file filename="core/assets/images/apps/f_spot.png" md5="a4cfbd282341fbb315c053d8c13eeae5"/>
+		<file filename="core/assets/images/apps/firefox.png" md5="5a950cf8b13766c5ce30eefd165e58c1"/>
+		<file filename="core/assets/images/apps/fontforge.png" md5="9522f7526051768747a810248515f868"/>
+		<file filename="core/assets/images/apps/fonts.png" md5="f1184592fe6ee8a3c42e772426e6a807"/>
+		<file filename="core/assets/images/apps/fyre.png" md5="bbc360b0575d2e34dc3a74e9e308a909"/>
+		<file filename="core/assets/images/apps/gaim.png" md5="8bcd278d4126ad1100d5383bff67ee31"/>
+		<file filename="core/assets/images/apps/googleearth.png" md5="f6b678571d36f9a2f54b631efd7bfd0c"/>
+		<file filename="core/assets/images/apps/graphics_viewer_document.png" md5="e412db77ae83d0fabf37e59d61c09ac8"/>
+		<file filename="core/assets/images/apps/gwenview.png" md5="ea06963279f219b1f3c48b04f556835f"/>
+		<file filename="core/assets/images/apps/hardware.png" md5="67ed697271df9795790da6e434e2bc3d"/>
+		<file filename="core/assets/images/apps/help_browser.png" md5="25516e3032714670591e20811c41574d"/>
+		<file filename="core/assets/images/apps/hwinfo.png" md5="71f118a7164072f1f188508c2169bc0c"/>
+		<file filename="core/assets/images/apps/hydrogen.png" md5="ff59a4dc24178800562023e6dfc4bf68"/>
+		<file filename="core/assets/images/apps/ies4linux.png" md5="8796f2ef2e598f5ae0d6357229b24157"/>
+		<file filename="core/assets/images/apps/inkscape.png" md5="286eeac3b68582f217954cb8598386af"/>
+		<file filename="core/assets/images/apps/internet_mail.png" md5="e62ce4481ac2d61c0c5a7ef9de9dcdf2"/>
+		<file filename="core/assets/images/apps/internet_telephony.png" md5="d547a2aad412b9e0eeb37a05a4cad38f"/>
+		<file filename="core/assets/images/apps/internet_web_browser.png" md5="071c9ed283bf894a9d99da81df8b0ddd"/>
+		<file filename="core/assets/images/apps/java.png" md5="865d8e7992612d2e9e138ad293df0189"/>
+		<file filename="core/assets/images/apps/jokosher.png" md5="7c0580718af575809b7602bade0b95cb"/>
+		<file filename="core/assets/images/apps/k3b.png" md5="74428935b710d05f9e603201e00a8c01"/>
+		<file filename="core/assets/images/apps/kaddressbook.png" md5="3cfce23276834e5fb2e33cc510c56751"/>
+		<file filename="core/assets/images/apps/kaffeine.png" md5="abc0e27286081a18a67f468f66afcd23"/>
+		<file filename="core/assets/images/apps/kalzium.png" md5="2cf7db55c683331a30e40aa177fb57de"/>
+		<file filename="core/assets/images/apps/kanagram.png" md5="c43c17a5c8038ebe2cb5215e649d5f6c"/>
+		<file filename="core/assets/images/apps/kate.png" md5="0398e5a68541aa9690812cc6cf004939"/>
+		<file filename="core/assets/images/apps/kblogger.png" md5="0fd18010d7cf52d5a8c545cc2e458c4d"/>
+		<file filename="core/assets/images/apps/kbruch.png" md5="94d948548bec3ff9b6688dea3e55691f"/>
+		<file filename="core/assets/images/apps/kbugbuster.png" md5="b218fe8be26fc217b45e4a27892586d3"/>
+		<file filename="core/assets/images/apps/kcalc.png" md5="5a19412de49903607700834e5a26bf06"/>
+		<file filename="core/assets/images/apps/kcall.png" md5="52d305b59cfa4ba027f0135a641d47c8"/>
+		<file filename="core/assets/images/apps/kchart.png" md5="41f6ddb3655793eb91bd6ddc9b440b71"/>
+		<file filename="core/assets/images/apps/kcmkwm.png" md5="9819ba2d79caf3648f6f89cbe266e67a"/>
+		<file filename="core/assets/images/apps/kcolorchooser.png" md5="438dab229b78016291ca81a32d687d8a"/>
+		<file filename="core/assets/images/apps/kde.png" md5="9156200b378a8e4a65c3b8f85dc94778"/>
+		<file filename="core/assets/images/apps/kdeprint_addprinter.png" md5="830ee129670c67329734d7c15293817f"/>
+		<file filename="core/assets/images/apps/kdeprint_printer.png" md5="830ee129670c67329734d7c15293817f"/>
+		<file filename="core/assets/images/apps/kdmconfig.png" md5="5ebad1cadbf4c889b53f1c828279898b"/>
+		<file filename="core/assets/images/apps/keduca.png" md5="6e9ffffcee41a0139775aae322491c65"/>
+		<file filename="core/assets/images/apps/kexi.png" md5="55aca681590dc2cf084695554dbd49b3"/>
+		<file filename="core/assets/images/apps/keyboard.png" md5="0cc8c8b00fdb9971a1d87f77bd377058"/>
+		<file filename="core/assets/images/apps/kfind.png" md5="e122525a9fe932f97be148aebcdb94ed"/>
+		<file filename="core/assets/images/apps/kfm.png" md5="4776c9a840203367de9be84605b1a99e"/>
+		<file filename="core/assets/images/apps/kgeography.png" md5="faaf49668cd64f9a28a373c19edb6233"/>
+		<file filename="core/assets/images/apps/kget.png" md5="ade3fa9ca5a09c2beed5fd721033e428"/>
+		<file filename="core/assets/images/apps/khangman.png" md5="ae5ee589bf9a1d8c80a16e1453925863"/>
+		<file filename="core/assets/images/apps/khelpcenter.png" md5="00d614ff31b9081b84a9b36498d4678b"/>
+		<file filename="core/assets/images/apps/kicker.png" md5="6ae15b52628d4f19206d374ac6650041"/>
+		<file filename="core/assets/images/apps/kiten.png" md5="e459c6f6d2d3b5d090f5b413a5283f85"/>
+		<file filename="core/assets/images/apps/kjournal.png" md5="0ce0e6ba76b203edaf963ca1d234e2e5"/>
+		<file filename="core/assets/images/apps/klatin.png" md5="37de6df2eb4e3b8a98abb83cc5eaeb4b"/>
+		<file filename="core/assets/images/apps/klettres.png" md5="88276c3507d8de5858761b846b99ea10"/>
+		<file filename="core/assets/images/apps/klipper.png" md5="85f563f20c8aad75b581c8b3c79ebd89"/>
+		<file filename="core/assets/images/apps/kmail.png" md5="b75bbd35ac65c370d8329fff63dac26d"/>
+		<file filename="core/assets/images/apps/kmenu.png" md5="3508548059cc27fcd6b4dd7c00c2760a"/>
+		<file filename="core/assets/images/apps/kmix.png" md5="17fe4e48f741d0bb190f572fc427f66c"/>
+		<file filename="core/assets/images/apps/kmixdocked.png" md5="17fe4e48f741d0bb190f572fc427f66c"/>
+		<file filename="core/assets/images/apps/kmixdocked_error.png" md5="02763d867ded04d4c5133a1ffc5519c6"/>
+		<file filename="core/assets/images/apps/kmixdocked_mute.png" md5="d54bd7cfa4541c566179282ca36e80c6"/>
+		<file filename="core/assets/images/apps/kmplayer.png" md5="68ba1b29211446c6cd38d7014b32b840"/>
+		<file filename="core/assets/images/apps/kmplot.png" md5="3899f98c7a4a2d8b47e30d214700d5f8"/>
+		<file filename="core/assets/images/apps/knotes.png" md5="36277614f78d1f6130f7a5db2d8b4ab9"/>
+		<file filename="core/assets/images/apps/knotify.png" md5="cf5389a13df3184568f6be0d0e8d9b99"/>
+		<file filename="core/assets/images/apps/kolf.png" md5="b9a7e7a6044f44291d19d72e4edc07a9"/>
+		<file filename="core/assets/images/apps/konqueror.png" md5="cb10b7fcd8f6fefe857e46ae0d589d04"/>
+		<file filename="core/assets/images/apps/konsole.png" md5="a17aa23afc16f83d272c379d17cd0c1e"/>
+		<file filename="core/assets/images/apps/kontact.png" md5="d3bb341812a0c05ec9143faae5573512"/>
+		<file filename="core/assets/images/apps/konv_message.png" md5="0e8ee25bac2d9dd77a53edfc0b388ac3"/>
+		<file filename="core/assets/images/apps/konversation.png" md5="247f7545c01a2e8ea45580f703db6d3b"/>
+		<file filename="core/assets/images/apps/kopete.png" md5="cd1b5c2a8793c7232107a337aef0a1c8"/>
+		<file filename="core/assets/images/apps/korganizer.png" md5="8174380b1e5f05c1690a22acf08f8dfe"/>
+		<file filename="core/assets/images/apps/kpercentage.png" md5="b45d7c7f50929109ce60467791fda46f"/>
+		<file filename="core/assets/images/apps/krdc.png" md5="49554702efaa745c00096193d39448c3"/>
+		<file filename="core/assets/images/apps/krfb.png" md5="9ecca92d6471d7d8c928079504721116"/>
+		<file filename="core/assets/images/apps/krita.png" md5="805c2f1d38bb92fb6d373c09dde74bbb"/>
+		<file filename="core/assets/images/apps/kruler.png" md5="e10677fea8d2aa4f91c83755397e2f22"/>
+		<file filename="core/assets/images/apps/kscreensaver.png" md5="49705a39588acea24e89634e0f77f8cc"/>
+		<file filename="core/assets/images/apps/ksim_cpu.png" md5="665c536e999ede83da9ceb415232dcfe"/>
+		<file filename="core/assets/images/apps/ksnapshot.png" md5="1d03d782c58cd35cd99f18e6a8c5a970"/>
+		<file filename="core/assets/images/apps/ksniffer.png" md5="a75ec55b388e40cf212fbefa7a18ae83"/>
+		<file filename="core/assets/images/apps/kstars.png" md5="0149df290cff5b2df6be79b1a21012bf"/>
+		<file filename="core/assets/images/apps/ksudoku.png" md5="cc5bc83b28b478e5ca3101935867f30a"/>
+		<file filename="core/assets/images/apps/kteatime.png" md5="7f5c4dd72731929366405eb03a058de8"/>
+		<file filename="core/assets/images/apps/ktip.png" md5="6e86e9fa6977418c6de168ec81a65b86"/>
+		<file filename="core/assets/images/apps/ktorrent.png" md5="e268cf4e4961bd9c8912ffcbcdeee2e1"/>
+		<file filename="core/assets/images/apps/kuickshow.png" md5="d12350b7d0eaf7de2264bb3ba329fc62"/>
+		<file filename="core/assets/images/apps/kverbos.png" md5="c085e538278ebac9a2e957fa466fb2e1"/>
+		<file filename="core/assets/images/apps/kwalletmanager.png" md5="600a9e12c4ed722b6df5a423b2d647f6"/>
+		<file filename="core/assets/images/apps/kwin.png" md5="9819ba2d79caf3648f6f89cbe266e67a"/>
+		<file filename="core/assets/images/apps/kword.png" md5="9ee6bed77f8c0fecea97b54c6412390a"/>
+		<file filename="core/assets/images/apps/kwordquiz.png" md5="db8f3aa14147b072c9ad43635beabc4b"/>
+		<file filename="core/assets/images/apps/kwrite.png" md5="a82c7dd179ff6580026ed381e43ecb36"/>
+		<file filename="core/assets/images/apps/laptop_battery.png" md5="d36824f41fccaabda8e71fd887aa06bf"/>
+		<file filename="core/assets/images/apps/locale.png" md5="87b84e67f543ffaf2b509178812416df"/>
+		<file filename="core/assets/images/apps/marble.png" md5="57acbc089b136eed543d8ce7d75b9e65"/>
+		<file filename="core/assets/images/apps/multimedia_volume_control.png" md5="6111520e83fc1cf055984e4b18b1f84b"/>
+		<file filename="core/assets/images/apps/office_addressbook.png" md5="9ecf0ea01129ed03d185f8a98f4e832d"/>
+		<file filename="core/assets/images/apps/office_calendar.png" md5="1c44b08f9430877b7ffabf6f95775070"/>
+		<file filename="core/assets/images/apps/okular.png" md5="8b921c79fad58a89e5551927a72a9c9e"/>
+		<file filename="core/assets/images/apps/oxygen.png" md5="277590b2307a76eed7fb98543ba57b03"/>
+		<file filename="core/assets/images/apps/package_accessories.png" md5="ab564a0ef3ee52be363205ab894e7c00"/>
+		<file filename="core/assets/images/apps/package_desktop.png" md5="1cbb214a5b8d2acbb14df91b59d1d83a"/>
+		<file filename="core/assets/images/apps/package_desktop_peripherals.png" md5="94c619fe6fb710ce39a5a6d473330c13"/>
+		<file filename="core/assets/images/apps/package_desktop_personal.png" md5="86a437dfe7f3d3ca478a82307214c366"/>
+		<file filename="core/assets/images/apps/package_development.png" md5="2a18943273b38442d53979e9836a89cd"/>
+		<file filename="core/assets/images/apps/package_development_translation.png" md5="ec418dda69d45d0e16e907a66f9c8553"/>
+		<file filename="core/assets/images/apps/package_development_web.png" md5="a5d41c61d647ff368870868bf1bd224a"/>
+		<file filename="core/assets/images/apps/package_education.png" md5="46dfc4a8d58f511da3d07029e6c0dd18"/>
+		<file filename="core/assets/images/apps/package_education_language.png" md5="d60131b0ae81cda30890c3d3d4e06195"/>
+		<file filename="core/assets/images/apps/package_education_mathematics.png" md5="73ecb850d0757280ec1ae9751e8aea26"/>
+		<file filename="core/assets/images/apps/package_engineering.png" md5="88ebab1885878bc06e375ee48ad4a6f7"/>
+		<file filename="core/assets/images/apps/package_games.png" md5="8ce33b36bc3480b7150e96fa124c99ac"/>
+		<file filename="core/assets/images/apps/package_graphics.png" md5="41bf9299faa51f1342b411652c59eeec"/>
+		<file filename="core/assets/images/apps/package_internet.png" md5="7ca2df9b0496b1f0656792dc1444ab73"/>
+		<file filename="core/assets/images/apps/package_multimedia.png" md5="f43ff2a0f4c98e22181d5be609d8af16"/>
+		<file filename="core/assets/images/apps/package_network.png" md5="d33b07904168608e54214c6615372703"/>
+		<file filename="core/assets/images/apps/package_office.png" md5="087299346535de471935240b321ceecb"/>
+		<file filename="core/assets/images/apps/package_other.png" md5="db858be398e35488d4ef3e8b78ba9fff"/>
+		<file filename="core/assets/images/apps/package_science.png" md5="692d1ae6ef9d19b9b7a570595fa8312b"/>
+		<file filename="core/assets/images/apps/package_system.png" md5="d6c9f68da5d95cd335bd44db7f167098"/>
+		<file filename="core/assets/images/apps/package_system_network.png" md5="2ff1a7cad547189d1805424aa27f8738"/>
+		<file filename="core/assets/images/apps/package_toys.png" md5="ffe7ad79e5cd2b970f3e34fd4afd571e"/>
+		<file filename="core/assets/images/apps/package_utilities.png" md5="c8ff0b107146af73150af82138ee5876"/>
+		<file filename="core/assets/images/apps/personal.png" md5="581c84e18a5eec026b014d4e8f10f792"/>
+		<file filename="core/assets/images/apps/phonon_xine.png" md5="85f40e1457f2e2d0464a8cdba64da794"/>
+		<file filename="core/assets/images/apps/pidgin.png" md5="9d39e70b0e21b3ce540ea7d316138622"/>
+		<file filename="core/assets/images/apps/plasma.png" md5="eabc203ebc0bb0d22de726718748f58d"/>
+		<file filename="core/assets/images/apps/plasmagik.png" md5="44b89bd30206dd317c032a8595e1ddeb"/>
+		<file filename="core/assets/images/apps/preferences_contact_list.png" md5="4d368b424b3d38c4bb92d1e2e5e8e7e3"/>
+		<file filename="core/assets/images/apps/preferences_desktop_accessibility.png" md5="88029e182e121b9e116aeece560ac9a3"/>
+		<file filename="core/assets/images/apps/preferences_desktop_color.png" md5="82cf42ba8720db68be2ce54d10a6d6fe"/>
+		<file filename="core/assets/images/apps/preferences_desktop_cryptography.png" md5="ad92860dc048374ea7527ad60376d89e"/>
+		<file filename="core/assets/images/apps/preferences_desktop_default_applications.png" md5="d3577f0adb6f9872338546e3c9f6f37b"/>
+		<file filename="core/assets/images/apps/preferences_desktop_display.png" md5="ec423c80c28d5eaaf6b6dc1b64735b51"/>
+		<file filename="core/assets/images/apps/preferences_desktop_filetype_association.png" md5="8a549a9597bc907b19c51df65a2b38bf"/>
+		<file filename="core/assets/images/apps/preferences_desktop_gaming.png" md5="244e7a851e05345ef38ac1c2195dbe8a"/>
+		<file filename="core/assets/images/apps/preferences_desktop_icons.png" md5="f184bc1e269850ba07c4de5d6c0d7f9c"/>
+		<file filename="core/assets/images/apps/preferences_desktop_keyboard.png" md5="9c86704506d9d6474dbad3812245e4a1"/>
+		<file filename="core/assets/images/apps/preferences_desktop_launch_feedback.png" md5="cf8db57241e868cdc3b53e4c2c63c92d"/>
+		<file filename="core/assets/images/apps/preferences_desktop_locale.png" md5="d60131b0ae81cda30890c3d3d4e06195"/>
+		<file filename="core/assets/images/apps/preferences_desktop_mouse.png" md5="7b58f12d3741767688e4c758f7b208ab"/>
+		<file filename="core/assets/images/apps/preferences_desktop_notification.png" md5="1038735976e0237a82f1884978742d9b"/>
+		<file filename="core/assets/images/apps/preferences_desktop_notification_bell.png" md5="b8a5b8ca748b4048227ceaf69bdd448b"/>
+		<file filename="core/assets/images/apps/preferences_desktop_printer.png" md5="830ee129670c67329734d7c15293817f"/>
+		<file filename="core/assets/images/apps/preferences_desktop_screensaver.png" md5="d4083409b1424a71fe61d5613dc76e55"/>
+		<file filename="core/assets/images/apps/preferences_desktop_sound.png" md5="a939c7ec4a84f3cb436daa184fac802b"/>
+		<file filename="core/assets/images/apps/preferences_desktop_text_to_speech.png" md5="e2b7e6bc4cb524e779642ba074cd126b"/>
+		<file filename="core/assets/images/apps/preferences_desktop_theme.png" md5="b8d91ebafcae2e4522b036b203bbf784"/>
+		<file filename="core/assets/images/apps/preferences_desktop_user.png" md5="02d6ee391025ba863b7e3fac03bfc51b"/>
+		<file filename="core/assets/images/apps/preferences_desktop_user_password.png" md5="58c825452915f678927e79c0470860d2"/>
+		<file filename="core/assets/images/apps/preferences_desktop_wallpaper.png" md5="f87d868c3763fdd22a5f7b4f9e7fd0d9"/>
+		<file filename="core/assets/images/apps/preferences_kcalc_constants.png" md5="d71e2df5895e31a5c89ad8c6e9bfefd8"/>
+		<file filename="core/assets/images/apps/preferences_other.png" md5="b194408bf0640652a3f7a7d7cbb80088"/>
+		<file filename="core/assets/images/apps/preferences_plugin.png" md5="d2b069d0136ca6879fae25e64ee24762"/>
+		<file filename="core/assets/images/apps/preferences_system.png" md5="2bc11e5a5498cefa334b7b65722c4c30"/>
+		<file filename="core/assets/images/apps/preferences_system_bluetooth.png" md5="a4d26277e29a54ce1a551125324d5f6d"/>
+		<file filename="core/assets/images/apps/preferences_system_login.png" md5="541beaae9238011fc1f9d2002c054176"/>
+		<file filename="core/assets/images/apps/preferences_system_network_sharing.png" md5="ac1c189dad7d7a4d68e1d19fd57f88ed"/>
+		<file filename="core/assets/images/apps/preferences_system_performance.png" md5="cf8db57241e868cdc3b53e4c2c63c92d"/>
+		<file filename="core/assets/images/apps/preferences_system_power_management.png" md5="06a0d93cf8824157fac1b05af5ee56a1"/>
+		<file filename="core/assets/images/apps/preferences_system_session_services.png" md5="6b3672de875b7f02d62beaab31a83f0a"/>
+		<file filename="core/assets/images/apps/preferences_system_time.png" md5="7a56c93c4ba4f8db90fdaa792ff4a7f0"/>
+		<file filename="core/assets/images/apps/preferences_system_windows.png" md5="9819ba2d79caf3648f6f89cbe266e67a"/>
+		<file filename="core/assets/images/apps/preferences_web_browser_adblock.png" md5="04d0a49bbd62eb767104e5fc294aed87"/>
+		<file filename="core/assets/images/apps/preferences_web_browser_cache.png" md5="38f5dda2475cb05b4a72ce81cd76ebaf"/>
+		<file filename="core/assets/images/apps/preferences_web_browser_cookies.png" md5="a53d3b437a21a6973927953d82a35165"/>
+		<file filename="core/assets/images/apps/preferences_web_browser_identification.png" md5="23aadf8f532e8d021588434491d1c187"/>
+		<file filename="core/assets/images/apps/preferences_web_browser_shortcuts.png" md5="2191c0d2c03b6968aa9e8c583ffcd10c"/>
+		<file filename="core/assets/images/apps/preferences_web_browser_stylesheets.png" md5="82b13ab5897257209256e4b8bdb11e1d"/>
+		<file filename="core/assets/images/apps/quodlibet.png" md5="0b0079aa31e70d8803df5b12e5e17467"/>
+		<file filename="core/assets/images/apps/scribus.png" md5="268fede118c7a4f01b381ae6bbf84ee9"/>
+		<file filename="core/assets/images/apps/serpentine.png" md5="43e72209ca300a54bd70ac6ac88b1638"/>
+		<file filename="core/assets/images/apps/skype.png" md5="ba212093266a15be8f1452104649201d"/>
+		<file filename="core/assets/images/apps/sound_juicer.png" md5="07e6b18490378618087e8d7677c02916"/>
+		<file filename="core/assets/images/apps/strigi.png" md5="da400043c7acce5b3c158c8ac4597eea"/>
+		<file filename="core/assets/images/apps/style.png" md5="15fb0dfc68e1d45974e2608a2e413016"/>
+		<file filename="core/assets/images/apps/system.png" md5="0d4f864b6300d7182fd094cde5c84ec7"/>
+		<file filename="core/assets/images/apps/system_file_manager.png" md5="184d86b2f5f3ac9ddbcd5b11a3ffae24"/>
+		<file filename="core/assets/images/apps/system_help.png" md5="0774f96af29a84c7f7c95ad24aa580e5"/>
+		<file filename="core/assets/images/apps/system_software_update.png" md5="b981e3a09ce77af4b06a4fbe2413f9c4"/>
+		<file filename="core/assets/images/apps/system_users.png" md5="5ebad1cadbf4c889b53f1c828279898b"/>
+		<file filename="core/assets/images/apps/systemtray.png" md5="c0899b2b8a82bbed9069577e61f5eb25"/>
+		<file filename="core/assets/images/apps/tagua.png" md5="4886a8c0526e9fa26a02f5321e4a35dd"/>
+		<file filename="core/assets/images/apps/thunderbird.png" md5="ff85ae463f475efd113aa1b686ddf0f6"/>
+		<file filename="core/assets/images/apps/todolist.png" md5="c013d0377c188c3a2eb25f9f8687ac03"/>
+		<file filename="core/assets/images/apps/totem.png" md5="efbda4d26827315e1653ce82068254e7"/>
+		<file filename="core/assets/images/apps/utilities_file_archiver.png" md5="0e8276012b9c71b50b5354df5b8a2303"/>
+		<file filename="core/assets/images/apps/utilities_log_viewer.png" md5="9d0e3f35963f26c0c62c627b304581d8"/>
+		<file filename="core/assets/images/apps/utilities_system_monitor.png" md5="1eb0e4148f719c95b29d1c5e6c96db77"/>
+		<file filename="core/assets/images/apps/utilities_terminal.png" md5="cd76443c2e991f89e7e0485203a3bd86"/>
+		<file filename="core/assets/images/apps/wine.png" md5="fad5eab5c90b532f235299d7b14cc365"/>
+		<file filename="core/assets/images/apps/wine_doors.png" md5="cf80353621e80a06e258127fe49559a4"/>
+		<file filename="core/assets/images/apps/x.png" md5="06fbfe843f885e3983ea755136f93fb8"/>
+		<file filename="core/assets/images/apps/xorg.png" md5="1163bae7cd8da5c73150db51f844cafe"/>
+		<file filename="core/assets/images/devices/3floppy_mount.png" md5="b71a6c9e950f3a51ab8a67b020186ab1"/>
+		<file filename="core/assets/images/devices/3floppy_unmount.png" md5="ae1b2f5b6096dcc4983174ff029253df"/>
+		<file filename="core/assets/images/devices/audio_card.png" md5="462f65700345eb5ebad1c06c93263a9d"/>
+		<file filename="core/assets/images/devices/audio_headset.png" md5="2c8f02df6bb30ec6dd531d9f201d1662"/>
+		<file filename="core/assets/images/devices/audio_input_line.png" md5="8bac9d9b37861119a23b85b78d48a518"/>
+		<file filename="core/assets/images/devices/audio_input_microphone.png" md5="f786f0ecb5bdb0cf14b48f52b22a21e5"/>
+		<file filename="core/assets/images/devices/battery.png" md5="cc30e0ed097d29d6b087c4a585d54278"/>
+		<file filename="core/assets/images/devices/camera.png" md5="459a1dcb6ff0d8e97f26ca14d5e7a787"/>
+		<file filename="core/assets/images/devices/camera_mount.png" md5="c96d04f45583ce4c005719831886ead6"/>
+		<file filename="core/assets/images/devices/camera_photo.png" md5="62baff73340a23cf448afcff2c59d40b"/>
+		<file filename="core/assets/images/devices/camera_unmount.png" md5="0113a4e7a182fd7ba0783230f2e55201"/>
+		<file filename="core/assets/images/devices/camera_web.png" md5="282a9b70a014d45397d73d424a901110"/>
+		<file filename="core/assets/images/devices/cdaudio_mount.png" md5="e6762ecb7833cc1df0f5481a0fb85d98"/>
+		<file filename="core/assets/images/devices/cdaudio_unmount.png" md5="8ad42cff2f3fbd3b7bd22332ce0e74ed"/>
+		<file filename="core/assets/images/devices/cdrom_mount.png" md5="d79182a10fb6ce96ee743a5831d531ec"/>
+		<file filename="core/assets/images/devices/cdrom_unmount.png" md5="b02e908a6269eecc89ff0212cd96f165"/>
+		<file filename="core/assets/images/devices/cdwriter_mount.png" md5="8734f6cfe91beb638dbe30226941edb1"/>
+		<file filename="core/assets/images/devices/cdwriter_unmount.png" md5="6ad124b4ea5fed87d84cd764a758c678"/>
+		<file filename="core/assets/images/devices/cellular_phone_mount.png" md5="d4bc42bdeecc338e167ddfd42276992c"/>
+		<file filename="core/assets/images/devices/cellular_phone_unmount.png" md5="46a6ec79c39bf4927411c8f759137f14"/>
+		<file filename="core/assets/images/devices/computer.png" md5="c2db8619b47fae2a7d7150a4006f20b3"/>
+		<file filename="core/assets/images/devices/computer_laptop.png" md5="b8ae8ae6ffec04889d157fafe816fea6"/>
+		<file filename="core/assets/images/devices/cpu.png" md5="f55de58d608ee7fce200a238e1778616"/>
+		<file filename="core/assets/images/devices/display.png" md5="ec423c80c28d5eaaf6b6dc1b64735b51"/>
+		<file filename="core/assets/images/devices/drive_harddisk.png" md5="f97beccc8e718ce33b57100bfa0e081f"/>
+		<file filename="core/assets/images/devices/drive_optical.png" md5="df20a9fa7b1be51957cca8d14635bae0"/>
+		<file filename="core/assets/images/devices/drive_remote.png" md5="ec943dadacdb17eb1228507548fa52a5"/>
+		<file filename="core/assets/images/devices/drive_removable_media.png" md5="41ed8a6a5c5f34147f3f4c528193e4ba"/>
+		<file filename="core/assets/images/devices/drive_removable_media_usb.png" md5="f63009df2b0fc62122053ad21d665350"/>
+		<file filename="core/assets/images/devices/drive_removable_media_usb_pendrive.png" md5="2d5a7781d7d7c13ee1f580337f103f0c"/>
+		<file filename="core/assets/images/devices/dvd_mount.png" md5="d01f55ddbd49c7c27a2dece96f54a69a"/>
+		<file filename="core/assets/images/devices/dvd_unmount.png" md5="acaeccc03600397b5791e148a62d885f"/>
+		<file filename="core/assets/images/devices/hdd_external_mount.png" md5="f887c6b030af0e71e663e00351b15d1d"/>
+		<file filename="core/assets/images/devices/hdd_external_unmount.png" md5="8fc76a79e729d87fdcf859915ed27e87"/>
+		<file filename="core/assets/images/devices/hdd_mount.png" md5="bf6fe96740dba562fc87d4f282a8652d"/>
+		<file filename="core/assets/images/devices/hdd_unmount.png" md5="e47c2cf44bd297b76594d79a04a48f0c"/>
+		<file filename="core/assets/images/devices/hdd_usb_mount.png" md5="25131934c210841fb32de9bace8aceae"/>
+		<file filename="core/assets/images/devices/hdd_usb_unmount.png" md5="da0ab334f0d93c65998e3b81041b4953"/>
+		<file filename="core/assets/images/devices/input_gaming.png" md5="db3ae0eef3dc02db7e6665598d33626f"/>
+		<file filename="core/assets/images/devices/input_keyboard.png" md5="dd2e1d4007e83962c8126c07b65ad779"/>
+		<file filename="core/assets/images/devices/input_mouse.png" md5="db43eddc819a37ab0a624aa0c6979620"/>
+		<file filename="core/assets/images/devices/input_tablet.png" md5="04398d4bc1c46af6ea2ce423c41223de"/>
+		<file filename="core/assets/images/devices/ipod_mount.png" md5="46d7e9e08a6ad193dadb035faf97cb42"/>
+		<file filename="core/assets/images/devices/ipod_unmount.png" md5="fd807c5495faba848cf7aacb77898296"/>
+		<file filename="core/assets/images/devices/joystick.png" md5="244e7a851e05345ef38ac1c2195dbe8a"/>
+		<file filename="core/assets/images/devices/keyboard.png" md5="b09331eb4002b8960df68f0cd8f0d07d"/>
+		<file filename="core/assets/images/devices/laptop.png" md5="f14314a4b6cd9dfedbb29af0c00f7b45"/>
+		<file filename="core/assets/images/devices/media_flash.png" md5="659a64c590dc58b8a0c536ad63831db1"/>
+		<file filename="core/assets/images/devices/media_flash_memory_stick.png" md5="1d710055960502372e2b1584ccf8d493"/>
+		<file filename="core/assets/images/devices/media_flash_sd_mmc.png" md5="52a65af0b84c35c032333444c3dc7d60"/>
+		<file filename="core/assets/images/devices/media_flash_smart_media.png" md5="88614866a8754037578a22042653edd6"/>
+		<file filename="core/assets/images/devices/media_floppy.png" md5="0cbdbab9cc61c788ce9080a09f323768"/>
+		<file filename="core/assets/images/devices/media_optical.png" md5="ff41feedc7bb4cf99a6f62cb0464f4b0"/>
+		<file filename="core/assets/images/devices/media_optical_audio.png" md5="133386421a2300156b9fddbc39d8c08a"/>
+		<file filename="core/assets/images/devices/media_optical_recordable.png" md5="a94c36e24c5addc9b19cfb2d4eb18387"/>
+		<file filename="core/assets/images/devices/media_tape.png" md5="abd3b95ba5eecd50e042d8c3cf529745"/>
+		<file filename="core/assets/images/devices/memory_stick_mount.png" md5="7d50cc13ab2bdbee6a4770617c28cc5f"/>
+		<file filename="core/assets/images/devices/memory_stick_unmount.png" md5="910004549dbe96cd633d0a3fcaed9ef4"/>
+		<file filename="core/assets/images/devices/modem.png" md5="17d255a5f7961c3f689ad00f93f7cb44"/>
+		<file filename="core/assets/images/devices/mouse.png" md5="7b58f12d3741767688e4c758f7b208ab"/>
+		<file filename="core/assets/images/devices/multimedia_player.png" md5="2458411dd0378778ddb6d670f9460309"/>
+		<file filename="core/assets/images/devices/multimedia_player_apple_ipod.png" md5="e111180d5e15b76e91a9f8fbf1435a3e"/>
+		<file filename="core/assets/images/devices/network.png" md5="cd9b6d8148daab21c21150358b5f7b76"/>
+		<file filename="core/assets/images/devices/network_wired.png" md5="d6b59d8693dc826c5bb2cbe8b75a7d81"/>
+		<file filename="core/assets/images/devices/network_wireless.png" md5="e033440fc09a2dacb4cc2130080de893"/>
+		<file filename="core/assets/images/devices/nfs_mount.png" md5="ada7922cdaf8c471b3c735fab9e9a0a9"/>
+		<file filename="core/assets/images/devices/nfs_unmount.png" md5="9427d9941a93bb58f996a615304328d4"/>
+		<file filename="core/assets/images/devices/pda.png" md5="0fc5383c5e0c79fbf9d947fe2e7ec593"/>
+		<file filename="core/assets/images/devices/phone.png" md5="734c5c488065b9fc52a04e0b8c8e75af"/>
+		<file filename="core/assets/images/devices/printer.png" md5="3610c044631ff0f05dfdd053d9500ebb"/>
+		<file filename="core/assets/images/devices/printer1.png" md5="f404f8b0e01744b5fb1a06c9bca68ff8"/>
+		<file filename="core/assets/images/devices/projector.png" md5="372eaf80b80d9d531662109ba1f2c7c2"/>
+		<file filename="core/assets/images/devices/scanner.png" md5="3778869b6ca777fb5d6cd3d54b178f5c"/>
+		<file filename="core/assets/images/devices/screen.png" md5="c2aad97ed7f87b9c248b9fc078a73c8e"/>
+		<file filename="core/assets/images/devices/sd_mmc_mount.png" md5="0daf9160f5c4447c908c5114d82eb3ff"/>
+		<file filename="core/assets/images/devices/sd_mmc_unmount.png" md5="2fccc126572a5db9c5431bef0e872a8b"/>
+		<file filename="core/assets/images/devices/smart_media_mount.png" md5="ecbdf41c0e8883757fadc1be2047b7e8"/>
+		<file filename="core/assets/images/devices/smart_media_unmount.png" md5="0913be5e276c67b18eed9ceb6ec683f0"/>
+		<file filename="core/assets/images/devices/system.png" md5="11351a9e30ae7fbe27d5a9ccc81435b8"/>
+		<file filename="core/assets/images/devices/tablet.png" md5="1413ede0babaa264c07b68b08c7764a3"/>
+		<file filename="core/assets/images/devices/usbpendrive_mount.png" md5="e1752b06b7262e838dbe923b088cabbc"/>
+		<file filename="core/assets/images/devices/usbpendrive_unmount.png" md5="e744cb99fc276a417e6af3b2ece0a505"/>
+		<file filename="core/assets/images/devices/video_display.png" md5="4b83d31f12c63ec126aa17fef89ca37b"/>
+		<file filename="core/assets/images/devices/video_projector.png" md5="c7347707edb37d67abdcb28f9aafe74d"/>
+		<file filename="core/assets/images/devices/video_television.png" md5="3ccc49fbb8af4633feddb04a8e620b49"/>
+		<file filename="core/assets/images/devices/webcam.png" md5="a6645e078f669f4a99d1a6d0e30825b3"/>
+		<file filename="core/assets/images/devices/webcam_mount.png" md5="b2bdb9f1dc6c1d00d0a131f89ae71332"/>
+		<file filename="core/assets/images/filesystems/bookmark.png" md5="737d7549b71c1ea3f817b5fe9dbcb126"/>
+		<file filename="core/assets/images/filesystems/contact.png" md5="067ab6285fb83f11688577742d6fb4a3"/>
+		<file filename="core/assets/images/filesystems/desktop.png" md5="5964bd62e17659c025404508d469c6ea"/>
+		<file filename="core/assets/images/filesystems/document_multiple.png" md5="49ef61322f123df29be7b2148f4b1486"/>
+		<file filename="core/assets/images/filesystems/file_broken.png" md5="fcd8fce353c30bf81638f53919d0227c"/>
+		<file filename="core/assets/images/filesystems/folder.png" md5="95321038bb93f5d54508365d79fdcf75"/>
+		<file filename="core/assets/images/filesystems/folder_blue.png" md5="b563b40ba94e88c0552bf263bee71456"/>
+		<file filename="core/assets/images/filesystems/folder_bookmarks.png" md5="7f6963ee8dea90acb7811aad40d00ea8"/>
+		<file filename="core/assets/images/filesystems/folder_brown.png" md5="8a8bf60e46da22edf6e61c3069338f73"/>
+		<file filename="core/assets/images/filesystems/folder_cyan.png" md5="fa7079ee0015a63ac49483eba8e557a2"/>
+		<file filename="core/assets/images/filesystems/folder_development.png" md5="7584f95f19c0b6bee146d877fa098f75"/>
+		<file filename="core/assets/images/filesystems/folder_downloads.png" md5="c9379c3da935034230e87766815a846f"/>
+		<file filename="core/assets/images/filesystems/folder_green.png" md5="4f7e9df34b3d8d2aa82d3636fd760e6d"/>
+		<file filename="core/assets/images/filesystems/folder_grey.png" md5="0089c67534f962be4f93ae625f4d9ebe"/>
+		<file filename="core/assets/images/filesystems/folder_home.png" md5="3338ba1a9cf98959fd0223b3be6151c6"/>
+		<file filename="core/assets/images/filesystems/folder_home2.png" md5="96eb106b640c171170c17731e34e60f0"/>
+		<file filename="core/assets/images/filesystems/folder_html.png" md5="e2f116eddb0bf451054e457722cb5dae"/>
+		<file filename="core/assets/images/filesystems/folder_image.png" md5="c5817ee1d90c5ee1884d8ddd81625c64"/>
+		<file filename="core/assets/images/filesystems/folder_important.png" md5="18c1d2bf10c4cc73724c20e466add36a"/>
+		<file filename="core/assets/images/filesystems/folder_locked.png" md5="834c044ad34b29308be3aa297044abd2"/>
+		<file filename="core/assets/images/filesystems/folder_network.png" md5="eda5fd41cfc2aa4117678a5edc643f82"/>
+		<file filename="core/assets/images/filesystems/folder_orange.png" md5="e1c7fb5304821555c4f90c075b77961a"/>
+		<file filename="core/assets/images/filesystems/folder_print.png" md5="dbd0aa84c247d158bcfcf46cf9fb67f7"/>
+		<file filename="core/assets/images/filesystems/folder_red.png" md5="f9f577327ff9b15ca53802e66726b516"/>
+		<file filename="core/assets/images/filesystems/folder_sound.png" md5="95c120944410f6c2644a5a3a4d0561f7"/>
+		<file filename="core/assets/images/filesystems/folder_tar.png" md5="bcc9aaf4d635b0881adf20af60c812f4"/>
+		<file filename="core/assets/images/filesystems/folder_txt.png" md5="c8e55e725a44a248df0a9043a230cee8"/>
+		<file filename="core/assets/images/filesystems/folder_video.png" md5="bdfcd84df9ebfd6221016cfde2d36cf8"/>
+		<file filename="core/assets/images/filesystems/folder_violet.png" md5="d9faa6896745ffe3f6f27460256f30d0"/>
+		<file filename="core/assets/images/filesystems/folder_yellow.png" md5="0aa854f8853c920b323325e2eda0b1e3"/>
+		<file filename="core/assets/images/filesystems/kfm_home.png" md5="96eb106b640c171170c17731e34e60f0"/>
+		<file filename="core/assets/images/filesystems/link.png" md5="ba535d3489c0b6f30a73ce634d98860f"/>
+		<file filename="core/assets/images/filesystems/mail_folder_sent" md5="8a1a167f008f30cd48533dd848bede80"/>
+		<file filename="core/assets/images/filesystems/mail_message.png" md5="f50520d3a7651f54b5ad594610bf96e6"/>
+		<file filename="core/assets/images/filesystems/media_album.png" md5="45a5d67fe1011adc2d0aeac5393774ce"/>
+		<file filename="core/assets/images/filesystems/media_playlist.png" md5="f13255c3da42a320aa64f0c6342977b2"/>
+		<file filename="core/assets/images/filesystems/media_podcast.png" md5="2ca6e480b374f42912fb7c077e79b33b"/>
+		<file filename="core/assets/images/filesystems/music.png" md5="2ffeba48701d31f37252f26ed45d0d1f"/>
+		<file filename="core/assets/images/filesystems/network.png" md5="17d3dc4e856dcfec861957ce7c2acb3b"/>
+		<file filename="core/assets/images/filesystems/network_local.png" md5="46053da917f9b9c67dab6c76f1c0c226"/>
+		<file filename="core/assets/images/filesystems/network_server.png" md5="c841ee518f51cf46d57473113a7cbe52"/>
+		<file filename="core/assets/images/filesystems/network_server_database.png" md5="6c1bde4c1be99950918ca5ff0b91c0a4"/>
+		<file filename="core/assets/images/filesystems/network_workgroup.png" md5="491ab5cd3d93c3a5a8c00c48da2c9331"/>
+		<file filename="core/assets/images/filesystems/server.png" md5="73ce21c185a7b850ee092fb128646cce"/>
+		<file filename="core/assets/images/filesystems/start_here.png" md5="1af61b3b6f4c68946708a0e0d57b5af8"/>
+		<file filename="core/assets/images/filesystems/trashcan_empty.png" md5="1832906780ff48d8a2b96213cbf18f0d"/>
+		<file filename="core/assets/images/filesystems/trashcan_empty_alt.png" md5="895b443728931a3ea0c2a4a1f37bc8dc"/>
+		<file filename="core/assets/images/filesystems/trashcan_full.png" md5="9354fb83d3768390ad2eac75cd40db0a"/>
+		<file filename="core/assets/images/filesystems/user_desktop.png" md5="cdfcfc4545b0cd27f77887e961f645f5"/>
+		<file filename="core/assets/images/filesystems/user_trash.png" md5="ab0e6c545a3b005927d3ee0deb08ca3a"/>
+		<file filename="core/assets/images/filesystems/video.png" md5="ab626a189f89d0a87704209a0267d2bb"/>
 		<file filename="core/assets/images/iso-country-flags/ad.png" md5="d8deb1b9b4eff60e98a7cb383b7092ff"/>
 		<file filename="core/assets/images/iso-country-flags/ae.png" md5="0660e526a23d38ede26bf5993988e723"/>
 		<file filename="core/assets/images/iso-country-flags/af.png" md5="f474a6829029cb62acf0022597fab410"/>
@@ -2349,14 +3173,15 @@
 		<file filename="core/assets/images/mimetypes/video-x-generic.png" md5="151bf6436338306e2150a2d5343c11ef"/>
 		<file filename="core/assets/images/mimetypes/video-x-ms-asf.png" md5="151bf6436338306e2150a2d5343c11ef"/>
 		<file filename="core/assets/images/placeholders/blog.png" md5="2ef8794320891042986b72da16f47bf1"/>
-		<file filename="core/assets/images/placeholders/building.png" md5="01fd59323876891e2b6b95df876c37eb"/>
-		<file filename="core/assets/images/placeholders/generic.png" md5="6b1b8ecb8333dfb86a56f1e1ee348d24"/>
+		<file filename="core/assets/images/placeholders/building.png" md5="3887f106482a5bcd63b5572f852de79a"/>
+		<file filename="core/assets/images/placeholders/generic.png" md5="fe11b971be2553c049be3d541d72ec3c"/>
+		<file filename="core/assets/images/placeholders/mystery.png" md5="bdfefd4a141e2cc9b0ae4bd5490c0806"/>
 		<file filename="core/assets/images/placeholders/person-tall.png" md5="5fceb195fbaf164fbadde1c6419b6aa4"/>
 		<file filename="core/assets/images/placeholders/person-wide.png" md5="dc7740eb685ceacaa7b1ff3a4dc70e5b"/>
 		<file filename="core/assets/images/placeholders/person.png" md5="dc6760a27890d742c748e7385068abeb"/>
-		<file filename="core/assets/images/placeholders/photo.png" md5="0665e6fda435b01116122b863a4548d2"/>
+		<file filename="core/assets/images/placeholders/photo.png" md5="e8e5a2225435523eed955010d44d06a2"/>
 		<file filename="core/assets/images/placeholders/placeholder-generic1.jpg" md5="7ee2b126c0396dcb5f3f41c25bea16d6"/>
-		<file filename="core/assets/images/placeholders/template.xcf" md5="2099f59f0748cd56d0f33022b5282b99"/>
+		<file filename="core/assets/images/placeholders/template.xcf" md5="243afb50ecb13d5c4a4679cf8fda6210"/>
 		<file filename="core/assets/images/previews/templates/widgets/pagesearch/page-search-execute.png" md5="80ad59afc22d02795c57848c87aaade4"/>
 		<file filename="core/assets/images/previews/templates/widgets/user/user-login-form-140.png" md5="91fea25ca3a9a34ff78b43ac0ca33a62"/>
 		<file filename="core/assets/images/previews/templates/widgets/user/user-login-form-210.png" md5="497b422faa93f97261891087e17bd1dc"/>
@@ -2377,7 +3202,7 @@
 		<file filename="core/assets/js/core.ajaxlinks.min.js" md5="4eb06267aad74dd6d3252b050d4b58b1"/>
 		<file filename="core/assets/js/core.base64.js" md5="d5858756a4cf8012eb25157105718dfa"/>
 		<file filename="core/assets/js/core.base64.min.js" md5="f5ad50e340c30409e5a0542c3b6a085d"/>
-		<file filename="core/assets/js/core.context-controls.js" md5="df9e18ebdbac116daec941c012cbf722"/>
+		<file filename="core/assets/js/core.context-controls.js" md5="d497d3a1aa368191040e6b090ef17bc6"/>
 		<file filename="core/assets/js/core.context-controls.min.js" md5="2cc21d30e11c2c912783d4bc74f2ebb6"/>
 		<file filename="core/assets/js/core.email.js" md5="b5f2a018dd9a739e19bba3b9c34ef862"/>
 		<file filename="core/assets/js/core.email.min.js" md5="20aea3e7761dbdf2817f121cf0d702ae"/>
@@ -2385,10 +3210,11 @@
 		<file filename="core/assets/js/core.example.min.js" md5="1c5c63b5faba5e464625102d64a225aa"/>
 		<file filename="core/assets/js/core.fileupload.js" md5="b9dc4a51c1aa7b563fb6699d2e250e15"/>
 		<file filename="core/assets/js/core.fileupload.min.js" md5="7b623f2723e8b92f6c6995aabf818708"/>
-		<file filename="core/assets/js/core.js" md5="c68f8e1813e42fe2145a93a5e018f55d"/>
+		<file filename="core/assets/js/core.js" md5="3ecc0f90dd6d1d964ddc28f1d3dce227"/>
 		<file filename="core/assets/js/core.listingtable.js" md5="a77408ec84d06f0ad7f8fca17a34d49b"/>
 		<file filename="core/assets/js/core.listingtable.min.js" md5="9cd834cd8f2f1c341ac46cd8c323de5a"/>
-		<file filename="core/assets/js/core.min.js" md5="55a00d26cb1938214649f620256244f5"/>
+		<file filename="core/assets/js/core.min.js" md5="fe3c341c3b3409f706009a35ebe1f883"/>
+		<file filename="core/assets/js/core.progress-log-iframe.js" md5="5ddf799e85a9fc1f24f0b29085e8e51a"/>
 		<file filename="core/assets/js/core.strings.js" md5="26903a589fd8be5d6ab6d205601eacc3"/>
 		<file filename="core/assets/js/core.strings.min.js" md5="9f909a453c62314c3a3d9d6ea6807bcf"/>
 		<file filename="core/assets/js/html5shiv.js" md5="2079db7476a330b2d0edee6210a81534"/>
@@ -2554,70 +3380,52 @@
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Nicholas Hinsch" email="nicholas@evalagency.com"/>
-		<author name="Rodney Rehm"/>
-		<author name="Thue Kristensen"/>
-		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
-		<author name="Andrei Zmievski"/>
+		<author name="Brent Cook" email="busterbcook@yahoo.com"/>
+		<author name="John Griffin" email="jgriffin316@netscape.net"/>
+		<author name="John Millaway"/>
+		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
 		<author name="Andy Prevost"/>
 		<author name="Marcus Bointon"/>
-		<author name="Jaroslav Mallat (http://mallat.cz/)"/>
-		<author name="Mark J Panaghiston"/>
-		<author name="Dmitry Petrov"/>
-		<author name="John Millaway"/>
-		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
-		<author name="Hans Engel"/>
-		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
-		<author name="Brent Cook" email="busterbcook@yahoo.com"/>
+		<author name="Rodney Rehm"/>
+		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
+		<author name="Andrei Zmievski"/>
+		<author name="Thue Kristensen"/>
+		<author name="Erich Enke" email="erich.Enke@gmail.com"/>
+		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
+		<author name="Lauren Matheson" email="inan@canada.com"/>
+		<author name="Solar Designer" email="solar at openwall.com"/>
+		<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
+		<author name="Pete Nelson" email="@GunGeekATX"/>
+		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
+		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
+		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
+		<author name="Catalin Constantin" email="catalin@dazoot.ro"/>
+		<author name="liqwei" email="liqwei@liqwei.com"/>
+		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
+		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
 		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
+		<author name="Duda" email="duda@big.hu"/>
+		<author name="Roberto Berto" email="roberto@berto.net"/>
+		<author name="Monte Ohrt" email="monte AT ohrt DOT com"/>
 		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
 		<author name="Gerard" email="gerard@interfold.com"/>
 		<author name="Jason Sweat" email="jsweat_php@yahoo.com"/>
 		<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
 		<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
 		<author name="boots" email="boots dot smarty at yahoo dot com"/>
-		<author name="Roberto Berto" email="roberto@berto.net"/>
-		<author name="Monte Ohrt" email="monte AT ohrt DOT com"/>
-		<author name="Duda" email="duda@big.hu"/>
 		<author name="Ralf Strehle (minor optimization)" email="ralf dot strehle at yahoo dot de"/>
 		<author name="Ralf Strehle" email="ralf dot strehle at yahoo dot de"/>
-		<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
-		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
-		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-		<author name="Catalin Constantin" email="catalin@dazoot.ro"/>
-		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
-		<author name="liqwei" email="liqwei@liqwei.com"/>
-		<author name="Solar Designer" email="solar at openwall.com"/>
-		<author name="David JEAN LOUIS" email="izimobil@gmail.com"/>
-		<author name="David JEAN" email="izimobil@gmail.com"/>
-		<author name="Naitik Shah" email="naitik@facebook.com"/>
-		<author name="Pete Nelson" email="@GunGeekATX"/>
-		<author name="Erich Enke" email="erich.Enke@gmail.com"/>
-		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
-		<author name="Lauren Matheson" email="inan@canada.com"/>
-		<author name="John Griffin" email="jgriffin316@netscape.net"/>
-		<author name="Stas Kobzar" email="stas@modulis.ca"/>
-		<author name="Author: Mike Brevoort" email="mike@brevoort.com"/>
-		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
-		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
-		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
 		<author name="Uwe Tews" email="uwe.tews@googlemail.com"/>
 	</authors>
 	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			See the included NOTICE.md file for more information.
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
 		</license>
+		<license>Public Domain</license>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
 		<license>
 			See the included NOTICE.md file for more information.
 		</license>
-		<license url="http://www.gnu.org/licenses/agpl.html">
-			GNU Affero General Public License v3
-		</license>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
-			GNU Affero General Public License v3
-		</license>
-		<license url="http://www.opensource.org/licenses/mit-license.php">MIT</license>
-		<license>Public Domain</license>
 	</licenses>
 </component>
 
