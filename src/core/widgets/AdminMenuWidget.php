@@ -54,7 +54,10 @@ class AdminMenuWidget extends Widget_2_1 {
 		if(\Core\user()){
 			foreach($pages as $p){
 				/** @var PageModel $p */
-				if(!\Core\user()->checkAccess($p->get('access'))) continue;
+				if(!\Core\user()->checkAccess($p->get('access'))){
+					// Skip pages that the current user cannot access.
+					continue;
+				}
 
 				// Pages can define which sub-menu they get grouped under.
 				// The 'Admin' submenu is the default.
