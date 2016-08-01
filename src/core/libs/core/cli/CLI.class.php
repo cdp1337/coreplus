@@ -244,7 +244,7 @@ class CLI {
 	 */
 	public static function PrintHeader($line, $maxlen = 90) {
 		$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
-
+		
 		echo COLOR_LINE;
 		echo "| " . $nl;
 		echo "+" . str_repeat('=', $maxlen-1) . $nl;
@@ -258,6 +258,10 @@ class CLI {
 		echo $line . $nl . COLOR_RESET . COLOR_LINE;
 		echo "+" . str_repeat('=', $maxlen-1);
 		echo COLOR_RESET . $nl;
+
+		if(EXEC_MODE == 'WEB'){
+			echo '<!--CLI-DATA:HEADER=' . $line . '-->';
+		}
 		
 		if(self::_FlushRequired()){
 			ob_flush();
@@ -279,6 +283,27 @@ class CLI {
 		}
 		else{
 			$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+
+			if(EXEC_MODE == 'WEB'){
+				switch($color){
+					case COLOR_DEBUG:
+						echo '<!--CLI-DATA:LINE=' . $line . ';TYPE=debug-->';
+						break;
+					case COLOR_ERROR:
+						echo '<!--CLI-DATA:LINE=' . $line . ';TYPE=error-->';
+						break;
+					case COLOR_WARNING:
+						echo '<!--CLI-DATA:LINE=' . $line . ';TYPE=warning-->';
+						break;
+					case COLOR_SUCCESS:
+						echo '<!--CLI-DATA:LINE=' . $line . ';TYPE=success-->';
+						break;
+					default:
+						echo '<!--CLI-DATA:LINE=' . $line . '-->';
+						break;
+				}
+			}
+			
 			echo COLOR_LINE . '| ' . COLOR_RESET . $color . $line . COLOR_RESET . $nl;
 
 			if(self::_FlushRequired()){
@@ -422,22 +447,36 @@ class CLI {
 
 		// Allow the bar to be reset on a new pass too!
 		if($percent < $last){
+			$percent = 0;
 			$pos = -1;
 		}
 
 		if($pos === -1){
-			echo COLOR_LINE . '| ' . COLOR_RESET . COLOR_SUCCESS . '>' . COLOR_RESET;
+			if(EXEC_MODE == 'WEB'){
+				echo '<!--CLI-DATA:PROGRESSBAR=0-->';
+			}
+			else{
+				echo COLOR_LINE . '| ' . COLOR_RESET . COLOR_SUCCESS . '>' . COLOR_RESET;	
+			}
+			
 			$pos++;
 		}
 		
 		// Echo the change in position!
-		if($newPos > $pos){
-			echo COLOR_SUCCESS . str_repeat('=', $newPos - $pos) . COLOR_RESET;
+		if($newPos > $pos && $newPos <= 87){
+			if(EXEC_MODE == 'WEB'){
+				echo '<!--CLI-DATA:PROGRESSBAR=' . (int)$percent . '-->';
+			}
+			else{
+				echo COLOR_SUCCESS . str_repeat('=', $newPos - $pos) . COLOR_RESET;	
+			}
 		}
 
 		if($newPos == 87 && $pos != $newPos){
 			// FIN!
-			echo (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
+			if(EXEC_MODE != 'WEB'){
+				echo NL;	
+			}
 		}
 		
 		// Record this new position for the next run.
