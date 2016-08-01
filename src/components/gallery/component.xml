@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Gallery" execmode="web" logo="gallery.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Gallery" execmode="web" logo="gallery.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -37,13 +37,14 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="2a037b137a7cad7ba9a5aa0f13a085a7"/>
+		<file filename="CHANGELOG" md5="6517adb7308a22519f0879c6d2098ff7"/>
 		<file filename="controllers/GalleryController.php" md5="fcc0907fc6b91edcd7797231b793afa9">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="controllers/GalleryWidgetController.php" md5="b1edab7f0bcc9c1b77e96321b1b0472d">
 			<controller name="GalleryWidgetController"/>
 		</file>
+		<file filename="gallery.png" md5="74f07e64024e5129ea294e313352d352"/>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
 			<class name="GalleryFormHandler"/>
 		</file>
@@ -103,14 +104,7 @@
 		<upgrade from="1.5.5" to="1.5.6"/>
 		<upgrade from="1.5.6" to="1.5.7"/>
 		<upgrade from="1.5.7" to="2.0.0"/>
+		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
