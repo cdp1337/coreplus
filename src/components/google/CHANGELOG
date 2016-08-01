@@ -1,3 +1,8 @@
+Google 2.0.1
+
+	* More images throughout everything!
+	-- Charlie Powell <charlie@evalagency.com>  Mon, 01 Aug 2016 00:32:02 -0400
+
 Google 2.0.0
 
 	* New methods on Google's GeocodeResponse for retrieving more information about the address.
