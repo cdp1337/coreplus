@@ -282,7 +282,7 @@ class Component_2_1 {
 		// Hack
 		// If there is an empty smartydir set, don't let that get saved.
 		if(!$this->getSmartyPluginDirectory()){
-			$this->_xmlloader->removeElements('//smartyplugins');
+			$this->_xmlloader->removeElements('/smartyplugins');
 		}
 
 		/*
@@ -375,7 +375,7 @@ class Component_2_1 {
 	public function getRequires() {
 		if($this->_requires === null){
 			$this->_requires = array();
-			foreach ($this->_xmlloader->getElements('//component/requires/require') as $r) {
+			foreach ($this->_xmlloader->getElements('/requires/require') as $r) {
 				$t  = $r->getAttribute('type');
 				$n  = $r->getAttribute('name');
 				$v  = @$r->getAttribute('version');
@@ -435,10 +435,36 @@ class Component_2_1 {
 	 */
 	public function getDescription() {
 		if ($this->_description === null) {
-			$this->_description = trim($this->_xmlloader->getElement('//description')->nodeValue);
+			$this->_description = trim($this->_xmlloader->getElement('/description')->nodeValue);
 		}
 
 		return $this->_description;
+	}
+
+	/**
+	 * Get the logo for this component as-per defined in the XML.
+	 * 
+	 * @return null|\Core\Filestore\File
+	 */
+	public function getLogo(){
+		if($this->_xmlloader->getRootDOM()->hasAttribute('logo')){
+			$icon = $this->_xmlloader->getRootDOM()->getAttribute('logo');
+			
+			// This icon must be local.
+			if(strpos($icon, '://') !== false){
+				return null;
+			}
+			
+			// And it must exist relative to the base directory of this component.
+			$full = $this->getBaseDir() . $icon;
+			
+			$file = Core\Filestore\Factory::File($full);
+			
+			return $file;
+		}
+		else{
+			return null;
+		}
 	}
 
 	/**
@@ -449,7 +475,7 @@ class Component_2_1 {
 		// Set the cache first.
 		$this->_description = $desc;
 		// And set the data in the original DOM.
-		$this->_xmlloader->getElement('//description')->nodeValue = $desc;
+		$this->_xmlloader->getElement('/description')->nodeValue = $desc;
 	}
 
 	/**
@@ -467,7 +493,7 @@ class Component_2_1 {
 	 * @return array
 	 */
 	public function getScreenshots(){
-		$s = $this->_xmlloader->getElements('//screenshots/screenshot');
+		$s = $this->_xmlloader->getElements('/screenshots/screenshot');
 
 		if(!$s){
 			return [];
@@ -595,10 +621,10 @@ class Component_2_1 {
 		// Now I can add the ones in the authors array.
 		foreach ($authors as $a) {
 			if (isset($a['email']) && $a['email']) {
-				$this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
+				$this->_xmlloader->getElement('/authors/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
 			}
 			else {
-				$this->_xmlloader->getElement('//component/authors/author[@name="' . $a['name'] . '"]');
+				$this->_xmlloader->getElement('/authors/author[@name="' . $a['name'] . '"]');
 			}
 		}
 	}
@@ -610,10 +636,10 @@ class Component_2_1 {
 	 */
 	public function setLicenses($licenses) {
 		// First, remove any licenses currently in the XML.
-		$this->_xmlloader->removeElements('//component/licenses');
+		$this->_xmlloader->removeElements('/licenses');
 
 		// Now I can add the ones in the licenses array.
-		$path = '//component/licenses/';
+		$path = '/licenses/';
 		foreach ($licenses as $lic) {
 			$el = 'license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
 			$l  = $this->_xmlloader->createElement($path . $el, false, 1);
@@ -728,6 +754,11 @@ class Component_2_1 {
 				}
 
 				foreach ($f->getElementsByTagName('interface') as $p) {
+					$n           = strtolower($p->getAttribute('name'));
+					$this->_classlist[$n] = $filename;
+				}
+
+				foreach ($f->getElementsByTagName('trait') as $p) {
 					$n           = strtolower($p->getAttribute('name'));
 					$this->_classlist[$n] = $filename;
 				}
@@ -1126,7 +1157,7 @@ class Component_2_1 {
 	 */
 	public function setFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//component/files/file');
+		$this->_xmlloader->removeElements('/files/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = array();
@@ -1137,7 +1168,7 @@ class Component_2_1 {
 
 		// And recreate them all.
 		foreach ($newarray as $f) {
-			$el = $this->_xmlloader->createElement('//component/files/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+			$el = $this->_xmlloader->createElement('/files/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 
 			if (isset($f['controllers'])) {
 				foreach ($f['controllers'] as $c) {
@@ -1154,6 +1185,11 @@ class Component_2_1 {
 					$this->_xmlloader->createElement('interface[@name="' . $i . '"]', $el);
 				}
 			}
+			if (isset($f['traits'])) {
+				foreach ($f['traits'] as $i) {
+					$this->_xmlloader->createElement('trait[@name="' . $i . '"]', $el);
+				}
+			}
 		}
 	}
 
@@ -1164,7 +1200,7 @@ class Component_2_1 {
 	 */
 	public function setAssetFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//component/assets/file');
+		$this->_xmlloader->removeElements('/assets/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = array();
@@ -1175,7 +1211,7 @@ class Component_2_1 {
 
 		// And recreate them all.
 		foreach ($newarray as $f) {
-			$el = $this->_xmlloader->createElement('//component/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+			$el = $this->_xmlloader->createElement('/assets/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 		}
 	}
 
@@ -1186,7 +1222,7 @@ class Component_2_1 {
 	 */
 	public function setViewFiles($files) {
 		// Clear out the array first.
-		$this->_xmlloader->removeElements('//component/view/file');
+		$this->_xmlloader->removeElements('/view/file');
 
 		// It would be nice to have them alphabetical.
 		$newarray = array();
@@ -1197,10 +1233,39 @@ class Component_2_1 {
 
 		// And recreate them all.
 		foreach ($newarray as $f) {
-			$el = $this->_xmlloader->createElement('//component/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+			$el = $this->_xmlloader->createElement('/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
 		}
 	}
 
+	/**
+	 * Set a require in the XML
+	 * 
+	 * This is used by the packager.
+	 * 
+	 * @param string      $name
+	 * @param string      $type
+	 * @param null|string $version
+	 * @param null|string $op
+	 */
+	public function setRequires($name, $type, $version = null, $op = null){
+		// Get the node, (and auto-create if it doesn't exist).
+		$node = $this->_xmlloader->getElement('/requires/require[@name="' . $name . '"][@type="' . $type . '"]');
+
+		// Set the new version and operation for it.
+		if($version){
+			$node->setAttribute('version', $version);
+			if($op){
+				$node->setAttribute('operation', $op);
+			}
+			else{
+				$node->removeAttribute('operation');
+			}
+		}
+		else{
+			$node->removeAttribute('version');
+			$node->removeAttribute('operation');
+		}
+	}
 
 	/**
 	 * Get the raw XML of this component, useful for debugging.
@@ -2331,6 +2396,11 @@ class Component_2_1 {
 
 				if($access !== null){
 					$m->set('access', $access);
+				}
+				
+				if($subnode->hasAttribute('image')){
+					// This page has an image attribute requested!
+					$m->setMeta('image', $subnode->getAttribute('image'));
 				}
 
 				// Do not update parent urls if the page already exists.
