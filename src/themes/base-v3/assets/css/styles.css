@@ -1123,125 +1123,106 @@ table.listing.listing-table-sortable th:hover i.sort-icon.current {
 
 /* line 21, ../scss/_messages.scss */
 .message-tutorial {
-  padding: 0.75em 0.75em 0.75em 55px;
+  padding: 0.75em 0.75em 0.75em 4em;
   margin: 0.375em;
   text-align: left;
   overflow: hidden;
-  font-size: 92%;
   position: relative;
 }
 
-/** Specific colors **/
-/* line 31, ../scss/_messages.scss */
+/** And the message's icons **/
+/* line 30, ../scss/_messages.scss */
+.message-note .message-background-icon,
+.message-info .message-background-icon,
+.message-success .message-background-icon,
+.message-warning .message-background-icon,
+.message-deprecated .message-background-icon,
+.message-error .message-background-icon,
+.message-tutorial .message-background-icon {
+  font-size: 4em;
+  left: -6px;
+  line-height: 1em;
+  opacity: 0.3;
+  position: absolute;
+  top: -11px;
+  z-index: 2;
+}
+
+/** Specific colors for specific message types. **/
+/* line 47, ../scss/_messages.scss */
 .message-note {
   background: #FCF0AD;
   border: 1px solid #BCB06D;
 }
+/* line 51, ../scss/_messages.scss */
+.message-note .message-background-icon {
+  color: #BCB06D;
+}
 
-/* line 35, ../scss/_messages.scss */
+/* line 55, ../scss/_messages.scss */
 .message-info {
   background: #eff0fd;
   border: 1px solid #5464eb;
   color: #101d86;
 }
+/* line 60, ../scss/_messages.scss */
+.message-info .message-background-icon {
+  color: #101d86;
+}
 
-/* line 40, ../scss/_messages.scss */
+/* line 64, ../scss/_messages.scss */
 .message-success {
   background: #d7f7d7;
   border: 1px solid #46da46;
   color: #146414;
 }
-
-/* line 45, ../scss/_messages.scss */
-.message-deprecated {
-  background: white;
-  border: 1px solid #e9e6d5;
-  color: #aea467;
-}
-
-/* line 50, ../scss/_messages.scss */
-.message-warning {
-  background: white;
-  border: 1px solid #f5cab8;
-  color: #df5c25;
-}
-
-/* line 55, ../scss/_messages.scss */
-.message-error {
-  background: white;
-  border: 1px solid #f57c84;
-  color: #bb0e19;
-}
-
-/* line 60, ../scss/_messages.scss */
-.message-tutorial {
-  background: white;
-  border: 1px solid #c2bb96;
-  color: #6f6841;
-}
-
-/** I need to color the A tags too **/
-/* line 67, ../scss/_messages.scss */
-body .pagecontent .message-note a {
-  color: #7f774a;
-}
-
-/* line 70, ../scss/_messages.scss */
-body .pagecontent .message-info a {
-  color: #0a1250;
+/* line 69, ../scss/_messages.scss */
+.message-success .message-background-icon {
+  color: #146414;
 }
 
 /* line 73, ../scss/_messages.scss */
-body .pagecontent .message-success a {
-  color: #151;
+.message-deprecated {
+  background: white;
+  border: 1px solid #e4e0c8;
+  color: #ada057;
+}
+/* line 78, ../scss/_messages.scss */
+.message-deprecated .message-background-icon {
+  color: #ada057;
 }
 
-/* line 76, ../scss/_messages.scss */
-body .pagecontent .message-error a {
-  color: #DF101D;
+/* line 82, ../scss/_messages.scss */
+.message-warning {
+  background: white;
+  border: 1px solid #edc0ae;
+  color: #c7582c;
+}
+/* line 87, ../scss/_messages.scss */
+.message-warning .message-background-icon {
+  color: #c7582c;
 }
 
-/* line 79, ../scss/_messages.scss */
-body .pagecontent .message-tutorial a {
-  color: #7f774a;
+/* line 91, ../scss/_messages.scss */
+.message-error {
+  background: white;
+  border: 1px solid #ec6f78;
+  color: #9e151e;
+}
+/* line 96, ../scss/_messages.scss */
+.message-error .message-background-icon {
+  color: #9e151e;
 }
 
-/** And the message's icons **/
-/* line 84, ../scss/_messages.scss */
-div[class^="message-"] .message-background-icon i,
-p[class^="message-"] .message-background-icon i {
-  font-size: 75px;
-  left: -6px;
-  line-height: 70px;
-  opacity: 0.3;
-  position: absolute;
-  top: -11px;
+/* line 100, ../scss/_messages.scss */
+.message-tutorial {
+  background: #cce2f8;
+  border: 1px solid #338de4;
+  color: #0d3861;
 }
-
-/** And the specific message types icon colors **/
-/* line 95, ../scss/_messages.scss */
-.message-note .message-background-icon i[class^="icon-"] {
-  color: #BCB06D;
-}
-
-/* line 98, ../scss/_messages.scss */
-.message-info .message-background-icon i[class^="icon-"] {
-  color: #2667FF;
-}
-
-/* line 101, ../scss/_messages.scss */
-.message-success .message-background-icon i[class^="icon-"] {
-  color: #373;
-}
-
-/* line 104, ../scss/_messages.scss */
-.message-error .message-background-icon i[class^="icon-"] {
-  color: #DF101D;
-}
-
-/* line 107, ../scss/_messages.scss */
-.message-tutorial .message-background-icon i[class^="icon-"] {
-  color: #BCB06D;
+/* line 105, ../scss/_messages.scss */
+.message-tutorial .message-background-icon {
+  color: #0d3861;
 }
 
 /*****************************************************************************
@@ -1379,7 +1360,7 @@ fieldset.collapsible.collapsed .collapsible-hint {
 
 /* line 2, ../scss/pages/_updater.scss */
 .page-updater .repository-status-bad {
-  color: #bb0e19;
+  color: #9e151e;
 }
 /* line 6, ../scss/pages/_updater.scss */
 .page-updater .repository-status-good {
@@ -1492,15 +1473,15 @@ body.page-user-view .user-primary-info, body.page-user-me .user-primary-info {
 }
 /* line 10, ../scss/pages/_admin_health.scss */
 .page-admin-health .health-checks li.health-check-warn i {
-  color: #df5c25;
+  color: #c7582c;
 }
 /* line 14, ../scss/pages/_admin_health.scss */
 .page-admin-health .health-checks li.health-check-errr i {
-  color: #bb0e19;
+  color: #9e151e;
 }
 /* line 18, ../scss/pages/_admin_health.scss */
 .page-admin-health .health-checks li.health-check-skip i {
-  color: #aea467;
+  color: #ada057;
 }
 
 /**
@@ -1601,6 +1582,49 @@ footer.page-footer .legal-notice {
   font-size: 75%;
 }
 
+/* line 2, ../scss/_progress-log.scss */
+.progress-log-wrapper .progress-log-title {
+  display: inline-block;
+  font-size: 1.5em;
+  font-weight: bold;
+  width: 90%;
+}
+/* line 9, ../scss/_progress-log.scss */
+.progress-log-wrapper .progress-log-view-details {
+  display: inline-block;
+  width: 9%;
+  text-align: right;
+}
+/* line 15, ../scss/_progress-log.scss */
+.progress-log-wrapper .progress-log-progressbar {
+  height: 2em;
+  border: 1px solid #DDD;
+  border-radius: 3px;
+  overflow: hidden;
+}
+/* line 22, ../scss/_progress-log.scss */
+.progress-log-wrapper .progress-log-progressbar-inner {
+  height: 2em;
+  background-color: #477DCA;
+}
+/* line 27, ../scss/_progress-log.scss */
+.progress-log-wrapper .progress-log-iframe {
+  width: 100%;
+  height: 25em;
+}
+
+/*
+<div id="$logname-container" style="display:none;" class="progress-log-wrapper">
+<div class="progress-log-title"></div>
+<div class="progress-log-progressbar">
+<div class="progress-log-progressbar-inner"></div>
+</div>
+<p class="progress-log-message"></p>
+
+<a href="#" class="progress-log-view-details">View Details</a><br/>
+<iframe id="$logname-frame" name="$logname" class="progress-log-iframe" style="display:none;"></iframe>
+</
+*/
 /* line 20, ../scss/vendor/bourbon/addons/_clearfix.scss */
 #admin-bar::after {
   clear: both;
@@ -1620,13 +1644,13 @@ footer.page-footer .legal-notice {
     display: none !important;
   }
 }
-/* line 42, ../scss/styles.scss */
+/* line 43, ../scss/styles.scss */
 a.agplv3-tag {
   display: inline-block;
   padding: 0 0.25em;
   color: #636;
 }
-/* line 47, ../scss/styles.scss */
+/* line 48, ../scss/styles.scss */
 a.agplv3-tag:hover {
   border-radius: 0.5em;
   background-color: #636;

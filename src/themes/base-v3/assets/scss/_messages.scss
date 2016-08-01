@@ -19,91 +19,90 @@
 	position: relative;;
 }
 .message-tutorial {
-	padding: ($base-spacing / 2) ($base-spacing / 2) ($base-spacing / 2) 55px;
+	padding: ($base-spacing / 2) ($base-spacing / 2) ($base-spacing / 2) 4em;
 	margin: ($base-spacing / 4);
 	text-align: left;
 	overflow: hidden;
-	font-size: 92%;
 	position: relative;;
 }
 
-/** Specific colors **/
+/** And the message's icons **/
+.message-note .message-background-icon,
+.message-info .message-background-icon,
+.message-success .message-background-icon,
+.message-warning .message-background-icon,
+.message-deprecated .message-background-icon,
+.message-error .message-background-icon,
+.message-tutorial .message-background-icon {
+	font-size: 4em;
+	left: -6px;
+	line-height: 1em;
+	opacity: 0.3;
+	position: absolute;
+	top: -11px;
+	z-index: 2;
+}
+
+/** Specific colors for specific message types. **/
 .message-note {
 	background:#FCF0AD;
 	border:1px solid #BCB06D;
+
+	.message-background-icon {
+		color: #BCB06D;
+	}
 }
 .message-info {
 	background: lighten($info, 67%);
 	border:1px solid lighten($info, 33%);
 	color: $info;
+
+	.message-background-icon {
+		color: $info;
+	}
 }
 .message-success {
 	background: lighten($success, 67%);
 	border: 1px solid lighten($success, 33%);
 	color: $success;
+
+	.message-background-icon {
+		color: $success;
+	}
 }
 .message-deprecated {
 	background: lighten($deprecated, 67%);
 	border:1px solid lighten($deprecated, 33%);
 	color: $deprecated;
+
+	.message-background-icon {
+		color: $deprecated;
+	}
 }
 .message-warning {
 	background: lighten($warning, 67%);
 	border:1px solid lighten($warning, 33%);
 	color: $warning;
+
+	.message-background-icon {
+		color: $warning;
+	}
 }
 .message-error {
 	background: lighten($error, 67%);
 	border:1px solid lighten($error, 33%);
 	color: $error;
+
+	.message-background-icon {
+		color: $error;
+	}
 }
 .message-tutorial {
 	background: lighten($tutorial, 67%);
 	border:1px solid lighten($tutorial, 33%);
 	color: $tutorial;
-}
 
-/** I need to color the A tags too **/
-body .pagecontent .message-note a {
-	color: #7f774a;
-}
-body .pagecontent .message-info a {
-	color: #0a1250;
-}
-body .pagecontent .message-success a {
-	color: #151;
-}
-body .pagecontent .message-error a {
-	color:#DF101D;
-}
-body .pagecontent .message-tutorial a {
-	color: #7f774a;
-}
-
-/** And the message's icons **/
-div[class^="message-"] .message-background-icon i,
-p[class^="message-"] .message-background-icon i {
-	font-size: 75px;
-	left: -6px;
-	line-height: 70px;
-	opacity: 0.3;
-	position: absolute;
-	top: -11px;
-}
-
-/** And the specific message types icon colors **/
-.message-note .message-background-icon i[class^="icon-"] {
-	 color: #BCB06D;
- }
-.message-info .message-background-icon i[class^="icon-"] {
-	color: #2667FF;
-}
-.message-success .message-background-icon i[class^="icon-"] {
-	color: #373;
-}
-.message-error .message-background-icon i[class^="icon-"] {
-	color: #DF101D;
-}
-.message-tutorial .message-background-icon i[class^="icon-"] {
-	color: #BCB06D;
+	.message-background-icon {
+		color: $tutorial;
+	}
 }

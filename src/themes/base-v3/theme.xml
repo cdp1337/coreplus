@@ -2,15 +2,15 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="Base V3">
 	<assets>
-		<file filename="assets/css/print.css" md5="f032b2a8bb0e1edfc6a407ed1347db59"/>
-		<file filename="assets/css/print.css.map" md5="169c45ea7e6ad8c38597af03b109b5d8"/>
-		<file filename="assets/css/print.min.css" md5="f10cfb6f782d88f0ed6c38431c82d350"/>
-		<file filename="assets/css/styles.css" md5="a23e886e026c2c665031cc271456d57e"/>
-		<file filename="assets/css/styles.css.map" md5="390b24b04a5c9e4a5f4f793167e30367"/>
-		<file filename="assets/css/styles.min.css" md5="e62b27d4bcda609245d481beafe90420"/>
-		<file filename="assets/css/tinymce/content.css" md5="2680a73e936565f3536cc40f0de0d1fc"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="80e2f3fa639798d04a2980ca0a4d8eab"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="0d6c8ad8cb74a2f870586a8685f097e4"/>
+		<file filename="assets/css/print.css" md5="1e75d61c2c5c7ab10538e4c5f7f45897"/>
+		<file filename="assets/css/print.css.map" md5="9925f7d7ea074210b7e3e37329472f68"/>
+		<file filename="assets/css/print.min.css" md5="e2d9b2b1758d47b6260be9af8c9e6215"/>
+		<file filename="assets/css/styles.css" md5="ffaea410980cbdb6dfb440e4d6e63711"/>
+		<file filename="assets/css/styles.css.map" md5="f3e67b830b8ac578c6bcc602113b58b2"/>
+		<file filename="assets/css/styles.min.css" md5="bfc4ba4ee96d91fce7814a778e051e3d"/>
+		<file filename="assets/css/tinymce/content.css" md5="c12d573ac29944bfba932a96d07ade67"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="93cbeab8f5da57cd5a3c3cf0ecc1ecfd"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="b6c1bb72b934d50dac157b4713114455"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="763f4af38987c9ec8facd6b086e5eaf7" title=""/>
@@ -62,17 +62,18 @@
 		<file filename="assets/scss/_form_elements.scss" md5="2f0e1cf42d8deb9b2641a629cf2932f2"/>
 		<file filename="assets/scss/_layout.scss" md5="42c07a5ecf89d6bf6c0806435c615674"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="2e8e9d6be0b82a493d0b7429d1732af8"/>
-		<file filename="assets/scss/_messages.scss" md5="002d7e2910f33c36ff9bcccb9a49e2ed"/>
+		<file filename="assets/scss/_messages.scss" md5="f462ec4ba98028afa41d01684a809b38"/>
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
+		<file filename="assets/scss/_progress-log.scss" md5="bbbc79d05d748254a98d71fe1f48d290"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
-		<file filename="assets/scss/_variables.scss" md5="9ce0aaa22a7a985d1b60de8e82f3b1cc"/>
+		<file filename="assets/scss/_variables.scss" md5="9eaf59c0a2f58a8ca5db9f2ccaf4ce99"/>
 		<file filename="assets/scss/pages/_admin_health.scss" md5="8f5e2f2aab639df930a16c8804e123a5"/>
 		<file filename="assets/scss/pages/_theme.scss" md5="1039df69f0df35e4c7c9883a109ef103"/>
 		<file filename="assets/scss/pages/_updater.scss" md5="071f9f71dda94d07e8423f02e811e72b"/>
 		<file filename="assets/scss/pages/_user.scss" md5="fb9196cfc019cdcd6a68cbe9508003aa"/>
 		<file filename="assets/scss/pages/_widgets.scss" md5="13db361c6afd511138cf054c9cafebab"/>
 		<file filename="assets/scss/print.scss" md5="d1d80005e0cff66c29a89e531ad2b56a"/>
-		<file filename="assets/scss/styles.scss" md5="dfdf7bccc347ef946b24b38479281711"/>
+		<file filename="assets/scss/styles.scss" md5="161ac75cd3b90092b2309913f05d2cb6"/>
 		<file filename="assets/scss/tinymce/content.scss" md5="e9344c1b36962c17c7ce839307df5cc4"/>
 		<file filename="assets/scss/vendor/_normalize.scss" md5="7caceed677229c6cc84aa3f4754ff3a4"/>
 		<file filename="assets/scss/vendor/bitters/_base.scss" md5="7166d9a919b6658b127e59de676742fc"/>
@@ -203,7 +204,7 @@
 		<upgrade from="2.1.1" to="3.0.0"/>
 	</upgrades>
 	<screenshots>
-		<screenshot file="screenshots/screen1.png" title="Home Page"/>
+		<screenshot file="screenshots/screen1.png"/>
 	</screenshots>
 </theme>
 
