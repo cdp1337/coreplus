@@ -229,9 +229,35 @@ EOD;
 			$this->_authors = array_merge($this->_authors, $docelements['authors']);
 			// No else needed, else is it's a directory, we don't care about those here.
 		}
+		
+		// If there is a LICENSE, LICENSE.[txt|TXT], or LICENSE.md, then read that and try to determine the best license from there.
+		$licenseFile = null;
+		if(file_exists($this->_base->getPath() . '/LICENSE')){
+			$licenseFile = $this->_base->getPath() . '/LICENSE';
+		}
+		elseif(file_exists($this->_base->getPath() . '/LICENSE.txt')){
+			$licenseFile = $this->_base->getPath() . '/LICENSE.txt';
+		}
+		elseif(file_exists($this->_base->getPath() . '/LICENSE.TXT')){
+			$licenseFile = $this->_base->getPath() . '/LICENSE.TXT';
+		}
+		elseif(file_exists($this->_base->getPath() . '/LICENSE.md')){
+			$licenseFile = $this->_base->getPath() . '/LICENSE.md';
+		}
+		
+		if($licenseFile){
+			$contents = file_get_contents($licenseFile);
+			
+			$autoDetect = \Core\Licenses\Factory::DetectLicense($contents);
+			if($autoDetect){
+				$this->_licenses[ $autoDetect['key'] ] = $autoDetect;
+			}
+			else{
+				trigger_error('Unknown license in ' . $licenseFile . ', please contribute this upstream!', E_USER_NOTICE);
+			}
+		}
 
 		// Remove dupes
-		$this->_licenses = self::GetUniqueLicenses($this->_licenses);
 		$this->_authors = self::GetUniqueAuthors($this->_authors);
 	}
 
@@ -420,11 +446,12 @@ EOD;
 				// It's a something..... it goes in the "files" array!
 				// This will be slightly different though, as it needs to also check for classes.
 				$filedat = [
-					'file' => $fname,
-					'md5' => $file->getHash(),
+					'file'        => $fname,
+					'md5'         => $file->getHash(),
 					'controllers' => [],
-					'classes' => [],
-					'interfaces' => []
+					'classes'     => [],
+					'interfaces'  => [],
+					'traits'      => [],
 				];
 
 				// PHP files get checked.
@@ -465,13 +492,19 @@ EOD;
 					foreach($ret[2] as $foundclass){
 						$filedat['interfaces'][] = $namespace . $foundclass;
 					}
-				}
 
+					// Allow traits to be associated as a provided element too.
+					preg_match_all('/^\s*(trait)[ ]*([a-z0-9_\-]*)/im', $fconts, $ret);
+					foreach($ret[2] as $foundclass){
+						$filedat['traits'][] = $namespace . $foundclass;
+					}
+				}
 
 				// Empty classes?
 				if(!sizeof($filedat['controllers'])) unset($filedat['controllers']);
 				if(!sizeof($filedat['classes'])) unset($filedat['classes']);
 				if(!sizeof($filedat['interfaces'])) unset($filedat['interfaces']);
+				if(!sizeof($filedat['traits'])) unset($filedat['traits']);
 
 				$otherfiles[] = $filedat;
 			}
@@ -491,10 +524,10 @@ EOD;
 
 		// If this is not Core, set the required version to the current Core version.
 		if($this->_type != 'core'){
-			$node = $this->_xmlLoader->getElement('requires/require[@name="core"]');
-			$node->setAttribute('type', 'component');
-			$node->setAttribute('version', \Core::GetComponent('core')->getVersion());
-			$node->setAttribute('operation', 'ge');
+			$vers = \Core::GetComponent('core')->getVersion();
+			// Split it up into pieces
+			$versParts = new \Core\VersionString($vers);
+			$object->setRequires('core', 'component', $versParts->major . '.' . $versParts->minor . '.0', 'ge');
 		}
 
 		$object->save();
@@ -630,6 +663,11 @@ EOD;
 		$bundle = $tgz;
 
 		if($signed) {
+			// If the file already exists, remove it beforehand.
+			// This is required for re-building packages of the same version.
+			if(file_exists($tgz . '.asc')){
+				unlink($tgz . '.asc');
+			}
 			//exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning -u "' . $packager_email . '" -a --sign "' . $tgz . '"');
 			// Use the user's current home directory instead of GPG_HOMEDIR!
 			// This is because the private key is required for signing of packages.
@@ -682,7 +720,7 @@ EOD;
 	/**
 	 * Get the Core object for this package, be it a Component or Theme.
 	 *
-	 * @return \Component|\Theme\Theme
+	 * @return \Component_2_1|\Theme\Theme
 	 */
 	private function _getObject(){
 		switch($this->_type){
@@ -964,20 +1002,47 @@ EOD;
 							$lic = preg_replace('/\*[ ]*@license[ ]*/i', '', $line);
 							if(substr_count($lic, ' ') == 0 && strpos($lic, '://') !== false){
 								// lic is similar to @license http://www.gnu.org/licenses/agpl-3.0.txt
-								// Take the entire string as both URL and title.
-								$ret['licenses'][] = ['title' => $lic, 'url' => $lic];
+								$m = \Core\Licenses\Factory::GetLicense($lic);
+								if($m){
+									$ret['licenses'][ $m['key'] ] =	$m;
+								}
+								else{
+									$ret['licenses'][] = [
+										'url' => $lic,
+										'title' => null,
+									];
+								}
 							}
 							elseif(strpos($lic, '://') === false){
 								// lic is similar to @license GNU Affero General Public License v3
-								// There's no url at all... just take the entire string as a title, blank URL.
-								$ret['licenses'][] = ['title' => $lic, 'url' => null];
+								$m = \Core\Licenses\Factory::GetLicense($lic);
+								if($m){
+									$ret['licenses'][ $m['key'] ] =	$m;
+								}
+								else{
+									$ret['licenses'][] = [
+										'url' => null,
+										'title' => $lic,
+									];
+								}
 							}
 							elseif(strpos($lic, '<') !== false && strpos($lic, '>') !== false){
 								// lic is similar to @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
 								// String has both.
 								$title = preg_replace('/[ ]*<[^>]*>/', '', $lic);
 								$url = preg_replace('/.*<([^>]*)>.*/', '$1', $lic);
-								$ret['licenses'][] = ['title' => $title, 'url' => $url];
+								if(($m = \Core\Licenses\Factory::GetLicense($url))){
+									$ret['licenses'][ $m['key'] ] = $m;
+								}
+								elseif(($m = \Core\Licenses\Factory::GetLicense($title))){
+									$ret['licenses'][ $m['key'] ] = $m;
+								}
+								else{
+									$ret['licenses'][] = [
+										'url' => $url,
+										'title' => $title,
+									];
+								}
 							}
 						}
 						// Is this an @author line?
@@ -1165,34 +1230,5 @@ EOD;
 		}
 
 		return $authors;
-	}
-
-	/**
-	 * Try to intelligently merge duplicate licenses, matching a variety of input names.
-	 *
-	 * @param array <<string>> $licenses
-	 * @return array
-	 */
-	public static function GetUniqueLicenses($licenses){
-		// This behaves much similar to the unique_authors system above, but much simpler.
-		$lics = [];
-		foreach($licenses as $v){
-			$v['title'] = trim($v['title']);
-			$v['url'] = trim($v['url']);
-
-			if(!isset($lics[$v['title']])){
-				$lics[$v['title']] = [$v['url']];
-			}
-			elseif(!in_array($v['url'], $lics[$v['title']])){
-				$lics[$v['title']][] = $v['url'];
-			}
-		}
-		// $lics should be unique-ified now.
-		$licenses = [];
-		foreach($lics as $l => $urls){
-			foreach($urls as $url) $licenses[] = ['title' => $l, 'url' => $url];
-		}
-
-		return $licenses;
 	}
 } 
