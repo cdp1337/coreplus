@@ -426,6 +426,34 @@ class PageModel extends Model {
 		return (array_key_exists($key, $p)) ? $p[$key] : null;
 	}
 
+	/**
+	 * Get the logo URL for this page, if available.
+	 * 
+	 * @return null|string
+	 */
+	public function getLogoURL(){
+		if(($img = $this->getImage())){
+			// Best way, this page has a main image set!
+			$logo = $img->getPreviewURL('24x24');
+		}
+		elseif($this->get('component')){
+			// Does this page have a registered component?
+			// If so, I can pull that logo!
+			$c = Core::GetComponent($this->get('component'));
+			if(($logo = $c->getLogo())){
+				$logo = $logo->getPreviewURL('24x24');
+			}
+			else{
+				$logo = null;
+			}
+		}
+		else{
+			$logo = null;
+		}
+		
+		return $logo;
+	}
+
 	public function setParameter($key, $val) {
 		$this->_params[$key] = $val;
 	}
