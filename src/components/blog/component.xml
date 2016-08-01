@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.0" name="Blog" execmode="web" logo="blog.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Blog" execmode="web" logo="blog.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="tags" type="component"/>
@@ -13,8 +13,9 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="405dc6c87e623be1f7cc6230a6746cf4"/>
+		<file filename="CHANGELOG" md5="bdcac7ac092f8cc30716b012787cd4f3"/>
 		<file filename="assets/scss/blog.scss" md5="633b1b43c66a5bdd53ca9b26da8c7f7c"/>
+		<file filename="blog.png" md5="ac1c1b821f637fbb4b3a601035109acf"/>
 		<file filename="controllers/BlogController.php" md5="2e88eb2cf41b330ca1dbcc7d1545294c">
 			<controller name="BlogController"/>
 		</file>
@@ -26,7 +27,7 @@
 		<file filename="models/BlogArticleModel.php" md5="bc7593d890b49e65cca1257710d792fa">
 			<class name="BlogArticleModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="b02c3b2d852cd9ba78109de563456a19">
+		<file filename="models/BlogModel.php" md5="351211e4d6129f5e02929a847bc564ce">
 			<class name="BlogModel"/>
 		</file>
 		<file filename="upgrades/121_to_130.php" md5="74f9e19bffde5be37788a696b7790b46"/>
@@ -130,6 +131,7 @@
 		<upgrade from="1.6.5" to="1.6.6"/>
 		<upgrade from="1.6.6" to="1.6.7"/>
 		<upgrade from="1.6.7" to="2.0.0"/>
+		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="8279a7ad097c30ae289799bd49761f13"/>
@@ -150,13 +152,5 @@
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>
 		<file filename="assets/js/blog-waypoint-scroll.min.js" md5="7b9efd6a0e44144b4ebc9e4f3a97a601"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
