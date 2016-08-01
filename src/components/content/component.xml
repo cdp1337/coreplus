@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.0" name="Content" execmode="web" logo="content.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1" name="Content" execmode="web" logo="content.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
@@ -12,7 +12,8 @@
 		<widgetcreate title="Content Area" class="ContentWidget"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="1d854e149d58f1335505d4482cbd7c1a"/>
+		<file filename="CHANGELOG" md5="275ae8d4515762330823ef0053c46c88"/>
+		<file filename="content.png" md5="86beb406ad3daac3eabb800366fc1bb7"/>
 		<file filename="controllers/ContentController.php" md5="f94f55b8ddbef7d7edc6b64c41f52dab">
 			<controller name="ContentController"/>
 		</file>
@@ -74,19 +75,12 @@
 		<upgrade from="2.5.0" to="2.5.1"/>
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="3.0.0"/>
+		<upgrade from="3.0.0" to="3.0.1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-140.png" md5="673cfa327007694704fe95e47dcc9ec0"/>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-210.png" md5="4908ee304cc74dadd78bf4eeddf5c12c"/>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area.png" md5="f8cea628a881b575aecfa54f1fd32500"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
