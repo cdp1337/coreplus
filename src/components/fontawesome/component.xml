@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-1" name="FontAwesome" execmode="web" logo="fontawesome.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-2" name="FontAwesome" execmode="web" logo="fontawesome.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
@@ -13,7 +13,7 @@
 		This package contains the Core-optimized version of FA.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="877c36e40dc05ea9d1a4a34422cb6f64"/>
+		<file filename="CHANGELOG" md5="b939a38b4cf144c4431e3ce3f31cb2d4"/>
 		<file filename="FontAwesome.lib.php" md5="0bd12edc9c443d9a1e5ad44828f0601a">
 			<class name="FontAwesome"/>
 		</file>
@@ -35,6 +35,7 @@
 		<file filename="assets/scss/_variables.scss" md5="44e534202b9f40532148f736fae8dd69"/>
 		<file filename="assets/scss/font-awesome.scss" md5="e5ae09005974241ba8947f652f6f1ab7"/>
 		<file filename="fontawesome.pdf" md5="9a251b8d451138e739e7200ed25391f4"/>
+		<file filename="fontawesome.png" md5="5883a8e2b307a8c16af7d68bdb63eb27"/>
 	</files>
 	<assets>
 		<file filename="assets/CONTRIBUTING.md" md5="51163d4979d1e0371aab27b8d29ea4b9"/>
@@ -58,9 +59,7 @@
 		<upgrade from="4.0.3~core2" to="4.0.3~core3"/>
 		<upgrade from="4.0.3~core3" to="4.0.3~core4"/>
 		<upgrade from="4.0.3~core4" to="4.6.1-1"/>
+		<upgrade from="4.6.1-1" to="4.6.1-2"/>
 	</upgrades>
-	<licenses>
-		<license url="http://opensource.org/licenses/MIT">MIT License</license>
-	</licenses>
 </component>
 
