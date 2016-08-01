@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.1" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,14 +10,14 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="c8ae9a66e6bc1f2a834e381da077af81"/>
+		<file filename="CHANGELOG" md5="1c8d353f9bc1cdd6127a4b9e025a79e8"/>
 		<file filename="assets/scss/theme/admin.scss" md5="96790afec6f515911a7e9ffa915262d0"/>
 		<file filename="assets/scss/theme/widgets.scss" md5="c30e4f3c1849a829d1bfc47fd9eecd0a"/>
 		<file filename="controllers/ThemeController.class.php" md5="0aba32530282b63cfbf859cb0bb3c109">
 			<controller name="ThemeController"/>
 		</file>
 		<file filename="functions/common.php" md5="6d8e7b9aa1cb62b63e5233ed4b824b0b"/>
-		<file filename="libs/Theme/Theme.php" md5="a236b526cce850bc999578245fec22c8">
+		<file filename="libs/Theme/Theme.php" md5="0429681296b145f6ead2bd1f8c4e6788">
 			<class name="Theme\Theme"/>
 		</file>
 		<file filename="libs/ThemeHandler.class.php" md5="4360132aa1f405d144f9330cb1083176">
@@ -81,15 +81,7 @@
 		<upgrade from="2.4.4" to="3.0.0"/>
 		<upgrade from="3.0.0" to="3.1.0"/>
 		<upgrade from="3.1.0" to="3.2.0"/>
+		<upgrade from="3.2.0" to="3.2.1"/>
 	</upgrades>
-	<authors>
-		<author name="Nick Hinsch" email="nicholas@evalagency.com"/>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
