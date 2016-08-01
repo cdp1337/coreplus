@@ -1,211 +1,210 @@
-$(function(){
-	var $body = $('body'),
-		defaults = {
-			proxyIcon: 'cog',
-			proxyIconAnimation: 'spin',
-			proxyText: 'Controls',
-			proxyForce: null,
-			position: 'right'
-		},
-		$currentopen = null,
-		$currentover = null,
-		timer = null,
-		isMobile = Core.Browser.is_mobile;
+(function(Core, $){
+	"use strict";
+	
+	$(function(){
+		var $body = $('body'),
+			defaults = {
+				proxyIcon: 'cog',
+				proxyIconAnimation: 'spin',
+				proxyText: 'Controls',
+				proxyForce: null,
+				position: 'right'
+			},
+			$currentopen = null,
+			$currentover = null,
+			timer = null,
+			isMobile = Core.Browser.is_mobile;
 
-	//$('.controls-hover').each(function(){
-	$('.controls').each(function(){
-		// The original menu, this will become contextual.
-		var $original = $(this),
-		// A clone of it, this will be flattened and act as the anchor.
-			$clone = $original.clone(),
-		// The main wrapper
-		//$wrapper = $('<div class="controls-hover-wrapper"/>'),
-			controlcount = $clone.find('li').length,
-			options = {
-				proxyIcon: $original.data('proxy-icon'),
-				proxyText: $original.data('proxy-text'),
-				proxyForce: $original.data('proxy-force'),
-				onlyIcons: $original.data('only-icons'),
-				position: $original.data('position'),
-				proxyIconAnimation: $original.data('proxy-icon-animation')
-			}, i, proxyclass, useProxy;
+		//$('.controls-hover').each(function(){
+		$('.controls').each(function(){
+			// The original menu, this will become contextual.
+			var $original = $(this),
+			// A clone of it, this will be flattened and act as the anchor.
+				$clone = $original.clone(),
+			// The main wrapper
+			//$wrapper = $('<div class="controls-hover-wrapper"/>'),
+				controlcount = $clone.find('li').length,
+				options = {
+					proxyIcon: $original.data('proxy-icon'),
+					proxyText: $original.data('proxy-text'),
+					proxyForce: $original.data('proxy-force'),
+					onlyIcons: $original.data('only-icons'),
+					position: $original.data('position'),
+					proxyIconAnimation: $original.data('proxy-icon-animation')
+				}, i, proxyclass, useProxy;
 
-		// Legacy options.
-		if($original.data('spin')){
-			options.proxyIconAnimation = 'spin';
-		}
-		else if($original.data('bounce')){
-			options.proxyIconAnimation = 'bounce';
-		}
-		else if($original.data('float')){
-			options.proxyIconAnimation = 'float';
-		}
-
-		for(i in options){
-			if(options[i] === undefined){
-				options[i] = defaults[i];
+			// Legacy options.
+			if($original.data('spin')){
+				options.proxyIconAnimation = 'spin';
 			}
-		}
-
-		// Transpose the appropriate defaults to the object.
-		$original.data('position', options.position);
-
-		// If there are more than 3 options, hide the rest.
-		if (
-			(options.proxyForce === null && controlcount > 3) ||
-			options.proxyForce === true ||
-			options.proxyForce === 1 ||
-			options.proxyForce === '1'
-		) {
-			useProxy = true;
-		}
-		else {
-			useProxy = false;
-		}
-
-		if(useProxy){
-
-			// Append the clone to the end of the original's parent.
-			// This should be in the same spot, if it isn't for some reason,
-			// wrap your <ul class="controls"/> with an empty <div/>.
-			$original.parent().append($clone);
-
-			// And move the original to the end of the body.
-			$body.append($original);
-
-			// I'm going to do modifications to the original, since that may have events already bound to it.
-			$original.addClass('context-menu').addClass('controls-hover');
-
-			// This helps fine-tune the styles a little.
-			if(controlcount === 1){
-				$original.addClass('context-menu-one-link');
+			else if($original.data('bounce')){
+				options.proxyIconAnimation = 'bounce';
 			}
-			else{
-				$original.addClass('context-menu-many-links');
+			else if($original.data('float')){
+				options.proxyIconAnimation = 'float';
 			}
 
-			// Ensure the clone width is correct.
-			$original.css('min-width', $clone.width());
-
-			// And hide it!  (it'll be shown on hover)
-			$original.hide();
-
-			proxyclass = 'controls-proxy-icon icon-' + options.proxyIcon;
-			if(options.proxyIconAnimation){
-				proxyclass += ' icon-' + options.proxyIconAnimation;
-				$clone.addClass('controls-animated');
-			}
-
-			$clone.addClass('controls-proxy proxy').html('<li><i class="icon ' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
-
-			// No icons?
-			if(options.onlyIcons == 1){
-				$clone.addClass('only-icons');
-			}
-		}
-		else{
-			$original.addClass('no-proxy');
-			// No icons?
-			if(options.onlyIcons == 1){
-				$original.addClass('only-icons');
-			}
-		}
-
-		if(options.proxyIconAnimation){
-			setTimeout(function($o){
-				$o.find('.controls-proxy-icon').removeClass('icon-' + options.proxyIconAnimation);
-			}, 1000, $clone);
-		}
-
-		$clone
-			.mouseenter(function(){
-				// Show this element's companion context menu always when the mouse enters its space.
-				var co = $clone.offset(),
-					bw = $('body').width(),
-					padding = 5,
-					position = $original.data('position'),
-					nc, oo, ow;
-
-				if($currentopen){
-					$currentopen.hide();
+			for(i in options){
+				if(options[i] === undefined){
+					options[i] = defaults[i];
 				}
+			}
 
-				if(position === 'bottom'){
-					nc = {
-						top: (co.top + $clone.height()) + 'px',
-						left: co.left + 'px'
-					};
+			// Transpose the appropriate defaults to the object.
+			$original.data('position', options.position);
+
+			// If there are more than 3 options, hide the rest.
+			useProxy = (
+				(options.proxyForce === null && controlcount > 3) ||
+				options.proxyForce === true ||
+				options.proxyForce === 1 ||
+				options.proxyForce === '1'
+			);
+
+			if(useProxy){
+
+				// Append the clone to the end of the original's parent.
+				// This should be in the same spot, if it isn't for some reason,
+				// wrap your <ul class="controls"/> with an empty <div/>.
+				$original.parent().append($clone);
+
+				// And move the original to the end of the body.
+				$body.append($original);
+
+				// I'm going to do modifications to the original, since that may have events already bound to it.
+				$original.addClass('context-menu').addClass('controls-hover');
+
+				// This helps fine-tune the styles a little.
+				if(controlcount === 1){
+					$original.addClass('context-menu-one-link');
 				}
 				else{
-					// Left is the default, so it's last just in case the user does something silly.
-					nc = {
-						top: co.top + 'px',
-						left: (co.left + $clone.innerHeight()) + 'px'
-					};
+					$original.addClass('context-menu-many-links');
 				}
 
-				$original.css( nc );
+				// Ensure the clone width is correct.
+				$original.css('min-width', $clone.width());
 
-				$original.show();
+				// And hide it!  (it'll be shown on hover)
+				$original.hide();
 
-				// Ensure that the dialog doesn't open past the edge of the window.
-				oo = $original.offset();
-				ow = $original.width();
-				if(oo.left + ow + padding > bw){
-					$original.css({ left: (bw - padding - ow) + 'px' });
+				proxyclass = 'controls-proxy-icon icon-' + options.proxyIcon;
+				if(options.proxyIconAnimation){
+					proxyclass += ' icon-' + options.proxyIconAnimation;
+					$clone.addClass('controls-animated');
 				}
 
-				$currentopen = $original;
-				$currentover = $clone;
+				$clone.addClass('controls-proxy proxy').html('<li><i class="icon ' + proxyclass + '"></i>' + (options.proxyText ? ' ' + options.proxyText : '') + '</li>');
 
-				if(options.proxyIconAnimation) {
-					$currentover.find('.controls-proxy-icon').addClass('icon-' + options.proxyIconAnimation);
-					setTimeout(function ($o) {
-						$o.find('.controls-proxy-icon').removeClass('icon-' + options.proxyIconAnimation);
-					}, 1000, $currentover);
+				// No icons?
+				if(options.onlyIcons === 1){
+					$clone.addClass('only-icons');
 				}
-			})
-			.mouseleave(function(){
-				if(timer){
-					clearTimeout(timer);
+			}
+			else{
+				$original.addClass('no-proxy');
+				// No icons?
+				if(options.onlyIcons === 1){
+					$original.addClass('only-icons');
 				}
-				timer = setTimeout(function(){
-					if($currentover == null && $currentopen){
-						$currentopen.fadeOut();
+			}
+
+			if(options.proxyIconAnimation){
+				setTimeout(function($o){
+					$o.find('.controls-proxy-icon').removeClass('icon-' + options.proxyIconAnimation);
+				}, 1000, $clone);
+			}
+
+			$clone
+				.mouseenter(function(){
+					// Show this element's companion context menu always when the mouse enters its space.
+					var co = $clone.offset(),
+						bw = $('body').width(),
+						padding = 5,
+						position = $original.data('position'),
+						nc, oo, ow;
+
+					if($currentopen){
+						$currentopen.hide();
 					}
-				}, 500);
 
-				$currentover = null;
-			});
-
-		$original
-			.mouseenter(function(){
-				$currentover = $original;
-			})
-			.mouseleave(function(){
-				$currentover = null;
-				if(timer){
-					clearTimeout(timer);
-				}
-				timer = setTimeout(function(){
-					if($currentover == null && $currentopen){
-						$currentopen.fadeOut();
+					if(position === 'bottom'){
+						nc = {
+							top: (co.top + $clone.height()) + 'px',
+							left: co.left + 'px'
+						};
 					}
-				}, 500);
-			});
+					else{
+						// Left is the default, so it's last just in case the user does something silly.
+						nc = {
+							top: co.top + 'px',
+							left: (co.left + $clone.innerHeight()) + 'px'
+						};
+					}
+
+					$original.css( nc );
+
+					$original.show();
+
+					// Ensure that the dialog doesn't open past the edge of the window.
+					oo = $original.offset();
+					ow = $original.width();
+					if(oo.left + ow + padding > bw){
+						$original.css({ left: (bw - padding - ow) + 'px' });
+					}
+
+					$currentopen = $original;
+					$currentover = $clone;
+
+					if(options.proxyIconAnimation) {
+						$currentover.find('.controls-proxy-icon').addClass('icon-' + options.proxyIconAnimation);
+						setTimeout(function ($o) {
+							$o.find('.controls-proxy-icon').removeClass('icon-' + options.proxyIconAnimation);
+						}, 1000, $currentover);
+					}
+				})
+				.mouseleave(function(){
+					if(timer){
+						clearTimeout(timer);
+					}
+					timer = setTimeout(function(){
+						if($currentover === null && $currentopen){
+							$currentopen.fadeOut();
+						}
+					}, 500);
+
+					$currentover = null;
+				});
+
+			$original
+				.mouseenter(function(){
+					$currentover = $original;
+				})
+				.mouseleave(function(){
+					$currentover = null;
+					if(timer){
+						clearTimeout(timer);
+					}
+					timer = setTimeout(function(){
+						if($currentover === null && $currentopen){
+							$currentopen.fadeOut();
+						}
+					}, 500);
+				});
 
 
-		if(isMobile){
-			$original.click(function(e){
+			if(isMobile){
+				$original.click(function(e){
 
-				$(this).toggleClass('controls-open');
+					$(this).toggleClass('controls-open');
 
-				if( $(this).hasClass('controls-open') ){
-					e.preventDefault();
-				}
+					if( $(this).hasClass('controls-open') ){
+						e.preventDefault();
+					}
 
-			});
+				});
 
-		}
+			}
+		});
 	});
-});
+})(window.Core, window.jQuery);

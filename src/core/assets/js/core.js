@@ -164,12 +164,12 @@ if(typeof console.log == 'undefined'){
  * This will NOT be required by default because jquery is not a requirement of Core,
  * simply a recommendation.
  */
-if(typeof jQuery != 'undefined'){
+if(typeof jQuery !== 'undefined'){
 	// The confirm text for links.  Useful for templates and systems that want to use that system without actually
 	// using the smarty function.
 	jQuery('body').on('click', 'a.confirmlink', function(){
-		var confirmtext = $(this).attr('confirm'),
-			confirmhref = $(this).attr('href');
+		var confirmtext = jQuery(this).attr('confirm'),
+			confirmhref = jQuery(this).attr('href');
 		if(!confirmtext) confirmtext = 'Are you sure?';
 
 		if(confirm(confirmtext)){
@@ -179,30 +179,29 @@ if(typeof jQuery != 'undefined'){
 		return false;
 	});
 
-	/**
-	 * Just a simple script to spruce up the message-* blocks with a bit of flair.
-	 */
-	types = [
-		{ msgclass: 'error',    icon: 'exclamation-circle' },
-		{ msgclass: 'info',     icon: 'info-circle' },
-		{ msgclass: 'note',     icon: 'asterisk' },
-		{ msgclass: 'success',  icon: 'check-circle' },
-		{ msgclass: 'tutorial', icon: 'question-circle' },
-		{ msgclass: 'warning',  icon: 'exclamation-triangle' }
-	];
-
-	for(i in types){
-		jQuery('.message-' + types[i].msgclass).each(function(){
-			jQuery(this).prepend('<span class="message-background-icon"><i class="icon icon-' + types[i].icon + '"></i></span>');
-		});
-	}
-}
-
-/**
- * Fancy collapsible fieldsets
- */
-if(typeof jQuery != 'undefined'){
 	jQuery(function(){
+		var i, types;
+		/**
+		 * Just a simple script to spruce up the message-* blocks with a bit of flair.
+		 */
+		types = [
+			{ msgclass: 'error',    icon: 'exclamation-circle' },
+			{ msgclass: 'info',     icon: 'info-circle' },
+			{ msgclass: 'note',     icon: 'asterisk' },
+			{ msgclass: 'success',  icon: 'check-circle' },
+			{ msgclass: 'tutorial', icon: 'question-circle' },
+			{ msgclass: 'warning',  icon: 'exclamation-triangle' }
+		];
+
+		for(i in types){
+			jQuery('.message-' + types[i].msgclass).each(function(){
+				jQuery(this).prepend('<i class="message-background-icon icon icon-' + types[i].icon + '"></i>');
+			});
+		}
+
+		/**
+		 * Fancy collapsible fieldsets
+		 */
 		jQuery('fieldset.collapsible').each(function(){
 			var $this = jQuery(this), ls;
 			if($this.attr('id')){
@@ -244,4 +243,3 @@ if(typeof jQuery != 'undefined'){
 		});
 	});
 }
-//})();
