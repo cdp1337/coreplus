@@ -93,14 +93,14 @@
 		<page baseurl="/user/logout" admin="0" access="g:authenticated" selectable="0" title="t:STRING_LOGOUT"/>
 		<page baseurl="/user/admin" admin="1" access="p:/user/users/manage" title="t:STRING_USER_ADMIN" group="t:STRING_USER" image="assets/images/apps/personal.png"/>
 		<page baseurl="/usergroupadmin" admin="1" access="p:/user/groups/manage" title="t:STRING_USER_GROUP_ADMIN" group="t:STRING_USER" image="assets/images/apps/system_users.png"/>
-		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_OVERVIEW" group="t:STRING_REPORTING"/>
-		<page baseurl="/useractivity/details" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_DETAILS" group="t:STRING_REPORTING"/>
+		<page baseurl="/useractivity" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_OVERVIEW" group="t:STRING_REPORTING" image="assets/images/actions/view_icon.png"/>
+		<page baseurl="/useractivity/details" admin="1" access="p:/user/activity/view" title="t:STRING_USER_ACTIVITY_DETAILS" group="t:STRING_REPORTING" image="assets/images/actions/matrix.png"/>
 		<page baseurl="/userconfig/admin" admin="1" access="g:admin" title="t:STRING_USER_OPTIONS" group="t:STRING_CONFIGURE" image="assets/images/apps/personal.png"/>
-		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="t:STRING_SYSTEM_LOG" group="t:STRING_REPORTING"/>
-		<page baseurl="/form/testui" admin="1" access="g:admin" title="t:STRING_TEST_FORM_ELEMENT_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
+		<page baseurl="/admin/log" admin="1" access="p:/core/systemlog/view" title="t:STRING_SYSTEM_LOG" group="t:STRING_REPORTING" image="assets/images/apps/utilities_log_viewer.png"/>
+		<page baseurl="/form/testui" admin="1" access="g:admin" title="t:STRING_TEST_FORM_ELEMENT_UIUX" group="t:STRING_THEME_AND_LAYOUTS" image="assets/images/apps/package_science.png"/>
 		<page baseurl="/admin/pages" admin="1" access="p:/core/pages/view" title="t:STRING_ALL_PAGES" group="t:STRING_CONTENT"/>
 		<page baseurl="/widget/admin" admin="1" access="p:/core/widgets/view;p:/core/widgets/manage" title="t:STRING_ALL_WIDGETS" group="t:STRING_CONTENT"/>
-		<page baseurl="/admin/testui" admin="1" access="g:admin" title="t:STRING_TEST_GENERAL_UIUX" group="t:STRING_THEME_AND_LAYOUTS"/>
+		<page baseurl="/admin/testui" admin="1" access="g:admin" title="t:STRING_TEST_GENERAL_UIUX" group="t:STRING_THEME_AND_LAYOUTS" image="assets/images/apps/package_science.png"/>
 		<page baseurl="/page/sitemap" admin="0" access="*" title="t:STRING_SITEMAP" rewriteurl="/sitemap" selectable="1" indexable="1"/>
 		<page baseurl="/admin/seo/config" admin="1" access="g:admin" title="t:STRING_SEO_OPTIONS" group="t:STRING_CONFIGURE"/>
 		<page baseurl="/admin/performance/config" admin="1" access="g:admin" title="t:STRING_PERFORMANCE_OPTIONS" group="t:STRING_CONFIGURE"/>
