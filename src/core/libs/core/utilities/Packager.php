@@ -332,6 +332,10 @@ EOD;
 					strpos($line, 'Update Theme/') === 0 &&
 					$this->_type == 'theme' &&
 					stripos($line, $sinceversion) !== false
+				) ||
+				// Skip any simple comment for the compiler.
+				(
+					$line == 'Compiler' || $line == 'Compiler.'
 				)
 			){
 				continue;
