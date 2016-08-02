@@ -16,24 +16,24 @@ MESSAGE_MODEL_CRONLOGMODEL_MEMORY:
 MESSAGE_MODEL_CRONLOGMODEL_STATUS:
   en: ""
 STRING_CONFIG_CRON_ENABLED:
-  en: ""
+  en: "Enable Cron"
 STRING_CRON_RESULTS:
-  en: ""
+  en: "Cron Results"
 STRING_LATEST_CRON_RESULTS:
-  en: ""
+  en: "Latest Cron Results"
 STRING_MODEL_CRONLOGMODEL_COMPLETED:
-  en: ""
+  en: "Completed"
 STRING_MODEL_CRONLOGMODEL_CRON:
-  en: ""
+  en: "Cron Type"
 STRING_MODEL_CRONLOGMODEL_DURATION:
-  en: ""
+  en: "Duration"
 STRING_MODEL_CRONLOGMODEL_IP:
-  en: ""
+  en: "IP Address"
 STRING_MODEL_CRONLOGMODEL_LOG:
-  en: ""
+  en: "Log"
 STRING_MODEL_CRONLOGMODEL_MEMORY:
-  en: ""
+  en: "Memory Usage"
 STRING_MODEL_CRONLOGMODEL_STATUS:
-  en: ""
+  en: "Status"
 STRING_PERMISSION_CRON_VIEWLOG:
-  en: ""
+  en: "View Cron Log Results"
