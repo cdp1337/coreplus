@@ -101,6 +101,11 @@ Updater = {};
 
 				// And show the updates.
 				showupdates();
+
+				// And the form.
+				if($('#update-everything-wrapper').length){
+					$('#update-everything-wrapper').show();
+				}
 			},
 			error: function(){
 				// :/ Whatever, I didn't care about updates anyway.

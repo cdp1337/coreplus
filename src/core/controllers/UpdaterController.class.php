@@ -756,7 +756,7 @@ class UpdaterController extends Controller_2_1 {
 	}
 
 	/**
-	 * Public page to kick off the installation or upgrade of components.
+	 * Admin page to kick off the installation or upgrade of components.
 	 */
 	public function component_install() {
 		$view = $this->getView();
@@ -769,7 +769,7 @@ class UpdaterController extends Controller_2_1 {
 	}
 
 	/**
-	 * Public page to kick off the installation or upgrade of themes.
+	 * Admin page to kick off the installation or upgrade of themes.
 	 */
 	public function theme_install() {
 		$view = $this->getView();
@@ -782,7 +782,7 @@ class UpdaterController extends Controller_2_1 {
 	}
 
 	/**
-	 * Public page to kick off the installation or upgrade of the core.
+	 * Admin page to kick off the installation or upgrade of the core.
 	 */
 	public function core_install() {
 		$view = $this->getView();
@@ -791,6 +791,75 @@ class UpdaterController extends Controller_2_1 {
 		$version = $req->getParameter('version');
 
 		$this->_performInstall('core', 'core', $version);
+	}
+
+	/**
+	 * Admin page to do exactly as it states; update everything possible.
+	 */
+	public function update_everything(){
+		$view = $this->getView();
+		$req  = $this->getPageRequest();
+
+		if(!$req->isPost()){
+			return View::ERROR_BADREQUEST;
+		}
+
+		$view->mode = View::MODE_NOOUTPUT;
+		$view->render();
+
+		\Core\CLI\CLI::PrintHeader('Loading Updates');
+		Core\CLI\CLI::PrintProgressBar(2);
+		$everything = UpdaterHelper::GetUpdates();
+		$updates = [];
+
+		// Core not updateable? remove them.
+		if($everything['core']['status'] == 'update'){
+			$updates[] = $everything['core'];
+		}
+
+		// Check each component too.
+		foreach($everything['components'] as $c => $dat){
+			if($dat['status'] == 'update'){
+				$updates[] = $everything['components'][$c];
+			}
+		}
+
+		// And the themes.
+		foreach($everything['themes'] as $c => $dat){
+			if($dat['status'] == 'update'){
+				$updates[] = $everything['themes'][$c];
+			}
+		}
+		Core\CLI\CLI::PrintProgressBar(5);
+
+		// Calculate the progress amount for each iteration based on the number of total updates to apply.
+		$progressEa = '+' . (95 / (sizeof($updates) * 2));
+
+		\Core\CLI\CLI::PrintHeader('Installing ' . sizeof($updates) . ' Updates');
+		foreach($updates as $thing){
+			try{
+				\Core\CLI\CLI::PrintLine('Installing ' . $thing['type'] . ' ' . $thing['name'] . ' ' . $thing['version']);
+
+				$return = UpdaterHelper::PerformInstall($thing['type'], $thing['name'], $thing['version'], true, false);
+				Core\CLI\CLI::PrintProgressBar($progressEa);
+
+				if($return['status'] == 1){
+					// Good to install!
+					$return = UpdaterHelper::PerformInstall($thing['type'], $thing['name'], $thing['version'], false, false);
+					Core\CLI\CLI::PrintProgressBar($progressEa);
+
+					if($return['status'] != 1){
+						\Core\CLI\CLI::PrintWarning($return['message']);
+					}
+				}
+				else{
+					\Core\CLI\CLI::PrintWarning($return['message']);
+				}
+			}
+			catch(Exception $e){
+				\Core\CLI\CLI::PrintError($e->getMessage());
+			}
+		}
 	}
 
 

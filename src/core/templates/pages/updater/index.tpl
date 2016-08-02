@@ -25,6 +25,14 @@
 	</script>{/script}
 {/if}
 
+<div id="update-everything-wrapper" style="display:none;">
+	<form action="{link '/updater/update_everything'}" method="POST" id="update-everything-form" target="update-everything">
+		<input type="submit" value="Update Everything"/>
+	</form>
+
+	{progress_log_iframe name='update-everything' form='update-everything-form'}
+</div>
+
 <!-- This will get populated with the update progress for installs and updates. -->
 <div id="update-terminal" style="display:none;"></div>
 
