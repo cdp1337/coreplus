@@ -313,27 +313,30 @@ EOD;
 		exec('git log --no-merges --format="%s" --since="' . $sincedate . '" ' . implode(' ', $paths), $gitlogoutput);
 
 		foreach($gitlogoutput as $line){
-			// If the line matches "[COMP NAME] [version]"... then assume that's simply a release commit and ignore it.
-			if($line == $this->_name . ' ' . $sinceversion) continue;
-			if($line == $this->_keyname . ' ' . $sinceversion) continue;
-
-			// Or if it contains the name, since version, and "release"... same thing!
 			if(
-				stripos($line, $this->_name . ' ' . $sinceversion) !== false &&
-				stripos($line, 'release') !== false
+				// If the line matches "[COMP NAME] [version]"...
+				$line == $this->_name . ' ' . $sinceversion ||
+				// Or if it contains the name, since version, and "release"...
+				$line == $this->_keyname . ' ' . $sinceversion ||
+				(
+					stripos($line, $this->_name . ' ' . $sinceversion) !== false && stripos($line, 'release') !== false
+				) ||
+				// OR, if it contains "Update [name] to [version]
+				(
+					strpos($line, 'Update') === 0 &&
+					stripos($line, $this->_name) !== false &&
+					stripos($line, $sinceversion) !== false
+				) ||
+				// OR support "Update Theme/(anything)", as there seems to be a minor issue where Themes don't record their name.
+				(
+					strpos($line, 'Update Theme/') === 0 &&
+					$this->_type == 'theme' &&
+					stripos($line, $sinceversion) !== false
+				)
 			){
 				continue;
 			}
-
-			// OR, if it contains "Update [name] to [version], that's also a release note.
-			if(
-				strpos($line, 'Update') === 0 &&
-				stripos($line, $this->_name) !== false &&
-				stripos($line, $sinceversion) !== false
-			){
-				continue;
-			}
-
+			
 			// Otherwise, it's a change!
 			$changes[] = $line;
 		}
