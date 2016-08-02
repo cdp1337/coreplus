@@ -246,7 +246,7 @@ function view(){
 function get_standard_http_headers($forcurl = false, $autoclose = false){
 	$headers = array(
 		'User-Agent: Core Plus ' . \Core::GetComponent()->getVersion() . ' (http://corepl.us)',
-		'Servername: ' . SERVERNAME,
+		'Referer: ' . SERVERNAME,
 	);
 
 	if($autoclose){
