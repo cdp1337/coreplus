@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Mon, 01 Aug 2016 00:16:52 -0400
+ * @compiled Tue, 02 Aug 2016 11:55:34 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -195,7 +195,7 @@ return page_request()->getView();
 function get_standard_http_headers($forcurl = false, $autoclose = false){
 $headers = array(
 'User-Agent: Core Plus ' . \Core::GetComponent()->getVersion() . ' (http://corepl.us)',
-'Servername: ' . SERVERNAME,
+'Referer: ' . SERVERNAME,
 );
 if($autoclose){
 $headers[] = 'Connection: close';
@@ -2549,7 +2549,7 @@ if($arguments) $this->_parseWhere($arguments);
 private function _parseWhere($statement){
 $valid = false;
 $operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
-$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
+$k = preg_replace('/^([^ !=<>]*).*/s', '$1', $statement);
 $statement = trim(substr($statement, strlen($k)));
 foreach($operations as $c){
 if(($pos = strpos($statement, $c)) === 0){
