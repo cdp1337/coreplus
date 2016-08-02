@@ -1,3 +1,9 @@
+Package Repository 1.2.1
+
+	* Include a logo for the Package Repo system.
+	* Ensure that the index length does not exceed 1000 bytes!
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 02 Aug 2016 13:45:12 -0400
+
 Package Repository 1.2.0
 
 	* More images throughout everything!

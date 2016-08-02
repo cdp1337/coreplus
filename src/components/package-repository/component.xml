@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.2.0" logo="ark.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.2.1" logo="ark.png">
 	<configs>
 		<config key="/package_repository/base_directory" type="string"/>
 		<config key="/package_repository/is_private" default="0" type="boolean"/>
@@ -19,8 +19,9 @@
 		<page baseurl="/packagerepository/analytics" title="t:STRING_PACKAGE_REPOSITORY_ANALYTICS" admin="1" access="p:/package_repository/view_analytics" group="t:STRING_REPORTING"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="e8366df997dce5ce1233ab0cbc38fb41"/>
+		<file filename="CHANGELOG" md5="fb7c0013000947afeee687c5595591b1"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
+		<file filename="ark.png" md5="e20f069001369c517ee48b5a14305e54"/>
 		<file filename="assets/scss/package-repository.scss" md5="c0ec0d8ad35fac327622b3a1c4be6565"/>
 		<file filename="controllers/PackageRepositoryController.php" md5="4b387e189fcbc7d16c274f520f94dac4">
 			<controller name="PackageRepositoryController"/>
@@ -39,7 +40,7 @@
 		<file filename="models/PackageRepositoryLicenseModel.php" md5="b546b3d44b6c41408f8194dd86c36e06">
 			<class name="PackageRepositoryLicenseModel"/>
 		</file>
-		<file filename="models/PackageRepositoryPackageModel.php" md5="c8759e613c84a4c9e54a16e9cecf38e0">
+		<file filename="models/PackageRepositoryPackageModel.php" md5="1827f2eac464296ae4fd0335a86dd6b8">
 			<class name="PackageRepositoryPackageModel"/>
 		</file>
 	</files>
@@ -58,6 +59,7 @@
 		<upgrade from="1.0.3" to="1.0.4"/>
 		<upgrade from="1.0.4" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.2.0"/>
+		<upgrade from="1.2.0" to="1.2.1"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/package-repository.css" md5="e3e84fdae6058076a4f0971ad715506c"/>
