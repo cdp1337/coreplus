@@ -37,12 +37,15 @@ class PackageRepositoryPackageModel extends Model {
 		],
 		'type' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 32,
 		],
 		'key' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 64,
 		],
 		'version' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'maxlength' => 32,
 		],
 		'name' => [
 			'type' => Model::ATT_TYPE_STRING,
