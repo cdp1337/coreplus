@@ -806,7 +806,15 @@ class UpdaterHelper {
 
 		// operation by default is ge.
 		if(!$rvrop) $rvrop = 'ge';
-
+		
+		// Explicit list of requirement types supported in this version.
+		// This is required in case there is a new require field from a newer version of Core than what is installed.
+		if(!(
+			$rtype == 'library' || $rtype == 'jslibrary' || $rtype == 'component' || $rtype == 'phpextension'
+		)){
+			// Anything not in this list are not supported at present, but may still work.
+			return true;
+		}
 
 		// This will check if the requirement is already met.
 		switch($rtype){
@@ -822,6 +830,11 @@ class UpdaterHelper {
 				break;
 			case 'component':
 				if(Core::IsComponentAvailable($rname, $rvers, $rvrop)){
+					return true;
+				}
+				break;
+			case 'phpextension':
+				if(extension_loaded($rname) === true){
 					return true;
 				}
 				break;
