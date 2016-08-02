@@ -599,7 +599,7 @@ while(true){
 		elseif($f['type'] == 'theme'){
 			$line = str_pad($f['title'], $longestname+1, ' ', STR_PAD_RIGHT);
 
-			/** @var Theme $t */
+			/** @var Theme\Theme $t */
 			$t = $f['theme'];
 			$lineflags = [];
 
