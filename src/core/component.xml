@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.1" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.2" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="5dc8948346d4f6e5a6d6119aba521351"/>
+		<file filename="core/CHANGELOG" md5="5713e5cd585018abbea299a82beb5e53"/>
 		<file filename="core/LICENSER.php" md5="22bee0e2215980e57231428bfe7907ee"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -142,7 +142,7 @@
 		<file filename="core/controllers/PageController.php" md5="ed393bfa72a4fd41b638ecaeb4ed10a8">
 			<controller name="PageController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="4bb0c769bf33b16582005f232013c1c6">
+		<file filename="core/controllers/UpdaterController.class.php" md5="2871609cdb7c97f6ff2598aa2b33c372">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/UserActivityController.php" md5="bca7232fefa3aea2d7f1a31d4746ddaa">
@@ -240,12 +240,12 @@
 		<file filename="core/forms/FormUserInput.php" md5="a5a8123902decd9cb3635b85be3bbb51">
 			<class name="FormUserInput"/>
 		</file>
-		<file filename="core/functions/Core.functions.php" md5="6974b6ed1b83dd77c37da88b021f1e3a"/>
+		<file filename="core/functions/Core.functions.php" md5="d61bb56aa37359472e5ba0bfdbe354e8"/>
 		<file filename="core/functions/global.php" md5="15b9b245993725c6ae969bab22239f17"/>
 		<file filename="core/helpers/RewriteMapHelper.class.php" md5="75a21a9412e2a01a9b7b123410bf2fd1">
 			<class name="RewriteMapHelper"/>
 		</file>
-		<file filename="core/helpers/UpdaterHelper.class.php" md5="3d8979626e6f18dc4990735b35aee549">
+		<file filename="core/helpers/UpdaterHelper.class.php" md5="738f58f91c06164ccc812b2c2b604349">
 			<class name="UpdaterHelper"/>
 		</file>
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
@@ -593,7 +593,7 @@
 		<file filename="core/libs/core/datamodel/DatasetStream.php" md5="f44d60e2e7cc820e9df8f64d93430c87">
 			<class name="Core\Datamodel\DatasetStream"/>
 		</file>
-		<file filename="core/libs/core/datamodel/DatasetWhere.php" md5="7239fc314c9cb82dadc4a9821f4769ab">
+		<file filename="core/libs/core/datamodel/DatasetWhere.php" md5="c0ac5326c5b037eaa9f521d859bd81ab">
 			<class name="Core\Datamodel\DatasetWhere"/>
 		</file>
 		<file filename="core/libs/core/datamodel/DatasetWhereClause.php" md5="92321de1c4000b2e5fd9b6b50c58942b">
@@ -858,7 +858,7 @@
 		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="3387c52211ba82ac696d20c5daf85ee4">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
-		<file filename="core/libs/core/utilities/Packager.php" md5="8de916c50c203457c04cdbd3d3317189">
+		<file filename="core/libs/core/utilities/Packager.php" md5="4d81d45a59845fa69d8f4b1334920975">
 			<class name="Core\Utilities\Packager"/>
 		</file>
 		<file filename="core/libs/core/utilities/changelog/Entry.php" md5="68449b47ea43aee8918263e19d41efec">
@@ -1845,7 +1845,7 @@
 		<file filename="core/templates/pages/page/sitemap.tpl" md5="0519486ddf51fb11b0541b6d92cb63bb"/>
 		<file filename="core/templates/pages/page/sitemap.xml.tpl" md5="a27828e243dfaac4a261b28567b49fad"/>
 		<file filename="core/templates/pages/updater/browse.tpl" md5="46164efb30e799b0daa3062cb53ed548"/>
-		<file filename="core/templates/pages/updater/index.tpl" md5="f2217af60dae2793c13d2913c9302605"/>
+		<file filename="core/templates/pages/updater/index.tpl" md5="3bf23b3ce057a10c44bd5006d3e4bb8b"/>
 		<file filename="core/templates/pages/updater/keys.tpl" md5="4ff939a015c21167bda5a5a8d47f3f37"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="d2208b9bd00c14d6d96fa1ec6cbe1cf2"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="98f43f644f6d5f457652a1aa874cbb9f"/>
@@ -3226,8 +3226,8 @@
 		<file filename="core/assets/js/less-1.5.0.min.js" md5="081283516fc385c335ef6cbc8f88146a"/>
 		<file filename="core/assets/js/less-1.7.1.js" md5="711eed4660fc8854febd8f10d58f77a8"/>
 		<file filename="core/assets/js/less-1.7.1.min.js" md5="9b7fc7fc8119cb16f0cab3eefe282e6b"/>
-		<file filename="core/assets/js/updater/index.js" md5="9498a5d80881cbd78ea51b1bcc935f81"/>
-		<file filename="core/assets/js/updater/index.min.js" md5="686cc6caa65b89907c19dbc5fed62359"/>
+		<file filename="core/assets/js/updater/index.js" md5="16e36952d92e5d070335749a9c2b3101"/>
+		<file filename="core/assets/js/updater/index.min.js" md5="b8323ef957fc317a51e4639606a78ed5"/>
 		<file filename="core/assets/js/user/admin.js" md5="1d287a160395144c5b4b636afdc4ae08"/>
 		<file filename="core/assets/js/user/admin.min.js" md5="cd04857b71e6ea94244a63b329a39de4"/>
 		<file filename="core/assets/js/user/login.js" md5="59394d160ea94793626830bfe2ef69f3"/>
@@ -3379,6 +3379,7 @@
 			<php file="core/upgrades/500_user_config_migration.php"/>
 		</upgrade>
 		<upgrade from="6.0.0" to="6.0.1"/>
+		<upgrade from="6.0.1" to="6.0.2"/>
 	</upgrades>
 </component>
 

@@ -1,3 +1,12 @@
+Core Plus 6.0.2
+
+	* [Bug] Fix for WHERE clauses containing newline characters.
+	* Packager fix for detecting a comment in a GIT message.
+	* More icon updates throughout Core.
+	* Regression fix for properly setting the referer for remote files.
+	* New "Update All" functionality on the updater page.
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 02 Aug 2016 13:44:25 -0400
+
 Core Plus 6.0.1
 
 	* [Bug] Fixes for previewing images that are not inside public directories.
