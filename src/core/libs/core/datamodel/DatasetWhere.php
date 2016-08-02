@@ -74,7 +74,7 @@ class DatasetWhere{
 		$operations = array('!=', '<=', '>=', '=', '>', '<', 'LIKE ', 'NOT LIKE', 'IN');
 
 		// First, extract out the key.  This is the simplest thing to look for.
-		$k = preg_replace('/^([^ !=<>]*).*/', '$1', $statement);
+		$k = preg_replace('/^([^ !=<>]*).*/s', '$1', $statement);
 
 		// and the rest of the query...
 		$statement = trim(substr($statement, strlen($k)));
