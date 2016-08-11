@@ -15,6 +15,7 @@ function smarty_function_progress_log_iframe($params, $smarty){
 		<div class="progress-log-progressbar-inner"></div>
 	</div>
 	<p class="progress-log-message"></p>
+	<p class="progress-log-warnings"></p>
 	
 	<iframe id="$logname-frame" name="$logname" class="progress-log-iframe" style="display:none;"></iframe>
 </div>

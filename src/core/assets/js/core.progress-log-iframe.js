@@ -28,6 +28,8 @@
 				$title = $wrapper.find('.progress-log-title'), 
 				$progressInner = $wrapper.find('.progress-log-progressbar-inner'),
 				$message = $wrapper.find('.progress-log-message'),
+				$warnings = $wrapper.find('.progress-log-warnings'),
+				warningsPrinted = [],
 				iframe = $iframe[0],
 				processText;
 			
@@ -76,6 +78,11 @@
 							}
 
 							if(c){
+								// This gets appended to the warnings too if it's new!
+								if(warningsPrinted.indexOf(m) === -1){
+									$warnings.append('<i class="icon ' + c + '"></i> ' + m + '<br/>');
+									warningsPrinted.push(m);
+								}
 								m = '<i class="icon ' + c + '"></i> ' + m;
 							}
 
