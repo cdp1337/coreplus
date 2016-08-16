@@ -739,7 +739,21 @@ class XMLLoader implements Serializable {
 	}
 
 	/**
+	 * Get this XML object without ANY string manipulations!
+	 * 
+	 * This is useful if you have CDATA that needs to be preserved.
+	 * 
+	 * @return string
+	 */
+	public function asXML(){
+		return $this->getDOM()->saveXML();
+	}
+
+	/**
 	 * Get this XML object as a minified string
+	 * 
+	 * NOTE, this DOES NOT PLAY NICELY WITH CDATA!!!!
+	 * Use asXML() for that!
 	 *
 	 * @return string
 	 */
@@ -771,6 +785,9 @@ class XMLLoader implements Serializable {
 
 	/**
 	 * Prettifies an XML string into a human-readable and indented work of art
+	 *
+	 * NOTE, this DOES NOT PLAY NICELY WITH CDATA!!!!
+	 * Use asXML() for that!
 	 *
 	 * @param boolean $html_output True if the output should be escaped (for use in HTML)
 	 *
