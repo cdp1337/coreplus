@@ -3,19 +3,19 @@
 		li {
 			list-style: none;
 			
-			&.health-check-good i {
+			&.health-check-good i.status-icon {
 				color: $success;
 			}
 			
-			&.health-check-warn i {
+			&.health-check-warn i.status-icon {
 				color: $warning;
 			}
 
-			&.health-check-errr i {
+			&.health-check-errr i.status-icon {
 				color: $error;
 			}
 
-			&.health-check-skip i {
+			&.health-check-skip i.status-icon {
 				color: $deprecated;
 			}
 		}
