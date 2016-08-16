@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.0" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.1" name="Base V3">
 	<assets>
 		<file filename="assets/css/print.css" md5="1e75d61c2c5c7ab10538e4c5f7f45897"/>
 		<file filename="assets/css/print.css.map" md5="9925f7d7ea074210b7e3e37329472f68"/>
 		<file filename="assets/css/print.min.css" md5="e2d9b2b1758d47b6260be9af8c9e6215"/>
-		<file filename="assets/css/styles.css" md5="ffaea410980cbdb6dfb440e4d6e63711"/>
-		<file filename="assets/css/styles.css.map" md5="f3e67b830b8ac578c6bcc602113b58b2"/>
-		<file filename="assets/css/styles.min.css" md5="bfc4ba4ee96d91fce7814a778e051e3d"/>
+		<file filename="assets/css/styles.css" md5="3229370094a9ddf0d499c8c755f1dd49"/>
+		<file filename="assets/css/styles.css.map" md5="0faa724e79862e8f2c155157e4bb4a15"/>
+		<file filename="assets/css/styles.min.css" md5="6d1541f18220498311912238547b3cc8"/>
 		<file filename="assets/css/tinymce/content.css" md5="c12d573ac29944bfba932a96d07ade67"/>
 		<file filename="assets/css/tinymce/content.css.map" md5="93cbeab8f5da57cd5a3c3cf0ecc1ecfd"/>
 		<file filename="assets/css/tinymce/content.min.css" md5="b6c1bb72b934d50dac157b4713114455"/>
@@ -53,7 +53,7 @@
 		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="6823f2f04b8307644d157d21be295089"/>
+		<file filename="CHANGELOG" md5="fb0a78dc73c2e9f683e6bd9a331b8148"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
 		<file filename="assets/scss/_content.scss" md5="18e00da409fa99734b17d5fc9e24037e"/>
 		<file filename="assets/scss/_controls.scss" md5="9ef44e36323a75fe4e895ce9c61146a4"/>
@@ -67,7 +67,7 @@
 		<file filename="assets/scss/_progress-log.scss" md5="bbbc79d05d748254a98d71fe1f48d290"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
 		<file filename="assets/scss/_variables.scss" md5="9eaf59c0a2f58a8ca5db9f2ccaf4ce99"/>
-		<file filename="assets/scss/pages/_admin_health.scss" md5="8f5e2f2aab639df930a16c8804e123a5"/>
+		<file filename="assets/scss/pages/_admin_health.scss" md5="9c02894ad0929bfc414cf75c7fa0e208"/>
 		<file filename="assets/scss/pages/_theme.scss" md5="1039df69f0df35e4c7c9883a109ef103"/>
 		<file filename="assets/scss/pages/_updater.scss" md5="071f9f71dda94d07e8423f02e811e72b"/>
 		<file filename="assets/scss/pages/_user.scss" md5="fb9196cfc019cdcd6a68cbe9508003aa"/>
@@ -203,6 +203,7 @@
 		<upgrade from="2.1.0" to="2.1.1"/>
 		<upgrade from="2.1.1" to="3.0.0"/>
 		<upgrade from="3.0.0" to="3.1.0"/>
+		<upgrade from="3.1.0" to="3.1.1"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
