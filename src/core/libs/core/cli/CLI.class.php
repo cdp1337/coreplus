@@ -284,6 +284,8 @@ class CLI {
 		else{
 			$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 
+			echo COLOR_LINE . '| ' . COLOR_RESET . $color . $line . COLOR_RESET . $nl;
+			
 			if(EXEC_MODE == 'WEB'){
 				switch($color){
 					case COLOR_DEBUG:
@@ -304,8 +306,6 @@ class CLI {
 				}
 			}
 			
-			echo COLOR_LINE . '| ' . COLOR_RESET . $color . $line . COLOR_RESET . $nl;
-
 			if(self::_FlushRequired()){
 				ob_flush();
 				flush();
@@ -365,6 +365,10 @@ class CLI {
 	public static function PrintActionStart($line, $maxlen = 90, $suffix = '...'){
 		$flen = strlen($line) + strlen($suffix) + 8;
 		echo "$line..." . str_repeat(NBSP, max($maxlen - $flen, 1));
+		
+		if(EXEC_MODE == 'WEB'){
+			echo '<!--CLI-DATA:LINE=' . $line . '-->';	
+		}
 
 		if(self::_FlushRequired()){
 			ob_flush();
