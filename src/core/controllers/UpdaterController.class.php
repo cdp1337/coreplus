@@ -338,12 +338,24 @@ class UpdaterController extends Controller_2_1 {
 				$gpg          = new \Core\GPG\GPG();
 
 				foreach($repo->getKeys() as $keyData){
-					try{
-						$gpg->importKey($keyData['key']);
-						++$keysimported;
+					if(!$keyData['installed']){
+						try{
+							if($keyData['contents']){
+								// Local import! :)
+								$gpg->importKey($keyData['contents']);
+							}
+							else{
+								$gpg->importKey($keyData['key']);
+							}
+							++$keysimported;
+						}
+						catch(Exception $e){
+							\Core\set_message('Unable to import key [' . $keyData['key'] . '] from keyserver!' . $e->getMessage(), 'error');
+						}
 					}
-					catch(Exception $e){
-						\Core\set_message('Unable to import key [' . $keyData['key'] . '] from keyserver!', 'error');
+					else{
+						// Flag already-imported keys as good.
+						++$keysimported;
 					}
 				}
 
@@ -458,44 +470,15 @@ class UpdaterController extends Controller_2_1 {
 		$view = $this->getView();
 
 		// Get the existing keys.
-		exec('gpg --homedir "' . GPG_HOMEDIR . '" --no-permission-warning --list-public-keys', $output, $result);
-		$keys = array();
-
-		if(sizeof($output) > 3){
-			// Drop the first two lines, these are useless headers.
-			array_shift($output);
-			array_shift($output);
-			$k = null;
-			foreach($output as $line){
-				if(strpos($line, 'pub') === 0){
-					// This is a new key.
-					if($k !== null){
-						// Save the previous one.
-						$keys[] = $k;
-					}
-
-					// And start the new key.
-					$k = array(
-						'key' => preg_replace('#^pub[ ]*[0-9]{4}[A-Z]/([A-Z0-9]*) .*#', '$1', $line),
-						'date' => preg_replace('#^pub[ ]*[0-9]{4}[A-Z]/[A-Z0-9]* ([0-9\-]*).*#', '$1', $line),
-						'names' => array()
-					);
-				}
-				elseif(strpos($line, 'uid') === 0){
-					// No key started yet?... hmm
-					if($k === null) continue;
-
-					$k['names'][] = preg_replace('#^uid[ ]*(.*)$#', '$1', $line);
-				}
-			}
-			// Save the last one.
-			$keys[] = $k;
-		}
-
+		$gpg = new \Core\GPG\GPG();
+		$keys = $gpg->listKeys();
+		
+		$managerAvailable = Core::IsComponentAvailable('gpg-key-manager');
 
 		$view->title = "GPG Keys";
 		$view->assign('directory', GPG_HOMEDIR);
 		$view->assign('keys', $keys);
+		$view->assign('manager_available', $managerAvailable);
 	}
 
 	public function keys_import() {
