@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component name="GPG Key Manager" version="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" logo="logo.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GPG Key Manager" version="1.0.0" logo="logo.png">
 	<pages>
 		<page baseurl="/gpgkeymanager" title="t:STRING_GPGKEYMANAGER" admin="1" access="g:admin" group="t:STRING_ADMIN" image="assets/images/actions/kgpg_key2_kopete.png"/>
 	</pages>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
 	<files>
-		<file filename="CHANGELOG" md5="31cbfeefe10c08434b7ebcc9977daf9b"/>
+		<file filename="CHANGELOG" md5="e0e0ac7e2797d0c004d605bdea266b5a"/>
 		<file filename="README.md" md5="061baee83f696ae60e675b4d284d8dbb"/>
-		<file filename="controllers/GPGKeyManagerController.php" md5="2465e73602458f4c8402ea12cbc2429f">
+		<file filename="controllers/GPGKeyManagerController.php" md5="90ee453916cd348ffe7019a6fdb3bb07">
 			<controller name="GPGKeyManagerController"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="8310ed31da8078e2e0c28502b8decba9"/>
+		<file filename="logo.png" md5="fb39282d5467bef30c0e583e9539342e"/>
 	</files>
+	<view>
+		<file filename="templates/pages/gpgkeymanager/generate.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/gpgkeymanager/index.tpl" md5="b71ccb6120111192c3b1d5020901b810"/>
+		<file filename="templates/pages/gpgkeymanager/upload.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+	</view>
+	<requires>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+	</requires>
 </component>
 
