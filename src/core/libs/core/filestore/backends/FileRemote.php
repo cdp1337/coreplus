@@ -83,6 +83,10 @@ class FileRemote implements Filestore\File {
 	private $_tmplocal = null;
 	
 	private $_requestHeaders = null;
+	
+	private $_method = 'GET';
+	
+	private $_payload = null;
 
 	/**
 	 * If the file was a 302, this is the temporary redirect placeholder.
@@ -187,10 +191,6 @@ class FileRemote implements Filestore\File {
 	 */
 	public function getFilename($prefix = ROOT_PDIR) {
 		return $this->_url;
-	}
-
-	public function setFilename($filename) {
-		$this->_url = $filename;
 	}
 
 	/**
@@ -577,6 +577,41 @@ class FileRemote implements Filestore\File {
 	public function isWritable() {
 		return false;
 	}
+	
+	public function setFilename($filename) {
+		$this->_url = $filename;
+	}
+
+	/**
+	 * Set the request method for this remote file
+	 * 
+	 * @param string $method
+	 *
+	 * @throws \Exception
+	 */
+	public function setMethod($method){
+		$method = strtoupper($method);
+		switch($method){
+			case 'GET':
+			case 'POST':
+				$this->_method = $method;
+				break;
+			default:
+				throw new \Exception('Unsupported method: ' . $method);
+		}
+	}
+	
+	public function setPayload($data){
+		if($this->_method == 'GET'){
+			$this->_method = 'POST';
+		}
+		
+		if(!is_array($data)){
+			throw new \Exception('POST payloads MUST be an associative array.');
+		}
+		
+		$this->_payload = $data;
+	}
 
 	/**
 	 * Set a particular REQUEST header to this file.
@@ -591,8 +626,15 @@ class FileRemote implements Filestore\File {
 	/**
 	 * Get the headers for this given file.
 	 * This will go out and query the server with a HEAD request if no headers set otherwise.
+	 * 
+	 * ONLY applicable with GET based requests!
 	 */
 	protected function _getHeaders() {
+
+		if($this->_method == 'POST' && $this->_headers === null){
+			return [];
+		}
+		
 		if ($this->_headers === null) {
 			$this->_headers = array();
 
@@ -749,6 +791,10 @@ class FileRemote implements Filestore\File {
 							CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 						)
 					);
+					
+					if($this->_method == 'POST'){
+						curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_payload);
+					}
 
 					$result = curl_exec($curl);
 					if($result === false){
