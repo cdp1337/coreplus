@@ -1,0 +1,22 @@
+---
+MESSAGE_MODEL_USERMODEL_BIO:
+  en: >
+    Short biography describing yourself; this is displayed publically.
+MESSAGE_MODEL_USERMODEL_FIRST_NAME:
+  en: First name
+MESSAGE_MODEL_USERMODEL_LAST_NAME:
+  en: Last name
+MESSAGE_MODEL_USERMODEL_PHONE:
+  en: Phone number, may be displayed to other users.
+MESSAGE_MODEL_USERMODEL_USERNAME:
+  en: ""
+STRING_MODEL_USERMODEL_BIO:
+  en: Bio
+STRING_MODEL_USERMODEL_FIRST_NAME:
+  en: First Name
+STRING_MODEL_USERMODEL_LAST_NAME:
+  en: Last Name
+STRING_MODEL_USERMODEL_PHONE:
+  en: Phone Number
+STRING_MODEL_USERMODEL_USERNAME:
+  en: Username
