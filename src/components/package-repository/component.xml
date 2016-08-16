@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.2.1" logo="ark.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.3.0" logo="ark.png">
 	<configs>
 		<config key="/package_repository/base_directory" type="string"/>
 		<config key="/package_repository/is_private" default="0" type="boolean"/>
@@ -21,38 +21,37 @@
 		<page baseurl="/packagerepositorylicense/features" title="t:STRING_PACKAGE_REPOSITORY_LICENSE_FEATURE_MANAGER" admin="1" group="t:STRING_CONFIGURE" access="p:/package_repository/licenses/manager" image="assets/images/actions/kgpg_key1_kopete.png"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="fb7c0013000947afeee687c5595591b1"/>
+		<file filename="CHANGELOG" md5="0c184fc7726a84089e202b2f09706d67"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
 		<file filename="ark.png" md5="e20f069001369c517ee48b5a14305e54"/>
 		<file filename="assets/scss/package-repository.scss" md5="c0ec0d8ad35fac327622b3a1c4be6565"/>
-		<file filename="controllers/PackageRepositoryController.php" md5="4b387e189fcbc7d16c274f520f94dac4">
+		<file filename="controllers/PackageRepositoryController.php" md5="a02a2095af074007efbec82c1efe2c19">
 			<controller name="PackageRepositoryController"/>
 		</file>
-		<file filename="controllers/PackageRepositoryLicenseController.php" md5="1a056be2e16272be70048bc6f1e618ec">
+		<file filename="controllers/PackageRepositoryLicenseController.php" md5="55157d248733549d9965a3c005b30b05">
 			<controller name="PackageRepositoryLicenseController"/>
 		</file>
-		<file filename="i18n/ar.ini" md5="a8b41ec7ee76f305ca4b3372cbf25f6d"/>
-		<file filename="i18n/de.ini" md5="992527fd785e95a33a94bc426b9dc94c"/>
-		<file filename="i18n/en.ini" md5="268b07bba4b3a0fb3202cb569164c2a6"/>
-		<file filename="i18n/fr.ini" md5="2e54ae729dd18fc82a460f349834a5e8"/>
-		<file filename="i18n/strings.yml" md5="e89c0e2487f2ee188670f279aa51a55b"/>
-		<file filename="models/PackageRepositoryFeatureModel.php" md5="1dbf954333f6de29c6ec4b8f28e2dd1b">
+		<file filename="i18n/strings.yml" md5="27d97254075aee233bded9b78a4727ec"/>
+		<file filename="models/PackageRepositoryFeatureModel.php" md5="90963c9bd62cf7529b231b9381f17ed4">
 			<class name="PackageRepositoryFeatureModel"/>
 		</file>
-		<file filename="models/PackageRepositoryLicenseModel.php" md5="b546b3d44b6c41408f8194dd86c36e06">
+		<file filename="models/PackageRepositoryLicenseModel.php" md5="141655ac758a52c68086ac84769a7e2c">
 			<class name="PackageRepositoryLicenseModel"/>
 		</file>
-		<file filename="models/PackageRepositoryPackageModel.php" md5="1827f2eac464296ae4fd0335a86dd6b8">
+		<file filename="models/PackageRepositoryPackageModel.php" md5="e39657d6174f13f1a882239e96887ebc">
 			<class name="PackageRepositoryPackageModel"/>
 		</file>
 	</files>
 	<view>
 		<file filename="templates/pages/packagerepository/analytics.tpl" md5="193308b38899c4eea4c5ed997ef028fc"/>
 		<file filename="templates/pages/packagerepository/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/packagerepository/index.tpl" md5="d832f30431b54a1dd379e45c43e7d9cb"/>
+		<file filename="templates/pages/packagerepository/details.tpl" md5="f535a59d39c59ffb80df2cdbb7792828"/>
+		<file filename="templates/pages/packagerepository/index.tpl" md5="67793a4bd590639eb85c749a1179744d"/>
 		<file filename="templates/pages/packagerepositorylicense/add.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
-		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="bbca812e43ef1e85d0eb9e9ea42291fd"/>
+		<file filename="templates/pages/packagerepositorylicense/admin.tpl" md5="8655908d022de995ffdd4720a6f676c0"/>
 		<file filename="templates/pages/packagerepositorylicense/edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/packagerepositorylicense/feature_create.tpl" md5="c82a436393184da5d2036729f8a2620f"/>
+		<file filename="templates/pages/packagerepositorylicense/features.tpl" md5="622224f0673ac8924cbbd0557f38338a"/>
 	</view>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
@@ -62,6 +61,7 @@
 		<upgrade from="1.0.4" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.2.1"/>
+		<upgrade from="1.2.1" to="1.3.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/package-repository.css" md5="e3e84fdae6058076a4f0971ad715506c"/>
