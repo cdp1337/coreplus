@@ -222,6 +222,9 @@ class GPG {
 	 * @var array|null Cache of local keys, in the event that multiple calls to listKeys are done.
 	 */
 	private $_localKeys;
+	
+	/** @var array|null Cache of local secret keys */
+	private $_secretKeys;
 
 	/** @var null|gnupg Object of the PECL instance if available. */
 	private $_gnupg = null;
@@ -280,6 +283,26 @@ class GPG {
 	}
 
 	/**
+	 * Retrieve a secret key from the local store.
+	 *
+	 * @param $key string Key ID to retrieve
+	 *
+	 * @return PrimaryKey|null
+	 */
+	public function getSecretKey($key){
+		$keys = $this->listSecretKeys();
+
+		foreach($keys as $k){
+			/** @var Key $k */
+			if($k->id == $key || $k->id_short == $key || $k->fingerprint == $key){
+				return $k;
+			}
+		}
+
+		return null;
+	}
+
+	/**
 	 * List the local keys installed on the system
 	 *
 	 * @return array Returns an array of GPG\Keys.
@@ -292,13 +315,37 @@ class GPG {
 		}
 
 		// Execute the command to retrieve the raw list of key data
-		$output = $this->_exec('--with-colons --fixed-list-mode --with-fingerprint --list-public-keys');
+		$output = $this->_exec('--with-colons --fixed-list-mode --with-fingerprint --list-sigs');
 
 		// Parse the output lines
 		$keys = $this->_parseOutputLines(explode("\n", $output['output']));
 
 		// Cache them for next time!
 		$this->_localKeys = $keys;
+
+		return $keys;
+	}
+
+	/**
+	 * List the local SECRET keys installed on the system
+	 *
+	 * @return array Returns an array of GPG\Keys.
+	 */
+	public function listSecretKeys(){
+
+		if($this->_secretKeys !== null){
+			// GOGO CACHE
+			return $this->_secretKeys;
+		}
+
+		// Execute the command to retrieve the raw list of key data
+		$output = $this->_exec('--with-colons --fixed-list-mode --with-fingerprint --list-secret-keys');
+
+		// Parse the output lines
+		$keys = $this->_parseOutputLines(explode("\n", $output['output']));
+
+		// Cache them for next time!
+		$this->_secretKeys = $keys;
 
 		return $keys;
 	}
@@ -367,6 +414,47 @@ class GPG {
 
 		// And return the newly imported key in its entirety.
 		return $this->getKey($key);
+	}
+
+	/**
+	 * Examine a key WITHOUT IMPORTING IT
+	 * 
+	 * If multiple keys are provided, then an array of keys will be returned, otherwise a single key is returned.
+	 *
+	 * @param string $key Full key data of the key to examine
+	 *
+	 * @throws \Exception
+	 *
+	 * @return PrimaryKey|array
+	 */
+	public function examineKey($key){
+		if(strlen($key) == 8 || strlen($key) == 40){
+			throw new \Exception('Please provide the FULL key to examine!');
+		}
+		else{
+			// CLI-only available and data is provided.
+			// This requires some trickery.
+			$local = \Core\Filestore\Factory::File('tmp/gpg-examine-' . \Core::RandomHex(6) . '.gpg');
+			$local->putContents($key);
+
+			// the CLI expects a local file, so now there is one!
+			$result = $this->_exec('--with-colons --fixed-list-mode --with-fingerprint --batch --no-tty ' . escapeshellarg($local->getFilename()));
+
+			if($result['return'] != 0){
+				throw new \Exception(trim($result['error']));
+			}
+
+			// Cleanup.
+			$local->delete();
+			$dat = $this->_parseOutputLines(explode("\n", $result['output']));
+			
+			if(sizeof($dat) == 1){
+				return $dat[0];
+			}
+			else{
+				return $dat;	
+			}
+		}
 	}
 
 	/**
@@ -440,6 +528,81 @@ class GPG {
 		}
 
 		return $result['output'];
+	}
+
+	/**
+	 * Decrypt a piece of information to the original source.
+	 * 
+	 * This is useful for both encrypted AND signed content.
+	 *
+	 * @param string $data
+	 *
+	 * @throws \Exception
+	 *
+	 * @return mixed
+	 */
+	public function decryptData($data){
+		
+		$result = $this->_exec('--batch --no-tty --decrypt', $data);
+
+		if($result['return'] != 0){
+			// Fatal error
+			throw new \Exception(trim($result['error']));
+		}
+
+		return $result['output'];
+	}
+
+	/**
+	 * Sign a piece of information with the given key and return the ASCII armoured text.
+	 * 
+	 * @param string $data
+	 * @param string|PrimaryKey $signingKey
+	 * 
+	 * @throws \Exception
+	 * 
+	 * @return string ASCII armoured output of the encrypted data.
+	 */
+	public function signData($data, $signingKey){
+		if($signingKey instanceof PrimaryKey){
+			// I just need the fingerprint here!
+			$signingKey = $signingKey->fingerprint;
+		}
+
+		$result = $this->_exec('--batch --no-tty --sign -a --default-key ' . $signingKey, $data);
+
+		if($result['return'] != 0){
+			// Fatal error
+			throw new \Exception(trim($result['error']));
+		}
+
+		return $result['output'];
+	}
+
+	/**
+	 * Verify an attached signature of a given source.
+	 * 
+	 * Will return just the Signature object.
+	 * 
+	 * @param string $data
+	 * 
+	 * @throws \Exception
+	 * 
+	 * @return Signature
+	 */
+	public function verifySignedData($data){
+		$result = $this->_exec('--with-fingerprint --batch --no-tty --verify ', $data);
+
+		// If the result failed, then nothing else to do here.
+		if($result['return'] !== 0){
+			throw new \Exception($result['error']);
+		}
+
+		// Else, the calling script may want to know the results of the verification, eg: the key and date.
+		// The metadata here is send to STDERR.  _Shrugs_
+		$sig = new Signature();
+		$sig->_parseOutputText($result['error']);
+		return $sig;
 	}
 
 	/**
@@ -542,12 +705,17 @@ class GPG {
 	 * @param string $comment   An optional comment for this key
 	 * @param string $keyType   Either 'DSA', 'RSA', or any of the other supported algorithms
 	 * @param int    $keyLength The key length, DSA should be limited to 3072 and RSA limited to 4096
+	 * @param string $expires   Expiration date of this key
+	 *                          Valid values are "0" for no expiration, a number followed by the letter  d (for  days),
+	 *                          w (for weeks), m (for months), or y (for years)
+	 *                          (for example "2m" for two months, or "5y" for five years),
+	 *                          or an absolute date in the form YYYY-MM-DD.
 	 *
 	 * @return PrimaryKey|null
 	 * 
 	 * @throws \Exception
 	 */
-	public function generateKey($name, $email, $comment = '', $keyType = 'RSA', $keyLength = 4096){
+	public function generateKey($name, $email, $comment = '', $keyType = 'RSA', $keyLength = 4096, $expires = '0'){
 		
 		// Is RNG available on the system?
 		// This only works with that binary available!
@@ -575,7 +743,7 @@ Subkey-Length: $keyLength
 Name-Real: $name
 Name-Comment: $comment
 Name-Email: $email
-Expire-Date: 0
+Expire-Date: $expires
 %no-protection
 %commit
 EOD;

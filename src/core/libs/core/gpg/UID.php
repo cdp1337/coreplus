@@ -67,4 +67,112 @@ class UID extends Key {
 	 */
 	public $email;
 
+	/** @var array Signatures attached to this public key */
+	public $sigs = [];
+	
+	public function _parseSig($parts){
+		
+		$sig = new UIDSig();
+
+		switch($parts[3]){
+			case '1':
+				$sig->encryptionType = Key::ENCRYPTION_TYPE_RSA;
+				break;
+			case '16':
+				$sig->encryptionType = Key::ENCRYPTION_TYPE_ELGAMAL;
+				break;
+			case '17':
+				$sig->encryptionType = Key::ENCRYPTION_TYPE_DSA;
+				break;
+			case '20':
+				$sig->encryptionType = Key::ENCRYPTION_TYPE_ELGAMAL;
+				break;
+		}
+		$sig->id = $parts[4];
+		$sig->id_short = substr($parts[4], -8);
+		$sig->created = $parts[5];
+
+		$split = GPG::ParseAuthorString($parts[9]);
+		$sig->fullname = $split['name'];
+		$sig->email    = $split['email'];
+		$sig->comment  = $split['comment'];
+		
+		if($parts[10] != ''){
+			$code = substr($parts[10], 0, 2);
+			switch($code){
+				case 10:
+					$sig->certification = UIDSig::CERTIFY_NONE;
+					break;
+				case 11:
+					$sig->certification = UIDSig::CERTIFY_PERSONA;
+					break;
+				case 12:
+					$sig->certification = UIDSig::CERTIFY_CASUAL;
+					break;
+				case 13:
+				case 18:
+					$sig->certification = UIDSig::CERTIFY_EXTENSIVE;
+					break;
+			}
+		}
+		
+		$this->sigs[] = $sig;
+	}
+	
+	public function getTrustLevel(){
+		$gpg = new GPG();
+		
+		// Revoked UIDs are easy!
+		if($this->validity == 'r'){
+			return -1;
+		}
+		
+		if($this->expires && $this->expires < time()){
+			return -2;
+		}
+		
+		switch($this->validity){
+			case '-':
+				$trust = 0;
+				break;
+			case 'e':
+				$trust = -3;
+				break;
+			case 'q':
+				$trust = 0;
+				break;
+			case 'n':
+				$trust = -999;
+				break;
+			case 'm':
+				$trust = 1;
+				break;
+			case 'f':
+				$trust = 2;
+				break;
+			case 'u':
+				$trust = 2;
+				break;
+			default:
+				$trust = 0;
+		}
+		
+		// Whoami?
+		// This is based off the private keys that are installed locally.
+		$secs = $gpg->listSecretKeys();
+		$me = [];
+		
+		// Make this a flat array.
+		foreach($secs as $s){
+			$me[] = $s->id;
+		}
+		
+		foreach($this->sigs as $sig){
+			if(in_array($sig->id, $me)){
+				$trust = 2;
+			}
+		}
+		
+		return $trust;
+	}
 } 

@@ -54,5 +54,21 @@ namespace Core\GPG;
  *
  */
 class PublicKey extends PrimaryKey {
+	/**
+	 * Get the ASCII representation of this key
+	 *
+	 * @return string
+	 *
+	 * @throws \Exception
+	 */
+	public function getAscii(){
+		$gpg = new GPG();
+		$result = $gpg->_exec('--export -a ' . $this->fingerprint);
 
+		if($result['return'] != 0){
+			throw new \Exception(trim($result['error']));
+		}
+
+		return $result['output'];
+	}
 } 

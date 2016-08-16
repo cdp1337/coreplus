@@ -22,6 +22,7 @@
  */
 
 namespace Core\GPG;
+use Core\Filestore\File;
 
 
 /**
@@ -55,14 +56,10 @@ namespace Core\GPG;
  */
 class PrimaryKey extends Key {
 
-	/**
-	 * @var array Array of UID keys on this primary key
-	 */
+	/** @var array UID keys on this primary key */
 	public $uids = [];
 
-	/**
-	 * @var array Array of sub keys on this primary key
-	 */
+	/** @var array Sub keys on this primary key */
 	public $subkeys = [];
 	
 	/** @var null|array Cache of photos on the filesystem for this primary key. */
@@ -134,6 +131,36 @@ class PrimaryKey extends Key {
 	}
 
 	/**
+	 * Get the name of the first valid UID on this primary key.
+	 *
+	 * @return string
+	 */
+	public function getName(){
+		foreach($this->uids as $u){
+			/** @var UID $u */
+			if($u->isValid()){
+				return $u->fullname;
+			}
+		}
+		return '';
+	}
+	
+	/**
+	 * Get the email of the first valid UID on this primary key.
+	 *
+	 * @return string
+	 */
+	public function getEmail(){
+		foreach($this->uids as $u){
+			/** @var UID $u */
+			if($u->isValid()){
+				return $u->email;
+			}
+		}
+		return '';
+	}
+
+	/**
 	 * Get an array containing all the photos for this public key
 	 * 
 	 * @return array
@@ -158,6 +185,33 @@ class PrimaryKey extends Key {
 		}
 		
 		return $this->_photos;
+	}
+
+	/**
+	 * Get the FIRST photo in this key
+	 * 
+	 * @return File|null
+	 */
+	public function getPhoto(){
+		$p = $this->getPhotos();
+		
+		if(!sizeof($p)){
+			return null;
+		}
+		else{
+			return $p[0];
+		}
+	}
+
+	/**
+	 * Get the ASCII representation of this key
+	 * 
+	 * @return string
+	 * 
+	 * @throws \Exception
+	 */
+	public function getAscii(){
+		die('Please extend this method in the appropriate class!');
 	}
 
 	/**
@@ -326,17 +380,26 @@ class PrimaryKey extends Key {
 	 *
 	 * @param string $line
 	 */
-	public function parseLine($line){
+	public function parseLine($line) {
 		$parts = explode(':', $line);
 
-		switch($parts[0]){
+		switch($parts[0]) {
 			case 'pub':
 			case 'sec':
 				// Primary key, either public or secret.
-				if(sizeof($parts) == 13){
+				if(sizeof($parts) == 16) {
+					// Secret keys often have 16 parts, but the 13 length can handle it.
 					self::_ParseKeyLine13($parts, $this);
 				}
-				else{
+				elseif(sizeof($parts) == 13) {
+					self::_ParseKeyLine13($parts, $this);
+				}
+				elseif(sizeof($parts) == 11){
+					// Public keys BEFORE being imported, eg: examine, will have only 11 parts.
+					// This also includes integrated UID data.
+					self::_ParseKeyLine11($parts, $this);
+				}
+				else {
 					self::_ParseKeyLine7($parts, $this);
 				}
 
@@ -348,10 +411,10 @@ class PrimaryKey extends Key {
 			case 'uid':
 				// UID sub key
 				$uid = new UID();
-				if(sizeof($parts) == 11){
+				if(sizeof($parts) == 11) {
 					self::_ParseSubUIDLine11($parts, $uid);
 				}
-				else{
+				else {
 					self::_ParseSubUIDLine5($parts, $uid);
 				}
 				$this->uids[] = $uid;
@@ -361,15 +424,24 @@ class PrimaryKey extends Key {
 				// Skip user attributes.
 				break;
 			case 'sub':
+			case 'ssb':
 				$sub = new Key();
-				if(sizeof($parts) == 13){
+				if(sizeof($parts) == 13) {
 					self::_ParseKeyLine13($parts, $sub);
 				}
-				else{
+				else {
 					self::_ParseKeyLine7($parts, $sub);
 				}
 				$this->subkeys[] = $sub;
 				break;
+			case 'sig':
+				// Signatures are public signatures on a given UID.
+				// This requires the last-added UID to be appended to.
+				$last = current($this->uids);
+				if($last){
+					$last->_parseSig($parts);
+				}
+				
 			/*
 * crt = X.509 certificate
 * crs = X.509 certificate and private key available
@@ -388,7 +460,7 @@ class PrimaryKey extends Key {
 			 */
 		}
 	}
-
+	
 	protected static function _ParseKeyLine13($parts, Key $key){
 		/*
 		 * (0-index of keys)
@@ -432,6 +504,63 @@ class PrimaryKey extends Key {
 		$key->id_short = substr($parts[4], -8);
 		$key->created = $parts[5];
 		$key->expires = $parts[6];
+	}
+
+	protected static function _ParseKeyLine11($parts, Key $key){
+		/*
+		 * (0-index of keys)
+		 * 0.  Field:  Type of record
+		 * 1.  Field:  A letter describing the calculated validity.
+		 * 2.  Field:  length of key in bits.
+		 * 3.  Field:  Algorithm:
+		 * 4.  Field:  KeyID
+		 * 5.  Field:  Creation Date (in UTC).
+		 * 6.  Field:  Key or user ID/user attribute expiration date or empty if none.
+		 * 7.  Field:  Used for serial number in crt records (used to be the Local-ID).
+		 * 8.  Field:  Ownertrust (primary public keys only)
+		 * 9.  Field:  User-ID.
+		 * 10. Field:  Signature class as per RFC-4880.
+		 * 11. Field:  Key capabilities
+		 * 12. Field:  Used in FPR records for S/MIME keys to store the fingerprint of the issuer certificate.
+		 * 13. Field:  Flag field used in the --edit menu output:
+		 * 14. Field:  Used in sec/sbb to print the serial number
+		 * 15. Field:  For sig records, this is the used hash algorithm:
+		 */
+		//$this->type = $parts[0];
+		$key->validity = $parts[1];
+		$key->encryptionBits = $parts[2];
+
+		switch($parts[3]){
+			case '1':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_RSA;
+				break;
+			case '16':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_ELGAMAL;
+				break;
+			case '17':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_DSA;
+				break;
+			case '20':
+				$key->encryptionType = Key::ENCRYPTION_TYPE_ELGAMAL;
+				break;
+		}
+
+		$key->id = $parts[4];
+		$key->id_short = substr($parts[4], -8);
+		$key->created = $parts[5];
+		$key->expires = $parts[6];
+		
+		if($parts[9] && $key instanceof PublicKey){
+			$uid = new UID();
+			$split = GPG::ParseAuthorString($parts[9]);
+			$uid->comment = $split['comment'];
+			$uid->email = $split['email'];
+			$uid->fullname = $split['name'];
+			$uid->validity = $key->validity;
+			$uid->id_short = $key->id_short;
+			$uid->id = $key->id;
+			$key->uids[] = $uid;
+		}
 	}
 
 	/**
@@ -479,7 +608,9 @@ class PrimaryKey extends Key {
 		$uid->validity = $parts[1];
 		$uid->created = $parts[5];
 		$uid->expires = $parts[6];
-		$uid->serial = $parts[7];
+		$uid->fingerprint = $parts[7];
+		$uid->id = substr($parts[7], -16);
+		$uid->id_short = substr($parts[7], -8);
 
 		$split = GPG::ParseAuthorString($parts[9]);
 		$uid->fullname = $split['name'];
