@@ -113,19 +113,23 @@ class RepoXML extends XMLLoader {
 			$id    = $k->getAttribute('id');
 			$key   = null;
 			$local = true;
-
+			$contents = $k->nodeValue;
+			
 			// Try to find more info about this key!
 			// First step is to assign the key from local data.
 			// If that fails, gracefully search remote servers for it.
 			if(($key = $gpg->getKey($id)) === null){
-				$remoteKeys = $gpg->searchRemoteKeys($id);
-				foreach($remoteKeys as $k){
-					/** @var \Core\GPG\PublicKey $k */
-					if($k->id == $id || $k->id_short == $id){
-						$key = $k;
-						$local = false;
-						break;
-					}
+				// Core 6.0.3+ will have the public key embedded with the repo!
+				if(!$contents){
+					$remoteKeys = $gpg->searchRemoteKeys($id);
+					foreach($remoteKeys as $k){
+						/** @var \Core\GPG\PublicKey $k */
+						if($k->id == $id || $k->id_short == $id){
+							$key = $k;
+							$local = false;
+							break;
+						}
+					}	
 				}
 			}
 
@@ -136,6 +140,7 @@ class RepoXML extends XMLLoader {
 					'installed'  => $local,
 					'fingerprint' => \Core\GPG\GPG::FormatFingerprint($key->fingerprint, false, true),
 					'uids'        => [],
+					'contents'    => null,
 				];
 
 				foreach($key->uids as $uid){
@@ -145,13 +150,31 @@ class RepoXML extends XMLLoader {
 					}
 				}
 			}
+			elseif($contents){
+				try{
+					$key = $gpg->examineKey($contents);
+					$dat = [
+						'key'        => $key->id_short,
+						'available'  => true,
+						'installed'  => false,
+						'fingerprint' => $key->fingerprint,
+						'uids'        => $key->uids,
+						'contents'    => $contents,
+					];
+				}
+				catch(Exception $e){
+					// Key isn't available :(
+					\Core\ErrorManagement\exception_handler($e);
+				}
+			}
 			else{
 				$dat = [
-					'key'        => $id,
-					'available'  => false,
-					'installed'  => false,
+					'key'         => $id,
+					'available'   => false,
+					'installed'   => false,
 					'fingerprint' => '',
 					'uids'        => [],
+					'contents'    => null,
 				];
 			}
 
@@ -167,11 +190,30 @@ class RepoXML extends XMLLoader {
 	 * @param string $name  The name, used for reference.
 	 * @param string $email The email, used to confirm against the public data upon installing.
 	 */
-	public function addKey($id, $name, $email){
+	public function addKey($id, $name = null, $email = null){
+		
+		if($id instanceof \Core\GPG\PrimaryKey){
+			$key = $id;
+			$id = $key->id_short;
+			$content = $key->getAscii();
+		}
+		else{
+			$content = null;
+		}
+		
 		$key = $this->getElement('keys/key[id="' . $id . '"]');
 		//$key->setAttribute('id', $id);
-		$key->setAttribute('name', $name);
-		$key->setAttribute('email', $email);
+		if($name){
+			$key->setAttribute('name', $name);	
+		}
+		if($email){
+			$key->setAttribute('email', $email);	
+		}
+		if($content){
+			// Newlines here are critical, so I need to ensure that they are preserved!
+			$key->appendChild($this->_DOM->createCDATASection($content));
+			//$key->nodeValue = $content;
+		}
 	}
 
 	/**
