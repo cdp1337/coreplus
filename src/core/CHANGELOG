@@ -1,3 +1,23 @@
+Core Plus 6.0.3
+
+	* [Feature] #530
+	* [Feature] User Story #1961 (Feature #1977, #1978, #1979)
+	* Better future support in the update system.
+	* Include the new license key for Core.
+	* Post a message to refer to the more powerful GPG Key manager when available.
+	* New license checks on the system health page.
+	* Embed public keys in the repoXML.
+	* New raw method asXML that uses the native libxml renderer.
+	* Integrate support for licensed features into Core.
+	* New support on GPG for Secret keys and Signatures.
+	* Support POST types for remote files.
+	* More support for javascript notifications from the CLI system.
+	* Better UX on the system health page, (expandable divs with additional information).
+	* Include licensing data on components natively.
+	* Auto-import new keys on existing repositories.
+	* Progress log now preserves warnings and errors.
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 16 Aug 2016 00:45:01 -0400
+
 Core Plus 6.0.2
 
 	* [Bug] Fix for WHERE clauses containing newline characters.

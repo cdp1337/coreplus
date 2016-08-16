@@ -8,8 +8,8 @@
  */
 
 return [
-	//'url' => 'http://corepl.us',
-	'url' => 'http://localhost/~charlie/coreplus',
+	'url' => 'https://corepl.us',
+	//'url' => 'http://localhost/~charlie/coreplus', // DEV!
 	'key' => '01D62BC0',
 	'features' => [
 		'/core/license',

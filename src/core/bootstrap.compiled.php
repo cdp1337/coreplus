@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 02 Aug 2016 11:55:34 -0400
+ * @compiled Tue, 16 Aug 2016 00:13:23 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1454,6 +1454,9 @@ return [
 '#ATTRIBUTES' => $atts,
 '#CHILDREN' => $children,
 ];
+}
+public function asXML(){
+return $this->getDOM()->saveXML();
 }
 public function asMinifiedXML() {
 $string = $this->getDOM()->saveXML();
@@ -5294,27 +5297,31 @@ namespace  {
 
 ### REQUIRE_ONCE FROM core/models/ComponentModel.class.php
 class ComponentModel extends Model {
-public static $Schema = array(
-'name'    => array(
+public static $Schema = [
+'name'    => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 48,
 'required'  => true,
 'null'      => false,
-),
-'version' => array(
+],
+'version' => [
 'type'      => Model::ATT_TYPE_STRING,
 'maxlength' => 24,
 'null'      => false,
-),
-'enabled' => array(
+],
+'enabled' => [
 'type'    => Model::ATT_TYPE_BOOL,
 'default' => '1',
 'null'    => false,
-),
-);
-public static $Indexes = array(
-'primary' => array('name'),
-);
+],
+'license' => [
+'type' => Model::ATT_TYPE_DATA,
+'encrypted' => true,
+],
+];
+public static $Indexes = [
+'primary' => ['name'],
+];
 } // END class ComponentModel extends Model
 
 
@@ -8980,6 +8987,8 @@ private $_controllerlist = null;
 private $_widgetlist = null;
 private $_requires = null;
 private $_ready = false;
+private $_licenseDBData = null;
+private $_licenserFileData = null;
 public function __construct($filename = null) {
 $this->_file = \Core\Filestore\Factory::File($filename);
 $this->_xmlloader = new XMLLoader();
@@ -8998,9 +9007,10 @@ $this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
 Core\Utilities\Logger\write_debug('Loading metadata for component [' . $this->_name . ']');
 $dat = ComponentFactory::_LookupComponentData($this->_name);
 if (!$dat) return;
-$this->_versionDB = $dat['version'];
-$this->_enabled   = ($dat['enabled']) ? true : false;
-$this->_loaded    = true;
+$this->_versionDB   = $dat['version'];
+$this->_enabled     = ($dat['enabled']) ? true : false;
+$this->_loaded      = true;
+$this->_licenseDBData = isset($dat['license']) ? $dat['license'] : null;
 $this->_permissions = array();
 foreach($this->_xmlloader->getElements('/permissions/permission') as $el){
 $this->_permissions[$el->getAttribute('key')] = [
@@ -9460,16 +9470,86 @@ public function getVersion() {
 return $this->_version;
 }
 public function getLicenseData(){
+if(!defined('SERVER_ID')){
+return [];
+}
+if(strlen(SERVER_ID) != 32){
+return [];
+}
+if($this->_licenserFileData === null){
 $f = ($this->getKeyName() == 'core' ? ROOT_PDIR . 'core/' : $this->getBaseDir() ) . 'LICENSER.php';
 if(file_exists($f)){
-include($f);
+$licenser = include($f);
 if(!isset($licenser)){
-trigger_error('Please ensure that LICENSER.php defines $licenser with the necessary data!', E_USER_WARNING);
+$this->_licenserFileData = [];
+return [];
+}
+elseif(is_array($licenser)){
+$this->_licenserFileData = $licenser;
 }
 else{
-return $licenser;
+$this->_licenserFileData = [];
+return [];
 }
 }
+else{
+$this->_licenserFileData = [];
+return [];
+}
+$features = [];
+$status = false;
+$message = 'No license data present';
+$expires = null;
+if($this->_licenseDBData){
+$cacheKey = md5('LICENSER:' . SERVER_ID . $this->getKeyName());
+$cached = \Core\Cache::Get($cacheKey);
+if($cached){
+$features = $cached['features'];
+$status = $cached['status'];
+$message = $cached['message'];
+$expires = $cached['expires'];
+}
+else{
+try{
+$gpg = new \Core\GPG\GPG();
+$data = $gpg->decryptData($this->_licenseDBData);
+if($data && ($decoded = json_decode($data, true))){
+if($decoded['status'] && isset($decoded['features'])){
+$features = $decoded['features'];
+}
+$status = $decoded['status'];
+if(isset($decoded['message'])){
+$message = $decoded['message'];
+}
+elseif($status){
+$message = 'Valid license'; // Good licenses may not have a message.
+}
+if(isset($decoded['expires'])){
+$expires = $decoded['expires'];
+}
+}
+\Core\Cache::Set($cacheKey, ['features' => $features, 'status' => $status, 'message' => $message, 'expires' => $expires], 7200);
+}
+catch(Exception $e){
+}
+}
+}
+$newFeatures = [];
+foreach($this->_licenserFileData['features'] as $f){
+if(isset($features[$f])){
+$newFeatures[$f] = $features[$f];
+}
+else{
+$newFeatures[$f] = false;
+}
+}
+$this->_licenserFileData['features'] = $newFeatures;
+$this->_licenserFileData['status'] = $status;
+$this->_licenserFileData['message'] = $message;
+$this->_licenserFileData['component'] = $this->getName();
+$this->_licenserFileData['expires'] = $expires;
+}
+return $this->_licenserFileData;
 }
 public function setVersion($vers) {
 if ($vers == $this->_version) return;
@@ -9925,6 +10005,43 @@ if(sizeof($changes) == 0 && $verbose){
 CLI::PrintLine('No changes performed.');
 }
 return (sizeof($changes)) ? $changes : false;
+}
+public function queryLicenser(){
+$data = $this->getLicenseData();
+$cacheKey = md5('LICENSER:' . SERVER_ID . $this->getKeyName());
+\Core\Cache::Delete($cacheKey);
+$this->_licenserFileData = null;
+if(!sizeof($data)){
+return null;
+}
+$url = $data['url'];
+$r = new \Core\Filestore\Backends\FileRemote();
+$r->setMethod('POST');
+$r->setPayload(['serverid' => SERVER_ID]);
+$r->setFilename($url . '/licenser?component=' . $this->getKeyName() . '&version=' . $this->getVersion());
+$contents = $r->getContents();
+if(strpos($contents, '-----BEGIN PGP MESSAGE-----') === false){
+return [
+'status' => false,
+'message' => 'Unexpected return from the server! ' . htmlentities($contents),
+];
+}
+$gpg = new Core\GPG\GPG();
+$verify = $gpg->verifySignedData($contents);
+if(!$verify->isValid){
+return [
+'status' => false,
+'message' => 'Invalid GPG signed content from server!  Do you have the correct keys installed?',
+];
+}
+$c = ComponentModel::Construct($this->_name);
+$c->set('license', $contents);
+$c->save();
+$this->_licenseDBData = $contents;
+return [
+'status' => true,
+'message' => 'Retrieved license successfully!',
+];
 }
 public function _parseWidgets($install = true, $verbosity = 0) {
 $overallChanges  = [];
@@ -12802,6 +12919,8 @@ private $_headers = null;
 private $_response = null;
 private $_tmplocal = null;
 private $_requestHeaders = null;
+private $_method = 'GET';
+private $_payload = null;
 protected $_redirectFile = null;
 protected $_redirectCount = 0;
 public function __construct($filename = null) {
@@ -12855,9 +12974,6 @@ return $url;
 }
 public function getFilename($prefix = ROOT_PDIR) {
 return $this->_url;
-}
-public function setFilename($filename) {
-$this->_url = $filename;
 }
 public function getBaseFilename($withoutext = false) {
 return $this->getBasename($withoutext);
@@ -13030,10 +13146,36 @@ return $this->_getTmpLocal()->getPreviewFile($dimensions);
 public function isWritable() {
 return false;
 }
+public function setFilename($filename) {
+$this->_url = $filename;
+}
+public function setMethod($method){
+$method = strtoupper($method);
+switch($method){
+case 'GET':
+case 'POST':
+$this->_method = $method;
+break;
+default:
+throw new \Exception('Unsupported method: ' . $method);
+}
+}
+public function setPayload($data){
+if($this->_method == 'GET'){
+$this->_method = 'POST';
+}
+if(!is_array($data)){
+throw new \Exception('POST payloads MUST be an associative array.');
+}
+$this->_payload = $data;
+}
 public function setRequestHeader($value, $key){
 $this->_requestHeaders[] = $value . ': ' . $key;
 }
 protected function _getHeaders() {
+if($this->_method == 'POST' && $this->_headers === null){
+return [];
+}
 if ($this->_headers === null) {
 $this->_headers = array();
 $curl = curl_init();
@@ -13136,6 +13278,9 @@ CURLOPT_URL            => $this->getURL(),
 CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 )
 );
+if($this->_method == 'POST'){
+curl_setopt($curl, CURLOPT_POSTFIELDS, $this->_payload);
+}
 $result = curl_exec($curl);
 if($result === false){
 switch(curl_errno($curl)){
@@ -15085,6 +15230,7 @@ private $_loaded = false;
 private $_componentobj;
 private $_profiletimes = array();
 private $_permissions = array();
+private $_features = [];
 public function load() {
 return;
 if ($this->_loaded) return;
@@ -15361,12 +15507,8 @@ $h->description = 'Automatic hook for control links on the ' . $class . ' object
 }
 }
 $licenser = $c->getLicenseData();
-if($licenser && defined('SERVER_ID') && class_exists('\\Core\\Licenser')){
-$url  = $licenser['url'];
-$comp = $c->getKeyName();
-foreach($licenser['features'] as $key){
-\Core\Licenser::RegisterFeature($key, $url, $comp);
-}
+if(sizeof($licenser) && isset($licenser['features'])){
+$this->_features += $licenser['features'];
 }
 $c->_setReady(true);
 }
@@ -15745,10 +15887,10 @@ public static function _AttachJSON(){
 return true;
 }
 public static function _GetLegalFooterContent(){
-$lic = \Core\Licenser::Get('/core/license');
-$licurl = \Core\Licenser::Get('/core/license_url');
-$licto = \Core\Licenser::Get('/core/licensed_to');
-$hide = \Core\Licenser::Get('/core/hide_legal_notice');
+$lic = self::GetLicensedFeature('/core/license');
+$licurl = self::GetLicensedFeature('/core/license_url');
+$licto = self::GetLicensedFeature('/core/licensed_to');
+$hide = self::GetLicensedFeature('/core/hide_legal_notice');
 if(!$lic) {
 $lic = 'AGPLv3';
 $licurl = 'https://www.gnu.org/licenses/agpl';
@@ -15805,6 +15947,21 @@ $ret[] = $key;
 }
 }
 return $ret;
+}
+public static function GetLicensedFeature($featureCode) {
+$s = self::Singleton();
+return isset($s->_features[$featureCode]) ? $s->_features[$featureCode] : false;
+}
+public static function GetLicensedDump() {
+$components = self::GetComponents();
+$licenses = [];
+foreach($components as $c){
+$dat = $c->getLicenseData();
+if(sizeof($dat)){
+$licenses[] = $dat;
+}
+}
+return $licenses;
 }
 }
 spl_autoload_register('Core::CheckClass');
@@ -19243,10 +19400,14 @@ $debug .= "</span>";
 $debug .= '</fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-licenser-information">';
 $debug .= sprintf($legend, 'Licensed Information');
-$lic = \Core\Licenser::GetRaw();
+$lic = Core::GetLicensedDump();
 $debug .= '<div>';
 foreach($lic as $dat){
-$debug .= $dat['url'] . '::' . $dat['feature'] . ' => ' . $dat['value'] . "\n";
+$licPrefix = $dat['status'] ? '<span style="color:green;">' : '<span style="color:red;">';
+$debug .= $dat['component'] . ' license from ' . $dat['url'] . ' => ' . $licPrefix . $dat['message'] . "</span>\n";
+foreach($dat['features'] as $k => $v){
+$debug .= '&nbsp;&nbsp;&nbsp;&nbsp;' . $k . ': ' . $v . "\n";
+}
 }
 $debug .= '</div></fieldset>';
 $debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-includes-information">';
@@ -19423,6 +19584,9 @@ unset($crumbs[$k]);
 }
 else{
 $seen[] = $dat['link'];
+if(substr($dat['title'], 0, 2) == 't:'){
+$crumbs[$k]['title'] = t(substr($dat['title'], 2));
+}
 }
 }
 return $crumbs;
