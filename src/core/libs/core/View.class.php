@@ -849,10 +849,14 @@ class View {
 					// Display the licensed content on this application
 					$debug .= '<fieldset class="debug-section collapsible collapsed" id="debug-section-licenser-information">';
 					$debug .= sprintf($legend, 'Licensed Information');
-					$lic = \Core\Licenser::GetRaw();
+					$lic = Core::GetLicensedDump();
 					$debug .= '<div>';
 					foreach($lic as $dat){
-						$debug .= $dat['url'] . '::' . $dat['feature'] . ' => ' . $dat['value'] . "\n";
+						$licPrefix = $dat['status'] ? '<span style="color:green;">' : '<span style="color:red;">';
+						$debug .= $dat['component'] . ' license from ' . $dat['url'] . ' => ' . $licPrefix . $dat['message'] . "</span>\n";
+						foreach($dat['features'] as $k => $v){
+							$debug .= '&nbsp;&nbsp;&nbsp;&nbsp;' . $k . ': ' . $v . "\n";
+						}
 					}
 					$debug .= '</div></fieldset>';
 
@@ -1135,6 +1139,11 @@ class View {
 			}
 			else{
 				$seen[] = $dat['link'];
+				
+				// Also ensure that the title for this entry has i18n translations.
+				if(substr($dat['title'], 0, 2) == 't:'){
+					$crumbs[$k]['title'] = t(substr($dat['title'], 2));
+				}
 			}
 		}
 

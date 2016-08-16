@@ -202,6 +202,12 @@ class Component_2_1 {
 	 * @var bool
 	 */
 	private $_ready = false;
+	
+	/** @var string Raw signed license data from the database, populated by load */
+	private $_licenseDBData = null;
+	
+	/** @var null|array Result of the LICENSER.php file in this component, populated by getLicenseData as-needed. */
+	private $_licenserFileData = null;
 
 
 	public function __construct($filename = null) {
@@ -238,9 +244,10 @@ class Component_2_1 {
 		$dat = ComponentFactory::_LookupComponentData($this->_name);
 		if (!$dat) return;
 
-		$this->_versionDB = $dat['version'];
-		$this->_enabled   = ($dat['enabled']) ? true : false;
-		$this->_loaded    = true;
+		$this->_versionDB   = $dat['version'];
+		$this->_enabled     = ($dat['enabled']) ? true : false;
+		$this->_loaded      = true;
+		$this->_licenseDBData = isset($dat['license']) ? $dat['license'] : null;
 
 		// Set the permissions
 		$this->_permissions = array();
@@ -1093,20 +1100,116 @@ class Component_2_1 {
 	public function getVersion() {
 		return $this->_version;
 	}
-	
+
+	/**
+	 * Return the fully populated array with the licensed data and the values from the license
+	 * 
+	 * @return array
+	 */
 	public function getLicenseData(){
-		$f = ($this->getKeyName() == 'core' ? ROOT_PDIR . 'core/' : $this->getBaseDir() ) . 'LICENSER.php';
+		// This feature relies on a valid server id.
+		if(!defined('SERVER_ID')){
+			return [];
+		}
+		if(strlen(SERVER_ID) != 32){
+			return [];
+		}
 		
-		if(file_exists($f)){
-			include($f);
-			
-			if(!isset($licenser)){
-				trigger_error('Please ensure that LICENSER.php defines $licenser with the necessary data!', E_USER_WARNING);
+		// See if I need to lookup the contents; this is cached internally to save on lookups.
+		if($this->_licenserFileData === null){
+			$f = ($this->getKeyName() == 'core' ? ROOT_PDIR . 'core/' : $this->getBaseDir() ) . 'LICENSER.php';
+
+			if(file_exists($f)){
+				$licenser = include($f);
+
+				if(!isset($licenser)){
+					$this->_licenserFileData = [];
+					return [];
+				}
+				elseif(is_array($licenser)){
+					$this->_licenserFileData = $licenser;
+				}
+				else{
+					// Just a blank array.
+					$this->_licenserFileData = [];
+					return [];
+				}
 			}
 			else{
-				return $licenser;
+				$this->_licenserFileData = [];
+				return [];
 			}
+
+			$features = [];
+			$status = false;
+			$message = 'No license data present';
+			$expires = null;
+			if($this->_licenseDBData){
+				// Only populate feature values if there is a license included.
+				// Otherwise, they will get set to FALSE.
+				
+				// First through, try to pull them from cache to save on a decryption operation.
+				// Lookup the cache for this licensed key value.
+				$cacheKey = md5('LICENSER:' . SERVER_ID . $this->getKeyName());
+				$cached = \Core\Cache::Get($cacheKey);
+				if($cached){
+					$features = $cached['features'];
+					$status = $cached['status'];
+					$message = $cached['message'];
+					$expires = $cached['expires'];
+				}
+				else{
+					try{
+						$gpg = new \Core\GPG\GPG();
+
+						$data = $gpg->decryptData($this->_licenseDBData);
+						if($data && ($decoded = json_decode($data, true))){
+							if($decoded['status'] && isset($decoded['features'])){
+								$features = $decoded['features'];
+							}
+							
+							$status = $decoded['status'];
+							if(isset($decoded['message'])){
+								$message = $decoded['message'];
+							}
+							elseif($status){
+								$message = 'Valid license'; // Good licenses may not have a message.
+							}
+							
+							if(isset($decoded['expires'])){
+								$expires = $decoded['expires'];
+							}
+						}
+						
+						// Save these back to cache so that this try/catch can be skipped for a little while again.
+						\Core\Cache::Set($cacheKey, ['features' => $features, 'status' => $status, 'message' => $message, 'expires' => $expires], 7200);
+					}
+					catch(Exception $e){
+						// GPG cannot be instantiated; silently skip pulling license features.
+					}
+				}
+			}
+
+			// Pull the information from the cache or database for the keys!
+			$newFeatures = [];
+			foreach($this->_licenserFileData['features'] as $f){
+				if(isset($features[$f])){
+					$newFeatures[$f] = $features[$f];
+				}
+				else{
+					$newFeatures[$f] = false;
+				}
+			}
+			
+			// Remap the stored key with the version containing the values.
+			$this->_licenserFileData['features'] = $newFeatures;
+			$this->_licenserFileData['status'] = $status;
+			$this->_licenserFileData['message'] = $message;
+			$this->_licenserFileData['component'] = $this->getName();
+			$this->_licenserFileData['expires'] = $expires;
 		}
+		
+		return $this->_licenserFileData;
 	}
 
 	/**
@@ -1795,6 +1898,68 @@ class Component_2_1 {
 		}
 
 		return (sizeof($changes)) ? $changes : false;
+	}
+
+	/**
+	 * Query the registered licenser URL for this Component.
+	 * 
+	 * @throws Exception
+	 * 
+	 * @return array 'status' and 'message' are keys returned from this call.
+	 */
+	public function queryLicenser(){
+		$data = $this->getLicenseData();
+		
+		// Every query voids the cache!
+		$cacheKey = md5('LICENSER:' . SERVER_ID . $this->getKeyName());
+		\Core\Cache::Delete($cacheKey);
+		$this->_licenserFileData = null;
+		
+		// No data?  Simple!
+		if(!sizeof($data)){
+			return null;
+		}
+		
+		$url = $data['url'];
+		
+		$r = new \Core\Filestore\Backends\FileRemote();
+		// I need to use POST here with a payload because Apache 2.4 is blocking custom X- headers!
+		$r->setMethod('POST');
+		$r->setPayload(['serverid' => SERVER_ID]);
+		// Send the component and version as GET parameters so the retrieving server can gather analytics on who is using what version.
+		$r->setFilename($url . '/licenser?component=' . $this->getKeyName() . '&version=' . $this->getVersion());
+
+		$contents = $r->getContents();
+		
+		if(strpos($contents, '-----BEGIN PGP MESSAGE-----') === false){
+			return [
+				'status' => false,
+				'message' => 'Unexpected return from the server! ' . htmlentities($contents),
+			];
+		}
+		
+		// Ensure that this content matches out with the recorded key.
+		//$sig = \Core\Filestore\Factory::File('tmp/gpg-verify-' . \Core::RandomHex(6) . '.asc');
+		//$sig->putContents($contents);
+		$gpg = new Core\GPG\GPG();
+		$verify = $gpg->verifySignedData($contents);
+		if(!$verify->isValid){
+			return [
+				'status' => false,
+				'message' => 'Invalid GPG signed content from server!  Do you have the correct keys installed?',
+			];
+		}
+		
+		// Verification was successful!  Record this onto the component.
+		$c = ComponentModel::Construct($this->_name);
+		$c->set('license', $contents);
+		$c->save();
+		$this->_licenseDBData = $contents;
+		
+		return [
+			'status' => true,
+			'message' => 'Retrieved license successfully!',
+		];
 	}
 
 	/**

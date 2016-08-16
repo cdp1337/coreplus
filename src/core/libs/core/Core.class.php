@@ -96,7 +96,7 @@ class Core implements ISingleton {
 
 	/**
 	 * The component object that contains the 'Core' definition.
-	 * @var Component
+	 * @var Component_2_1
 	 */
 	private $_componentobj;
 
@@ -114,6 +114,9 @@ class Core implements ISingleton {
 	 * @var array
 	 */
 	private $_permissions = array();
+
+	/** @var array Array of licensed feature codes and the URL that they point to. */
+	private $_features = [];
 
 
 	/*****     PUBLIC METHODS       *********/
@@ -603,13 +606,8 @@ class Core implements ISingleton {
 		}
 		
 		$licenser = $c->getLicenseData();
-		if($licenser && defined('SERVER_ID') && class_exists('\\Core\\Licenser')){
-			// This will contain a url key and the features.
-			$url  = $licenser['url'];
-			$comp = $c->getKeyName();
-			foreach($licenser['features'] as $key){
-				\Core\Licenser::RegisterFeature($key, $url, $comp);
-			}
+		if(sizeof($licenser) && isset($licenser['features'])){
+			$this->_features += $licenser['features'];
 		}
 
 		// Lastly, mark this component as available!
@@ -1434,10 +1432,10 @@ EOD;
 	
 	public static function _GetLegalFooterContent(){
 		
-		$lic = \Core\Licenser::Get('/core/license');
-		$licurl = \Core\Licenser::Get('/core/license_url');
-		$licto = \Core\Licenser::Get('/core/licensed_to');
-		$hide = \Core\Licenser::Get('/core/hide_legal_notice');
+		$lic = self::GetLicensedFeature('/core/license');
+		$licurl = self::GetLicensedFeature('/core/license_url');
+		$licto = self::GetLicensedFeature('/core/licensed_to');
+		$hide = self::GetLicensedFeature('/core/hide_legal_notice');
 
 		if(!$lic) {
 			$lic = 'AGPLv3';
@@ -1575,6 +1573,40 @@ EOD;
 		return $ret;
 	}
 
+	/**
+	 * Get the requested licensed feature code from the licenser, or false if invalid/not set.
+	 * 
+	 * @param string $featureCode
+	 *
+	 * @return bool|string
+	 */
+	public static function GetLicensedFeature($featureCode) {
+		$s = self::Singleton();
+		
+		return isset($s->_features[$featureCode]) ? $s->_features[$featureCode] : false;
+	}
+
+	/**
+	 * Get a dump of all licensed features on the site, along with their current value and expiration.
+	 * 
+	 * Useful for the system health page and developer debug output.
+	 * 
+	 * @return array
+	 */
+	public static function GetLicensedDump() {
+		$components = self::GetComponents();
+		$licenses = [];
+		
+		foreach($components as $c){
+			/** @var Component_2_1 $c */
+			$dat = $c->getLicenseData();
+			if(sizeof($dat)){
+				$licenses[] = $dat;
+			}
+		}
+		
+		return $licenses;
+	}
 }
 
 
