@@ -43,6 +43,9 @@ class UpdaterHelper {
 		$pkgcount   = 0;
 		$current    = Core::GetComponents();
 		$froze      = \ConfigHandler::Get('/core/updater/versionfreeze');
+		$keys       = [];
+		$gpg        = new \Core\GPG\GPG();
+		
 
 		// If Core isn't installed yet, GetComponents will yield null.
 		if($current === null) $current = array();
@@ -173,6 +176,13 @@ class UpdaterHelper {
 			$repoxml->loadFromFile($file);
 			$rootpath = dirname($file->getFilename()) . '/';
 
+			// Auto-import new keys on existing repos.
+			foreach($repoxml->getKeys() as $dat){
+				if(!$dat['installed'] && $dat['available'] && $dat['contents']){
+					$gpg->importKey($dat['contents']);
+				}
+			}
+			
 			foreach($repoxml->getPackages() as $pkg){
 				/** @var $pkg PackageXML */
 				// Already installed and is up to date, don't do anything.
