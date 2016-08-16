@@ -110,7 +110,7 @@ class PackageRepositoryController extends Controller_2_1 {
 			$view->mode = View::MODE_NOOUTPUT;
 			$view->contenttype = 'application/xml';
 			$view->render();
-			echo $xml->asMinifiedXML();
+			echo $xml->asXML();
 			return;
 		}
 		elseif($request->ext == 'xml.gz'){
@@ -119,7 +119,7 @@ class PackageRepositoryController extends Controller_2_1 {
 			$view->mode = View::MODE_NOOUTPUT;
 			$view->contenttype = 'application/gzip';
 			$view->render();
-			$c = $xml->asMinifiedXML();
+			$c = $xml->asXML();
 			echo gzencode($c);
 			return;
 		}
@@ -199,6 +199,40 @@ class PackageRepositoryController extends Controller_2_1 {
 		$view->title = 'Package Repository';
 		$view->templatename = 'pages/packagerepository/index.tpl';
 		$view->assign('is_admin', $isAdmin);
+	}
+
+	/**
+	 * View the details on a given package that is contained in this repo.
+	 */
+	public function details(){
+		$request = $this->getPageRequest();
+		$view    = $this->getView();
+		
+		$type = $request->getParameter('type');
+		$key = $request->getParameter('key');
+		
+		// Lookup this package.
+		
+		$pkgs = PackageRepositoryPackageModel::Find(['type = ' . $type, 'key = ' . $key], null, 'datetime_released DESC');
+		$latest = null;
+		$latestVersion = null;
+		
+		foreach($pkgs as $p){
+			// Determine the latest version.
+			if($latestVersion === null || \Core\version_compare($p->get('version'), $latestVersion, 'gt')){
+				$latest = $p;
+				$latestVersion = $p->get('version');
+			}
+		}
+		
+		if(!$latest){
+			return View::ERROR_NOTFOUND;
+		}
+		
+		$view->addBreadcrumb('Package Repository', '/packagerepository');
+		$view->title = $latest->get('name');
+		$view->assign('latest', $latest);
+		$view->assign('all', $pkgs);
 	}
 
 	public function download(){

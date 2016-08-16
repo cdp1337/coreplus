@@ -13,31 +13,25 @@ class PackageRepositoryFeatureModel extends Model {
 		],
 		'feature' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'required' => true,
+			'form' => [
+			],
 		],
 		'type' => [
-			'type' => Model::ATT_TYPE_STRING,
+			'type' => Model::ATT_TYPE_ENUM,
 			'required' => true,
-			'maxlength' => 64,
-			'form' => array(
-				'title' => 'Field Type',
-				'description' => 'The type of field to display on the custom form',
-				'group' => 'Form Elements',
-				'grouptype' => 'tabs',
-			)
-		],
-		'title' => [
-			'type' => Model::ATT_TYPE_STRING,
-			'null' => false,
-			'required' => true,
-			'form' => array(
-				'group' => 'Form Elements',
-				'grouptype' => 'tabs',
-			),
+			'options' => [
+				'text' => 'Free-Form Text Field',
+				'bool' => 'Boolean Yes/No',
+				'enum' => 'Select Options',
+			],
+			'form' => [
+			],
 		],
 		'options' => [
-			'type' => Model::ATT_TYPE_DATA,
-			'encoding' => Model::ATT_ENCODING_JSON,
-			'comment' => 'JSON encoded set of data',
+			'type' => Model::ATT_TYPE_TEXT,
+			'form' => [
+			],
 		],
 	];
 	
@@ -45,4 +39,13 @@ class PackageRepositoryFeatureModel extends Model {
 		'primary' => 'id',
 		'unique:feature' => 'feature',
 	];
+	
+	public function getOptionsAsArray(){
+		if($this->get('type') == 'enum'){
+			return array_map('trim', explode("\n", $this->get('options')));
+		}
+		else{
+			return [];
+		}
+	}
 }

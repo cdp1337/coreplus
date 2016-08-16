@@ -53,6 +53,9 @@ class PackageRepositoryPackageModel extends Model {
 		'gpg_key' => [
 			'type' => Model::ATT_TYPE_STRING,
 		],
+		'lic_key' => [
+			'type' => Model::ATT_TYPE_STRING,
+		],
 		'logo' => [
 			'type' => Model::ATT_TYPE_STRING,
 		],
@@ -60,6 +63,9 @@ class PackageRepositoryPackageModel extends Model {
 			'type' => Model::ATT_TYPE_STRING,
 		],
 		'file' => [
+			'type' => Model::ATT_TYPE_STRING,
+		],
+		'md5' => [
 			'type' => Model::ATT_TYPE_STRING,
 		],
 		'description' => [
@@ -92,6 +98,10 @@ class PackageRepositoryPackageModel extends Model {
 		'upgrades' => [
 			'type' => Model::ATT_TYPE_DATA,
 			'encoding' => Model::ATT_ENCODING_JSON,
+		],
+		'enabled' => [
+			'type' => Model::ATT_TYPE_BOOL,
+			'default' => 0,
 		],
 	];
 	
@@ -135,7 +145,7 @@ class PackageRepositoryPackageModel extends Model {
 	public static function GetAsRepoXML($serverid, $limitPackager) {
 		$repo = new RepoXML();
 		$repo->setDescription(ConfigHandler::Get('/package_repository/description'));
-		$gpg          = new Core\GPG\GPG();
+		
 		$keysfound    = [];
 
 		$where = [];
@@ -156,33 +166,51 @@ class PackageRepositoryPackageModel extends Model {
 			if(!in_array($pkg->get('gpg_key'), $keysfound)){
 				$keysfound[] = $pkg->get('gpg_key');
 			}
+			
+			if($pkg->get('lic_key') && !in_array($pkg->get('lic_key'), $keysfound)){
+				$keysfound[] = $pkg->get('lic_key');
+			}
 
 			$package->setFileLocation(\Core\resolve_link('/packagerepository/download?file=' . $pkg->get('file')));
 			
-			$upgrades = $pkg->get('requires');
-			foreach($upgrades as $dat){
-				$package->setRequire($dat['type'], $dat['name'], $dat['version'], $dat['operation']);
+			$requires = $pkg->get('requires');
+			if(is_array($requires)){
+				foreach($requires as $dat){
+					$package->setRequire($dat['type'], $dat['name'], $dat['version'], $dat['operation']);
+				}
 			}
 
-			$upgrades = $pkg->get('provides');
-			foreach($upgrades as $dat){
-				$package->setProvide($dat['type'], $dat['name'], $dat['version']);
+			$provides = $pkg->get('provides');
+			if(is_array($provides)){
+				foreach($provides as $dat){
+					$package->setProvide($dat['type'], $dat['name'], $dat['version']);
+				}	
 			}
 
 			$upgrades = $pkg->get('upgrades');
-			foreach($upgrades as $dat){
-				$package->setUpgrade($dat['from'], $dat['to']);
+			if(is_array($upgrades)){
+				foreach($upgrades as $dat){
+					$package->setUpgrade($dat['from'], $dat['to']);
+				}
 			}
 
 			$screens = $pkg->get('screenshots');
-			foreach($screens as $dat){
-				$f = \Core\Filestore\Factory::File($dat);
-				$package->setScreenshot($f->getURL());
+			if(is_array($screens)){
+				foreach($screens as $dat){
+					$f = \Core\Filestore\Factory::File($dat);
+					$package->setScreenshot($f->getURL());
+				}	
 			}
 			
 			$package->setChangelog($pkg->get('changelog'));
 			
 			$repo->addPackage($package);
+		}
+
+		$gpg          = new Core\GPG\GPG();
+		foreach($keysfound as $k){
+			$repo->addKey($gpg->getKey($k));
+			//var_dump($key->getAscii()); die();
 		}
 		
 		return $repo;
@@ -195,9 +223,6 @@ class PackageRepositoryPackageModel extends Model {
 			trigger_error('Base directory is set to "/", this is probably not what you want!');
 			return false;
 		}
-		$coredir      = $dir->getPath() . 'core/';
-		$componentdir = $dir->getPath() . 'components/';
-		$themedir     = $dir->getPath() . 'themes/';
 		$tmpdir       = \Core\Filestore\Factory::Directory('tmp/exports/');
 		$gpg          = new Core\GPG\GPG();
 		$keysfound    = [];
@@ -211,8 +236,25 @@ class PackageRepositoryPackageModel extends Model {
 		\Core\CLI\CLI::PrintHeader('Rebuilding Packages');
 		\Core\CLI\CLI::PrintProgressBar(0);
 		$totalPackages = sizeof($ls);
-		$percentEach = 100 / $totalPackages;
-		$currentPercent = 0;
+		$percentEach = '+' . (100 / $totalPackages);
+		
+		// Cache of models on the system currently to save on queries.
+		$models = PackageRepositoryPackageModel::Find();
+		$modelsByHash = [];
+		$modelsByKeys = [];
+		foreach($models as $m){
+			/** @var PackageRepositoryPackageModel $m */
+			$k = $m->get('type') . ':' . $m->get('key') . ':' . $m->get('version');
+			$modelsByHash[ $m->get('md5') ] = $m;
+			$modelsByKeys[ $k ] = $m;
+		}
+		
+		$features = PackageRepositoryFeatureModel::Find();
+		$featuresByKey = [];
+		foreach($features as $f){
+			/** @var PackageRepositoryFeatureModel $f */
+			$featuresByKey[ $f->get('feature') ] = $f;
+		}
 
 		// Ensure that the necessary temp directory exists.
 		$tmpdir->mkdir();
@@ -223,8 +265,15 @@ class PackageRepositoryPackageModel extends Model {
 			$fullpath   = $file->getFilename();
 			$relpath    = substr($file->getFilename(), strlen($dir->getPath()));
 			$tmpdirpath = $tmpdir->getPath();
+			$hash       = $file->getHash();
 			
-			\Core\CLI\CLI::PrintLine('Processing ' . $file->getBasename());
+			\Core\CLI\CLI::PrintActionStart('Processing ' . $file->getBasename());
+			
+			// If this hash already exists, then it hasn't been updated!
+			/*if(isset($modelsByHash[ $hash ])){
+				Core\CLI\CLI::PrintLine('Skipping, not modified');
+				\Core\CLI\CLI::PrintProgressBar($percentEach);
+			}*/
 
 			// Drop the .asc extension.
 			$basename = $file->getBasename(true);
@@ -238,16 +287,28 @@ class PackageRepositoryPackageModel extends Model {
 				$signature = $gpg->verifyFileSignature($fullpath);
 			}
 			catch(\Exception $e){
-				trigger_error($fullpath . ' was not able to be verified as authentic, (probably because the GPG public key was not available)');
+				\Core\CLI\CLI::PrintActionStatus(false);
+				\Core\CLI\CLI::PrintError($e->getMessage());
 				$failedpackages++;
+				\Core\CLI\CLI::PrintProgressBar($percentEach);
 				continue;
+			}
+			
+			if(!isset($keysfound[ $signature->keyID ])){
+				// Look this key data up!
+				$keysfound[ $signature->keyID ] = [
+					'public' => $gpg->getKey($signature->keyID),
+					'private' => $gpg->getSecretKey($signature->keyID)
+				];
 			}
 
 			// decode and untar it in a temp directory to get the package.xml file.
 			exec('gpg --homedir "' . GPG_HOMEDIR . '" -q -d "' . $fullpath . '" > "' . $tgz->getFilename() . '" 2>/dev/null', $output, $ret);
 			if($ret) {
-				trigger_error('Decryption of file ' . $fullpath . ' failed!');
+				\Core\CLI\CLI::PrintActionStatus(false);
+				\Core\CLI\CLI::PrintError('Decryption of file ' . $fullpath . ' failed!');
 				$failedpackages++;
+				\Core\CLI\CLI::PrintProgressBar($percentEach);
 				continue;
 			}
 
@@ -284,8 +345,11 @@ class PackageRepositoryPackageModel extends Model {
 			}
 
 			// Lookup this package in the database or create if it doesn't exist.
-			$model = PackageRepositoryPackageModel::Find(['type = ' . $package->getType(), 'key = ' . $package->getKeyName(), 'version = ' . $package->getVersion()], 1);
-			if(!$model){
+			$key = $type . ':' . $package->getKeyName() . ':' . $package->getVersion();
+			if(isset($modelsByKeys[ $key ])){
+				$model = $modelsByKeys[ $key ];
+			}
+			else{
 				$model = new PackageRepositoryPackageModel();
 				$model->set('type', $type);
 				$model->set('key', $package->getKeyName());
@@ -301,6 +365,19 @@ class PackageRepositoryPackageModel extends Model {
 			$model->set('requires', $package->getRequires());
 			$model->set('provides', $package->getProvides());
 			$model->set('upgrades', $package->getUpgrades());
+			$model->set('md5', $hash);
+			$model->set('enabled', true);
+
+			if(!$keysfound[ $signature->keyID ]['public']){
+				trigger_error($fullpath . ' was not able to be verified as authentic, (probably because the GPG public key was not available)');
+				$failedpackages++;
+				$model->set('enabled', false);
+			}
+			if($keysfound[ $signature->keyID ]['private']){
+				trigger_error('Refusing to enable package with the private key available as a security precaution!  (The server that distributes the files should not be able to modify the packages!)');
+				$failedpackages++;
+				$model->set('enabled', false);
+			}
 
 			unlink($tmpdirpath . 'package.xml');
 
@@ -397,20 +474,64 @@ class PackageRepositoryPackageModel extends Model {
 					}
 				}
 			}
+
+			$archivedFile = dirname($xmlFile) . '/LICENSER.php';
+			exec('tar -xzf "' . $tgz->getFilename() . '" -O ' . $archivedFile . ' > "' . $tmpdirpath . 'LICENSER.php"', $output, $ret);
+			if(!$ret) {
+				// Return code should be 0 on a successful write.
+				$ret = include($tmpdirpath . 'LICENSER.php');
+				// This should be an array of the licenser data, including the key!
+				if(is_array($ret) && isset($ret['key']) && isset($ret['features'])){
+					// Lookup this key and see if it's present.
+					// Since the point of this will be to sign content for the features, we'll need the PRIVATE key here.
+					if(!isset($keysfound[ $ret['key'] ])){
+						// Look this key data up!
+						$keysfound[ $ret['key'] ] = [
+							'public' => $gpg->getKey($ret['key']),
+							'private' => $gpg->getSecretKey($ret['key'])
+						];
+					}
+					
+					if(!$keysfound[ $ret['key'] ]['private']){
+						\Core\CLI\CLI::PrintWarning('Private key ' . $ret['key'] . ' not available, please install that if you wish to make use of managing the licensed features.');
+					}
+					else{
+						// Private key is available!  Install these features so they can be managed!
+						// NOTE, the private key is NOT required if this repository will not be managing the features,
+						// eg: mirroring someone else's packages.
+						foreach($ret['features'] as $feature){
+							if(!isset($featuresByKey[$feature])){
+								// Create it!
+								$f = new PackageRepositoryFeatureModel();
+								$f->set('feature', $feature);
+								$f->save();
+								\Core\CLI\CLI::PrintLine('Registered Feature ' . $feature);
+								
+								$featuresByKey[$feature] = $f;
+							}
+						}
+						
+						$model->set('lic_key', $ret['key']);
+					}
+				}
+				// @TODO
+				unlink($tmpdirpath . 'LICENSER.php');
+			}
 			
 			if($model->changed()){
+				\Core\CLI\CLI::PrintActionStatus(true);
 				$model->save(true);
 				$addedpackages++;	
 			}
 			else{
+				\Core\CLI\CLI::PrintActionStatus('skip');
 				$skippedpackages++;
 			}
 
 			// But I can still cleanup!
 			$tgz->delete();
 
-			$currentPercent += $percentEach;
-			\Core\CLI\CLI::PrintProgressBar($currentPercent);
+			\Core\CLI\CLI::PrintProgressBar($percentEach);
 		}
 
 		// Commit everything!

@@ -1,11 +1,20 @@
-{$generate_form->render()}
-
 
 {$listings->render('head')}
 	{foreach $listings as $l}
 		<tr>
 			<td>
-				{$l->getLabel()}
+				{if $l.comment}
+					{$l.comment}<br/>
+					({$l->getLabel()})
+				{else}
+					{$l->getLabel()}
+				{/if}
+				<br/>
+				{if $l.expires && $l.expires != '0000-00-00'}
+					Expires {date format="SD" $l.expires}
+				{else}
+					EXPIRED/UNKNOWN
+				{/if}
 			</td>
 			<td>
 				{if $l.password}
@@ -17,9 +26,17 @@
 					<span class="password" style="display:none;">{$l.password}</span>	
 				{/if}
 			</td>
-			<td>{$l.comment}</td>
-			<td>{$l.expires}</td>
 			<td>{$l.ip_restriction}</td>
+			<td>
+				{foreach $l.features as $k => $v}
+					{$k}: {$v}<br/>
+				{/foreach}
+			</td>
+			<td>
+				{$l.referrer_last_checkin}<br/>
+				{date format="SDT" $l.datetime_last_checkin}<br/>
+				{geoiplookup $l.ip_last_checkin} {$l.ip_last_checkin}
+			</td>
 			<td>
 				{controls model=$l}
 			</td>

@@ -15,8 +15,8 @@
 <div class="package-list">
 	{foreach $packages as $pkg}
 		<div class="package">
-			{img src=$pkg.package.logo dimensions="128x128" class="package-screenshot" placeholder="generic"}
-			<span class="package-name">{$pkg.package.name}</span>
+			{img src=$pkg.package.logo dimensions="96x96" class="package-screenshot" placeholder="generic"}
+			{a href="/packagerepository/details?type=`$pkg.package.type`&key=`$pkg.package.key`" class="package-name"}{$pkg.package.name}{/a}
 
 			{if $pkg.package.description}
 				<p class="package-description">

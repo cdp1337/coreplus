@@ -55,15 +55,24 @@ class PackageRepositoryLicenseModel extends Model {
 		],
 		'datetime_last_checkin' => [
 			'type' => Model::ATT_TYPE_INT,
+			'formtype' => 'disabled',
 		],
 		'ip_last_checkin' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'disabled',
 		],
 		'useragent_last_checkin' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'disabled',
 		],
 		'referrer_last_checkin' => [
 			'type' => Model::ATT_TYPE_STRING,
+			'formtype' => 'disabled',
+		],
+		'features' => [
+			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
+			'formtype' => 'disabled',
 		],
 	];
 
@@ -78,19 +87,18 @@ class PackageRepositoryLicenseModel extends Model {
 	];
 
 	/**
-	 * Check if this license is valid, will return a group of flags if invalid.
+	 * Check if this license is valid, or the flag if invalid.
 	 *
 	 * @param string $password Optional password to verify
 	 * @return int
 	 */
 	public function isValid($password = null){
-		$valid = 0;
 		if(!$this->exists()) {
 			return self::VALID_INVALID;
 		}
 
 		if($this->get('expires') < date('Y-m-d')){
-			$valid |= self::VALID_EXPIRED;
+			return self::VALID_EXPIRED;
 		}
 
 		if($this->get('ip_restriction')){
@@ -110,15 +118,15 @@ class PackageRepositoryLicenseModel extends Model {
 				}
 			}
 			if(!$allowed){
-				$valid |= self::VALID_ACCESS;
+				return self::VALID_ACCESS;
 			}
 		}
 
 		if($password && $this->get('password') != strtoupper($password)){
-			$valid |= self::VALID_PASSWORD;
+			return self::VALID_PASSWORD;
 		}
 
-		return $valid;
+		return self::VALID_VALID;
 	}
 
 	/**
