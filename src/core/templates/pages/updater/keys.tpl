@@ -1,24 +1,24 @@
-<p>Base Directory: {$directory}</p>
+{if $manager_available}
+	<p class="message-tutorial">
+		A more {a href="/gpgkeymanager"}advanced GPG key manager{/a} is available!
+	</p>
+{/if}
 
 {if sizeof($keys)}
 	<table class="listing">
 		<tr>
 			<th>Key</th>
 			<th>Date Created</th>
-			<th>Names</th>
+			<th>Owner</th>
 			<th>&nbsp;</th>
 		</tr>
 		{foreach from=$keys item=k}
 			<tr>
-				<td>{$k.key}</td>
-				<td>{$k.date}</td>
+				<td>{$k->id_short}</td>
+				<td>{date format="SD" $k->created}</td>
+				<td>{$k->getName()} {$k->getEmail()}</td>
 				<td>
-					{foreach from=$k.names item='e'}
-						{$e|escape}<br/>
-					{/foreach}
-				</td>
-				<td>
-					{a href="/updater/keys/delete/`$k.key`" confirm="Really delete key `$k.key`?" class="control-delete"}Delete{/a}
+					{a href="/updater/keys/delete/`$k->id_short`" confirm="Really delete key `$k->id_short`?" class="control-delete"}Delete{/a}
 				</td>
 			</tr>
 		{/foreach}
