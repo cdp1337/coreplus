@@ -7,9 +7,10 @@
  * Time: 9:16 PM
  */
 
-$licenser = [
+return [
 	//'url' => 'http://corepl.us',
 	'url' => 'http://localhost/~charlie/coreplus',
+	'key' => '01D62BC0',
 	'features' => [
 		'/core/license',
 		'/core/license_url',
