@@ -2,10 +2,10 @@
 /**
  * Defines the schema for the Component table
  *
- * @package Core
- * @author Charlie Powell <charlie@evalagency.com>
+ * @package   Core
+ * @author    Charlie Powell <charlie@evalagency.com>
  * @copyright Copyright (C) 2009-2016  Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+ * @license   GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -28,32 +28,34 @@
  * Please update result to your preferences and copy to the final location.
  *
  * @author Charlie Powell <charlie@evalagency.com>
- * @date 2011-06-09 01:14:48
+ * @date   2011-06-09 01:14:48
  */
 class ComponentModel extends Model {
-	public static $Schema = array(
-		'name'    => array(
+	public static $Schema = [
+		'name'    => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 48,
 			'required'  => true,
 			'null'      => false,
-		),
-		'version' => array(
+		],
+		'version' => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 24,
 			'null'      => false,
-		),
-		'enabled' => array(
+		],
+		'enabled' => [
 			'type'    => Model::ATT_TYPE_BOOL,
 			'default' => '1',
 			'null'    => false,
-		),
-	);
+		],
+		'license' => [
+			'type' => Model::ATT_TYPE_DATA,
+			'encrypted' => true,
+		],
+	];
 
-	public static $Indexes = array(
-		'primary' => array('name'),
-	);
-
-	// @todo Put your code here.
+	public static $Indexes = [
+		'primary' => ['name'],
+	];
 
 } // END class ComponentModel extends Model
