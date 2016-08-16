@@ -1,0 +1,38 @@
+---
+MESSAGE_GPGKEYMANAGER_FORM_GPG_KEY_COMMENT:
+  en: Completely optional comment for this key.
+MESSAGE_GPGKEYMANAGER_FORM_GPG_KEY_EMAIL:
+  en: >
+    The email address associated with this key.  REALLY SHOULD be a valid address
+    that people can contact via, but not absolutely required.
+MESSAGE_GPGKEYMANAGER_FORM_GPG_KEY_ENCRYPTION:
+  en: Type of encryption for this key.
+MESSAGE_GPGKEYMANAGER_FORM_GPG_KEY_EXPIRES:
+  en: Select the duration that you would like this key to be valid for.
+MESSAGE_GPGKEYMANAGER_FORM_GPG_KEY_NAME:
+  en: >
+    The "common name" or "CN" for this key; usually your REAL legal name, legal
+    business name, or other concise name, although name deviations, nick names,
+    short names, handles, etc are also accepted here. <br/> This is the field that
+    most people will see immediately for this key.
+MESSAGE_GPGKEYMANAGER_FORM_GPG_KEY_UPLOAD:
+  en: >
+    Copy the ASCII version of a public or private key to import.  This is available via gpg --export -a on the command line.
+STRING_GPGKEYMANAGER:
+  en: GPG Key Manager
+STRING_GPGKEYMANAGER_FORM_GPG_KEY_COMMENT:
+  en: Comment
+STRING_GPGKEYMANAGER_FORM_GPG_KEY_EMAIL:
+  en: Email Address
+STRING_GPGKEYMANAGER_FORM_GPG_KEY_ENCRYPTION:
+  en: Encryption Level
+STRING_GPGKEYMANAGER_FORM_GPG_KEY_EXPIRES:
+  en: Expires
+STRING_GPGKEYMANAGER_FORM_GPG_KEY_NAME:
+  en: Name "Common Name"
+STRING_GPGKEYMANAGER_FORM_GPG_KEY_UPLOAD:
+  en: Import/Upload GPG Key Contents
+STRING_GPGKEYMANAGER_GENERATE_KEY:
+  en: Generate Key
+STRING_GPGKEYMANAGER_UPLOAD_KEY:
+  en: Upload Key

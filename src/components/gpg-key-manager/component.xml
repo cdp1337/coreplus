@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component name="GPG Key Manager" version="1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" logo="logo.png">
+	<pages>
+		<page baseurl="/gpgkeymanager" title="t:STRING_GPGKEYMANAGER" admin="1" access="g:admin" group="t:STRING_ADMIN" image="assets/images/actions/kgpg_key2_kopete.png"/>
+	</pages>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<files>
+		<file filename="CHANGELOG" md5="31cbfeefe10c08434b7ebcc9977daf9b"/>
+		<file filename="README.md" md5="061baee83f696ae60e675b4d284d8dbb"/>
+		<file filename="controllers/GPGKeyManagerController.php" md5="2465e73602458f4c8402ea12cbc2429f">
+			<controller name="GPGKeyManagerController"/>
+		</file>
+	</files>
+</component>
+
