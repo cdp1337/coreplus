@@ -1548,7 +1548,7 @@ class AdminController extends Controller_2_1 {
 		}
 		else{
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
-				t('STRING_CHECK_PHP_S_OK', phpversion()),
+				'PHP Version is good',
 				t('MESSAGE_SUCCESS_PHP_S_OK', phpversion())
 			);
 		}
@@ -1557,7 +1557,7 @@ class AdminController extends Controller_2_1 {
 		if(is_dir($dir) && is_writable($dir)){
 			// Yay, everything is good here!
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
-				t('STRING_CHECK_LOG_DIRECTORY_S_OK', $dir),
+				'Log Directory is good',
 				t('MESSAGE_SUCCESS_LOG_DIRECTORY_S_OK', $dir)
 			);
 		}
@@ -1580,7 +1580,7 @@ class AdminController extends Controller_2_1 {
 		if(is_dir($dir) && is_writable($dir)){
 			// Yay, everything is good here!
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
-				t('STRING_CHECK_ROOT_DIRECTORY_S_OK', $dir),
+				'Root directory is good',
 				t('MESSAGE_SUCCESS_ROOT_DIRECTORY_S_OK', $dir)
 			);
 		}
@@ -1603,7 +1603,7 @@ class AdminController extends Controller_2_1 {
 		if($dir->exists() && $dir->isWritable()){
 			// Yay, everything is good here!
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
-				t('STRING_CHECK_PUBLIC_DIRECTORY_S_OK', $dir->getPath()),
+				'Public directory is good',
 				t('MESSAGE_SUCCESS_PUBLIC_DIRECTORY_S_OK', $dir->getPath())
 			);
 		}
@@ -1626,7 +1626,7 @@ class AdminController extends Controller_2_1 {
 		if($dir->exists() && $dir->isWritable()){
 			// Yay, everything is good here!
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
-				t('STRING_CHECK_ASSET_DIRECTORY_S_OK', $dir->getPath()),
+				'Assets directory is good',
 				t('MESSAGE_SUCCESS_ASSET_DIRECTORY_S_OK', $dir->getPath())
 			);
 		}
@@ -1647,7 +1647,7 @@ class AdminController extends Controller_2_1 {
 		
 		if(defined('SERVER_ID') && strlen(SERVER_ID) == 32){
 			$checks[] = \Core\HealthCheckResult::ConstructGood(
-				t('STRING_CHECK_SERVER_ID_IS_S', wordwrap(SERVER_ID, 4, '-', true)),
+				'Server ID is set and good',
 				t('MESSAGE_SUCCESS_CHECK_SERVER_ID_IS_S', wordwrap(SERVER_ID, 4, '-', true))
 			);
 		}
@@ -1659,25 +1659,46 @@ class AdminController extends Controller_2_1 {
 			);
 		}
 		
-		foreach(Core::GetComponents() as $c){
+		foreach(Core::GetComponents() as $c) {
 			/** @var Component_2_1 $c */
-			
+
 			$rc = $c->runRequirementChecks();
-			
-			foreach($rc as $result){
+
+			foreach($rc as $result) {
 				$m = $c->getName() . ': ' . $result['result']['message'];
-				if($result['result']['passed']){
-					if($result['result']['available'] !== true){
+				if($result['result']['passed']) {
+					if($result['result']['available'] !== true) {
 						$m .= ' (' . $result['result']['available'] . ')';
 					}
 					$checks[] = \Core\HealthCheckResult::ConstructGood($m, '');
 				}
-				else{
+				else {
 					$checks[] = \Core\HealthCheckResult::ConstructWarn($m, '', '');
 				}
 			}
+
+			// Check this component's license data as well by performing an actual query against the licensing server.
+			$c->queryLicenser();
+			
+			$licenseCheck = $c->getLicenseData();
+			if(sizeof($licenseCheck)){
+				$check = new \Core\HealthCheckResult();
+				if($licenseCheck['status']){
+					$check->result = \Core\HealthCheckResult::RESULT_GOOD;
+					$check->title = $c->getName() . ' has a valid license until ' . \Core\Date\DateTime::FormatString($licenseCheck['expires'], \Core\Date\DateTime::SHORTDATE);
+					$check->description = '';
+					foreach($licenseCheck['features'] as $k => $v){
+						$check->description .= $k . ': ' . $v . '<br/>';
+					}
+				}
+				else{
+					$check->result = \Core\HealthCheckResult::RESULT_ERROR;
+					$check->title = $c->getName() . ' ' . $licenseCheck['message'];
+				}
+
+				$checks[] = $check;
+			}
 		}
-		
 
 		return $checks;
 	}
