@@ -58,8 +58,10 @@ else{
 }
 
 
-$dir = \Core\Filestore\Factory::Directory($out);
-$dir->mkdir();
+$outdir = \Core\Filestore\Factory::Directory($out);
+// Remove the contents to prevent legacy files from being included.
+$outdir->delete();
+$outdir->mkdir();
 
 $dir = \Core\Filestore\Factory::Directory($build);
 $dir->mkdir();
@@ -90,5 +92,5 @@ system(
 	BASE_DIR . 'vendor/phpdoc-md-master/bin/phpdocmd' .
 	' ' . escapeshellarg($build . '/structure.xml') .
 	' ' . escapeshellarg($out) .
-	' --index index.md'
+	' --index index.md --lowercase 1'
 );
