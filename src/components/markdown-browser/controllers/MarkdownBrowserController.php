@@ -456,8 +456,12 @@ class MarkdownBrowserController extends Controller_2_1{
 			if($checkFile->exists() && $checkFile->getFilename() != $file->getFilename()){
 				// This file exists and is not the currently viewed file, (don't want to have double breadcrumbs).
 				$checkUrl = '/markdownbrowser/view' . $relDir;
-				
+
+				// Convert these contents from markdown to HTML.
+				$helper = new MarkdownBrowserUrlHelper();
+				$helper->basedir = $checkFile->getDirectoryName();
 				$checkProcessor = new \Core\MarkdownProcessor();
+				$checkProcessor->urlCallback = [$helper, 'parseURL'];
 				$checkProcessor->transform($checkFile->getContents());
 				$breadcrumbs[] = [
 					'title' => $checkProcessor->getMeta('title'),
