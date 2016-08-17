@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.4" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.5" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="68fdedfa19828a54ceeb3fd27c33f716"/>
+		<file filename="core/CHANGELOG" md5="52f012c4bdfe3424aa841f415b34f07d"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -485,7 +485,7 @@
 		<file filename="core/libs/core/InstallerException.php" md5="c4d5321e702c6ac86012b0b224f29fb1">
 			<class name="InstallerException"/>
 		</file>
-		<file filename="core/libs/core/MarkdownProcessor.php" md5="f11ed3bdcc9ed6e265710db2f3c371b6">
+		<file filename="core/libs/core/MarkdownProcessor.php" md5="9355c113002b1a150c9b3559351c6331">
 			<class name="Core\MarkdownProcessor"/>
 		</file>
 		<file filename="core/libs/core/Model.class.php" md5="350c623a22cd9e838e3bcdb620d3e9b2">
@@ -3382,6 +3382,7 @@
 		<upgrade from="6.0.1" to="6.0.2"/>
 		<upgrade from="6.0.2" to="6.0.3"/>
 		<upgrade from="6.0.3" to="6.0.4"/>
+		<upgrade from="6.0.4" to="6.0.5"/>
 	</upgrades>
 </component>
 
