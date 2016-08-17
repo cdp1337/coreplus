@@ -1,3 +1,8 @@
+Cron 2.0.3
+
+	* Requests to the cron subsystem no longer get recorded into user activity.
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 16 Aug 2016 21:48:17 -0400
+
 Cron 2.0.2
 
 	* I18N for the Cron component.
