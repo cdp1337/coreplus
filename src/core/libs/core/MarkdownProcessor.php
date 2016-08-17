@@ -222,15 +222,16 @@ class MarkdownProcessor extends MarkdownExtra {
 			return $url;
 		}
 		else{
-			// Try to use Core to resolve this URL.
-			$resolved = \Core\resolve_link($url);
-			if($resolved !== null){
-				return $resolved;
-			}
-			
 			// Is there a supplemental method to handle these?
-			if ($this->urlCallback)
+			if ($this->urlCallback){
 				$url = call_user_func($this->urlCallback, $url);
+			}
+			else{
+				// Try to use Core to resolve this URL.
+				if(($resolved = \Core\resolve_link($url)) !== null){
+					$url = $resolved;
+				}
+			}
 			
 			return $url;
 		}
