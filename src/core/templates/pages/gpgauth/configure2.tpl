@@ -43,6 +43,6 @@
 					conn = null;
 				}
 			});
-		}, 5000
+		}, 10000
 	);
 </script>{/script}
