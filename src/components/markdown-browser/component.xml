@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Markdown Browser" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Markdown Browser" execmode="web" logo="markdown-icon.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
