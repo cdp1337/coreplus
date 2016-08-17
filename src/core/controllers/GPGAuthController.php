@@ -549,6 +549,8 @@ EOD;
 		
 		$view->mode = View::MODE_AJAX;
 		$view->contenttype = View::CTYPE_JSON;
+		// Do not record this in the user activity; it will just clutter that.
+		$view->record = false;
 		
 		// The nonce key should be the first parameter.
 		if(!$request->getParameter(0)){
