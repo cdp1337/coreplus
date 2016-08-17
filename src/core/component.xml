@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.3" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.4" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="d889458082161b2308d946a0347800b5"/>
+		<file filename="core/CHANGELOG" md5="68fdedfa19828a54ceeb3fd27c33f716"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -133,7 +133,7 @@
 		<file filename="core/controllers/FormController.class.php" md5="e05cf08b97dee440c3888ffd72214856">
 			<controller name="FormController"/>
 		</file>
-		<file filename="core/controllers/GPGAuthController.php" md5="a1f68854e01616e6e4a0944eff473113">
+		<file filename="core/controllers/GPGAuthController.php" md5="0bbb31550f3db0178a2f252dae6e0a5b">
 			<controller name="GPGAuthController"/>
 		</file>
 		<file filename="core/controllers/GettingStartedController.class.php" md5="b50f5bb042dfa261f16c170baf76b241">
@@ -1740,7 +1740,7 @@
 		<file filename="core/templates/emails/admin/test_email.tpl" md5="c5eec2c6d33f52a34ee309a1d49349fa"/>
 		<file filename="core/templates/emails/user/activation.tpl" md5="7cdb992418a86922f94a7c5910224a1f"/>
 		<file filename="core/templates/emails/user/datastoreauth_forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
-		<file filename="core/templates/emails/user/gpgauth_key_verification.tpl" md5="3de2984c26c0ae6b8b4684ec53022837"/>
+		<file filename="core/templates/emails/user/gpgauth_key_verification.tpl" md5="08ad8cff364ae53516246a9d1b012d7d"/>
 		<file filename="core/templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="core/templates/emails/user/registration.tpl" md5="03b81ce9fa635969f51f913ecd7aa62d"/>
 		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="2499a9ce11662ce5b4e950058dfb90de"/>
@@ -1835,8 +1835,8 @@
 		<file filename="core/templates/pages/error/error500.tpl" md5="286730a5c35399f12541addc65006492"/>
 		<file filename="core/templates/pages/form/testui.tpl" md5="9c786b9e5952ff16f481d45d8259f872"/>
 		<file filename="core/templates/pages/gettingstarted/index.tpl" md5="5a938c2eccf4a9401a10404097a860de"/>
-		<file filename="core/templates/pages/gpgauth/configure.tpl" md5="ff2e86731a708f188dbd5234a435c5a7"/>
-		<file filename="core/templates/pages/gpgauth/configure2.tpl" md5="671faf214dd257f6956e01f313054cf0"/>
+		<file filename="core/templates/pages/gpgauth/configure.tpl" md5="5fe7dc10baef8deedc9e16264a786fc3"/>
+		<file filename="core/templates/pages/gpgauth/configure2.tpl" md5="7819bca452b9bf8d0a8e580534fd37bf"/>
 		<file filename="core/templates/pages/gpgauth/login2.tpl" md5="07c8cc12e36d1b9cccba723b7a8c2999"/>
 		<file filename="core/templates/pages/gpgauth/register2.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/gpgauth/reset.tpl" md5="c8745e49dd3ad22749c2ec412c76dc55"/>
@@ -3381,6 +3381,7 @@
 		<upgrade from="6.0.0" to="6.0.1"/>
 		<upgrade from="6.0.1" to="6.0.2"/>
 		<upgrade from="6.0.2" to="6.0.3"/>
+		<upgrade from="6.0.3" to="6.0.4"/>
 	</upgrades>
 </component>
 

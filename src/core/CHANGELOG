@@ -1,3 +1,10 @@
+Core Plus 6.0.4
+
+	* Increase the timer length to 10 seconds for GPG upload checks.
+	* Do not record gpg json checks into user activity.
+	* "minor text change"
+	-- Charlie Powell <charlie@evalagency.com>  Tue, 16 Aug 2016 21:49:02 -0400
+
 Core Plus 6.0.3
 
 	* [Feature] #530
