@@ -1,3 +1,9 @@
+Markdown Browser 2.2.1
+
+	* New logo for markdown browser.
+	* Properly handle links when generating breadcrumbs in markdown files.
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 17 Aug 2016 00:55:19 -0400
+
 Markdown Browser 2.2.0
 
 	* [Bug] Fix to ensure that html files are translated correctly to the md source.

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0" name="Markdown Browser" execmode="web" logo="markdown-icon.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="Markdown Browser" execmode="web" logo="markdown-icon.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 	</requires>
@@ -24,9 +24,9 @@
 		<hook name="/cron/5-minute" call="MarkdownBrowserController::_AutoRegisterFiles"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="b5a7ed954827acbc8a83c25347dea94f"/>
+		<file filename="CHANGELOG" md5="a51b91824d11aa261bae5ef43fca873b"/>
 		<file filename="README.md" md5="f4f72d72499902599c77b0e065712f0a"/>
-		<file filename="controllers/MarkdownBrowserController.php" md5="bbab0d27bab01a114f3a26973816ac45">
+		<file filename="controllers/MarkdownBrowserController.php" md5="0f715df79369d2dcf8424c452858759a">
 			<controller name="MarkdownBrowserController"/>
 			<class name="MarkdownBrowserUrlHelper"/>
 		</file>
@@ -35,6 +35,7 @@
 		<file filename="i18n/en.ini" md5="567a45f02dbef4435a852a8b4c58739a"/>
 		<file filename="i18n/fr.ini" md5="a9a71c151f3671cb0a7299c68194eaa0"/>
 		<file filename="i18n/strings.yml" md5="448866c4cc9803c7c32e2a739162efcd"/>
+		<file filename="markdown-icon.png" md5="d7a3b0d4743a1156ade31b3e65386307"/>
 	</files>
 	<view searchdir="templates">
 		<file filename="templates/pages/markdownbrowser/admin.tpl" md5="bf2fc7bce0a2a7954c5ae599692b41e7"/>
@@ -48,16 +49,9 @@
 		<upgrade from="1.0.2" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.2.0"/>
+		<upgrade from="2.2.0" to="2.2.1"/>
 	</upgrades>
 	<users/>
 	<widgets/>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
