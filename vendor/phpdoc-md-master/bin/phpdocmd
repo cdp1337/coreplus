@@ -24,6 +24,7 @@ $positional = array();
 $named = array(
     'lt' => '%c.md',
     'index' => 'ApiIndex.md',
+    'lowercase' => 0,
 );
 
 for ($i = 0; $i < count($arguments); $i++) {
@@ -64,6 +65,10 @@ $generator = new PHPDocMD\Generator(
     $named['lt'],
     $named['index']
 );
+
+if($named['lowercase']){
+    $generator->setForceLowercase(true);
+}
 
 echo "Generating pages\n";
 

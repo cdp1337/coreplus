@@ -28,7 +28,7 @@ class Generator
      *
      * @var array
      */
-    protected $classDefinitions;
+    protected static $ClassDefinitions;
 
     /**
      * Directory containing the twig templates.
@@ -42,7 +42,7 @@ class Generator
      *
      * @var string
      */
-    protected $linkTemplate;
+    protected static $LinkTemplate;
 
     /**
      * Filename for API Index.
@@ -50,6 +50,12 @@ class Generator
      * @var string
      */
     protected $apiIndexFile;
+
+    /**
+     * Set to true to force lowercase files in the generation.
+     * @var bool
+     */
+    protected static $ForceLowercase = false;
 
     /**
      * @param array  $classDefinitions
@@ -60,11 +66,20 @@ class Generator
      */
     function __construct(array $classDefinitions, $outputDir, $templateDir, $linkTemplate = '%c.md', $apiIndexFile = 'ApiIndex.md')
     {
-        $this->classDefinitions = $classDefinitions;
+        self::$ClassDefinitions = $classDefinitions;
         $this->outputDir = $outputDir;
         $this->templateDir = $templateDir;
-        $this->linkTemplate = $linkTemplate;
+        self::$LinkTemplate = $linkTemplate;
         $this->apiIndexFile = $apiIndexFile;
+    }
+
+    /**
+     * Set to true if filenames are converted to lowercase.
+     * 
+     * @param bool|false $mode
+     */
+    public function setForceLowercase($mode = false){
+        self::$ForceLowercase = $mode;
     }
 
     /**
@@ -79,16 +94,18 @@ class Generator
 
         $twig = new Twig_Environment($loader);
 
-        $GLOBALS['PHPDocMD_classDefinitions'] = $this->classDefinitions;
-        $GLOBALS['PHPDocMD_linkTemplate'] = $this->linkTemplate;
-
         $filter = new Twig_SimpleFilter('classLink', ['PHPDocMd\\Generator', 'classLink']);
         $twig->addFilter($filter);
 
-        foreach ($this->classDefinitions as $className => $data) {
+        foreach (self::$ClassDefinitions as $className => $data) {
             $output = $twig->render('class.twig', $data);
 
-            file_put_contents($this->outputDir . '/' . $data['fileName'], $output);
+            $filename = $data['fileName'];
+            if(self::$ForceLowercase){
+                $filename = strtolower($filename);
+                $filename = str_replace('-', '_', $filename);
+            }
+            file_put_contents($this->outputDir . '/' . $filename, $output);
         }
 
         $index = $this->createIndex();
@@ -96,7 +113,7 @@ class Generator
         $index = $twig->render('index.twig',
             [
                 'index'            => $index,
-                'classDefinitions' => $this->classDefinitions,
+                'classDefinitions' => self::$ClassDefinitions,
             ]
         );
 
@@ -115,7 +132,7 @@ class Generator
     {
         $tree = [];
 
-        foreach ($this->classDefinitions as $className => $classInfo) {
+        foreach (self::$ClassDefinitions as $className => $classInfo) {
             $current = & $tree;
 
             foreach (explode('\\', $className) as $part) {
@@ -169,8 +186,6 @@ class Generator
      */
     static function classLink($className, $label = null)
     {
-        $classDefinitions = $GLOBALS['PHPDocMD_classDefinitions'];
-        $linkTemplate = $GLOBALS['PHPDocMD_linkTemplate'];
 
         $returnedClasses = [];
 
@@ -181,11 +196,17 @@ class Generator
                 $label = $oneClass;
             }
 
-            if (!isset($classDefinitions[$oneClass])) {
+            if (!isset(self::$ClassDefinitions[$oneClass])) {
                 $returnedClasses[] = $oneClass;
             } else {
-                $link = str_replace('\\', '-', $oneClass);
-                $link = strtr($linkTemplate, ['%c' => $link]);
+                if(self::$ForceLowercase){
+                    $link = str_replace('\\', '_', $oneClass);
+                    $link = strtolower($link);
+                }
+                else{
+                    $link = str_replace('\\', '-', $oneClass);
+                }
+                $link = strtr(self::$LinkTemplate, ['%c' => $link]);
 
                 $returnedClasses[] = sprintf("[%s](%s)", $label, $link);
             }
