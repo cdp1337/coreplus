@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 16 Aug 2016 00:13:23 -0400
+ * @compiled Wed, 17 Aug 2016 01:12:51 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21082,7 +21082,7 @@ $view->contenttype == View::CTYPE_XML &&
 $view->templatename === null
 ){
 $cnameshort           = (strpos($this->_rawPageData['controller'], 'Controller') == strlen($this->_rawPageData['controller']) - 10) ? substr($this->_rawPageData['controller'], 0, -10) : $this->_rawPageData['controller'];
-$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $this->_rawPageData['method'] . '.xml.tpl'));
+$view->templatename = \Core\Templates\Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $this->_rawPageData['method'] . '.xml.tpl'));
 }
 if($defaultpage && $defaultpage->get('page_template')){
 $base     = substr($view->templatename, 0, -4);

@@ -564,7 +564,7 @@ class PageRequest {
 			$view->templatename === null
 		){
 			$cnameshort           = (strpos($this->_rawPageData['controller'], 'Controller') == strlen($this->_rawPageData['controller']) - 10) ? substr($this->_rawPageData['controller'], 0, -10) : $this->_rawPageData['controller'];
-			$view->templatename = Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $this->_rawPageData['method'] . '.xml.tpl'));
+			$view->templatename = \Core\Templates\Template::ResolveFile(strtolower('pages/' . $cnameshort . '/' . $this->_rawPageData['method'] . '.xml.tpl'));
 		}
 
 		// In addition to the autogeneration, also support the page_template from the datastore.
