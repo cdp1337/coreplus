@@ -13,6 +13,8 @@ class CronController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 		$view    = $this->getView();
 		$view->mode = View::MODE_NOOUTPUT;
+		// Do not record this page view in the user activity log; it's a system utility.
+		$view->record = false;
 		
 		$crons = [
 			'1-minute'  => SECONDS_ONE_MINUTE,
@@ -68,6 +70,8 @@ class CronController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 		$view    = $this->getView();
 		$view->mode = View::MODE_NOOUTPUT;
+		// Do not record this page view in the user activity log; it's a system utility.
+		$view->record = false;
 
 		// Check and see if I need to run this cron already, ie: don't run an hourly log twice in the same hour.
 		$last = CronLogModel::Find(array('cron' => 'hourly'), 1, 'created DESC');
@@ -94,6 +98,8 @@ class CronController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 		$view    = $this->getView();
 		$view->mode = View::MODE_NOOUTPUT;
+		// Do not record this page view in the user activity log; it's a system utility.
+		$view->record = false;
 
 		// Check and see if I need to run this cron already, ie: don't run an hourly log twice in the same hour.
 		$last = CronLogModel::Find(array('cron' => 'daily'), 1, 'created DESC');
@@ -123,6 +129,8 @@ class CronController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 		$view    = $this->getView();
 		$view->mode = View::MODE_NOOUTPUT;
+		// Do not record this page view in the user activity log; it's a system utility.
+		$view->record = false;
 
 		// Check and see if I need to run this cron already, ie: don't run an hourly log twice in the same hour.
 		$last = CronLogModel::Find(array('cron' => 'weekly'), 1, 'created DESC');
@@ -154,6 +162,8 @@ class CronController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 		$view    = $this->getView();
 		$view->mode = View::MODE_NOOUTPUT;
+		// Do not record this page view in the user activity log; it's a system utility.
+		$view->record = false;
 
 		// Check and see if I need to run this cron already, ie: don't run an hourly log twice in the same hour.
 		$last = CronLogModel::Find(array('cron' => 'monthly'), 1, 'created DESC');
