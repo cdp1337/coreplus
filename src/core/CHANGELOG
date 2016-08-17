@@ -1,3 +1,8 @@
+Core Plus 6.0.6
+
+	* [Bug] Fix the sitemap.xml feed, (there was a minor namespace issue).
+	-- Charlie Powell <charlie@evalagency.com>  Wed, 17 Aug 2016 01:14:19 -0400
+
 Core Plus 6.0.5
 
 	* Switch the order of URL manipulation in markdown files if there is a urlCallback provided.

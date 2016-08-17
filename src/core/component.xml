@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.5" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.6" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="52f012c4bdfe3424aa841f415b34f07d"/>
+		<file filename="core/CHANGELOG" md5="2e8b78db7e853c566e0f69a28455e426"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -504,7 +504,7 @@
 		<file filename="core/libs/core/PackageXML.class.php" md5="c8739443809534d8340bc7080037d01c">
 			<class name="PackageXML"/>
 		</file>
-		<file filename="core/libs/core/PageRequest.class.php" md5="eb40f7efb845c2a0387690f303fd5b6c">
+		<file filename="core/libs/core/PageRequest.class.php" md5="22751412c0804bf30dab86f8647b7b78">
 			<class name="PageRequest"/>
 		</file>
 		<file filename="core/libs/core/RepoXML.class.php" md5="ab15f17f1f3da7bf00c790812e3f7d5f">
@@ -3383,6 +3383,7 @@
 		<upgrade from="6.0.2" to="6.0.3"/>
 		<upgrade from="6.0.3" to="6.0.4"/>
 		<upgrade from="6.0.4" to="6.0.5"/>
+		<upgrade from="6.0.5" to="6.0.6"/>
 	</upgrades>
 </component>
 
