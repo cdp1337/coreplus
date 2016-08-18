@@ -1,0 +1,13 @@
+---
+MESSAGE_CONFIG_ZABBIXAGENT_HOST:
+  en: This hostname MUST match exactly what is defined in Zabbix.  Please consult your network administrator if you do not know this value.
+MESSAGE_CONFIG_ZABBIXAGENT_PORT:
+  en: The port of the remtoe Zabbix server, by default this is 10051.
+MESSAGE_CONFIG_ZABBIXAGENT_SERVER:
+  en: The hostname or IP address of the remote Zabbix server.
+STRING_CONFIG_ZABBIXAGENT_HOST:
+  en: Local Hostname
+STRING_CONFIG_ZABBIXAGENT_PORT:
+  en: Remote Monitoring Port
+STRING_CONFIG_ZABBIXAGENT_SERVER:
+  en: Remote Monitoring Hostname/IP

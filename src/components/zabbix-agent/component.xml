@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.0" logo="zabbix-logo.png">
+	<description>
+		Monitoring agent for the Zabbix system.  Sends system health reports to the monitoring server every minute.
+	</description>
+	<files>
+		<file filename="CHANGELOG" md5="2a64b580f73f29c7bda64284fc019e4e"/>
+		<file filename="README.md" md5="6b7f9d4633b0306a3feb976e3061fe45"/>
+		<file filename="controllers/ZabbixAgentController.php" md5="2898e87da28a9abb08aa025c85d0a7cc">
+			<controller name="ZabbixAgentController"/>
+		</file>
+		<file filename="i18n/strings.yml" md5="6178d09a5d286a236c69391046615b2b"/>
+		<file filename="zabbix-logo.png" md5="b85c2ab6920a8390a5187c9aeebe463a"/>
+	</files>
+	<hooks>
+		<hook name="/cron/1-minute" call="ZabbixAgentController::_SendStatus"/>
+		<hook name="/cron/hourly" call="ZabbixAgentController::_DiscoverComponents"/>
+	</hooks>
+	<configs>
+		<config key="/zabbixagent/server" type="string"/>
+		<config key="/zabbixagent/port" type="int" default="10051"/>
+		<config key="/zabbixagent/host" type="string"/>
+	</configs>
+	<view/>
+	<requires>
+		<require name="core" type="component" version="6.0.0" operation="ge"/>
+	</requires>
+</component>
+
