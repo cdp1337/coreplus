@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 17 Aug 2016 01:12:51 -0400
+ * @compiled Thu, 18 Aug 2016 01:10:58 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -728,6 +728,25 @@ return true;
 }
 }
 return false;
+}
+function mean(&$array, $percentile){
+if($percentile < 0 || $percentile > 100){
+return false;
+}
+if($percentile == 0){
+reset($array);
+return current($array);
+}
+if($percentile == 100){
+end($array);
+return current($array);
+}
+$s = sizeof($array);
+$idx = ceil($s * $percentile / 100) - 1;
+if($idx > $s){
+$idx = $s;
+}
+return $array[$idx];
 }
 } // ENDING NAMESPACE Core
 

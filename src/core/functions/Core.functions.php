@@ -1223,3 +1223,43 @@ function is_ip_private($ip){
 	
 	return false;
 }
+
+/**
+ * Calculate the mean in a given numeric array.
+ * 
+ * The array is expected to be sorted first!
+ * 
+ * Will return false if a an out-of-range percentile is provided.
+ * 
+ * The array is passed in by-ref to save memory.
+ * 
+ * @param $array
+ * @param $percentile
+ * 
+ * @return mixed|false
+ */
+function mean(&$array, $percentile){
+	if($percentile < 0 || $percentile > 100){
+		return false;
+	}
+	
+	if($percentile == 0){
+		// Use reset+current to not modify the original array.
+		reset($array);
+		return current($array);
+	}
+	
+	if($percentile == 100){
+		// Use end+current to not modify the original array.
+		end($array);
+		return current($array);
+	}
+	
+	// Calculate the key position of the requested percentile.
+	$s = sizeof($array);
+	$idx = ceil($s * $percentile / 100) - 1;
+	if($idx > $s){
+		$idx = $s;
+	}
+	return $array[$idx];
+}
