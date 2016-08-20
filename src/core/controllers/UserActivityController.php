@@ -328,19 +328,14 @@ class UserActivityController extends Controller_2_1 {
 			'text',
 			['name' => 'session_id', 'title' => 'Session ID', 'link' => FilterForm::LINK_TYPE_STANDARD]
 		);
-
-		$pages = PageModel::Find(null, null, 'baseurl');
-		$allPages = ['' => '-- ' . t('STRING_ALL_PAGES') . ' --'];
-		foreach($pages as $p){
-			/** @var PageModel $p */
-			$allPages[$p->get('baseurl')] = $p->get('baseurl');
-		}
+		
+		$pages = PageModel::GetPagesAsOptions(false, t('STRING_ALL_PAGES'));
 		$listing->addFilter(
 			'select',
 			[
 				'name' => 'baseurl',
 			    'title' => 'Page',
-			    'options' => $allPages,
+			    'options' => $pages,
 			    'link' => FilterForm::LINK_TYPE_STANDARD,
 			]
 		);
