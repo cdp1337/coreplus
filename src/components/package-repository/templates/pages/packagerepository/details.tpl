@@ -20,7 +20,32 @@
 	{/a}
 {/foreach}
 
+{if $agents}
+	<p class="message-tutorial">
+		Below are the list of remote servers that are using this component.  This section only appears to super admins.
+	</p>
+	<table class="listing">
+		<tr>
+			<th>Remote Site</th>
+			<th>Remote IP Address</th>
+			<th>Latest Checkin</th>
+			<th>Latest Version of {$latest.name}</th>
+		</tr>
+		{foreach $agents as $rec}
+			<tr>
+				<td>{$rec.site}</td>
+				<td>{geoiplookup $rec.ip} {$rec.ip}</td>
+				<td>{date format="SDT" $rec.datetime}</td>
+				<td>{$rec.version}</td>
+			</tr>
+		{/foreach}
+	</table>
+{/if}
+
 <div class="all-package-versions">
+	<p class="message-tutorial">
+		Historical versions for {$latest.name} that are included in this repository.  Also included is the full changelog as published by the maintainer.
+	</p>
 	{foreach $all as $p}
 		<div class="package-version-details">
 			<h2>{$p.name} {$p.version}</h2>

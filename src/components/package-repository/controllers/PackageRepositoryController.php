@@ -229,10 +229,41 @@ class PackageRepositoryController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 		
+		if(\Core\user()->checkAccess('g:admin')){
+			// /~charlie/coreplus/licenser?component=core&version=6.0.3
+			// Pull the page views for this file to provide stats on what versions are out in the wild.
+			
+			// This will be sorted by the incoming IP address.
+			$agents = [];
+			$views = UserActivityModel::FindRaw([
+				'baseurl = /packagerepositorylicense', 
+				'request LIKE %component=' . $key . '%', 
+				'useragent LIKE Core Plus%'
+			], null, 'datetime DESC');
+			
+			foreach($views as $rec){
+				$v = preg_replace('/.*version=(.*)$/', '$1', $rec['request']);
+				
+				if(!isset($agents[ $rec['ip_addr'] ])){
+					$agents[ $rec['ip_addr'] ] = [
+						'site' => $rec['referrer'],
+						'agent' => $rec['useragent'],
+						'version' => $v,
+						'datetime' => $rec['datetime'],
+						'ip' => $rec['ip_addr'],
+					];
+				}
+			}
+		}
+		else{
+			$agents = null;
+		}
+		
 		$view->addBreadcrumb('Package Repository', '/packagerepository');
 		$view->title = $latest->get('name');
 		$view->assign('latest', $latest);
 		$view->assign('all', $pkgs);
+		$view->assign('agents', $agents);
 	}
 
 	public function download(){

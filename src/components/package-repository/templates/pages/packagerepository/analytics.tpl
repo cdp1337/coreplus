@@ -39,7 +39,7 @@
 						{$rec.servername}
 					{/if}
 				</td>
-				<td>{$rec.ip_addr}</td>
+				<td>{geoiplookup $rec.ip_addr} {$rec.ip_addr}</td>
 				<td>{$rec.version}</td>
 				<td>{date $rec.datetime format="SDT"}</td>
 			</tr>
