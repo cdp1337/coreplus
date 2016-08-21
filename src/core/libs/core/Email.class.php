@@ -366,6 +366,8 @@ class Email {
 		else{
 			$m->MsgHTML($body);
 		}
+		
+		$status = null;
 
 		if($this->_encryption){
 			// Encrypt this message, (both HTML and Alt), and all attachments.
@@ -381,6 +383,7 @@ class Email {
 				// This requires a little more overhead, as I need to lookup each recipient's user account
 				// to retrieve their GPG key.
 				$recipients = $m->getToAddresses();
+				$statuses = [];
 
 				foreach($recipients as $dat){
 					$email = $dat[0];
@@ -418,7 +421,35 @@ class Email {
 				return $m->Send();
 			}
 		}
-
-		return $m->Send();
+		else{
+			$status = $m->Send();	
+		}
+		
+		// Record this in the system log.
+		$to = [];
+		$all = $m->getToAddresses();
+		if(is_array($all)){
+			foreach($all as $t){
+				$to[] = $t[0];
+			}
+		}
+		$to = implode(',', $to);
+		
+		$log = SystemLogModel::Factory();
+		$log->set('icon', 'envelope-o');
+		$log->set('code', '/email/sent');
+		if($status){
+			$log->set('type', 'info');
+			$log->set('message', 'Sent ' . $m->Subject . ' to ' . $to);
+			$log->set('details', $m->GetSentMIMEMessage());
+		}
+		else{
+			$log->set('type', 'error');
+			$log->set('message', 'FAILED to send ' . $m->Subject . ' to ' . $to);
+			$log->set('details', $m->ErrorInfo);
+		}
+		$log->save();
+		
+		return $status;
 	}
 }

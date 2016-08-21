@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 18 Aug 2016 01:10:58 -0400
+ * @compiled Sat, 20 Aug 2016 20:12:53 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7028,13 +7028,22 @@ public static $Schema = array(
 'type' => Model::ATT_TYPE_TEXT,
 'comment' => 'Any details or backtrace that needs to accompany this log event',
 ),
+'icon' => [
+'type' => Model::ATT_TYPE_STRING,
+'comment' => 'An optional icon to display along with this log message.',
+],
+'source' => [
+'type' => Model::ATT_TYPE_STRING,
+'comment' => 'An optional source to keep track of what type of message this comes from.',
+],
 );
 public static $Indexes = array(
 'primary'       => ['id'],
 'datetime'      => ['datetime'],
 'user'          => ['user_id'],
 'affected_user' => ['affected_user_id'],
-'code'          => ['code']
+'code'          => ['code'],
+'source'        => ['source'],
 );
 public function isBot(){
 switch($this->getUserAgent()->type){

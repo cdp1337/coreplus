@@ -1617,6 +1617,16 @@ class PHPMailer {
 		return $this->MIMEHeader . $this->mailHeader . self::CRLF . $this->MIMEBody;
 	}
 
+	/**
+	 * Get the sent MIME headers on a message.
+	 *
+	 * MUST be called after a send is performed!
+	 *
+	 * @return string
+	 */
+	public function getSentHeaders(){
+		return $this->MIMEHeader;
+	}
 
 	/**
 	 * Assembles the message body.  Returns an empty string on failure.
