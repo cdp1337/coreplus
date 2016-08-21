@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.7" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.8" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="c3018ab9a2a9ec431b2eb18fbc55a6c7"/>
+		<file filename="core/CHANGELOG" md5="35768a028101d5b4d4e32c5d7a4d63b1"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -145,7 +145,7 @@
 		<file filename="core/controllers/UpdaterController.class.php" md5="666411688980fb606366e80c707e3de4">
 			<controller name="UpdaterController"/>
 		</file>
-		<file filename="core/controllers/UserActivityController.php" md5="bca7232fefa3aea2d7f1a31d4746ddaa">
+		<file filename="core/controllers/UserActivityController.php" md5="241ba790d4a7660d98b0d85b0ee3197b">
 			<controller name="UserActivityController"/>
 		</file>
 		<file filename="core/controllers/UserConfigController.php" md5="1b01735cd28b9f4e9f94b00e5e81d787">
@@ -449,7 +449,7 @@
 		<file filename="core/libs/core/DB.class.php" md5="d20f8c7733c5c262c01f920004f3aab5">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="c51a1491b8572ae5272e31e8f34bf3b5">
+		<file filename="core/libs/core/Email.class.php" md5="3e892d2cfbda2e51762a71dbee58b5d1">
 			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/Exceptions.php" md5="8b4d0342bbee5b64ae877ada9a174097">
@@ -953,7 +953,7 @@
 		<file filename="core/libs/phpmailer/LICENSE" md5="278f2557e3b277b94e9a8430f6a6d0a9"/>
 		<file filename="core/libs/phpmailer/README" md5="3848f3fba320c30e5d3abfb1f39cc1ae"/>
 		<file filename="core/libs/phpmailer/changelog.txt" md5="9fb661bb50b89fbb554e3e391c866762"/>
-		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="c06252759b0c842a2aa026d9fe71dd6f">
+		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="98114bb97a9dcae37cd0797ebf684bd7">
 			<class name="PHPMailer"/>
 			<class name="phpmailerException"/>
 		</file>
@@ -1611,7 +1611,7 @@
 		<file filename="core/models/SessionModel.class.php" md5="5286197fb80b334e418aaf859f6824bb">
 			<class name="SessionModel"/>
 		</file>
-		<file filename="core/models/SystemLogModel.php" md5="147a1c4fcbef67d97036af365339c39e">
+		<file filename="core/models/SystemLogModel.php" md5="d599f9397e30f2eaec0166c790edbf53">
 			<class name="SystemLogModel"/>
 		</file>
 		<file filename="core/models/TemplateCssModel.php" md5="2f6ffde79c0440c30df5d06c307bcba4">
@@ -1803,7 +1803,7 @@
 		<file filename="core/templates/pages/admin/i18n-PREV.tpl" md5="20e5a7891945d7cddc8efb566f2cd4c5"/>
 		<file filename="core/templates/pages/admin/i18n.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
-		<file filename="core/templates/pages/admin/log.tpl" md5="f0ff3c9884a0acc313e5b067f0eb0188"/>
+		<file filename="core/templates/pages/admin/log.tpl" md5="ac3322c1ee98167c048d99896d6cfeed"/>
 		<file filename="core/templates/pages/admin/log_details.tpl" md5="194679bb89f669a7e49d82b454ad6685"/>
 		<file filename="core/templates/pages/admin/pages.tpl" md5="00eadd35f87f53f53770878d2e467cfb"/>
 		<file filename="core/templates/pages/admin/performance_config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -3385,6 +3385,7 @@
 		<upgrade from="6.0.4" to="6.0.5"/>
 		<upgrade from="6.0.5" to="6.0.6"/>
 		<upgrade from="6.0.6" to="6.0.7"/>
+		<upgrade from="6.0.7" to="6.0.8"/>
 	</upgrades>
 </component>
 
