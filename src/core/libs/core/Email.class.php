@@ -47,8 +47,10 @@ class Email {
 	 * @var string
 	 */
 	public $templatename;
-
-
+	
+	/** @var string An optional source to track this email in the logging system. */
+	private $_source = '';
+	
 	public function __construct() {
 
 	}
@@ -296,6 +298,15 @@ class Email {
 	}
 
 	/**
+	 * Set the "source" for this email to be recorded in the system logger.
+	 * 
+	 * @param string $source
+	 */
+	public function setSource($source){
+		$this->_source = $source;
+	}
+
+	/**
 	 * Send the message
 	 *
 	 * @throws phpmailerException
@@ -438,6 +449,7 @@ class Email {
 		$log = SystemLogModel::Factory();
 		$log->set('icon', 'envelope-o');
 		$log->set('code', '/email/sent');
+		$log->set('source', $this->_source);
 		if($status){
 			$log->set('type', 'info');
 			$log->set('message', 'Sent ' . $m->Subject . ' to ' . $to);
