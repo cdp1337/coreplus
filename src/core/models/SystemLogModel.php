@@ -105,6 +105,14 @@ class SystemLogModel extends Model {
 			'type' => Model::ATT_TYPE_TEXT,
 			'comment' => 'Any details or backtrace that needs to accompany this log event',
 		),
+		'icon' => [
+			'type' => Model::ATT_TYPE_STRING,
+			'comment' => 'An optional icon to display along with this log message.',
+		],
+		'source' => [
+			'type' => Model::ATT_TYPE_STRING,
+			'comment' => 'An optional source to keep track of what type of message this comes from.',
+		],
 	);
 
 	public static $Indexes = array(
@@ -112,7 +120,8 @@ class SystemLogModel extends Model {
 		'datetime'      => ['datetime'],
 		'user'          => ['user_id'],
 		'affected_user' => ['affected_user_id'],
-		'code'          => ['code']
+		'code'          => ['code'],
+		'source'        => ['source'],
 	);
 
 	/**

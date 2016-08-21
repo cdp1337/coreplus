@@ -14,7 +14,9 @@
 	<tr class="systemlog-entry-type-{$entry.type}">
 		<td class="systemlog-entry-code">
 			{if $entry.type == "info"}
-				<!-- No icon needed -->
+				{if $entry.icon}
+					<i class="icon icon-{$entry.icon}"></i>
+				{/if}
 			{elseif $entry.type == "error"}
 				<i class="icon icon-exclamation" title="Error Entry"></i>
 			{elseif $entry.type == "security"}
@@ -30,7 +32,9 @@
 			{geoiplookup $entry.ip_addr}<br/>
 			{$entry.ip_addr}
 		</td>
-		<td>{$entry.message|truncate:100}</td>
+		<td>
+			{$entry.message|truncate:100}
+		</td>
 		<td>
 			{user $entry.user_id}
 		</td>
