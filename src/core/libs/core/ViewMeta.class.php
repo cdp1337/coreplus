@@ -155,7 +155,7 @@ class ViewMetas implements Iterator, ArrayAccess {
 		}
 
 		// Is value already a viewmeta object?
-		if($value instanceof ViewMeta || is_subclass_of($value, 'ViewMeta')){
+		if(is_object($value) && ($value instanceof ViewMeta || is_subclass_of($value, 'ViewMeta'))){
 			if(isset($this->_links[$offset])){
 				// It's already set, merge the values in
 
