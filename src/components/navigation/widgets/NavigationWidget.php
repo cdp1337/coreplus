@@ -131,15 +131,16 @@ class NavigationWidget extends Widget_2_1 {
 
 		$view->title        = $m->get('title');
 		$view->access       = $m->get('access');
-		$view->templatename = '/widgets/navigation/view.tpl';
+		//$view->templatename = '/widgets/navigation/view.tpl';
 		$view->assignVariable('model', $m);
 		$view->assignVariable('entries', $sortedentries);
-		/*
-		$view->addControl('New Navigation Menu', '/Navigation/Create', 'add');
-		$view->addControl('Edit Page', '/Content/Edit/' . $m->get('id'), 'edit');
-		$view->addControl('Delete Page', '/Content/Delete/' . $m->get('id'), 'delete');
-		$view->addControl('All Content Pages', '/Content', 'directory');
-		*/
+		
+		if(\Core\user()->checkAccess('g:admin')){
+			if(($wi = $this->getWidgetInstanceModel())){
+				$this->addControl('Edit Display Options', '/widget/instance/update/' . $wi->get('id'), 'desktop');
+			}
+			$this->addControl('Edit Menu', '/navigation/edit/' . $m->get('id'), 'edit');	
+		}
 	}
 
 	/**
