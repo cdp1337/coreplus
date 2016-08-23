@@ -76,11 +76,11 @@
 
 								{if $manager}
 									<div>
-									<ul class="controls">
+									<ul class="controls" data-proxy-force="1">
 										<li>
 											{a href="/widget/instance/update/{$widget.id}" class="control control-edit" title="Edit Options"}
-												<i class="icon icon-edit"></i>
-												<span>Edit Installed Options</span>
+												<i class="icon icon-desktop"></i>
+												<span>Edit Display Options</span>
 											{/a}
 										</li>
 										{if $widget.Widget.editurl}
