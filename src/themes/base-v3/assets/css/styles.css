@@ -1657,4 +1657,28 @@ a.agplv3-tag:hover {
   color: white;
 }
 
+@media only screen and (max-width: 1000px) {
+  /* line 6, ../scss/_responsive.scss */
+  .page-column-width-2 .page-content {
+    width: 80%;
+    padding: 0 1em 0 0;
+  }
+
+  /* line 11, ../scss/_responsive.scss */
+  .page-column-width-2 #right-col {
+    display: none;
+  }
+}
+@media only screen and (max-width: 800px) {
+  /* line 20, ../scss/_responsive.scss */
+  .page-column-width-1 .page-content, .page-column-width-2 .page-content {
+    width: 100%;
+    padding: 0 1em;
+  }
+  /* line 24, ../scss/_responsive.scss */
+  .page-column-width-1 aside.page-column, .page-column-width-2 aside.page-column {
+    display: none;
+  }
+}
+
 /*# sourceMappingURL=styles.css.map */

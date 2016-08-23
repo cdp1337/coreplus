@@ -1,0 +1,28 @@
+@media only screen and (max-width: 1000px) {
+	// On < 1000px displays, hide the RIGHT COLUMN only,
+	// it is assumed that the left column is more important.
+	
+	.page-column-width-2 {
+		.page-content {
+			width: 80%;
+			padding: 0 1em 0 0;
+		}
+		#right-col {
+			display: none;
+		}
+	} 
+}
+
+@media only screen and (max-width: 800px) {
+	
+	// Both columns are hidden on < 800px displays.
+	.page-column-width-1, .page-column-width-2 {
+		.page-content, {
+			width: 100%;
+			padding: 0 1em;
+		}
+		aside.page-column {
+			display: none;
+		}
+	}
+}
