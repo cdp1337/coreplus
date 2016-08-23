@@ -100,9 +100,23 @@ class Widget_2_1 {
 			$this->_view              = new View();
 			$this->_view->contenttype = View::CTYPE_HTML;
 			$this->_view->mode        = View::MODE_WIDGET;
-			if ($this->getWidgetInstanceModel()) {
+			if (($wi = $this->getWidgetInstanceModel())) {
 				// easy way
-				$this->_view->baseurl = $this->getWidgetInstanceModel()->get('baseurl');
+				$this->_view->baseurl = $wi->get('baseurl');
+
+				$pagedat    = $wi->splitParts();
+				$cnameshort = (strpos($pagedat['controller'], 'Widget') == strlen($pagedat['controller']) - 6) ?
+					substr($pagedat['controller'], 0, -6) :
+					$pagedat['controller'];
+				
+				if($wi->get('display_template')){
+					// Convert that to the filename of the template.
+					// This must be in /widgets/[widget-info]/displaytemplate.tpl.
+					$this->_view->templatename = strtolower('/widgets/' . $cnameshort . '/' . $pagedat['method'] . '/' . $wi->get('display_template'));
+				}
+				else{
+					$this->_view->templatename = strtolower('/widgets/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+				}
 			}
 			else {
 				// difficult way
@@ -140,6 +154,10 @@ class Widget_2_1 {
 			return;
 		}
 
+		if($this->controls === null){
+			$this->controls = new ViewControls();
+		}
+		
 		$control = new ViewControl();
 
 		// Completely associative-array based version!
@@ -164,6 +182,7 @@ class Widget_2_1 {
 			$control->link = \Core\resolve_link($link);
 		}
 
+		$this->controls->setProxyForce(true);
 		$this->controls->setProxyText('Widget Controls');
 		$this->controls[] = $control;
 	}
