@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 20 Aug 2016 20:12:53 -0400
+ * @compiled Tue, 23 Aug 2016 00:43:57 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -14498,7 +14498,7 @@ $this->next();
 }
 $offset = $this->key();
 }
-if($value instanceof ViewMeta || is_subclass_of($value, 'ViewMeta')){
+if(is_object($value) && ($value instanceof ViewMeta || is_subclass_of($value, 'ViewMeta'))){
 if(isset($this->_links[$offset])){
 $existingmeta = $this->_links[$offset];
 if($existingmeta->multiple){
@@ -19908,8 +19908,18 @@ if ($this->_view === null) {
 $this->_view              = new View();
 $this->_view->contenttype = View::CTYPE_HTML;
 $this->_view->mode        = View::MODE_WIDGET;
-if ($this->getWidgetInstanceModel()) {
-$this->_view->baseurl = $this->getWidgetInstanceModel()->get('baseurl');
+if (($wi = $this->getWidgetInstanceModel())) {
+$this->_view->baseurl = $wi->get('baseurl');
+$pagedat    = $wi->splitParts();
+$cnameshort = (strpos($pagedat['controller'], 'Widget') == strlen($pagedat['controller']) - 6) ?
+substr($pagedat['controller'], 0, -6) :
+$pagedat['controller'];
+if($wi->get('display_template')){
+$this->_view->templatename = strtolower('/widgets/' . $cnameshort . '/' . $pagedat['method'] . '/' . $wi->get('display_template'));
+}
+else{
+$this->_view->templatename = strtolower('/widgets/' . $cnameshort . '/' . $pagedat['method'] . '.tpl');
+}
 }
 else {
 $back = debug_backtrace();
@@ -19929,6 +19939,9 @@ $this->controls = ViewControls::DispatchModel($title);
 $this->controls->setProxyText('Widget Controls');
 return;
 }
+if($this->controls === null){
+$this->controls = new ViewControls();
+}
 $control = new ViewControl();
 if(func_num_args() == 1 && is_array($title)){
 foreach($title as $k => $v){
@@ -19947,6 +19960,7 @@ $control->class = $class;
 $control->title = $title;
 $control->link = \Core\resolve_link($link);
 }
+$this->controls->setProxyForce(true);
 $this->controls->setProxyText('Widget Controls');
 $this->controls[] = $control;
 }
