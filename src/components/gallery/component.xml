@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Gallery" execmode="web" logo="gallery.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="Gallery" execmode="web" logo="gallery.png">
 	<requires>
 		<require name="core" type="component" version="6.0.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -29,15 +29,15 @@
 		<file filename="templates/pages/gallery/updatelisting.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/pages/gallery/view-audio.tpl" md5="1feec2a73a61e58cc812c5ee3106adfc"/>
 		<file filename="templates/pages/gallery/view-file.tpl" md5="5921c8d1617d5f599fe5dab06acb686e"/>
-		<file filename="templates/pages/gallery/view-image.tpl" md5="29a4a5ef38ae6de565e470eadbc9d0f4"/>
+		<file filename="templates/pages/gallery/view-image.tpl" md5="719395942bc61b941e78cdfc8ef3dd74"/>
 		<file filename="templates/pages/gallery/view-video.tpl" md5="9f81030e6586e441e1898f52dac71732"/>
-		<file filename="templates/pages/gallery/view.tpl" md5="aad9d14c52bee27c422039f9af875047"/>
+		<file filename="templates/pages/gallery/view.tpl" md5="29f48c0e9a87bb6cb1f9a3f933cf9423"/>
 		<file filename="templates/pages/gallerywidget/admin.tpl" md5="71bbd8c87b269337e47f6e7ee126d59d"/>
 		<file filename="templates/pages/gallerywidget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="6517adb7308a22519f0879c6d2098ff7"/>
+		<file filename="CHANGELOG" md5="0bb4f52f5a6a906964d8e3ea3b2f29a3"/>
 		<file filename="controllers/GalleryController.php" md5="fcc0907fc6b91edcd7797231b793afa9">
 			<controller name="GalleryController"/>
 		</file>
@@ -49,10 +49,10 @@
 			<class name="GalleryFormHandler"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="71f7b10abf27df1b17a528d60e3d9d40"/>
-		<file filename="models/GalleryAlbumModel.php" md5="1183b08ffeb8637e71a310c2cf88319e">
+		<file filename="models/GalleryAlbumModel.php" md5="576e6c557060d6205869977a003fd67a">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="cdcc869182cff13f70ad0c95afb826e8">
+		<file filename="models/GalleryImageModel.php" md5="5be45d5b42a08304e0a726d7e829d817">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
@@ -105,6 +105,7 @@
 		<upgrade from="1.5.6" to="1.5.7"/>
 		<upgrade from="1.5.7" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
+		<upgrade from="2.0.1" to="2.0.2"/>
 	</upgrades>
 </component>
 

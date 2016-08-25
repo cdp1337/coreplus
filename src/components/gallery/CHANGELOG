@@ -1,3 +1,10 @@
+Gallery 2.0.2
+
+	* Regression fixes for gallery images.
+	* Regression fix on Gallery creation.
+	* UI fix on gallery view pages to prevent images from overflowing past the container.
+	-- Charlie Powell <support@corepl.us>  Wed, 24 Aug 2016 22:16:16 -0400
+
 Gallery 2.0.1
 
 	* More meta information for the gallery component.
