@@ -111,7 +111,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="35768a028101d5b4d4e32c5d7a4d63b1"/>
+		<file filename="core/CHANGELOG" md5="0ed7fdf7ab182e642be4f09146b91686"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>

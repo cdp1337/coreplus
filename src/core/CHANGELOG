@@ -1,10 +1,15 @@
 Core Plus 6.0.8
 
+	* [Bug] Fix display templates on widgets!
+	* [Bug] Fix a naming conflict when a meta attribute is the same name as a class.
 	* New method to support setting the source for email logs.
 	* Emails now are recorded into the system logger.
 	* System log now support icon and source fields.
 	* Better option values on useractivity/details.
-	-- Charlie Powell <charlie@evalagency.com>  Sat, 20 Aug 2016 21:06:20 -0400
+	* Update Core Plus to 6.0.8
+	* Update the upgrade path to require 6.0.7.
+	* Modify admin widgets UX slightly.
+	-- Charlie Powell <support@corepl.us>  Wed, 24 Aug 2016 21:49:54 -0400
 
 Core Plus 6.0.7
 
