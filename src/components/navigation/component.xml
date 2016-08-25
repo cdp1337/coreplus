@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.1" name="Navigation" execmode="web" logo="navigation.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="Navigation" execmode="web" logo="navigation.png">
 	<requires>
 		<require name="core" type="component" operation="ge" version="6.0.0"/>
 	</requires>
@@ -8,7 +8,7 @@
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="t:STRING_CONTENT" access="g:admin" admin="1"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="62a306c3229234a1c48ee11ef19498da"/>
+		<file filename="CHANGELOG" md5="bc23e2cda1bb070e0d350fc8b1ec936f"/>
 		<file filename="assets/scss/navigation.scss" md5="271eb2ce6a8d6329b27d67e25dda8a33"/>
 		<file filename="controllers/NavigationController.php" md5="41c3ab9c23116ebbaccaead3a7795b74">
 			<controller name="NavigationController"/>
@@ -91,14 +91,7 @@
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="2.6.0"/>
 		<upgrade from="2.6.0" to="2.6.1"/>
+		<upgrade from="2.6.1" to="2.6.2"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
