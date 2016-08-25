@@ -128,7 +128,7 @@ class GalleryAlbumModel extends Model {
 		$k = strtolower($k);
 		switch($k){
 			case 'baseurl':
-				return '/gallery/view/' . $this->_data['id'];
+				return '/gallery/view/' . parent::get('id');
 				break;
 			case 'title':
 				return $this->getLink('Page')->get('title');
