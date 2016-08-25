@@ -87,9 +87,9 @@
 
 		</div>
 	{/foreach}
+	<!-- An empty div to ensure that the image floats do not chop into other content on the page. -->
+	<div class="gallery-view-last-div"></div>
 </div>
-
-<div class="clear"></div>
 
 
 
