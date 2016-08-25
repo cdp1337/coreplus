@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.1" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.2" name="Base V3">
 	<assets>
 		<file filename="assets/css/print.css" md5="1e75d61c2c5c7ab10538e4c5f7f45897"/>
 		<file filename="assets/css/print.css.map" md5="9925f7d7ea074210b7e3e37329472f68"/>
 		<file filename="assets/css/print.min.css" md5="e2d9b2b1758d47b6260be9af8c9e6215"/>
-		<file filename="assets/css/styles.css" md5="3229370094a9ddf0d499c8c755f1dd49"/>
-		<file filename="assets/css/styles.css.map" md5="0faa724e79862e8f2c155157e4bb4a15"/>
-		<file filename="assets/css/styles.min.css" md5="6d1541f18220498311912238547b3cc8"/>
+		<file filename="assets/css/styles.css" md5="ef89fb7f7e7b7ef2d4170fdd1a54389c"/>
+		<file filename="assets/css/styles.css.map" md5="ea2e83121c036e0961461eee1b1d5373"/>
+		<file filename="assets/css/styles.min.css" md5="78fc33443de8ae5635fbddda3c1488a5"/>
 		<file filename="assets/css/tinymce/content.css" md5="c12d573ac29944bfba932a96d07ade67"/>
 		<file filename="assets/css/tinymce/content.css.map" md5="93cbeab8f5da57cd5a3c3cf0ecc1ecfd"/>
 		<file filename="assets/css/tinymce/content.min.css" md5="b6c1bb72b934d50dac157b4713114455"/>
@@ -53,7 +53,7 @@
 		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="fb0a78dc73c2e9f683e6bd9a331b8148"/>
+		<file filename="CHANGELOG" md5="5806420c3a087c48e200d04fce9303d1"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
 		<file filename="assets/scss/_content.scss" md5="18e00da409fa99734b17d5fc9e24037e"/>
 		<file filename="assets/scss/_controls.scss" md5="9ef44e36323a75fe4e895ce9c61146a4"/>
@@ -65,6 +65,7 @@
 		<file filename="assets/scss/_messages.scss" md5="f462ec4ba98028afa41d01684a809b38"/>
 		<file filename="assets/scss/_print.scss" md5="f3dd7a5f96e67e8d2156b5887ea785d4"/>
 		<file filename="assets/scss/_progress-log.scss" md5="bbbc79d05d748254a98d71fe1f48d290"/>
+		<file filename="assets/scss/_responsive.scss" md5="517996e4d65ade598714d01d5c24f1b7"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
 		<file filename="assets/scss/_variables.scss" md5="9eaf59c0a2f58a8ca5db9f2ccaf4ce99"/>
 		<file filename="assets/scss/pages/_admin_health.scss" md5="9c02894ad0929bfc414cf75c7fa0e208"/>
@@ -73,7 +74,7 @@
 		<file filename="assets/scss/pages/_user.scss" md5="fb9196cfc019cdcd6a68cbe9508003aa"/>
 		<file filename="assets/scss/pages/_widgets.scss" md5="13db361c6afd511138cf054c9cafebab"/>
 		<file filename="assets/scss/print.scss" md5="d1d80005e0cff66c29a89e531ad2b56a"/>
-		<file filename="assets/scss/styles.scss" md5="161ac75cd3b90092b2309913f05d2cb6"/>
+		<file filename="assets/scss/styles.scss" md5="add3cab2ac0838c4d045a9518ef79f70"/>
 		<file filename="assets/scss/tinymce/content.scss" md5="e9344c1b36962c17c7ce839307df5cc4"/>
 		<file filename="assets/scss/vendor/_normalize.scss" md5="7caceed677229c6cc84aa3f4754ff3a4"/>
 		<file filename="assets/scss/vendor/bitters/_base.scss" md5="7166d9a919b6658b127e59de676742fc"/>
@@ -204,6 +205,7 @@
 		<upgrade from="2.1.1" to="3.0.0"/>
 		<upgrade from="3.0.0" to="3.1.0"/>
 		<upgrade from="3.1.0" to="3.1.1"/>
+		<upgrade from="3.1.1" to="3.1.2"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
