@@ -529,7 +529,7 @@
 			<class name="ViewControls"/>
 			<class name="ViewControl"/>
 		</file>
-		<file filename="core/libs/core/ViewMeta.class.php" md5="07f0c4ae09d2b7da97f95e2183d6dd88">
+		<file filename="core/libs/core/ViewMeta.class.php" md5="893cec46d4c014bb460131719dbf5383">
 			<class name="ViewMetas"/>
 			<class name="ViewMeta"/>
 			<class name="ViewMeta_description"/>
@@ -541,7 +541,7 @@
 			<class name="ViewMeta_generator"/>
 			<class name="ViewMeta_image"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="f9bdad48dba6094982ea5400b0b77103">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="8b5279e51ae3f4d3d6b4f434b49721da">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -1871,7 +1871,7 @@
 		<file filename="core/templates/pages/userconfig/admin.tpl" md5="ddb0b2244edc6285dbcb45d222f1bb88"/>
 		<file filename="core/templates/pages/usergroupadmin/create_update.tpl" md5="7d72552f0b0f003af068eb7693834e4e"/>
 		<file filename="core/templates/pages/usergroupadmin/index.tpl" md5="58565b83dd1e62c0e5156c5149b63060"/>
-		<file filename="core/templates/pages/widget/admin.tpl" md5="b66bb545d5627a55c7800598b61b2728"/>
+		<file filename="core/templates/pages/widget/admin.tpl" md5="959c5c2e4e221a7051d16ccfb2ce103d"/>
 		<file filename="core/templates/pages/widget/create.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/widget/index.tpl" md5="b91848efc05679534b7b937853096fba"/>
 		<file filename="core/templates/pages/widget/instance_update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
