@@ -33,7 +33,7 @@ class GalleryImageModel extends Model {
 			'formtype' => 'system'
 		),
 		'uploaderid' => array(
-			'type' => Model::ATT_TYPE_INT,
+			'type' => Model::ATT_TYPE_UUID_FK,
 			'formtype' => 'disabled',
 			'comment' => 'User id of the uploading user',
 		),
@@ -116,8 +116,9 @@ class GalleryImageModel extends Model {
 			'default' => 0
 		),
 		'exifdata' => array(
-			'type' => Model::ATT_TYPE_TEXT,
+			'type' => Model::ATT_TYPE_DATA,
 			'formtype' => 'disabled',
+			'encoding' => Model::ATT_ENCODING_JSON,
 			'comment' => 'Exif data from the photo, retrieved automatically'
 		),
 		'created' => array(
@@ -161,27 +162,29 @@ class GalleryImageModel extends Model {
 	public function set($k, $v){
 		switch($k){
 			case 'file':
-				$ret = parent::set($k, $v);
+				parent::set($k, $v);
 				// Clear out the cache
 				$this->_file = null;
 				// File was updated... load the exif data too!
 				// Note, only do this if it was an image!
 				$file = $this->getOriginalFile();
 				if($file->isImage() && ($file->getExtension() == 'jpg')){
-					$this->_data['exifdata'] = json_encode( exif_read_data($file->getFilename()) );
+					parent::set('exifdata', exif_read_data($file->getFilename()));
 				}
 				else{
-					$this->_data['exifdata'] = null;
+					parent::set('exifdata', null);
 				}
 
 				// Also if the file is new and it didn't exist... set the uploader id.
-				if(!$this->_exists) $this->_data['uploaderid'] = \Core\user()->get('id');
-				return $ret;
+				if(!$this->_exists){
+					parent::set('uploaderid', \Core\user()->get('id'));
+				}
+				break;
 			case 'exifdata':
 				// exif data cannot be changed externally!
-				return false;
+				break;
 			default:
-				return parent::set($k, $v);
+				parent::set($k, $v);
 		}
 	}
 
@@ -190,8 +193,6 @@ class GalleryImageModel extends Model {
 			case 'baseurl':
 			case 'rewriteurl':
 				return $this->getRewriteURL();
-			case 'exifdata':
-				return json_decode($this->_data['exifdata'], true);
 			default:
 				return parent::get($k);
 		}
@@ -327,7 +328,6 @@ class GalleryImageModel extends Model {
 		$dat = array(
 			'FileSize' => null, 'FileSizeFormatted' => null, 'Height' => null, 'Width' => null, 'Dimensions' => null,
 			'DateTimeOriginal' => null,
-			'FNumber' => null,
 			'Make' => null, 'Model' => null, 'Orientation' => null, 'Software' => null, 'DateTime' => null, 'ExposureTime' => null,
 			// 	33437 (hex 0x829D)
 			'FNumber' => null,
@@ -368,7 +368,7 @@ class GalleryImageModel extends Model {
 		}
 
 		// Filesize supports formatting.
-		if($dat['FileSize']) $dat['FileSizeFormatted'] = Core::FormatSize($dat['FileSize'], 2);
+		if($dat['FileSize']) $dat['FileSizeFormatted'] = \Core\Filestore\format_size($dat['FileSize'], 2);
 
 		// Don't know why some of them are in fractions... but they are.
 		foreach(array('FNumber', 'ShutterSpeedValue', 'ApertureValue', 'FocalLength', 'MaxApertureValue', 'XResolution', 'YResolution') as $k){
