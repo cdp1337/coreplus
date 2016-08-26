@@ -77,7 +77,7 @@
 					</div>
 				{/if}
 				{a href="`$i.rewriteurl`"}
-					{img alt="`$i.title|escape`" file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title|escape`"}
+					{img alt="`$i.title|escape`" file=$i->getPreviewFile() dimensions="`$dimensions`" title="`$i.title|escape`" class="gallery-image-img"}
 				{/a}
 			</div>
 			<div class="gallery-image-title">
@@ -167,13 +167,27 @@
 
 <script>
 	$(function() {
-		var $container = $('#gallery-images');
-
-		$container.masonry({
-			itemSelector : '.gallery-image-wrapper',
-			isAnimated: true,
-			columnWidth: 50
+		var $imgs = $('.gallery-image-img'),
+			len = $imgs.length,
+			loaded = 0,
+			timer = null;
+		
+		$imgs.each(function() {
+			$(this).on('load', function() {
+				loaded++;
+			});
 		});
+		
+		timer = setInterval(function() {
+			if(loaded == len){
+				clearInterval(timer);
+				$('#gallery-images').masonry({
+					itemSelector : '.gallery-image-wrapper',
+					isAnimated: true,
+					columnWidth: 50
+				});
+			}
+		}, 500);
 
 		$('.gallery-image-wrapper')
 			.mouseover(function(){
