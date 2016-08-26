@@ -1,3 +1,8 @@
+Gallery 2.0.3
+
+	* Better detection for image loading on gallery view.
+	-- Charlie Powell <support@corepl.us>  Thu, 25 Aug 2016 23:04:45 -0400
+
 Gallery 2.0.2
 
 	* Regression fixes for gallery images.
