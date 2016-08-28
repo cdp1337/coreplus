@@ -94,6 +94,8 @@ MESSAGE_CONFIG_CORE_LANGUAGE_LANGUAGES_ENABLED:
   en: ""
 MESSAGE_CONFIG_CORE_LANGUAGE_SITE_DEFAULT:
   en: Default language for this site.
+MESSAGE_CONFIG_CORE_LOGS_DB_KEEP:
+  en: Keep database logs for a given amount of time, or 0 to keep all logs indefinitely.
 MESSAGE_CONFIG_CORE_LOGS_ROTATE_COMPRESS:
   en: Compress log files after rotation.
 MESSAGE_CONFIG_CORE_LOGS_ROTATE_FREQUENCY:
@@ -273,6 +275,8 @@ MESSAGE_LOG_IN_TO_EXISTING_ACCOUNT:
   en: Log in to your existing account.
 MESSAGE_MODEL_COMPONENTMODEL_ENABLED:
   en: ""
+MESSAGE_MODEL_COMPONENTMODEL_LICENSE:
+  en_US: ""
 MESSAGE_MODEL_COMPONENTMODEL_NAME:
   en: ""
 MESSAGE_MODEL_COMPONENTMODEL_VERSION:
@@ -403,12 +407,16 @@ MESSAGE_MODEL_SYSTEMLOGMODEL_CODE:
   en: ""
 MESSAGE_MODEL_SYSTEMLOGMODEL_DETAILS:
   en: ""
+MESSAGE_MODEL_SYSTEMLOGMODEL_ICON:
+  en_US: ""
 MESSAGE_MODEL_SYSTEMLOGMODEL_IP_ADDR:
   en: ""
 MESSAGE_MODEL_SYSTEMLOGMODEL_MESSAGE:
   en: ""
 MESSAGE_MODEL_SYSTEMLOGMODEL_SESSION_ID:
   en: ""
+MESSAGE_MODEL_SYSTEMLOGMODEL_SOURCE:
+  en_US: ""
 MESSAGE_MODEL_SYSTEMLOGMODEL_TYPE:
   en: ""
 MESSAGE_MODEL_SYSTEMLOGMODEL_USERAGENT:
@@ -684,16 +692,17 @@ MESSAGE_TUTORIAL_GPGAUTH_LOGIN2_COPY_PASTE_COMMAND_TO_LOGIN:
   en: ""
 MESSAGE_TUTORIAL_GPGAUTH_REGISTER_ALT_UPLOAD:
   en: >
-    Instead of pasting commands into a terminal, you can also manually upload your GPG public key with the form below.
-    <br/><br/>
-    Simply export your public key in ASCII mode and paste the text respresentation below along with your email address.
+    Instead of pasting commands into a terminal, you can also manually upload your
+    GPG public key with the form below. <br/><br/> Simply export your public key in
+    ASCII mode and paste the text respresentation below along with your email
+    address.
 MESSAGE_TUTORIAL_GPGAUTH_REGISTER_COPY_PASTE_COMMAND:
   en: >
-    To register an account on this site, start by running the following command in a local terminal
-    where your public and private GPG keys are available.  <em>(Hint, copy/paste works well here)</em>
-    <br/><br/>
-    You will be prompted for the 8-digit public key fingerprint which will be displayed in the format similar to:
-    "sec   4096R/1234ABCD", in that case, enter 1234ABCD.
+    To register an account on this site, start by running the following command in a
+    local terminal where your public and private GPG keys are available.  <em>(Hint,
+    copy/paste works well here)</em> <br/><br/> You will be prompted for the 8-digit
+    public key fingerprint which will be displayed in the format similar to: "sec  
+    4096R/1234ABCD", in that case, enter 1234ABCD.
 MESSAGE_TUTORIAL_MANUALLY_UPLOAD_PACKAGE:
   en: >
     You can use this form to upload a TGZ file to manually install a package. Please
@@ -800,32 +809,20 @@ STRING_CHECK_ASSET_DIRECTORY_S_DOES_NOT_EXIST:
   en: Asset directory [%1%] does not exist
 STRING_CHECK_ASSET_DIRECTORY_S_NOT_WRITABLE:
   en: Asset directory [%1%] is not writable
-STRING_CHECK_ASSET_DIRECTORY_S_OK:
-  en: Asset directory [%1%] is good
 STRING_CHECK_LOG_DIRECTORY_S_DOES_NOT_EXIST:
   en: Log directory [%1%] does not exist
 STRING_CHECK_LOG_DIRECTORY_S_NOT_WRITABLE:
   en: Log directory [%1%] is not writable
-STRING_CHECK_LOG_DIRECTORY_S_OK:
-  en: Log directory [%1%] is good
-STRING_CHECK_PHP_S_OK:
-  en: PHP Version [%1%] is good
 STRING_CHECK_PHP_S_TOO_OLD:
   en: PHP Version [%1%] is too old for Core to function correctly
 STRING_CHECK_PUBLIC_DIRECTORY_S_DOES_NOT_EXIST:
   en: Public directory [%1%] does not exist
 STRING_CHECK_PUBLIC_DIRECTORY_S_NOT_WRITABLE:
   en: Public directory [%1%] is not writable
-STRING_CHECK_PUBLIC_DIRECTORY_S_OK:
-  en: Public directory [%1%] is good
 STRING_CHECK_ROOT_DIRECTORY_S_DOES_NOT_EXIST:
   en: Root directory [%1%] does not exist
 STRING_CHECK_ROOT_DIRECTORY_S_NOT_WRITABLE:
   en: Root directory [%1%] is not writable
-STRING_CHECK_ROOT_DIRECTORY_S_OK:
-  en: Root directory [%1%] is good
-STRING_CHECK_SERVER_ID_IS_S:
-  en: Your server ID is [%1%]
 STRING_CHECK_SERVER_ID_NOT_VALID:
   en: Your server ID is not valid!
 STRING_CHECK_UPDATER_NO_UPDATE_SITES:
@@ -891,6 +888,8 @@ STRING_CONFIG_CORE_LANGUAGE_LANGUAGES_ENABLED:
   en: ""
 STRING_CONFIG_CORE_LANGUAGE_SITE_DEFAULT:
   en: Site Default Language
+STRING_CONFIG_CORE_LOGS_DB_KEEP:
+  en: Database Log Retention
 STRING_CONFIG_CORE_LOGS_ROTATE_COMPRESS:
   en: Compression for Log Rotation
 STRING_CONFIG_CORE_LOGS_ROTATE_FREQUENCY:
@@ -1281,6 +1280,16 @@ STRING_INCLUDE_ADMIN_PAGES:
   en: Include Admin Pages
 STRING_INSTALL:
   en: Install
+STRING_KEEP_DB_LOGS_0_MONTH:
+  en: 0 Months
+STRING_KEEP_DB_LOGS_1_MONTH:
+  en: Keep for 1 Month
+STRING_KEEP_DB_LOGS_7_DAYS:
+  en: Keep for 1 Week
+STRING_KEEP_DB_LOGS_NEVER:
+  en: Keep Indefintely
+STRING_KEEP_DB_LOGS_N_MONTH:
+  en: Keep for [%1%] Months
 STRING_LANG_Afrikaans:
   en: Afrikaans
 STRING_LANG_Albanian:
@@ -1435,6 +1444,8 @@ STRING_LOGIN:
   de: Anmelden
 STRING_LOGOUT:
   en: Logout
+STRING_LOG_CONFIG:
+  en: System Log Configuration
 STRING_MANAGE_GPG_KEYS:
   en: Manage GPG Keys
 STRING_MANAGE_REPOSITORIES:
@@ -1443,6 +1454,8 @@ STRING_MANUALLY_UPLOAD_PACKAGE:
   en: Manually Upload Package
 STRING_MODEL_COMPONENTMODEL_ENABLED:
   en: Enabled
+STRING_MODEL_COMPONENTMODEL_LICENSE:
+  en_US: ""
 STRING_MODEL_COMPONENTMODEL_NAME:
   en: Name
 STRING_MODEL_COMPONENTMODEL_VERSION:
@@ -1573,12 +1586,16 @@ STRING_MODEL_SYSTEMLOGMODEL_CODE:
   en: Code
 STRING_MODEL_SYSTEMLOGMODEL_DETAILS:
   en: Details
+STRING_MODEL_SYSTEMLOGMODEL_ICON:
+  en_US: ""
 STRING_MODEL_SYSTEMLOGMODEL_IP_ADDR:
   en: IP Address
 STRING_MODEL_SYSTEMLOGMODEL_MESSAGE:
   en: Message
 STRING_MODEL_SYSTEMLOGMODEL_SESSION_ID:
   en: Session ID
+STRING_MODEL_SYSTEMLOGMODEL_SOURCE:
+  en_US: ""
 STRING_MODEL_SYSTEMLOGMODEL_TYPE:
   en: Type
 STRING_MODEL_SYSTEMLOGMODEL_USERAGENT:

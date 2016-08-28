@@ -66,6 +66,7 @@
 		<hook name="/cron/hourly" call="\Core\Utilities\Logger\LogFile::RotateHourly"/>
 		<hook name="/cron/daily" call="Core\User\Helper::PurgeUserActivityCron"/>
 		<hook name="/cron/daily" call="\Core\Utilities\Logger\LogFile::RotateDaily"/>
+		<hook name="/cron/daily" call="SystemLogModel::PurgeHook"/>
 		<hook name="/cron/weekly" call="UpdaterHelper::CheckWeekly"/>
 		<hook name="/cron/weekly" call="\Core\Utilities\Logger\LogFile::RotateWeekly"/>
 		<hook name="/cron/weekly" call="AdminController::_HealthCheckReport"/>
@@ -108,6 +109,7 @@
 		<page baseurl="/admin/i18n" admin="1" access="g:admin" title="t:STRING_I18N_LANGUAGES" group="t:STRING_CONFIGURE"/>
 		<page baseurl="/admin/health" admin="1" access="g:admin" title="t:STRING_SYSTEM_HEALTH" group="t:STRING_ADMIN" image="assets/images/apps/package_utilities.png"/>
 		<page baseurl="/admin/serverid" admin="1" access="g:admin" title="t:STRING_SERVER_ID" group="t:STRING_ADMIN"/>
+		<page baseurl="/admin/log/config" admin="1" access="g:admin" title="t:STRING_LOG_CONFIG" group="t:STRING_CONFIGURE" image="assets/images/apps/utilities_log_viewer.png"/>
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
@@ -1951,6 +1953,7 @@
 		<config key="/core/logs/rotate/frequency" type="enum" options="hourly|daily|weekly|monthly|never" default="weekly"/>
 		<config key="/core/logs/rotate/compress" type="boolean" default="1"/>
 		<config key="/core/logs/rotate/keep" type="int" default="14"/>
+		<config key="/core/logs/db/keep" type="int" default="1095" form-attributes="type:select;source:SystemLogModel::GetKeepDBAsOptions"/>
 		<config key="/theme/siteskin/user" type="string"/>
 		<!-- I18N Options -->
 		<config key="/core/language/site_default" type="string" default="en" form-attributes="type:select;source:Core\i18n\I18NLoader::GetLanguagesAsOptions"/>

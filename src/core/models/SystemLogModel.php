@@ -279,4 +279,57 @@ class SystemLogModel extends Model {
 		return $log;
 	}
 
+	/**
+	 * Simple method to get the valid options for DB Keep logs options.
+	 * 
+	 * @return array
+	 */
+	public static function GetKeepDBAsOptions(){
+		return [
+			'7'   => t('STRING_KEEP_DB_LOGS_7_DAYS'),
+			'30'  => t('STRING_KEEP_DB_LOGS_N_MONTH', 1),
+			'60'  => t('STRING_KEEP_DB_LOGS_N_MONTH', 2),
+			'90'  => t('STRING_KEEP_DB_LOGS_N_MONTH', 3),
+			'180' => t('STRING_KEEP_DB_LOGS_N_MONTH', 6),
+			'365' => t('STRING_KEEP_DB_LOGS_N_MONTH', 12),
+			'558' => t('STRING_KEEP_DB_LOGS_N_MONTH', 18),
+			'744' => t('STRING_KEEP_DB_LOGS_N_MONTH', 24),
+			'1095' => t('STRING_KEEP_DB_LOGS_N_MONTH', 36),
+			'0'   => t('STRING_KEEP_DB_LOGS_NEVER'),
+		];
+	}
+
+	/**
+	 * Purge old system logs from the database, as per configuration options.
+	 * 
+	 * @return bool
+	 */
+	public static function PurgeHook(){
+		$len = ConfigHandler::Get('/core/logs/db/keep');
+		if(!$len){
+			echo "Not purging any logs, as per configuration option.\n";
+			return true;
+		}
+		
+		// Otherwise, the length will be the number of days to keep.
+		$d = new \Core\Date\DateTime();
+		$d->modify('-' . $len . ' days');
+		
+		echo "Deleting system logs older than " . $d->format(\Core\Date\DateTime::FULLDATE) . "\n";
+		
+		$count = \Core\Datamodel\Dataset::Init()
+			->count()
+			->table('system_log')
+			->where('datetime < ' . $d->format('U'))
+			->executeAndGet();
+		
+		echo "Found " . $count . " log entries, deleting!\n";
+		\Core\Datamodel\Dataset::Init()
+			->table('system_log')
+			->where('datetime < ' . $d->format('U'))
+			->delete()
+			->execute();
+		
+		return true;
+	}
 }

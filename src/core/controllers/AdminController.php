@@ -608,6 +608,108 @@ class AdminController extends Controller_2_1 {
 	}
 
 	/**
+	 * Display log management for Core.
+	 * 
+	 * @return int
+	 */
+	public function log_config(){
+		$view = $this->getView();
+		$request = $this->getPageRequest();
+
+		if(!\Core\user()->checkAccess('p:/core/systemlog/view')){
+			return View::ERROR_ACCESSDENIED;
+		}
+		
+		if($request->getParameter('download')){
+			$name = $request->getParameter('download');
+			$dir = Core\Filestore\Factory::Directory(ROOT_PDIR . 'logs/');
+			$file = Core\Filestore\Factory::File(ROOT_PDIR . 'logs/' . $name);
+			if(!$file->inDirectory($dir->getPath())){
+				return View::ERROR_BADREQUEST;
+			}
+			if(!$file->exists()){
+				return View::ERROR_NOTFOUND;
+			}
+			$file->sendToUserAgent(true);
+			return;
+		}
+
+		$keys = [
+			'/core/logs/rotate/frequency',
+			'/core/logs/rotate/compress',
+			'/core/logs/rotate/keep',
+			'/core/logs/db/keep',
+		];
+
+		$form = new Form();
+		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
+
+		foreach($keys as $k){
+			$c = ConfigHandler::GetConfig($k);
+			$f = $c->asFormElement();
+			// Don't need them grouped
+			$f->set('group', '');
+			$form->addElement($f);
+		}
+		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
+		
+		// Give me some information about the logs currently on the system.
+		$dir = Core\Filestore\Factory::Directory(ROOT_PDIR . 'logs/');
+		$logs = [];
+		$archived = [];
+		foreach($dir->ls() as $file){
+			/** @var \Core\Filestore\File $file */
+			$b = $file->getBaseFilename(true);
+			if($b == 'info'){
+				$logs[] = [
+					'type' => 'info',
+					'file' => $file,
+				];
+			}
+			elseif($b == 'security'){
+				$logs[] = [
+					'type' => 'security',
+					'file' => $file,
+				];
+			}
+			elseif($b == 'error'){
+				$logs[] = [
+					'type' => 'error',
+					'file' => $file,
+				];
+			}
+			elseif(strpos($b, 'info.log') === 0){
+				$archived[] = [
+					'type' => 'info',
+					'file' => $file,
+				];
+			}
+			elseif(strpos($b, 'security.log') === 0){
+				$archived[] = [
+					'type' => 'security',
+					'file' => $file,
+				];
+			}
+			elseif(strpos($b, 'error.log') === 0){
+				$archived[] = [
+					'type' => 'error',
+					'file' => $file,
+				];
+			}
+		}
+		
+		// Sort the archived ones.
+		usort($archived, function($a, $b){
+			return $a['file']->getBasename() < $b['file']->getBasename();
+		});
+
+		$view->title = 't:STRING_LOG_CONFIG';
+		$view->assign('form', $form);
+		$view->assign('logs', $logs);
+		$view->assign('archived', $archived);
+	}
+
+	/**
 	 * Display a listing of all pages registered in the system.
 	 */
 	public function pages(){

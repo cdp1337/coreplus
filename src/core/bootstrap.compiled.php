@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 23 Aug 2016 00:43:57 -0400
+ * @compiled Sat, 27 Aug 2016 20:02:56 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7136,6 +7136,41 @@ array(
 )
 );
 return $log;
+}
+public static function GetKeepDBAsOptions(){
+return [
+'7'   => t('STRING_KEEP_DB_LOGS_7_DAYS'),
+'30'  => t('STRING_KEEP_DB_LOGS_N_MONTH', 1),
+'60'  => t('STRING_KEEP_DB_LOGS_N_MONTH', 2),
+'90'  => t('STRING_KEEP_DB_LOGS_N_MONTH', 3),
+'180' => t('STRING_KEEP_DB_LOGS_N_MONTH', 6),
+'365' => t('STRING_KEEP_DB_LOGS_N_MONTH', 12),
+'558' => t('STRING_KEEP_DB_LOGS_N_MONTH', 18),
+'744' => t('STRING_KEEP_DB_LOGS_N_MONTH', 24),
+'0'   => t('STRING_KEEP_DB_LOGS_NEVER'),
+];
+}
+public static function PurgeHook(){
+$len = ConfigHandler::Get('/core/logs/db/keep');
+if(!$len){
+echo "Not purging any logs, as per configuration option.\n";
+return true;
+}
+$d = new \Core\Date\DateTime();
+$d->modify('-' . $len . ' days');
+echo "Deleting system logs older than " . $d->format(\Core\Date\DateTime::FULLDATETIME) . "\n";
+$count = \Core\Datamodel\Dataset::Init()
+->count()
+->table('system_log')
+->where('datetime < ' . $d->format('U'))
+->executeAndGet();
+echo "Found " . $count . " log entries, deleting!\n";
+\Core\Datamodel\Dataset::Init()
+->table('system_log')
+->where('datetime < ' . $d->format('U'))
+->delete()
+->executeAndGet();
+return true;
 }
 }
 
