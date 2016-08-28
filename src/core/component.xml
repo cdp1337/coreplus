@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.8" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.9" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -113,14 +113,14 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="0ed7fdf7ab182e642be4f09146b91686"/>
+		<file filename="core/CHANGELOG" md5="cd43391924b2a0789f957b56d2c8bc6d"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
 		<file filename="core/bootstrap_postincludes.php" md5="ad5edc4ca5372e9245fa6c4af1b5db7a"/>
 		<file filename="core/bootstrap_predefines.php" md5="19c03f50f1de46a41681c26a3af7f23f"/>
 		<file filename="core/bootstrap_preincludes.php" md5="c3deceae3d39082ed940dcf6aea27061"/>
-		<file filename="core/controllers/AdminController.php" md5="987950f3991aebb1abe9b1351545b94d">
+		<file filename="core/controllers/AdminController.php" md5="d787c0f59ea75b7b67a44f7dded9db7a">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="1926f241215b0b84a06bdbba29b26f11">
@@ -253,7 +253,7 @@
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
 		<file filename="core/htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
-		<file filename="core/i18n/strings.yml" md5="6320b8326f8bf9979d0fc370293fd9ce"/>
+		<file filename="core/i18n/strings.yml" md5="7dbcd2e43e170b857653cdf33a8be49b"/>
 		<file filename="core/libs/Michelf/License.md" md5="171ec084d03465cd4148b8298a8dfe11"/>
 		<file filename="core/libs/Michelf/Markdown.inc.php" md5="724fb43c68d63fbbc24024ef6e91e456"/>
 		<file filename="core/libs/Michelf/Markdown.php" md5="455f66e6c0931c51b5c1ae95e323f2ab">
@@ -1613,7 +1613,7 @@
 		<file filename="core/models/SessionModel.class.php" md5="5286197fb80b334e418aaf859f6824bb">
 			<class name="SessionModel"/>
 		</file>
-		<file filename="core/models/SystemLogModel.php" md5="d599f9397e30f2eaec0166c790edbf53">
+		<file filename="core/models/SystemLogModel.php" md5="298b2df1dd8a24bae6e6552cc4c0d264">
 			<class name="SystemLogModel"/>
 		</file>
 		<file filename="core/models/TemplateCssModel.php" md5="2f6ffde79c0440c30df5d06c307bcba4">
@@ -1806,6 +1806,7 @@
 		<file filename="core/templates/pages/admin/i18n.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/admin/index.tpl" md5="0612a6c0c5f24a968a657d89fa3f9bd0"/>
 		<file filename="core/templates/pages/admin/log.tpl" md5="ac3322c1ee98167c048d99896d6cfeed"/>
+		<file filename="core/templates/pages/admin/log_config.tpl" md5="04270da79dcc1452559471c617483f24"/>
 		<file filename="core/templates/pages/admin/log_details.tpl" md5="194679bb89f669a7e49d82b454ad6685"/>
 		<file filename="core/templates/pages/admin/pages.tpl" md5="00eadd35f87f53f53770878d2e467cfb"/>
 		<file filename="core/templates/pages/admin/performance_config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -3240,6 +3241,7 @@
 	</assets>
 	<upgrades>
 		<upgrade from="6.0.7" to="6.0.8"/>
+		<upgrade from="6.0.8" to="6.0.9"/>
 	</upgrades>
 </component>
 
