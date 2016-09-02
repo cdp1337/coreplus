@@ -3240,6 +3240,155 @@
 		<file filename="core/assets/js/user/user.min.js" md5="3f3d760fb7084da6b673fd1840a26c25"/>
 	</assets>
 	<upgrades>
+		<upgrade from="0.0.1-dev1" to="0.0.2"/>
+		<upgrade from="0.0.2" to="0.0.2-1"/>
+		<upgrade from="0.0.2-1" to="0.0.2-2"/>
+		<upgrade from="0.0.2-2" to="0.0.3"/>
+		<upgrade from="0.0.3" to="0.0.4"/>
+		<upgrade from="0.0.4" to="0.0.5"/>
+		<upgrade from="0.0.5" to="0.0.6"/>
+		<upgrade from="0.0.6" to="0.0.7"/>
+		<upgrade from="0.0.7" to="0.0.8"/>
+		<upgrade from="0.0.8" to="0.0.9"/>
+		<upgrade from="0.0.9" to="0.1.0"/>
+		<upgrade from="0.1.0" to="1.9.0"/>
+		<upgrade from="1.9.0" to="1.9.1">
+			<dataset action="update" table="widget">
+				<datasetset key="baseurl">/userwidget/login</datasetset>
+				<datasetwhere>
+					baseurl = /UserLoginWidget/execute
+				</datasetwhere>
+			</dataset>
+		</upgrade>
+		<upgrade from="1.9.1" to="1.9.2"/>
+		<upgrade from="1.9.2" to="2.1.0"/>
+		<upgrade from="2.1.0" to="2.1.1"/>
+		<upgrade from="2.1.1" to="2.1.2"/>
+		<upgrade from="2.1.2" to="2.1.3"/>
+		<upgrade from="2.1.3" to="2.1.4"/>
+		<upgrade from="2.1.4" to="2.1.5"/>
+		<upgrade from="2.1.5" to="2.1.6"/>
+		<upgrade from="2.1.6" to="2.2.0"/>
+		<upgrade from="2.2.0" to="2.2.1"/>
+		<upgrade from="2.2.1" to="2.2.2"/>
+		<upgrade from="2.2.2" to="2.2.3"/>
+		<upgrade from="2.2.3" to="2.2.4"/>
+		<upgrade from="2.2.4" to="2.2.5"/>
+		<upgrade from="2.2.5" to="2.2.6"/>
+		<upgrade from="2.2.6" to="2.3.0"/>
+		<upgrade from="2.3.0" to="2.3.1"/>
+		<upgrade from="2.3.1" to="2.3.2"/>
+		<upgrade from="2.3.2" to="2.4.0"/>
+		<upgrade from="2.4.0" to="2.4.1">
+			<phpfileinclude>
+				core/upgrades/240_to_241_pagemetas.php
+			</phpfileinclude>
+		</upgrade>
+		<upgrade from="2.4.1" to="2.4.2"/>
+		<upgrade from="2.4.2" to="2.4.3">
+			<phpfileinclude>
+				core/upgrades/242_to_243_page_selectable.php
+			</phpfileinclude>
+		</upgrade>
+		<upgrade from="2.4.3" to="2.4.4"/>
+		<upgrade from="2.4.4" to="2.4.5"/>
+		<upgrade from="2.4.5" to="2.4.6"/>
+		<upgrade from="2.4.6" to="2.4.7b1"/>
+		<upgrade from="2.4.6.1" to="2.4.7b2"/>
+		<upgrade from="2.4.7b1" to="2.4.7b2"/>
+		<upgrade from="2.4.7b2" to="2.4.7b3"/>
+		<upgrade from="2.4.7b3" to="2.4.7b4"/>
+		<upgrade from="2.4.7b4" to="2.4.7b5"/>
+		<upgrade from="2.4.7b5" to="2.4.7b6"/>
+		<upgrade from="2.4.7b6" to="2.4.7b7"/>
+		<upgrade from="2.4.7b7" to="2.4.7b8"/>
+		<upgrade from="2.4.7b8" to="2.4.7b9"/>
+		<upgrade from="2.4.7b9" to="2.5.0"/>
+		<upgrade from="2.5.0" to="2.5.1"/>
+		<upgrade from="2.5.1" to="2.5.2"/>
+		<upgrade from="2.5.2" to="2.5.3"/>
+		<upgrade from="2.5.3" to="2.5.4"/>
+		<upgrade from="2.5.4" to="2.5.5"/>
+		<upgrade from="2.5.5" to="2.5.6"/>
+		<upgrade from="2.5.6" to="2.5.7"/>
+		<upgrade from="2.5.7" to="2.5.8"/>
+		<upgrade from="2.5.8" to="2.5.9"/>
+		<upgrade from="2.5.9" to="2.6.0">
+			<phpfileinclude>
+				core/upgrades/258_to_260_pagemetasandinsertables.php
+			</phpfileinclude>
+			<phpfileinclude>core/upgrades/257_to_260.php</phpfileinclude>
+		</upgrade>
+		<upgrade from="2.6.0" to="2.6.1"/>
+		<upgrade from="2.6.1" to="2.6.2"/>
+		<upgrade from="2.6.2" to="2.7.0"/>
+		<upgrade from="2.6.3" to="2.7.0">
+			<php file="core/upgrades/261_to_262.php"/>
+		</upgrade>
+		<upgrade from="2.6.4" to="2.7.0">
+			<php file="core/upgrades/261_to_262.php"/>
+		</upgrade>
+		<upgrade from="2.6.5" to="2.7.0"/>
+		<upgrade from="2.6.6" to="2.7.0"/>
+		<upgrade from="2.7.0" to="2.8.0">
+			<php file="core/upgrades/270_to_280_groups.php"/>
+			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
+		</upgrade>
+		<upgrade from="2.8.0" to="3.0.0"/>
+		<upgrade from="3.0.0" to="3.1.0">
+			<dataset action="update" table="widget_instance">
+				<datasetset key="baseurl">/user/login</datasetset>
+				<datasetwhere>baseurl = /UserWidget/Login</datasetwhere>
+			</dataset>
+			<dataset action="update" table="widget_instance">
+				<datasetset key="baseurl">/user/register</datasetset>
+				<datasetwhere>baseurl = /UserWidget/Register</datasetwhere>
+			</dataset>
+			<dataset action="delete" table="widget">
+				<datasetwhere>baseurl = /UserWidget/Login</datasetwhere>
+			</dataset>
+			<dataset action="delete" table="widget">
+				<datasetwhere>baseurl = /UserWidget/Register</datasetwhere>
+			</dataset>
+			<php file="core/upgrades/300_page_published.php"/>
+		</upgrade>
+		<upgrade from="3.1.0" to="3.2.0">
+			<dataset action="update" table="widget_instance">
+				<datasetset key="page_baseurl">/admin</datasetset>
+				<datasetwhere>page = pages/admin/index.tpl</datasetwhere>
+			</dataset>
+		</upgrade>
+		<upgrade from="3.2.0" to="3.2.1"/>
+		<upgrade from="3.2.1" to="3.2.2"/>
+		<upgrade from="3.2.2" to="3.4.0"/>
+		<upgrade from="3.4.0" to="3.5.0"/>
+		<upgrade from="3.5.0" to="4.0.0"/>
+		<upgrade from="3.5.1" to="4.0.0"/>
+		<upgrade from="4.0.0" to="4.0.1"/>
+		<upgrade from="4.0.1" to="4.0.2"/>
+		<upgrade from="4.0.2" to="4.0.3"/>
+		<upgrade from="4.0.3" to="4.0.4"/>
+		<upgrade from="4.0.4" to="4.0.5"/>
+		<upgrade from="4.0.5" to="4.0.6"/>
+		<upgrade from="4.0.6" to="4.0.7"/>
+		<upgrade from="4.0.7" to="4.0.8"/>
+		<upgrade from="4.0.8" to="4.1.0"/>
+		<upgrade from="4.1.0" to="4.1.1"/>
+		<upgrade from="4.1.1" to="4.1.2"/>
+		<upgrade from="4.1.2" to="4.2.0"/>
+		<upgrade from="4.2.0" to="4.9.0"/>
+		<upgrade from="4.9.0" to="5.0.0"/>
+		<upgrade from="5.0.0" to="5.0.1"/>
+		<upgrade from="5.0.1" to="6.0.0">
+			<php file="core/upgrades/500_user_config_migration.php"/>
+		</upgrade>
+		<upgrade from="6.0.0" to="6.0.1"/>
+		<upgrade from="6.0.1" to="6.0.2"/>
+		<upgrade from="6.0.2" to="6.0.3"/>
+		<upgrade from="6.0.3" to="6.0.4"/>
+		<upgrade from="6.0.4" to="6.0.5"/>
+		<upgrade from="6.0.5" to="6.0.6"/>
+		<upgrade from="6.0.6" to="6.0.7"/>
 		<upgrade from="6.0.7" to="6.0.8"/>
 		<upgrade from="6.0.8" to="6.0.9"/>
 	</upgrades>
