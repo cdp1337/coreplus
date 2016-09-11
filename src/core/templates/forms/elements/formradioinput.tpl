@@ -4,6 +4,14 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 	</span>
 
+	{if $element->get('description')}
+		{if strpos($element->get('description'), "\n")}
+			<p class="form-element-description">{$element->get('description')}</p>
+		{else}
+			<span class="form-element-description">{$element->get('description')}</span>
+		{/if}
+	{/if}
+
 	<div class="form-element-value clearfix">
 		{foreach from=$element->get('options') item=title key=key}
 			<label>
@@ -12,8 +20,6 @@
 			</label>
 		{/foreach}
 	</div>
-
-	<p class="form-element-description">{$element->get('description')}</p>
 </div>
 
 {script library="jquery.icheck"}{/script}

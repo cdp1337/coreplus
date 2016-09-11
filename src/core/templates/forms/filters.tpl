@@ -19,18 +19,30 @@
 					{foreach $elements as $element}
 						{$element->render()}
 					{/foreach}
-
-					<div class="clear"></div>
-					<a href="#" class="button reset-filters">
-						<i class="icon icon-times"></i>
-						<span>{t 'STRING_RESET'}</span>
-					</a>
+					
+					{if sizeof($elements) > 3}
+						<hr class="listing-filters-break"/>
+					{/if}
+					
 					<!-- Render a submit button so 'Enter' works... -->
 					<input type="submit" style="display:none;"/>
-					<a href="#" class="button apply-filters">
-						<i class="icon icon-ok"></i>
-						<span>{t 'STRING_APPLY'}</span>
-					</a>
+					
+					<div class="button-group">
+						<a href="#" class="button apply-filters button-apply">
+							<i class="icon icon-ok"></i>
+							<span>{t 'STRING_APPLY'}</span>
+						</a>
+						
+						<a href="#" class="button hide-filters">
+							<i class="icon icon-chevron-up"></i>
+							<span>{t 'STRING_HIDE'}</span>
+						</a>
+						
+						<a href="#" class="button reset-filters button-reset">
+							<i class="icon icon-times"></i>
+							<span>{t 'STRING_RESET'}</span>
+						</a>
+					</div>
 				</form>
 			{/if}
 		</div>
@@ -63,6 +75,12 @@
 		$('.reset-filters').click(function(){
 			$(this).closest('form').find(':input').val('');
 			$(this).closest('form').submit();
+			return false;
+		});
+		$('.hide-filters').click(function() {
+			var $f = $(this).closest('fieldset');
+			$f.find('.collapsible-contents').hide();
+			$f.removeClass('expanded').addClass('collapsed');
 			return false;
 		});
 	});

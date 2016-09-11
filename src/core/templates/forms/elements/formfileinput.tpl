@@ -13,13 +13,21 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 	</label>
 
+	{if $element->get('description')}
+		{if strpos($element->get('description'), "\n")}
+			<p class="form-element-description">{$element->get('description')}</p>
+		{else}
+			<span class="form-element-description">{$element->get('description')}</span>
+		{/if}
+	{/if}
+
 	<noscript>
 		<input type="file" name="{$element->get('name')}" accept="{$element->get('accept')}"/><br/>
 		(Please enable javascript to get the most out of this form)
 	</noscript>
 
-	<table class="file-input-innercontainer clearfix form-element-value" id="{$element->get('id')}"><tr>
-
+	<table class="file-input-innercontainer clearfix form-element-value" id="{$element->get('id')}">
+		<tr>
 			<td id="{$element->get('id')}-selector" style="display:none;" class="formfileinput-selector">
 				{if $element->get('value')}
 					<label>
@@ -84,9 +92,8 @@
 				{/if}
 			</td>
 
-		</tr></table>
-
-	<p class="form-element-description">{$element->get('description')}</p>
+		</tr>
+	</table>
 </div>
 
 

@@ -7,6 +7,13 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 	</label>
 
+	{if $element->get('description')}
+		{if strpos($element->get('description'), "\n")}
+			<p class="form-element-description">{$element->get('description')}</p>
+		{else}
+			<span class="form-element-description">{$element->get('description')}</span>
+		{/if}
+	{/if}
 
 	<div class="form-element-value">
 		<select id="{$element->get('id')}" name="{$element->get('name')}" class="{$dynname}_main">
@@ -42,11 +49,7 @@
 				</label>
 			{/foreach}
 		</div>
-
-		<div class="clear"></div>
 	</div>
-
-	<p class="form-element-description">{$element->get('description')}</p>
 
 	<script type="text/javascript">
 		$(function () {

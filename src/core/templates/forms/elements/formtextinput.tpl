@@ -7,7 +7,13 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 	</label>
 
-	
+	{if $element->get('description')}
+		{if strpos($element->get('description'), "\n")}
+			<p class="form-element-description">{$element->get('description')}</p>
+		{else}
+			<span class="form-element-description">{$element->get('description')}</span>
+		{/if}
+	{/if}
 
 	{if $element->get('autocomplete') && $element->get('autocomplete') != 'on' && $element->get('autocomplete') != 'off'}
 		{* values should be an array of value => label *}
@@ -48,10 +54,6 @@
 		<div class="form-element-value">
 			<input type="{$type}"{$element->getInputAttributes()}>
 		</div>
-	{/if}
-
-	{if $element->get('description')}
-		<p class="form-element-description">{$element->get('description')}</p>
 	{/if}
 </div>
 

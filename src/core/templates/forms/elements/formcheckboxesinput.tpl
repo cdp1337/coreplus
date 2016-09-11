@@ -6,13 +6,17 @@
 
 		<span class="checkboxes-toggle checkboxes-toggle-check" style="display:none;" title="Check All">
 			<span>Check All</span>
-			<i class='icon-check'></i>
+			<i class='icon icon-check-square-o'></i>
 		</span>
 		<span class="checkboxes-toggle checkboxes-toggle-uncheck" style="display:none;" title="Uncheck All">
 			<span>Uncheck All</span>
-			<i class='icon-check'></i>
+			<i class='icon icon-minus-square-o'></i>
 		</span>
 	</span>
+
+	{if $element->get('description')}
+		<p class="form-element-description">{$element->get('description')}</p>
+	{/if}
 
 	<div class="form-element-value clearfix">
 		{foreach from=$element->get('options') item=title key=key}
@@ -22,8 +26,6 @@
 			</label>
 		{/foreach}
 	</div>
-
-	<p class="form-element-description">{$element->get('description')}</p>
 </div>
 
 {script library="jquery"}{/script}

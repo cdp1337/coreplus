@@ -4,12 +4,17 @@
 		{if $element->get('required')}<span class="form-element-required-mark" title="Required Field"> *</span>{/if}
 	</label>
 
+	{if $element->get('description')}
+		{if strpos($element->get('description'), "\n")}
+			<p class="form-element-description">{$element->get('description')}</p>
+		{else}
+			<span class="form-element-description">{$element->get('description')}</span>
+		{/if}
+	{/if}
+
 	<div class="keywords-multi-select form-element-value clearfix">
 		<input type="text"{$element->getInputAttributes()}>
 	</div>
-
-	<p class="form-element-description">{$element->get('description')}</p>
-
 </div>
 
 
