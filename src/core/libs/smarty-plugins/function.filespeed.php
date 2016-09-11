@@ -24,10 +24,12 @@
  *
  * #### Example Usage
  *
- * <pre>
+ * ```
  * {filesize 123} => "123 bytes"
  * {filesize 2048} => "2 kiB"
- * </pre>
+ * {filesize 2050} => '2.1 kiB"
+ * {filesize 2050 round=0} => '2 kiB"
+ * ```
  *
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
  * @param Smarty $smarty  Parent Smarty template object
@@ -39,6 +41,8 @@ function smarty_function_filespeed($params, $smarty){
 	
 	$size = $params[0];
 	
+	$round = isset($params['round']) ? $params['round'] : 1; 
+	
 	$suf = array('bps', 'Kbps', 'Mbps', 'Gbps', 'Tbps', 'Pbps', 'Ebps', 'Zbps', 'Ybps');
 	$c   = 0;
 	while ($size >= 1024) {
@@ -46,5 +50,5 @@ function smarty_function_filespeed($params, $smarty){
 		$size = $size / 1024;
 	}
 
-	return \Core\i18n\I18NLoader::FormatNumber($size, 1) . ' ' . $suf[$c];
+	return \Core\i18n\I18NLoader::FormatNumber($size, $round) . ' ' . $suf[$c];
 }
