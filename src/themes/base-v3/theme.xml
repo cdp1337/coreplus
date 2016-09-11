@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.2" name="Base V3">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.3" name="Base V3">
 	<assets>
-		<file filename="assets/css/print.css" md5="1e75d61c2c5c7ab10538e4c5f7f45897"/>
-		<file filename="assets/css/print.css.map" md5="9925f7d7ea074210b7e3e37329472f68"/>
-		<file filename="assets/css/print.min.css" md5="e2d9b2b1758d47b6260be9af8c9e6215"/>
-		<file filename="assets/css/styles.css" md5="ef89fb7f7e7b7ef2d4170fdd1a54389c"/>
-		<file filename="assets/css/styles.css.map" md5="ea2e83121c036e0961461eee1b1d5373"/>
-		<file filename="assets/css/styles.min.css" md5="78fc33443de8ae5635fbddda3c1488a5"/>
-		<file filename="assets/css/tinymce/content.css" md5="c12d573ac29944bfba932a96d07ade67"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="93cbeab8f5da57cd5a3c3cf0ecc1ecfd"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="b6c1bb72b934d50dac157b4713114455"/>
+		<file filename="assets/css/print.css" md5="f4514e07ce030ab89fd665c0da231206"/>
+		<file filename="assets/css/print.css.map" md5="5f77a594189bdaf31ed2c71cf51f139b"/>
+		<file filename="assets/css/print.min.css" md5="2ca9057382ac660c2d0084a3f203792f"/>
+		<file filename="assets/css/styles.css" md5="8d9dd07ed5aa59a064570dcb1d336b89"/>
+		<file filename="assets/css/styles.css.map" md5="acd442ed4aed2c59e8b4f812d7f393e1"/>
+		<file filename="assets/css/styles.min.css" md5="1b6bd4ff1426e72d6113c3cb3b7a3a9b"/>
+		<file filename="assets/css/tinymce/content.css" md5="6fffc237874c761d44536081a605dabb"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="bb060e164855b2d30bd85a98aa3e4679"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="6fe38eafeccd1e8e7dcd4c71a1bb6a33"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="763f4af38987c9ec8facd6b086e5eaf7" title=""/>
@@ -53,13 +53,13 @@
 		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="5806420c3a087c48e200d04fce9303d1"/>
+		<file filename="CHANGELOG" md5="23b724617085577a3164f10b0a4191fa"/>
 		<file filename="assets/scss/_collapsible_fieldsets.scss" md5="c34fcba3463f69af6cd82dec79526d75"/>
 		<file filename="assets/scss/_content.scss" md5="18e00da409fa99734b17d5fc9e24037e"/>
 		<file filename="assets/scss/_controls.scss" md5="9ef44e36323a75fe4e895ce9c61146a4"/>
 		<file filename="assets/scss/_debugging.scss" md5="1b0978ef99dfd17c0e2df59dbea683e4"/>
-		<file filename="assets/scss/_filters_and_pagination.scss" md5="ddfe81dc89f8bd282ebf4c86576b8132"/>
-		<file filename="assets/scss/_form_elements.scss" md5="2f0e1cf42d8deb9b2641a629cf2932f2"/>
+		<file filename="assets/scss/_filters_and_pagination.scss" md5="42d53694c496ce64e91283fe2c2c632a"/>
+		<file filename="assets/scss/_form_elements.scss" md5="812bdef06f18840f4f5e828ddd02846e"/>
 		<file filename="assets/scss/_layout.scss" md5="42c07a5ecf89d6bf6c0806435c615674"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="2e8e9d6be0b82a493d0b7429d1732af8"/>
 		<file filename="assets/scss/_messages.scss" md5="f462ec4ba98028afa41d01684a809b38"/>
@@ -67,7 +67,7 @@
 		<file filename="assets/scss/_progress-log.scss" md5="bbbc79d05d748254a98d71fe1f48d290"/>
 		<file filename="assets/scss/_responsive.scss" md5="517996e4d65ade598714d01d5c24f1b7"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
-		<file filename="assets/scss/_variables.scss" md5="9eaf59c0a2f58a8ca5db9f2ccaf4ce99"/>
+		<file filename="assets/scss/_variables.scss" md5="673f171ea61041ae6df90d48572880a8"/>
 		<file filename="assets/scss/pages/_admin_health.scss" md5="9c02894ad0929bfc414cf75c7fa0e208"/>
 		<file filename="assets/scss/pages/_theme.scss" md5="1039df69f0df35e4c7c9883a109ef103"/>
 		<file filename="assets/scss/pages/_updater.scss" md5="071f9f71dda94d07e8423f02e811e72b"/>
@@ -206,6 +206,7 @@
 		<upgrade from="3.0.0" to="3.1.0"/>
 		<upgrade from="3.1.0" to="3.1.1"/>
 		<upgrade from="3.1.1" to="3.1.2"/>
+		<upgrade from="3.1.2" to="3.1.3"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
