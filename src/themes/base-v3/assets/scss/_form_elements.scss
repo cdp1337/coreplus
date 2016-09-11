@@ -1,12 +1,47 @@
 .formelement {
+	margin-bottom: 1.25em;
+	
+	// Common elements across many/all form elements
+	.form-element-label {
+		display: inline-block;
+		font-weight: 600;
+	}
 
-	margin-bottom: 0.35em;
+	span.form-element-description {
+		// Inline element descriptions, (they're a span).
+		margin-left: 2em;
+		color: $form-element-description-color;
+		font-size: $form-element-description-font-size;
+	}
+	p.form-element-description {
+		// Standard/multi-line element descriptions, (they'll be a p).
+		color: $form-element-description-color;
+		font-size: $form-element-description-font-size;
+		margin: 0 0 0.25em;
+	}
 
 	&.formselect select {
 		// Reducing the padding set from bourbon for these, as the p.description following should be closer.
 		margin-bottom: 0.20em;
 	}
 
+	&.formpagemetaauthorinput, &.formuserinput {
+		/* Meta-Author input styles */
+		.form-element-value {
+			position: relative;
+
+			input {
+				padding-left: 24px;
+				width: 93%;
+			}
+			.meta-author-indicator,
+			.user-indicator{
+				position: absolute;
+				left: 8px;
+				top: 4px;
+			}
+		}
+	}
 	&.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator,
 	&.formuserinput.user-valid .user-invalid-indicator {
 		display: none;
@@ -16,47 +51,83 @@
 		display: none;
 	}
 	
+	&.formcheckboxesinput {
+		// Multiple checkboxes input
+		.checkboxes-toggle {
+			color: $form-element-description-color;
+			font-size: $form-element-description-font-size;
+			cursor: pointer;
+			margin-left: 2em;
+		}
+		
+		.form-element-value label {
+			font-weight: inherit;
+			display: inline-block;
+			margin-right: 2em;
+			min-width: 17em;
+		}
+	}
+
+	&.formradioinput {
+		// Radio input
+		.form-element-value label {
+			font-weight: inherit;
+			display: inline-block;
+			margin-right: 1em;
+		}
+	}
+	
 	&.formelement-disabled {
 		// Lighten disabled form elements a bit to make them more notable.
 		opacity: 0.4;
 	}
-
-	.form-element-description {
-		color: lighten($dark-gray, 16%);
-		font-size: $base-font-size * .9;
-	}
-}
-
-
-.formelement.formpagemetaauthorinput,
-.formelement.formuserinput {
-	/* Meta-Author input styles */
-	.form-element-value {
-		position: relative;
-
-		input {
-			padding-left: 24px;
-			width: 93%;
+	
+	&.formfileinput {
+		table.form-element-value {
+			.formfileinput-selector {
+				width: 30%;
+			}
 		}
-		.meta-author-indicator,
-		.user-indicator{
-			position: absolute;
-			left: 8px;
-			top: 4px;
+		
+		td {
+			padding: 0;
 		}
 	}
+
 }
 
-.formelement.formfileinput {
-	table.form-element-value {
-		.formfileinput-selector {
-			width: 30%;
-		}
-	}
-}
 
 // Lighten up the readonly overlay a bit.
 body .readonly_overlay {
 	background-color: rgba(230, 230, 230, 0.4);
 	opacity: 1;
+}
+
+#{$all-buttons} {
+	&.button-reset {
+		color: $button-reset-color;
+	}
+
+	&.button-apply {
+		color: $button-apply-color;
+	}
+}
+
+// New button groups
+.button-group {
+	#{$all-buttons} {
+		border-radius: 0;
+		float: left;
+		border-right: $base-border;
+
+		&:first-child {
+			border-top-left-radius: $base-border-radius;
+			border-bottom-left-radius: $base-border-radius;
+		}
+		&:last-child {
+			border-top-right-radius: $base-border-radius;
+			border-bottom-right-radius: $base-border-radius;
+			border-right: 0 none;
+		}
+	}
 }

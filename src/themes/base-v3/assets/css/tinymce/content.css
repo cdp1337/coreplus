@@ -694,65 +694,122 @@ html {
 
 /* line 1, ../../scss/_form_elements.scss */
 .formelement {
-  margin-bottom: 0.35em;
+  margin-bottom: 1.25em;
 }
 /* line 5, ../../scss/_form_elements.scss */
-.formelement.formselect select {
-  margin-bottom: 0.20em;
+.formelement .form-element-label {
+  display: inline-block;
+  font-weight: 600;
 }
 /* line 10, ../../scss/_form_elements.scss */
-.formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator, .formelement.formuserinput.user-valid .user-invalid-indicator {
-  display: none;
-}
-/* line 14, ../../scss/_form_elements.scss */
-.formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator, .formelement.formuserinput.user-invalid .user-valid-indicator {
-  display: none;
-}
-/* line 19, ../../scss/_form_elements.scss */
-.formelement.formelement-disabled {
-  opacity: 0.4;
-}
-/* line 24, ../../scss/_form_elements.scss */
-.formelement .form-element-description {
+.formelement span.form-element-description {
+  margin-left: 2em;
   color: #5c5c5c;
   font-size: 0.9em;
 }
-
-/* line 31, ../../scss/_form_elements.scss */
-.formelement.formpagemetaauthorinput,
-.formelement.formuserinput {
+/* line 16, ../../scss/_form_elements.scss */
+.formelement p.form-element-description {
+  color: #5c5c5c;
+  font-size: 0.9em;
+  margin: 0 0 0.25em;
+}
+/* line 23, ../../scss/_form_elements.scss */
+.formelement.formselect select {
+  margin-bottom: 0.20em;
+}
+/* line 28, ../../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput, .formelement.formuserinput {
   /* Meta-Author input styles */
 }
-/* line 34, ../../scss/_form_elements.scss */
-.formelement.formpagemetaauthorinput .form-element-value,
-.formelement.formuserinput .form-element-value {
+/* line 30, ../../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput .form-element-value, .formelement.formuserinput .form-element-value {
   position: relative;
 }
-/* line 37, ../../scss/_form_elements.scss */
-.formelement.formpagemetaauthorinput .form-element-value input,
-.formelement.formuserinput .form-element-value input {
+/* line 33, ../../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput .form-element-value input, .formelement.formuserinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 41, ../../scss/_form_elements.scss */
+/* line 37, ../../scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator,
-.formelement.formpagemetaauthorinput .form-element-value .user-indicator,
-.formelement.formuserinput .form-element-value .meta-author-indicator,
+.formelement.formpagemetaauthorinput .form-element-value .user-indicator, .formelement.formuserinput .form-element-value .meta-author-indicator,
 .formelement.formuserinput .form-element-value .user-indicator {
   position: absolute;
   left: 8px;
   top: 4px;
 }
-
-/* line 52, ../../scss/_form_elements.scss */
+/* line 45, ../../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator, .formelement.formuserinput.user-valid .user-invalid-indicator {
+  display: none;
+}
+/* line 49, ../../scss/_form_elements.scss */
+.formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator, .formelement.formuserinput.user-invalid .user-valid-indicator {
+  display: none;
+}
+/* line 56, ../../scss/_form_elements.scss */
+.formelement.formcheckboxesinput .checkboxes-toggle {
+  color: #5c5c5c;
+  font-size: 0.9em;
+  cursor: pointer;
+  margin-left: 2em;
+}
+/* line 63, ../../scss/_form_elements.scss */
+.formelement.formcheckboxesinput .form-element-value label {
+  font-weight: inherit;
+  display: inline-block;
+  margin-right: 2em;
+  min-width: 17em;
+}
+/* line 73, ../../scss/_form_elements.scss */
+.formelement.formradioinput .form-element-value label {
+  font-weight: inherit;
+  display: inline-block;
+  margin-right: 1em;
+}
+/* line 80, ../../scss/_form_elements.scss */
+.formelement.formelement-disabled {
+  opacity: 0.4;
+}
+/* line 87, ../../scss/_form_elements.scss */
 .formelement.formfileinput table.form-element-value .formfileinput-selector {
   width: 30%;
 }
+/* line 92, ../../scss/_form_elements.scss */
+.formelement.formfileinput td {
+  padding: 0;
+}
 
-/* line 59, ../../scss/_form_elements.scss */
+/* line 101, ../../scss/_form_elements.scss */
 body .readonly_overlay {
   background-color: rgba(230, 230, 230, 0.4);
   opacity: 1;
+}
+
+/* line 107, ../../scss/_form_elements.scss */
+button.button-reset, input[type="button"].button-reset, input[type="reset"].button-reset, input[type="submit"].button-reset, a.button.button-reset {
+  color: #ec6f78;
+}
+/* line 111, ../../scss/_form_elements.scss */
+button.button-apply, input[type="button"].button-apply, input[type="reset"].button-apply, input[type="submit"].button-apply, a.button.button-apply {
+  color: #46da46;
+}
+
+/* line 118, ../../scss/_form_elements.scss */
+.button-group button, .button-group input[type="button"], .button-group input[type="reset"], .button-group input[type="submit"], .button-group a.button {
+  border-radius: 0;
+  float: left;
+  border-right: 1px solid #DDD;
+}
+/* line 123, ../../scss/_form_elements.scss */
+.button-group button:first-child, .button-group input[type="button"]:first-child, .button-group input[type="reset"]:first-child, .button-group input[type="submit"]:first-child, .button-group a.button:first-child {
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
+}
+/* line 127, ../../scss/_form_elements.scss */
+.button-group button:last-child, .button-group input[type="button"]:last-child, .button-group input[type="reset"]:last-child, .button-group input[type="submit"]:last-child, .button-group a.button:last-child {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
+  border-right: 0 none;
 }
 
 /*****************************************************************************
