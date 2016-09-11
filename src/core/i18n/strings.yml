@@ -95,7 +95,9 @@ MESSAGE_CONFIG_CORE_LANGUAGE_LANGUAGES_ENABLED:
 MESSAGE_CONFIG_CORE_LANGUAGE_SITE_DEFAULT:
   en: Default language for this site.
 MESSAGE_CONFIG_CORE_LOGS_DB_KEEP:
-  en: Keep database logs for a given amount of time, or 0 to keep all logs indefinitely.
+  en: >
+    Keep database logs for a given amount of time, or 0 to keep all logs
+    indefinitely.
 MESSAGE_CONFIG_CORE_LOGS_ROTATE_COMPRESS:
   en: Compress log files after rotation.
 MESSAGE_CONFIG_CORE_LOGS_ROTATE_FREQUENCY:
@@ -701,7 +703,7 @@ MESSAGE_TUTORIAL_GPGAUTH_REGISTER_COPY_PASTE_COMMAND:
     To register an account on this site, start by running the following command in a
     local terminal where your public and private GPG keys are available.  <em>(Hint,
     copy/paste works well here)</em> <br/><br/> You will be prompted for the 8-digit
-    public key fingerprint which will be displayed in the format similar to: "sec  
+    public key fingerprint which will be displayed in the format similar to: "sec
     4096R/1234ABCD", in that case, enter 1234ABCD.
 MESSAGE_TUTORIAL_MANUALLY_UPLOAD_PACKAGE:
   en: >
@@ -1272,8 +1274,10 @@ STRING_FORGOT_PASSWORD:
   de: Passwort Vergessen
 STRING_GENERATE_SECURE_PASSWORD:
   en: Generate Secure Password
+STRING_HIDE:
+  en: Hide
 STRING_I18N_LANGUAGES:
-  en: ""
+  en: Languages
 STRING_IMPORT_GPG_KEY:
   en: Import GPG Key
 STRING_INCLUDE_ADMIN_PAGES:

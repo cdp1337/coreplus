@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sat, 27 Aug 2016 20:02:56 -0400
+ * @compiled Sun, 11 Sep 2016 17:07:26 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7147,6 +7147,7 @@ return [
 '365' => t('STRING_KEEP_DB_LOGS_N_MONTH', 12),
 '558' => t('STRING_KEEP_DB_LOGS_N_MONTH', 18),
 '744' => t('STRING_KEEP_DB_LOGS_N_MONTH', 24),
+'1095' => t('STRING_KEEP_DB_LOGS_N_MONTH', 36),
 '0'   => t('STRING_KEEP_DB_LOGS_NEVER'),
 ];
 }
@@ -7158,7 +7159,7 @@ return true;
 }
 $d = new \Core\Date\DateTime();
 $d->modify('-' . $len . ' days');
-echo "Deleting system logs older than " . $d->format(\Core\Date\DateTime::FULLDATETIME) . "\n";
+echo "Deleting system logs older than " . $d->format(\Core\Date\DateTime::FULLDATE) . "\n";
 $count = \Core\Datamodel\Dataset::Init()
 ->count()
 ->table('system_log')
@@ -7169,7 +7170,7 @@ echo "Found " . $count . " log entries, deleting!\n";
 ->table('system_log')
 ->where('datetime < ' . $d->format('U'))
 ->delete()
-->executeAndGet();
+->execute();
 return true;
 }
 }
@@ -20039,7 +20040,10 @@ protected function getParameter($param) {
 if($this->_params !== null){
 $parameters = $this->_params;
 }
-else{
+elseif($this->_request->parameters){
+$parameters = $this->_request->parameters;
+}
+elseif($this->getWidgetInstanceModel()){
 $dat = $this->getWidgetInstanceModel()->splitParts();
 $parameters = $dat['parameters'];
 }
