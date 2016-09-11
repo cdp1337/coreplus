@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.0.9" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.1.0" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -113,7 +113,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="cd43391924b2a0789f957b56d2c8bc6d"/>
+		<file filename="core/CHANGELOG" md5="35dace3e35f43d684a24b6ab1e298113"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -253,7 +253,7 @@
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
 		<file filename="core/htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
-		<file filename="core/i18n/strings.yml" md5="7dbcd2e43e170b857653cdf33a8be49b"/>
+		<file filename="core/i18n/strings.yml" md5="21b86f9344724afdf5ba7efa8813a990"/>
 		<file filename="core/libs/Michelf/License.md" md5="171ec084d03465cd4148b8298a8dfe11"/>
 		<file filename="core/libs/Michelf/Markdown.inc.php" md5="724fb43c68d63fbbc24024ef6e91e456"/>
 		<file filename="core/libs/Michelf/Markdown.php" md5="455f66e6c0931c51b5c1ae95e323f2ab">
@@ -451,7 +451,7 @@
 		<file filename="core/libs/core/DB.class.php" md5="d20f8c7733c5c262c01f920004f3aab5">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="3e892d2cfbda2e51762a71dbee58b5d1">
+		<file filename="core/libs/core/Email.class.php" md5="2e15cb412188b2deb783e3e865bc3965">
 			<class name="Email"/>
 		</file>
 		<file filename="core/libs/core/Exceptions.php" md5="8b4d0342bbee5b64ae877ada9a174097">
@@ -543,7 +543,7 @@
 			<class name="ViewMeta_generator"/>
 			<class name="ViewMeta_image"/>
 		</file>
-		<file filename="core/libs/core/Widget_2_1.class.php" md5="8b5279e51ae3f4d3d6b4f434b49721da">
+		<file filename="core/libs/core/Widget_2_1.class.php" md5="8422b2313ba6ff041544c773a40d8836">
 			<class name="Widget_2_1"/>
 			<class name="WidgetRequest"/>
 		</file>
@@ -1062,7 +1062,7 @@
 		<file filename="core/libs/smarty-plugins/function.email.php" md5="0d5959f3c48fc0f47fcd444525ad9435"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="6cd1a03b62866c0092d1df566a61b806"/>
 		<file filename="core/libs/smarty-plugins/function.filesize.php" md5="6d178639b2311020177c53e6a1a01000"/>
-		<file filename="core/libs/smarty-plugins/function.filespeed.php" md5="28ea2b1c85f50a6d4967e240ef811c21"/>
+		<file filename="core/libs/smarty-plugins/function.filespeed.php" md5="40fa5ee16ebfbceb03057018a581f323"/>
 		<file filename="core/libs/smarty-plugins/function.gpg_fingerprint.php" md5="7efbd4470a25787650878b5dd843835d"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="a5598c383c7f37a8f5a1b3b3f3c99b80"/>
 		<file filename="core/libs/smarty-plugins/function.img.php" md5="0f737d4343f66fdbab67e143047c8be7"/>
@@ -1745,40 +1745,40 @@
 		<file filename="core/templates/emails/user/gpgauth_key_verification.tpl" md5="08ad8cff364ae53516246a9d1b012d7d"/>
 		<file filename="core/templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
 		<file filename="core/templates/emails/user/registration.tpl" md5="03b81ce9fa635969f51f913ecd7aa62d"/>
-		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="2499a9ce11662ce5b4e950058dfb90de"/>
+		<file filename="core/templates/forms/elements/_standard_elements.tpl" md5="f98b9647640d2e1db588ac4610724dcb"/>
 		<file filename="core/templates/forms/elements/button.tpl" md5="f3042037d97f739d995a134e879c80ea"/>
-		<file filename="core/templates/forms/elements/formaccessstringinput.tpl" md5="6d0bac3bde644f4fd1cd05a47a75bb26"/>
+		<file filename="core/templates/forms/elements/formaccessstringinput.tpl" md5="edee433e94daa32ae5de07436f78841b"/>
 		<file filename="core/templates/forms/elements/formbuttoninput.tpl" md5="50a4dbed93f33f0a4309527b87084514"/>
-		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="bed6b5939b773cd80d96a0cdda32b964"/>
-		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="16044bbcc8a0f0024e691d970305ee64"/>
+		<file filename="core/templates/forms/elements/formcheckboxesinput.tpl" md5="66e4ec0a589fdd39338cf2728118e547"/>
+		<file filename="core/templates/forms/elements/formcheckboxinput.tpl" md5="5c0c163b6d0e49db224844de90a44555"/>
 		<file filename="core/templates/forms/elements/formdateinput.tpl" md5="bc5a17edff3be9f0d9dd4710b57460a8"/>
 		<file filename="core/templates/forms/elements/formdatetimeinput.tpl" md5="0dab7e1348963b014876b638d7f162af"/>
-		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="1f675c1fa8120747709a81b8df2bc211"/>
+		<file filename="core/templates/forms/elements/formfileinput.tpl" md5="181f4a436f0410e213097f872fd72b4c"/>
 		<file filename="core/templates/forms/elements/formhiddeninput.tpl" md5="a11dcd84f0f7a7ee67611112f389d933"/>
 		<file filename="core/templates/forms/elements/formlicenseinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
-		<file filename="core/templates/forms/elements/formmarkdowninput.tpl" md5="d15d99726b9e3287713ffec042dc9ec4"/>
-		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="8ce7c64e5acb2d5d64c02f029bb537a7"/>
-		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="060d314b6374816d8ba15e972648eae3"/>
+		<file filename="core/templates/forms/elements/formmarkdowninput.tpl" md5="39d600c155d7dc6f6e28a8d6e1661747"/>
+		<file filename="core/templates/forms/elements/formpagemetaauthorinput.tpl" md5="2132d07dfe60ff700a593932be1b3958"/>
+		<file filename="core/templates/forms/elements/formpagemetakeywordsinput.tpl" md5="129f8abba5f45a745e869faeeea6446a"/>
 		<file filename="core/templates/forms/elements/formpagemetasinput.tpl" md5="04851f883c681032c2fd96c80714b434"/>
 		<file filename="core/templates/forms/elements/formpagepageselectinput.tpl" md5="5d38e9d2fea9b6e30544de11ce746573"/>
 		<file filename="core/templates/forms/elements/formpageparentselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpagerewriteurlinput.tpl" md5="58c0ffa26002427aa745b8b57c4eceae"/>
 		<file filename="core/templates/forms/elements/formpagethemeselectinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formpasswordinput.tpl" md5="28b80ed323ef365ff9a43ea2f146043e"/>
-		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="c73b32c411d17ab3cdd7f2a8490a6857"/>
+		<file filename="core/templates/forms/elements/formradioinput.tpl" md5="352f69118556f79cd1f5d555b1e0ad4e"/>
 		<file filename="core/templates/forms/elements/formresetinput.tpl" md5="846229516d0c919a8d2f072a5ec39336"/>
-		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="09645910e43a86dfe75dee8c0f2a8983"/>
+		<file filename="core/templates/forms/elements/formselectinput.tpl" md5="36f2f5a32d3444f8265a9a15ebe38cce"/>
 		<file filename="core/templates/forms/elements/formstateinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
 		<file filename="core/templates/forms/elements/formsubmitinput.tpl" md5="fb8c85c11628a118144d4f990302960c"/>
-		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="10349ef6ef475b95a777c7bcc10833ce"/>
-		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="a88f5ff9bc71f01ae3f4ab7f3185222e"/>
+		<file filename="core/templates/forms/elements/formtextareainput.tpl" md5="11e969183d224ac94f432258aac5be4a"/>
+		<file filename="core/templates/forms/elements/formtextinput.tpl" md5="b0783cfb59b8b889d512c919674591f3"/>
 		<file filename="core/templates/forms/elements/formtimeinput.tpl" md5="81104590cbc5f9e7debec813395e7dc2"/>
-		<file filename="core/templates/forms/elements/formuserinput.tpl" md5="bae0c2e0b1face93bf2ee81fae533029"/>
+		<file filename="core/templates/forms/elements/formuserinput.tpl" md5="3d32ba2e626bc76ceb1aef636b1f9cc9"/>
 		<file filename="core/templates/forms/elements/html.tpl" md5="82b88be9c2b096f305051417de200991"/>
 		<file filename="core/templates/forms/elements/image.tpl" md5="c1ba661d273fa9336a68625aaadcc3db"/>
 		<file filename="core/templates/forms/elements/reset.tpl" md5="846229516d0c919a8d2f072a5ec39336"/>
 		<file filename="core/templates/forms/filters-pagination.tpl" md5="13b986c8521fdc74aa6d0d930f2d1521"/>
-		<file filename="core/templates/forms/filters.tpl" md5="d25e51dbabe32685e17ffb56b0940e08"/>
+		<file filename="core/templates/forms/filters.tpl" md5="4e905a35a29f24055ac948de01db60ee"/>
 		<file filename="core/templates/forms/form.body.tpl" md5="59b4f9edf5db3068632bec2aa88d1b72"/>
 		<file filename="core/templates/forms/form.foot.tpl" md5="30832eb395bce665ce858c51270f71bc"/>
 		<file filename="core/templates/forms/form.head.tpl" md5="8e92eaca7bca7a82ff64f9d6563ea00c"/>
@@ -3391,6 +3391,7 @@
 		<upgrade from="6.0.6" to="6.0.7"/>
 		<upgrade from="6.0.7" to="6.0.8"/>
 		<upgrade from="6.0.8" to="6.0.9"/>
+		<upgrade from="6.0.9" to="6.1.0"/>
 	</upgrades>
 </component>
 

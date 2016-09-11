@@ -1,3 +1,12 @@
+Core Plus 6.1.0
+
+	* Smarty function 'filespeed' supports rounding now.
+	* Minor fix for widgets being staticly called.
+	* Email supports "on-behalf-of" (kinda).
+	* Reorganize the form element ordering slightly.
+	* Re-add the upgrade paths.
+	-- Charlie Powell <support@corepl.us>  Sun, 11 Sep 2016 17:16:24 -0400
+
 Core Plus 6.0.9
 
 	* [Feature] New feature, system log configuration.
