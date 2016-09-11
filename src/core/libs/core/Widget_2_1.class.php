@@ -291,7 +291,10 @@ class Widget_2_1 {
 		if($this->_params !== null){
 			$parameters = $this->_params;
 		}
-		else{
+		elseif($this->_request->parameters){
+			$parameters = $this->_request->parameters;
+		}
+		elseif($this->getWidgetInstanceModel()){
 			$dat = $this->getWidgetInstanceModel()->splitParts();
 			$parameters = $dat['parameters'];
 		}
