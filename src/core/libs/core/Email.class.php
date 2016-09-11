@@ -246,6 +246,25 @@ class Email {
 	public function setReplyTo($address, $name = '') {
 		$this->getMailer()->AddReplyTo($address, $name);
 	}
+	
+	public function setOnBehalfOf($address, $name = ''){
+		if($this->getMailer()->From){
+			// Move these over to the Sender header.
+			$sender = $this->getMailer()->FromName;
+			if($sender){
+				$sender .= ' <' . $this->getMailer()->From . '>';
+			}
+			else{
+				$sender = $this->getMailer()->From;
+			}
+			$this->getMailer()->AddCustomHeader('Sender', $sender);
+		}
+		
+		$this->getMailer()->From = $address;
+		if($name){
+			$this->getMailer()->FromName = $name;
+		}
+	}
 
 	/**
 	 * Set the body for this email.
