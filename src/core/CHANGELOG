@@ -1,3 +1,8 @@
+Core Plus 6.1.1
+
+	* Retool the datastore password mechanism a bit.
+	-- Charlie Powell <support@corepl.us>  Mon, 12 Sep 2016 22:58:23 -0400
+
 Core Plus 6.1.0
 
 	* Smarty function 'filespeed' supports rounding now.

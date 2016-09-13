@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.1.0" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.1.1" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -113,7 +113,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="35dace3e35f43d684a24b6ab1e298113"/>
+		<file filename="core/CHANGELOG" md5="6f512737dc93b608ef4c838f18c49e19"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -123,7 +123,7 @@
 		<file filename="core/controllers/AdminController.php" md5="d787c0f59ea75b7b67a44f7dded9db7a">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="1926f241215b0b84a06bdbba29b26f11">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="e4851f9920939773d94075f469fe5cc4">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="523e0d1f142094fb39bb3e1eb8c2cf9d">
@@ -1741,6 +1741,7 @@
 		<file filename="core/templates/emails/admin/health_report.tpl" md5="06c7bb879f5d92402992217437299337"/>
 		<file filename="core/templates/emails/admin/test_email.tpl" md5="c5eec2c6d33f52a34ee309a1d49349fa"/>
 		<file filename="core/templates/emails/user/activation.tpl" md5="7cdb992418a86922f94a7c5910224a1f"/>
+		<file filename="core/templates/emails/user/admin_password.tpl" md5="e75c3a6f5c753fd41f1ea4f90533120c"/>
 		<file filename="core/templates/emails/user/datastoreauth_forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
 		<file filename="core/templates/emails/user/gpgauth_key_verification.tpl" md5="08ad8cff364ae53516246a9d1b012d7d"/>
 		<file filename="core/templates/emails/user/initialpassword.tpl" md5="e1313d158e73c9104cd798ef5d5e39e7"/>
@@ -1816,7 +1817,7 @@
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
 		<file filename="core/templates/pages/admin/testui.tpl" md5="7854fa5292a1f3910be158559e591386"/>
 		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="ed40e9f26a0782f1185c46dce4d5cc4c"/>
-		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="1c0ba67c877ecc9cf3864e6f92c98bc3"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
 		<file filename="core/templates/pages/error/error400.tpl" md5="5267d156e5b46adf11f9ad5c4262fd87"/>
 		<file filename="core/templates/pages/error/error402.tpl" md5="c0c5be747cce3563f11f3edd6de92800"/>
@@ -3392,6 +3393,7 @@
 		<upgrade from="6.0.7" to="6.0.8"/>
 		<upgrade from="6.0.8" to="6.0.9"/>
 		<upgrade from="6.0.9" to="6.1.0"/>
+		<upgrade from="6.1.0" to="6.1.1"/>
 	</upgrades>
 </component>
 
