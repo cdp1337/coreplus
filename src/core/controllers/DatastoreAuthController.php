@@ -84,52 +84,46 @@ class DatastoreAuthController extends Controller_2_1 {
 			\Core\go_back();
 		}
 
-		/** @var \Core\User\AuthDrivers\datastore $auth */
-		$auth = $user->getAuthDriver('datastore');
-
-		if($req->isPost()){
-			try{
-				$p1val = $_POST['pass'];
-				$p2val = $_POST['pass2'];
-				// Check the passwords, (that they match).
-				if($p1val != $p2val){
-					throw new ModelValidationException('Passwords do not match');
-				}
-
-				$status = $auth->setPassword($p1val);
-				if($status === false){
-					// No change
-					\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
-				}
-				elseif($status === true){
-					$user->save();
-					\SystemLogModel::LogSecurityEvent('/user/password', 'Password changed', null, $user->get('id'));
-					\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_PASSWORD');
-				}
-				else{
-					throw new ModelValidationException($status);
-				}
-
-				if($ownpassword){
-					\core\redirect('/user/me');
-				}
-				else{
-					\core\redirect('/user/admin');
-				}
-			}
-			catch(ModelValidationException $e){
-				\Core\set_message($e->getMessage(), 'error');
-			}
-			catch(Exception $e){
-				\Core\set_message((DEVELOPMENT_MODE ? $e->getMessage() : 'An unknown error occured'), 'error');
-				\Core\ErrorManagement\exception_handler($e);
-			}
+		try{
+			/** @var \Core\User\AuthDrivers\datastore $auth */
+			$auth = $user->getAuthDriver('datastore');	
+		}
+		catch(Exception $e){
+			// This will fail if the datastore auth is not enabled yet.
+			$auth = new \Core\User\AuthDrivers\datastore($user);
 		}
 
 		$form = new Form();
+		$form->set('callsmethod', 'DatastoreAuthController::_PasswordHandler');
+		$form->addElement('system', ['name' => 'user', 'value' => $user->get('id')]);
 
-		$form->addElement('password', array('name' => 'pass', 'title' => t('STRING_PASSWORD'), 'required' => true));
-		$form->addElement('password', array('name' => 'pass2', 'title' => t('STRING_CONFIRM_PASSWORD'), 'required' => true));
+		if($manager){
+			$form->addElement(
+				'checkbox', [
+					'name' => 'pwgen',
+					'value' => '1',
+					'title' => t('STRING_GENERATE_SECURE_PASSWORD'),
+					'description' => t('MESSAGE_GENERATE_SECURE_PASSWORD'),
+				]
+			);
+		}
+		
+		$form->addElement(
+			'password', 
+			[
+				'name' => 'pass',
+				'title' => t('STRING_PASSWORD'),
+				'required' => (!$manager)
+			]
+		);
+		$form->addElement(
+			'password', 
+			[
+				'name' => 'pass2',
+				'title' => t('STRING_CONFIRM_PASSWORD'),
+				'required' => (!$manager)
+			]
+		);
 
 		$form->addElement('submit', array('value' => t('STRING_SAVE')));
 
@@ -140,8 +134,9 @@ class DatastoreAuthController extends Controller_2_1 {
 
 		$view->mastertemplate = ConfigHandler::Get('/theme/siteskin/user');
 		$view->assign('form', $form);
+		$view->assign('is_manager', $manager);
 		$view->title = 't:STRING_PASSWORD_MANAGEMENT';
-
+		
 		// Breadcrumbs! (based on access permissions)
 		if(!$ownpassword){
 			$view->addBreadcrumb('t:STRING_USER_ADMIN', '/user/admin');
@@ -611,9 +606,9 @@ class DatastoreAuthController extends Controller_2_1 {
 	 */
 	public static function GetUserControlLinks($userid){
 
-		$enabled = \Core\User\Helper::GetEnabledAuthDrivers();
-		if(!isset($enabled['datastore'])){
-			// GPG isn't enabled at all, disable any control links from the system.
+		$globalEnabled = \Core\User\Helper::GetEnabledAuthDrivers();
+		if(!isset($globalEnabled['datastore'])){
+			// Datastore isn't enabled at all, disable any control links from the system.
 			return [];
 		}
 
@@ -638,40 +633,114 @@ class DatastoreAuthController extends Controller_2_1 {
 			return [];
 		}
 
-		try{
-			// If this throws an exception, then it's not enabled!
-			$user->getAuthDriver('datastore');
+		$ret = [];
+		$enabled = $user->isAuthDriverEnabled('datastore');
+		
+		if(!$enabled){
+			$ret[] = [
+				'link' => '/datastoreauth/password/' . $user->get('id'),
+				'title' => t('STRING_ENABLE_PASSWORD_LOGIN'),
+				'icon' => 'key',
+			];
 		}
-		catch(Exception $e){
-			if($isself){
-				return [
-					[
-						'link' => '/datastoreauth/forgotpassword',
-						'title' => t('STRING_ENABLE_PASSWORD_LOGIN'),
-						'icon' => 'key',
-					]
+		else{
+			$ret[] = [
+				'link' => '/datastoreauth/password/' . $user->get('id'),
+				'title' => t('STRING_CHANGE_PASSWORD'),
+				'icon' => 'key',
+			];
+
+			if(sizeof($user->getEnabledAuthDrivers()) > 1){
+				// Only give the option to disable the password logins if there is another type available.
+				$ret[] = [
+					'link' => '/datastoreauth/disable/' . $user->get('id'),
+					'title' => t('STRING_DISABLE_PASSWORD_LOGIN'),
+					'icon' => 'ban',
+					'confirm' => 'Are you sure you want to disable password-based logins?  (They can be re-enabled if requested.)',
 				];
 			}
 		}
-
-		$ret = [];
-		$ret[] = [
-			'link' => '/datastoreauth/password/' . $user->get('id'),
-			'title' => t('STRING_CHANGE_PASSWORD'),
-			'icon' => 'key',
-		];
-
-		if(sizeof($user->getEnabledAuthDrivers()) > 1){
-			$ret[] = [
-				'link' => '/datastoreauth/disable/' . $user->get('id'),
-				'title' => t('STRING_DISABLE_PASSWORD_LOGIN'),
-				'icon' => 'ban',
-				'confirm' => 'Are you sure you want to disable password-based logins?  (They can be re-enabled if requested.)',
-			];
-		}
-
-
+		
 		return $ret;
 
+	}
+
+	public static function _PasswordHandler(Form $form) {
+		$p1 = $form->getElement('pass');
+		$p2 = $form->getElement('pass2');
+		
+		$p1val = $p1->get('value');
+		$p2val = $p2->get('value');
+
+		$manager = \Core\user()->checkAccess('p:/user/users/manage'); // Current user an admin?
+		
+		/** @var UserModel $user */
+		$user = UserModel::Construct($form->getElementValue('user'));
+		if(!$user->exists()){
+			throw new ModelValidationException('User does not exist');
+		}
+
+		$ownpassword = ($user->get('id') == \Core\user()->get('id'));
+
+		// Only allow this if the user is either the same user or has the user manage permission.
+		if(!($ownpassword || $manager)){
+			return View::ERROR_ACCESSDENIED;
+		}
+		
+		$user->enableAuthDriver('datastore');
+		/** @var \Core\User\AuthDrivers\datastore $auth */
+		$auth = $user->getAuthDriver('datastore');
+
+		if($manager && $form->getElement('pwgen') && $form->getElementValue('pwgen')){
+			$password = $auth->pwgen();
+			$auth->setPassword($password);
+			
+			$user->save();
+			\SystemLogModel::LogSecurityEvent('/user/password', 'Password changed (administratively)', null, $user->get('id'));
+			
+			// Send an email to this user notifying them of the new password.
+			$email = new Email();
+			$email->to($user->get('email'));
+			$email->setSubject('New Password Set');
+			$email->templatename = 'emails/user/admin_password.tpl';
+			$email->assign('user', $user);
+			$email->assign('new_password', $password);
+			$email->assign('sitename', SITENAME);
+			try{
+				$email->send();
+				\Core\set_message('Updated user password!', 'success');
+			}
+			catch(Exception $e){
+				\Core\set_message($e->getMessage(), 'error');
+				\Core\set_message('Set password as "' . $password . '" but could not send the notification email.', 'warning');
+			}
+		}
+		else{
+			// Check the passwords, (that they match).
+			if($p1val != $p2val){
+				throw new ModelValidationException('Passwords do not match');
+			}
+			$status = $auth->setPassword($p1val);
+
+			if($status === false){
+				// No change
+				\Core\set_message('t:MESSAGE_INFO_NO_CHANGES_PERFORMED');
+			}
+			elseif($status === true){
+				$user->save();
+				\SystemLogModel::LogSecurityEvent('/user/password', 'Password changed', null, $user->get('id'));
+				\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_PASSWORD');
+			}
+			else{
+				throw new ModelValidationException($status);
+			}
+		}
+
+		if($ownpassword){
+			return '/user/me';
+		}
+		else{
+			return '/user/admin';
+		}
 	}
 }
