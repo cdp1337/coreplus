@@ -1,6 +1,10 @@
 fieldset.collapsible {
 	.fieldset-title {
 		margin: -1em -1em 0.5em;
+		img {
+			// These sometimes have images in them; display them vertically aligned.
+			vertical-align: middle;
+		}
 	}
 
 	.expandable-hint {

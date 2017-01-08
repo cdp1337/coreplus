@@ -55,8 +55,10 @@ $base-button-color: $base-link-color;
 $hover-button-color: $hover-link-color;
 
 // Special buttons
-$button-reset-color: lighten($error, 33%);
-$button-apply-color: lighten($success, 33%);
+$button-reset-color: lighten($error, 66%);
+$button-reset-icon-color: lighten($error, 33%);
+$button-apply-color: lighten($success, 66%);
+$button-apply-icon-color: lighten($success, 33%);
 
 // Listing Table colors and styles
 $listing-table-tr-odd-bg: $light-gray;
@@ -64,6 +66,12 @@ $listing-table-tr-even-bg: $base-background-color;
 $listing-table-tr-hover-bg: lighten($blue, 33%);
 $listing-table-th-color: $base-background-color;
 $listing-table-th-background: $medium-gray;
+
+$listing-table-border-width: 1px;
+$listing-table-border-style: solid;
+$listing-table-border-color: $base-border-color;
+$listing-table-border-even-color: darken($listing-table-tr-even-bg, 7);
+$listing-table-border-odd-color: darken($listing-table-tr-odd-bg, 7);
 
 // Forms and Form Elements
 $form-border-color: $base-border-color;
@@ -77,6 +85,37 @@ $form-font-family: $base-font-family;
 $form-element-description-color: lighten($dark-gray, 16%);
 $form-element-description-font-size: $base-font-size * .9;
 
+// Controls Options
+$controls-inline-background: inherit;
+$controls-inline-color: $action-color;
+
+$controls-inline-icon-background: inherit;
+$controls-inline-icon-color: $action-color;
+
+$controls-proxy-background: transparent;
+$controls-proxy-border: 1px solid $action-color;
+$controls-proxy-color: $action-color;
+$controls-proxy-hover-background: $base-background-color;
+$controls-proxy-hover-border: $base-border;
+$controls-proxy-hover-color: $base-font-color;
+
+$controls-popover-background: $base-background-color;
+$controls-popover-border: $base-border;
+$controls-popover-color: $action-color;
+$controls-popover-hover-background: lighten($action-color, 33%);
+$controls-popover-hover-color: $action-color;
+
+$controls-popover-icon-background: lighten($base-border-color, 8%);
+$controls-popover-icon-color: $base-font-color;
+
 // Animations
 $base-duration: 150ms;
 $base-timing: ease;
+
+// Responsive Breakpoints
+// These provide convenience sizes for various typical devices.
+// Feel free to use these or not, whatever! :)
+$breakpoint-wide: 1600px;   // "Wide" screens and formats.
+$breakpoint-narrow: 1000px; // Standard/narrow screens, not usually used except when needed
+$breakpoint-tablet: 790px;  // Tablets and phones in landscape
+$breakpoint-mobile: 500px;  // Phones and other small devices

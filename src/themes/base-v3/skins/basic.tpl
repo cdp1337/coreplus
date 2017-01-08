@@ -89,11 +89,7 @@
 					{/if}
 
 					{if $controls->hasLinks()}
-						<div id="page-controls-wrapper" class="page-controls-wrapper">
-							<menu id="page-controls" class="page-controls">
-								{$controls->fetch()}
-							</menu>	
-						</div>
+						{$controls->fetch()}
 					{/if}
 				</nav>
 				

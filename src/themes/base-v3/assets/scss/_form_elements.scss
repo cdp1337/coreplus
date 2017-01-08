@@ -105,11 +105,21 @@ body .readonly_overlay {
 
 #{$all-buttons} {
 	&.button-reset {
-		color: $button-reset-color;
+		i.icon {
+			color: $button-reset-icon-color;
+		}
+		span {
+			color: $button-reset-color;
+		}
 	}
 
 	&.button-apply {
-		color: $button-apply-color;
+		i.icon {
+			color: $button-apply-icon-color;
+		}
+		span {
+			color: $button-apply-color;
+		}
 	}
 }
 
@@ -128,6 +138,21 @@ body .readonly_overlay {
 			border-top-right-radius: $base-border-radius;
 			border-bottom-right-radius: $base-border-radius;
 			border-right: 0 none;
+		}
+	}
+}
+
+@media only screen and (max-width: $breakpoint-tablet){
+	.button-group {
+		display: table;
+		width: 100%;
+		
+		#{$all-buttons} {
+			display: table-cell;
+			float: none;
+			width: auto;
+			text-align: center;
+			padding: 0.5em 0;
 		}
 	}
 }

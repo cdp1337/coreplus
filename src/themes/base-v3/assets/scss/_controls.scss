@@ -166,3 +166,189 @@ ul.controls.context-menu-many-links {
 	box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
 	opacity: 0.9;
 }
+
+
+// Core 6.2 supports pre-rendered control menus!
+// This saves a LOT of time on large listing tables and chocks the rendering over to the server.
+// Not to mention optimized for mobile ;)
+div.controls-container {
+	min-width: 8em;
+	min-height: 2em;
+}
+
+menu.controls-prerendered {
+	margin: 0;
+	padding: 0;
+	font-size: 90%;
+	
+	&.controls-no-proxy {
+		ul {
+			margin-left: 0;
+		}
+		
+		li {
+			display: inline-block;
+			list-style: none;
+			white-space: nowrap;
+			margin-right: 0.25em;
+			color: $controls-inline-color;
+			
+			&:after {
+				content: ' |';
+			}
+			
+			&:last-child {
+				margin-right: 0;
+				
+				&:after {
+					content: '';
+				}
+			}
+			
+			a {
+				margin-right: 0.25em;
+				background: $controls-inline-background;
+				color: $controls-inline-color;
+			}
+			
+			i {
+				background: $controls-inline-icon-background;
+				color: $controls-inline-icon-color;
+			}
+		}
+	}
+	
+	&.controls-have-proxy {
+		position: absolute;
+		
+		&:hover {
+			label {
+				background: $controls-proxy-hover-background;
+				border: $controls-proxy-hover-border;
+				color: $controls-proxy-hover-color;
+				border-bottom-width: 0;
+				padding-bottom: 1em;
+			}
+			
+			ul {
+				display: block;
+			}
+		}
+		
+		label {
+			white-space: nowrap;
+			min-width: 8em;
+			padding: 0.35em 0.75em;
+			background: $controls-proxy-background;
+			border: $controls-proxy-border;
+			color: $controls-proxy-color;
+		}
+		
+		ul {
+			display: none;
+			position: relative;
+			z-index: 999;
+			top: 0;
+			margin: -1em 0 0 0;
+			padding: 0.15em 0 0 0;
+			color: $controls-popover-color;
+			border: $controls-popover-border;
+			background: $controls-popover-background;
+			border-top-width: 0;
+		}
+		
+		li {
+			list-style: none;
+			white-space: nowrap;
+			background: $controls-popover-background;
+			
+			&:hover {
+				background: $controls-popover-hover-background;
+				color: $controls-popover-hover-color;
+				
+				i {
+					background: $controls-popover-hover-background;
+				}
+			}
+			
+			a {
+				display: block;
+				padding: 0;
+				color: $controls-popover-color;
+			}
+			
+			i {
+				background: $controls-popover-icon-background;
+				color: $controls-popover-icon-color;
+				padding: 0.5em;
+				text-align: center;
+				width: 2.1em;
+			}
+			
+			span {
+				padding-right: 0.5em;
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: $breakpoint-tablet){
+	menu.controls-prerendered {
+		margin: 0;
+		padding: 0;
+		font-size: 90%;
+
+		&.controls-have-proxy {
+			position: relative;
+			
+			label {
+				display: none;
+			}
+			
+			ul {
+				display: block;
+				position: relative;
+				z-index: 1;
+				top: 0;
+				margin: 0;
+				background-color: $controls-inline-background;
+				border: 0px none;
+			}
+
+			li {
+				display: inline-block;
+				list-style: none;
+				white-space: nowrap;
+				background-color: transparent;
+				margin-right: 0.25em;
+				
+				&:after {
+					content: ' |';
+				}
+				
+				&:last-child {
+					margin-right: 0;
+
+					&:after {
+						content: '';
+					}
+				}
+				
+
+				a {
+					display: inline-block;
+					padding: 0.25em 0.5em;
+					background: $controls-inline-background;
+					color: $controls-inline-color;
+				}
+				
+				i {
+					width: auto;
+					padding: 0;
+					background: $controls-inline-icon-background;
+					color: $controls-inline-icon-color;
+				}
+			}
+		}
+	}
+}

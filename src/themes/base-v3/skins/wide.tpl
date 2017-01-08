@@ -85,9 +85,7 @@
 					{/if}
 
 					{if $controls->hasLinks()}
-						<menu id="page-controls" class="page-controls">
-							{$controls->fetch()}
-						</menu>
+						{$controls->fetch()}
 					{/if}
 				</nav>
 

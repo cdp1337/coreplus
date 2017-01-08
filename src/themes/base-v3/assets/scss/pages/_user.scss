@@ -55,3 +55,31 @@ body.page-user-view, body.page-user-me {
 		width: 75%;
 	}
 }
+
+@media only screen and (max-width: $breakpoint-mobile){
+	body.page-user-view, body.page-user-me {
+		.user-side-info {
+			float: none;
+			width: 100%;
+
+			ul {
+				list-style: none;
+			}
+
+			li {
+				font-size: 90%;
+				
+				&.user-field-avatar {
+					float: left;
+					margin-right: 1em;
+				}
+			}
+		}
+
+		.user-primary-info {
+			float: none;
+			width: 100%;
+			clear: left;
+		}
+	}
+}
