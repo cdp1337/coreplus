@@ -1,3 +1,10 @@
+Core Plus 2.6.7
+
+	* [Security] Upgrade phpMailer to newest version upstream.
+	* Backport several fixes in the page URL system from Core Plus 6.2.
+	* Backport .gitignore from Core Plus 6.2
+	-- Charlie Powell <support@corepl.us>  Sun, 08 Jan 2017 16:56:31 -0500
+
 Core Plus 2.6.6
 
 	* [Bug] fix Support compressed browscap.ini files on remote servers.

@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 01 Sep 2015 15:36:03 -0400
+ * @compiled Sun, 08 Jan 2017 16:48:47 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -209,6 +209,33 @@ define('FULL_DEBUG', false);
 define('NL', "\n");
 define('TAB', "\t");
 define('DS', DIRECTORY_SEPARATOR);
+##
+# Gimme some colors!
+# These are used to prettify the terminal.
+# Color 1 is always standard and
+# Color 2 is always the bold version.
+if(EXEC_MODE == 'CLI'){
+define('COLOR_LINE', "\033[0;30m");
+define('COLOR_HEADER', "\033[1;36m");
+define('COLOR_SUCCESS', "\033[1;32m");
+define('COLOR_WARNING', "\033[1;33m");
+define('COLOR_ERROR', "\033[1;31m");
+define('COLOR_DEBUG', "\033[0;34m");
+define('COLOR_NORMAL', "\033[0m");
+define('COLOR_RESET', "\033[0m");
+define('NBSP', ' ');
+}
+else{
+define('COLOR_LINE', "<span style='color:grey; font-family:Courier,mono;'>");
+define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_ERROR', "<span style='color:red; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_DEBUG', "<span style='color:lightskyblue; font-family:Courier,mono;'>");
+define('COLOR_NORMAL', "<span style='font-family:Courier,mono;'>");
+define('COLOR_RESET', "</span>");
+define('NBSP', '&nbsp;');
+}
 unset($em, $rpdr, $rwdr, $rip);
 
 
@@ -11651,7 +11678,12 @@ $uri = $_SERVER['REQUEST_URI'];
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
 if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
-if ($uri{0} != '/') $uri = '/' . $uri;
+if(strlen($uri) == 0){
+$uri = '/';
+}
+elseif( $uri{0} != '/' ){
+$uri = '/' . $uri;
+}
 if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
 $ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
 $uri   = substr($uri, 0, -1 - strlen($ctype));
@@ -13796,7 +13828,12 @@ $this->uri = $uri;
 if (!$uri) $uri = ROOT_WDIR;
 $uri = substr($uri, strlen(ROOT_WDIR));
 if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
-if ($uri{0} != '/') $uri = '/' . $uri;
+if(strlen($uri) == 0){
+$uri = '/';
+}
+elseif( $uri{0} != '/' ){
+$uri = '/' . $uri;
+}
 if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
 $ctype = strtolower(preg_replace('/^.*\.([a-z]{3,4})$/i', '\1', $uri));
 $uri   = substr($uri, 0, -1 - strlen($ctype));
