@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.1.1" name="core" logo="core/coreplus-rounded-border-128x128.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.1.2" name="core" logo="core/coreplus-rounded-border-128x128.png">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -113,7 +113,7 @@
 	</pages>
 	<files>
 		<file filename="config/configuration.example.xml" md5="04985a590595bb3c26f7bef039ccf9b7"/>
-		<file filename="core/CHANGELOG" md5="6f512737dc93b608ef4c838f18c49e19"/>
+		<file filename="core/CHANGELOG" md5="b31090a34790782578b08e4e00828901"/>
 		<file filename="core/LICENSER.php" md5="993bd934090c72d1bdd1efce8abbc16a"/>
 		<file filename="core/assets/scss/admin/widgets.scss" md5="ef3d22b9b60286a59f5eae3f3a83d853"/>
 		<file filename="core/bootstrap.php" md5="a2c603a274b3d9060357fa51ed6f4624"/>
@@ -3375,125 +3375,7 @@
 		<upgrade from="6.0.8" to="6.0.9"/>
 		<upgrade from="6.0.9" to="6.1.0"/>
 		<upgrade from="6.1.0" to="6.1.1"/>
+		<upgrade from="6.1.1" to="6.1.2"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Brent Cook" email="busterbcook@yahoo.com"/>
-		<author name="John Griffin" email="jgriffin316@netscape.net"/>
-		<author name="John Millaway"/>
-		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
-		<author name="Brent R. Matzelle (original founder)"/>
-		<author name="@sherryl4george"/>
-		<author name="Chris Ryan"/>
-		<author name="@dominicus-75"/>
-		<author name="El&#xE7;in &#xD6;zel"/>
-		<author name="Can Y&#x131;lmaz"/>
-		<author name="Mehmet Benlio&#x11F;lu"/>
-		<author name="@yasinaydin"/>
-		<author name="Indrek P&#xE4;ri"/>
-		<author name="D&#xE1;vur S&#xF8;rensen &lt;http://www.profo-webdesign.dk&gt;"/>
-		<author name="@mirjalal"/>
-		<author name="Mitsuhiro Yoshida &lt;http://mitstek.com/&gt;"/>
-		<author name="Yoshi Sakai &lt;http://bluemooninc.jp/&gt;"/>
-		<author name="Jyry Kuukanen"/>
-		<author name="LiuXin &lt;http://www.80x86.cn/blog/&gt;"/>
-		<author name="Rodney Rehm"/>
-		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
-		<author name="Andrei Zmievski"/>
-		<author name="Thue Kristensen"/>
-		<author name="Erich Enke" email="erich.Enke@gmail.com"/>
-		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
-		<author name="Lauren Matheson" email="inan@canada.com"/>
-		<author name="Solar Designer" email="solar at openwall.com"/>
-		<author name="Fabien Potencier" email="fabien.potencier@symfony-project.com"/>
-		<author name="Pete Nelson" email="@GunGeekATX"/>
-		<author name="Marcus Bointon (Synchro/coolbru)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon (@Synchro)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Jim Jagielski (jimjag)" email="jimjag@gmail.com"/>
-		<author name="Jim Jagielski" email="jimjag@gmail.com"/>
-		<author name="Andy Prevost (codeworxtech)" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Andy Prevost" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
-		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-		<author name="Manuel Reinhard" email="manu@sprain.ch"/>
-		<author name="Richard Davey (original author)" email="rich@corephp.co.uk"/>
-		<author name="Richard Davey" email="rich@corephp.co.uk"/>
-		<author name="by Donato Rouco" email="donatorouco@gmail.com"/>
-		<author name="by Donato" email="donatorouco@gmail.com"/>
-		<author name="VINADES.,JSC" email="contact@vinades.vn"/>
-		<author name="Mikael Stokkebro" email="info@stokkebro.dk"/>
-		<author name="Ali Jazayeri" email="jaza.ali@gmail.com"/>
-		<author name="Mohammad Hossein Mojtahedi" email="mhm5000@gmail.com"/>
-		<author name="Mohammad Hossein" email="mhm5000@gmail.com"/>
-		<author name="Eduards M." email="e@npd.lv"/>
-		<author name="Eduards M" email="e@npd.lv"/>
-		<author name="Avtandil Kikabidze aka LONGMAN" email="akalongman@gmail.com"/>
-		<author name="Avtandil Kikabidze" email="akalongman@gmail.com"/>
-		<author name="Klemen Tu&#x161;ar" email="techouse@gmail.com"/>
-		<author name="Klemen Tu" email="techouse@gmail.com"/>
-		<author name="Paulo Henrique Garcia" email="paulo@controllerweb.com.br"/>
-		<author name="Paulo Henrique" email="paulo@controllerweb.com.br"/>
-		<author name="Lucas Guimar&#xE3;es" email="lucas@lucasguimaraes.com"/>
-		<author name="Lucas Guimar" email="lucas@lucasguimaraes.com"/>
-		<author name="Phelipe Alves" email="phelipealvesdesouza@gmail.com"/>
-		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
-		<author name="Stefano Sabatini" email="sabas88@gmail.com"/>
-		<author name="Cecep Prawiro" email="cecep.prawiro@gmail.com"/>
-		<author name="Ronny Sherer" email="ronny@hoojima.com"/>
-		<author name="Dainius Kaupaitis" email="dk@sum.lt"/>
-		<author name="Hrvoj3e" email="hrvoj3e@gmail.com"/>
-		<author name="Matt Sturdy" email="matt.sturdy@gmail.com"/>
-		<author name="&#x410;&#x43B;&#x435;&#x43A;&#x441;&#x430;&#x43D;&#x434;&#x430;&#x440; &#x408;&#x435;&#x432;&#x440;&#x435;&#x43C;&#x43E;&#x432;&#x438;&#x45B;" email="ajevremovic@gmail.com"/>
-		<author name="Tuxion" email="team@tuxion.nl"/>
-		<author name="Nawawi Jamili" email="nawawi@rutweb.com"/>
-		<author name="Alex Florea" email="alecz.fia@gmail.com"/>
-		<author name="Aleksander Maksymiuk" email="info@setpro.pl"/>
-		<author name="liqwei" email="liqwei@liqwei.com"/>
-		<author name="Peter Dave Hello" email="@PeterDaveHello/"/>
-		<author name="Peter Dave" email="@PeterDaveHello/"/>
-		<author name="Jason Chiang" email="xcojad@gmail.com"/>
-		<author name="Yuriy Rudyy" email="yrudyy@prs.net.ua"/>
-		<author name="Mikhail Kyosev" email="mialygk@gmail.com"/>
-		<author name="Alexey Chumakov" email="alex@chumakov.ru"/>
-		<author name="Foster Snowhill" email="i18n@forstwoof.ru"/>
-		<author name="Johan Linn&#xE9;r" email="johan@linner.biz"/>
-		<author name="Johan Linn" email="johan@linner.biz"/>
-		<author name="Elan Ruusam&#xE4;e" email="glen@delfi.ee"/>
-		<author name="Elan Ruusam" email="glen@delfi.ee"/>
-		<author name="Hrayr Grigoryan" email="hrayr@bits.am"/>
-		<author name="Jonadabe" email="jonadabe@hotmail.com"/>
-		<author name="ChalkPE" email="amato0617@gmail.com"/>
-		<author name="bahjat al mostafa" email="bahjat983@hotmail.com"/>
-		<author name="bahjat al" email="bahjat983@hotmail.com"/>
-		<author name="young" email="masxy@foxmail.com"/>
-		<author name="Michal Tinka" email="michaltinka@gmail.com"/>
-		<author name="Ivan" email="web AT microstudi DOT com"/>
-		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
-		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
-		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
-		<author name="Duda" email="duda@big.hu"/>
-		<author name="Roberto Berto" email="roberto@berto.net"/>
-		<author name="Monte Ohrt" email="monte AT ohrt DOT com"/>
-		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
-		<author name="Gerard" email="gerard@interfold.com"/>
-		<author name="Jason Sweat" email="jsweat_php@yahoo.com"/>
-		<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
-		<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
-		<author name="boots" email="boots dot smarty at yahoo dot com"/>
-		<author name="Ralf Strehle (minor optimization)" email="ralf dot strehle at yahoo dot de"/>
-		<author name="Ralf Strehle" email="ralf dot strehle at yahoo dot de"/>
-		<author name="Uwe Tews" email="uwe.tews@googlemail.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-		<license>Public Domain</license>
-		<license url="http://opensource.org/licenses/MIT">MIT License</license>
-		<license>
-			See the included NOTICE.md file for more information.
-		</license>
-	</licenses>
 </component>
 

@@ -1,3 +1,9 @@
+Core Plus 6.1.2
+
+	* [Security] Upgrade phpMailer to newest version upstream.
+	* Add update path from 2.6.7 to 6.1.2
+	-- Charlie Powell <support@corepl.us>  Sun, 08 Jan 2017 17:26:10 -0500
+
 Core Plus 6.1.1
 
 	* Retool the datastore password mechanism a bit.
