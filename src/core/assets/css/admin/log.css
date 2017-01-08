@@ -1,0 +1,26 @@
+/*
+@copyright Copyright (C) 2009-2016  charlie
+@license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
+*/
+/*
+    Created on : Nov 11, 2016, 1:04:33 AM
+    Author     : charlie
+*/
+/* line 22, ../../scss/admin/log.scss */
+div.listing-table .listing-table-cell.column-name-message {
+  flex-grow: 20;
+}
+
+/*# sourceMappingURL=log.css.map */

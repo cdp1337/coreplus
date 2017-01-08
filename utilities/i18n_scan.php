@@ -147,6 +147,13 @@ foreach($configs as $c){
 // Give me permissions!
 if($comp){
 	foreach($comp->getPermissions() as $key => $p){
+		// Every permission will be grouped by its parent name, calculate that!
+		$exploded = explode('/', substr($key, 1));
+
+		// Build the name for this permission group.
+		array_pop($exploded);
+		$matches[] = 'STRING_PERMISSION_' . strtoupper(implode('_', $exploded));
+		
 		$key = \Core\i18n\I18NLoader::KeyifyString($key);
 		$matches[] = 'STRING_PERMISSION_' . $key;
 		//$matches[] = 'MESSAGE_CONFIG_' . $key;
@@ -184,9 +191,7 @@ if($comp){
 			}
 
 			if(
-				$dat['type'] == Model::ATT_TYPE_ALIAS || $dat['type'] == Model::ATT_TYPE_CREATED || $dat['type'] == Model::ATT_TYPE_UPDATED ||
-				$dat['type'] == Model::ATT_TYPE_DELETED || $dat['type'] == Model::ATT_TYPE_ID || $dat['type'] == Model::ATT_TYPE_ID_FK ||
-				$dat['type'] == Model::ATT_TYPE_UUID || $dat['type'] == Model::ATT_TYPE_UUID_FK
+				$dat['type'] == Model::ATT_TYPE_ALIAS
 			){
 				continue;
 			}
@@ -295,7 +300,7 @@ foreach($matches as $m){
 		// Set to the current value OR
 		$current[$m] :
 		// An empty string for the user's default language if not set yet.
-		[ \Core\i18n\I18NLoader::GetUsersLanguage() => '' ];
+		[ \Core\i18n\I18NLoader::GetFallbackLanguage() => '' ];
 }
 
 // Sort the translations!

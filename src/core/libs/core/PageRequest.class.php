@@ -1223,7 +1223,14 @@ class PageRequest {
 	public static function GetSystemRequest() {
 		static $instance = null;
 		if ($instance === null) {
-			$instance = new PageRequest(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null);
+			if(EXEC_MODE == 'CLI' && $_SERVER['argc'] == 2){
+				// In CLI operation, the calling URI is provided as the next argument after index.php!
+				$instance = new PageRequest($_SERVER['argv'][1]);
+			}
+			else{
+				$instance = new PageRequest(isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : null);
+			}
+			
 		}
 		return $instance;
 	}

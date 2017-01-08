@@ -1,0 +1,17 @@
+/**
+ * Common styles for the user application across the different pages
+ */
+/* line 11, ../scss/user.scss */
+.page-user-admin div.listing-table .listing-table-record .column-name-avatar {
+  flex-grow: 3;
+}
+/* line 14, ../scss/user.scss */
+.page-user-admin div.listing-table .listing-table-record .column-name-active {
+  flex-grow: 1;
+}
+/* line 17, ../scss/user.scss */
+.page-user-admin div.listing-table .listing-table-record .column-name-email {
+  flex-grow: 15;
+}
+
+/*# sourceMappingURL=user.css.map */

@@ -710,6 +710,10 @@ class FilterForm {
 		// Might as well update the count now, it can always be updated later.
 		$this->setTotalCount($factory->count());
 	}
+	
+	public function getElements(){
+		return $this->_elements;
+	}
 
 	private function _render($readonly = false){
 		$filterset = $this->hasSet();

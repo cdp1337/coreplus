@@ -28,9 +28,25 @@
 function t(){
 	$params   = func_get_args();
 	$key      = $params[0];
-
-	$string = new \Core\i18n\I18NString($key);
-	$string->setParameters($params);
-
-	return $string->getTranslation();
+	static $__tLookupCache = [];
+	
+	if(func_num_args() == 1){
+		// This is a simple lookup with no additional parameters,
+		// try to speed up repeated lookups if possible.
+		// That is also why this function is written in a longer form than necessary;
+		// it's designed to process faster with minimal instruction requirements.
+		if(!isset($__tLookupCache[$key])){
+			$string = new \Core\i18n\I18NString($key);
+			$string->setParameters($params);
+			$__tLookupCache[$key] = $string->getTranslation();
+		}
+		
+		return $__tLookupCache[$key];
+	}
+	else{
+		// Complex strings simply get processed by the underlying system as normal.
+		$string = new \Core\i18n\I18NString($key);
+		$string->setParameters($params);
+		return $string->getTranslation();
+	}
 }

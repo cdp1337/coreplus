@@ -530,13 +530,22 @@ class FormElement {
 		$key = strtolower($key);
 
 		switch ($key) {
-			case 'label': // Special case, returns either title or name, whichever is set.
-				if (!empty($this->_attributes['title'])) return $this->_attributes['title'];
-				else return $this->get('name');
-				break;
-			case 'id': // ID is also a special case, it casn use the name if not defined otherwise.
+			case 'title':
+				// This should be translated if necessary.
+				$v = isset($this->_attributes[$key]) ? $this->_attributes[$key] : null;
+				if($v !== null && strpos($v, 't:') === 0){
+					$v = t(substr($v, 2));
+				}
+				return $v;
+			case 'label':
+				// Special case, returns either title or name, whichever is set.
+				$v = (!empty($this->_attributes['title'])) ? $this->_attributes['title'] : $this->get('name');
+				return $v;
+			case 'id':
+				// ID is also a special case, it can use the name if not defined otherwise.
 				return $this->getID();
-				break;
+			case 'options':
+				return $this->getOptions();
 			default:
 				return (isset($this->_attributes[$key])) ? $this->_attributes[$key] : null;
 		}
@@ -761,6 +770,35 @@ class FormElement {
 			return $id;
 		}
 	}
+	
+	/**
+	 * Get the options for this input as a valid array
+	 * 
+	 * This array will be translated automatically if necessary.
+	 * 
+	 * This only has use when called on select, radio, or checkboxes, 
+	 * but is listed here to remove the requirement of each of those having the logic.
+	 * 
+	 * @return array
+	 */
+	public function getOptions(){
+		// Allow options to be pulled dynamically from the source when set.
+		if(!isset($this->_attributes['options']) && isset($this->_attributes['source'])){
+			// Store this output as the options value so that it doesn't need to be called multiple times.
+			$this->_attributes['options'] = $this->_parseSourceAttribute();
+		}
+		
+		if(isset($this->_attributes['options']) && is_array($this->_attributes['options'])){
+			// Iterate over each option and translate it if necessary.
+			foreach($this->_attributes['options'] as $k => $v){
+				if(strpos($v, 't:') === 0){
+					$this->_attributes['options'][$k] = t(substr($v, 2));
+				}
+			}
+		}
+		
+		return $this->_attributes['options'];
+	}
 
 	/**
 	 * Template helper function
@@ -826,6 +864,55 @@ class FormElement {
 			if (!isset($src[$n])) return null;
 			else return $src[$n];
 		}
+	}
+	
+	/**
+	 * Parse the source string and return the resulting output from the method/function set.
+	 * 
+	 * @return array
+	 */
+	protected function _parseSourceAttribute(){
+		// Select options support a source attribute to be used if there are no options otherwise.
+		// this allows the options to be pulled from a dynamic function.
+		if(isset($this->_attributes['source'])){
+			$source = $this->_attributes['source'];
+
+			if( is_array($source) && sizeof($source) == 2 ){
+				// Allow an array of object, method to be called.
+				$options = call_user_func($source);
+			}
+			elseif(strpos($source, 'this::') === 0){
+				// This object starts with "this", which should point back to the original Model.
+				// This link is now established with the parent object.
+				if($this->parent instanceof Model){
+					$m = substr($source, 6);
+					$options = call_user_func([$this->parent, $m]);
+				}
+				else{
+					trigger_error('"source => ' . $source . '" requested on ' . $this->get('name') . ' when parent was not defined!  Please only use source when creating a form element from a valid model object.');
+					$options = false;
+				}
+			}
+			elseif(strpos($source, '::') !== false){
+				// This is a static binding to some model otherwise, great!
+				$options = call_user_func($source);
+			}
+			else{
+				// ..... umm
+				trigger_error('Invalid source attribute for ' . $this->get('name') . ', please ensure it is set to a callback of a valid class::method!');
+				$options = false;
+			}
+
+			if($options === false){
+				$options = [];
+			}
+		}
+		else{
+			// ???......
+			$options = [];
+		}
+		
+		return $options;
 	}
 
 	/**

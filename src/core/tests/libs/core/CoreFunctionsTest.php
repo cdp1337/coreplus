@@ -147,4 +147,150 @@ class CoreFunctionsTest extends PHPUnit_Framework_TestCase {
 		$this->assertTrue(!\Core\compare_strings('1234', '01234'));
 		$this->assertTrue(\Core\compare_strings(1234, '1234'));
 	}
+	
+	public function testTimeDurationFormat(){
+		// Default 1ns - 1M seconds, should have automatic precision+rounding.
+		$this->assertEquals(
+			\Core\time_duration_format(0.000000001),
+			"1.0000 ns"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.00000001),
+			"10.0000 ns"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.0000001),
+			"100.0000 ns"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.000001),
+			"1.0000 µs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.00001),
+			"10.0000 µs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.0001),
+			"100.0000 µs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.001),
+			"1.0000 ms"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.01),
+			"10.0000 ms"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.1),
+			"100.0000 ms"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(1),
+			"1.0000 s"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(10),
+			"10.0000 s"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(100),
+			"1 min 40 sec"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(1000),
+			"16 min 40 sec"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(10000),
+			"2 hrs 47 min"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(100000),
+			"1 Day 4 hrs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(1000000),
+			"11 Days 14 hrs"
+		);
+		
+		// No precision/rounding via ,0 argument.
+		// Default 1ns - 1M seconds, should have automatic precision+rounding.
+		$this->assertEquals(
+			\Core\time_duration_format(0.000000001, 0),
+			"1 ns"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.00000001, 0),
+			"10 ns"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.0000001, 0),
+			"100 ns"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.000001, 0),
+			"1 µs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.00001, 0),
+			"10 µs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.0001, 0),
+			"100 µs"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.001, 0),
+			"1 ms"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.01, 0),
+			"10 ms"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(0.1, 0),
+			"100 ms"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(1, 0),
+			"1 s"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(10, 0),
+			"10 s"
+		);
+		
+		
+		// Some complex scenarios.
+		$this->assertEquals(
+			\Core\time_duration_format(3, 0),
+			"3 s"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(3, 1),
+			"3.0 s"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(3.14159),
+			"3.1416 s"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(63.14159),
+			"1 min 3 sec"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(60),
+			"1 Minute"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(3600),
+			"1 Hour"
+		);
+		$this->assertEquals(
+			\Core\time_duration_format(86400),
+			"1 Day"
+		);
+	}
 }

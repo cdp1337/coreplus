@@ -110,6 +110,7 @@ class View {
 	const CTYPE_XML   = 'application/xml';
 	const CTYPE_ICS   = 'text/calendar';
 	const CTYPE_RSS   = 'application/rss+xml';
+	const CTYPE_CSV   = 'text/csv';
 
 
 	public $error;
@@ -611,9 +612,31 @@ class View {
 					break;
 			}
 		}
+		
+		if($mastertpl == false && $this->mode == View::MODE_AJAX && $this->contenttype == View::CTYPE_HTML){
+			// There is no master template to render scripts, but HTML was requested via AJAX.
+			// Include them after the body!
+			foreach($this->scripts['head'] as $idx => $script){
+				if($idx == 0){
+					// Skip the first head script; that's always the Core setup object.
+					continue;
+				}
+				
+				$body .= $script;
+			}
+			foreach($this->scripts['foot'] as $idx => $script){
+				$body .= $script;
+			}
+			
+			foreach($this->stylesheets as $s){
+				$body .= $s;
+			}
+		}
 
 		// If there's *still* no template, I still have nothing to do.
-		if (!$mastertpl) return $body;
+		if (!$mastertpl){
+			return $body;
+		}
 
 
 		$template = \Core\Templates\Template::Factory($mastertpl);

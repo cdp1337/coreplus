@@ -106,26 +106,32 @@ class Model implements ArrayAccess {
 	 * Useful for column renames where the data needs to persist to the new column name.
 	 */
 	const ATT_TYPE_ALIAS = '__alias';
+	
+	/**
+	 * Meta field, not actually in the database, but present in the logic for some reason or another.
+	 * This is useful for defining fields that are calculated for listing tables.
+	 */
+	const ATT_TYPE_META = '__meta';
 
 	/**
-	 * Mysql datetime and ISO 8601 formatted datetime field.
-	 * This format is discouraged in Core+, but allowed.
-	 *
-	 * This stores the data as 'YYYY-mm-dd HH:ii:ss'.
+	 * ISO 8601 datetime formatted field.
+	 * 
+	 * This stores the data as `YYYY-mm-dd HH:ii:ss` in the database and
+	 * is the default `datetime` format for MySQL.
+	 * 
+	 * This format is discouraged in Core+ as it does not contain necessary timezone information
+	 * and is ambiguous when considering full l10n, but is allowed.
 	 */
 	const ATT_TYPE_ISO_8601_DATETIME = 'ISO_8601_datetime';
 
 	/**
-	 * Mysql-specific timestamp field.
-	 * This stores the data as 'YYYY-mm-dd HH:ii:ss'.
-	 */
-	const ATT_TYPE_MYSQL_TIMESTAMP = 'mysql_timestamp';
-
-	/**
-	 * Mysql date and ISO 8601 formatted date field.
-	 * This format is discouraged in Core+, but allowed.
-	 *
-	 * This stores the data as 'YYYY-mm-dd'.
+	 * ISO 8601 date formatted field.
+	 * 
+	 * This stores the data as `YYYY-mm-dd` in the database and
+	 * is the default `date` format for MySQL.
+	 * 
+	 * This format is discouraged in Core+ as it does not contain necessary timezone information
+	 * and is ambiguous when considering full l10n, but is allowed.
 	 */
 	const ATT_TYPE_ISO_8601_DATE = 'ISO_8601_date';
 
@@ -730,36 +736,77 @@ class Model implements ArrayAccess {
 	}
 
 	/**
-	 * Get the requested key for this object.
+	 * Get the requested column value for this object/record.
+	 * 
+	 * This automatically looks up columns, "other" data fields, aliases, and links.
+	 * 
+	 * ### Content Format Requested
+	 * 
+	 * If the optional second parameter `$format` is passed in, the CTYPE can be defined and
+	 * if supported by the underlying dataset, can be rendered into that format natively.
+	 * 
+	 * Please note, not all keys and backends support alternate rendering, and may ignore this parameter.
 	 *
-	 * @param string $k
+	 * @param string      $key
+	 * @param string|null $format
 	 *
 	 * @return mixed
 	 */
-	public function get($k) {
-		if($k === '__CLASS__'){
+	public function get($key, $format = null) {
+		if($key === '__CLASS__'){
 			// Magic key
 			return get_called_class();
 		}
-		elseif($k === '__PRIMARYKEY__'){
+		elseif($key === '__PRIMARYKEY__'){
 			// Magic key
 			return $this->getPrimaryKeyString();
 		}
-		elseif(isset($this->_columns[$k])){
+		elseif(isset($this->_columns[$key])){
 			// It's a standard column object!
-			return $this->_columns[$k]->valueTranslated;
+			
+			if($format === null){
+				// Traditional get with no additional formatting arguments provided, passthru to the column!
+				// This is done above the formatting logic for the sake of performance,
+				// no need to run through that logic if NULL was requested as the format!
+				return $this->_columns[$key]->valueTranslated;
+			}
+			
+			// These standard objects support formatting parameters!
+			// Additionally, a format was requested! :)
+			$col = $this->_columns[$key];
+			
+			if($col->formatter){
+				// Special "this" method.
+				if (is_array($col->formatter) && sizeof($col->formatter) == 2 && $col->formatter[0] == 'this') {
+					$ret = @call_user_func([$this, $col->formatter[1]], $format);
+					return $ret === null ? $col->valueTranslated : $ret;
+				}
+				// Static Method formatting, pass in the value as the first parameter.
+				elseif (strpos($col->formatter, '::') !== false) {
+					$ret = @call_user_func($col->formatter, $col->valueTranslated, $format);
+					return $ret === null ? $col->valueTranslated : $ret;
+				}
+				else{
+					// ?....
+					return $col->valueTranslated;
+				}
+			}
+			else{
+				// No formatter was registered, passthru.
+				return $col->valueTranslated;
+			}
 		}
-		elseif(isset($this->_aliases[$k])){
+		elseif(isset($this->_aliases[$key])){
 			// It's an alias of another key, re-call this method on that key instead.
-			return $this->get($this->_aliases[$k]);
+			return $this->get($this->_aliases[$key]);
 		}
-		elseif (array_key_exists($k, $this->_dataother)) {
+		elseif (array_key_exists($key, $this->_dataother)) {
 			// Check if this data was set from the "set" command on a non-tracked column.
-			return $this->_dataother[$k];
+			return $this->_dataother[$key];
 		}
-		elseif($this->getLink($k)){
+		elseif($this->getLink($key)){
 			// Check if this data is actually a linked model
-			return $this->getLink($k);
+			return $this->getLink($key);
 		}
 		else {
 			return null;
@@ -775,6 +822,24 @@ class Model implements ArrayAccess {
 	 */
 	public function getColumn($key){
 		return isset($this->_columns[$key]) ? $this->_columns[$key] : null;
+	}
+	
+	/**
+	 * Convenience method to get the original "DB" value of a given column.
+	 * Useful for listing what the previous value was before a change.
+	 * 
+	 * If no change occurred, simply the DB value will be returned.
+	 * 
+	 * @param string $key
+	 * @return string|int|null|mixed
+	 */
+	public function getOriginalValue($key){
+		$c = $this->getColumn($key);
+		if(!$c){
+			return null;
+		}
+		
+		return $c->valueDB;
 	}
 
 	/**
@@ -809,6 +874,16 @@ class Model implements ArrayAccess {
 		else{
 			return 'Unnamed ' . $this->getPrimaryKeyString();
 		}
+	}
+	
+	/**
+	 * Get the class for this object, by default just the name of the Model,
+	 * but extend this to return your own name if necessary.
+	 * 
+	 * @return string
+	 */
+	public function getClass(){
+		return strtolower($this->get('__CLASS__'));
 	}
 
 	/**
@@ -862,6 +937,17 @@ class Model implements ArrayAccess {
 			$ret[$c->field] = $c->valueDB;
 		}
 		return $ret;
+	}
+	
+	/**
+	 * Get the data tags for this Model.
+	 * 
+	 * By default, nothing is returned, but extend this method to set your own data-* tags.
+	 * 
+	 * @return array
+	 */
+	public function getDataTags(){
+		return [];
 	}
 
 	/**
@@ -1990,6 +2076,10 @@ class Model implements ArrayAccess {
 					$idcol = $c->field;
 				}
 			}
+			elseif($c->type == Model::ATT_TYPE_META){
+				// Skip these entirely.
+				continue;
+			}
 			else{
 				if($defer){
 					$inserts[$c->field] = $c->getInsertValue();
@@ -2043,6 +2133,10 @@ class Model implements ArrayAccess {
 			
 			if($c->type == Model::ATT_TYPE_ID || $c->type == Model::ATT_TYPE_UUID){
 				$dat->setID($c->field, $c->value);
+			}
+			elseif($c->type == Model::ATT_TYPE_META){
+				// Skip these entirely.
+				continue;
 			}
 			elseif($c->changed()){
 				$dat->update($c->field, $c->getUpdateValue());
@@ -2510,6 +2604,7 @@ class Model implements ArrayAccess {
 						'formtype' => 'disabled',
 						'default' => 0,
 						'comment' => 'The created timestamp of this record, populated automatically',
+						'formatter' => '\\Core\\Formatter\\GeneralFormatter::DateStringSDT',
 					];
 				}
 			}
@@ -2523,6 +2618,7 @@ class Model implements ArrayAccess {
 						'formtype' => 'disabled',
 						'default' => 0,
 						'comment' => 'The updated timestamp of this record, populated automatically',
+						'formatter' => '\\Core\\Formatter\\GeneralFormatter::DateStringSDT',
 					];
 				}
 			}
@@ -2536,6 +2632,7 @@ class Model implements ArrayAccess {
 						'formtype' => 'disabled',
 						'default' => 0,
 						'comment' => 'The deleted timestamp of this record, populated automatically',
+						'formatter' => '\\Core\\Formatter\\GeneralFormatter::DateStringSDT',
 					];
 				}
 			}
@@ -2696,6 +2793,7 @@ class Model implements ArrayAccess {
 		if (!isset($schema['encrypted']))          $schema['encrypted'] = false;
 		if (!isset($schema['required']))           $schema['required']  = false;
 		if (!isset($schema['encoding']))           $schema['encoding']  = false;
+		if (!isset($schema['formatter']))          $schema['formatter'] = false;
 
 		if($schema['default'] === false && $schema['null'] === true){
 			// Easiest case!  NULL is allowed on this column.
@@ -2878,6 +2976,15 @@ class ModelFactory {
 	 */
 	public function getDataset(){
 		return $this->_dataset;
+	}
+	
+	/**
+	 * Helper method to return the name of the model this Factory is representing.
+	 * 
+	 * @return string
+	 */
+	public function getModelName(){
+		return $this->_model;
 	}
 
 	/**

@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAAA;;;;;;;;;;;;;;;EAeE;AACF;;;EAGE;;AAEF,yDAA0D;EACzD,SAAS,EAAE,EAAE",
+"sources": ["../../scss/admin/log.scss"],
+"names": [],
+"file": "log.css"
+}

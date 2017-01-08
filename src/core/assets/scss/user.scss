@@ -1,0 +1,21 @@
+/**
+ * Common styles for the user application across the different pages
+ */
+
+
+.page-user-admin {
+	// Styles for /user/admin
+	
+	div.listing-table .listing-table-record {
+		// Adjust the listing table sizes slightly.
+		.column-name-avatar {
+			flex-grow: 3;
+		}
+		.column-name-active {
+			flex-grow: 1;
+		}
+		.column-name-email {
+			flex-grow: 15;
+		}
+	}
+}

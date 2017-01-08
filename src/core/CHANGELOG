@@ -1,3 +1,35 @@
+Core Plus 6.2.0
+
+	* [Security] Update phpMailer to newest version upstream.
+	* [Bug] Force the session to be updated when it exists on page exit.
+	* [Bug] Better support for time durations > 1 minute.
+	* [Bug] Fix CLI detection when the SHELL env variable is not present.
+	* [Performance] Better cache for the t() function.
+	* [Feature] New support for a mimetype format on Model get calls.
+	* [Feature] Better responsiveness on listing "tables".
+	* [Feature] More automation options for listing tables.
+	* [Feature] Support for pre-rendered view controls (require fewer JS calls).
+	* [Feature] /user/admin has new filter, last logged in.
+	* [Feature] New "meta" model schema type; useful for defining custom functionality on models without a
+	  database column associated.
+	* [Feature] New support for "data-*" tags on Models, (useful for listing tables).
+	* [Feature] New subsystem; \Core\Formatter.
+	* [Feature] Model columns now support a "formatter" attribute to format the values from an external or
+	  internal method.
+	* [Feature] New support to "inline" an SVG image; the actual SVG code is entered into the markdown
+	  instead of simply a link for it.
+	* Upgrade SQL_Parser to newer upstream version 0.7.0
+	* New method for Models, getOriginalValue()
+	* More images to the stock imageset for devices.
+	* /admin/log now supports new responsive table layout.
+	* /admin/pages now supports new responsive table layout.
+	* /user/admin now supports new responsive table layout.
+	* New method FilterForm->getElements().
+	* I18N support on Form->get('title').
+	* New support for "source" attributes to populate "options" on form elements.
+	* Drop Model::ATT_TYPE_MYSQL_TIMESTAMP; was a duplicate of ISO_8601_DATETIME.
+	* Better support for CSV mimetypes.
+
 Core Plus 6.1.1
 
 	* Retool the datastore password mechanism a bit.

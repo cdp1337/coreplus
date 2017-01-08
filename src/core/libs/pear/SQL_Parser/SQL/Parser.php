@@ -36,7 +36,7 @@
  * @copyright 2002-2004 Brent Cook
  *            2005 Erich Enke
  * @license   http://www.gnu.org/licenses/lgpl.html GNU Lesser GPL 3
- * @version   CVS: $Id: Parser.php 295082 2010-02-15 06:23:04Z clockwerx $
+ * @version   CVS: $Id: Parser.php 316129 2011-09-05 07:49:53Z alan_k $
  * @link      http://pear.php.net/package/SQL_Parser
  * @since     File available since Release 0.1.0
  */
@@ -48,7 +48,16 @@ require_once dirname(__FILE__) . '/Parser/Lexer.php';
 
 /**
  * A sql parser
+ * 
+ * 
+ * @example
+ * 
+require_once 'SQL/Parser.php';
+$parser = new SQL_Parser();
+$struct = $parser->parse("SELECT a,b,c FROM Foo");
+print_r($struct);
  *
+ * @see       http://www.sjhannah.com/blog/?p=16
  * @category  Database
  * @package   SQL_Parser
  * @author    Brent Cook <busterbcook@yahoo.com>
@@ -153,7 +162,7 @@ class SQL_Parser
      * Constructor
      *
      * @param string $string the SQL query to parse
-     * @param string $dialect the SQL dialect
+     * @param string $dialect the SQL dialect (eg. 'ANSI' or 'MySQL')
      * @uses  SQL_Parser::setDialect()
      * @uses  SQL_Parser::$lexer      W to create it
      * @uses  SQL_Parser::$symbols    R
@@ -281,9 +290,7 @@ class SQL_Parser
     /**
      *
      * @param string $message error message
-     *
-     * @throws \Exception
-     *
+     * @return Error
      * @uses  is_null()
      * @uses  substr()
      * @uses  strlen()
@@ -317,7 +324,7 @@ class SQL_Parser
             $this->lexer->lineBegin - $length)) . "^";
         $message .= ' found: "' . $this->lexer->tokText . '"';
 
-        throw new \Exception($message);
+        throw new Exception($message);
     }
     // }}}
 
@@ -407,6 +414,223 @@ class SQL_Parser
     }
     // }}}
 
+    // {{{ isEngineName()
+    /**
+     * Returns true if current token has a engine name for value, otherwise false
+     *
+     * @uses  SQL_Parser::$token  R
+     * @return  boolean  true if current token is a value
+     */
+    public function isEngineName()
+    {
+        $engines = array(
+            'myisam',
+            'innodb',
+            'ibmdb2i',
+            'merge',
+            'memory',
+            'example',
+            'federated',
+            'archive',
+            'csv',
+            'blackhole',
+        );
+        return in_array(strtolower($this->lexer->tokText), $engines);
+    }
+    // }}}
+
+    // {{{ isCharsetName()
+    /**
+     * Returns true if current token has a charset name for value, otherwise false
+     *
+     * @uses  SQL_Parser::$token  R
+     * @return  boolean  true if current token has a charset name for  value
+     */
+    public function isCharsetName()
+    {
+        $charsets = array(
+            'armscii8',
+            'ascii',
+            'big5',
+            'binary',
+            'cp1250',
+            'cp1251',
+            'cp1256',
+            'cp1257',
+            'cp850',
+            'cp852',
+            'cp866',
+            'cp932',
+            'dec8',
+            'eucjpms',
+            'euckr',
+            'gb2312',
+            'gbk',
+            'geostd8',
+            'greek',
+            'hebrew',
+            'hp8',
+            'keybcs2',
+            'koi8r',
+            'koi8u',
+            'latin1',
+            'latin2',
+            'latin5',
+            'latin7',
+            'macce',
+            'macroman',
+            'sjis',
+            'swe7',
+            'tis620',
+            'ucs2',
+            'ujis',
+            'utf8',
+        );
+        return in_array(strtolower($this->lexer->tokText), $charsets);
+    }
+    // }}}
+
+    // {{{ isCollationName()
+    /**
+     * Returns true if current token has a collation name for value, otherwise false
+     *
+     * @uses  SQL_Parser::$token  R
+     * @return  boolean  true if current token has a collation name for value
+     */
+    public function isCollationName()
+    {
+        $collations = array(
+            'armscii8_bin',
+            'armscii8_general_ci',
+            'ascii_bin',
+            'ascii_general_ci',
+            'big5_bin',
+            'big5_chinese_ci',
+            'binary',
+            'cp1250_bin',
+            'cp1250_croatian_ci',
+            'cp1250_czech_cs',
+            'cp1250_general_ci',
+            'cp1251_bin',
+            'cp1251_bulgarian_ci',
+            'cp1251_general_ci',
+            'cp1251_general_cs',
+            'cp1251_ukrainian_ci',
+            'cp1256_bin',
+            'cp1256_general_ci',
+            'cp1257_bin',
+            'cp1257_general_ci',
+            'cp1257_lithuanian_ci',
+            'cp850_bin',
+            'cp850_general_ci',
+            'cp852_bin',
+            'cp852_general_ci',
+            'cp866_bin',
+            'cp866_general_ci',
+            'cp932_bin',
+            'cp932_japanese_ci',
+            'dec8_bin',
+            'dec8_swedish_ci',
+            'eucjpms_bin',
+            'eucjpms_japanese_ci',
+            'euckr_bin',
+            'euckr_korean_ci',
+            'gb2312_bin',
+            'gb2312_chinese_ci',
+            'gbk_bin',
+            'gbk_chinese_ci',
+            'geostd8_bin',
+            'geostd8_general_ci',
+            'greek_bin',
+            'greek_general_ci',
+            'hebrew_bin',
+            'hebrew_general_ci',
+            'hp8_bin',
+            'hp8_english_ci',
+            'keybcs2_bin',
+            'keybcs2_general_ci',
+            'koi8r_bin',
+            'koi8r_general_ci',
+            'koi8u_bin',
+            'koi8u_general_ci',
+            'latin1_bin',
+            'latin1_danish_ci',
+            'latin1_general_ci',
+            'latin1_general_cs',
+            'latin1_german1_ci',
+            'latin1_german2_ci',
+            'latin1_spanish_ci',
+            'latin1_swedish_ci',
+            'latin2_bin',
+            'latin2_croatian_ci',
+            'latin2_czech_cs',
+            'latin2_general_ci',
+            'latin2_hungarian_ci',
+            'latin5_bin',
+            'latin5_turkish_ci',
+            'latin7_bin',
+            'latin7_estonian_cs',
+            'latin7_general_ci',
+            'latin7_general_cs',
+            'macce_bin',
+            'macce_general_ci',
+            'macroman_bin',
+            'macroman_general_ci',
+            'sjis_bin',
+            'sjis_japanese_ci',
+            'swe7_bin',
+            'swe7_swedish_ci',
+            'tis620_bin',
+            'tis620_thai_ci',
+            'ucs2_bin',
+            'ucs2_czech_ci',
+            'ucs2_danish_ci',
+            'ucs2_esperanto_ci',
+            'ucs2_estonian_ci',
+            'ucs2_general_ci',
+            'ucs2_hungarian_ci',
+            'ucs2_icelandic_ci',
+            'ucs2_latvian_ci',
+            'ucs2_lithuanian_ci',
+            'ucs2_persian_ci',
+            'ucs2_polish_ci',
+            'ucs2_roman_ci',
+            'ucs2_romanian_ci',
+            'ucs2_slovak_ci',
+            'ucs2_slovenian_ci',
+            'ucs2_spanish2_ci',
+            'ucs2_spanish_ci',
+            'ucs2_swedish_ci',
+            'ucs2_turkish_ci',
+            'ucs2_unicode_ci',
+            'ujis_bin',
+            'ujis_japanese_ci',
+            'utf8_bin',
+            'utf8_czech_ci',
+            'utf8_danish_ci',
+            'utf8_esperanto_ci',
+            'utf8_estonian_ci',
+            'utf8_general_ci',
+            'utf8_hungarian_ci',
+            'utf8_icelandic_ci',
+            'utf8_latvian_ci',
+            'utf8_lithuanian_ci',
+            'utf8_persian_ci',
+            'utf8_polish_ci',
+            'utf8_roman_ci',
+            'utf8_romanian_ci',
+            'utf8_slovak_ci',
+            'utf8_slovenian_ci',
+            'utf8_spanish2_ci',
+            'utf8_spanish_ci',
+            'utf8_swedish_ci',
+            'utf8_turkish_ci',
+            'utf8_unicode_ci',
+        );
+        return in_array(strtolower($this->lexer->tokText), $collations);
+    }
+    // }}}
+
     // {{{ getTok()
     /**
      * retrieves next token
@@ -444,7 +668,7 @@ class SQL_Parser
         // parse field options
         $namedConstraint = false;
         $options         = array();
-        while ($this->token != ',' && $this->token != ')' && $this->token != null ) {
+        while ($this->token != ',' && $this->token != ';' && $this->token != ')' && $this->token != null ) {
             $option    = $this->token;
             $haveValue = true;
             switch ($option) {
@@ -565,7 +789,7 @@ class SQL_Parser
                     foreach ($intervals as $class) {
                         if (isset($class[$option])) {
                             $constraintOpts = array(
-                            	'quantum_1' => $this->token,
+                                'quantum_1' => $this->token,
                             );
                             $this->getTok();
                             if ($this->token == 'to') {
@@ -677,7 +901,7 @@ class SQL_Parser
                 $argtype = $this->token;
                 $clause['args'][] = array(
                     'value' => $arg,
-                	'type'  => $argtype,
+                    'type'  => $argtype,
                 );
                 $this->getTok();
             }
@@ -735,7 +959,7 @@ class SQL_Parser
                         }
                         $clause['args'][] = array(
                             'values' => $values,
-                        	'types'  => $types,
+                            'types'  => $types,
                         );
                     }
                     if ($this->token != ')') {
@@ -789,7 +1013,7 @@ class SQL_Parser
                 $argtype = $this->token;
                 $clause['args'][] = array(
                     'value' => $arg,
-                	'type'  => $argtype,
+                    'type'  => $argtype,
                 );
                 $this->getTok();
             }
@@ -847,7 +1071,7 @@ class SQL_Parser
                         }
                         $clause['args'][] = array(
                             'values' => $values,
-                        	'types'  => $types,
+                            'types'  => $types,
                         );
                     }
                     if ($this->token != ')') {
@@ -873,160 +1097,34 @@ class SQL_Parser
      * @access  public
      * @return mixed array parsed field list on success, otherwise Error
      */
-    public function parseFieldList()
+    public function parseFieldList($allow_multiple = true, $expect = '(')
     {
         $fields = array();
-
-        $this->getTok();
-        if ($this->token != '(') {
-            $this->raiseError('Expected (');
+        if ($expect !== false) {
+            $this->getTok();
+            if ($this->token != $expect) {
+                $this->raiseError('Expected (');
+            }
+            $this->getTok();
         }
-
         while (1) {
-            // parse field identifier
-            $this->getTok();
+            $new_data_fields = $this->parseField();
+            $fields = array_merge_recursive($fields, $new_data_fields);
+
             if ($this->token == ',') {
-                continue;
-            }
-            // In this context, field names can be reserved words or function names
-            if ($this->token == 'primary') {
                 $this->getTok();
-                if ($this->token != 'key') {
-                    $this->raiseError('Expected key');
+                if ($allow_multiple) {
+                    continue;
                 }
-                $this->getTok();
-                if ($this->token != '(') {
-                    $this->raiseError('Expected (');
-                }
-                $this->getTok();
-                if ($this->token != 'ident') {
-                    $this->raiseError('Expected identifier');
-                }
-                $name = $this->lexer->tokText;
-                $this->getTok();
-                if ($this->token != ')') {
-                    $this->raiseError('Expected )');
-                }
-                $fields[$name]['constraints'][] = array(
-                    'type'  => 'primary_key',
-                    'value' => true,
-                );
-                continue;
-            } elseif ($this->token == 'key') {
-                $this->getTok();
-                if ($this->token != 'ident') {
-                    $this->raiseError('Expected identifier');
-                }
-                $key = $this->lexer->tokText;
-                $this->getTok();
-                if ($this->token != '(') {
-                    $this->raiseError('Expected (');
-                }
-                $this->getTok();
-                $rows = array();
-                while ($this->token != ')') {
-                    if ($this->token != 'ident') {
-                        $this->raiseError('Expected identifier');
-                    }
-                    $name= $this->lexer->tokText;
-                    $fields[$name]['constraints'][] = array(
-                        'type'  => 'key',
-                        'value' => $key,
-                    );
-                    $this->getTok();
-                }
-                continue;
-            } elseif ($this->token == 'ident' || $this->isFunc()
-             || $this->isReserved()) {
-                $name = $this->lexer->tokText;
-            } elseif ($this->token == ')') {
+                // parsing alter field list - have to break on ','
                 return $fields;
-            } else {
-                //$this->raiseError('Expected identifier');
             }
-
-            // parse field type
-            $this->getTok();
-            if (! $this->isType($this->token)) {
-                $this->raiseError('Expected a valid type');
-            }
-            $type = $this->token;
-
-            $this->getTok();
-            // handle special case two-word types
-            if ($this->token == 'precision') {
-                // double precision == double
-                if ($type == 'double') {
-                    $this->raiseError('Unexpected token');
-                }
-                $this->getTok();
-            } elseif ($this->token == 'varying') {
-                // character varying() == varchar()
-                if ($type != 'character' && $type != 'varchar') {
-                    $this->raiseError('Unexpected token');
-                }
-                $this->getTok();
-            }
-            $fields[$name]['type'] = $this->synonyms[$type];
-            // parse type parameters
-            if ($this->token == '(') {
-                $results = $this->getParams($values, $types);
-                if (false === $results) {
-                    return $results;
-                }
-                switch ($fields[$name]['type']) {
-                    case 'numeric':
-                        if (isset($values[1])) {
-                            if ($types[1] != 'int_val') {
-                                $this->raiseError('Expected an integer');
-                            }
-                            $fields[$name]['decimals'] = $values[1];
-                        }
-                        break;
-                    case 'float':
-                        if ($types[0] != 'int_val') {
-                            $this->raiseError('Expected an integer');
-                        }
-                        $fields[$name]['length'] = $values[0];
-                        break;
-                    case 'char':
-                    case 'varchar':
-                    case 'integer':
-                    case 'int':
-                    case 'tinyint' :
-                        if (sizeof($values) != 1) {
-                            $this->raiseError('Expected 1 parameter');
-                        }
-                        if ($types[0] != 'int_val') {
-                            $this->raiseError('Expected an integer');
-                        }
-                        $fields[$name]['length'] = $values[0];
-                        break;
-                    case 'set':
-                    case 'enum':
-                        if (! sizeof($values)) {
-                            $this->raiseError('Expected a domain');
-                        }
-                        $fields[$name]['domain'] = $values;
-                        break;
-                    default:
-                        if (sizeof($values)) {
-                            $this->raiseError('Unexpected )');
-                        }
-                }
-                $this->getTok();
-            }
-
-            $options = $this->parseFieldOptions();
-            if (false === $options) {
-                return $options;
-            }
-
-            $fields[$name] += $options;
-
             if ($this->token == ')') {
+                $this->getTok();
                 return $fields;
-            } elseif ($this->token == ';' || is_null($this->token)) {
+            } 
+            if ($this->token == ';' || is_null($this->token)) {
+                $this->getTok();
                 return $fields;
             }
         }
@@ -1034,6 +1132,556 @@ class SQL_Parser
         return $fields;
     }
     // }}}
+
+    public function parseField()
+    {
+        $tree = array();
+        $startTokenPtr = $this->lexer->tokPtr;
+        /*
+        try {
+            $tree['constraint_defs'] = $this->parseConstraint();
+            return $tree; // optimization
+        } catch (Exception $err) {
+            if ($startTokenPtr != $this->lexer->tokPtr) {
+                throw $err;
+            }
+        }
+         * 
+         */
+        try {
+            $tree['index_defs'] = $this->parseIndex();
+            return $tree; // optimization
+        } catch (Exception $err) {
+            if ($startTokenPtr != $this->lexer->tokPtr) {
+                throw $err;
+            }
+        }
+        try {
+            $tree['column_defs'] = $this->parseColumn();
+            return $tree; // optimization
+        } catch (Exception $err) {
+            // it was the right rule, but there was a mistake
+            if ($startTokenPtr != $this->lexer->tokPtr) {
+                throw $err;
+            }
+        }
+        // /!\ all field data have to be merged recursively in
+        // the calling environment to merge data of all fields
+        return $tree;
+    }
+
+    public function parseColumn()
+    {
+        $fields = array();
+
+        // In this context, field names can be reserved words or function names
+        if ($this->token == 'primary') {
+            $this->getTok();
+            if ($this->token != 'key') {
+                $this->raiseError('Expected key');
+            }
+            $this->getTok();
+            if ($this->token != '(') {
+                $this->raiseError('Expected (');
+            }
+            while (1) {
+                $this->getTok();
+                if ($this->token != 'ident') {
+                    $this->raiseError('Expected identifier');
+                }
+                $name = $this->lexer->tokText;
+                $this->getTok();
+
+                if ($this->token == ')') {
+                    $fields[$name]['constraints'][] = array(
+                        'type'  => 'primary_key',
+                        'value' => true,
+                    );
+                    // break;
+                    return $fields;
+                }
+                if ($this->token == ',') {
+                    $fields[$name]['constraints'][] = array(
+                        'type'  => 'primary_key',
+                        'value' => true,
+                    );
+                    // continue;
+                    return $fields;
+                }
+                $this->raiseError('Expected )');
+
+            }
+            // continue;
+            return $fields;
+        }
+
+
+        if ($this->token == 'key') {
+            $this->getTok();
+            if ($this->token != 'ident') {
+                $this->raiseError('Expected identifier');
+            }
+            $key = $this->lexer->tokText;
+            $this->getTok();
+            if ($this->token != '(') {
+                $this->raiseError('Expected (');
+            }
+            $this->getTok();
+            $rows = array();
+            while ($this->token != ')') {
+                if ($this->token != 'ident') {
+                    $this->raiseError('Expected identifier');
+                }
+                $name= $this->lexer->tokText;
+                $fields[$name]['constraints'][] = array(
+                    'type'  => 'key',
+                    'value' => $key,
+                );
+                $this->getTok();
+            }
+            // continue;
+            return $fields;
+        }
+
+        if ($this->token == ')') {
+            return $fields;
+        }
+
+        if ($this->token == 'ident' || $this->isFunc() || $this->isReserved()) {
+            $name = $this->lexer->tokText;
+        }
+        // else ??    //$this->raiseError('Expected identifier');
+
+        // parse field type
+        $this->getTok();
+        if (! $this->isType($this->token)) {
+            $this->raiseError('Expected a valid type');
+        }
+        $type = $this->token;
+
+        $this->getTok();
+        // handle special case two-word types
+        if ($this->token == 'precision') {
+            // double precision == double
+            if ($type == 'double') {
+                $this->raiseError('Unexpected token');
+            }
+            $this->getTok();
+        } elseif ($this->token == 'varying') {
+            // character varying() == varchar()
+            if ($type != 'character' && $type != 'varchar') {
+                $this->raiseError('Unexpected token');
+            }
+            $this->getTok();
+        }
+
+
+        $fields[$name]['type'] = $this->synonyms[$type];
+
+        // parse type parameters
+        if ($this->token == '(') {
+            $results = $this->getParams($values, $types);
+            if (false === $results) {
+                return $results;
+            }
+            switch ($fields[$name]['type']) {
+                case 'numeric':
+                    if (isset($values[1])) {
+                        if ($types[1] != 'int_val') {
+                            $this->raiseError('Expected an integer');
+                        }
+                        $fields[$name]['decimals'] = $values[1];
+                    }
+                case 'float':
+                    if ($types[0] != 'int_val') {
+                        $this->raiseError('Expected an integer');
+                    }
+                    $fields[$name]['length'] = $values[0];
+                    break;
+                case 'char':
+                case 'varchar':
+                case 'integer':
+                case 'int':
+                case 'tinyint' :
+                    if (sizeof($values) != 1) {
+                        $this->raiseError('Expected 1 parameter');
+                    }
+                    if ($types[0] != 'int_val') {
+                        $this->raiseError('Expected an integer');
+                    }
+                    $fields[$name]['length'] = $values[0];
+                    break;
+                case 'set':
+                case 'enum':
+                    if (! sizeof($values)) {
+                        $this->raiseError('Expected a domain');
+                    }
+                    $fields[$name]['domain'] = $values;
+                    break;
+                default:
+                    if (sizeof($values)) {
+                        $this->raiseError('Unexpected )');
+                    }
+            }
+            $this->getTok();
+        }
+        // parse field options..
+        $options = $this->parseFieldOptions();
+        if (false === $options) {
+            return $options;
+        }
+
+        $fields[$name] += $options;
+
+        return $fields;
+    }
+
+    public function parseIndex()
+    {
+        if ($this->token != 'index') {
+            $this->raiseError('Expected index');
+        }
+
+        $this->getTok();
+        if ($this->token != 'ident') {
+            $this->raiseError('Expected identifier');
+        }
+        $name = $this->lexer->tokText;
+
+        $this->getTok();
+        // @todo type should be preceed with using and not directly.
+        // 'ident' might be replaced with 'using'
+        if ($this->token != '(' && $this->token != 'ident') {
+            $this->raiseError('Expected ( or the index type');
+        }
+        if ($this->token == 'iden') {
+            $type = $this->lexer->tokText;
+            $this->getTok();
+        }
+
+        if ($this->token != '(') {
+            $this->raiseError('Expected (');
+        }
+        $this->getTok();
+        $cols = array();
+        while ($this->token != ')') {
+            if ($this->token != 'ident') {
+                $this->raiseError('Expected identifier');
+            }
+            $cols [] = $this->lexer->tokText;
+            $this->getTok();
+        }
+        $this->getTok();
+
+        $index[$name] = array('columns' => $cols);
+        $index[$name]['type'] = isset($type) ? $type : 'default';
+        return $index;
+    }
+
+
+    public function parseTableOptions()
+    {
+        $options = array();
+        $this->getTok();
+        while (';' !== $this->token) {
+            $option = $this->parseTableOption();
+            $options [] = $option;
+            if (',' === $this->token) {
+                $this->getTok();
+            }
+        }
+        return empty($options) ? false : $options;
+    }
+
+
+    public function parseTableOption($is_default = false)
+    {
+        $option = array();
+        switch ($this->token) {
+            case 'engine':
+                // ENGINE [=] engine_name
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isEngineName()) {
+                    $this->raiseError("Unknown engine name {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'engine';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'auto_increment':
+                // AUTO_INCREMENT [=] value
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isVal()) {
+                    $this->raiseError('Value expected');
+                }
+                $option['option_name'] = 'auto_increment';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'avg_row_length':
+                // AVG_ROW_LENGTH [=] value
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isVal()) {
+                    $this->raiseError('Value expected');
+                }
+                $option['option_name'] = 'avg_row_length';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'default':
+                // [DEFAULT] CHARACTER SET [=] charset_name
+                // [DEFAULT] COLLATE [=] collation_name
+                $this->getTok();
+                $option = $this->parseTableOption(true);
+                break;
+            case 'character':
+                // [DEFAULT] CHARACTER SET [=] charset_name
+                $this->getTok();
+                if ('set' !== $this->token) {
+                    $this->raiseError("Expected 'set' instead of {$this->lexer->tokText}");
+                }
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isCharsetName()) {
+                    $this->raiseError("Unknown charset name {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'character set';
+                $option['value'] = $this->lexer->tokText;
+                $option['is_default'] = $is_default;
+                $this->getTok();
+                break;
+            case 'collate':
+                // [DEFAULT] COLLATE [=] collation_name
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isCollationName()) {
+                    $this->raiseError("Unknown collation name {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'collate';
+                $option['value'] = $this->lexer->tokText;
+                $option['is_default'] = $is_default;
+                $this->getTok();
+                break;
+            case 'checksum':
+                // CHECKSUM [=] {0 | 1}
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ('0' !== $this->lexer->tokText && '1' !== $this->lexer->tokText) {
+                    $this->raiseError("Expected 0 or 1 instead of {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'checksum';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+/*
+            @todo find the right algorithm to get comments, paths or
+            connect_strings in all cases (escaped chars, same quote, etc)
+            case 'comment':
+                // COMMENT [=] 'string'
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                // @todo check that it doesn't run into an infinite loop
+                // @todo manage escaped quote
+                if ( ! in_array($this->token, $dialect['quotes'])) {
+                    $this->raiseError("Expected a quote instead of {$this->token}");
+                }
+                $quote_type = $this->token;
+                $this->getTok();
+                $comment = '';
+                while ($quote_type !== $this->token) {
+                    $comment .= $this->token . ' ';
+                    $this->getTok();
+                }
+                if (strlen($comment) > 0) {
+                    $comment = substr($comment, 0, -1);
+                }
+                $option['option_name'] = 'comment';
+                $option['value'] = $comment;
+                break;
+            case 'connection':
+                // CONNECTION [=] 'connect_string'
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                break;
+            case 'data':
+                // DATA DIRECTORY [=] 'absolute path to directory'
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                break;
+*/
+            case 'delay_key_write':
+                // DELAY_KEY_WRITE [=] {0 | 1}
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ('0' !== $this->lexer->tokText && '1' !== $this->lexer->tokText) {
+                    $this->raiseError("Expected 0 or 1 instead of {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'delay_key_write';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+/*
+            @todo same as above
+            case 'index':
+                // INDEX DIRECTORY [=] 'absolute path to directory'
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                break;
+*/
+            case 'insert_method':
+                // INSERT_METHOD [=] { NO | FIRST | LAST }
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                $insert_methods = array('no', 'first', 'last');
+                if ( ! in_array(strtolower($this->lexer->tokText), $insert_methods)) {
+                    $this->raiseError("Expected no, first or last instead of {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'insert_method';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'key_block_size':
+                // KEY_BLOCK_SIZE [=] value
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isVal()) {
+                    $this->raiseError('Value expected');
+                }
+                $option['option_name'] = 'key_block_size';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'max_rows':
+                // MAX_ROWS [=] value
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isVal()) {
+                    $this->raiseError('Value expected');
+                }
+                $option['option_name'] = 'max_rows';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'min_rows':
+                // MIN_ROWS [=] value
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                if ( ! $this->isVal()) {
+                    $this->raiseError('Value expected');
+                }
+                $option['option_name'] = 'min_rows';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'pack_keys':
+                // PACK_KEYS [=] {0 | 1 | DEFAULT}
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                $pack_keys_values = array('0', '1', 'default');
+                if ( ! in_array(strtolower($this->lexer->tokText), $pack_keys_values)) {
+                    $this->raiseError("Expected 0, 1 or default instead of {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'pack_keys';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+/*
+            @todo same as above
+            case 'password':
+                // PASSWORD [=] 'string'
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                $option['option_name'] = '';
+                $option['value'] = $this->token;
+                break;
+*/
+            case 'row_format':
+                // ROW_FORMAT [=] {DEFAULT|DYNAMIC|FIXED|COMPRESSED|REDUNDANT|COMPACT}
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                $row_formats = array('default','dynamic','fixed','compressed','redundant','compact');
+                if ( ! in_array(strtolower($this->lexer->tokText), $row_formats)) {
+                    $this->raiseError("Unexpected row format {$this->lexer->tokText}");
+                }
+                $option['option_name'] = 'row_format';
+                $option['value'] = $this->lexer->tokText;
+                $this->getTok();
+                break;
+            case 'tablespace':
+                // TABLESPACE tablespace_name [STORAGE {DISK|MEMORY|DEFAULT}]
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                $option['option_name'] = 'tablespace';
+                $option['value'] = $this->token;
+                $this->getTok();
+                if ('storage' === $this->token) {
+                    $this->getTok();
+                    $storage_modes = array('disk', 'memory', 'default');
+                    if ( ! in_array(strtolower($this->lexer->tokText), $storage_modes)) {
+                        $this->raiseError("Unexpected storage {$this->lexer->tokText}");
+                    }
+                    $option['storage'] = $this->lexer->tokText;
+                    $this->getTok();
+                }
+                break;
+/*
+            @todo manage the delimiter ',' which is like the delimiter for options...
+            case 'union':
+                // UNION [=] (tbl_name[,tbl_name]...)
+                $this->getTok();
+                if ('=' === $this->token) {
+                    $this->getTok();
+                }
+                $option['option_name'] = '';
+                $option['value'] = $this->token;
+                break;
+*/
+            default:
+                $this->raiseError('Unknown table option');
+        }
+        return $option;
+    }
 
     // {{{ parseFunctionOpts()
     /**
@@ -1083,9 +1731,12 @@ class SQL_Parser
                 if (false === $fields) {
                     return $fields;
                 }
-                $tree['column_defs'] = $fields;
-                // $tree['column_names'] = array_keys($fields);
-                break;
+                $tree = array_merge($tree, $fields);
+                $options = $this->parseTableOptions();
+                if (false !== $options) {
+                    $tree['table_options'] = $options;
+                }
+                return $tree;
             case 'index':
                 $tree['command'] = 'create_index';
                 break;
@@ -1103,6 +1754,141 @@ class SQL_Parser
         return $tree;
     }
     // }}}
+
+
+    public function parseAlter()
+    {
+        $tree = array();
+
+        $this->getTok();
+        switch ($this->token) {
+            case 'table':
+                $tree['command'] = 'alter_table';
+                $this->getTok();
+                if ($this->token != 'ident') {
+                    $this->raiseError('Expected table name');
+                }
+                $tree['table_names'] = array( $this->lexer->tokText );
+                $tree['table_actions'] = array();
+
+                $action = array();
+
+
+                while (1) {
+
+                    if ($this->token == ';' || $this->token == ',') {
+                        $tree['table_actions'][] = $action;
+                        $action = array();
+                    }
+
+                    if ($this->token == ';') {
+                        return $tree;
+                    }
+
+                    $this->getTok();
+                    // alter table ADD|CHANGE|..
+                    $action['action'] = $this->token;
+                    $this->getTok();
+                    // alter table ADD COLUMN....
+                    $action['what'] = $this->token;
+                   // var_dump($action['what']);
+                    switch ($action['what']) {
+
+                        case 'column': // add / remove / 
+
+                            if ($action['action'] == 'drop') {
+                                $this->getTok();
+                                $action['name'] = $this->lexer->tokText;
+                                // fixmen check...
+                                $this->getTok(); // comma or ;
+                                if ($this->token != ';' && $this->token != ',') {
+                                    $this->raiseError("expection ', or ;' got ".  $this->token);
+                                }
+                                break;
+                            }
+
+                            if ($action['action'] == 'change') {
+                                $this->getTok();
+                                $action['from'] = $this->lexer->tokText;
+                            }
+
+                            $fields = $this->parseFieldList(false, false);
+                            foreach($fields as $k=>$v) {
+                                $action['name'] = $k;
+                                $action['field'] = $v;
+                            }
+                            //var_dump($this->token);
+                            if ($this->token != ';' && $this->token != ',') {
+                                $this->raiseError("expection ', or ;' got " . $this->token);
+                            }
+
+                            break;
+
+
+
+                        case 'index':
+                            // alter table xxx add index indexname(a,b,c);
+                            $this->getTok();
+                            $action['name'] = $this->lexer->tokText;
+
+                            $this->getTok();
+                            if ($this->token != '(') {
+                                $this->raiseError("Expecting '(', got : ". $this->token);
+                            }
+                            // this needs more work.. let's start with just handling a lit of toeksn..
+                            $action['indexes'] = array();
+                            while(1) {
+                                $this->getTok();
+                                $action['indexes'][] = $this->lexer->tokText;
+                                $this->getTok();
+                                if ($this->token ==',') {
+                                    continue;
+                                }
+                                if ($this->token ==')') {
+                                    break;
+                                }
+                                $this->raiseError("Expecting ', or )' got " . $this->token);
+                            }
+
+                            // @ ), or ;
+
+                            $this->getTok();
+                            if ($this->token != ';' && $this->token != ',') {
+                                $this->raiseError("expection ', or ;' got " . $this->token);
+                            }
+
+                            break;
+
+
+                        default: 
+                            $this->raiseError("do not know how to handle: " . $action['what']);
+                    }// end switch..
+
+
+
+
+                }
+                // we never get here.. it should return from insind the loop.
+                break;
+            case 'index':
+                $tree['command'] = 'alter_index';
+
+
+
+                break;
+            case 'constraint':
+                $tree['command'] = 'alter_constraint';
+                break;
+            case 'sequence':
+                $tree['command'] = 'alter_sequence';
+                break;
+            default:
+                $this->raiseError('Unknown object to create');
+        }
+
+
+        throw new Exception("Can not handle ". $tree['command'] . " yet");
+    }
 
     // {{{ parseInsert()
     // INSERT INTO tablename
@@ -1192,15 +1978,16 @@ class SQL_Parser
         }
 
         while (true) {
+            $set = array();
             $this->getTok();
-            $set['column'] = $this->parseIdentifier();
+            $set['name'] = $this->parseIdentifier();
 
             if ($this->token != '=') {
                 $this->raiseError('Expected =');
             }
 
             $this->getTok();
-            $set['column'] = $this->parseCondition();
+            $set['value'] = $this->parseCondition();
 
             $tree['sets'][] = $set;
 
@@ -1380,39 +2167,114 @@ class SQL_Parser
     public function parseDrop()
     {
         $this->getTok();
+
         switch ($this->token) {
             case 'table':
                 $tree = array('command' => 'drop_table');
-                $this->getTok();
-                if ($this->token != 'ident') {
-                    $this->raiseError('Expected a table name');
-                }
-                $tree['table_names'][] = $this->lexer->tokText;
-
-                $this->getTok();
-                if ($this->token == 'restrict'
-                 || $this->token == 'cascade')
-                {
-                    $tree['drop_behavior'] = $this->token;
-                    $this->getTok();
-                }
-                return $tree;
+                $this->parseDropTable($tree);
                 break;
+
             case 'index':
                 $tree = array('command' => 'drop_index');
+                $this->raiseError('DROP ' . $this->token . ' not supported yet');
                 break;
+
             case 'constraint':
                 $tree = array('command' => 'drop_constraint');
+                $this->raiseError('DROP ' . $this->token . ' not supported yet');
                 break;
+
             case 'sequence':
                 $tree = array('command' => 'drop_sequence');
+                $this->raiseError('DROP ' . $this->token . ' not supported yet');
                 break;
+
+            case 'function':
+                $tree = array('command' => 'drop_function');
+                $this->raiseError('DROP ' . $this->token . ' not supported yet');
+                break;
+
+
             default:
                 $this->raiseError('Unknown object to drop');
         }
         return $tree;
     }
     // }}}
+    /**
+     * parses SQL from right after DROP TABLE
+     * 
+     * @uses    SQL_Parser::getTok()
+     * @uses    SQL_Parser::$token
+     * @uses    SQL_Parser::$drop_table_options
+     * @uses    SQL_Parser::$lexer
+     * @uses    Lexer::$tokText
+     * @param   array   $tree   the array to be filled with SQL information
+     */
+    public function parseDropTable(&$tree)
+    {
+        $this->getTok();
+        $table_names_valid = true;
+        while (null !== $this->token && $this->token != ';') {
+            switch ($this->token) {
+                case ',':
+                    break;
+                case 'restrict':
+                    $tree['behaviors'][] = $this->token;
+                    $table_names_valid = false;
+                    break;
+                case 'cascade':
+                    $tree['behaviors'][] = $this->token;
+                    $table_names_valid = false;
+                    break;
+                default:
+                    $token_text = $this->lexer->tokText;
+                    if ($option = $this->parseOption($this->drop_table_options)) {
+                        $tree['command_options'][] = $option;
+                    } elseif ($table_names_valid) {
+                        $tree['table_names'][] = $token_text;
+                    } else {
+                        $this->raiseError('Unknown drop syntax '. $token_text);
+                        $tree['unknown'][] = $token_text;
+                    }
+            }
+            $this->getTok();
+        }
+    }
+
+    /**
+     * checks if the current token leads to a valid option (keyword)
+     * supports multi word option like IF EXISTS
+     * 
+     * @recursiv
+     * @uses    SQL_Parser::getTok()
+     * @uses    SQL_Parser::_parseOption()
+     * @uses    SQL_Parser::$lexer
+     * @uses    Lexer::pushBack()
+     * @uses    Lexer::$tokText
+     * @uses    is_array()
+     * @param   array   $valid_options  valid options to check $this->lexer->tokText against
+     * @return  mixed   option name or false if not found
+     */
+    public function _parseOption($valid_options)
+    {
+        if (isset($valid_options[$this->lexer->tokText])) {
+            if (is_array($valid_options[$this->lexer->tokText])) {
+                $valid_options = $valid_options[$this->lexer->tokText];
+                $this->getTok();
+                $option = $this->_parseOption($valid_options);
+                if (false === $option) {
+                    $this->lexer->pushBack();
+                }
+                return $option;
+            } else {
+                return $valid_options[$this->lexer->tokText];
+            }
+        } else {
+            return false;
+        }
+    }
+
 
     /**
      * [[db.].table].column [[AS] alias]
@@ -1707,6 +2569,7 @@ class SQL_Parser
 
         // get query action
         $this->getTok();
+        //var_Dump($this->token);
         while (1) {
             $branch = array();
             switch ($this->token) {
@@ -1727,6 +2590,9 @@ class SQL_Parser
                     break;
                 case 'create':
                     $branch = $this->parseCreate();
+                    break;
+                case 'alter':
+                    $branch = $this->parseAlter();
                     break;
                 case 'drop':
                     $branch = $this->parseDrop();
@@ -1778,26 +2644,33 @@ class SQL_Parser
         return $tree;
     }
 
-	/**
-	 * @param null $string
-	 *
-	 * @return array
-	 *
-	 * @throws Exception
-	 */
-	public function parse($string = null) {
-	    if (is_string($string)) {
-			$this->initLexer($string);
-		}
-		elseif (! $this->lexer instanceof SQL_Parser_Lexer) {
-			throw new Exception('No initial string specified');
-		}
+    public function parse($string = null)
+    {
+        try {
+            if (is_string($string)) {
+                $this->initLexer($string);
+            } elseif (! $this->lexer instanceof SQL_Parser_Lexer) {
+                throw new Exception('No initial string specified');
+                return array('empty' => true);
+            }
+        } catch (Exception $e) {
+            return 'Caught exception on init: ' . $e->getMessage() . "\n";
+        }
 
-		$tree = $this->parseQuery();
-		if (! is_null($this->token)) {
-			throw new Exception('Expected EOQ');
-		}
+        try {
+            $tree = $this->parseQuery();
+            if (! is_null($this->token)) {
+                $this->raiseError('Expected EOQ');
+            }
+        } catch (Exception $e) {
+            $tree = "\n";
+            $tree .= 'Caught exception: ' . $e->getMessage() . "\n";
+            $tree .= 'in: ' . $e->getFile() . '#' . $e->getLine() . "\n";
+            $tree .= 'from: ' . "\n" . $e->getTraceAsString();
+            $tree .= "\n";
+        }
 
         return $tree;
     }
+    // }}}
 }

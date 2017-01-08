@@ -40,7 +40,8 @@ class UserGroupModel extends Model {
 			'required' => true,
 			'validation' => array('this', '_validateName'),
 			'form' => array(
-				'description' => 'The name for this group displayed in the admin and user interface.',
+				'group' => 'Basic',
+				'grouptype' => 'tabs',
 			)
 		),
 		'context' => array(
@@ -61,8 +62,8 @@ class UserGroupModel extends Model {
 			'type' => Model::ATT_TYPE_BOOL,
 			'default' => false,
 			'form' => array(
-				'title' => 'Default Group',
-				'description' => 'Is this a default user group for new account sign-ups?',
+				'group' => 'Basic',
+				'grouptype' => 'tabs',
 			),
 		),
 		'created' => array(

@@ -124,6 +124,12 @@ if($compileJS === null && $compilePHP === null && $compileSCSSDev === null && $c
 	exit;
 }
 
+if($onlyComponent === 'core'){
+	// Remap -c core to --core internally.  Other scripts allow -c core to be used.
+	$onlyCore = true;
+	$onlyComponent = null;
+}
+
 
 // Open the bootstrap.php file and read in the sourcecode of the requested files.
 

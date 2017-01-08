@@ -69,6 +69,7 @@ class UserModel extends Model {
 					'1'  => 'Active',
 				],
 			],
+			'formatter' => ['this', 'getActive'],
 		],
 		'admin'                => [
 			'type'    => Model::ATT_TYPE_BOOL,
@@ -84,6 +85,7 @@ class UserModel extends Model {
 				'accept'  => 'image/*',
 				'basedir' => 'public/user/avatar',
 			],
+			'formatter' => ['this', 'getAvatar'],
 		],
 		'gpgauth_pubkey' => [
 			'type' => Model::ATT_TYPE_STRING,
@@ -117,12 +119,14 @@ class UserModel extends Model {
 			'default' => 0,
 			'comment' => 'The timestamp of the last login of this user',
 			'formtype'  => 'disabled',
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::DateStringSDT',
 		],
 		'last_password'        => [
 			'type'    => Model::ATT_TYPE_INT,
 			'default' => 0,
 			'comment' => 'The timestamp of the last password reset of this user',
 			'formtype'  => 'disabled',
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::DateStringSDT',
 		],
 	];
 
@@ -176,12 +180,12 @@ class UserModel extends Model {
 		parent::__construct($id);
 	}
 	
-	public function get($key){
+	public function get($key, $format = null){
 		if($key == 'groups'){
 			return $this->getGroups();
 		}
 		else{
-			return parent::get($key);
+			return parent::get($key, $format);
 		}
 	}
 
@@ -518,6 +522,83 @@ class UserModel extends Model {
 		}
 		else {
 			return false;
+		}
+	}
+	
+	/**
+	 * Get this user's active status as human-readable text or HTML
+	 * 
+	 * @param string $format
+	 * @return string HTML or plain text
+	 */
+	public function getActive($format){
+		$status = $this->get('active');
+		
+		switch($format){
+			case View::CTYPE_HTML:
+				if($status == '1'){
+					return '<i class="icon icon-ok" title="' . t('STRING_ACTIVATED') . '"></i>';
+				}
+				elseif($status == '-1'){
+					return '<i class="icon icon-times" title="' . t('STRING_DEACTIVATED') . '"></i>';
+				}
+				else{
+					return '<i class="icon icon-exclamation-sign" title="' . t('STRING_NOT_ACTIVATED_YET') . '"></i>';
+				}
+				break;
+			default:
+				if($status == '1'){
+					return t('STRING_ACTIVATED');
+				}
+				elseif($status == '-1'){
+					return t('STRING_DEACTIVATED');
+				}
+				else{
+					return t('STRING_NOT_ACTIVATED_YET');
+				}
+		}
+	}
+	
+	/**
+	 * Get this user's avatar picture as a small thumbnail or an empty string if none set
+	 * 
+	 * @param string $format
+	 * @return string
+	 */
+	public function getAvatar($format){
+		$avatar = $this->get('avatar');
+		
+		if(!$avatar){
+			// No avatar loaded means an empty string.
+			return '';
+		}
+		$f = \Core\Filestore\Factory::File($avatar);
+		
+		switch($format){
+			case View::CTYPE_HTML:
+				return '<img src="' . $f->getPreviewURL('50x60') . '"/>';
+				break;
+			default:
+				return $f->getPreviewURL('50x60');
+		}
+	}
+	
+	public function render($key){
+		if($key == 'registration_invitee'){
+			$invitee = $this->get('registration_invitee');
+			if(!$invitee){
+				return '';
+			}
+			else{
+				$u = UserModel::Construct($invitee);
+				return $u->getDisplayName();
+			}
+		}
+		elseif($key == 'created'){
+			return \Core\Date\DateTime::FormatString($this->get('created'), 'SD');
+		}
+		else{
+			return parent::render($key);
 		}
 	}
 	

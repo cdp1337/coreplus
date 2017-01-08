@@ -9,7 +9,12 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 		other: (currentsortdirection == 'up' ? 'down' : 'up')
 	};
 	this.$table = $table;
-	this.$tableheads = this.$table.find('th[data-sortkey]');
+	// DIV or TABLE, needed to support new CSS3 listing-tables.
+	this.type = $table[0].nodeName;
+	this.$tableheads = 
+		this.type == 'DIV' ?
+		this.$table.find('.listing-table-cell-header') :
+		this.$table.find('th[data-sortkey]');
 	this.storagename = 'core-listingtable-columns-' + $table.data('table-name');
 	this.mode = 'view';
 
@@ -17,16 +22,25 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 		var current = JSON.parse(localStorage.getItem(self.storagename)), i;
 
 		if(!current){
-			// The stylesheet takes care of default values.
+			// The stylesheet takes care of default values,
+			// just clear out any existing styles attached to the columns,
+			// (useful for when the user resets the views on columns).
+			self.$table.find('.column-visibility-hidden').removeClass('column-visibility-hidden');
+			self.$table.find('.column-visibility-visible').removeClass('column-visibility-visible');
+			
 			return;
 		}
 
 		for(i in current){
 			if(current[i]){
-				$('.' + i).show();
+				self.$table.find('.' + i)
+					.removeClass('column-visibility-hidden')
+					.addClass('column-visibility-visible');
 			}
 			else{
-				$('.' + i).hide();
+				self.$table.find('.' + i)
+					.addClass('column-visibility-hidden')
+					.removeClass('column-visibility-visible');
 			}
 		}
 	};
@@ -34,27 +48,36 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 
 
 	// I can now copy these classes to every td in the table.
-	self.$table.find('tr').each(function(){
-		row++;
-		if(row == 0){
-			// Copy every <th> class in this row to the colidx.
-			$(this).children('th').each(function(){
-				colidx.push($(this).attr('class'));
-			});
-		}
-		else{
-			col = 0;
-			$(this).children('td').each(function(){
-				$(this).attr('class', colidx[col]);
-				col++;
-			});
-		}
-	});
+	// This is not required with Core 6.2 listing tables,
+	// as they are dynamically generated and will have the classes attached already!
+	if(this.type == 'TABLE'){
+		self.$table.find('tr').each(function(){
+			row++;
+			if(row == 0){
+				// Copy every <th> class in this row to the colidx.
+				$(this).children('th').each(function(){
+					colidx.push($(this).attr('class'));
+				});
+			}
+			else{
+				col = 0;
+				$(this).children('td').each(function(){
+					$(this).attr('class', colidx[col]);
+					col++;
+				});
+			}
+		});
+	}
 
 	self.$tableheads.each(function(){
 		var $th = $(this),
 			sortkey = $th.data('sortkey'),
 			icons;
+			
+		if(!sortkey){
+			// Skip columns that do not have a sort key.
+			return true;
+		}
 		
 		icons = '<div class="sort-icons">';
 		
@@ -84,28 +107,8 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 		});
 	});
 
-	/*self.$tableheads.click(function(){
-		var $th = $(this), newkey, newdir, req,
-			sortkey = $th.data('sortkey');
-
-		if(sortkey == self.currentsort.key){
-			// Set the dir
-			newkey = self.currentsort.key;
-
-			if(self.currentsort.dir == 'up') newdir = 'down';
-			else newdir = 'up';
-		}
-		else{
-			newkey = sortkey;
-			newdir = self.currentsort.dir;
-		}
-
-		req = 'sortkey=' + newkey + '&sortdir=' + newdir;
-
-		window.location.search = '?' + req;
-	});*/
-
-	self.$table.find('.control-column-selection').click(function(){
+	//console.log(self.$tableheads);
+	self.$tableheads.find('.control-column-selection').click(function(){
 		var html = '', current, $dialog;
 
 		// What values are currently set as display/hidden?
@@ -119,7 +122,7 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 			current = {};
 		}
 
-		self.$table.find('th').each(function(){
+		self.$tableheads.each(function(){
 			var $th = $(this),
 				vk = $th.data('viewkey');
 
@@ -140,6 +143,13 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 			}
 			html += '>&nbsp;' + $th.data('viewtitle') + '</label>';
 		});
+		
+		// Tack on a 'reset view' button so that the end user can reset the view back to defaults if they royally jack something up.
+		// Since we're here, might as well add an 'OK' button too!
+		html += '<div class="button-group">' +
+			'<a href="#" class="button button-apply"><i class="icon icon-check"></i> <span>OK</span></a>' +
+			'<a href="#" class="button button-reset"><i class="icon icon-history"></i> <span>Reset</span></a>' +
+			'</div>';
 
 		$dialog = $('<div class="listing-table-column-select">' + html + '</div>');
 
@@ -148,7 +158,10 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 			title: 'Select Columns',
 			width: '75%',
 			resizable: false
-		}).find('input').change(function(){
+		});
+		
+		// Attach the event for updating the checkbox items.
+		$dialog.find('input').change(function(){
 			var n = $(this).attr('name');
 			// INVERSE!
 			current[n] = !current[n];
@@ -157,6 +170,33 @@ Core.ListingTable = function($table, currentsortkey, currentsortdirection){
 			localStorage.setItem(self.storagename, JSON.stringify(current));
 
 			self.refreshColumns();
+		});
+		
+		// Attach the event for resetting the view.
+		$dialog.find('a.button-reset').click(function(){
+			current = [];
+			
+			// Clear the local storage.
+			localStorage.removeItem(self.storagename);
+			
+			self.refreshColumns();
+			
+			// Close the dialog window because I'm lazy and don't feel like going back and 
+			// resyncing the labels with the display logic.
+			// Otherwise, the user resets the views and the table updates, but the labels to control what's displayed doesn't update.
+			$dialog.dialog('close');
+			
+			// Prevent jumping.
+			return false;
+		});
+		
+		// Attach the event for accepting the view. ;)
+		$dialog.find('a.button-apply').click(function(){
+			// Just close!  The view updates in real time, so there's nothing to actually do here.
+			$dialog.dialog('close');
+			
+			// Prevent jumping.
+			return false;
 		});
 
 		return false;

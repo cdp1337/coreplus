@@ -199,6 +199,11 @@ function smarty_function_img($params, $smarty){
 			$attributes['src'] = '#';
 			$attributes['title'] = 'No preview files available!';
 		}
+		elseif($inline && $f->getExtension() == 'svg'){
+			// SVG files actually get rendered inline, as in the SVG code gets embedded.
+			$markup = $f->getContents();
+			return $assign ? $smarty->assign($assign, $markup) : $markup;
+		}
 		elseif($inline && $f->getFilesize() < 1048576*4){
 			// Overwrite the src attribute with the base64 contents.
 			// This can only happen after the preview file exists!

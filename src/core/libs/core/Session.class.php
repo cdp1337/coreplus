@@ -217,6 +217,24 @@ class Session implements \SessionHandlerInterface {
 			$session->write(session_id(), serialize($_SESSION));
 		}*/
 	}
+	
+	/**
+	 * Handler to be called after a page has been loaded.
+	 * 
+	 * This ensures that the user's session doesn't terminate while they're browsing around.
+	 * (otherwise, there's nothing on the session data that changes, so the updated timestamp never changes).
+	 */
+	public static function ClosePage(){
+		if(self::$Instance !== null){
+			// Perform this update at a lower level because the Model system will refuse to proceed
+			// if there were no actual data changes.
+			Datamodel\Dataset::Init()
+				->update('updated', Date\DateTime::NowGMT())
+				->table('session')
+				->where('session_id = ' . session_id())
+				->execute();
+		}
+	}
 
 	/**
 	 * Cleanup any expired sessions from the database.

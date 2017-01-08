@@ -62,7 +62,8 @@ class SystemLogModel extends Model {
 			'type' => Model::ATT_TYPE_UUID,
 		),
 		'datetime' => array(
-			'type' => Model::ATT_TYPE_CREATED
+			'type' => Model::ATT_TYPE_CREATED,
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::DateStringSDT',
 		),
 		'type' => array(
 			'type' => Model::ATT_TYPE_ENUM,
@@ -76,20 +77,24 @@ class SystemLogModel extends Model {
 		'user_id'    => array(
 			'type'    => Model::ATT_TYPE_UUID_FK,
 			'default' => 0,
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::User',
 		),
 		'ip_addr'    => array(
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 39,
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::IPAddress',
 		),
 		'useragent' => array(
 			'type' => Model::ATT_TYPE_STRING,
-			'maxlength' => 128
+			'maxlength' => 128,
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::UserAgent',
 		),
 		'affected_user_id'    => array(
 			'type'    => Model::ATT_TYPE_UUID_FK,
 			'default' => null,
 			'null'    => true,
-			'comment' => 'If this action potentially affects a user, list the ID here.'
+			'comment' => 'If this action potentially affects a user, list the ID here.',
+			'formatter' => '\\Core\\Formatter\\GeneralFormatter::User',
 		),
 		'code' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -151,6 +156,42 @@ class SystemLogModel extends Model {
 		}
 		return $this->_ua;
 	}
+	
+	public function render($key){
+		if($key == 'type'){
+			switch($this->get('type')){
+				case 'info':
+					if($this->get('icon')){
+						$i = '<i class="icon icon-' . $this->get('icon') . '"></i>';
+					}
+					else{
+						$i = '';
+					}
+					break;
+				case 'error':
+					$i = '<i class="icon icon-exclamation" title="Error Entry"></i>';
+					break;
+				case 'security':
+					$i = '<i class="icon icon-exclamation-triangle" title="Security Entry"></i>';
+					break;
+				default:
+					$i = '[ ' . $this->get('type') . ' ]';
+			}
+			
+			return $i . ' ' . $this->get('code');
+		}
+		elseif($key == 'datetime'){
+			return \Core\Date\DateTime::FormatString($this->get('datetime'), 'SDT');
+		}
+		elseif($key == 'ip_addr'){
+			$ua = new \Core\UserAgent($this->get('useragent'));
+			$ip = new geocode\IPLookup($this->get('ip_addr'));
+			return $ua->getAsHTML() . ' ' . $ip->getAsHTML(true) . ' ' . $this->get('ip_addr');
+		}
+		else{
+			return parent::render($key);
+		}
+	}
 
 	public function save($defer = false){
 
@@ -183,6 +224,47 @@ class SystemLogModel extends Model {
 			Core\Utilities\Logger\append_to($this->get('type'), $this->get('message'), $this->get('code'));
 		}
 
+	}
+	
+	public function getControlLinks() {
+		$r = [];
+		$id = $this->get('id');
+		$ip = $this->get('ip_addr');
+		
+		if(\Core\user()->checkAccess('g:admin')){
+			$r[] = [
+				'title' => 'View Details',
+				'link' => '/admin/log/details/' . $id,
+				'class' => 'ajax-link',
+				'icon' => 'view',
+			];
+			
+			$r[] = [
+				'title' => 'Ban IP',
+				'link' => '/security/blacklistip/add?ip_addr=' . $ip . '/32',
+				'icon' => 'thumbs-down',
+			];
+		}
+		
+		if(\Core\user()->checkAccess('p:/user/activity/view')){
+			$r[] = [
+				'title' => 'View Activity by IP',
+				'link' => '/useractivity/details?filter[ip_addr]=' . $ip,
+				'icon' => 'list-alt',
+			];
+			
+			if($this->get('user_id')){
+				$r[] = [
+					'title' => '/useractivity/details?filter[userid]=' . $this->get('user_id'),
+					'title' => 'View Activity by User',
+					'icon' => 'user',
+				];
+			}
+		}
+		
+		$r = array_merge($r, parent::getControlLinks());
+		
+		return $r;
 	}
 
 

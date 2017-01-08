@@ -150,6 +150,7 @@ class Widget_2_1 {
 			// Allow a raw Model to be sent in as the control subject.
 			// This is a shortcut for Controllers much like the {controls} smarty function has.
 			$this->controls = ViewControls::DispatchModel($title);
+			$this->controls->setProxyForce(true);
 			$this->controls->setProxyText('Widget Controls');
 			return;
 		}

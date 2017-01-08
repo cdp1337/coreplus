@@ -13,36 +13,29 @@
 <div id="user-login-placeholder-for-javascript-because-otherpages-may-have-an-error"></div>
 
 <div id="user-login-center" class="user-login-center">
-	{if sizeof($drivers) > 1}
-		{assign var='column_count' value='col-2'}
-		{assign var='form_orientation' value='vertical'}
-	{else}
-		{assign var='column_count' value='col-1'}
-		{assign var='form_orientation' value='horizontal'}
-	{/if}
-
-	<fieldset id="user-login-existing" class="user-login-existing clearfix {$column_count}">
-		<div class="user-login-section-heading clearfix">
-			{t 'MESSAGE_LOG_IN_TO_EXISTING_ACCOUNT'}
-		</div>
-
-		{**
-		 * An alternative to this if you so please is to do:
-		 *
-		 * {$drivers.datastore->renderLogin()}
-		 * <some-markup/>
-		 * {$drivers.facebook->renderLogin()}
-		 *
-		 * The default will simply render every authentication driver enabled on the system.
+	{assign var='jqueryAvailable' value=Core::IsLibraryAvailable('jquery-full')}
+	
+	{if $jqueryAvailable}
+		{*
+		 * Only display the UI tabs if jQuery is available.
 		 *}
-
-		{foreach $drivers as $name => $d}
-			<div class="user-login-include user-authdriver-{$name}">
-				<div class="user-authdriver-title">{$d->getAuthTitle()}</div>
-				{$d->renderLogin(['orientation' => {$form_orientation}])}
-			</div>
-		{/foreach}
-	</fieldset>
+		<ul>
+			{foreach $drivers as $name => $d}
+				<li>
+					<a href="#login-auth-{$name}">
+						<i class="icon icon-{$d->getAuthIcon()}"></i>
+						<span>{$d->getAuthTitle()}</span>
+					</a>
+				</li>
+			{/foreach}
+		</ul>
+	{/if}
+	
+	{foreach $drivers as $name => $d}
+		<div class="user-login-include user-authdriver-{$name}" id="login-auth-{$name}">
+			{$d->renderLogin()}
+		</div>
+	{/foreach}
 
 	{if $allowregister}
 		<fieldset id="user-login-register" class="user-login-register">
@@ -76,9 +69,12 @@
 	{/if}
 </div>
 
-{if Core::IsLibraryAvailable('JQuery')}
-	{script library="jquery"}{/script}
+	
+{if $jqueryAvailable}
 	{script library="jqueryui"}{/script}
-	{script library="jquery.form"}{/script}
-	{script src="assets/js/user/login.js"}{/script}
+	{script location="foot"}<script>
+		$(function() {
+			$('#user-login-center').tabs();
+		});
+	</script>{/script}
 {/if}

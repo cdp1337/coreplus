@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<package packagerversion="1.9.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
+<package packagerversion="1.10.1" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0 http://pear.php.net/dtd/tasks-1.0.xsd http://pear.php.net/dtd/package-2.0 http://pear.php.net/dtd/package-2.0.xsd">
  <name>SQL_Parser</name>
  <channel>pear.php.net</channel>
  <summary>An SQL parser</summary>
  <description>This class is primarily an SQL parser, written with influences from a variety of sources (mSQL, CPAN&apos;s SQL-Statement, mySQL). It also includes a tokenizer (lexer) class and a reimplementation of the ctype extension in PHP.</description>
+ <lead>
+  <name>Alan Knowles</name>
+  <user>alan_k</user>
+  <email>alan_k@php.net</email>
+  <active>yes</active>
+ </lead>
  <lead>
   <name>Sebastian Mendel</name>
   <user>cybot</user>
@@ -22,10 +28,10 @@
   <email>erich.enke@gmail.com</email>
   <active>no</active>
  </lead>
- <date>2010-10-06</date>
- <time>21:44:47</time>
+ <date>2016-04-07</date>
+ <time>01:47:34</time>
  <version>
-  <release>0.6.0</release>
+  <release>0.7.0</release>
   <api>0.6.0</api>
  </version>
  <stability>
@@ -34,47 +40,24 @@
  </stability>
  <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
  <notes>
-QA release
-    * Fixed bug in parsing default function arguments
-    * Added more test cases; tests no longer rely on Var_Dump for now
-    * Dialects can pass parser and lexer options to change behavior
-      beyond just keywords.
-    * Added lexer option to accept idents starting with a number
-Bug #4034 	Assignment of field = field not recognized 	busterb
-Bug #4035 	Update statements should recognize FROM clause 	cybot
-Bug #4036 	Implement Parser with Bridge design pattern 	 
-Bug #4054 	Parsing create: int(11) not recognized as type 	epte
-Bug #4058 	[Patch] Functions added to Dialect_MySQL 	busterb
-Bug #4059 	parseFieldList (or Options?) doesn&apos;t handle auto_increment 	 
-Bug #4066 	Functions are keywords 	busterb
-Bug #4067 	Dialect_Mysql.php needs tinyint in $types 	busterb
-Bug #4081 	[PATCH] Added tinyint to synonyms 	epte
-Bug #4082 	MySQL: PRIMARY KEY(id) line breaks 	epte
-Bug #4085 	Lexer should recognize identifier delimiters 	cybot
-Bug #4086 	(UN)LOCK TABLES statements not recognized (MySQL) 	cybot
-Bug #4087 	Comma not recognized after PRIMARY KEY statement 	cybot
-Bug #4088 	c-style block comments not handled 	cybot
-Bug #5755 	Cannot handle select in form of tablename.* 	epte
-Bug #6438 	Column list with &apos;*&apos; cannot have additional columns 	epte
-Bug #6439 	Improper handling of absolute column names eg: table.column 	epte
-Bug #11462 	generate_testcases.php does not correct split queries 	cybot
-Bug #11463 	int and string is a valid token after SELECT 	cybot
-Bug #11464 	FROM is not required for SELECT 	cybot
-Bug #11472 	comment handling for ANSI and MySQL 	cybot
-Bug #11544 	Arithmetic Operations in (), problem with update and in where clause 	cybot
-Bug #11679 	Wrong parsed select statement. 	cybot
-Bug #13403 	Parser does not accept arbitrary expressions in JOIN clauses 	cybot
-Bug #13404 	NOW() causes infinite loop 	cybot
-Bug #14744 	keyword parse problem 	doconnor
+Minor Feature / bug fixes release
+ * basic create table, alter table support 
+ 
+ fix #18647 - extral lexemes for mysql dialect
+ fix #18298 - document the options for dialect a bit better
+ fix #18559 - update parsing (bug got lost somewhere)
+ fix #18648 - index table options support (thomas ernest1)
+ fix #16129 - support columns without column names
+ fix #4089 - IF EXISTS support for drop table
  </notes>
  <contents>
   <dir baseinstalldir="/" name="/">
-   <file baseinstalldir="/" md5sum="e87cf4791b0ac772d4291f63b1d5b423" name="SQL/Parser.php" role="php" />
-   <file baseinstalldir="/" md5sum="d7110a26dbf1283427d11e717f6235f2" name="SQL/Parser/Compiler.php" role="php" />
+   <file baseinstalldir="/" md5sum="d3da55c3cce7fc25fc11b3f4e61d19d6" name="SQL/Parser.php" role="php" />
+   <file baseinstalldir="/" md5sum="66bdaf8a5afe54ed936839df1f4ea974" name="SQL/Parser/Compiler.php" role="php" />
    <file baseinstalldir="/" md5sum="d91da5e3391c188d7c1c817be17f1202" name="SQL/Parser/ctype.php" role="php" />
-   <file baseinstalldir="/" md5sum="29dac837bc279d069fa86db2b2620b0a" name="SQL/Parser/Lexer.php" role="php" />
+   <file baseinstalldir="/" md5sum="8ef85abab03d5a550529d897a2c9579c" name="SQL/Parser/Lexer.php" role="php" />
    <file baseinstalldir="/" md5sum="5717a0d0946d0c73b428329e3ba87644" name="SQL/Parser/Dialect/ANSI.php" role="php" />
-   <file baseinstalldir="/" md5sum="3f4ca0087fc18510ed25ae1f6bfe8642" name="SQL/Parser/Dialect/MySQL.php" role="php" />
+   <file baseinstalldir="/" md5sum="a014e9bc351a329a713103d38af8121a" name="SQL/Parser/Dialect/MySQL.php" role="php" />
    <file baseinstalldir="/" md5sum="3cf446e3ad8fad2cddaf8d658ed37fa1" name="TODO" role="data" />
   </dir>
  </contents>
@@ -261,6 +244,29 @@ Bug #11679 	Wrong parsed select statement. 	cybot
 Bug #13403 	Parser does not accept arbitrary expressions in JOIN clauses 	cybot
 Bug #13404 	NOW() causes infinite loop 	cybot
 Bug #14744 	keyword parse problem 	doconnor
+   </notes>
+  </release>
+  <release>
+   <date>2016-04-07</date>
+   <version>
+    <release>0.7.0</release>
+    <api>0.6.0</api>
+   </version>
+   <stability>
+    <release>devel</release>
+    <api>devel</api>
+   </stability>
+   <license uri="http://www.gnu.org/copyleft/lesser.html">LGPL</license>
+   <notes>
+Minor Feature / bug fixes release
+ * basic create table, alter table support 
+ 
+ fix #18647 - extral lexemes for mysql dialect
+ fix #18298 - document the options for dialect a bit better
+ fix #18559 - update parsing (bug got lost somewhere)
+ fix #18648 - index table options support (thomas ernest1)
+ fix #16129 - support columns without column names
+ fix #4089 - IF EXISTS support for drop table
    </notes>
   </release>
  </changelog>

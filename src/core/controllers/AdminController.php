@@ -564,14 +564,24 @@ class AdminController extends Controller_2_1 {
 				'link' => FilterForm::LINK_TYPE_STARTSWITH,
 			]
 		);
+		
+		$listings->addFilter(
+			'text',
+			[
+				'title' => 'Message Contains',
+				'name' => 'message',
+				'link' => FilterForm::LINK_TYPE_CONTAINS,
+			]
+		);
 
-		$listings->addColumn('Type', 'type');
-		$listings->addColumn('Date/Time', 'datetime');
-		$listings->addColumn('IP Address', 'ip_addr');
-		$listings->addColumn('Message', 'message');
+		$listings->addColumn(['key' => 'message', 'group' => 'primary']);
+		$listings->addColumn(['key' => 'type', 'group' => 'secondary']);
+		$listings->addColumn(['key' => 'datetime', 'group' => 'secondary']);
+		$listings->addColumn(['key' => 'ip_addr', 'group' => 'secondary']);
+		$listings->addColumn(['key' => 'useragent', 'visible' => false]);
 		//$listings->addColumn('Session', 'session_id');
-		$listings->addColumn('User', 'user_id', false);
-		$listings->addColumn('Affected User', 'affected_user_id', false);
+		$listings->addColumn(['key' => 'user_id', 'visible' => false]);
+		$listings->addColumn(['key' => 'affected_user_id', 'visible' => false]);
 
 		$listings->loadFiltersFromRequest($request);
 
@@ -748,7 +758,7 @@ class AdminController extends Controller_2_1 {
 
 		$table = new Core\ListingTable\Table();
 
-		$table->setLimit(20);
+		//$table->setLimit(20);
 
 		// Set the model that this table will be pulling data from.
 		$table->setModelName('PageModel');
@@ -803,26 +813,89 @@ class AdminController extends Controller_2_1 {
 
 		// Add in all the columns for this listing table.
 		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
-			$table->addColumn('Site', 'site', false);
+			$table->addColumn(
+				[
+					'title' => 'Site',
+					'renderkey' => 'site',
+					'visible' => false,
+				]
+			);
 			$ms = true;
 		}
 		else{
 			$ms = false;
 		}
-		$table->addColumn(t('STRING_TITLE'), 'title');
-		$table->addColumn(t('STRING_URL'), 'rewriteurl');
-		$table->addColumn(t('STRING_VIEWS'), 'pageviews', false);
-		$table->addColumn(t('STRING_SCORE'), 'popularity');
-		$table->addColumn(t('STRING_CACHE'), 'expires');
-		$table->addColumn(t('STRING_CREATED'), 'created', false);
-		$table->addColumn(t('STRING_LAST_UPDATED'), 'updated', false);
-		$table->addColumn(t('STRING_STATUS'));
-		$table->addColumn(t('STRING_PUBLISHED'), 'published');
-		$table->addColumn(t('STRING_EXPIRES'), 'published_expires');
-		$table->addColumn(t('STRING_SEO_TITLE'));
-		$table->addColumn(t('STRING_SEO_DESCRIPTION'), null, false);
-		$table->addColumn(t('STRING_ACCESS'), 'access');
-		$table->addColumn(t('STRING_COMPONENT'), 'component', false);
+		$table->addColumn([
+			'title' => 't:STRING_TITLE',
+			'renderkey' => 'title',
+			'sortkey' => 'title',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_URL',
+			'renderkey' => 'rewriteurl',
+			'sortkey' => 'rewriteurl',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_VIEWS',
+			'renderkey' => 'pageviews',
+			'sortkey' => 'pageviews',
+			'visible' => false,
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_SCORE',
+			'renderkey' => 'popularity',
+			'sortkey' => 'popularity',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_CACHE',
+			'renderkey' => 'expires',
+			'sortkey' => 'expires',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_CREATED',
+			'renderkey' => 'created',
+			'sortkey' => 'created',
+			'visible' => false,
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_LAST_UPDATED',
+			'renderkey' => 'updated',
+			'sortkey' => 'updated',
+			'visible' => false,
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_STATUS',
+			'renderkey' => 'status',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_PUBLISHED',
+			'renderkey' => 'published',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_EXPIRES',
+			'renderkey' => 'published_expires',
+			'sortkey' => 'published_expires',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_SEO_TITLE',
+			'renderkey' => 'seotitle',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_SEO_DESCRIPTION',
+			'renderkey' => 'teaser',
+			'visible' => false,
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_ACCESS',
+			'renderkey' => 'access',
+		]);
+		$table->addColumn([
+			'title' => 't:STRING_COMPONENT',
+			'renderkey' => 'component',
+			'sortkey' => 'component',
+			'visible' => false,
+		]);
+		
 
 		// This page will also feature a quick-edit feature.
 		//$table->setEditFormCaller('AdminController::PagesSave');

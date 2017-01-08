@@ -65,6 +65,9 @@ class Schema {
 	
 	/** @var array Flat array of aliases and their destination key */
 	public $aliases = [];
+	
+	/** @var array Any meta fields that may be defined. */
+	public $metas = [];
 
 	/**
 	 * Get a column by order (int) or name

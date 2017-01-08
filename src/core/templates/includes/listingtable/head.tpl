@@ -9,7 +9,7 @@
 		{$edit_form->render('body')}
 	{/if}
 
-	<table {$table_attributes}>
+	<table {$attributes}>
 		<tr>
 			{foreach $columns as $c}
 				{** @var ListingTable/Column $c *}

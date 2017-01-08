@@ -116,7 +116,7 @@ class mysqli_Schema extends Schema{
 				$schema['type'] = \Model::ATT_TYPE_ISO_8601_DATETIME;
 				break;
 			case 'timestamp':
-				$schema['type'] = \Model::ATT_TYPE_MYSQL_TIMESTAMP;
+				$schema['type'] = \Model::ATT_TYPE_ISO_8601_DATETIME;
 				break;
 			case 'date':
 				$schema['type'] = \Model::ATT_TYPE_ISO_8601_DATE;

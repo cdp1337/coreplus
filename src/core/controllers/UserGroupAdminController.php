@@ -259,25 +259,113 @@ class UserGroupAdminController extends Controller_2_1{
 	 * @param UserGroupModel $model
 	 */
 	private function _setPermissionsToForm(Form $form, UserGroupModel $model){
-		// I want to split up the permission set into a set of groups, based on the first key.
-		$groups = [];
+		// Everything gets added to the 'Everything' group.
+		$everything = new FormTabsGroup([
+			'title' => t('STRING_PERMISSIONS'),
+		]);
+		
+		$flatList = [];
+		$elementList = [];
+		
+		// Flatten the permissions to a simple array
+		$permissions = array_keys(Core::GetPermissions());
+		
+		foreach($permissions as $perm){
+			$exploded = explode('/', substr($perm, 1));
+			
+			// Build the name for this permission group.
+			$last = array_pop($exploded);
+			
+			// The name will be everything sans the last element.
+			$title = 't:STRING_PERMISSION_' . strtoupper(implode('_', $exploded));
+			$id = 'permission-' . implode('-', $exploded);
+
+			if(!isset($elementList[$id])){
+				$elementList[$id] = new FormCheckboxesInput([
+					'title' => $title,
+					'id' => $id,
+					'name' => 'permissions',
+					'options' => [],
+					'value' => $model->getPermissions(),
+				]);
+
+				$everything->addElement($elementList[$id]);
+			}
+
+			// Append the title and key
+			$title .= '_' . strtoupper($last);
+
+			$opts = $elementList[$id]->get('options');
+			$opts[$perm] = $title;
+			$elementList[$id]->set('options', $opts);
+		}
+		
+		$form->addElement($everything);
+		return;
+		
 		foreach(Core::GetPermissions() as $key => $data){
+			$last = null;
 			if($key{0} == '/'){
-				$group = substr($key, 1, strpos($key, '/', 1)-1);
+				// Create nested groups for this permission.
+				// This makes management easier as they'll be grouped by the parent permission.
+				// eg: /blah/foo/thing will be grouped under Blah -> Foo
+				$exploded = explode('/', substr($key, 1));
+				$len = sizeof($exploded);
+				$title = 't:STRING_PERMISSION';
+				$keyname = '';
+				for($i = 0; $i+2<$len; $i++){
+					
+					// Shortcut to this element
+					$k = $exploded[$i];
+					
+					// Append the title and key
+					$title .= '_' . strtoupper($k);
+					$keyname .= '/' . $k;
+					
+					if(!isset($everything[$keyname])){
+						$everything[$keyname] = new FormGroup([
+							'title' => $title,
+						]);
+					}
+					
+					if($last === null){
+						$grouped[] = $everything[$keyname];
+					}
+					else{
+						$last->addElement($everything[$keyname]);
+					}
+					
+					$last =& $everything[$keyname];
+				}
+				
+				var_dump($last);
+				
+				
+				/*// Add this element to the last group
+				$k = $e[ $l-1 ];
+				$g['elements'][ $key ] = $t . '_' . strtoupper($k);
+				
+				$group = substr($key, 1, strpos($key, '/', 1)-1);*/
 			}
 			else{
 				$group = 'general';
 			}
+			
+			
+			
+			
 
-			if(!isset($groups[$group])){
+			/*if(!isset($groups[$group])){
 				$groups[$group] = [];
 			}
 
 			// NEW i18n support for config options!
 			$i18nKey = \Core\i18n\I18NLoader::KeyifyString($key);
 			//$opts['description'] = t('MESSAGE_PERM__' . $i18nKey);
-			$groups[$group][$key] = t('STRING_PERMISSION_' . $i18nKey);
+			$groups[$group][$key] = t('STRING_PERMISSION_' . $i18nKey);*/
 		}
+		
+		var_dump($everything); die();
 
 		// Now, I can add these groups to the form.
 		foreach($groups as $gkey => $options){

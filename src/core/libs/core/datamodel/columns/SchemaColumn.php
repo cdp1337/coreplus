@@ -125,6 +125,9 @@ class SchemaColumn {
 	
 	/** @var array Array of form attributes for this column, generally set from the Model's metadata. */
 	public $formAttributes = [];
+	
+	/** @var array|string|null Formatter method for this column, new as of 201611 */
+	public $formatter = null;
 
 	/**
 	 * Check to see if this column is datastore identical to another column.
@@ -369,6 +372,11 @@ class SchemaColumn {
 		
 		if(isset($schema['autoinc'])){
 			$this->autoinc = $schema['autoinc'];
+		}
+		
+		if(isset($schema['formatter']) && $schema['formatter'] !== false){
+			// New formatter support as of 201611, Core 6.2
+			$this->formatter = $schema['formatter'];
 		}
 		
 		// Set the value as the default by well... default.

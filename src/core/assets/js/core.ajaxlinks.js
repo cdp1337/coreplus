@@ -18,7 +18,7 @@ $('body').on('click', '.ajax-link', function(){
 		width: width + 'px',
 		// This has been moved up here because it's breaking on the newest version of jQuery when on load. 
 		position: { my: "center top", at: "center top+50", of: window },
-		close: function(){ $(this).remove(); }
+		close: function(){ $window.remove(); }
 	});
 
 	$window.load(

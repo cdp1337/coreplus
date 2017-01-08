@@ -70,7 +70,10 @@ class SchemaColumn_boolean extends SchemaColumn {
 	public function getFormElementAttributes(){
 		$na = parent::getFormElementAttributes();
 
-		$na['options'] = ['yes' => t('STRING_YES'), 'no' => t('STRING_NO')];
+		// Allow options to be set automatically if not otherwise set by the Model.
+		if(!isset($na['options'])){
+			$na['options'] = ['yes' => 't:STRING_YES', 'no' => 't:STRING_NO'];
+		}
 		
 		// The application is expecting true/false, but those don't translate too well to html :p
 		if($this->valueTranslated === null){

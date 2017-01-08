@@ -25,7 +25,7 @@
  * @author    John Griffin <jgriffin316@netscape.net>
  * @copyright 2004, 2005 John Griffin
  * @license   http://www.gnu.org/licenses/lgpl.html GNU Lesser GPL 3
- * @version   CVS: $Id: MySQL.php 263413 2008-07-24 14:49:31Z cybot $
+ * @version   CVS: $Id: MySQL.php 316130 2011-09-05 07:55:26Z alan_k $
  * @link      http://pear.php.net/package/SQL_Parser
  * @since     File available since Release 0.5.0
  */
@@ -42,7 +42,7 @@ $dialect = array(
         'delete',
         'insert',
         'update',
-		'rename',
+        'rename',
         'do',
         'handler',
         'load',
@@ -74,7 +74,7 @@ $dialect = array(
         '*',
         '/',
         '^',
-    	'=',
+        '=',
         '<>',
         '!=',
         '<',
@@ -92,7 +92,7 @@ $dialect = array(
         'or',
     ),
 
-    'types' => array(
+    'types' => array( // add here - you probably need to ad to synonyms
         'character',
         'char',
         'varchar',
@@ -105,6 +105,8 @@ $dialect = array(
         'int',
         'tinyint',
         'smallint',
+        'mediumint',
+        'bigint',
         'float',
         'real',
         'double',
@@ -118,6 +120,7 @@ $dialect = array(
         'set',
         'enum',
         'text',
+        'longtext'
     ),
 
     'conjunctions' => array(
@@ -337,6 +340,7 @@ $dialect = array(
         'and',
         'as',
         'asc',
+        'avg_row_length',
         'asensitive',
         'auto_increment',
         'bdb',
@@ -354,6 +358,7 @@ $dialect = array(
         'change',
         'char',
         'character',
+        'checksum',
         'check',
         'collate',
         'column',
@@ -378,6 +383,7 @@ $dialect = array(
         'decimal',
         'declare',
         'default',
+        'delay_key_write',
         'delayed',
         'delete',
         'desc',
@@ -390,6 +396,7 @@ $dialect = array(
         'drop',
         'else',
         'elseif',
+        'engine',
         'enclosed',
         'escaped',
         'exists',
@@ -422,6 +429,7 @@ $dialect = array(
         'innodb',
         'inout',
         'insensitive',
+        'insert_method',
         'insert',
         'int',
         'integer',
@@ -432,6 +440,7 @@ $dialect = array(
         'iterate',
         'join',
         'key',
+        'key_block_size',
         'keys',
         'kill',
         'leading',
@@ -450,12 +459,14 @@ $dialect = array(
         'loop',
         'low_priority',
         'master_server_id',
+        'max_rows',
         'match',
         'mediumblob',
         'mediumint',
         'mediumtext',
         'middleint',
         'minute_microsecond',
+        'min_rows',
         'minute_second',
         'mod',
         'natural',
@@ -471,6 +482,7 @@ $dialect = array(
         'order',
         'out',
         'outer',
+        'pack_keys',
         'outfile',
         'precision',
         'primary',
@@ -489,6 +501,7 @@ $dialect = array(
         'return',
         'revoke',
         'right',
+        'row_format',
         'rlike',
         'second_microsecond',
         'select',
@@ -518,10 +531,12 @@ $dialect = array(
         'sql_tsi_week',
         'sql_tsi_year',
         'ssl',
+        'storage',
         'starting',
         'straight_join',
         'striped',
         'table',
+        'tablespace',
         'tables',
         'terminated',
         'then',
@@ -560,7 +575,7 @@ $dialect = array(
         'year_month',
         'zerofill',
     ),
-
+    
     'synonyms' => array(
         'decimal' => 'numeric',
         'dec' => 'numeric',
@@ -572,6 +587,8 @@ $dialect = array(
         'integer' => 'int',
         'interval' => 'interval',
         'smallint' => 'smallint',
+        'mediumint' => 'mediumint',
+        'bigint' => 'bigint',
         'tinyint' => 'tinyint',
         'timestamp' => 'timestamp',
         'bool' => 'bool',
@@ -579,6 +596,7 @@ $dialect = array(
         'set' => 'set',
         'enum' => 'enum',
         'text' => 'text',
+        'longtext' => 'longtext',
         'char' => 'char',
         'character' => 'char',
         'varchar' => 'varchar',
@@ -588,17 +606,25 @@ $dialect = array(
         'desc' => 'desc',
         'date' => 'date',
         'time' => 'time',
+        'datetime' => 'datetime'
     ),
 
     'lexeropts' => array(
         'allowIdentFirstDigit' => true,
     ),
-
-    'parseropts' => array(
+    'parseropts' => array(),
+    
+    'drop_options'  => array(
+        'temporary' => 'TEMPORARY',
+    ),
+    
+    'drop_table_options' => array(
+        'if' => array(
+            'exists' => 'IF EXISTS',
+        ),
     ),
 
     'comments' => array(
-	    "--\n"  => '',
         '-- '   => "\n",
         '/*'    => '*/',
         '#'     => "\n",
@@ -609,4 +635,6 @@ $dialect = array(
         '"' => 'string',
         '`' => 'ident',
     ),
+
+
 );

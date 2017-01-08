@@ -1128,37 +1128,120 @@ function version_compare($version1, $version2, $operation = null) {
  * @return string
  */
 function time_duration_format($time_in_seconds, $round = 4){
+	// Parts of the result.
+	$parts = [];
+	
 	if($time_in_seconds < 0.000001){
-		$suffix = 'ns';
-		$time = $time_in_seconds * 1000000000; 
+		$parts[] = [
+			'suffix' => 'ns',
+			'round' => true,
+			'precision' => true,
+			'value' => $time_in_seconds * 1000000000,
+		];
 	}
 	elseif($time_in_seconds < 0.001){
-		$suffix = 'µs';
-		$time = $time_in_seconds * 1000000;
+		$parts[] = [
+			'suffix' => 'µs',
+			'round' => true,
+			'precision' => true,
+			'value' => $time_in_seconds * 1000000,
+		];
 	}
 	elseif($time_in_seconds < 1){
-		$suffix = 'ms';
-		$time = $time_in_seconds * 1000;
+		$parts[] = [
+			'suffix' => 'ms',
+			'round' => true,
+			'precision' => true,
+			'value' => $time_in_seconds * 1000,
+		];
 	}
-	elseif($time_in_seconds < 60){
-		$suffix = 's';
-		$time = $time_in_seconds;
+	elseif($time_in_seconds < SECONDS_ONE_MINUTE){
+		$parts[] = [
+			'suffix' => 's',
+			'round' => true,
+			'precision' => true,
+			'value' => $time_in_seconds,
+		];
 	}
-	elseif($time_in_seconds < 3600){
+	elseif($time_in_seconds < SECONDS_ONE_HOUR){
 		$m = floor($time_in_seconds / 60);
 		$s = round($time_in_seconds - $m*60, 0);
-		return $m . ' m ' . $s . ' s';
+		if($s > 0){
+			$parts[] = [
+				'formatted' => t('STRING_N_MINUTE_ABBREVIATED', $m),
+			];
+			$parts[] = [
+				'formatted' => t('STRING_N_SECOND_ABBREVIATED', $s),
+			];
+		}
+		else{
+			$parts[] = [
+				'formatted' => t('STRING_N_MINUTE', $m),
+			];
+		}
+	}
+	elseif($time_in_seconds < SECONDS_ONE_DAY){
+		$h = floor($time_in_seconds / SECONDS_ONE_HOUR);
+		$m = round(($time_in_seconds - $h * SECONDS_ONE_HOUR)/60, 0);
+		if($m > 0){
+			$parts[] = [
+				'formatted' => t('STRING_N_HOUR_ABBREVIATED', $h),
+			];
+			$parts[] = [
+				'formatted' => t('STRING_N_MINUTE_ABBREVIATED', $m),
+			];
+		}
+		else{
+			$parts[] = [
+				'formatted' => t('STRING_N_HOUR', $h),
+			];
+		}
 	}
 	else{
-		$h = floor($time_in_seconds / 3600);
-		$m = round($time_in_seconds - $h*3600, 0);
-		return $h . ' h ' . $m . ' m';
+		$d = floor($time_in_seconds / SECONDS_ONE_DAY);
+		$h = round(($time_in_seconds - $d*SECONDS_ONE_DAY)/SECONDS_ONE_HOUR, 0);
+		if($h > 0){
+			$parts[] = [
+				'formatted' => t('STRING_N_DAY', $d),
+			];
+			$parts[] = [
+				'formatted' => t('STRING_N_HOUR_ABBREVIATED', $h),
+			];
+		}
+		else{
+			$parts[] = [
+				'formatted' => t('STRING_N_DAY', $d),
+			];
+		}
 	}
-
-	return number_format(round($time, $round), $round)  . ' ' . $suffix;
+	
+	$out = [];
+	foreach($parts as $p){
+		if(isset($p['formatted'])){
+			// Already formatted, nothing to do.
+			$out[] = $p['formatted'];
+		}
+		else{
+			$f = $p['value'];
+			if($p['round']){
+				$f = round($f, $round);
+			}
+			if($p['precision']){
+				$f = number_format($f, $round);
+			}
+			$out[] = $f . ' ' . $p['suffix'];
+		}
+	}
+	
+	return implode(' ', $out);
 }
 
 function is_ip_private($ip){
+	// IPV6 Checks, (rudamentary, but they work for now)
+	if($ip == '::1'){
+		return true;
+	}
+	
 	$privates = [
 		[
 			// Private IPv4 addresses (rfc1918)

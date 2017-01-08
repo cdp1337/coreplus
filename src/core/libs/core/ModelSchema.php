@@ -75,6 +75,9 @@ class ModelSchema extends Core\Datamodel\Schema{
 			if($def['type'] == Model::ATT_TYPE_ALIAS){
 				$this->aliases[$name] = $def['alias'];
 			}
+			elseif($def['type'] == Model::ATT_TYPE_META){
+				$this->metas[$name] = $def;
+			}
 			else{
 				$def['name'] = $name;
 				$column = \Core\Datamodel\Columns\SchemaColumn::FactoryFromSchema($def);

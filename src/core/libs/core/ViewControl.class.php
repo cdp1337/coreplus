@@ -231,14 +231,58 @@ class ViewControls implements Iterator, ArrayAccess {
 			return '';
 		}
 
-		$ulclass = ['controls'];
+		$ulclass = ['controls', 'controls-prerendered'];
 		if($this->hovercontext) $ulclass[] = 'controls-hover';
 
 		$atts = [];
 		$atts['class'] = implode(' ', $ulclass);
 		foreach($this->_data as $k => $v){
+			if($k == 'proxy-text' && strpos($v, 't:') === 0){
+				$v = t(substr($v, 2));
+			}
 			$atts['data-' . $k] = $v;
 		}
+		
+		$useProxy  = (isset($this->_data['proxy-force'])) ? $this->_data['proxy-force'] : 'auto';
+		$proxyText = (isset($this->_data['proxy-text'])) ? $this->_data['proxy-text'] : 't:STRING_CONTROLS';
+		$proxyIcon = (isset($this->_data['proxy-icon'])) ? $this->_data['proxy-icon'] : 'cog';
+		
+		if($useProxy === 'auto'){
+			// Translate this to either true or false based on how many links are provided.
+			// This allows TRUE or FALSE to be set to override any auto behaviour.
+			$useProxy = (sizeof($this->_links) > 3);
+		}
+		$menuClasses = ['controls-prerendered'];
+		$menuClasses[] = $useProxy ? 'controls-have-proxy' : 'controls-no-proxy';
+		
+		$html = '<div class="controls-container"><menu class="' . implode(' ', $menuClasses) . '">';
+		
+		if($useProxy){
+			if(strpos($proxyText, 't:') === 0){
+				// Support I18N on the proxy text!
+				$proxyText = t(substr($proxyText, 2));
+			}
+			
+			if($proxyIcon){
+				$icon = '<i class="icon icon-' . $proxyIcon . '"></i>&nbsp;';
+			}
+			else{
+				$icon = '';
+			}
+			
+			$html .= '<label class="controls-proxy-text">' . $icon . $proxyText . '</label>';
+		}
+		
+		$html .= '<ul>';
+		
+		foreach($this->_links as $l){
+			$html .= $l->fetch();
+		}
+		
+		$html .= '</ul>';
+		$html .= '</menu></div>';
+		
+		return $html;
 
 		$html = '<ul ';
 		foreach($atts as $k => $v){
@@ -250,9 +294,9 @@ class ViewControls implements Iterator, ArrayAccess {
 			$html .= $l->fetch();
 		}
 
-		$html .= '</ul>';
+		
 
-		return $html;
+		
 	}
 
 	/**
@@ -433,17 +477,23 @@ class ViewControl implements ArrayAccess {
 		if($this->link){
 			$html .= $this->_fetchA();
 		}
+		else{
+			$html .= '<a href="#">';
+		}
 
 		if($this->icon){
 			$html .= '<i class="icon icon-' . $this->icon . '"></i> ';
+		}
+		else{
+			$html .= '<i class="icon">&nbsp;</i> ';
 		}
 
 		$html .= '<span>' . $title . '</span>';
 
 		// Close the a tag if it's a link
-		if($this->link){
+		//if($this->link){
 			$html .= '</a>';
-		}
+		//}
 
 		// And close the li tag
 		$html .= '</li>';

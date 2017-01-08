@@ -148,12 +148,15 @@ function smarty_function_widgetarea($params, $smarty) {
 		// Does this widget have controls attached to it?
 		$widget = $wi->getWidget();
 		if($widget->controls instanceof ViewControls && $widget->controls->hasLinks()){
+			$contents = $widget->controls->fetch() . $contents;
+			/*
 			$contents = '<div class="widget-controls-wrapper">' .
 				'<menu id="widget-controls-' . $wi->get('id') . '">' . 
 				$widget->controls->fetch() . 
 				'</menu>' . 
 				'</div>' .
 				$contents;
+			 */
 		}
 
 		$body .= '<div class="widget">' . $contents . '</div>';

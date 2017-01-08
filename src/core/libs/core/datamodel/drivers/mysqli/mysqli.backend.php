@@ -1073,9 +1073,6 @@ class mysqli_backend implements BackendInterface {
 			case \Model::ATT_TYPE_ISO_8601_DATETIME:
 				$type = 'datetime';
 				break;
-			case \Model::ATT_TYPE_MYSQL_TIMESTAMP:
-				$type = 'timestamp';
-				break;
 			case \Model::ATT_TYPE_ISO_8601_DATE:
 				$type = 'date';
 				break;

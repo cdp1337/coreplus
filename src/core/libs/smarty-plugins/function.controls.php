@@ -89,6 +89,11 @@ function smarty_function_controls($params, $smarty){
 
 		$controls = ViewControls::Dispatch($baseurl, $subject);
 	}
+	elseif(isset($params[0]) && is_array($params[0])){
+		// Lazy/simple method of rendering control links; via a raw array.
+		$controls = new ViewControls();
+		$controls->addLinks($params[0]);
+	}
 	else{
 		throw new SmartyException('Unable to get links without a baseurl!  Provided Parameters: ' . print_r($params, true));
 	}

@@ -37,7 +37,7 @@ if (PHP_VERSION < '5.4.0') {
 
 // Right off the bat, I need to decide which mode I'm running in, either as a CLI script or regular.
 // In addition, there are some other things that need to be retrieved early on, such as root path and what not.
-if (isset($_SERVER['SHELL'])) {
+if (isset($_SERVER['SHELL']) || php_sapi_name() == "cli") {
 	$em = 'CLI';
 	// Using __DIR__ is more accurate for files including the core in other directories.
 	$rpdr = realpath(__DIR__ . '/../') . '/';

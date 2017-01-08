@@ -676,6 +676,70 @@ class PageModel extends Model {
 
 		return $m ? $m->get('meta_value_title') : '';
 	}
+	
+	
+	public function render($key){
+		if($key == 'site'){
+			$s = $this->get('site');
+			if($s == -1){
+				return 'Global';
+			}
+			elseif($s == 0){
+				return 'Root-Only';
+			}
+			else{
+				return 'Local (' . $s . ')';
+			}
+		}
+		elseif($key == 'title'){
+			$p = $this->getParent();
+			return ($p ? $p->get('title') . ' &raquo;' : '') . $this->get('title');
+		}
+		elseif($key == 'expires'){
+			$e = $this->get('expires');
+			
+			if($e == 0){
+				return t('STRING_DISABLED');
+			}
+			else{
+				return \Core\time_duration_format($e);
+			}
+		}
+		elseif($key == 'created' || $key == 'updated'){
+			return \Core\Date\DateTime::FormatString($this->get($key), 'SD');
+		}
+		elseif($key == 'status'){
+			return $this->getPublishedStatus();
+		}
+		elseif($key == 'published'){
+			$d = $this->get('published');
+			if($d){
+				return \Core\Date\DateTime::FormatString($d, 'SD');
+			}
+			else{
+				return t('STRING_NOT_PUBLISHED');
+			}
+		}
+		elseif($key == 'published_expires'){
+			$d = $this->get('published_expires');
+			if($d){
+				return \Core\Date\DateTime::FormatString($d, 'SD');
+			}
+			else{
+				return t('STRING_NO_EXPIRATION');
+			}
+		}
+		elseif($key == 'seotitle'){
+			return $this->getSEOTitle();
+		}
+		elseif($key == 'teaser'){
+			return $this->getTeaser();
+		}
+		else{
+			return parent::render($key);
+		}
+	}
+	
 
 	public function set($k, $v){
 		if($k == 'site'){

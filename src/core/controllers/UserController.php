@@ -45,58 +45,136 @@ class UserController extends Controller_2_1{
 		if(!\Core\user()->checkAccess('p:/user/users/manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
-
-		$filters = new FilterForm();
-		$filters->setName('user-admin');
-		$filters->haspagination = true;
-		$filters->hassort = true;
-		$filters->setSortkeys(array('email', 'active', 'created','last_login'));
-		$filters->addElement(
+		
+		$enableAvatars = \ConfigHandler::Get('/user/enableavatar');
+		
+		$table = new \Core\ListingTable\Table();
+		$table->setName('user-admin');
+		$table->setModelName('UserModel');
+		
+		// Assign the various filters that are allowed on this table.
+		$table->addFilter(
 			'text',
-			array(
-				'title' => 'Email',
+			[
+				'title' => 't:STRING_EMAIL',
 				'name' => 'email',
 				'link' => FilterForm::LINK_TYPE_CONTAINS
-			)
+			]
 		);
-		$filters->addElement(
+		
+		$table->addFilter(
 			'select',
-			array(
-				'title' => 'Active',
+			[
+				'title' => 't:STRING_ACTIVE',
 				'name' => 'active',
-				'options' => array('' => '-- All --', '0' => 'Inactive', '1' => 'Active'),
+				'options' => ['' => 't:STRING_OPTION_PLACEHOLDER_ALL', '0' => 't:STRING_INACTIVE', '1' => 't:STRING_ACTIVE'],
 				'link' => FilterForm::LINK_TYPE_STANDARD,
-			)
+			]
 		);
-		$filters->addElement(
+		
+		$table->addFilter(
 			'select',
-			array(
-				'title' => 'Ever logged in?',
+			[
+				'title' => 't:STRING_LAST_LOGGED_IN',
 				'name' => 'last_login',
-				'options' => array('' => 'Both', '1' => 'No', '2' => 'Yes'),
-			)
+				// No link here; it's handled manually instead.
+				'options' => [
+					'' => 't:STRING_OPTION_PLACEHOLDER_ALL',
+					'1' => 't:STRING_NEVER',
+					'-1 day' => t('STRING_N_DAY', 1),
+					'-7 days' => t('STRING_N_DAY', 7),
+					'-30 days' => t('STRING_N_DAY', 30),
+					'-60 days' => t('STRING_N_DAY', 60),
+					'-90 days' => t('STRING_N_DAY', 90),
+					'2' => 't:STRING_MORE_THAN_THREE_MONTHS',
+				]
+			]
 		);
-
-		$filters->load($request);
-		$factory = new ModelFactory('UserModel');
-
-		if($filters->get('last_login') == 1) {
-			$factory->where('last_login = 0');
+		
+		
+		if($enableAvatars){
+			$table->addColumn(
+				[
+					'title' => 't:STRING_AVATAR',
+					'renderkey' => 'avatar',
+					'group' => 'primary',
+				]
+			);
 		}
-		elseif($filters->get('last_login') == 2) {
-			$factory->where('last_login > 0');
+		$table->addColumn(
+			[
+				'key' => 'email',
+				'group' => 'primary',
+			]
+		);
+		$table->addColumn(
+			[
+				'key' => 'active',
+				'abbr' => 'A',
+				'group' => 'primary',
+			]
+		);
+		$table->addColumn(
+			[
+				'key' => 'created',
+				'group' => 'secondary',
+			]
+		);
+		$table->addColumn(
+			[
+				'key' => 'registration_source',
+				'group' => 'secondary',
+			]
+		);
+		$table->addColumn(
+			[
+				'key' => 'registration_invitee',
+				'group' => 'secondary',
+			]
+		);
+		$table->addColumn([
+			'key' => 'last_login',
+			'visible' => false,
+		]);
+		$table->addColumn([
+			'key' => 'last_password',
+			'visible' => false,
+		]);
+		
+		$table->loadFiltersFromRequest();
+		
+		if(($filterLastLogin = $table->getFilterValue('last_login')) != ''){
+			
+			if($filterLastLogin == 1){
+				$table->getModelFactory()->where('last_login = 0');
+			}
+			elseif($filterLastLogin == 2){
+				$d = new Core\Date\DateTime();
+				$d->modify('-3 months');
+				$table->getModelFactory()->where('last_login <= ' . $d->format('U'));
+				$table->getModelFactory()->where('last_login > 0');
+			}
+			else{
+				$d = new Core\Date\DateTime();
+				$d->modify($filterLastLogin);
+				$table->getModelFactory()->where('last_login >= ' . $d->format('U'));
+			}
 		}
-
-		$filters->applyToFactory($factory);
-
-		$users = $factory->get();
+		
+		// Allow loading this data as a CSV
+		$table->addControl([
+			'title' => 't:STRING_DOWNLOAD_CSV',
+			'link' => '/user/admin.csv',
+			'icon' => 'download',
+		]);
+		if($request->ctype == View::CTYPE_CSV){
+			$table->render('csv');
+		}
 
 		$view->title = 'User Administration';
-		$view->assign('enableavatar', (\ConfigHandler::Get('/user/enableavatar')));
-		$view->assign('users', $users);
-		$view->assign('filters', $filters);
 		$view->addControl('Add User', '/user/register', 'add');
 		$view->addControl('Import Users', '/user/import', 'upload-alt');
+		$view->assign('listing', $table);
 
 		return null;
 	}

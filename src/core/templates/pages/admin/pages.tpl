@@ -29,7 +29,8 @@
 
 
 
-{$listing->render('head')}
+{$listing->render()}
+{*
 {foreach $listing as $entry}
 	<tr>
 		{if $multisite}
@@ -167,6 +168,7 @@
 
 {/foreach}
 {$listing->render('foot')}
+*}
 
 {css}<style>
 	.links-create-options a.button {

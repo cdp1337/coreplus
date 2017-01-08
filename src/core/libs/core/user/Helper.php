@@ -55,6 +55,14 @@ abstract class Helper{
 		try{
 
 			$processingtime = (round(Profiler::GetDefaultProfiler()->getTime(), 3) * 1000);
+			if(EXEC_MODE == 'WEB'){
+				$type = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET';
+				$ruri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+			}
+			else{
+				$type = 'CLI';
+				$ruri = $_SERVER['argv'][1];
+			}
 
 			$log = new \UserActivityModel();
 			$log->setFromArray(
@@ -65,8 +73,8 @@ abstract class Helper{
 					'ip_addr' => REMOTE_IP,
 					'useragent' => $request->useragent,
 					'referrer' => $request->referrer,
-					'type' => $_SERVER['REQUEST_METHOD'],
-					'request' => $_SERVER['REQUEST_URI'],
+					'type' => $type,
+					'request' => $ruri,
 					'baseurl' => $request->getBaseURL(),
 					'status' => $view->error,
 					'db_reads' => DatamodelProfiler::GetDefaultProfiler()->readCount(),
