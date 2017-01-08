@@ -73,14 +73,13 @@ class ContentModel extends Model{
 		parent::__construct($key);
 	}
 	
-	public function get($k) {
-		$k = strtolower($k);
+	public function get($k, $format = null) {
 		switch($k){
 			case 'baseurl':
 				return '/content/view/' . $this->_columns['id']->valueTranslated;
 				break;
 			default:
-				return parent::get($k);
+				return parent::get($k, $format);
 		}
 	}
 }
