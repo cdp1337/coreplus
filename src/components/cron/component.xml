@@ -16,9 +16,10 @@
 		<hookregister name="/cron/monthly" description="Monthly hook called from the cron system"/>
 		<hook name="/core/admin/view" call="CronHelper::AdminHook"/>
 		<hook name="/cron/hourly" call="CronLogModel::_CleanupDatabase"/>
+		<hook name="/cron/1-minute" call="CronPersistentJobModel::CheckJobs"/>
 	</hooks>
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.1.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
@@ -51,6 +52,9 @@
 		<file filename="i18n/strings.yml" md5="bcd7fb13bd63b13496794b860b627c50"/>
 		<file filename="models/CronLogModel.php" md5="a009f692f5f5485638c0ed1257f1550c">
 			<class name="CronLogModel"/>
+		</file>
+		<file filename="models/CronPersistentJobModel.php" md5="7e1cd6a7d3d9ad92dfcad38137081bbc">
+			<class name="CronPersistentJobModel"/>
 		</file>
 		<file filename="upgrades/202_remove_cron_entries.php" md5="1126db9bdf0acd988f752740b681b7cc"/>
 		<file filename="widgets/CronWidget.php" md5="ecb11a7ef265b06f100e133796b4530d">

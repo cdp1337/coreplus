@@ -186,6 +186,52 @@ class CronController extends Controller_2_1 {
 			echo 'failed, check the logs';
 		}
 	}
+	
+	/**
+	 * Run a persistent job that's registered on this server.
+	 * 
+	 * This is meant to be executed on the CLI and will abort otherwise!
+	 */
+	public function persistent(){
+		$request = $this->getPageRequest();
+		$view = $this->getView();
+		
+		if(EXEC_MODE != 'CLI'){
+			return View::ERROR_BADREQUEST;
+		}
+		
+		// Run this request!
+		$view->mode = View::MODE_NOOUTPUT;
+		
+		// Pull the script to run based on the inbound data.
+		$jid = $request->getParameter(0);
+		$job = CronPersistentJobModel::Construct($jid);
+		if(!$job->exists()){
+			exit;
+		}
+		
+		if($job->get('server') != SERVER_ID){
+			exit;
+		}
+		
+		try{
+			// Try to call the requested script!
+			call_user_func_array($job->get('call'), $job->get('parameters'));
+		} catch (Exception $ex) {
+			$job = new CronPersistentJobModel($jid);
+			$job->set('state', 'stopped');
+			$job->save();
+			
+			\Core\ErrorManagement\exception_handler($ex);
+			exit;
+		}
+		
+		// After it's done, mark it as complete!
+		// Since this may be sometime since it's started, create a new one.
+		$job = new CronPersistentJobModel($jid);
+		$job->set('state', 'stopped');
+		$job->save();
+	}
 
 
 	/**
