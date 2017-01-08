@@ -30,47 +30,6 @@ function smarty_function_geoiplookup($params, $template){
 
 	$ip = $params[0];
 	$getflag = isset($params['flag']) ? $params['flag'] : true;
-
-	if(\Core\is_ip_private($ip)){
-		$lookup = null;
-		$country = 'LOCAL';
-		$cname = 'Local/Internal Connection';
-		$flag = 'assets/images/iso-country-flags/intl.png';
-	}
-	else{
-		$lookup = new \geocode\IPLookup($ip);
-		$country = $lookup->country;
-		$cname = $lookup->getCountryName();
-		$flag = 'assets/images/iso-country-flags/' . strtolower($lookup->country) . '.png';
-	}
-
-	if($getflag){
-		$file = \Core\Filestore\Factory::File($flag);
-
-		if($file->exists()){
-			$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $cname . '" alt="' . $country . '"/> ';
-		}
-		else{
-			$out = '';
-		}
-	}
-	else{
-		$out = '';
-	}
-
-	
-	if($lookup && $lookup->province && $lookup->city){
-		$out .= $lookup->city . ', ' . $lookup->province;	
-	}
-	elseif($lookup && $lookup->province){
-		$out .= $lookup->province;
-	}
-	elseif($lookup && $lookup->city){
-		$out .= $lookup->city;
-	}
-	elseif($country){
-		$out .= $country;
-	}
-
-	return $out;
+	$lookup = new \geocode\IPLookup($ip);
+	return $lookup->getAsHTML($getflag);
 }

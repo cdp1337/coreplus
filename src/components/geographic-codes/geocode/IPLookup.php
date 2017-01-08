@@ -70,15 +70,13 @@ class IPLookup {
 
 	public function __construct($ip_addr) {
 		try{
-			if($ip_addr == '127.0.0.1'){
-				// Load local connections up with Columbus, OH.
-				// Why?  ;)
+			if(\Core\is_ip_private($ip_addr)){
 				$cache = [
-					'city'     => 'Columbus',
-					'province' => 'OH',
-					'country'  => 'US',
-					'timezone' => 'America/New_York',
-					'postal'   => '43215',
+					'city'     => 'LOCAL',
+					'province' => '',
+					'country'  => '',
+					'timezone' => date_default_timezone_get(),
+					'postal'   => '',
 				];
 			}
 			else{
@@ -142,5 +140,50 @@ class IPLookup {
 		}
 
 		return $f->getPreviewURL($dimensions);
+	}
+	
+	public function getAsHTML($getflag){
+		if($this->city == 'LOCAL'){
+			$country = 'LOCAL';
+			$cname = 'Local/Internal Connection';
+			$flag = 'assets/images/iso-country-flags/intl.png';
+			$check = false;
+		}
+		else{
+			$country = $this->country;
+			$cname = $this->getCountryName();
+			$flag = 'assets/images/iso-country-flags/' . strtolower($this->country) . '.png';
+			$check = true;
+		}
+
+		if($getflag){
+			$file = \Core\Filestore\Factory::File($flag);
+
+			if($file->exists()){
+				$out = '<img src="' . $file->getPreviewURL('20x20') . '" title="' . $cname . '" alt="' . $country . '"/> ';
+			}
+			else{
+				$out = '';
+			}
+		}
+		else{
+			$out = '';
+		}
+
+
+		if($check && $this->province && $this->city){
+			$out .= $this->city . ', ' . $this->province;	
+		}
+		elseif($check && $this->province){
+			$out .= $this->province;
+		}
+		elseif($check && $this->city){
+			$out .= $this->city;
+		}
+		elseif($country){
+			$out .= $country;
+		}
+
+		return $out;
 	}
 } 
