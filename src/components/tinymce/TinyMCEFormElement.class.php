@@ -11,12 +11,12 @@
 
 class TinyMCEFormElement extends FormElement {
 	public function __construct($atts = null) {
-		parent::__construct($atts);
-
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formwysiwyginput tinymce';
 		$this->_attributes['rows']  = '25';
-
+		
+		parent::__construct($atts);
+		
 		// Note, I'm taking the required flag out from here; tinymce doesn't support it.
 		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'readonly', 'tabindex', 'rows', 'cols', 'style', 'class');
 	}
