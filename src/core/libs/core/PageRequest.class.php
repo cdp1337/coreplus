@@ -105,8 +105,14 @@ class PageRequest {
 		// Split the string on the '?'.  Obviously anything after are parameters.
 		if (($_qpos = strpos($uri, '?')) !== false) $uri = substr($uri, 0, $_qpos);
 
-		// the URI should start with a '/'.
-		if ($uri{0} != '/') $uri = '/' . $uri;
+		if(strlen($uri) == 0){
+			// URLs that do not contain anything should remap to the home page ('/')
+			$uri = '/';
+		}
+		elseif( $uri{0} != '/' ){
+			// the URI should start with a '/'.
+			$uri = '/' . $uri;
+		}
 
 		// If the useragent requested a specifc mode type, remember that and set it for the page.
 		if (preg_match('/\.[a-z]{3,4}$/i', $uri)) {
