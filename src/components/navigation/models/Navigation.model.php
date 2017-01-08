@@ -68,14 +68,13 @@ class NavigationModel extends Model {
 	}
 
 
-	public function get($k) {
-		$k = strtolower($k);
+	public function get($k, $format = null) {
 		switch ($k) {
 			case 'baseurl':
 				return '/navigation/view/' . $this->get('id');
 				break;
 			default:
-				return parent::get($k);
+				return parent::get($k, $format);
 		}
 	}
 
