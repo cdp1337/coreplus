@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0~core8" name="Facebook" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0-1~bpo268" name="Facebook" execmode="web">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 	</hooks>
@@ -27,10 +27,11 @@
 		<file filename="templates/widgets/facebook/login.tpl" md5="a2ecb2faade8f57d53a3837b6a9c0307"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="225941cce19d3676ea8559e35f1fe7dc"/>
+		<file filename="CHANGELOG" md5="de498696e22df35b3aabeabc1a3704d8"/>
 		<file filename="FacebookHelper.class.php" md5="d7ac2466285ce37c587f9bb91e079aa9">
 			<class name="FacebookHelper"/>
 		</file>
+		<file filename="component.xml" md5="96dadf259c84ef312b3e75a6a116a27b"/>
 		<file filename="controllers/FacebookController.php" md5="439bcd076fb45b8f2216af0f07a80202">
 			<controller name="FacebookController"/>
 		</file>
@@ -75,6 +76,7 @@
 		<upgrade from="3.2.0~core5" to="3.2.0~core6"/>
 		<upgrade from="3.2.0~core6" to="3.2.0~core7"/>
 		<upgrade from="3.2.0~core7" to="3.2.0~core8"/>
+		<upgrade from="3.2.0~core8" to="3.2.0-1~bpo268"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="b6a7a960c63910152e0f52dde3d7e86c"/>
@@ -83,7 +85,7 @@
 	<description>
 		This component provides Facebook authentication abilities
 	</description>
-
+	<smartyplugins/>
 	<authors>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

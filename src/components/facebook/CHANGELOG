@@ -1,3 +1,8 @@
+Facebook 3.2.0-1~bpo268
+
+	* Better descriptions in the component metafile.
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:06:42 -0500
+
 Facebook 3.2.0~core8
 
 	* Use the View instead of CurrentPage for attaching the HTML attribute.
