@@ -1,8 +1,291 @@
-/**
- * This file left intentionally blank, but provides a way to append to the
- * default code mirror options in a Core Plus-y way.
- */
-
-div.CodeMirror {
-	border: 1px solid #CCC;
+/* BASICS */
+/* line 9, ../scss/codemirror.scss */
+h3.CodeMirror-heading,
+h4.CodeMirror-heading,
+h5.CodeMirror-heading,
+h6.CodeMirror-heading {
+  color: #000;
+  border-color: #CCC;
+  border-style: solid;
+  border-width: 1px 1px 0;
+  background-color: #f7f7f7;
+  margin: 0 0 -1em;
+  padding: 0 0 0 1em;
 }
+
+/* line 22, ../scss/codemirror.scss */
+.CodeMirror-pre {
+  position: relative;
+}
+/* line 25, ../scss/codemirror.scss */
+.CodeMirror-pre .CodeMirror-mode {
+  position: absolute;
+  top: 0;
+  z-index: 2;
+  right: 3px;
+  color: #545454;
+  font-size: 90%;
+}
+
+/* line 35, ../scss/codemirror.scss */
+.CodeMirror {
+  /* Set height, width, borders, and global font properties here */
+  font-family: monospace;
+  height: auto;
+  color: #000;
+  border: 1px solid #CCC;
+  background-color: #FFF;
+}
+
+/* PADDING */
+/* line 48, ../scss/codemirror.scss */
+.CodeMirror-lines {
+  padding: 4px 0;
+  /* Vertical padding around content */
+}
+
+/* line 51, ../scss/codemirror.scss */
+.CodeMirror pre {
+  padding: 0 4px;
+  /* Horizontal padding of content */
+}
+
+/* line 55, ../scss/codemirror.scss */
+.CodeMirror-scrollbar-filler, .CodeMirror-gutter-filler {
+  background-color: white;
+  /* The little square between H and V scrollbars */
+}
+
+/* GUTTER */
+/* line 61, ../scss/codemirror.scss */
+.CodeMirror-gutters {
+  border-right: 1px solid #CCC;
+  background-color: #f7f7f7;
+  white-space: nowrap;
+}
+
+/* line 67, ../scss/codemirror.scss */
+.CodeMirror-linenumber {
+  padding: 0 3px 0 5px;
+  min-width: 20px;
+  text-align: right;
+  color: #999;
+  white-space: nowrap;
+}
+
+/* line 75, ../scss/codemirror.scss */
+.CodeMirror-guttermarker {
+  color: black;
+}
+
+/* line 76, ../scss/codemirror.scss */
+.CodeMirror-guttermarker-subtle {
+  color: #999;
+}
+
+/* CURSOR */
+/* line 80, ../scss/codemirror.scss */
+.CodeMirror-cursor {
+  border-left: 1px solid black;
+  border-right: none;
+  width: 0;
+}
+
+/* Shown when moving in bi-directional text */
+/* line 86, ../scss/codemirror.scss */
+.CodeMirror div.CodeMirror-secondarycursor {
+  border-left: 1px solid silver;
+}
+
+/* line 89, ../scss/codemirror.scss */
+.cm-fat-cursor .CodeMirror-cursor {
+  width: auto;
+  border: 0;
+  background: #7e7;
+}
+
+/* line 94, ../scss/codemirror.scss */
+.cm-fat-cursor div.CodeMirror-cursors {
+  z-index: 1;
+}
+
+/* line 98, ../scss/codemirror.scss */
+.cm-animate-fat-cursor {
+  width: auto;
+  border: 0;
+  -webkit-animation: blink 1.06s steps(1) infinite;
+  -moz-animation: blink 1.06s steps(1) infinite;
+  animation: blink 1.06s steps(1) infinite;
+  background-color: #7e7;
+}
+
+@-moz-keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+@-webkit-keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+@keyframes blink {
+  50% {
+    background-color: transparent;
+  }
+}
+/* Can style cursor different in overwrite (non-insert) mode */
+/* line 125, ../scss/codemirror.scss */
+.cm-tab {
+  display: inline-block;
+  text-decoration: inherit;
+}
+
+/* line 127, ../scss/codemirror.scss */
+.CodeMirror-ruler {
+  border-left: 1px solid #ccc;
+  position: absolute;
+}
+
+/* DEFAULT THEME */
+/* line 134, ../scss/codemirror.scss */
+.cm-s-default .cm-header {
+  color: blue;
+  font-weight: bold;
+}
+/* line 138, ../scss/codemirror.scss */
+.cm-s-default .cm-quote {
+  color: #090;
+}
+/* line 141, ../scss/codemirror.scss */
+.cm-s-default .cm-negative {
+  color: #d44;
+}
+/* line 144, ../scss/codemirror.scss */
+.cm-s-default .cm-positive {
+  color: #292;
+}
+/* line 147, ../scss/codemirror.scss */
+.cm-s-default .cm-keyword {
+  color: #708;
+}
+/* line 150, ../scss/codemirror.scss */
+.cm-s-default .cm-atom {
+  color: #130193;
+}
+/* line 153, ../scss/codemirror.scss */
+.cm-s-default .cm-number {
+  color: #164;
+}
+/* line 156, ../scss/codemirror.scss */
+.cm-s-default .cm-def {
+  color: #00f;
+}
+/* line 165, ../scss/codemirror.scss */
+.cm-s-default .cm-property {
+  color: blue;
+}
+/* line 171, ../scss/codemirror.scss */
+.cm-s-default .cm-variable-2 {
+  color: #05a;
+}
+/* line 174, ../scss/codemirror.scss */
+.cm-s-default .cm-variable-3 {
+  color: #085;
+}
+/* line 177, ../scss/codemirror.scss */
+.cm-s-default .cm-comment {
+  color: #cfa67d;
+}
+/* line 180, ../scss/codemirror.scss */
+.cm-s-default .cm-string {
+  color: #a11;
+}
+/* line 183, ../scss/codemirror.scss */
+.cm-s-default .cm-string-2 {
+  color: #f50;
+}
+/* line 186, ../scss/codemirror.scss */
+.cm-s-default .cm-meta {
+  color: #555;
+}
+/* line 189, ../scss/codemirror.scss */
+.cm-s-default .cm-qualifier {
+  color: #1F7709;
+}
+/* line 192, ../scss/codemirror.scss */
+.cm-s-default .cm-builtin {
+  color: #08900a;
+}
+/* line 195, ../scss/codemirror.scss */
+.cm-s-default .cm-bracket {
+  color: #997;
+}
+/* line 198, ../scss/codemirror.scss */
+.cm-s-default .cm-tag {
+  color: #170;
+}
+/* line 201, ../scss/codemirror.scss */
+.cm-s-default .cm-attribute {
+  color: #00c;
+}
+/* line 204, ../scss/codemirror.scss */
+.cm-s-default .cm-hr {
+  color: #999;
+}
+/* line 207, ../scss/codemirror.scss */
+.cm-s-default .cm-link {
+  color: #00c;
+}
+/* line 210, ../scss/codemirror.scss */
+.cm-s-default .cm-error {
+  color: #f00;
+}
+/* line 213, ../scss/codemirror.scss */
+.cm-s-default .cm-invalidchar {
+  color: #f00;
+}
+/* line 217, ../scss/codemirror.scss */
+.cm-s-default .cm-strong {
+  font-weight: bold;
+}
+/* line 218, ../scss/codemirror.scss */
+.cm-s-default .cm-em {
+  font-style: italic;
+}
+/* line 219, ../scss/codemirror.scss */
+.cm-s-default .cm-link {
+  text-decoration: underline;
+}
+/* line 220, ../scss/codemirror.scss */
+.cm-s-default .cm-strikethrough {
+  text-decoration: line-through;
+}
+
+/* line 223, ../scss/codemirror.scss */
+.CodeMirror-composing {
+  border-bottom: 2px solid;
+}
+
+/* Default styles for common addons */
+/* line 227, ../scss/codemirror.scss */
+div.CodeMirror span.CodeMirror-matchingbracket {
+  color: #0f0;
+}
+
+/* line 228, ../scss/codemirror.scss */
+div.CodeMirror span.CodeMirror-nonmatchingbracket {
+  color: #f22;
+}
+
+/* line 229, ../scss/codemirror.scss */
+.CodeMirror-matchingtag {
+  background: rgba(255, 150, 0, 0.3);
+}
+
+/* line 230, ../scss/codemirror.scss */
+.CodeMirror-activeline-background {
+  background: #e8f2ff;
+}
+
+/*# sourceMappingURL=codemirror.css.map */
