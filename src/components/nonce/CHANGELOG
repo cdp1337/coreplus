@@ -1,3 +1,8 @@
+Nonce 1.0.2-1~bpo268
+
+	* Better description in the component metafile
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:08:31 -0500
+
 Nonce 1.0.2
 
 	* The Nonce hash validation is more forgiving for different-typecasted strings.

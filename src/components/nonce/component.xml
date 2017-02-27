@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.2">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Nonce" version="1.0.2-1~bpo268">
 	<requires>
 		<require name="Core" type="component" version="2.5.1"/>
 	</requires>
@@ -8,23 +8,29 @@
 		<hook name="/cron/hourly" call="NonceModel::Cleanup"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="74ddb59c9994e873d5295eccbca49c31"/>
+		<file filename="CHANGELOG" md5="844328338571981da0b6d7b9221df2d5"/>
 		<file filename="README.md" md5="5bcf92183d0ab8d2045c82f264e66369"/>
+		<file filename="component.xml" md5="8da5da316a129c28e4125eaa44f4fa36"/>
 		<file filename="models/NonceModel.php" md5="1184758472a7424ee57da24d2127f171">
 			<class name="NonceModel"/>
+		</file>
+		<file filename="tests/NonceTest.php" md5="3d2fec97d478f40698ab341353ac1bf5">
+			<class name="NonceTest"/>
 		</file>
 	</files>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.0.2-1~bpo268"/>
 	</upgrades>
+	<description>
+		This component provides support for securely generating nonces http://en.wikipedia.org/wiki/Cryptographic_nonce
+	</description>
+	<smartyplugins/>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Charlie Powell &lt;charlie@eval.bz"/>
 	</authors>
-	<description>
-		This component provides support for securely generating nonces http://en.wikipedia.org/wiki/Cryptographic_nonce
-	</description>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 			GNU Affero General Public License v3
