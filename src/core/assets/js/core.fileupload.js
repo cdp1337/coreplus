@@ -28,6 +28,12 @@ Core.fileupload = function(idprefix){
 		// Only show the selector if there is more than 1 label to select...
 		$selectgrp.show();
 	}
+	
+	if(!type){
+		// Failsafe if one of the options isn't checked.
+		// They should always be checked, but in theory one may not be.
+		type = "none";
+	}
 
 	$actiongrp.find('.fileinput-action').hide();
 	$actiongrp.show();
