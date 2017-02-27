@@ -1,3 +1,8 @@
+Blog 1.5.4-1~bpo268
+
+	* Better descriptions in the component metafile.
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:04:44 -0500
+
 Blog 1.5.4
 
 	* Increase the blog title length from 64 to 256 characters.

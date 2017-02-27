@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.4" name="Blog" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.5.4-1~bpo268" name="Blog" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.6.1" operation="ge"/>
 		<require name="user" type="component" version="2.5.4"/>
@@ -14,7 +14,8 @@
 		<hook name="/cron/daily" call="BlogHelper::CronRetrieveRemoteFeeds"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="9a18252af34af0bea0a86b350786c02a"/>
+		<file filename="CHANGELOG" md5="ff034152880074c4648e79f67314fc2c"/>
+		<file filename="component.xml" md5="5c097e7b77739a1f3066c0383bfe924a"/>
 		<file filename="controllers/BlogController.php" md5="d876b20913373241681f117f0cf74159">
 			<controller name="BlogController"/>
 		</file>
@@ -27,6 +28,13 @@
 		<file filename="models/BlogModel.php" md5="37bc0cf4adbacd59cd96fcb68f39a080">
 			<class name="BlogModel"/>
 		</file>
+		<file filename="tests/BlogTest.php" md5="9662970b168f65c33fcec86769a725b8">
+			<class name="BlogTest"/>
+		</file>
+		<file filename="tests/blog-test-image.png" md5="2ef8794320891042986b72da16f47bf1"/>
+		<file filename="tests/bugsweeps/Bug409Test.php" md5="3606f171441e685a6697a9d77c356029">
+			<class name="Bug409Test"/>
+		</file>
 		<file filename="upgrades/121_to_130.php" md5="4f71587ed4a65da58490523dd9581684"/>
 		<file filename="upgrades/130_to_140_published.php" md5="4ab899aa7768154bde4f5197a7cfbf2b"/>
 		<file filename="upgrades/130_to_140_selectable.php" md5="33c3b2e0c9456a6a900d7340f1c65c5b"/>
@@ -36,7 +44,9 @@
 		<page baseurl="/blog/admin" admin="1" access="p:blog_manage" title="Blog Administration" group="Content"/>
 		<page baseurl="/blog" title="Blogs"/>
 	</pages>
-	<description>This component provides the blogging ability for Core Plus</description>
+	<description>
+		This component provides the blogging ability for Core Plus
+	</description>
 	<view searchdir="templates">
 		<file filename="templates/pages/blog/admin.tpl" md5="44274363e8c7fea512396a63293c63fd"/>
 		<file filename="templates/pages/blog/admin_view.tpl" md5="e1ca90792ff8835bee5ef1d03c54a851"/>
@@ -92,6 +102,7 @@
 		<upgrade from="1.5.1" to="1.5.2"/>
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.5.4"/>
+		<upgrade from="1.5.4" to="1.5.4-1~bpo268"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/blog.css" md5="525a38d44528503b891cc5b7a094b98e"/>
@@ -99,6 +110,7 @@
 		<file filename="assets/images/valid-rss.png" md5="7dac8fdd319e86cf82fa27bc7e2d416f"/>
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>
 	</assets>
+	<smartyplugins/>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
