@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.7" name="core" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.8" name="core" execmode="both">
 	<provides>
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
@@ -42,7 +42,7 @@
 	<files>
 		<file filename="config/configuration.xml.ant" md5="38de8c2255e2efdbe7c552f20f329ffe"/>
 		<file filename="config/configuration.xml.ex" md5="b854ce5a634fff3a14ef02118baca9aa"/>
-		<file filename="core/CHANGELOG" md5="888ee579d51d492bb1be03783f9661bf"/>
+		<file filename="core/CHANGELOG" md5="e822ae050cf25b7a4c813f321af08d10"/>
 		<file filename="core/bootstrap.php" md5="6885762e3fd11610ea22aceffd3375ff"/>
 		<file filename="core/bootstrap_postincludes.php" md5="129d5a6cab56e728c99eb116c2786051"/>
 		<file filename="core/bootstrap_predefines.php" md5="6acdf152ca4839060c578766c5933514"/>
@@ -501,7 +501,6 @@
 		<file filename="core/libs/core/InstallArchiveAPI.class.php" md5="20677792359e49c7315994357c53f9d6">
 			<class name="InstallArchiveAPI"/>
 		</file>
-		<file filename="core/libs/core/InstallTask.class.php.DISABLED" md5="78b24bb7af7d1175eb2d8f797f7bb783"/>
 		<file filename="core/libs/core/InstallerException.php" md5="2d613e3a11d4dacdf350d6c10b18c57a">
 			<class name="InstallerException"/>
 		</file>
@@ -522,7 +521,6 @@
 		<file filename="core/libs/core/RepoXML.class.php" md5="598a7f067ea84ea03d02b6ef517c4e3f">
 			<class name="RepoXML"/>
 		</file>
-		<file filename="core/libs/core/SQLBuilder.class.php.DISABLED" md5="47925681d58280bff9c130f449c9ba90"/>
 		<file filename="core/libs/core/Session.class.php" md5="13177c774dd176f4ba7db2cf0f351898">
 			<class name="Session"/>
 		</file>
@@ -607,7 +605,7 @@
 		<file filename="core/libs/core/filestore/backends/FileLocal.php" md5="19b4adf2b9c6c6baa4285ed2d62026a1">
 			<class name="Core\Filestore\Backends\FileLocal"/>
 		</file>
-		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="5f146e122f0edbff0714ca642f1806ff">
+		<file filename="core/libs/core/filestore/backends/FileRemote.php" md5="4f8bd9ecc03c6795983013abb216b8a4">
 			<class name="Core\Filestore\Backends\FileRemote"/>
 		</file>
 		<file filename="core/libs/core/filestore/backends/file_awss3.backend.php" md5="902580d00f4bc5688e0c515c13e328d7">
@@ -1701,6 +1699,7 @@
 		<upgrade from="2.6.4" to="2.6.5"/>
 		<upgrade from="2.6.5" to="2.6.6"/>
 		<upgrade from="2.6.6" to="2.6.7"/>
+		<upgrade from="2.6.7" to="2.6.8"/>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

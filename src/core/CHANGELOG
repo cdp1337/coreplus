@@ -1,3 +1,9 @@
+Core Plus 2.6.8
+
+	* Remove some unnessary files from Core libs.
+	* Support for 302 status codes in remote files.
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:00:46 -0500
+
 Core Plus 2.6.7
 
 	* [Security] Upgrade phpMailer to newest version upstream.
