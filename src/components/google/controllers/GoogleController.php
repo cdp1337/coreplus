@@ -58,6 +58,11 @@ class GoogleController extends Controller_2_1 {
 
 		$view = $this->getView();
 		$request = $this->getPageRequest();
+		
+		$admin       = \Core\user()->checkAccess('g:admin');
+		if(!$admin){
+			return View::ERROR_ACCESSDENIED;
+		}
 
 		$form = new Form();
 		$form->set('callsmethod', 'GoogleController::ConfigureSave');
