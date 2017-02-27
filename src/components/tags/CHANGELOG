@@ -1,3 +1,8 @@
+Tags 1.0.1-1~bpo268
+
+	* Better description in the component metafile
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:13:13 -0500
+
 Tags 1.0.1
 
 	* [Feature] Added a check in the template to allow the tag system to run without the user-social
