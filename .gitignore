@@ -11,7 +11,9 @@ nbproject
 src/.htaccess
 
 # Skip the configuration file, this is developer and server centric
-src/config/configuration.xml
+# The exception are the "example" files contained therein.
+src/config/*.xml
+!src/config/*.example.xml
 
 # Skip some Apple directories, these is machine centric
 .DS_Store
