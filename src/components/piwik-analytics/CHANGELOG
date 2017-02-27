@@ -1,3 +1,8 @@
+Piwik Analytics 1.1.1-1~bpo268
+
+	* [Feature] Backport new features from 1.1.1, 1.1.0, and 1.0.3 into Core LTS 2.x
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:11:35 -0500
+
 Piwik Analytics 1.1.1
 
 	* Update the copyright to 2015 and my email address throughout the project.
