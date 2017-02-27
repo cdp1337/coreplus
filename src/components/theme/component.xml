@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.5" name="Theme" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.5-1~bpo268" name="Theme" execmode="web">
 	<requires>
 		<require name="core" type="component" version="2.5.6"/>
 		<require name="jquery" type="library" version="1.7.0" operation="ge"/>
@@ -10,7 +10,8 @@
 		<hook name="/core/components/loaded" call="ThemeHandler::Load"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="54f621b05ca877bfad833b8abcc97923"/>
+		<file filename="CHANGELOG" md5="26e51750863bef21c8306a4432f5ce3f"/>
+		<file filename="component.xml" md5="4208aa983f6c97fc99cda767651ef861"/>
 		<file filename="controllers/ThemeController.class.php" md5="dfb6680c5bc15fc8ee49e2f5a1f10722">
 			<controller name="ThemeController"/>
 		</file>
@@ -66,10 +67,12 @@
 		<upgrade from="2.1.2" to="2.1.3"/>
 		<upgrade from="2.1.3" to="2.1.4"/>
 		<upgrade from="2.1.4" to="2.1.5"/>
+		<upgrade from="2.1.5" to="2.1.5-1~bpo268"/>
 	</upgrades>
 	<description>
 		This component provides theme support for Core Plus
 	</description>
+	<smartyplugins/>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Nick Hinsch &lt;nicholas@eval.bz"/>

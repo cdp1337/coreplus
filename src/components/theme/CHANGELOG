@@ -1,3 +1,8 @@
+Theme 2.1.5-1~bpo268
+
+	* Better description in the component metafile
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:13:43 -0500
+
 Theme 2.1.5
 
 	* [Performance] Increased performance of the theme management page.  It should now actually be able to
@@ -52,17 +57,17 @@ Theme 2.0.4
 	* Yet again corrected the asset installer for theme assets.. hopefully THIS TIME it's correct...
 	-- Charlie Powell <charlie@eval.bz>  Wed, 03 Apr 2013 15:01:32 -0400
 
-Theme 2.0.3b1
-
-	* Themes now support auto-install mode for assets when in development.
-	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:47:33 -0500
-
 Theme 2.0.3
 
 	* [Bug] Fixes in the theme asset installer.
 	* [Bug] Fixes to support themes with a space in their name.
 	* Set the default theme to be base-v2 and removed some legacy configuration options.
 	-- Charlie Powell <charlie@eval.bz>  Mon, 01 Apr 2013 20:41:19 -0400
+
+Theme 2.0.3b1
+
+	* Themes now support auto-install mode for assets when in development.
+	-- Charlie Powell <charlie@eval.bz>  Sun, 24 Feb 2013 20:47:33 -0500
 
 Theme 2.0.2
 
