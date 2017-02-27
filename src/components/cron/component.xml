@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.8">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="1.1.8-1~bpo268">
 	<hooks>
 		<hookregister name="/cron/hourly" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/daily" description="Daily hook called from the cron system"/>
@@ -27,11 +27,12 @@
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="5038c6844df3d6fcdfc907cf3b1e2460"/>
+		<file filename="CHANGELOG" md5="8195a0dc63cf44124c953ae2a4356b19"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
 		<file filename="classes/CronHelper.php" md5="ba7b794f691ba12729d42f2275cee260">
 			<class name="CronHelper"/>
 		</file>
+		<file filename="component.xml" md5="657ba24c9c21108ac42028efd1d558b7"/>
 		<file filename="controllers/CronController.php" md5="b01fc3ffe347e6ef54fbeb25bac9b0d4">
 			<controller name="CronController"/>
 		</file>
@@ -52,6 +53,7 @@
 		<upgrade from="1.1.5" to="1.1.6"/>
 		<upgrade from="1.1.6" to="1.1.7"/>
 		<upgrade from="1.1.7" to="1.1.8"/>
+		<upgrade from="1.1.8" to="1.1.8-1~bpo268"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
@@ -59,6 +61,7 @@
 	<description>
 		This web cron component provides hooks to common system crons to perform scheduled tasks.
 	</description>
+	<smartyplugins/>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
