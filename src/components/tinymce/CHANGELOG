@@ -1,3 +1,8 @@
+TinyMCE 4.0.1-1~bpo268
+
+	* Better description in the component metafile
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:14:17 -0500
+
 TinyMCE 4.0.1~core3
 
 	* Make use of the namespace versions of View instead of static.
