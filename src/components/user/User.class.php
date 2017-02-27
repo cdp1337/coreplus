@@ -180,10 +180,15 @@ class User {
 				if($v != $this->get('email')){
 					// Try to retrieve the user data from the database based on the email.
 					// Email is a unique key, so there can only be 1 in the system.
-					if(UserModel::Find(array('email' => $v), 1)){
-						$el->setError(true, false);
-						throw new ModelValidationException('Requested email is already registered');
-						return false;
+					if(($existing = UserModel::Find(array('email' => $v), 1))){
+						if($existing->isdeleted()){
+							// Just delete the existing one and resume.
+							$existing->delete();
+						}
+						else{
+							$el->setError(true, false);
+							throw new ModelValidationException('Requested email is already registered');
+						}
 					}
 
 					$this->set('email', $v);
@@ -276,13 +281,25 @@ class User {
 		$admin   = \Core\user()->checkAccess('g:admin');
 
 		if($this->_getModel()->changed()){
-			//if(!$manager && !$isnew && ConfigHandler::Get('/user/profileedits/requireapproval') && Core::IsComponentAvailable('model-audit')){
-			//	// If the option to require administrative approval is checked, any existing user change must be approved.
-			//	\ModelAudit\Helper::SaveDraftOnly($this->_getModel());
-			//}
-			//else{
-			$this->_getModel()->save();
-			//}
+			if(
+				!$manager && 
+				!$isnew && 
+				ConfigHandler::Get('/user/profileedits/requireapproval') && 
+				Core::IsComponentAvailable('model-audit')
+			){
+				$initial = $this->_getModel()->getInitialData();
+				if($initial['email'] != $this->_getModel()->get('email')){
+					// If the option to require administrative approval is checked, any existing user change must be approved.
+					// This is meant to ONLY kick in for the user's email changing.
+					\ModelAudit\Helper::SaveDraftOnly($this->_getModel());
+				}
+				else{
+					$this->_getModel()->save();
+				}
+			}
+			else{
+				$this->_getModel()->save();
+			}
 
 			$status = true;
 		}

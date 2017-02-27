@@ -14,6 +14,7 @@
 					<th>Name/Title</th>
 					<th>On Registration</th>
 					<th>On Edit</th>
+					<th>Required?</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -30,6 +31,9 @@
 						</td>
 						<td>
 							<input type="checkbox" name="onedit[{$config.key}]" {if $config.onedit}checked="checked"{/if}/>
+						</td>
+						<td>
+							<input type="checkbox" name="required[{$config.key}]" {if $config.required}checked="checked"{/if}/>
 						</td>
 					</tr>
 				{/foreach}

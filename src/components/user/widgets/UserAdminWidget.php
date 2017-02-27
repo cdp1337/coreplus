@@ -60,7 +60,14 @@ class UserAdminWidget extends Widget_2_1{
 		// 1 month sounds good!
 		$date = new CoreDateTime();
 		$date->modify('-1 month');
-		$searches = UserModel::Find(['created > ' . $date->getFormatted('U')], 10, 'created DESC');
+		$searches = UserModel::Find(
+			[
+				'created > ' . $date->getFormatted('U'),
+				'deleted = 0',
+			],
+			10,
+			'created DESC'
+		);
 
 		// No results?  No problem :)
 		if(!sizeof($searches)) return '';

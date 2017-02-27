@@ -194,7 +194,7 @@ class UserController extends Controller_2_1{
 			$form = \User\get_edit_form($user);
 		} else {
 			Core::SetMessage('A user with this ID does not exist');
-			\Core\go_back();
+			\Core\redirect( '/admin' );
 		}
 
 		$view->controls = ViewControls::Dispatch('/user/view', $user->get('id'));
@@ -432,8 +432,18 @@ class UserController extends Controller_2_1{
 
 		/** @var $nonce NonceModel */
 		$nonce = NonceModel::Construct($n);
+		
+		// There are two data types.... (Yeah yeah, I know.....)
+		$data1 = [
+			'type' => 'password-reset',
+			'user' => (int)$u->get('id')
+		];
+		$data2 = [
+			'type' => 'password-reset',
+			'user' => $u->get('id')
+		];
 		// I can't invalidate it quite yet... the user still needs to set the new password.
-		if(!$nonce->isValid(['type' => 'password-reset', 'user' => $u->get('id')])){
+		if(!$nonce->isValid($data1) && !$nonce->isValid($data2)){
 			SecurityLogModel::Log('/user/forgotpassword/confirm', 'fail', $u->get('id'), 'Invalid key requested: [' . $n . ']');
 			Core::SetMessage('Invalid key provided!', 'error');
 			\core\redirect('/');

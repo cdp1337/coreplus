@@ -96,6 +96,7 @@ class UserConfigController extends Controller_2_1{
 				$config->set('name', $_POST['name'][$k]);
 				$config->set('onregistration', (isset($_POST['onregistration'][$k])) );
 				$config->set('onedit', (isset($_POST['onedit'][$k])) );
+				$config->set('required', (isset($_POST['required'][$k])) );
 				$config->set('weight', array_search($k, $keymap));
 
 				$config->save();

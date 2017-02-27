@@ -33,13 +33,33 @@ class UserAdminController extends Controller_2_1{
 			array(
 				'title' => 'Active',
 				'name' => 'active',
-				'options' => array('' => '-- All --', '0' => 'Inactive', '1' => 'Active'),
+				'options' => array('' => '-- All --', '0' => 'Not Active Yet', '1' => 'Active', '-1' => 'Deactivated'),
 				'link' => FilterForm::LINK_TYPE_STANDARD,
 			)
 		);
+		
+		$filters->addElement(
+			'select',
+			array(
+				'title' => 'User ever logged in?',
+				'name' => 'last_login',
+				'options' => array('' => 'Both', '1' => 'No', '2' => 'Yes'),
+			)
+	);
+
 
 		$filters->load($request);
 		$factory = new ModelFactory('UserModel');
+		
+		if($filters->get('last_login') == 1) {
+			$factory->where('last_login = 0');
+		}
+		elseif($filters->get('last_login') == 2) {
+			$factory->where('last_login > 0');
+		}
+		
+		$factory->where('deleted < 1');
+		
 		$filters->applyToFactory($factory);
 
 		$users = $factory->get();

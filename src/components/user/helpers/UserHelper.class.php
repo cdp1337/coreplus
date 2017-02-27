@@ -79,7 +79,13 @@ abstract class UserHelper{
 			$e->setError('Your account has been deactivated!');
 			return false;
 		}
-
+		
+		if($u->get('deleted') > 1){
+			$logmsg = 'User tried to login after account deletion' . "\n" . 'User: ' . $u->get('email') . "\n";
+			SecurityLogModel::Log('/user/login', 'fail', null, $logmsg);
+			$e->setError('Your account has been deleted!');
+			return false;
+		}
 		// A few exceptions for backends.
 		if($u instanceof User_facebook_Backend){
 			// This isn't a log-worthy event (at least yet)
@@ -228,7 +234,7 @@ abstract class UserHelper{
 		if(UserModel::Count() == 0){
 			// If none, register this user as an admin automatically.
 			$user->set('admin', true);
-			$user->set('active', true);
+			$user->set('active', '1');
 		}
 		else{
 			// There is at least one user on the system, use the standard logic.
@@ -240,10 +246,10 @@ abstract class UserHelper{
 				$user->set('active', $active);
 			}
 			elseif(\ConfigHandler::Get('/user/register/requireapproval')){
-				$user->set('active', false);
+				$user->set('active', '0');
 			}
 			else{
-				$user->set('active', true);
+				$user->set('active', '1');
 			}
 		}
 

@@ -11,10 +11,10 @@ function update_user_table (){
 		var $tr = $(this),
 			$status = $tr.find('.active-status');
 
-		if($status.attr('data-useractive') == '1'){
+		if($status.data('useractive') == '1'){
 			$status.html('<a href="#" class="user-activate-link" title="Activated"><i class="icon-ok"></i></a>');
 		}
-		else if($status.attr('data-useractive') == '-1'){
+		else if($status.data('useractive') == '-1'){
 			$status.html('<a href="#" class="user-activate-link" title="Deactivated"><i class="icon-remove"></i></a>');
 		}
 		else{
@@ -30,7 +30,7 @@ $(function(){
 	$('.listing').on('click', '.user-activate-link', function(){
 		var $status = $(this).closest('.active-status'),
 			$tr = $(this).closest('tr'),
-			status = $status.attr('data-useractive'),
+			status = $status.data('useractive'),
 			newstatus;
 
 		if(status == 0){
@@ -50,13 +50,13 @@ $(function(){
 		$.ajax({
 			url: Core.ROOT_URL + 'useradmin/activate.json',
 			data: {
-				user: $tr.attr('data-userid'),
+				user: $tr.data('userid'),
 				status: newstatus
 			},
 			dataType: 'json',
 			type: 'post',
 			success: function(d){
-				$status.attr('data-useractive', newstatus);
+				$status.data('useractive', newstatus);
 				update_user_table();
 			}
 		});

@@ -18,7 +18,7 @@ function smarty_function_user($params, $template){
 
 	$user = User::Construct($userid);
 
-	if(!$user) return '';
+	if(!$user) return '[Non-existent User]';
 
 	$username = $user->getDisplayName();
 	return $username;

@@ -106,6 +106,9 @@ class UserModel extends Model {
 			'type' => Model::ATT_TYPE_UPDATED,
 			'null' => false,
 		),
+		'deleted' => array(
+			'type' => Model::ATT_TYPE_DELETED,
+		),
 	);
 	
 	public static $Indexes = array(
