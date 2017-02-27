@@ -1,11 +1,12 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.8" name="Navigation" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.8-1~bpo268" name="Navigation" execmode="web">
 	<requires>
 		<require name="core" type="component" operation="ge" version="2.5.6"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="10f7c3961265743924787d944b2d786f"/>
+		<file filename="CHANGELOG" md5="a648ed88c7c3da3e1a6f42db1f87cd6d"/>
+		<file filename="component.xml" md5="dd8d81cb95ed046a52a9c5819d16397a"/>
 		<file filename="controllers/NavigationController.php" md5="47d368a14b8ee518ff805652b3c77dfe">
 			<controller name="NavigationController"/>
 		</file>
@@ -56,13 +57,15 @@
 		<upgrade from="2.1.5" to="2.1.6"/>
 		<upgrade from="2.1.6" to="2.1.7"/>
 		<upgrade from="2.1.7" to="2.1.8"/>
+		<upgrade from="2.1.8" to="2.1.8-1~bpo268"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
-	</authors>
 	<description>
 		This component provides the navigation menu system
 	</description>
+	<smartyplugins/>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 			GNU Affero General Public License v3
