@@ -31,8 +31,17 @@ if [ -z "$(which inotifywait 2>/dev/null)" ]; then
 	exit 1
 fi
 
-printheader "Starting watch!"
-while inotifywait -e modify -r $ROOTPDIR/src/components/$COMPONENT/assets/scss $ROOTPDIR/src/components/$COMPONENT/assets/js; do
+# Assemble the directories that get watched for the compiler.
+DIRS=""
+if [ -e "$ROOTPDIR/src/components/$COMPONENT/assets/scss" ]; then
+	DIRS="$DIRS $ROOTPDIR/src/components/$COMPONENT/assets/scss"
+fi
+if [ -e "$ROOTPDIR/src/components/$COMPONENT/assets/js" ]; then
+	DIRS="$DIRS $ROOTPDIR/src/components/$COMPONENT/assets/js"
+fi
+
+printheader "Watching directories $DIRS for change!"
+while inotifywait -e modify -r $DIRS; do
 	$ROOTPDIR/utilities/compiler.php --scss --component=$COMPONENT
 	$ROOTPDIR/utilities/compiler.php --js --component=$COMPONENT
 	$ROOTPDIR/utilities/reinstall.php --assets --component=$COMPONENT --verbosity=0
