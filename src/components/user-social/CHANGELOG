@@ -1,3 +1,8 @@
+User-Social 1.0.5-1~bpo268
+
+	* Better description in the component metafile
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:14:43 -0500
+
 User-Social 1.0.5
 
 	* [Bug] Fix a minor error where the edit public profiles control wasn't displaying for the own user.
