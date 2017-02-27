@@ -7,7 +7,7 @@
  * @package Core\Filestore\Backends
  * @since 2.5.6
  * @author Charlie Powell <charlie@eval.bz>
- * @copyright Copyright (C) 2009-2012  Charlie Powell
+ * @copyright Copyright (C) 2009-2014  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -81,8 +81,49 @@ class FileRemote implements Filestore\File {
 	 */
 	private $_tmplocal = null;
 
+	/**
+	 * If the file was a 302, this is the temporary redirect placeholder.
+	 *
+	 * This is a separate file because according to the RFC2616 spec,
+	 * requests that fall under a 302 are independent of each other and should be cached independently.
+	 *
+	 * @var null|FileRemote
+	 */
+	protected $_redirectFile = null;
+
+	/**
+	 * Level of redirect counts this file request is under.
+	 *
+	 * Used to prevent infinite redirect loops.
+	 *
+	 * @var int
+	 */
+	protected $_redirectCount = 0;
+
 	public function __construct($filename = null) {
 		if ($filename) $this->setFilename($filename);
+	}
+
+	/**
+	 * Get the title of this file, either generated from the filename or pulled from the meta data as appropriate.
+	 *
+	 * @return string
+	 */
+	public function getTitle(){
+		$metas = new Filestore\FileMetaHelper($this);
+
+		// If no title was set, I need to pick one by default.
+		if(($t = $metas->getMetaTitle('title'))){
+			return $t;
+		}
+		else{
+			// Generate a moderately meaningful title from the filename.
+			$title = $this->getBasename(true);
+			$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+			$title = trim(preg_replace('/[ ]+/', ' ', $title));
+			$title = ucwords($title);
+			return $title;
+		}
 	}
 
 	public function getFilesize($formatted = false) {
@@ -447,7 +488,7 @@ class FileRemote implements Filestore\File {
 	 * @return File
 	 */
 	public function getQuickPreviewFile($dimensions = '300x300') {
-		// TODO: Implement getQuickPreviewFile() method.
+		return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
 	}
 
 	/**
@@ -458,7 +499,7 @@ class FileRemote implements Filestore\File {
 	 * @return File
 	 */
 	public function getPreviewFile($dimensions = '300x300') {
-		// TODO: Implement getPreviewFile() method.
+		return $this->_getTmpLocal()->getPreviewFile($dimensions);
 	}
 
 	/**
@@ -479,8 +520,7 @@ class FileRemote implements Filestore\File {
 			$this->_headers = array();
 
 			// I like curl better because it doesn't make a GET request when 
-			// all I want to do is a HEAD request.
-			// Just give me HEAD damnit!..... :p
+			// all I want to do is a HEAD request, JUST THE TIP!
 
 			$curl = curl_init();
 			curl_setopt_array(
@@ -527,6 +567,36 @@ class FileRemote implements Filestore\File {
 					$this->_headers[$k] = $v;
 				}
 			}
+
+			if($this->_response == '302' && isset($this->_headers['Location'])){
+				/*
+				From: http://www.ietf.org/rfc/rfc2616.txt and http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html
+
+				10.3.3 302 Found
+
+				The requested resource resides temporarily under a different URI.
+				Since the redirection might be altered on occasion, the client SHOULD continue to use the Request-URI for future requests.
+				This response is only cacheable if indicated by a Cache-Control or Expires header field.
+
+				The temporary URI SHOULD be given by the Location field in the response.
+				Unless the request method was HEAD,
+				the entity of the response SHOULD contain a short hypertext note with a hyperlink to the new URI(s).
+
+				If the 302 status code is received in response to a request other than GET or HEAD,
+				the user agent MUST NOT automatically redirect the request unless it can be confirmed by the user,
+				since this might change the conditions under which the request was issued.
+				*/
+				$newcount = $this->_redirectCount + 1;
+				if($newcount <= 5){
+					$this->_redirectFile = new FileRemote();
+					$this->_redirectFile->_redirectCount = ($this->_redirectCount + 1);
+					$this->_redirectFile->setFilename($this->_headers['Location']);
+					$this->_redirectFile->_getHeaders();
+		}
+				else{
+					trigger_error('Too many redirects when requesting ' . $this->getURL(), E_USER_WARNING);
+				}
+			}
 		}
 
 		return $this->_headers;
@@ -546,6 +616,7 @@ class FileRemote implements Filestore\File {
 	private function _getTmpLocal() {
 		if ($this->_tmplocal === null) {
 			$f = md5($this->getFilename());
+
 			// Gotta love obviously-named flags.
 			$needtodownload = true;
 
@@ -555,53 +626,114 @@ class FileRemote implements Filestore\File {
 			if ($this->cacheable && $this->_tmplocal->exists()) {
 				// Lookup this file in the system cache.
 				$systemcachedata = \Core::Cache()->get('remotefile-cache-header-' . $f);
-				if ($systemcachedata) {
+				if ($systemcachedata && isset($systemcachedata['headers'])) {
 					// I can only look them up if the cache is available.
 
 					// First check will be the expires header.
-					// If this is set and the data exists locally, don't even try to
-					if(isset($systemcachedata['Expires']) && strtotime($systemcachedata['Expires']) > time()){
+					if(isset($systemcachedata['headers']['Expires']) && strtotime($systemcachedata['headers']['Expires']) > time()){
 						$needtodownload = false;
 						// And set the headers!
 						// This is required
-						$this->_headers = $systemcachedata;
-						$this->_response = 200;
+						$this->_headers = $systemcachedata['headers'];
+						$this->_response = $systemcachedata['response'];
 					}
 					// Next, try ETag.
-					elseif ($this->_getHeader('ETag')) {
-						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['ETag']);
+					elseif ($this->_getHeader('ETag') && isset($systemcachedata['headers']['ETag'])) {
+						$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['headers']['ETag']);
 					}
 					// No?  How 'bout 
-					elseif ($this->_getHeader('Last-Modified')) {
-						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['Last-Modified']);
+					elseif ($this->_getHeader('Last-Modified') && isset($systemcachedata['headers']['Last-Modified'])) {
+						$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['headers']['Last-Modified']);
 					}
-					// Still no?  The default is to download it anway.
+					// Still no?  The default is to download it anyway.
 				}
 			}
 
 			if ($needtodownload || !$this->cacheable) {
-				// Create a stream
-				$opts = array(
-					'http' => array(
-						'protocol_version' => '1.1',
-						'method'           => "GET",
-						'header'           => \Core::GetStandardHTTPHeaders(false, true)
+				// Make sure that the headers are updated, this is a requirement to use the 302 tag.
+				$this->_getHeaders();
+				if($this->_response == '302' && $this->_redirectFile !== null){
+					$this->_tmplocal = $this->_redirectFile->_getTmpLocal();
+				}
+				else{
+					// BTW, use cURL.
+					$curl = curl_init();
+					curl_setopt_array(
+						$curl, array(
+							CURLOPT_HEADER         => false,
+							CURLOPT_NOBODY         => false,
+							CURLOPT_RETURNTRANSFER => true,
+							CURLOPT_URL            => $this->getURL(),
+							CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 					)
 				);
 
-				$context = stream_context_create($opts);
+					$result = curl_exec($curl);
+					if($result === false){
+						switch(curl_errno($curl)){
+							case CURLE_COULDNT_CONNECT:
+							case CURLE_COULDNT_RESOLVE_HOST:
+							case CURLE_COULDNT_RESOLVE_PROXY:
+								$this->_response = 404;
+								return $this->_tmplocal;
+								break;
+							default:
+								$this->_response = 500;
+								return $this->_tmplocal;
+								break;
+						}
+					}
+
+					curl_close($curl);
+
 				// Copy the data down to the local file.
-				$this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
+					$this->_tmplocal->putContents($result);
+				}
 
 				// And remember this header data for nexttime.
 				\Core::Cache()->set(
 					'remotefile-cache-header-' . $f,
-					$this->_getHeaders()
+					[
+						'headers'  => $this->_getHeaders(),
+						'response' => $this->_response,
+					]
 				);
 			}
 		}
 
 		return $this->_tmplocal;
+	}
+
+	/**
+	 * Send a file to the user agent
+	 *
+	 * @param bool $forcedownload Set to true to force download instead of just sending the file.
+	 *
+	 * @throws \Exception
+	 *
+	 * @return void
+	 */
+	public function sendToUserAgent($forcedownload = false) {
+		$view = \Core\view();
+		$request = \Core\page_request();
+
+		$view->mode = \View::MODE_NOOUTPUT;
+		$view->contenttype = $this->getMimetype();
+		$view->updated = $this->getMTime();
+		if($forcedownload){
+			$view->headers['Content-Disposition'] = 'attachment; filename="' . $this->getBasename() . '"';
+			$view->headers['Cache-Control'] = 'no-cache, must-revalidate';
+			$view->headers['Content-Transfer-Encoding'] = 'binary';
+}
+		$view->headers['Content-Length'] = $this->getFilesize();
+
+		// Send all the view headers
+		$view->render();
+
+		// And now the actual content if it's not a HEAD request.
+		if($request->method != \PageRequest::METHOD_HEAD){
+			echo $this->getContents();
+		}
 	}
 }
 
