@@ -197,6 +197,26 @@ Each key supports several attributes, one ("type"), required, the rest optional.
 	get lookups via get().
 	* Mainly useful when renaming a column to a new name while still ensuring non-updated components compatibility.
 
+* formatter
+    * Provide a formatter method to format HTML output for this column value.
+    * Useful built-in methods:
+    * \Core\Formatter\CurrencyFormatter::BTC - Format as BTC
+    * \Core\Formatter\CurrencyFormatter::EUR - Format as EUR
+    * \Core\Formatter\CurrencyFormatter::GBP - Format as GBP
+    * \Core\Formatter\CurrencyFormatter::USD - Format as USD
+    * \Core\Formatter\GeneralFormatter::BoolEnabledDisabled - Format as "enabled" or "disabled"
+    * \Core\Formatter\GeneralFormatter::BoolYesNo - Format as "yes" or "no"
+    * \Core\Formatter\GeneralFormatter::DateStringFD - Format a date as a full long date
+    * \Core\Formatter\GeneralFormatter::DateStringFDT - Format a date as a full long date+time
+    * \Core\Formatter\GeneralFormatter::DateStringSD - Format a date as short date
+    * \Core\Formatter\GeneralFormatter::DateStringSDT - Format a date as short date+time
+    * \Core\Formatter\GeneralFormatter::Filesize - Format as filesize with automatic suffixes
+    * \Core\Formatter\GeneralFormatter::IPAddress - Format as IP Address (with geo lookups when available)
+    * \Core\Formatter\GeneralFormatter::TimeDuration - Format an amount of time into human-readable version.
+    * \Core\Formatter\GeneralFormatter::TimeDurationSinceNow - Format an amount of time into human-readable version.
+    * \Core\Formatter\GeneralFormatter::User - Format a user ID into the username.
+    * \Core\Formatter\GeneralFormatter::UserAgent - Format a useragent into human-friendly formats.
+
 
 ## Models defining form elements
 

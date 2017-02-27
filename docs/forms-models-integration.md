@@ -4,14 +4,14 @@ Since forms can be directly associated with the low-level data, (and therefore M
 
 The following code can be put into a controller to create a form directly based off a model:
 
-    $form = new Form();
+    $form = new \Core\Forms\Form();
     $model = new SomeModel();
     $form->addModel($model);
 
 If multiple models need to be present on the same form, that can be achieved as well:
 
     // Create a new form object
-    $form = new Form();
+    $form = new \Core\Forms\Form();
     
     // And get the models from wherever necessary.
     $model1 = new PageModel();
