@@ -30,6 +30,7 @@
 		</file>
 	</files>
 	<pages>
+		<page title="t:STRING_NEW_CONTENT_PAGE" baseurl="/content/create" access="p:/content/manage_all" admin="1" group="t:STRING_CONTENT"/>
 		<pagecreate title="t:STRING_CONTENT_PAGE" baseurl="/content/create" description="t:MESSAGE_CONTENT_PAGE"/>
 	</pages>
 	<description>

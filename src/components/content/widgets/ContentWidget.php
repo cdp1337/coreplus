@@ -49,31 +49,29 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class ContentWidget extends Widget_2_1 {
+class ContentWidget extends \Core\Widget {
 	public $is_simple = true;
+	
+	public $title = 'Content Widget';
 
 	public $settings = [
-		'title' => 'Content Title',
-	    'content' => '',
+		[
+			'type'        => 'text',
+			'name'        => 'title',
+			'title'       => 'Displayed Title',
+			'description' => 'Displayed title on the page where this widget is added to.',
+			'value'       => 'Content Title',
+		],
+		[
+			'type'  => 'wysiwyg',
+			'name'  => 'content',
+			'title' => 'Widget Content',
+			'value' => '',
+		],
 	];
 
 	public function getFormSettings(){
-
-		$settings = [
-			[
-				'type'        => 'text',
-				'name'        => 'title',
-				'title'       => 'Displayed Title',
-				'description' => 'Displayed title on the page where this widget is added to.',
-			],
-		    [
-			    'type' => 'wysiwyg',
-		        'name' => 'content',
-		        'title' => 'Widget Content',
-		    ]
-		];
-
-		return $settings;
+		return $this->settings;
 	}
 
 	/**
@@ -94,6 +92,15 @@ class ContentWidget extends Widget_2_1 {
 	 */
 	public function execute(){
 		$view = $this->getView();
+		
+		if(false && \Core\user()->checkAccess('g:admin')){
+			/*if(($wi = $this->getWidgetInstanceModel())){
+				$this->addControl('Edit Display Options', '/widget/instance/update/' . $wi->get('id'), 'desktop');
+			}*/
+			///widget/update?baseurl=/content/execute/0537-d831de842e7-3044
+			var_dump($this); die();
+			$this->addControl('Settings', '/widget/update?baseurl=' . $m->get('id'), 'edit');
+		}
 
 		$view->assign('title', $this->getSetting('title'));
 		$view->assign('content', \Core\parse_html($this->getSetting('content')));

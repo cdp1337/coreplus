@@ -78,7 +78,7 @@ class ContentController extends Controller_2_1 {
 
 		$page = $model->getLink('Page');
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
 
 		$form->addModel($page, 'page');
@@ -128,7 +128,7 @@ class ContentController extends Controller_2_1 {
 			$page->set('page_template', $request->getParameter('page_template'));
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'ContentController::_SaveHandler');
 
 		$form->addModel($page, 'page');
@@ -145,7 +145,7 @@ class ContentController extends Controller_2_1 {
 		$view->assignVariable('form', $form);
 	}
 
-	public static function _SaveHandler(Form $form) {
+	public static function _SaveHandler(\Core\Forms\Form $form) {
 
 		/** @var $model ContentModel */
 		$model = $form->getModel('model');

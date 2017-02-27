@@ -50,7 +50,7 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class ContentAdminWidget extends Widget_2_1 {
+class ContentAdminWidget extends \Core\Widget {
 	/**
 	 * Widget to quickly create a new Content page as a draft.
 	 */
@@ -62,7 +62,7 @@ class ContentAdminWidget extends Widget_2_1 {
 			return '';
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('orientation', 'vertical');
 		$form->set('callsmethod', 'ContentAdminWidget::QuickDraftSave');
 		$form->addElement(
@@ -97,7 +97,7 @@ class ContentAdminWidget extends Widget_2_1 {
 	 *
 	 * @return string|bool
 	 */
-	public static function QuickDraftSave(Form $form){
+	public static function QuickDraftSave(\Core\Forms\Form $form){
 
 		if(!$form->getElementValue('title')){
 			\Core\set_message('All pages must have titles.', 'error');
