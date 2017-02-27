@@ -12,7 +12,7 @@
  *
  * @package Facebook
  */
-class FacebookWidget extends Widget_2_1{
+class FacebookWidget extends \Core\Widget {
 	/**
 	 * Display the login widget for facebook.  This is actually just a button and FB handles the rest :)
 	 */

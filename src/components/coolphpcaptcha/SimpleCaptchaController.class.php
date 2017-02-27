@@ -155,7 +155,7 @@ class SimpleCaptchaController extends Controller_2_1{
 
 
 		// Build the form.  This will be pretty simple :p
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$presetoptions = array();
 		if(!$current){
 			// Add the custom settings option.

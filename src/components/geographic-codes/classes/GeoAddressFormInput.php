@@ -49,7 +49,7 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class GeoAddressFormInput extends FormElement {
+class GeoAddressFormInput extends \Core\Forms\FormElement {
 
 	/** @var GeoAddressModel */
 	private $_model;

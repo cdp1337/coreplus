@@ -26,7 +26,7 @@
  * Displays the system captcha as a form input.
  * Handles all the validation automatically.
  */
-class FormCaptchaInput extends FormElement{
+class FormCaptchaInput extends \Core\Forms\FormElement{
 	public function  __construct($atts = null) {
 		parent::__construct($atts);
 

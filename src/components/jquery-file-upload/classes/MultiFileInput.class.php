@@ -7,7 +7,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-class MultiFileInput extends FormElement {
+class MultiFileInput extends \Core\Forms\FormElement {
 	public function __construct($atts = null) {
 		// Some defaults
 		$this->_attributes      = array(

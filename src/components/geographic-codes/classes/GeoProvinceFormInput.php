@@ -5,7 +5,7 @@
  * 
  * Pulls dynamically from the database for real results.
  */
-class GeoProvinceFormInput extends FormElement {
+class GeoProvinceFormInput extends \Core\Forms\FormElement {
 	public function  __construct($atts = null) {
 		parent::__construct($atts);
 

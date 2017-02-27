@@ -77,11 +77,11 @@ class GoogleController extends Controller_2_1 {
 			]
 		];
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'GoogleController::ConfigureSave');
 
 		foreach($configs as $gk => $gdat){
-			$group = new FormTabsGroup(['name' => $gk, 'title' => $gdat['title']]);
+			$group = new \Core\Forms\TabsGroup(['name' => $gk, 'title' => $gdat['title']]);
 			foreach($gdat['configs'] as $c){
 				/** @var ConfigModel $config */
 				$config = ConfigHandler::GetConfig($c);
@@ -96,7 +96,7 @@ class GoogleController extends Controller_2_1 {
 		$view->assign('form', $form);
 	}
 
-	public static function ConfigureSave(Form $form) {
+	public static function ConfigureSave(\Core\Forms\Form $form) {
 		foreach($form->getElements() as $el){
 			/** @var $el FormElement */
 			$n = $el->get('name');

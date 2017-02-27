@@ -21,11 +21,11 @@ class FaviconController extends Controller_2_1 {
 
 		$image = ConfigHandler::Get('/favicon/image');
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 		
-		$basic = new FormTabsGroup(['name' => 'basic', 'title' => 'Basic Settings']);
-		$advanced = new FormTabsGroup(['name' => 'advanced', 'title' => 'Advanced Settings']);
+		$basic = new \Core\Forms\TabsGroup(['name' => 'basic', 'title' => 'Basic Settings']);
+		$advanced = new \Core\Forms\TabsGroup(['name' => 'advanced', 'title' => 'Advanced Settings']);
 
 		$basic->addElement(ConfigHandler::GetConfig('/favicon/image')->getAsFormElement());
 		

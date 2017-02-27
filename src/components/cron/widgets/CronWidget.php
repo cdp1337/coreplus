@@ -6,7 +6,7 @@
  * Time: 5:17 AM
  * To change this template use File | Settings | File Templates.
  */
-class CronWidget extends Widget_2_1{
+class CronWidget extends \Core\Widget {
 	/**
 	 * The view for the admin dashboard.  Gets the last executed crons and displays that to the admin.
 	 */
