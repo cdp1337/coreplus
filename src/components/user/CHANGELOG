@@ -1,3 +1,8 @@
+User 2.6.3-1~bpo268
+
+	* Backport support for the Deleted flag on users.
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:20:44 -0500
+
 User 2.6.3
 
 	* User accounts can now be deactivated instead of simply marked as inactive (back ported from 3.1).
