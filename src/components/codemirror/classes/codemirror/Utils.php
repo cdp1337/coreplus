@@ -43,6 +43,18 @@ namespace CodeMirror;
  *
  */
 abstract class Utils {
+	private static $Dependencies = [
+		'htmlmixed' => [ 'css', 'xml', 'javascript' ],
+		'php'       => [ 'htmlmixed' ],
+		'smarty'    => [ 'php' ],
+	];
+	
+	private static $Aliases = [
+		'html' => 'htmlmixed',
+		'bash' => 'shell',
+		'sh'   => 'shell',
+	];
+	
 	/**
 	 * Include the base codemirror dependencies.
 	 *
@@ -57,57 +69,78 @@ abstract class Utils {
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
 	}
+	
+	/**
+	 * Include a mode, (or an alias of a mode), and return the resolved name of the mode.
+	 * 
+	 * @param string $mode
+	 * @return string
+	 */
+	public static function IncludeMode($mode){
+		// Everything requires the core.
+		self::IncludeCodeMirror();
+		
+		// Allow this mode to be an alias of something.
+		if(isset(self::$Aliases[$mode])){
+			$mode = self::$Aliases[$mode];
+		}
+		
+		if(isset(self::$Dependencies[$mode])){
+			// Handle all dependency resolution.
+			foreach(self::$Dependencies[$mode] as $dep){
+				self::IncludeMode($dep);
+			}
+		}
+		
+		// Now this mode can be included.
+		\Core\view()->addScript('libs/codemirror/mode/' . $mode . '/' . $mode . '.js');
+		
+		return $mode;
+	}
 
 	public static function IncludeCSS() {
-		return self::_IncludeMode('css');
+		self::IncludeMode('css');
+		return true;
 	}
 
 	public static function IncludeSQL() {
 		return self::_IncludeMode('sql');
+		self::IncludeMode('sql');
+		return true;
 	}
 
 	public static function IncludeHTML() {
-		self::_IncludeMode('css');
-		self::_IncludeMode('xml');
-		self::_IncludeMode('javascript');
-		return self::_IncludeMode('htmlmixed');
+		self::IncludeMode('htmlmixed');
+		return true;
 	}
 
 	public static function IncludeHTTP() {
-		return self::_IncludeMode('http');
+		self::IncludeMode('http');
+		return true;
 	}
 
 	public static function IncludeJS() {
-		return self::_IncludeMode('javascript');
+		self::IncludeMode('javascript');
+		return true;
 	}
 
 	public static function IncludeMD() {
-		return self::_IncludeMode('markdown');
+		self::IncludeMode('markdown');
+		return true;
 	}
 
 	public static function IncludePHP() {
-		self::_IncludeMode('css');
-		self::_IncludeMode('javascript');
-		self::_IncludeMode('htmlmixed');
-		return self::_IncludeMode('php');
+		self::IncludeMode('php');
+		return true;
 	}
 
 	public static function IncludeSmarty() {
-		self::_IncludeMode('css');
-		self::_IncludeMode('javascript');
-		self::_IncludeMode('htmlmixed');
-		self::_IncludeMode('php');
-		return self::_IncludeMode('smarty');
+		self::IncludeMode('smarty');
+		return true;
 	}
 
 	public static function IncludeShell() {
-		return self::_IncludeMode('shell');
-	}
-
-	private static function _IncludeMode($mode) {
-		self::IncludeCodeMirror();
-
-		\Core\view()->addScript('libs/codemirror/mode/' . $mode . '/' . $mode . '.js');
+		self::IncludeMode('shell');
 		return true;
 	}
 }

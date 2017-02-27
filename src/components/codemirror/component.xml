@@ -2,13 +2,13 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-5" name="CodeMirror" execmode="web" logo="logo.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<files>
 		<file filename="CHANGELOG" md5="a4546d6c86682ef19c48239d55c28dde"/>
 		<file filename="LICENSE" md5="9b220ffd4c5ac8f2dd268ac13493a602"/>
 		<file filename="README.md" md5="0f08084b2e14a8ae88004b4cc635bc3d"/>
-		<file filename="classes/codemirror/Utils.php" md5="8efb018357372248ccbfa009f0370974">
+		<file filename="classes/codemirror/Utils.php" md5="962c9558a76604b93deb14fb66bbc009">
 			<class name="CodeMirror\Utils"/>
 		</file>
 		<file filename="logo.png" md5="f824dab41f1b8c60a38187f0dfa70d53"/>
@@ -41,7 +41,7 @@
 		<upgrade from="5.6.0-4" to="5.6.0-5"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/css/codemirror.css" md5="81c74138a50b07e3d86973fa4be3da0b"/>
+		<file filename="assets/css/codemirror.css" md5="136581127e49e8fc0aa024287a9a58bc"/>
 		<file filename="assets/libs/codemirror/AUTHORS" md5="dae54d0ba943da7adb0cd9cc83d8caeb"/>
 		<file filename="assets/libs/codemirror/CONTRIBUTING.md" md5="89dd65bf9084fce69e3701baaffe1de8"/>
 		<file filename="assets/libs/codemirror/addon/comment/comment.js" md5="e1233ff2b2428c5078ecfafbea23b7a0"/>
@@ -251,7 +251,7 @@
 		<file filename="assets/libs/codemirror/keymap/sublime.min.js" md5="e8e64b19dd518aaf3c2372761e22fd7f"/>
 		<file filename="assets/libs/codemirror/keymap/vim.js" md5="fcef669eb703a71af874cb7ed081d5d0"/>
 		<file filename="assets/libs/codemirror/keymap/vim.min.js" md5="78f5554e0ef042de9497e83786efdcc4"/>
-		<file filename="assets/libs/codemirror/lib/codemirror.css" md5="2336fb49f85e9fa887ada9af35223dce"/>
+		<file filename="assets/libs/codemirror/lib/codemirror.css" md5="0795d5c2f16ae81038e5cab1d8e290b4"/>
 		<file filename="assets/libs/codemirror/lib/codemirror.js" md5="fa7004973c68be0820c47a87cc4eb851"/>
 		<file filename="assets/libs/codemirror/lib/codemirror.min.js" md5="a8f3d666b20b403e4c805560eaabc580"/>
 		<file filename="assets/libs/codemirror/mode/apl/apl.js" md5="e142a4e7ff3e988d54f74b628711884b"/>
@@ -723,5 +723,17 @@
 		<file filename="assets/libs/codemirror/theme/yeti.css" md5="623dc805bc84dd6d25deef376593354e"/>
 		<file filename="assets/libs/codemirror/theme/zenburn.css" md5="94ad50bf3d048ed92cc513cd901dc685"/>
 	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="Nick Hinsch" email="nicholas@evalagency.com"/>
+		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
+		<author name="Stas Kobzar" email="stas@modulis.ca"/>
+		<author name="Hans Engel"/>
+		<author name="Gautam Mehta"/>
+		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
+	</authors>
+	<licenses>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
+	</licenses>
 </component>
 
