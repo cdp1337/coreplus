@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Media Manager">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1-1~bpo268" name="Media Manager">
 	<requires>
 		<require name="core" type="component" version="2.6.0"/>
 		<require name="jquery" type="library"/>
@@ -22,7 +22,8 @@
 		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ebe362af28ed768c736ac99d6cf86639"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="65c9c70962372fcacfd44f31a3a33df9"/>
+		<file filename="CHANGELOG" md5="598687b2e0a025fd685f0225b5a6c7bd"/>
+		<file filename="component.xml" md5="5c94ba372b2fa2962266e849f5f2d849"/>
 		<file filename="controllers/MediaManagerNavigatorController.php" md5="4ad8781484bfc7c8cd07a780de25db49">
 			<controller name="MediaManagerNavigatorController"/>
 		</file>
@@ -36,13 +37,15 @@
 	</assets>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
+		<upgrade from="1.0.1" to="1.0.1-1~bpo268"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
-	</authors>
 	<description>
 		This component provides the multi-file uploader and media manager pages
 	</description>
+	<smartyplugins/>
+	<authors>
+		<author name="Charlie Powell" email="charlie@eval.bz"/>
+	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 			GNU Affero General Public License v3
