@@ -225,6 +225,9 @@
 		</upgrade>
 		<upgrade from="4.0.1~core2" to="4.0.1~core3"/>
 	</upgrades>
+	<description>
+		This component provides the WYSIWYG text editor for textareas
+	</description>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

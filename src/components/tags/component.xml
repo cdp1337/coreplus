@@ -17,6 +17,9 @@
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
+	<description>
+		This component provides tagging for pages
+	</description>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl.html">
 			GNU Affero General Public License v3

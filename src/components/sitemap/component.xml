@@ -24,6 +24,9 @@
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
 	</upgrades>
+	<description>
+		This component provides sitemap.xml
+	</description>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

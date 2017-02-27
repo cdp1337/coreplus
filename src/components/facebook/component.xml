@@ -80,6 +80,10 @@
 		<file filename="assets/css/facebook.css" md5="b6a7a960c63910152e0f52dde3d7e86c"/>
 		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
 	</assets>
+	<description>
+		This component provides Facebook authentication abilities
+	</description>
+
 	<authors>
 		<author name="Naitik Shah" email="naitik@facebook.com"/>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>

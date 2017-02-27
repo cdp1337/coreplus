@@ -36,7 +36,7 @@
 		<page baseurl="/blog/admin" admin="1" access="p:blog_manage" title="Blog Administration" group="Content"/>
 		<page baseurl="/blog" title="Blogs"/>
 	</pages>
-	<description>Blog system.</description>
+	<description>This component provides the blogging ability for Core Plus</description>
 	<view searchdir="templates">
 		<file filename="templates/pages/blog/admin.tpl" md5="44274363e8c7fea512396a63293c63fd"/>
 		<file filename="templates/pages/blog/admin_view.tpl" md5="e1ca90792ff8835bee5ef1d03c54a851"/>

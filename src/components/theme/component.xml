@@ -67,6 +67,9 @@
 		<upgrade from="2.1.3" to="2.1.4"/>
 		<upgrade from="2.1.4" to="2.1.5"/>
 	</upgrades>
+	<description>
+		This component provides theme support for Core Plus
+	</description>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 		<author name="Nick Hinsch &lt;nicholas@eval.bz"/>

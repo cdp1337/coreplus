@@ -32,6 +32,10 @@
 	<assets>
 		<file filename="assets/css/usersocial.css" md5="4cf64ea147f88e890f4c79d8c7c5f7e3"/>
 	</assets>
+	<description>
+		This component provides social profile connections to users
+	</description>
+
 	<view searchdir="templates">
 		<file filename="templates/pages/userprofile/connectedprofiles.tpl" md5="aa7df8ae9e197157efcdd397c78eddba"/>
 		<file filename="templates/pages/userprofile/view.tpl" md5="1261b0e0555d06fd13afd92da3565e87"/>

@@ -56,6 +56,9 @@
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
 	</assets>
+	<description>
+		This web cron component provides hooks to common system crons to perform scheduled tasks.
+	</description>
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>

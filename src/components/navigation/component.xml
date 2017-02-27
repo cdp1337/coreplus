@@ -60,6 +60,9 @@
 	<authors>
 		<author name="Charlie Powell" email="charlie@eval.bz"/>
 	</authors>
+	<description>
+		This component provides the navigation menu system
+	</description>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
 			GNU Affero General Public License v3
