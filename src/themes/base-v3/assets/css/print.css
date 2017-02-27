@@ -1307,24 +1307,24 @@ table.listing {
 }
 /* line 17, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(even) {
-  background-color: white;
+  background-color: #f1f1f1;
 }
 /* line 21, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
-  background-color: #DDD;
+  background-color: white;
 }
 /* line 25, ../scss/_listing_tables.scss */
 table.listing tr:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
-  background-color: #cad9f0;
+  background-color: #dde7f5;
 }
 /* line 31, ../scss/_listing_tables.scss */
 table.listing th {
   padding: 0.375em 0.25em;
   border: 1px solid #b7b7b7;
   vertical-align: top;
-  background: #999;
-  color: white;
+  background: white;
+  color: #333;
   position: relative;
 }
 /* line 40, ../scss/_listing_tables.scss */
@@ -1346,7 +1346,7 @@ table.listing.listing-table-sortable th .sort-icons {
   cursor: pointer;
   right: 0;
   top: 4px;
-  background: #999;
+  background: white;
 }
 /* line 63, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons i.icon-sort-up {
@@ -1397,7 +1397,7 @@ table.listing.listing-table-sortable th:hover i.sort-icon.current {
   padding-top: 1em;
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: #DDD;
+  border-top-color: #f1f1f1;
 }
 
 /* line 128, ../scss/_listing_tables.scss */
@@ -1406,7 +1406,7 @@ div.listing-table {
   width: 100%;
   border-width: 1px;
   border-style: solid;
-  border-color: #DDD;
+  border-color: #f1f1f1;
   display: -webkit-box;
   display: -moz-box;
   display: box;
@@ -1443,24 +1443,24 @@ div.listing-table .listing-table-record {
 }
 /* line 146, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(even) {
-  background-color: white;
+  background-color: #f1f1f1;
 }
 /* line 149, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(even) .listing-table-cell {
-  border-color: #ededed;
+  border-color: #e0e0e0;
 }
 /* line 153, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(odd) {
-  background-color: #DDD;
+  background-color: white;
 }
 /* line 156, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(odd) .listing-table-cell {
-  border-color: #cbcbcb;
+  border-color: #ededed;
 }
 /* line 160, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
-  background-color: #cad9f0;
+  background-color: #dde7f5;
 }
 /* line 166, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-group {
@@ -1510,8 +1510,8 @@ div.listing-table .listing-table-cell.listing-table-cell-header {
   padding: 0.375em 0.25em;
   font-weight: 600;
   vertical-align: top;
-  background: #999;
-  color: white;
+  background: white;
+  color: #333;
   position: relative;
   min-width: 2.5em;
 }
@@ -1524,7 +1524,7 @@ div.listing-table.listing-table-sortable .sort-icons {
   cursor: pointer;
   right: 0;
   top: 4px;
-  background: #999;
+  background: white;
 }
 /* line 216, ../scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons i.icon-sort-up {

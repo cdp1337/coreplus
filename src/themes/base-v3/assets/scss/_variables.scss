@@ -61,15 +61,15 @@ $button-apply-color: lighten($success, 66%);
 $button-apply-icon-color: lighten($success, 33%);
 
 // Listing Table colors and styles
-$listing-table-tr-odd-bg: $light-gray;
-$listing-table-tr-even-bg: $base-background-color;
-$listing-table-tr-hover-bg: lighten($blue, 33%);
-$listing-table-th-color: $base-background-color;
-$listing-table-th-background: $medium-gray;
+$listing-table-tr-odd-bg: $base-background-color;
+$listing-table-tr-even-bg: lighten($light-gray, 8%);
+$listing-table-tr-hover-bg: lighten($blue, 38%);
+$listing-table-th-color: $base-font-color;
+$listing-table-th-background: $base-background-color;
 
 $listing-table-border-width: 1px;
 $listing-table-border-style: solid;
-$listing-table-border-color: $base-border-color;
+$listing-table-border-color: lighten($base-border-color, 8%);
 $listing-table-border-even-color: darken($listing-table-tr-even-bg, 7);
 $listing-table-border-odd-color: darken($listing-table-tr-odd-bg, 7);
 

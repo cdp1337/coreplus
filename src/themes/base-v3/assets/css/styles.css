@@ -1299,24 +1299,24 @@ table.listing {
 }
 /* line 17, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(even) {
-  background-color: white;
+  background-color: #f1f1f1;
 }
 /* line 21, ../scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
-  background-color: #DDD;
+  background-color: white;
 }
 /* line 25, ../scss/_listing_tables.scss */
 table.listing tr:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
-  background-color: #cad9f0;
+  background-color: #dde7f5;
 }
 /* line 31, ../scss/_listing_tables.scss */
 table.listing th {
   padding: 0.375em 0.25em;
   border: 1px solid #b7b7b7;
   vertical-align: top;
-  background: #999;
-  color: white;
+  background: white;
+  color: #333;
   position: relative;
 }
 /* line 40, ../scss/_listing_tables.scss */
@@ -1338,7 +1338,7 @@ table.listing.listing-table-sortable th .sort-icons {
   cursor: pointer;
   right: 0;
   top: 4px;
-  background: #999;
+  background: white;
 }
 /* line 63, ../scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons i.icon-sort-up {
@@ -1389,7 +1389,7 @@ table.listing.listing-table-sortable th:hover i.sort-icon.current {
   padding-top: 1em;
   border-top-width: 1px;
   border-top-style: solid;
-  border-top-color: #DDD;
+  border-top-color: #f1f1f1;
 }
 
 /* line 128, ../scss/_listing_tables.scss */
@@ -1398,7 +1398,7 @@ div.listing-table {
   width: 100%;
   border-width: 1px;
   border-style: solid;
-  border-color: #DDD;
+  border-color: #f1f1f1;
   display: -webkit-box;
   display: -moz-box;
   display: box;
@@ -1435,24 +1435,24 @@ div.listing-table .listing-table-record {
 }
 /* line 146, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(even) {
-  background-color: white;
+  background-color: #f1f1f1;
 }
 /* line 149, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(even) .listing-table-cell {
-  border-color: #ededed;
+  border-color: #e0e0e0;
 }
 /* line 153, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(odd) {
-  background-color: #DDD;
+  background-color: white;
 }
 /* line 156, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(odd) .listing-table-cell {
-  border-color: #cbcbcb;
+  border-color: #ededed;
 }
 /* line 160, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-record:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
-  background-color: #cad9f0;
+  background-color: #dde7f5;
 }
 /* line 166, ../scss/_listing_tables.scss */
 div.listing-table .listing-table-group {
@@ -1502,8 +1502,8 @@ div.listing-table .listing-table-cell.listing-table-cell-header {
   padding: 0.375em 0.25em;
   font-weight: 600;
   vertical-align: top;
-  background: #999;
-  color: white;
+  background: white;
+  color: #333;
   position: relative;
   min-width: 2.5em;
 }
@@ -1516,7 +1516,7 @@ div.listing-table.listing-table-sortable .sort-icons {
   cursor: pointer;
   right: 0;
   top: 4px;
-  background: #999;
+  background: white;
 }
 /* line 216, ../scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons i.icon-sort-up {
@@ -2133,6 +2133,95 @@ body.page-user-view .user-primary-info, body.page-user-me .user-primary-info {
 }
 */
 /**
+ * Handles the public /page/* styles for the theme.
+ *
+ * These include site search and the sitemap.
+ */
+/* line 9, ../scss/pages/_page.scss */
+.page-search-widget form .form-element-value {
+  position: relative;
+}
+/* line 13, ../scss/pages/_page.scss */
+.page-search-widget form i {
+  position: absolute;
+  right: 10px;
+  top: 11px;
+}
+/* line 19, ../scss/pages/_page.scss */
+.page-search-widget form .submit-button {
+  display: none;
+}
+
+/* line 27, ../scss/pages/_page.scss */
+.page-page-search .page-search-form .form-element-value, .page-page-sitemap .page-search-form .form-element-value {
+  position: relative;
+}
+/* line 31, ../scss/pages/_page.scss */
+.page-page-search .page-search-form i, .page-page-sitemap .page-search-form i {
+  position: absolute;
+  right: 10px;
+  top: 11px;
+}
+/* line 37, ../scss/pages/_page.scss */
+.page-page-search .page-search-form .submit-button, .page-page-sitemap .page-search-form .submit-button {
+  display: none;
+}
+
+/* line 44, ../scss/pages/_page.scss */
+.page-page-search .search-result-page {
+  margin-bottom: 0.75em;
+}
+/* line 48, ../scss/pages/_page.scss */
+.page-page-search .page-title {
+  display: block;
+  float: left;
+  font-size: 105%;
+}
+/* line 54, ../scss/pages/_page.scss */
+.page-page-search .page-image {
+  clear: left;
+  float: left;
+  margin-right: 0.25em;
+}
+/* line 60, ../scss/pages/_page.scss */
+.page-page-search .page-teaser {
+  clear: right;
+  color: #616161;
+  font-size: 90%;
+}
+/* line 66, ../scss/pages/_page.scss */
+.page-page-search .search-relevancy {
+  color: #999;
+  float: right;
+  font-size: 75%;
+}
+
+/* line 74, ../scss/pages/_page.scss */
+.page-page-sitemap .page-teaser {
+  color: #616161;
+  font-size: 90%;
+}
+
+/* line 1, ../scss/widgets/_adminbar.scss */
+#admin-bar ul ul.sub-menu {
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.8);
+}
+/* line 6, ../scss/widgets/_adminbar.scss */
+#admin-bar ul ul.sub-menu li a.has-image {
+  color: #f2f2f2;
+  padding: 9px 10px 9px 3px;
+}
+/* line 10, ../scss/widgets/_adminbar.scss */
+#admin-bar ul ul.sub-menu li a.has-image img {
+  vertical-align: middle;
+}
+/* line 14, ../scss/widgets/_adminbar.scss */
+#admin-bar ul ul.sub-menu li a.no-image {
+  color: #f2f2f2;
+  padding: 9px 10px 9px 31px;
+}
+
+/**
  * General content styles
  */
 /* line 6, ../scss/_content.scss */
@@ -2292,13 +2381,13 @@ footer.page-footer .legal-notice {
     display: none !important;
   }
 }
-/* line 44, ../scss/styles.scss */
+/* line 46, ../scss/styles.scss */
 a.agplv3-tag {
   display: inline-block;
   padding: 0 0.25em;
   color: #636;
 }
-/* line 49, ../scss/styles.scss */
+/* line 51, ../scss/styles.scss */
 a.agplv3-tag:hover {
   border-radius: 0.5em;
   background-color: #636;
