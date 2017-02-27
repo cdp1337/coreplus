@@ -37,6 +37,16 @@ define('ROOT_URL_SSL', ROOT_WDIR);
 define('ROOT_URL_NOSSL', ROOT_WDIR);
 //define('TMP_DIR', sys_get_temp_dir() . '/coreplus-installer/');
 define('CUR_CALL', ROOT_WDIR . 'install/');
+define('SERVERNAME', 'localhost');
+
+/**
+ * The GnuPG home directory to store keys in.
+ */
+if (!defined('GPG_HOMEDIR')) {
+	define('GPG_HOMEDIR', ROOT_PDIR . 'gnupg');
+}
+// PECL expects this variable to be set, so set it!
+putenv('GNUPGHOME=' . GPG_HOMEDIR);
 
 // Make this page load appear as a standard web request instead of a CLI one.
 //unset($_SERVER['SHELL']);
