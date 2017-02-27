@@ -1,3 +1,9 @@
+Google 1.2.0-1~bpo268
+
+	* Backport 1.2.1 feature of postal-only geocode requests.
+	* Permissions check when managing Google settings.
+	-- Charlie Powell <support@corepl.us>  Mon, 27 Feb 2017 04:19:50 -0500
+
 Google 1.2.0
 
 	* [Feature] Google geocode supports enterprise signing!
