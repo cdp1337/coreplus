@@ -2,7 +2,7 @@
 /**
  * File for class Page Search definition in the coreplus project
  * 
- * @package Blog
+ * @package Core
  * @author Charlie Powell <charlie@evalagency.com>
  * @date 20140228.1328
  * @copyright Copyright (C) 2009-2016  Charlie Powell
@@ -29,10 +29,24 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class PageSearchWidget extends Widget_2_1 {
+class PageSearchWidget extends \Core\Widget {
 	public $is_simple = true;
+	
+	public $displaySettings = [
+		[
+			'name' => 'title',
+			'title' => 'Title',
+			'description' => 'Set the title to display above/before the search box, leave blank to omit any text.',
+		],
+		[
+			'name' => 'placeholder',
+			'title' => 'Placeholder Text',
+			'value' => 'Search',
+			'description' => 'Set the text to display inside the search box as placeholder text.',
+		],
+	];
 
-	public $settings = [
+	/*public $settings = [
 		'title' => 'Page Search',
 	];
 
@@ -48,7 +62,7 @@ class PageSearchWidget extends Widget_2_1 {
 		];
 
 		return $settings;
-	}
+	}*/
 
 	/**
 	 * Get the path for the preview image for this widget.
@@ -76,9 +90,15 @@ class PageSearchWidget extends Widget_2_1 {
 		else{
 			$query = null;
 		}
+		
+		$displaySettings = [];
+		foreach($this->displaySettings as $dat){
+			$displaySettings[ $dat['name'] ] = $dat['value'];
+		}
 
 		$view->assign('title', $this->getSetting('title'));
 		$view->assign('url', $url);
 		$view->assign('query', $query);
+		$view->assign('display_settings', $displaySettings);
 	}
 } 

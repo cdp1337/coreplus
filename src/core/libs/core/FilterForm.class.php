@@ -154,9 +154,9 @@ class FilterForm {
 			if ($atts) $element->setFromArray($atts);
 		}
 		else {
-			if (!isset(Form::$Mappings[$element])) $element = 'text'; // Default.
+			if (!isset(\Core\Forms\Form::$Mappings[$element])) $element = 'text'; // Default.
 
-			$element = new Form::$Mappings[$element]($atts);
+			$element = new \Core\Forms\Form::$Mappings[$element]($atts);
 		}
 
 		// Lastly...
@@ -655,7 +655,7 @@ class FilterForm {
 			}
 
 			// If this link is a date object, convert a date string to its unix timestamp representation.
-			if($el instanceof FormDateInput || $el->get('dateformat')){
+			if($el instanceof \Core\Forms\DateInput || $el->get('dateformat')){
 				// Default to a unix timestamp, but allow the user to override this.
 				// This is useful for saving a date in the datastore as a human-readable format.
 				$format = $el->get('dateformat') ? $el->get('dateformat') : 'U';

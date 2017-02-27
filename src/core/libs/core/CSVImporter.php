@@ -367,7 +367,7 @@ class CSVImporter {
 	 *
 	 * @return bool
 	 */
-	public static function FormHandler1(\Form $form) {
+	public static function FormHandler1(\Core\Forms\Form $form) {
 		
 		$importer = new CSVImporter($form->getElementValue('key'));
 
@@ -381,7 +381,7 @@ class CSVImporter {
 		return true;
 	}
 
-	public static function FormHandler2(\Form $form) {
+	public static function FormHandler2(\Core\Forms\Form $form) {
 		$importer = new CSVImporter($form->getElementValue('key'));
 		
 		if($form->getElementValue('cancel') == '1'){

@@ -240,7 +240,7 @@ class UpdaterController extends Controller_2_1 {
 
 		$site = new UpdateSiteModel();
 
-		$form = Form::BuildFromModel($site);
+		$form = \Core\Forms\Form::BuildFromModel($site);
 		$form->set('action', \Core\resolve_link('/updater/repos/add'));
 		$form->addElement('submit', array('value' => 'Next'));
 
@@ -295,7 +295,7 @@ class UpdaterController extends Controller_2_1 {
 			]);
 
 			// From here on out, populate the previous form with this new model.
-			$form = Form::BuildFromModel($model);
+			$form = \Core\Forms\Form::BuildFromModel($model);
 			$form->set('action', \Core\resolve_link('/updater/repos/add'));
 			$form->addElement('submit', array('value' => 'Next'));
 			$view->assign('form', $form);
@@ -390,7 +390,7 @@ class UpdaterController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$form = Form::BuildFromModel($site);
+		$form = \Core\Forms\Form::BuildFromModel($site);
 		$form->set('callsmethod', 'UpdaterController::_SaveRepo');
 		$form->addElement('submit', array('value' => 'Update'));
 
@@ -447,7 +447,7 @@ class UpdaterController extends Controller_2_1 {
 		$request = $this->getPageRequest();
 		$view = $this->getView();
 		
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'UpdaterController::_UploadHandler');
 		$form->addElement(
 			'file',
@@ -925,7 +925,7 @@ class UpdaterController extends Controller_2_1 {
 
 	}
 
-	public static function _SaveRepo(Form $form) {
+	public static function _SaveRepo(\Core\Forms\Form $form) {
 		try{
 			$model = $form->getModel();
 			$model->save();
@@ -1030,7 +1030,7 @@ class UpdaterController extends Controller_2_1 {
 		return $checks;
 	}
 
-	public static function _UploadHandler(Form $form) {
+	public static function _UploadHandler(\Core\Forms\Form $form) {
 		$localfile = \Core\Filestore\Factory::File($form->getElement('upload')->get('value'));
 		$localobj = $localfile->getContentsObject();
 		if(!$localobj instanceof Core\Filestore\Contents\ContentTGZ){

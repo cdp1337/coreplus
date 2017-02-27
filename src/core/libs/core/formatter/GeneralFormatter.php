@@ -271,4 +271,79 @@ class GeneralFormatter {
 		
 		return \Core\time_duration_format($value);
 	}
+	
+	/**
+	 * Format an access string as a human-representable version.
+	 * 
+	 * @param string $value
+	 * @param string $format
+	 * 
+	 * @return string
+	 */
+	public static function AccessString($value, $format = \View::CTYPE_HTML){
+		if($value == 'g:admin'){
+			// Simple admin-only access string
+			return t('STRING_ACCESS_ONLY_SUPER_ADMINS');
+		}
+		elseif($value == '*'){
+			return t('STRING_ACCESS_ANYONE');
+		}
+		elseif($value == '!*'){
+			return t('STRING_ACCESS_NOACCESS');
+		}
+		elseif($value == 'g:authenticated'){
+			return t('STRING_ACCESS_ONLY_AUTHENTICATED');
+		}
+		elseif($value == 'g:anonymous'){
+			return t('STRING_ACCESS_ONLY_ANONYMOUS');
+		}
+		else{
+			// Each group can contain a set of groups, permissions, or the like.
+			$strings = [];
+			$parts = explode(';', $value);
+			foreach($parts as $p){
+				if(strpos($p, ':')){
+					list($k, $v) = explode(':', $p);
+				
+					if($v{0} == '!'){
+						$prefix = t('STRING_NOT') . ' ';
+						$v = substr($v, 1);
+					}
+					else{
+						$prefix = '';
+					}
+
+					if($k == 'g'){
+						// Lookup this group to get the name.
+						$group = \UserGroupModel::Construct($v);
+						$strings[] = $prefix . $group->get('name');
+					}
+					elseif($k == 'p'){
+						$strings[] = $prefix . t('STRING_PERMISSION_S', $v);
+					}
+					else{
+						$strings[] = $prefix . $k . ':' . $v;
+					}
+				}
+				else{
+					if($p{0} == '!'){
+						$prefix = t('STRING_NOT') . ' ';
+						$p = substr($p, 1);
+					}
+					else{
+						$prefix = '';
+					}
+					
+					if($p == '*'){
+						$strings[] = $prefix . t('STRING_ACCESS_ANYONE_ELSE');
+					}
+					else{
+						$strings[] = $prefix . $p;
+					}
+				}
+			}
+			
+			return implode("\n<br/>", $strings);
+		}
+	}
 }

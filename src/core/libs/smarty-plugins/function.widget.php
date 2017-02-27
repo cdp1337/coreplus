@@ -77,7 +77,7 @@ function smarty_function_widget($params, $smarty){
 	}
 	// @todo Add support for requiring instancing.
 
-	/** @var $w Widget_2_1 */
+	/** @var $w \Core\Widget */
 	$w = new $name();
 	// Version 1.0 API
 	if($api == 1.0){

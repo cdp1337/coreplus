@@ -74,13 +74,13 @@ class Dataset implements \Iterator{
 	public $_where = null;
 
 	/**
-	 * @deprecated 201607
-	 * @var string
+	 * Set to an explict mode if required and supported by the datamodel backend.
+	 * 
+	 * @var string|null
 	 */
-	public $_mode = Dataset::MODE_GET;
+	public $_mode = null;
 
 	/**
-	 * @deprecated 201607
 	 * @var array
 	 */
 	public $_sets = array();

@@ -317,7 +317,7 @@ class ConfigModel extends Model {
 		$attributes = $this->getFormAttributes();
 		$val        = \ConfigHandler::Get($key);
 		$type       = $attributes['type'];
-		$el         = \FormElement::Factory($type, $attributes);
+		$el         = \Core\Forms\FormElement::Factory($type, $attributes);
 
 		if($type == 'radio'){
 			// Ensure that this matches what the radios will have.

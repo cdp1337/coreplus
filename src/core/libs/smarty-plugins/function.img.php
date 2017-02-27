@@ -185,6 +185,21 @@ function smarty_function_img($params, $smarty){
 		if($width) $attributes['width'] = $width;
 		if($height) $attributes['height'] = $height;
 	}
+	elseif($f->getExtension() == 'svg'){
+		// Vector graphics should be sent to the user agent for processing there.
+		// This provides the best quality, (as opposed to rasterizing the data).
+		if($inline){
+			// Load the contents of the SVG and return the markup.
+			$markup = $f->getContents();
+			return $assign ? $smarty->assign($assign, $markup) : $markup;
+		}
+		else{
+			// Otherwise, simply grab the URL for the SVG and set the width+height attributes appropriately.
+			$attributes['src'] = $f->getURL();
+			if($width) $attributes['width'] = $width;
+			if($height) $attributes['height'] = $height;
+		}
+	}
 	else{
 		// Try to lookup the preview file.
 		// if it exists, then YAY... I can return that direct resource.
@@ -198,11 +213,6 @@ function smarty_function_img($params, $smarty){
 		if(!$previewfile){
 			$attributes['src'] = '#';
 			$attributes['title'] = 'No preview files available!';
-		}
-		elseif($inline && $f->getExtension() == 'svg'){
-			// SVG files actually get rendered inline, as in the SVG code gets embedded.
-			$markup = $f->getContents();
-			return $assign ? $smarty->assign($assign, $markup) : $markup;
 		}
 		elseif($inline && $f->getFilesize() < 1048576*4){
 			// Overwrite the src attribute with the base64 contents.

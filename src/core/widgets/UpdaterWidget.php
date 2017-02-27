@@ -12,7 +12,7 @@
  *
  * @package Core
  */
-class UpdaterWidget extends Widget_2_1{
+class UpdaterWidget extends \Core\Widget {
 	public function check(){
 		if( !\Core\user()->checkAccess('g:admin') ) return '';
 	}

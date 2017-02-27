@@ -286,7 +286,7 @@ class SchemaColumn {
 	/**
 	 * Get this column value as a valid form element.
 	 * 
-	 * @return \FormElement|null
+	 * @return \Core\Forms\FormElement|null
 	 */
 	public function getAsFormElement(){
 		
@@ -298,7 +298,7 @@ class SchemaColumn {
 			return null;
 		}
 		
-		$el = \FormElement::Factory($type, $attributes);
+		$el = \Core\Forms\FormElement::Factory($type, $attributes);
 		
 		// Ensure that the form element's "parent" is the same as this column's parent.
 		// If it's null, then it'll be null there! (which is fine.)

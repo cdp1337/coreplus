@@ -80,14 +80,14 @@
 										<li>
 											{a href="/widget/instance/update/{$widget.id}" class="control control-edit" title="Edit Options"}
 												<i class="icon icon-desktop"></i>
-												<span>Edit Display Options</span>
+												<span>Display Options</span>
 											{/a}
 										</li>
 										{if $widget.Widget.editurl}
 											<li>
 												{a href="`$widget.Widget.editurl`"}
 													<i class="icon icon-wrench"></i>
-													<span>Edit Widget Settings</span>
+													<span>Settings</span>
 												{/a}
 											</li>
 										{/if}
@@ -108,9 +108,9 @@
 											</li>
 										{/if}
 										<li>
-											{a href="/widget/instance/remove/`$widget.id`" class="control control-delete" title="Remove Widget Instance" confirm="Confirm removing the widget from this area?"}
+											{a href="/widget/instance/remove/`$widget.id`" class="control control-delete" title="Remove Widget Instance" confirm=""}
 												<i class="icon icon-trash-o"></i>
-												<span>Uninstall Instance</span>
+												<span>Remove</span>
 											{/a}
 										</li>
 									</ul>
@@ -135,87 +135,91 @@
 
 <fieldset class="widget-bucket-source">
 	<h3 class="fieldset-title">Available Widgets</h3>
-	{foreach $available_widgets as $widget}
-		<div class="widget-source">
-			<span class="widget-title">
-				{$widget.title}
-			</span>
-
-			{if $manager && ($widget.editurl || $widget.deleteurl)}
-				<div>
-				<ul class="controls">
-					{if $widget.editurl}
-						<li>
-							{a href="`$widget.editurl`"}
-								<i class="icon icon-wrench"></i>
-								<span>Edit Widget Settings</span>
-							{/a}
-						</li>
-					{/if}
-					{if $widget.deleteurl}
-						<li>
-							{a href="`$widget.deleteurl`" confirm="Are you sure you want to completely delete this widget?"}
-								<i class="icon icon-remove"></i>
-								<span>Delete Widget</span>
-							{/a}
-						</li>
-					{/if}
-				</ul>
-				</div>
-			{/if}
-
-			{if $widget->getWidget() === null}
-				[ Widget Not Found! ]<br/>
-				{$widget.baseurl}
-			{elseif $widget->getWidget()->getPreviewImage()}
-				{img width="210" src="`$widget->getWidget()->getPreviewImage()`"}
-			{else}
-				{$widget.baseurl}
-			{/if}
-
-			{if $widget->getWidget() !== null}
-				<form action="{link '/widget/instance/install'}" method="POST">
-					<select name="area">
-						<option value="">-- Select Widget Area --</option>
-						{foreach from=$areas item='area'}
-							<option value="{$area.name}">{$area.name}</option>
-						{/foreach}
-					</select>
-					<input type="hidden" name="template" value="{$template}"/>
-					<input type="hidden" name="widget_baseurl" value="{$widget.baseurl}"/>
-					<input type="submit" value="Install Widget"/>
-				</form>
-			{/if}
-
-			{*widget.installable*}
-		</div>
-	{/foreach}
+	<table class="listing">
+		{foreach $available_widgets as $widget}
+			<tr>
+				<td>
+					{img dimensions="100x60" src="`$widget->getPreviewImage()`" placeholder="generic"}
+				</td>
+				<td>
+					<span class="widget-title">
+						{$widget.title}
+					</span><br/>
+					{$widget.baseurl}
+				</td>
+				<td>
+					<div class="button-group">
+						{if $manager && ($widget.editurl || $widget.deleteurl)}
+							{if $widget.editurl}
+								{a href="`$widget.editurl`" class="button"}
+									<i class="icon icon-wrench"></i>
+									<span>Settings</span>
+								{/a}
+							{/if}
+							{if $widget.deleteurl}
+								{a href="`$widget.deleteurl`" confirm="Are you sure you want to completely delete this widget?" class="button"}
+									<i class="icon icon-remove"></i>
+									<span>Delete</span>
+								{/a}
+							{/if}
+						{/if}
+						<a class="button install-widget-link" href="#" data-widget="{$widget.baseurl}">
+							Install Widget
+						</a>
+					</div>
+				</td>
+			</tr>
+		{/foreach}
+	</table>
 </fieldset>
 
 {if $manager}
 	<fieldset class="widget-bucket-registration">
-		<h3 class="fieldset-title">New Widget Types</h3>
-		{foreach $links as $l}
-			<div class="widget-registration">
-				<span class="widget-title">
-					{$l.title}
-				</span>
-
-				{if $l.preview}
-					{img width="210" src="`$l.preview`"}
-				{/if}
+		<h3 class="fieldset-title">Create New Widget</h3>
+		<div class="button-group">
+			
+			{foreach $links as $l}
 				{a href="`$l.baseurl`" title="Register New `$l.title` Widget" class="button"}
 					<i class="icon icon-add"></i>
-					<span>Register New</span>
+					<span>{$l.title}</span>
 				{/a}
-			</div>
-		{/foreach}
+			{/foreach}
+		</div>
 	</fieldset>
 {/if}
 
+<div id="install-widget-popover">
+	<form action="{link '/widget/instance/install'}" method="POST">
+		<select name="area">
+			{foreach from=$areas item='area'}
+				<option value="{$area.name}">{$area.name}</option>
+			{/foreach}
+		</select>
+		<input type="hidden" name="template" value="{$template}"/>
+		<input type="hidden" class="widget-baseurl" name="widget_baseurl" value="%%WIDGET%%"/>
+		<input type="submit" value="Install Widget"/>
+	</form>
+</div>
 
 {script location="foot"}<script>
-	$('#skin-selection-select').change(function(){
-		$(this).closest('form').submit();
+	$(function(){
+		var $widgetInstallPopover = $('#install-widget-popover').dialog({
+			autoOpen: false,
+			modal: true,
+			title: 'Install Widget Into...'
+		});
+		
+		$('.install-widget-link').click(function(){
+			var $this = $(this);
+			
+			$widgetInstallPopover.find('.widget-baseurl').val($this.data('widget'));
+			$widgetInstallPopover.dialog('open');
+			
+			return false;
+		});
+		
+		$('#skin-selection-select').change(function(){
+			$(this).closest('form').submit();
+		});
 	});
 </script>{/script}

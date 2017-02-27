@@ -909,6 +909,29 @@ class Model implements ArrayAccess {
 	public function getAsJSON(){
 		return json_encode($this->getAsArray());
 	}
+	
+	/**
+	 * Get this Model and all associated Columns as an array of FormElements
+	 * that can be modified by an outside source if necessary.
+	 * 
+	 * @return array
+	 */
+	public function getAsFormArray(){
+		$s = $this->getKeySchemas();
+		$ret = [];
+
+		foreach ($s as $k => $v) {
+			$c = $this->getColumn($k);
+			if($c && $c instanceof \Core\Datamodel\Columns\SchemaColumn){
+				$el = $c->getAsFormElement();
+				if($el){
+					$ret[$k] = $el;	
+				}
+			}
+		}
+		
+		return $ret;
+	}
 
 	/**
 	 * Get the data of this model.
@@ -1672,7 +1695,7 @@ class Model implements ArrayAccess {
 	 * @param Form        $form   Form object to pull data from
 	 * @param string|null $prefix Prefix that all keys should be matched to, (optional)
 	 */
-	public function setFromForm(Form $form, $prefix = null){
+	public function setFromForm(\Core\Forms\Form $form, $prefix = null){
 
 		// Get every "prefix[...]" element, as they key up 1-to-1.
 		$els = $form->getElements(true, false);
@@ -1702,9 +1725,9 @@ class Model implements ArrayAccess {
 	 * Any special instructions for your model's elements can go here, simply extend this method and add logic as necessary.
 	 *
 	 * @param             $key
-	 * @param FormElement $element
+	 * @param \Core\Forms\FormElement $element
 	 */
-	public function setToFormElement($key, FormElement $element){
+	public function setToFormElement($key, \Core\Forms\FormElement $element){
 		// This method left intentionally blank.
 		// If custom logic is required here, extend this method in your model and do so there.
 	}
@@ -1717,7 +1740,7 @@ class Model implements ArrayAccess {
 	 * @param Form   $form
 	 * @param string $prefix
 	 */
-	public function addToFormPost(Form $form, $prefix){
+	public function addToFormPost(\Core\Forms\Form $form, $prefix){
 		// This method left intentionally blank.
 		// If custom logic is required here, extend this method in your model and do so there.
 	}

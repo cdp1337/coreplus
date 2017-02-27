@@ -105,7 +105,7 @@ abstract class Helper{
 	 *
 	 * @return bool|string
 	 */
-	public static function RegisterHandler(\Form $form){
+	public static function RegisterHandler(\Core\Forms\Form $form){
 
 		///////       VALIDATION     \\\\\\\\
 
@@ -200,7 +200,7 @@ abstract class Helper{
 		}
 	}
 
-	public static function UpdateHandler(\Form $form){
+	public static function UpdateHandler(\Core\Forms\Form $form){
 
 		/** @var \UserModel $user */
 		$user        = $form->getElement('user')->get('value');
@@ -344,7 +344,7 @@ abstract class Helper{
 	 *
 	 * @param \UserModel
 	 *
-	 * @return \Form
+	 * @return \Core\Forms\Form
 	 */
 	public static function GetEditForm(\UserModel $user){
 		return self::GetForm($user);
@@ -353,10 +353,10 @@ abstract class Helper{
 	/**
 	 * @param \UserModel|null $user
 	 *
-	 * @return \Form
+	 * @return \Core\Forms\Form
 	 */
 	public static function GetForm($user = null){
-		$form = new \Form();
+		$form = new \Core\Forms\Form();
 		if($user === null) $user = new \UserModel();
 
 		$type               = ($user->exists()) ? 'edit' : 'registration';

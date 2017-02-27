@@ -30,7 +30,7 @@
  * @date 2011-06-09 01:14:48
  */
 class WidgetInstanceModel extends Model {
-	/** @var Widget_2_1|null */
+	/** @var \Core\Widget|null */
 	private $_widget;
 
 	public static $Schema = [
@@ -99,6 +99,11 @@ class WidgetInstanceModel extends Model {
 				//'grouptype' => 'tabs',
 			    'source' => 'this::getAlternativeTemplateOptions'
 			],
+		],
+		'display_settings' => [
+			'type'     => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
+			'formtype' => 'disabled',
 		],
 		'access'     => [
 			'type'      => Model::ATT_TYPE_STRING,
@@ -170,15 +175,15 @@ class WidgetInstanceModel extends Model {
 	/**
 	 * Get the associated model for this instance, if available.
 	 *
-	 * @return Widget_2_1|null
+	 * @return \Core\Widget|null
 	 */
 	public function getWidget(){
 		if($this->_widget === null){
 			$pagedat = $this->splitParts();
 
 			// This will be a Widget object.
-			/** @var Widget_2_1 $c */
-			$this->_widget = Widget_2_1::Factory($pagedat['controller']);
+			/** @var \Core\Widget $c */
+			$this->_widget = \Core\Widget::Factory($pagedat['controller']);
 
 			// Make sure it's linked
 			$this->_widget->_instance = $this;
@@ -190,6 +195,14 @@ class WidgetInstanceModel extends Model {
 
 			// Pass in any base and customer parameters
 			$this->_widget->_params = $pagedat['parameters'];
+			
+			// Pass in any display settings saved in this instance.
+			$settings = $this->get('display_settings');
+			foreach($this->_widget->displaySettings as $idx => $dat){
+				if(isset($settings[ $dat['name'] ])){
+					$this->_widget->displaySettings[$idx]['value'] = $settings[ $dat['name'] ];
+				}
+			}
 		}
 
 		return $this->_widget;
@@ -204,7 +217,7 @@ class WidgetInstanceModel extends Model {
 	 */
 	public function getAlternativeTemplateOptions(){
 		$parts = $this->splitParts();
-
+		
 		// Figure out the template directory for custom pages, (if it exists)
 		// In order to get the types, I need to sift through all the potential template directories and look for a directory
 		// with the matching name.
@@ -309,6 +322,32 @@ class WidgetInstanceModel extends Model {
 		}
 
 		return $return;
+	}
+	
+	public function getControlLinks() {
+		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
+		$id = $this->get('id');
+		
+		$ret = [];
+		
+		if($manager){
+			$ret[] = [
+				'link' => '/widget/instance/update/' . $id,
+				'title' => t('STRING_CORE_WIDGET_DISPLAY_OPTIONS'),
+				'icon' => 'desktop',
+			];
+			
+			$ret[] = [
+				'link' => '/widget/instance/remove/' . $id,
+				'title' => t('STRING_CORE_WIDGET_REMOVE'),
+				'icon' => 'trash-o',
+				'confirm' => '',
+			];
+		}
+		
+		$ret = array_merge($ret, parent::getControlLinks());
+		
+		return $ret;
 	}
 
 } // END class WidgetInstanceModel extends Model

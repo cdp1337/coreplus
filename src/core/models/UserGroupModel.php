@@ -42,8 +42,15 @@ class UserGroupModel extends Model {
 			'form' => array(
 				'group' => 'Basic',
 				'grouptype' => 'tabs',
-			)
+			),
 		),
+		'description' => [
+			'type' => Model::ATT_TYPE_TEXT,
+			'form' => array(
+				'group' => 'Basic',
+				'grouptype' => 'tabs',
+			),
+		],
 		'context' => array(
 			'type' => Model::ATT_TYPE_STRING,
 			'default' => '',

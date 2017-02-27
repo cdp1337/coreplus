@@ -134,7 +134,7 @@ class datastore implements AuthDriverInterface{
 	 * @return void
 	 */
 	public function renderLogin($form_options = []) {
-		$form = new \Form($form_options);
+		$form = new \Core\Forms\Form($form_options);
 		$form->set('callsMethod', 'DatastoreAuthController::LoginHandler');
 
 		$form->addElement('hidden', ['name' => 'redirect']);
@@ -154,7 +154,7 @@ class datastore implements AuthDriverInterface{
 	 * @return void
 	 */
 	public function renderRegister() {
-		$form = new \Form();
+		$form = new \Core\Forms\Form();
 
 		$complexity  = $this->getPasswordComplexityAsHTML();
 		$usermanager = \Core\user()->checkAccess('p:/user/users/manage');

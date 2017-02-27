@@ -807,7 +807,7 @@ class UserController extends Controller_2_1{
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'User\\ImportHelper::FormHandler1');
 		$form->addElement(
 			'file',
@@ -868,7 +868,7 @@ class UserController extends Controller_2_1{
 			$preview = $data;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'User\\ImportHelper::FormHandler2');
 		$form->addElement('system', ['name' => 'key', 'value' => \Core\Session::Get('user-import/key')]);
 		$form->addElement(
@@ -997,7 +997,7 @@ class UserController extends Controller_2_1{
 			);
 
 			// Templated version of the access string form system, useful for dynamic permissions on the page.
-			$templateel = new FormAccessStringInput(array(
+			$templateel = new \Core\Forms\AccessStringInput(array(
 				'title' => '##TITLE##',
 				'name' => '##NAME##',
 				'description' => '##DESCRIPTION##',
@@ -1036,7 +1036,7 @@ class UserController extends Controller_2_1{
 		// Google has no business indexing user-action pages.
 		$view->addMetaName('robots', 'noindex');
 
-		$loginform = new Form();
+		$loginform = new \Core\Forms\Form();
 		$loginform->set('callsMethod', 'Core\\User\\Helper::LoginHandler');
 
 		$loginform->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));

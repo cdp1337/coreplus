@@ -21,7 +21,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class UserLoginWidget extends Widget_2_1{
+class UserLoginWidget extends \Core\Widget {
 
 	/**
 	 * @deprecated 2012.06.13

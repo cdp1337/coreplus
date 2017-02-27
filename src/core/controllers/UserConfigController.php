@@ -142,7 +142,7 @@ class UserConfigController extends Controller_2_1{
 			'/user/profileedits/requireapproval',
 			'/user/register/allowpublic', '/user/register/requireapproval', '/user/register/requirecaptcha',
 		];
-		$configform = new Form();
+		$configform = new \Core\Forms\Form();
 
 		foreach($configs as $key){
 			$el = ConfigHandler::GetConfig($key)->getAsFormElement();

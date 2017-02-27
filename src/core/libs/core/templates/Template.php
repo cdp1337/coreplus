@@ -21,12 +21,17 @@ abstract class Template {
 
 	/**
 	 * @param string $filename Filename of the template
-	 * @return TemplateInterface
+	 * @return TemplateInterface|null
 	 */
 	public static function Factory($filename){
 		// Make sure it's resolved first.
 		$resolved = self::ResolveFile($filename);
-
+		
+		// File couldn't be located?
+		if($resolved === null){
+			return null;
+		}
+		
 		// The template backend will depend on the extension.
 		$ext = \Core\GetExtensionFromString($resolved);
 
@@ -62,7 +67,9 @@ abstract class Template {
 		$dirs = self::GetPaths();
 
 		// Trim off the beginning '/' if there is one;  All directories end with a '/'.
-		if ($filename{0} == '/') $filename = substr($filename, 1);
+		if ($filename{0} == '/'){
+			$filename = substr($filename, 1);
+		}
 
 		foreach ($dirs as $d) {
 			if (file_exists($d . $filename)) return $d . $filename;

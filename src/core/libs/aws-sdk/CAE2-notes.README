@@ -1,1 +1,0 @@
-I am removing the lib/cachecore from this library set because it is in its own library seperate from AWS.  When an update is done to this library, please be sure not to commit that directory.

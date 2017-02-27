@@ -22,7 +22,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class AdminMenuWidget extends Widget_2_1 {
+class AdminMenuWidget extends \Core\Widget {
 
 	// API Version 1.0 of the widget system.
 	public function execute(){

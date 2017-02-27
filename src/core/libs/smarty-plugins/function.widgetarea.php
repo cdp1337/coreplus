@@ -147,17 +147,38 @@ function smarty_function_widgetarea($params, $smarty) {
 		
 		// Does this widget have controls attached to it?
 		$widget = $wi->getWidget();
-		if($widget->controls instanceof ViewControls && $widget->controls->hasLinks()){
-			$contents = $widget->controls->fetch() . $contents;
-			/*
-			$contents = '<div class="widget-controls-wrapper">' .
-				'<menu id="widget-controls-' . $wi->get('id') . '">' . 
-				$widget->controls->fetch() . 
-				'</menu>' . 
-				'</div>' .
-				$contents;
-			 */
+		// The model contains other useful information such as the standard control links
+		// and user edit permissions.
+		/** @var $model WidgetModel */
+		$model = $wi->getLink('Widget');
+		
+		$controls = new ViewControls();
+		$controls->setProxyForce(true);
+		$controls->setProxyText($model->get('title'));
+		//$controls->setProxyText(t('STRING_CORE_WIDGET_CONTROLS'));
+		
+		// Add any on-the-fly widget defined controls.
+		// These reside in the custom Widget class.
+		if($widget->controls instanceof ViewControls){
+			foreach($widget->controls as $link){
+				$controls->addLink($link);
+			}
 		}
+		
+		// Now I can add the standard WidgetInstance control options.
+		foreach($wi->getControlLinks() as $link){
+			$controls->addLink($link);
+		}
+		
+		// Now I can add the standard Model control options.
+		foreach($model->getControlLinks() as $link){
+			$controls->addLink($link);
+		}
+		
+		if($controls->hasLinks()){
+			$contents = $controls->fetch() . $contents;
+		}
+		
 
 		$body .= '<div class="widget">' . $contents . '</div>';
 	}

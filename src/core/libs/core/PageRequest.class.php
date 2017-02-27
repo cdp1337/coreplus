@@ -323,7 +323,7 @@ class PageRequest {
 			if(\Core\Session::Get('page-password-protected/' . $page->get('baseurl')) !== $page->get('password_protected')){
 				$view->templatename = '/pages/page/passwordprotected.tpl';
 
-				$form = new Form();
+				$form = new \Core\Forms\Form();
 
 				$form->set('callsmethod', 'PageRequest::PasswordProtectHandler');
 				$form->addElement(
@@ -1241,7 +1241,7 @@ class PageRequest {
 	 *
 	 * @return bool
 	 */
-	public static function PasswordProtectHandler(Form $form){
+	public static function PasswordProtectHandler(\Core\Forms\Form $form){
 		/** @var PageModel $page */
 		$page = $form->getElementValue('page');
 		$val  = $form->getElementValue('passinput');

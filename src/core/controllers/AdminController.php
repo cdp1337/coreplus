@@ -291,7 +291,7 @@ class AdminController extends Controller_2_1 {
 			$gname = $el->get('group');
 
 			if (!isset($groups[$gname])){
-				$groups[$gname] = new FormGroup(
+				$groups[$gname] = new \Core\Forms\FormGroup(
 					[
 						'title' => $gname,
 						'name' => $gname,
@@ -305,7 +305,7 @@ class AdminController extends Controller_2_1 {
 		}
 
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 		// This form gives me more trouble with its persistence....
 		// @todo Implement a better option than this.
@@ -651,7 +651,7 @@ class AdminController extends Controller_2_1 {
 			'/core/logs/db/keep',
 		];
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 
 		foreach($keys as $k){
@@ -865,7 +865,7 @@ class AdminController extends Controller_2_1 {
 		]);
 		$table->addColumn([
 			'title' => 't:STRING_STATUS',
-			'renderkey' => 'status',
+			'renderkey' => 'published_status',
 		]);
 		$table->addColumn([
 			'title' => 't:STRING_PUBLISHED',
@@ -992,6 +992,8 @@ class AdminController extends Controller_2_1 {
 
 	/**
 	 * Display a listing of all pages registered in the system.
+	 * 
+	 * @deprecated since version 6.0.0
 	 */
 	public function widgets(){
 		$view = $this->getView();
@@ -1008,6 +1010,8 @@ class AdminController extends Controller_2_1 {
 
 	/**
 	 * Create a simple widget with the standard settings configurations.
+	 * 
+	 * @deprecated since version 6.0.0
 	 */
 	public function widget_create(){
 		$view = $this->getView();
@@ -1021,14 +1025,12 @@ class AdminController extends Controller_2_1 {
 
 	/**
 	 * Create a simple widget with the standard settings configurations.
+	 * 
+	 * @deprecated since version 6.0.0
 	 */
 	public function widget_update(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
-
-		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
-			return View::ERROR_ACCESSDENIED;
-		}
 
 		$baseurl = $request->getParameter('baseurl');
 		\Core\redirect('/widget/update?baseurl=' . $baseurl);
@@ -1036,6 +1038,8 @@ class AdminController extends Controller_2_1 {
 
 	/**
 	 * Delete a simple widget.
+	 * 
+	 * @deprecated since version 6.0.0
 	 */
 	public function widget_delete(){
 		$view = $this->getView();
@@ -1050,17 +1054,24 @@ class AdminController extends Controller_2_1 {
 		}
 
 		$baseurl = $request->getParameter('baseurl');
-		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
+		if($baseurl{0} == '/'){
+			// Trim off the beginning '/' from the URL.
+			$class = substr($baseurl, 1, strpos($baseurl, '/', 1)-1) . 'widget';
+		}
+		else{
+			$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
+		}
+
 
 		if(!class_exists($class)){
 			\Core\set_message('t:MESSAGE_ERROR_CLASS_S_NOT_AVAILABLE', $class);
 			\Core\go_back();
 		}
 
-		/** @var Widget_2_1 $obj */
+		/** @var \Core\Widget $obj */
 		$obj = new $class();
 
-		if(!($obj instanceof Widget_2_1)){
+		if(!($obj instanceof \Core\Widget)){
 			\Core\set_message('t:MESSAGE_ERROR_CLASS_S_NOT_VALID_WIDGET', $class);
 			\Core\go_back();
 		}
@@ -1289,7 +1300,7 @@ class AdminController extends Controller_2_1 {
 
 		$strings = \Core\i18n\I18NLoader::GetAllStrings($requested);
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_i18nSaveHandler');
 		
 		$form->addElement(
@@ -1353,7 +1364,7 @@ class AdminController extends Controller_2_1 {
 			'/core/page/indexable',
 		];
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 
 		foreach($keys as $k){
@@ -1388,7 +1399,7 @@ class AdminController extends Controller_2_1 {
 			'/core/performance/anonymous_user_page_cache',
 		];
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 
 		foreach($keys as $k){
@@ -1429,7 +1440,7 @@ class AdminController extends Controller_2_1 {
 			'/core/email/smtp_security',
 		];
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 
 		foreach($keys as $k){
@@ -1530,7 +1541,7 @@ class AdminController extends Controller_2_1 {
 		CLI::PrintLine(explode("\n", $email->getMailer()->CreateBody()));
 	}
 
-	public static function _WidgetCreateUpdateHandler(Form $form){
+	public static function _WidgetCreateUpdateHandler(\Core\Forms\Form $form){
 		$baseurl = $form->getElement('baseurl')->get('value');
 
 		$model = new WidgetModel($baseurl);
@@ -1554,7 +1565,7 @@ class AdminController extends Controller_2_1 {
 		return 'back';
 	}
 
-	public static function _ConfigSubmit(Form $form) {
+	public static function _ConfigSubmit(\Core\Forms\Form $form) {
 		$elements = $form->getElements();
 
 		$updatedcount = 0;
@@ -1615,7 +1626,7 @@ class AdminController extends Controller_2_1 {
 	 *
 	 * @return bool
 	 */
-	public static function PagesSave(Form $form) {
+	public static function PagesSave(\Core\Forms\Form $form) {
 		$models = [];
 
 		foreach($form->getElements() as $el){
@@ -1663,7 +1674,7 @@ class AdminController extends Controller_2_1 {
 		return true;
 	}
 
-	public static function _i18nSaveHandler(Form $form) {
+	public static function _i18nSaveHandler(\Core\Forms\Form $form) {
 		
 		// NEW IDEA!
 		// Instead of setting the override for keys, (possibly useful, just somewhere else)...

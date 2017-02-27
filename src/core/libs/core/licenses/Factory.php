@@ -154,6 +154,35 @@ class Factory {
 	 */
 	public static function GetLicenses() {
 		return array(
+			// BSD
+			'bsd-3-clause' => [
+				'title'    => '3-Clause BSD License',
+				'opttitle' => '[BSD] Modified BSD License',
+				'url'      => 'https://opensource.org/licenses/BSD-3-Clause',
+				'matches' => [
+					'Redistributions of source code must retain the above copyright notice',
+					'Redistributions in binary form must reproduce the above copyright notice',
+					'Neither the name of the copyright holder nor the names of its contributors may be used to endorse',
+				],
+				'aliases' => [
+					'New BSD License',
+					'Modified BSD License',
+				]
+			],
+			'bsd-2-clause' => [
+				'title'    => '2-Clause BSD License',
+				'opttitle' => '[BSD] Simplified BSD License',
+				'url'      => 'https://opensource.org/licenses/BSD-2-Clause',
+				'matches' => [
+					'Redistributions of source code must retain the above copyright notice',
+					'Redistributions in binary form must reproduce the above copyright notice',
+				],
+				'aliases' => [
+					'Simplified BSD License',
+					'FreeBSD License',
+				]
+			],
+			
 			// Creative Commons - Attribution
 			'cc-by-3.0' => [
 				'title'    => 'Creative Commons Attribution',

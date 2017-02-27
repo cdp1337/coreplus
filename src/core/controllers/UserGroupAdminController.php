@@ -35,7 +35,7 @@ class UserGroupAdminController extends Controller_2_1{
 		$view = $this->getView();
 
 		$permissionmanager = \Core\user()->checkAccess('p:/user/permissions/manage');
-
+		
 		$factory = new ModelFactory('UserGroupModel');
 
 		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
@@ -88,7 +88,7 @@ class UserGroupAdminController extends Controller_2_1{
 		$usecontexts  = false;
 		$isadmin      = \Core\user()->checkAccess('g:admin');
 
-		$form  = Form::BuildFromModel($model);
+		$form  = \Core\Forms\Form::BuildFromModel($model);
 		$form->set('callsmethod', 'UserGroupAdminController::_UpdateFormHandler');
 
 		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
@@ -152,7 +152,7 @@ class UserGroupAdminController extends Controller_2_1{
 		$req           = $this->getPageRequest();
 		$id            = $req->getParameter(0);
 		$model         = new UserGroupModel($id);
-		$form          = Form::BuildFromModel($model);
+		$form          = \Core\Forms\Form::BuildFromModel($model);
 		$contextnames  = [];
 		$contexts      = [];
 		$usecontexts   = false;
@@ -258,9 +258,9 @@ class UserGroupAdminController extends Controller_2_1{
 	 * @param Form $form
 	 * @param UserGroupModel $model
 	 */
-	private function _setPermissionsToForm(Form $form, UserGroupModel $model){
+	private function _setPermissionsToForm(\Core\Forms\Form $form, UserGroupModel $model){
 		// Everything gets added to the 'Everything' group.
-		$everything = new FormTabsGroup([
+		$everything = new \Core\Forms\TabsGroup([
 			'title' => t('STRING_PERMISSIONS'),
 		]);
 		
@@ -281,7 +281,7 @@ class UserGroupAdminController extends Controller_2_1{
 			$id = 'permission-' . implode('-', $exploded);
 
 			if(!isset($elementList[$id])){
-				$elementList[$id] = new FormCheckboxesInput([
+				$elementList[$id] = new \Core\Forms\CheckboxesInput([
 					'title' => $title,
 					'id' => $id,
 					'name' => 'permissions',
@@ -323,7 +323,7 @@ class UserGroupAdminController extends Controller_2_1{
 					$keyname .= '/' . $k;
 					
 					if(!isset($everything[$keyname])){
-						$everything[$keyname] = new FormGroup([
+						$everything[$keyname] = new \Core\Forms\FormGroup([
 							'title' => $title,
 						]);
 					}
@@ -386,7 +386,7 @@ class UserGroupAdminController extends Controller_2_1{
 		}
 	}
 
-	public static function _UpdateFormHandler(Form $form){
+	public static function _UpdateFormHandler(\Core\Forms\Form $form){
 
 		try{
 			/** @var UserGroupModel $model */

@@ -186,6 +186,7 @@ class PageModel extends Model {
 				'group' => 'Access & Advanced',
 				'grouptype' => 'tabs',
 			],
+			'formatter' => '\Core\Formatter\GeneralFormatter::TimeDuration',
 		),
 		'access' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -199,6 +200,7 @@ class PageModel extends Model {
 				'group' => 'Access & Advanced',
 				'grouptype' => 'tabs',
 			),
+			'formatter' => '\Core\Formatter\GeneralFormatter::AccessString',
 		),
 		'password_protected' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -275,7 +277,8 @@ class PageModel extends Model {
 					only.  Useful for saving a page without releasing it to public users.',
 				'group' => 'Publish Settings',
 				'grouptype' => 'tabs',
-			)
+			),
+			'formatter' => ['this', 'getPublishedStatus'],
 		),
 		'published' => array(
 			'type' => Model::ATT_TYPE_INT,
@@ -287,6 +290,7 @@ class PageModel extends Model {
 				'grouptype' => 'tabs',
 			),
 			'comment' => 'The published date',
+			'formatter' => '\Core\Formatter\GeneralFormatter::DateStringSD',
 		),
 		'published_expires' => array(
 			'type' => Model::ATT_TYPE_STRING,
@@ -301,6 +305,7 @@ class PageModel extends Model {
 				'datetimepicker_dateformat' => 'yy-mm-dd',
 				'datetimepicker_timeformat' => 'HH:mm',
 			),
+			'formatter' => '\Core\Formatter\GeneralFormatter::DateStringSDT',
 		),
 		'body' => array(
 			'type'      => Model::ATT_TYPE_TEXT,
@@ -311,6 +316,14 @@ class PageModel extends Model {
 				'type' => 'disabled',
 			),
 		),
+		'seotitle' => [
+			'type' => Model::ATT_TYPE_META,
+			'formatter' => ['this', 'getSEOTitle'],
+		],
+		'teaser' => [
+			'type' => Model::ATT_TYPE_META,
+			'formatter' => ['this', 'getTeaser'],
+		],
 	);
 
 	public static $Indexes = array(
@@ -432,26 +445,30 @@ class PageModel extends Model {
 	 * @return null|string
 	 */
 	public function getLogoURL(){
+		$logo = $this->getLogo();
+		return $logo !== null ? $logo->getPreviewURL('24x24') : null;
+	}
+	
+	/**
+	 * Get the logo File for this page, if available.
+	 * 
+	 * @return null|\Core\Filestore\File
+	 */
+	public function getLogo(){
 		if(($img = $this->getImage())){
 			// Best way, this page has a main image set!
-			$logo = $img->getPreviewURL('24x24');
+			return $img;
 		}
 		elseif($this->get('component')){
 			// Does this page have a registered component?
 			// If so, I can pull that logo!
 			$c = Core::GetComponent($this->get('component'));
 			if(($logo = $c->getLogo())){
-				$logo = $logo->getPreviewURL('24x24');
+				return $logo;
 			}
-			else{
-				$logo = null;
-			}
-		}
-		else{
-			$logo = null;
 		}
 		
-		return $logo;
+		return null;
 	}
 
 	public function setParameter($key, $val) {
@@ -675,6 +692,72 @@ class PageModel extends Model {
 		$m = $this->getMeta($name);
 
 		return $m ? $m->get('meta_value_title') : '';
+	}
+	
+	public function getAsFormArray() {
+		$ret = parent::getAsFormArray();
+		
+		// If the user has access to manage sites globally, then enable that option!
+		if(
+			Core::IsComponentAvailable('multisite') && 
+			MultiSiteHelper::IsEnabled() && 
+			\Core\user()->checkAccess('g:admin') &&
+			isset($ret['site'])
+		){
+			$opts = $ret['site']->getAsArray();
+			unset($opts['__class']);
+			
+			$ret['site'] = \Core\Forms\FormElement::Factory( 'select', $opts );
+			
+			// Ensure that the form element's "parent" is the same as this column's parent.
+			// If it's null, then it'll be null there! (which is fine.)
+			// Remember since this is an object, only the REFERENCE will be used.
+			$ret['site']->parent = $this;
+		}
+		
+		// Add in some extra fields that are associated with Pages too!
+		// I need to add the rewrite options, (I need to get them too).
+		$ret['rewrites'] = \Core\Forms\FormElement::Factory('textarea',
+			[
+				'name' => 'rewrites',
+				'group' => 'Meta Information & URL (SEO)',
+				'title' => 'Rewrite Aliases',
+				'value' => $this->getRewriteURLs(),
+				'description' => 'Enter rewrite aliases that point to this page, one per line.  You may use the fully resolved path or simply the part after the ".com".',
+			]
+		);
+
+		// I need to add the pagemetas!
+		foreach($this->getMetasArray() as $key => $dat){
+			$type = $dat['type'];
+			unset($dat['type']);
+			$dat['name'] = 'metas[' . $key . ']';
+			$dat['group'] = 'Meta Information & URL (SEO)'; 
+			
+			$ret['metas_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
+		}
+
+		// And the page insertables.
+		$tpl = Core\Templates\Template::Factory($this->getTemplateName());
+		if($tpl){
+			foreach($tpl->getInsertables() as $key => $dat){
+				$type = $dat['type'];
+				unset($dat['type']);
+				$dat['name'] = 'insertables[' . $key . ']';
+				$dat['group'] = 'Basic';
+				$dat['class'] = 'insertable';
+
+				// This insertable may already have content from the database... if so I want to pull that!
+				$i = InsertableModel::Construct($this->get('site'), $this->get('baseurl'), $key);
+				if ($i->get('value') !== null){
+					$dat['value'] = $i->get('value');
+				}
+
+				$ret['insertables_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
+			}
+		}
+		
+		return $ret;
 	}
 	
 	
@@ -1015,7 +1098,7 @@ class PageModel extends Model {
 	 * @param Form        $form   Form object to pull data from
 	 * @param string|null $prefix Prefix that all keys should be matched to, (optional)
 	 */
-	public function setFromForm(Form $form, $prefix = null){
+	public function setFromForm(\Core\Forms\Form $form, $prefix = null){
 
 		// Pull the meta and insertables to try to minimize data loss when changing the site id.
 		$this->getLink('Insertable');
@@ -1055,97 +1138,10 @@ class PageModel extends Model {
 		}
 	}
 
-	public function setToFormElement($key, FormElement $element){
+	public function setToFormElement($key, \Core\Forms\FormElement $element){
 		if($key == 'page_template'){
 			// Make sure to set the element's templatename.
 			$element->set('templatename', $this->getBaseTemplateName());
-		}
-	}
-
-	/**
-	 * Method that is called on the model after "addModel" is called on a form.
-	 *
-	 * Any special logic such as adding custom elements from the model can be done here, simply extend this method and add logic as necessary.
-	 *
-	 * @param Form   $form    The form itself.
-	 * @param string $prefix  The form prefix to use, ie: "page" or "model", etc.
-	 */
-	public function addToFormPost(Form $form, $prefix){
-
-		// If the user has access to manage sites globally, then enable that option!
-		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
-			$form->switchElementType($prefix . '[site]', 'select');
-			$el = $form->getElement($prefix . '[site]');
-
-			$opts = [
-				'-1' => 'Global Page',
-				'0'  => 'Root-Only Page',
-			];
-
-			$fac = MultiSiteModel::FindRaw([], null, null);
-			foreach($fac as $dat){
-				if($dat['status'] != 'active'){
-					continue;
-				}
-				$opts[ $dat['id'] ] = $dat['name'] . ' (' . $dat['id'] . ')';
-			}
-
-			$el->set( 'options', $opts );
-		}
-
-		// Get the groups that these additional elements will tack onto,
-		// and create them if necessary.
-		$metasgroupname = 'Meta Information & URL (SEO)';
-		$insertablesgroupname = 'Basic';
-
-		$metasgroup = $form->getElement($metasgroupname);
-		if(!$metasgroup){
-			$metasgroup = new FormGroup(array('title' => $metasgroupname, 'name' => $metasgroupname));
-			$form->addElement($metasgroup);
-		}
-
-		$insertablesgroup = $form->getElement($insertablesgroupname);
-		if(!$insertablesgroup){
-			$insertablesgroup = new FormGroup(array('title' => $insertablesgroupname, 'name' => $insertablesgroupname));
-			$form->addElement($insertablesgroup);
-		}
-
-		// I need to add the rewrite options, (I need to get them too).
-		$metasgroup->addElement(
-			'textarea',
-			[
-				'name' => $prefix . '[rewrites]',
-				'title' => 'Rewrite Aliases',
-				'value' => $this->getRewriteURLs(),
-				'description' => 'Enter rewrite aliases that point to this page, one per line.  You may use the fully resolved path or simply the part after the ".com".',
-			]
-		);
-
-		// I need to add the pagemetas!
-		foreach($this->getMetasArray() as $key => $dat){
-			$type = $dat['type'];
-			$dat['name'] = $prefix . '[metas][' . $key . ']';
-
-			$metasgroup->addElement($type, $dat);
-		}
-
-		// And the page insertables.
-		$tpl = Core\Templates\Template::Factory($this->getTemplateName());
-		if($tpl){
-			foreach($tpl->getInsertables() as $key => $dat){
-				$type = $dat['type'];
-				$dat['name'] = $prefix . '[insertables][' . $key . ']';
-
-				// This insertable may already have content from the database... if so I want to pull that!
-				$i = InsertableModel::Construct($this->get('site'), $this->get('baseurl'), $key);
-				if ($i->get('value') !== null){
-					$dat['value'] = $i->get('value');
-				}
-
-				$dat['class'] = 'insertable';
-
-				$insertablesgroup->addElement($type, $dat);
-			}
 		}
 	}
 
@@ -1570,6 +1566,71 @@ class PageModel extends Model {
 	public function getIndexCacheKey(){
 		return 'page-cache-index-' . $this->get('site') . '-' . md5($this->get('baseurl'));
 	}
+	
+	public function getControlLinks() {
+		$admin = \Core\user()->checkAccess('g:admin');
+		$access = \Core\user()->checkAccess($this->get('access'));
+		$baseurl = $this->get('baseurl');
+		$ret = [];
+		
+		if($access){
+			$ret[] = [
+				'title' => 't:STRING_VIEW',
+				'icon' => 'view',
+				'link' => $baseurl,
+			];
+		}
+		
+		if($admin){
+			if($this->get('editurl')){
+				$ret[] = [
+					'title' => 't:STRING_EDIT',
+					'icon' => 'edit',
+					'link' => $this->get('editurl'),
+				];
+			}
+			
+			switch($this->getPublishedStatus()){
+				case 'draft':
+					$ret[] = [
+						'title'   => 't:STRING_PUBLISH_PAGE',
+						'icon'    => 'thumbs-up',
+						'link'    => '/admin/page/publish?baseurl=' . $baseurl,
+						'confirm' => '',
+					];
+					break;
+				case 'expired':
+					$ret[] = [
+						'title'   => 't:STRING_REPUBLISH_PAGE',
+						'icon'    => 'thumbs-up',
+						'link'    => '/admin/page/publish?baseurl=' . $baseurl,
+						'confirm' => '',
+					];
+					break;
+				case 'published':
+					$ret[] = [
+						'title'   => 't:STRING_UNPUBLISH_PAGE',
+						'icon'    => 'thumbs-down',
+						'link'    => '/admin/page/unpublish?baseurl=' . $baseurl,
+						'confirm' => '',
+					];
+					break;
+			}
+			
+			if($this->get('deleteurl')){
+				$ret[] = [
+					'title'   => 't:STRING_DELETE',
+					'icon'    => 'remove',
+					'link'    => $this->get('deleteurl'),
+					'confirm' => 't:MESSAGE_ASK_COMPLETEY_DELETE_PAGE',
+				];
+			}
+		}
+		
+		$parent = parent::getControlLinks();
+		
+		return array_merge($ret, $parent);
+	}
 
 	/**
 	 * Get a textual representation of this Model as a flat string.
@@ -1943,8 +2004,10 @@ class PageModel extends Model {
 
 			if($site === null){
 				$tries = [];
-				foreach(self::$_FuzzyCache as $dat){
-					$tries = array_merge($tries, $dat);
+				if(isset(self::$_FuzzyCache) && is_array(self::$_FuzzyCache)){
+					foreach(self::$_FuzzyCache as $dat){
+						$tries = array_merge($tries, $dat);
+					}
 				}
 			}
 			elseif(isset(self::$_FuzzyCache[$site])){

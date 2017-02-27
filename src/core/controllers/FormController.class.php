@@ -305,7 +305,7 @@ class FormController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 
 		// What type of orientation do you want to see?
 		$orientation = $request->getParameter('orientation');
@@ -318,7 +318,7 @@ class FormController extends Controller_2_1 {
 
 		$form->set('orientation', $orientation);
 
-		$mappings = Form::$Mappings;
+		$mappings = \Core\Forms\Form::$Mappings;
 		// Make them alphabetical.
 		ksort($mappings);
 
@@ -334,27 +334,27 @@ class FormController extends Controller_2_1 {
 
 				// Some form elements have particular requirements.
 				switch($v){
-					case 'FormFileInput':
+					case '\\Core\\Forms\\FileInput':
 					case 'MultiFileInput':
 						$atts['basedir'] = 'tmp/form/testui';
 						break;
-					case 'FormPagePageSelectInput':
+					case '\\Core\\Forms\\PagePageSelectInput':
 						$atts['templatename'] = 'foo';
 						break;
-					case 'FormPageInsertables':
+					case '\\Core\\Forms\\PageInsertables':
 						$atts['baseurl'] = '/';
 						break;
-					case 'FormPageMeta':
+					case '\\Core\\Forms\\PageMeta':
 						$atts['name'] = 'test';
 						break;
-					case 'FormCheckboxesInput':
-					case 'FormRadioInput':
+					case '\\Core\\Forms\\CheckboxesInput':
+					case '\\Core\\Forms\\RadioInput':
 						$atts['options'] = ['key1' => 'Key 1', 'key2' => 'Key 2'];
 						break;
 				}
-				$el = FormElement::Factory($k, $atts);
+				$el = \Core\Forms\FormElement::Factory($k, $atts);
 
-				if($error && $el instanceof FormElement){
+				if($error && $el instanceof \Core\Forms\FormElement){
 					$el->setError('Something bad happened', false);
 				}
 				$form->addElement( $el );

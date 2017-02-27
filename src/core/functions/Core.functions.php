@@ -538,9 +538,17 @@ function parse_html($html){
 /**
  * Add a message to the user's stack.
  *	It will be displayed the next time the user (or session) renders the page.
+ * 
+ * If t:MESSAGE_[SOMETHING] is passed in as the first argument,
+ * the i18n system will take effect and translate the string if possible.
+ * 
+ * Additionally, MESSAGE_SUCCESS_, MESSAGE_ERROR_, MESSAGE_TUTORIAL_, MESSAGE_WARNING_, and
+ * MESSAGE_INFO_ will trigger that type of message code to be returned.
+ * 
+ * Also when t: is used, any arguments passed in after the first string will be sent to the i18n system for replacement.
  *
  * @param string $message_text The message text or the MESSAGE_ string constant for i18n and automatic type detection!
- * @param string $message_type
+ * @param string $message_type Message type or arguments to pass into the translate method.
  *
  * @return boolean (on success)
  */
@@ -548,7 +556,8 @@ function set_message($messageText, $messageType = 'info'){
 	if(strpos($messageText, 't:MESSAGE_') === 0){
 		// It's an i18n message!  Retrieve the locale version of text and the message type.
 		$messageText = substr($messageText, 2);
-
+		$args = func_get_args();
+		
 		if(strpos($messageText, 'MESSAGE_SUCCESS_') === 0){
 			$messageType = 'success';
 		}
@@ -567,10 +576,10 @@ function set_message($messageText, $messageType = 'info'){
 		else{
 			$messageType = 'info';
 		}
-
+		
 		if(func_num_args() > 1){
 			// Use func_call to call 1, as I need to pass in the other options too!
-			$messageText = call_user_func_array('t', func_get_args());
+			$messageText = call_user_func_array('t', $args);
 		}
 		else{
 			$messageText = t($messageText);

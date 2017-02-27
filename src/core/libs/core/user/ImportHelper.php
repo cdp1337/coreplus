@@ -63,7 +63,7 @@ abstract class ImportHelper {
 	 *
 	 * @return bool
 	 */
-	public static function FormHandler1(\Form $form) {
+	public static function FormHandler1(\Core\Forms\Form $form) {
 
 		// If it's gotten here, all the form validation has succeeded!
 		// Pretty simple eh? :p
@@ -84,7 +84,7 @@ abstract class ImportHelper {
 	 * @param \Form $form
 	 * @return bool
 	 */
-	public static function FormHandler2(\Form $form) {
+	public static function FormHandler2(\Core\Forms\Form $form) {
 		$filename = Session::Get('user-import/file');
 		$file = Factory::File($filename);
 		/** @var $contents \Core\Filestore\Contents\ContentCSV */

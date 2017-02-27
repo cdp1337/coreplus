@@ -94,37 +94,8 @@ class WidgetController extends Controller_2_1 {
 					}
 				}
 			}
-
-			foreach($c->getXML()->getElements('/widgets/widgetcreate') as $node){
-				/** @var DOMElement $node */
-
-				if($node->getAttribute('baseurl')){
-					$nodebaseurl = $node->getAttribute('baseurl');
-					$image = '';
-				}
-				elseif($node->getAttribute('class')){
-					/** @var Widget_2_1 $obj */
-					$obj = Widget_2_1::Factory($node->getAttribute('class'));
-					$nodebaseurl = '/widget/create?class=' . $node->getAttribute('class');
-					if($obj){
-						$image = $obj->getPreviewImage();
-					}
-					else{
-						\Core\set_message('Invalid "widgetcreate" found in ' .$node->getAttribute('class') . ', ' . $node->getAttribute('title'), 'error');
-						$image = '';
-					}
-				}
-				else{
-					\Core\set_message('Invalid "widgetcreate" found in ' . $c->getName() . ', ' . $node->getAttribute('title'), 'error');
-					continue;
-				}
-
-				$links[] = [
-					'baseurl' => $nodebaseurl,
-					'title' => $node->getAttribute('title'),
-				    'preview' => $image,
-				];
-			}
+			
+			$links = array_merge($links, $c->getWidgetCreatesDefined());
 		}
 
 		// Build the array of skins for the current theme
@@ -235,7 +206,7 @@ class WidgetController extends Controller_2_1 {
 		}
 
 		$available = WidgetModel::Find(['installable IN ' . implode(', ', $installables)]);
-
+		
 		/*
 		$table = new Core\ListingTable\Table();
 		$table->setName('/admin/widgets');
@@ -281,6 +252,7 @@ class WidgetController extends Controller_2_1 {
 		$view = $this->getView();
 		$request = $this->getPageRequest();
 
+		// Only widget managers can create widgets.
 		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
 			return View::ERROR_ACCESSDENIED;
 		}
@@ -293,24 +265,24 @@ class WidgetController extends Controller_2_1 {
 		}
 
 		if(!class_exists($class)){
-			\Core\set_message('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_NOT_FOUND_ON_SYSTEM', $class);
 			\Core\go_back();
 		}
 
-		/** @var Widget_2_1 $obj */
+		/** @var \Core\Widget $obj */
 		$obj = new $class();
 
-		if(!($obj instanceof Widget_2_1)){
-			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+		if(!($obj instanceof \Core\Widget)){
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_WRONG_PARENT_CLASS', $class);
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			\Core\set_message('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_NOT_SIMPLE_WIDGET', $class);
 			\Core\go_back();
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'WidgetController::_CreateUpdateHandler');
 
 		// Make the widget's "baseurl", which for simple widgets will be the widget class followed by a UUID.
@@ -318,14 +290,14 @@ class WidgetController extends Controller_2_1 {
 		$baseurl .= Core::GenerateUUID();
 
 		$form->addElement('system', ['name' => 'baseurl', 'value' => $baseurl]);
-
+		
 		$form->addElement(
 			'text',
 			[
 				'name' => 'title',
 				'required' => true,
-				'title' => 'Admin Title',
-				'description' => 'The identifying title used on admin pages.',
+				'title' => t('STRING_CORE_WIDGET_ADMIN_TITLE'),
+				'description' => t('MESSAGE_CORE_WIDGET_ADMIN_TITLE')
 			]
 		);
 
@@ -336,18 +308,29 @@ class WidgetController extends Controller_2_1 {
 			$type = $dat['type'];
 			$name = $dat['name'];
 
-			$dat['value'] = $defaults[$name];
 			$dat['name'] = 'setting[' . $name . ']';
 
 			$form->addElement($type, $dat);
 		}
+		
+		// Managers can manage the edit permissions for this particular widget.
+		// This allows managers to delegate edit permissions for particular areas on the site.
+		$form->addElement(
+			'access',
+			[
+				'name' => 'editpermissions',
+				'title' => t('STRING_CORE_WIDGET_EDIT_PERMISSIONS'),
+				'description' => t('MESSAGE_CORE_WIDGET_EDIT_PERMISSIONS'),
+				'value' => '!*',
+			]
+		);
 
 
-		$form->addElement('submit', ['value' => 'Create Widget']);
+		$form->addElement('submit', ['value' => t('STRING_CORE_WIDGET_CREATE')]);
 
 		$view->mastertemplate = 'admin';
 		$view->addBreadcrumb('All Widgets', '/widget/admin');
-		$view->title = 'Create Widget';
+		$view->title = t('STRING_CORE_WIDGET_CREATE');
 		$view->assign('form', $form);
 	}
 
@@ -357,8 +340,10 @@ class WidgetController extends Controller_2_1 {
 	public function update(){
 		$view = $this->getView();
 		$request = $this->getPageRequest();
+		
+		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
 
-		if(!\Core\user()->checkAccess('p:/core/widgets/manage')){
+		if(!$manager){
 			return View::ERROR_ACCESSDENIED;
 		}
 
@@ -366,40 +351,52 @@ class WidgetController extends Controller_2_1 {
 		$class = substr($baseurl, 1, strpos($baseurl, '/', 1)-1) . 'widget';
 
 		if(!class_exists($class)){
-			\Core\set_message('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_NOT_FOUND_ON_SYSTEM', $class);
 			\Core\go_back();
 		}
 
-		/** @var Widget_2_1 $obj */
+		/** @var \Core\Widget $obj */
 		$obj = new $class();
 
-		if(!($obj instanceof Widget_2_1)){
-			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+		if(!($obj instanceof \Core\Widget)){
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_WRONG_PARENT_CLASS', $class);
 			\Core\go_back();
 		}
 
 		if(!$obj->is_simple){
-			\Core\set_message('Widget [' . $class . '] does not appear to be a simple widget.  Only simple widgets can be created via this page.', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_NOT_SIMPLE_WIDGET', $class);
 			\Core\go_back();
 		}
 
 		$model = new WidgetModel($baseurl);
+		
+		if(!$model->exists()){
+			return View::ERROR_NOTFOUND;
+		}
+		
+		// Check that this user has permission to edit if they are not a manager.
+		if(!$manager && !\Core\user()->checkAccess($model->get('editpermissions'))){
+			return View::ERROR_ACCESSDENIED;
+		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'WidgetController::_CreateUpdateHandler');
 
 		$form->addElement('system', ['name' => 'baseurl', 'value' => $baseurl]);
 
-		$form->addElement(
+		if($manager){
+			$form->addElement(
 			'text',
-			[
-				'name' => 'title',
-				'required' => true,
-				'value' => $model->get('title'),
-				'title' => 'Admin Title',
-				'description' => 'The identifying title used on admin pages.',
-			]
-		);
+				[
+					'name' => 'title',
+					'required' => true,
+					'value' => $model->get('title'),
+					'title' => t('STRING_CORE_WIDGET_ADMIN_TITLE'),
+					'description' => t('MESSAGE_CORE_WIDGET_ADMIN_TITLE')
+				]
+			);
+		}
+		
 
 		$defaults = $obj->settings;
 		$formdata = $obj->getFormSettings();
@@ -413,13 +410,27 @@ class WidgetController extends Controller_2_1 {
 
 			$form->addElement($type, $dat);
 		}
+		
+		if($manager){
+			// Managers can manage the edit permissions for this particular widget.
+			// This allows managers to delegate edit permissions for particular areas on the site.
+			$form->addElement(
+				'access',
+				[
+					'name' => 'editpermissions',
+					'title' => t('STRING_CORE_WIDGET_EDIT_PERMISSIONS'),
+					'description' => t('MESSAGE_CORE_WIDGET_EDIT_PERMISSIONS'),
+					'value' => $model->get('editpermissions'),
+				]
+			);
+		}
 
 
-		$form->addElement('submit', ['value' => 'Update Widget']);
+		$form->addElement('submit', ['value' => t('STRING_CORE_WIDGET_UPDATE')]);
 
 		$view->mastertemplate = 'admin';
 		$view->addBreadcrumb('All Widgets', '/widget/admin');
-		$view->title = 'Update Widget';
+		$view->title = t('STRING_CORE_WIDGET_UPDATE');
 		$view->assign('form', $form);
 	}
 
@@ -439,18 +450,25 @@ class WidgetController extends Controller_2_1 {
 		}
 
 		$baseurl = $request->getParameter('baseurl');
-		$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
-
+		$baseurl = $request->getParameter('baseurl');
+		if($baseurl{0} == '/'){
+			// Trim off the beginning '/' from the URL.
+			$class = substr($baseurl, 1, strpos($baseurl, '/', 1)-1) . 'widget';
+		}
+		else{
+			$class = substr($baseurl, 0, strpos($baseurl, '/')) . 'widget';
+		}
+		
 		if(!class_exists($class)){
-			\Core\set_message('Class [' . $class . '] was not found on the system, invalid widget!', 'error');
+			\Core\set_message('t:MESSAGE_ERROR_CORE_WIDGET_S_NOT_FOUND_ON_SYSTEM', $class);
 			\Core\go_back();
 		}
 
-		/** @var Widget_2_1 $obj */
+		/** @var \Core\Widget $obj */
 		$obj = new $class();
 
-		if(!($obj instanceof Widget_2_1)){
-			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget_2_1 instance, invalid widget!', 'error');
+		if(!($obj instanceof \Core\Widget)){
+			\Core\set_message('Wrong parent class for [' . $class . '], it does not appear to be a Widget instance, invalid widget!', 'error');
 			\Core\go_back();
 		}
 
@@ -626,11 +644,38 @@ class WidgetController extends Controller_2_1 {
 		if(!$instance->exists()){
 			return View::ERROR_NOTFOUND;
 		}
+		
+		$widget = $instance->getWidget();
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'WidgetController::_InstanceHandler');
 
 		$form->addModel($instance);
+		
+		// Add any of the widget display settings that may be set in the Widget.
+		foreach($widget->displaySettings as $setting){
+			// Pull the type of the form element from the array, or text as the default.
+			$type = isset($setting['type']) ? $setting['type'] : 'text';
+			
+			// Remap the name to a name that the form handler will know about.
+			$setting['name'] = 'display_setting[' . $setting['name'] . ']';
+			
+			if($type == 'checkbox'){
+				// This one requires some additional work;
+				// The value is true or false, but the attribute to set is 'checked'.
+				if($setting['value'] === 1 || $setting['value'] === '1' || $setting['value'] === true){
+					$setting['checked'] = true;
+				}
+				else{
+					$setting['checked'] = false;
+				}
+				
+				$setting['value'] = '1';
+			}
+			
+			$form->addElement($type, $setting);
+		}
+		
 		$form->addElement('submit', ['value' => 'Save Options']);
 
 		$view->mastertemplate = 'admin';
@@ -775,13 +820,19 @@ class WidgetController extends Controller_2_1 {
 	}
 
 
-	public static function _CreateUpdateHandler(Form $form){
+	public static function _CreateUpdateHandler(\Core\Forms\Form $form){
 		$baseurl = $form->getElement('baseurl')->get('value');
 
 		$model = new WidgetModel($baseurl);
-		$model->set('editurl', '/admin/widget/update?baseurl=' . $baseurl);
-		$model->set('deleteurl', '/admin/widget/delete?baseurl=' . $baseurl);
-		$model->set('title', $form->getElement('title')->get('value'));
+		$model->set('editurl', '/widget/update?baseurl=' . $baseurl);
+		$model->set('deleteurl', '/widget/delete?baseurl=' . $baseurl);
+		
+		if(\Core\user()->checkAccess('p:/core/widgets/manage')){
+			// Managers have additional permissions to edit advanced fields.
+			$model->set('title', $form->getElementValue('title'));
+			$model->set('editpermissions', $form->getElementValue('editpermissions'));
+		}
+		
 
 		$elements = $form->getElements();
 		foreach($elements as $el){
@@ -792,12 +843,27 @@ class WidgetController extends Controller_2_1 {
 			}
 		}
 		$model->save();
+		
+		\Core\set_message('t:MESSAGE_SUCCESS_CORE_WIDGET_S_UPDATED', $model->get('title'));
 
 		return 'back';
 	}
 
-	public static function _InstanceHandler(Form $form){
-		$form->getModel()->save();
+	public static function _InstanceHandler(\Core\Forms\Form $form){
+		$instance = $form->getModel();
+	
+		// Set any display settings that may be present.
+		$displaySettings = $form->getElementsByName('display_setting\[.*\]');
+		$displaySettingValues = [];
+		foreach($displaySettings as $el){
+			
+			$name = substr($el->get('name'), 16, -1);
+			$val  = $el->get('value');
+			$displaySettingValues[$name] = $val;
+		}
+		$instance->set('display_settings', $displaySettingValues);
+		
+		$instance->save();
 
 		return 'back';
 	}

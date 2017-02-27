@@ -47,7 +47,7 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class UserAdminWidget extends Widget_2_1{
+class UserAdminWidget extends \Core\Widget {
 	/**
 	 * Widget to display some of the newest registrations, (if any).
 	 */

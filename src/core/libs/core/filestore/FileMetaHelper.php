@@ -307,7 +307,7 @@ class FileMetaHelper implements \ArrayAccess {
 	 * @param \Form  $form
 	 * @param string $prefix
 	 */
-	public function addElementsToForm(\Form $form, $prefix = 'metas'){
+	public function addElementsToForm(\Core\Forms\Form $form, $prefix = 'metas'){
 		$allmetas   = self::GetMetaElements();
 		$metavalues = $this->getMetas();
 		$keywords   = [];

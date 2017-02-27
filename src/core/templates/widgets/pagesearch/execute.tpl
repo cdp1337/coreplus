@@ -1,13 +1,13 @@
 <div class="page-search-widget">
-	{if $title}
-		<h3>{$title}</h3>
+	{if $display_settings.title}
+		<h3>{$display_settings.title}</h3>
 	{/if}
 
 	<form action="{$url}" method="GET" class="form-orientation-vertical page-search-widget clearfix">
 
 		<div class="formelement formelementtext">
 			<div class="form-element-value">
-				<input type="text" name="q" value="{$query}" placeholder="Search Site"/>
+				<input type="text" name="q" value="{$query}" placeholder="{$display_settings.placeholder}"/>
 				<i class="icon icon-search"></i>
 			</div>
 		</div>

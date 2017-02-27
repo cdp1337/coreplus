@@ -591,6 +591,11 @@ class Component_2_1 {
 		return $pages;
 	}
 
+	/**
+	 * Get an array of Page Creates that are defined in the XML for this component.
+	 * 
+	 * @return array
+	 */
 	public function getPageCreatesDefined(){
 		$pages = [];
 
@@ -695,8 +700,10 @@ class Component_2_1 {
 
 
 		// This component may have special form elements registered.  Check!
-		foreach ($this->_xmlloader->getElements('/forms/formelement') as $node) {
-			Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
+		if(class_exists('\\Core\\Forms\\Form')){
+			foreach ($this->_xmlloader->getElements('/forms/formelement') as $node) {
+				\Core\Forms\Form::$Mappings[$node->getAttribute('name')] = $node->getAttribute('class');
+			}	
 		}
 
 		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
@@ -856,6 +863,48 @@ class Component_2_1 {
 		}
 
 		return $this->_widgetlist;
+	}
+	
+	/**
+	 * Get an array of Page Creates that are defined in the XML for this component.
+	 * 
+	 * @return array
+	 */
+	public function getWidgetCreatesDefined(){
+		$widgets = [];
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('widgets');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('widgetcreate') as $subnode) {
+			/** @var DOMElement $subnode */
+
+			$title       = $subnode->getAttribute('title');
+			$description = $subnode->getAttribute('description');
+			$image       = $subnode->getAttribute('image');
+			
+			if($subnode->getAttribute('baseurl')){
+				$nodebaseurl = $subnode->getAttribute('baseurl');
+			}
+			elseif(($class = $subnode->getAttribute('class'))){
+				$nodebaseurl = '/widget/create?class=' . $class;
+			}
+			else{
+				\Core\set_message('Invalid "widgetcreate" found in ' . $this->getName() . ', ' . $subnode->getAttribute('title') . '; at least baseurl or class are required.', 'error');
+				continue;
+			}
+
+			// Toss this widget onto the stack
+			$widgets[] = [
+				'title'       => $title,
+				'baseurl'     => $nodebaseurl,
+				'description' => $description,
+				'preview'     => $image,
+			];
+		}
+
+		return $widgets;
 	}
 
 	public function getViewClassList() {

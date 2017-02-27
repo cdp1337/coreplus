@@ -22,15 +22,7 @@
 
 class WidgetModel extends Model {
 
-	/**
-	 * A cache of the settings available from the model.
-	 * This saves from having to perform the jsondecode every time a setting is requested.
-	 *
-	 * @var array
-	 */
-	private $_settings = null;
-
-	/** @var Widget_2_1|null */
+	/** @var \Core\Widget|null */
 	private $_widget;
 
 
@@ -71,9 +63,10 @@ class WidgetModel extends Model {
 			'null'      => true,
 		),
 		'settings' => array(
-			'type' => Model::ATT_TYPE_TEXT,
+			'type'     => Model::ATT_TYPE_DATA,
 			'formtype' => 'disabled',
-			'comment' => 'Provides a section for saving json-encoded settings on the widget.'
+			'encoding' => Model::ATT_ENCODING_JSON,
+			'comment'  => 'Provides a section for saving json-encoded settings on the widget.'
 		),
 		'editurl' => array(
 			'type'      => Model::ATT_TYPE_STRING,
@@ -91,6 +84,14 @@ class WidgetModel extends Model {
 			'null'      => false,
 			'comment'   => 'The URL to perform the POST on to delete this widget',
 		),
+		'editpermissions' => array(
+			'type' => Model::ATT_TYPE_STRING,
+			'default' => '!*',
+			'form' => array(
+				'type' => 'access',
+				'group' => 'Access & Advanced',
+			)
+		),
 		'created' => array(
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
@@ -104,6 +105,17 @@ class WidgetModel extends Model {
 	public static $Indexes = array(
 		'primary' => array('baseurl'),
 	);
+	
+	public function __construct($key = null){
+		$this->_linked = [
+			'WidgetInstance' => [
+				'link' => Model::LINK_HASMANY,
+				'on' => 'baseurl'
+			],
+		];
+
+		parent::__construct($key);
+	}
 
 
 	/**
@@ -115,44 +127,45 @@ class WidgetModel extends Model {
 	 * @return mixed
 	 */
 	public function getSetting($key){
-		if($this->_settings === null){
-			// settings is a json encoded array.
-			$string = $this->get('settings');
-			if($string){
-				$this->_settings = json_decode($this->get('settings'), true);
-				if(!$this->_settings) $this->_settings = array();
-			}
-			else{
-				$this->_settings = array();
-			}
-		}
-
-		return (isset($this->_settings[$key])) ? $this->_settings[$key] : null;
+		$s = $this->get('settings');
+		
+		return (isset($s[$key])) ? $s[$key] : null;
 	}
 
 
 	/**
 	 * Set a given setting that is to be saved into the json encoded string.
 	 *
-	 * @param $key
-	 * @param $value
+	 * @param string $key
+	 * @param mixed  $value
 	 */
 	public function setSetting($key, $value){
-		// First I need to get the settings.  This will do 2 things,
-		// allow me to load up the json encoded string (and not have to duplicate that code),
-		// and allow the values to be checked so if the value is unchanged, no action needs be performed.
-
-		$current = $this->getSetting($key);
-
-		// Is it the same?
-		if($current === $value) return;
-
-		// Nope?  Ok, save in the cache and the json encoded string.
-		$this->_settings[$key] = $value;
-
-		$this->set('settings', json_encode($this->_settings));
+		// Get all settings from the underlying Model layer
+		$s = $this->get('settings');
+		
+		// Sanity check to ensure it's a valid array.
+		if(!is_array($s)){
+			$s = [];
+		}
+		
+		// Update the key with the new value
+		$s[$key] = $value;
+		
+		// And stamp the merged values back to the Model.
+		$this->set('settings', $s);
 	}
-
+	
+	/**
+	 * Get the path for the preview image for this widget.
+	 * 
+	 * Will simply forward the request to the Widget object itself, if available.
+	 * 
+	 * @return string
+	 */
+	public function getPreviewImage(){
+		$w = $this->getWidget();
+		return $w === null ? '' : $w->getPreviewImage();
+	}
 
 	/**
 	 * Widgets are linked via their baseurl, but if the baseurl has an id, ie:
@@ -199,43 +212,80 @@ class WidgetModel extends Model {
 	}
 
 	/**
-	 * Get the associated model for this instance, if available.
+	 * Get the associated Widget Object for this Model, if available.
 	 *
-	 * @return Widget_2_1|null
+	 * @return \Core\Widget|null
 	 */
 	public function getWidget(){
 		if($this->_widget === null){
-			$pagedat = $this->splitParts();
-
+			$pagedat = WidgetModel::SplitBaseURL($this->get('baseurl'));
+			
+			if($pagedat === null){
+				// The widget info for this Model isn't valid or wasn't located.
+				$this->_widget = false;
+				return null;
+			}
+			
 			// This will be a Widget object.
-			/** @var Widget_2_1 $c */
-			$this->_widget = Widget_2_1::Factory($pagedat['controller']);
+			/** @var \Core\Widget $c */
+			$this->_widget = \Core\Widget::Factory($pagedat['controller']);
 
 			if($this->_widget === null){
+				// If the Widget couldn't be loaded; set it as such and drop out.
 				$this->_widget = false;
+				return null;
 			}
-			else{
-				// Make sure it's linked
-				$this->_widget->_instance = $this;
+			
+			// Make sure it's linked
+			$this->_widget->_instance = $this;
 
-				// Was installable passed in?  It may contain data useful to the widget.
-				if($this->get('installable')){
-					$this->_widget->_installable = $this->get('installable');
-				}
-
-				// Pass in any base and customer parameters
-				$this->_widget->_params = $pagedat['parameters'];
+			// Was installable passed in?  It may contain data useful to the widget.
+			if($this->get('installable')){
+				$this->_widget->_installable = $this->get('installable');
 			}
+
+			// Pass in any base and customer parameters
+			$this->_widget->_params = $pagedat['parameters'];
 		}
 
 		return $this->_widget === false ? null : $this->_widget;
+	}
+	
+	public function getControlLinks() {
+		$manager = \Core\user()->checkAccess('p:/core/widgets/manage');
+		$editor = \Core\user()->checkAccess($this->get('editpermissions'));
+		$id = $this->get('id');
+		
+		$ret = [];
+		
+		
+		if(($manager || $editor) && $this->get('editurl')){
+			$ret[] = [
+				'link' => $this->get('editurl'),
+				'title' => t('STRING_CORE_WIDGET_SETTINGS'),
+				'icon' => 'wrench',
+			];
+		}
+		
+		if($manager && $this->get('deleteurl')){
+			$ret[] = [
+				'link' => $this->get('deleteurl'),
+				'title' => t('STRING_CORE_WIDGET_DELETE'),
+				'icon' => 'close',
+				'confirm' => 'This will completely delete the widget and content from the database!',
+			];
+		}
+		
+		$ret = array_merge($ret, parent::getControlLinks());
+		
+		return $ret;
 	}
 
 
 	/**
 	 * Split a base url into its corresponding parts, controller method and parameters.
 	 *
-	 * This ONLY supports widgets, and therefore does not support standard Controllers now rewriteurls.
+	 * This ONLY supports widgets, and therefore does not support standard Controllers nor rewriteurls.
 	 *
 	 * @param string $base
 	 *
@@ -272,7 +322,7 @@ class WidgetModel extends Model {
 		if (class_exists($controller . 'Widget')) {
 			switch (true) {
 				// 2.1 API
-				case is_subclass_of($controller . 'Widget', 'Widget_2_1'):
+				case is_subclass_of($controller . 'Widget', '\\Core\\Widget'):
 					// 1.0 API
 				case is_subclass_of($controller . 'Widget', 'Widget'):
 					$controller = $controller . 'Widget';
@@ -285,7 +335,7 @@ class WidgetModel extends Model {
 		// Not quite preferred way, but still works.
 		elseif (class_exists($controller)) {
 			if(!
-				(is_subclass_of($controller, 'Widget_2_1') || is_subclass_of($controller, 'Widget'))
+				(is_subclass_of($controller, '\\Core\\Widget') || is_subclass_of($controller, 'Widget'))
 			){
 				// Not a valid widget
 				return null;

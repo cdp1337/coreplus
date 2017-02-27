@@ -1,6 +1,6 @@
 <?php
 
-class PageWidget extends Widget_2_1 {
+class PageWidget extends \Core\Widget {
 	/**
 	 * This is a widget to display siblings on a given page.
 	 *

@@ -649,7 +649,7 @@ class UserModel extends Model {
 	 * @return bool
 	 * @throws ModelValidationException
 	 */
-	public function setFromForm(Form $form, $prefix = null) {
+	public function setFromForm(\Core\Forms\Form $form, $prefix = null) {
 		foreach($form->getElements() as $el) {
 			/** @var $el FormElement */
 
@@ -1313,24 +1313,8 @@ class UserModel extends Model {
 
 			if(isset($dat[$pk])){
 				// Only check the information if the primary key is set on this record.
-				if($pk == 'email' || $pk == 'id') {
-					// These are the only two fields on the User object itself.
-					$user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
-				}
-				else {
-					$uucm = UserUserConfigModel::Find(['key = ' . $pk, 'value = ' . $dat[ $pk ]], 1);
-
-					if($uucm) {
-						$user = $uucm->getLink('UserModel');
-					}
-					else {
-
-						// Try the lookup from the email address instead.
-						// This will force accounts that exist to be synced up correctly.
-						// The only caveat to this is that users will not be updated with the foreign key if merge is disabled.
-						$user = UserModel::Find(['email = ' . $dat['email']], 1);
-					}
-				}
+				// These are the only two fields on the User object itself.
+				$user = UserModel::Find([$pk . ' = ' . $dat[ $pk ]], 1);
 			}
 			else{
 				$user = null;
@@ -1349,6 +1333,7 @@ class UserModel extends Model {
 				// All incoming users must have an email address!
 				if(!isset($dat['email'])) {
 					$log->error('Unable to import user without an email address!');
+					$log->log(print_r($dat, true));
 					// Skip to the next record.
 					continue;
 				}
@@ -1370,66 +1355,66 @@ class UserModel extends Model {
 			// No else needed, else is there IS a valid $user object and it's setup ready to go.
 
 			
-			// Handle all the properties for this user!
-			foreach($dat as $key => $val){
-				
-				if($key == 'avatar' && strpos($val, '://') !== false){
-					// Sync the user avatar.
-					$log->actionStart('Downloading ' . $dat['avatar']);
-					$f    = new \Core\Filestore\Backends\FileRemote($dat['avatar']);
-					$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
-					if($dest->identicalTo($f)) {
-						$log->actionSkipped();
-					}
-					else {
-						$f->copyTo($dest);
-						$user->set('avatar', 'public/user/avatar/' . $dest->getBaseFilename());
-						$log->actionSuccess();
-					}
-				}
-				elseif($key == 'profiles' && is_array($val)) {
-					$new_profiles = $val;
-
-					// Pull the current profiles from the account
-					$profiles = $user->get('external_profiles');
-					if($profiles && is_array($profiles)) {
-						$current_flat = [];
-						foreach($profiles as $current_profile) {
-							$current_flat[] = $current_profile['url'];
-						}
-
-						// Merge in any *actual* new profile
-						foreach($new_profiles as $new_profile) {
-							if(!in_array($new_profile['url'], $current_flat)) {
-								$profiles[] = $new_profile;
-							}
-						}
-
-						unset($new_profile, $new_profiles, $current_flat, $current_profile);
-					}
-					else {
-						$profiles = $new_profiles;
-						unset($new_profiles);
-					}
-
-					$user->set('external_profiles', $profiles);
-				}
-				elseif($key == 'backend'){
-					// Was a backend requested?
-					// This gets merged instead of replaced entirely.
-					$user->enableAuthDriver($val);
-				}
-				elseif($key == 'groups'){
-					$user->setGroups($val);
-				}
-				else{
-					// Default Behaviour,
-					// save the key into whatever field it was set to go to.
-					$user->set($key, $val);
-				}
-			}
-
 			try {
+				// Handle all the properties for this user!
+				foreach($dat as $key => $val){
+
+					if($key == 'avatar' && strpos($val, '://') !== false){
+						// Sync the user avatar.
+						$log->actionStart('Downloading ' . $dat['avatar']);
+						$f    = new \Core\Filestore\Backends\FileRemote($dat['avatar']);
+						$dest = \Core\Filestore\Factory::File('public/user/avatar/' . $f->getBaseFilename());
+						if($dest->identicalTo($f)) {
+							$log->actionSkipped();
+						}
+						else {
+							$f->copyTo($dest);
+							$user->set('avatar', 'public/user/avatar/' . $dest->getBaseFilename());
+							$log->actionSuccess();
+						}
+					}
+					elseif($key == 'profiles' && is_array($val)) {
+						$new_profiles = $val;
+
+						// Pull the current profiles from the account
+						$profiles = $user->get('external_profiles');
+						if($profiles && is_array($profiles)) {
+							$current_flat = [];
+							foreach($profiles as $current_profile) {
+								$current_flat[] = $current_profile['url'];
+							}
+
+							// Merge in any *actual* new profile
+							foreach($new_profiles as $new_profile) {
+								if(!in_array($new_profile['url'], $current_flat)) {
+									$profiles[] = $new_profile;
+								}
+							}
+
+							unset($new_profile, $new_profiles, $current_flat, $current_profile);
+						}
+						else {
+							$profiles = $new_profiles;
+							unset($new_profiles);
+						}
+
+						$user->set('external_profiles', $profiles);
+					}
+					elseif($key == 'backend'){
+						// Was a backend requested?
+						// This gets merged instead of replaced entirely.
+						$user->enableAuthDriver($val);
+					}
+					elseif($key == 'groups'){
+						$user->setGroups($val);
+					}
+					else{
+						// Default Behaviour,
+						// save the key into whatever field it was set to go to.
+						$user->set($key, $val);
+					}
+				}
+			
 				// Set the default groups loaded from the system.
 				if(!$user->exists()){
 					$user->setGroups($groups);	
@@ -1438,7 +1423,8 @@ class UserModel extends Model {
 				$status = $user->save();
 			}
 			catch(Exception $e) {
-				$log->error($e->getMessage());
+				$log->error('Exception hit while processing user ' . $user->getLabel() . ': ' . $e->getMessage());
+				$log->log(print_r($dat, true));
 				// Skip to the next.
 				continue;
 			}

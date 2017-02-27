@@ -93,7 +93,7 @@ class DatastoreAuthController extends Controller_2_1 {
 			$auth = new \Core\User\AuthDrivers\datastore($user);
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'DatastoreAuthController::_PasswordHandler');
 		$form->addElement('system', ['name' => 'user', 'value' => $user->get('id')]);
 
@@ -206,7 +206,7 @@ class DatastoreAuthController extends Controller_2_1 {
 
 
 		// Create a simple form to render.  This is better than doing it in the template.
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('method', 'POST');
 
 		if(\Core\user()->exists()){
@@ -291,7 +291,7 @@ class DatastoreAuthController extends Controller_2_1 {
 		$genericauth = new \Core\User\AuthDrivers\datastore();
 
 		// Create a simple form to render.  This is better than doing it in the template.
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('method', 'POST');
 		$form->addElement('password', ['name' => 'p1', 'title' => 'Password', 'required' => true]);
 		$form->addElement('password', ['name' => 'p2', 'title' => 'Confirm', 'required' => true]);
@@ -371,7 +371,7 @@ class DatastoreAuthController extends Controller_2_1 {
 	 *
 	 * @return bool|string
 	 */
-	public static function RegisterHandler(Form $form) {
+	public static function RegisterHandler(\Core\Forms\Form $form) {
 		$p1 = $form->getElement('pass');
 		$p2 = $form->getElement('pass2');
 
@@ -451,7 +451,7 @@ class DatastoreAuthController extends Controller_2_1 {
 	 *
 	 * @return bool|null|string
 	 */
-	public static function LoginHandler(\Form $form){
+	public static function LoginHandler(\Core\Forms\Form $form){
 		/** @var \FormElement $e */
 		$e = $form->getElement('email');
 		/** @var \FormElement $p */
@@ -665,7 +665,7 @@ class DatastoreAuthController extends Controller_2_1 {
 
 	}
 
-	public static function _PasswordHandler(Form $form) {
+	public static function _PasswordHandler(\Core\Forms\Form $form) {
 		$p1 = $form->getElement('pass');
 		$p2 = $form->getElement('pass2');
 		

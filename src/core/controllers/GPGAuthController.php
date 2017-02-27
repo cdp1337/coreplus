@@ -66,7 +66,7 @@ class GPGAuthController extends Controller_2_1 {
 			\Core\redirect('/gpgauth/configure/' . \Core\user()->get('id'));
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsMethod', 'GPGAuthController::ResetHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
@@ -126,7 +126,7 @@ $url
 
 EOD;
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('orientation', 'vertical');
 		$form->set('callsmethod', 'GPGAuthController::Login2Handler');
 		$form->addElement('system', ['name' => 'nonce', 'value' => $nonce->get('key')]);
@@ -163,7 +163,7 @@ EOD;
 		if($nonce->isUsed()){
 			$data = $nonce->get('data');
 			
-			$form = new Form();
+			$form = new \Core\Forms\Form();
 			$form->set('callsmethod', 'GPGAuthController::RegisterHandler');
 			$form->addElement('system', ['name' => 'redirect', 'value' => $data['original_redirect']]);
 			$form->addElement('system', ['name' => 'keyid', 'value' => $data['key']]);
@@ -477,7 +477,7 @@ gpg --export -a $eml 2&gt;/dev/null | curl --data-binary @- \\
 $url
 
 EOD;
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'GPGAuthController::ConfigureHandler');
 		$form->addElement('system', ['name' => 'userid', 'value' => $user->get('id')]);
 		$form->addElement(
@@ -520,7 +520,7 @@ EOD;
 			\Core\go_back();
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('orientation', 'vertical');
 		$form->set('callsmethod', 'GPGAuthController::Configure2Handler');
 		$form->addElement('system', ['name' => 'nonce', 'value' => $nonce->get('key')]);
@@ -595,7 +595,7 @@ EOD;
 	 *
 	 * @return bool|string
 	 */
-	public static function ResetHandler(Form $form) {
+	public static function ResetHandler(\Core\Forms\Form $form) {
 		$email = $form->getElement('email');
 
 		/** @var \UserModel $u */
@@ -638,7 +638,7 @@ EOD;
 	 *
 	 * @return bool|string
 	 */
-	public static function ConfigureHandler(Form $form){
+	public static function ConfigureHandler(\Core\Forms\Form $form){
 		$key  = $form->getElementValue('key');
 		/** @var UserModel $user */
 		$user = UserModel::Construct($form->getElement('userid')->get('value'));
@@ -667,7 +667,7 @@ EOD;
 	 *
 	 * @return bool|string
 	 */
-	public static function Configure2Handler(Form $form){
+	public static function Configure2Handler(\Core\Forms\Form $form){
 		/** @var NonceModel $nonce */
 		$nonceKey = NonceModel::Construct($form->getElement('nonce')->get('value'));
 		$sig      = $form->getElement('message')->get('value');
@@ -717,7 +717,7 @@ EOD;
 	 *
 	 * @return bool|string
 	 */
-	public static function LoginHandler(Form $form){
+	public static function LoginHandler(\Core\Forms\Form $form){
 		$email = $form->getElement('email');
 
 		/** @var \UserModel $u */
@@ -802,7 +802,7 @@ EOD;
 	 *
 	 * @return bool|mixed|string
 	 */
-	public static function Login2Handler(Form $form){
+	public static function Login2Handler(\Core\Forms\Form $form){
 		/** @var NonceModel $nonce */
 		$nonce = NonceModel::Construct($form->getElement('nonce')->get('value'));
 
@@ -883,7 +883,7 @@ EOD;
 	 *
 	 * @return bool|string
 	 */
-	public static function RegisterHandler(Form $form) {
+	public static function RegisterHandler(\Core\Forms\Form $form) {
 		$keyid = $form->getElement('keyid');
 		$key   = $form->getElement('key');
 		$email = $form->getElement('email');
