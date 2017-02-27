@@ -3,9 +3,9 @@
  * File for class PiwikHelper definition in the coreplus project
  * 
  * @package Piwik
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  * @date 20130619.0232
- * @copyright Copyright (C) 2009-2013  Author
+ * @copyright Copyright (C) 2009-2015  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -50,16 +50,41 @@ namespace Piwik;
  *
  * 
  * @package Piwik
- * @author Charlie Powell <charlie@eval.bz>
+ * @author Charlie Powell <charlie@evalagency.com>
  *
  */
 abstract class PiwikHelper {
 	public static function InstallTracking() {
-		$siteid = \ConfigHandler::Get('/piwik/siteid');
-		$server = \ConfigHandler::Get('/piwik/server/host');
+		$siteid       = \ConfigHandler::Get('/piwik/siteid');
+		$server       = \ConfigHandler::Get('/piwik/server/host');
+		$all_domains  = \ConfigHandler::Get('/piwik/tracking/all_subdomains');
+		$domain_title = \ConfigHandler::Get('/piwik/tracking/domain_title');
 
 		// If there's no code available, don't display anything.
 		if(!($siteid && $server)) return;
+
+		// Trim the server.
+		$server = trim($server, '/');
+
+		$paqopts = [];
+
+		$paqopts[] = '"trackPageView"';
+		$paqopts[] = '"enableLinkTracking"';
+		if($all_domains){
+			$h = '*.' . HOST;
+			if(strpos($h, '*.www.') === 0){
+				$h = str_replace('*.www.', '*.', $h);
+			}
+			$paqopts[] = '"setCookieDomain", "' . $h . '"';
+		}
+		if($domain_title){
+			$paqopts[] = '"setDocumentTitle", document.domain + "/" + document.title';
+		}
+
+		$paqstr = '';
+		foreach($paqopts as $k => $v){
+			$paqstr .= '    _paq.push([' . $v . ']);' . "\n";
+		}
 
 		// This version of the script is Piwik's newest version as of 2013.06.19
 		$script = <<<EOD
@@ -67,10 +92,9 @@ abstract class PiwikHelper {
 <!-- Piwik -->
 <script type="text/javascript">
   var _paq = _paq || [];
-  _paq.push(['trackPageView']);
-  _paq.push(['enableLinkTracking']);
+$paqstr
   (function() {
-    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://$server//";
+    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://$server/";
     _paq.push(['setTrackerUrl', u+'piwik.php']);
     _paq.push(['setSiteId', $siteid]);
     var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
@@ -88,4 +112,8 @@ EOD;
 
 		return true;
 	}
+
+	//public static function SearchHook($dat) {
+	//	// Piwik.getAsyncTracker()
+	//}
 }

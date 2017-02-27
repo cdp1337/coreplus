@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.2" name="Piwik Analytics" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.1.1~bpo26" name="Piwik Analytics" execmode="web">
 	<requires>
-		<require name="core" type="component" version="2.5.7"/>
+		<require name="core" type="component" version="2.6.7" operation="ge"/>
 	</requires>
 	<hooks>
 		<hook name="/core/page/prerender" call="\Piwik\PiwikHelper::InstallTracking"/>
@@ -17,19 +17,22 @@
 	<configs>
 		<config key="/piwik/server/host" type="string" default="" description="Set to the hostname of your Piwik server"/>
 		<config key="/piwik/siteid" type="int" default="" description="Set to your site id"/>
+		<config key="/piwik/tracking/all_subdomains" type="boolean" default="0" description="So if one visitor visits x.corepl.us and y.corepl.us, they will be counted as a unique visitor."/>
+		<config key="/piwik/tracking/domain_title" type="boolean" default="0" description="if someone visits the 'About' page on blog.corepl.us it will be recorded as 'blog / About'. This is the easiest way to get an overview of your traffic by sub-domain."/>
 	</configs>
 	<pages>
-		<page baseurl="/piwik/configure" title="Piwik Analytics" selectable="0" admin="1" group="Configure"/>
+		<page baseurl="/piwik/configure" title="Piwik Analytics" access="g:admin" selectable="0" admin="1" group="Configure"/>
 	</pages>
 	<view>
 		<file filename="templates/pages/piwik/configure.tpl" md5="2ebddb8a00faee1306d901b3ef3f7204"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="a52fd54d1757637896c33882f7ab3370"/>
-		<file filename="controllers/PiwikController.php" md5="b9fe202c963a76203be11a5cc26b8ea4">
+		<file filename="CHANGELOG" md5="bfa5f21d42b6cc46373db2ef6bc975ba"/>
+		<file filename="component.xml" md5="89003ecd00a8c52e135e1847f8ab8483"/>
+		<file filename="controllers/PiwikController.php" md5="d2ab6e1f0b9384beb4cd5d189540bb6c">
 			<controller name="PiwikController"/>
 		</file>
-		<file filename="libs/piwik/PiwikHelper.php" md5="69fc9e742887704bb73d142cd0dd4c69">
+		<file filename="libs/piwik/PiwikHelper.php" md5="da108e991a47d36b662df5153811eb9b">
 			<class name="Piwik\PiwikHelper"/>
 		</file>
 	</files>
@@ -39,9 +42,11 @@
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
+		<upgrade from="1.0.2" to="1.1.1~bpo26"/>
 	</upgrades>
+	<smartyplugins/>
 	<authors>
-		<author name="Charlie Powell" email="charlie@eval.bz"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
 		<license url="http://www.gnu.org/licenses/agpl-3.0.txt">
