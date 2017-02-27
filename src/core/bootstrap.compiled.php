@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2013  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 08 Jan 2017 16:48:47 -0500
+ * @compiled Mon, 27 Feb 2017 03:56:21 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7470,8 +7470,23 @@ private $_url = null;
 private $_headers = null;
 private $_response = null;
 private $_tmplocal = null;
+protected $_redirectFile = null;
+protected $_redirectCount = 0;
 public function __construct($filename = null) {
 if ($filename) $this->setFilename($filename);
+}
+public function getTitle(){
+$metas = new Filestore\FileMetaHelper($this);
+if(($t = $metas->getMetaTitle('title'))){
+return $t;
+}
+else{
+$title = $this->getBasename(true);
+$title = preg_replace('/[^a-zA-Z0-9 ]/', ' ', $title);
+$title = trim(preg_replace('/[ ]+/', ' ', $title));
+$title = ucwords($title);
+return $title;
+}
 }
 public function getFilesize($formatted = false) {
 $h = $this->_getHeaders();
@@ -7650,8 +7665,10 @@ $file = Filestore\Factory::File('assets/images/mimetypes/unknown.png');
 return $file->getPreviewURL($dimensions);
 }
 public function getQuickPreviewFile($dimensions = '300x300') {
+return $this->_getTmpLocal()->getQuickPreviewFile($dimensions);
 }
 public function getPreviewFile($dimensions = '300x300') {
+return $this->_getTmpLocal()->getPreviewFile($dimensions);
 }
 public function isWritable() {
 return false;
@@ -7699,6 +7716,18 @@ $v = substr($v, 0, strpos($v, 'charset=') - 2);
 $this->_headers[$k] = $v;
 }
 }
+if($this->_response == '302' && isset($this->_headers['Location'])){
+$newcount = $this->_redirectCount + 1;
+if($newcount <= 5){
+$this->_redirectFile = new FileRemote();
+$this->_redirectFile->_redirectCount = ($this->_redirectCount + 1);
+$this->_redirectFile->setFilename($this->_headers['Location']);
+$this->_redirectFile->_getHeaders();
+}
+else{
+trigger_error('Too many redirects when requesting ' . $this->getURL(), E_USER_WARNING);
+}
+}
 }
 return $this->_headers;
 }
@@ -7713,37 +7742,81 @@ $needtodownload = true;
 $this->_tmplocal = Filestore\Factory::File('tmp/remotefile-cache/' . $f);
 if ($this->cacheable && $this->_tmplocal->exists()) {
 $systemcachedata = \Core::Cache()->get('remotefile-cache-header-' . $f);
-if ($systemcachedata) {
-if(isset($systemcachedata['Expires']) && strtotime($systemcachedata['Expires']) > time()){
+if ($systemcachedata && isset($systemcachedata['headers'])) {
+if(isset($systemcachedata['headers']['Expires']) && strtotime($systemcachedata['headers']['Expires']) > time()){
 $needtodownload = false;
-$this->_headers = $systemcachedata;
-$this->_response = 200;
+$this->_headers = $systemcachedata['headers'];
+$this->_response = $systemcachedata['response'];
 }
-elseif ($this->_getHeader('ETag')) {
-$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['ETag']);
+elseif ($this->_getHeader('ETag') && isset($systemcachedata['headers']['ETag'])) {
+$needtodownload = ($this->_getHeader('ETag') != $systemcachedata['headers']['ETag']);
 }
-elseif ($this->_getHeader('Last-Modified')) {
-$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['Last-Modified']);
+elseif ($this->_getHeader('Last-Modified') && isset($systemcachedata['headers']['Last-Modified'])) {
+$needtodownload = ($this->_getHeader('Last-Modified') != $systemcachedata['headers']['Last-Modified']);
 }
 }
 }
 if ($needtodownload || !$this->cacheable) {
-$opts = array(
-'http' => array(
-'protocol_version' => '1.1',
-'method'           => "GET",
-'header'           => \Core::GetStandardHTTPHeaders(false, true)
+$this->_getHeaders();
+if($this->_response == '302' && $this->_redirectFile !== null){
+$this->_tmplocal = $this->_redirectFile->_getTmpLocal();
+}
+else{
+$curl = curl_init();
+curl_setopt_array(
+$curl, array(
+CURLOPT_HEADER         => false,
+CURLOPT_NOBODY         => false,
+CURLOPT_RETURNTRANSFER => true,
+CURLOPT_URL            => $this->getURL(),
+CURLOPT_HTTPHEADER     => \Core::GetStandardHTTPHeaders(true),
 )
 );
-$context = stream_context_create($opts);
-$this->_tmplocal->putContents(file_get_contents($this->getURL(), false, $context));
+$result = curl_exec($curl);
+if($result === false){
+switch(curl_errno($curl)){
+case CURLE_COULDNT_CONNECT:
+case CURLE_COULDNT_RESOLVE_HOST:
+case CURLE_COULDNT_RESOLVE_PROXY:
+$this->_response = 404;
+return $this->_tmplocal;
+break;
+default:
+$this->_response = 500;
+return $this->_tmplocal;
+break;
+}
+}
+curl_close($curl);
+$this->_tmplocal->putContents($result);
+}
 \Core::Cache()->set(
 'remotefile-cache-header-' . $f,
-$this->_getHeaders()
+[
+'headers'  => $this->_getHeaders(),
+'response' => $this->_response,
+]
 );
 }
 }
 return $this->_tmplocal;
+}
+public function sendToUserAgent($forcedownload = false) {
+$view = \Core\view();
+$request = \Core\page_request();
+$view->mode = \View::MODE_NOOUTPUT;
+$view->contenttype = $this->getMimetype();
+$view->updated = $this->getMTime();
+if($forcedownload){
+$view->headers['Content-Disposition'] = 'attachment; filename="' . $this->getBasename() . '"';
+$view->headers['Cache-Control'] = 'no-cache, must-revalidate';
+$view->headers['Content-Transfer-Encoding'] = 'binary';
+}
+$view->headers['Content-Length'] = $this->getFilesize();
+$view->render();
+if($request->method != \PageRequest::METHOD_HEAD){
+echo $this->getContents();
+}
 }
 }
 } // ENDING NAMESPACE Core\Filestore\Backends
