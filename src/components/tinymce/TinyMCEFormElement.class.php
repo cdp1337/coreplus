@@ -9,7 +9,7 @@
  * @license GNU Library or "Lesser" General Public License version 2.1
  */
 
-class TinyMCEFormElement extends FormElement {
+class TinyMCEFormElement extends \Core\Forms\FormElement {
 	public function __construct($atts = null) {
 		// Some defaults
 		$this->_attributes['class'] = 'formelement formwysiwyginput tinymce';

@@ -68,7 +68,7 @@ class PiwikController extends Controller_2_1 {
 			\Core\reload();
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->addElement(
 			'text',
 			[

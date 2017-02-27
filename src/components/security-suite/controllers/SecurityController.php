@@ -22,7 +22,7 @@ class SecurityController extends Controller_2_1 {
 		$configs = [
 			'/security/site_password',
 		];
-		$configform = new Form();
+		$configform = new \Core\Forms\Form();
 		$configform->set('callsmethod', 'SecurityController::SitePasswordSave');
 
 		foreach($configs as $key){
@@ -221,7 +221,7 @@ class SecurityController extends Controller_2_1 {
 		$ban->set('ip_addr', $request->getParameter('ip_addr'));
 		$ban->set('message', 'Your IP address has been blocked from this site by the administrator!');
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'SecurityController::SaveBlacklistIp');
 		$form->addModel($ban, 'model');
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Ban IP!']);
@@ -243,7 +243,7 @@ class SecurityController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'SecurityController::SaveBlacklistIp');
 		$form->addModel($ban, 'model');
 		$form->addElement('submit', ['name' => 'submit', 'value' => 'Edit Banned IP!']);
@@ -341,7 +341,7 @@ class SecurityController extends Controller_2_1 {
 			// Step 1 for training with content, provide a text area to submit content!
 			$view->templatename = 'pages/security/spam_train_1.tpl';
 
-			$form = new Form();
+			$form = new \Core\Forms\Form();
 			$form->addElement(
 				'textarea',
 				[
@@ -363,7 +363,7 @@ class SecurityController extends Controller_2_1 {
 			$check = new \SecuritySuite\SpamCan\SpamCheck($request->getPost('content'));
 			$keywords = $check->getKeywords();
 
-			$form = new Form();
+			$form = new \Core\Forms\Form();
 			$form->set('orientation', 'grid');
 
 			foreach($keywords as $dat){
@@ -401,7 +401,7 @@ class SecurityController extends Controller_2_1 {
 	 *
 	 * @return bool
 	 */
-	public static function SitePasswordSave(Form $form){
+	public static function SitePasswordSave(\Core\Forms\Form $form){
 		$pass = $form->getElement('config[/security/site_password]')->get('value');
 
 		\ConfigHandler::Set('/security/site_password', $pass);
@@ -413,7 +413,7 @@ class SecurityController extends Controller_2_1 {
 	 * @param Form $form
 	 * @return false|string
 	 */
-	public static function SaveBlacklistIp(Form $form){
+	public static function SaveBlacklistIp(\Core\Forms\Form $form){
 		try{
 			$ban = $form->getModel('model');
 
@@ -444,7 +444,7 @@ class SecurityController extends Controller_2_1 {
 		}
 	}
 
-	public static function SpamKeywordsSave(Form $form) {
+	public static function SpamKeywordsSave(\Core\Forms\Form $form) {
 		ConfigHandler::Set('/security/spam_threshold', $form->getElementValue('threshold'));
 
 		foreach($form->getElements() as $el){

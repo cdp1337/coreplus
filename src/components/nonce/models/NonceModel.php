@@ -165,14 +165,14 @@ class NonceModel extends Model {
 		'primary' => array('key'),
 	);
 
-	public function get($k){
+	public function get($k, $format = null){
 		if($k == 'data'){
-			$try = unserialize(parent::get($k));
-			if(!$try) return parent::get($k);
+			$try = unserialize(parent::get($k, $format));
+			if(!$try) return parent::get($k, $format);
 			else return $try;
 		}
 		else{
-			return parent::get($k);
+			return parent::get($k, $format);
 		}
 	}
 	

@@ -33,7 +33,7 @@ class NavigationController extends Controller_2_1 {
 
 		if (!$m->exists()) return View::ERROR_NOTFOUND;
 
-		$form = Form::BuildFromModel($m);
+		$form = \Core\Forms\Form::BuildFromModel($m);
 		$form->set('callsmethod', 'NavigationController::_SaveHandler');
 
 		// I only want non-fuzzy pages to display.
@@ -59,7 +59,7 @@ class NavigationController extends Controller_2_1 {
 		$view = $this->getView();
 		$m    = new NavigationModel();
 
-		$form = Form::BuildFromModel($m);
+		$form = \Core\Forms\Form::BuildFromModel($m);
 		$form->set('callsmethod', 'NavigationController::_SaveHandler');
 
 		// I only want non-fuzzy pages to display.
@@ -94,7 +94,7 @@ class NavigationController extends Controller_2_1 {
 		\core\redirect('/navigation');
 	}
 
-	public static function _SaveHandler(Form $form) {
+	public static function _SaveHandler(\Core\Forms\Form $form) {
 
 		// Save the model
 		$m = $form->getModel();

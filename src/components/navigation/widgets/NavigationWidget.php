@@ -21,7 +21,7 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
-class NavigationWidget extends Widget_2_1 {
+class NavigationWidget extends \Core\Widget {
 	public function view() {
 		$view       = $this->getView();
 		$m          = NavigationModel::Construct($this->getParameter(0));
@@ -134,13 +134,6 @@ class NavigationWidget extends Widget_2_1 {
 		//$view->templatename = '/widgets/navigation/view.tpl';
 		$view->assignVariable('model', $m);
 		$view->assignVariable('entries', $sortedentries);
-		
-		if(\Core\user()->checkAccess('g:admin')){
-			if(($wi = $this->getWidgetInstanceModel())){
-				$this->addControl('Edit Display Options', '/widget/instance/update/' . $wi->get('id'), 'desktop');
-			}
-			$this->addControl('Edit Menu', '/navigation/edit/' . $m->get('id'), 'edit');	
-		}
 	}
 
 	/**

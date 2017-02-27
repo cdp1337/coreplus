@@ -6,7 +6,7 @@
  * Date: 5/1/16
  * Time: 7:45 PM
  */
-class SecurityWidget extends Widget_2_1 {
+class SecurityWidget extends \Core\Widget {
 	
 	public function Userlogins(){
 		$view = $this->getView();

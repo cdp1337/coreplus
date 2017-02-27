@@ -433,7 +433,7 @@ class TinyMCEController extends Controller_2_1 {
 
 		// Only certain people are allowed the rights to upload here.
 		if(\Core\user()->checkAccess($uploadpermission)){
-			$uploadform = new Form();
+			$uploadform = new \Core\Forms\Form();
 			$uploadform->set('action', \Core\resolve_link('/tinymce/' . $type . '/upload'));
 			$uploadform->addElement(
 				'multifile',

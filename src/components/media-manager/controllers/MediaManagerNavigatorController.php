@@ -415,7 +415,7 @@ class MediaManagerNavigatorController extends  Controller_2_1{
 	 *
 	 * @param Form $form
 	 */
-	public static function FileMetadataSaveHandler(Form $form) {
+	public static function FileMetadataSaveHandler(\Core\Forms\Form $form) {
 		$filename = $form->getElement('file')->get('value');
 		$file     = \Core\Filestore\Factory::File($filename);
 		$helper   = new \Core\Filestore\FileMetaHelper($file);

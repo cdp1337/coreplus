@@ -36,7 +36,7 @@ class ThemeController extends Controller_2_1{
 			$optionForm = null;
 		}
 		else{
-			$optionForm = new Form();
+			$optionForm = new \Core\Forms\Form();
 			$optionForm->set('callsmethod', 'AdminController::_ConfigSubmit');
 			foreach($configOptions as $c){
 				/** @var $c ConfigModel */
@@ -192,7 +192,7 @@ class ThemeController extends Controller_2_1{
 			}
 		}
 
-		$siteskinform = new Form();
+		$siteskinform = new \Core\Forms\Form();
 		$siteskinform->set('callsmethod', 'ThemeController::SaveSiteSkins');
 		$opts = ['' => '-- Public Default --'];
 		foreach($current->getSkins() as $skin){
@@ -256,7 +256,7 @@ class ThemeController extends Controller_2_1{
 				$m->set('content', $content);
 				$m->set('filename', 'assets/css/custom.css');
 
-				$form = Form::BuildFromModel($m);
+				$form = \Core\Forms\Form::BuildFromModel($m);
 
 				$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
 				// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
@@ -742,7 +742,7 @@ class ThemeController extends Controller_2_1{
 		$m->set('content', $content);
 		$m->set('filename', $file);
 
-		$form = Form::BuildFromModel($m);
+		$form = \Core\Forms\Form::BuildFromModel($m);
 		$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
 		// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
 		//$form->addElement('system', array('name' => 'revision', 'value' => $revision));
@@ -789,7 +789,7 @@ class ThemeController extends Controller_2_1{
 		$tpl = \Core\Templates\Template::Factory($file);
 		$stylesheets = $tpl->getOptionalStylesheets();
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		foreach($stylesheets as $style){
 			$model = TemplateCssModel::Construct($file, $style['src']);
 			if(!$model->exists() && isset($style['default']) && $style['default']){
@@ -847,7 +847,7 @@ class ThemeController extends Controller_2_1{
 		}
 	}
 
-	public static function _SaveEditorHandler(Form $form){
+	public static function _SaveEditorHandler(\Core\Forms\Form $form){
 		$newmodel = $form->getModel();
 		$file = $form->getElement('file')->get('value');
 		$activefile = $form->getElement('filetype')->get('value');
@@ -961,7 +961,7 @@ class ThemeController extends Controller_2_1{
 		return '/theme';
 	}
 
-	public static function SaveSiteSkins(Form $form){
+	public static function SaveSiteSkins(\Core\Forms\Form $form){
 		foreach($form->getElements() as $el){
 			/** @var FormElement $el */
 
