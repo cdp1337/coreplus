@@ -11,6 +11,10 @@ MESSAGE_ERROR_MARKDOWNBROWSER_DIRECTORY_DOES_NOT_EXIST:
   en: The configured physical directory does not seem to exist!
 MESSAGE_ERROR_MARKDOWNBROWSER_NO_CONFIGURED_DIRECTORY:
   en: There is no configured physical directory, please set that first.
+MESSAGE_SUCCESS_REGISTERED_MARKDOWNBROWSER_PAGE:
+  en: "Created markdown page successfully."
+MESSAGE_SUCCESS_UPDATED_MARKDOWNBROWSER_PAGE:
+  en: "Updated markdown page successfully."
 MESSAGE_TUTORIAL_MARKDOWNBROWSER_REGISTER_UPDATE_PAGE_NOTICE:
   en: >
     This allows you to change the URL and some of the permissions for markdown

@@ -76,7 +76,7 @@ class MarkdownBrowserController extends Controller_2_1{
 			}
 		}
 		
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 		$form->addElement(ConfigHandler::GetConfig('/markdownbrowser/basedir')->asFormElement());
 		$form->addElement(ConfigHandler::GetConfig('/markdownbrowser/source')->asFormElement());
@@ -137,7 +137,7 @@ class MarkdownBrowserController extends Controller_2_1{
 			$page->set('created', $file->getMTime());
 		}
 		
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'MarkdownBrowserController::_SaveHandler');
 		$form->addModel($page, 'page');
 		
@@ -224,21 +224,90 @@ class MarkdownBrowserController extends Controller_2_1{
 		
 		$breadcrumbs = $this->_resolveBreadcrumbsFromURL();
 		foreach($breadcrumbs as $bs){
-			$view->addBreadcrumb($bs['title'], $bs['link']);
+			$view->addBreadcrumb($bs['title'], $bs['rewriteurl']);
 		}
 		
 		$view->title = $processor->getMeta('title');
-		if($processor->getMeta('description')){
-			$view->addMetaName('description', $processor->getMeta('description'));
+		$view->updated = $file->getMTime();
+		if(($desc = $processor->getMeta('description'))){
+			$view->addMetaName('description', $desc);
 		}
-		if($processor->getMeta('keywords')){
-			if(is_array($processor->getMeta('keywords'))){
-				$view->addMetaName('keywords', implode(', ', $processor->getMeta('keywords')) );	
+		if(($keywords = $processor->getMeta('keywords'))){
+			if(is_array($keywords)){
+				$view->addMetaName('keywords', implode(', ', $keywords) );
 			}
 			else{
-				$view->addMetaName('keywords', $processor->getMeta('keywords') );
+				$view->addMetaName('keywords', $keywords );
 			}
 		}
+		if(($authors = $processor->getMeta('authors'))){
+			if(is_array($authors)){
+				foreach($authors as $a){
+					$view->addMetaName('author', $a);
+				}
+			}
+			else{
+				$view->addMetaName('author', $authors );
+			}
+		}
+		
+		// New integration!
+		// If Codemirror is available and there are &lt;code class="syntax-something"&gt; tags present,
+		// try to include that "mode" for codemirror.
+		if(
+			Core::IsComponentAvailable('codemirror') &&
+			preg_match('/<code[^>]*class="[^"]*syntax-[a-z]*[^"]*"[^>]*>/', $html)
+		){
+			$js = <<<EOD
+<script>
+$(function(){
+	$('code.syntax-%SYNTAX%').each(function(){
+		var jQthis          = $(this),
+			jQparent        = jQthis.parent(),
+			jQSiblingPrev   = jQparent.prev(),
+			siblingPrevType = jQSiblingPrev[0].nodeName;
+		
+		// If this pre has a previous .pre-header, then add some CodeMirror classes to that.
+		if(
+			jQSiblingPrev.hasClass('pre-heading') &&
+			(siblingPrevType == 'H3' || siblingPrevType == 'H4' || siblingPrevType == 'H5' || siblingPrevType == 'H6')
+		){
+			jQSiblingPrev.addClass('CodeMirror-heading');
+		}
+		
+		// Prepend the type of this preformatted code.
+		jQparent.append('<div class="CodeMirror-mode">%ALIAS%</div>');
+		
+		// This pre needs to know it's a CodeMirror pre.
+		jQparent.addClass('CodeMirror-pre');
+		
+		// Lastly, initialize the code.
+		new CodeMirror(jQparent[0], {
+			value: jQthis.text().trim(),
+			mode: '%ALIAS%',
+			lineNumbers: true,
+			readOnly: true
+		});
+		jQthis.hide();
+	});
+});
+</script>
+EOD;
+			preg_match_all('/<code[^>]*class="[^"]*syntax-([a-z]*)[^"]*"[^>]*>/', $html, $matches);
+			foreach($matches[1] as $lang){
+				$alias = CodeMirror\Utils::IncludeMode($lang);
+				$view->addScript(
+					str_replace(
+						['%SYNTAX%', '%ALIAS%'],
+						[$lang, $alias],
+						$js
+					),
+					'foot'
+				);
+			}
+		}
+		
+
 		$view->templatename = 'pages/markdownbrowser/view-file.tpl';
 		$view->assign('contents', $html);
 	}
@@ -430,7 +499,7 @@ class MarkdownBrowserController extends Controller_2_1{
 		if($root){
 			$breadcrumbs[] = [
 				'title' => $root->get('title'),
-			    'link'  => '/',
+			    'rewriteurl'  => '/',
 			];
 		}
 		
@@ -465,7 +534,7 @@ class MarkdownBrowserController extends Controller_2_1{
 				$checkProcessor->transform($checkFile->getContents());
 				$breadcrumbs[] = [
 					'title' => $checkProcessor->getMeta('title'),
-					'link' => $checkUrl,
+					'rewriteurl' => $checkUrl,
 				];
 			}
 		}
@@ -482,13 +551,19 @@ class MarkdownBrowserController extends Controller_2_1{
 	 *
 	 * @return mixed
 	 */
-	public static function _SaveHandler(Form $form){
+	public static function _SaveHandler(\Core\Forms\Form $form){
 
 		$model = $form->getModel('page');
 		$exists = $model->exists();
 		$model->save();
 
-		\Core\set_message('t:MESSAGE_SUCCESS_' . ($exists ? 'UPDATED_MARKDOWNBROWSER_PAGE' : 'REGISTERED_MARKDOWNBROWSER_PAGE'));
+		if($exists){
+			\Core\set_message('t:MESSAGE_SUCCESS_UPDATED_MARKDOWNBROWSER_PAGE');
+		}
+		else{
+			\Core\set_message('t:MESSAGE_SUCCESS_REGISTERED_MARKDOWNBROWSER_PAGE');
+		}
+		
 		
 		// w00t
 		return $model->getResolvedURL();

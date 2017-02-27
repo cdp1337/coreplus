@@ -1,0 +1,27 @@
+diff --git a/src/components/php-markdown-lib/libs/Michelf/Markdown.php b/src/components/php-markdown-lib/libs/Michelf/Markdown.php
+index c3eaf44..348d0c6 100644
+--- a/src/components/php-markdown-lib/libs/Michelf/Markdown.php
++++ b/src/components/php-markdown-lib/libs/Michelf/Markdown.php
+@@ -29,7 +29,7 @@
+ 	 * @param  string $text
+ 	 * @return string
+ 	 */
+-	public static function defaultTransform($text) {
++	public static function DefaultTransform($text) {
+ 		// Take parser class on which this function was called.
+ 		$parser_class = \get_called_class();
+ 
+diff --git a/src/components/php-markdown-lib/libs/Michelf/MarkdownInterface.php b/src/components/php-markdown-lib/libs/Michelf/MarkdownInterface.php
+index 8512e37..5089e67 100644
+--- a/src/components/php-markdown-lib/libs/Michelf/MarkdownInterface.php
++++ b/src/components/php-markdown-lib/libs/Michelf/MarkdownInterface.php
+@@ -23,7 +23,7 @@
+ 	 * @param  string $text
+ 	 * @return string
+ 	 */
+-	public static function defaultTransform($text);
++	public static function DefaultTransform($text);
+ 
+ 	/**
+ 	 * Main function. Performs some preprocessing on the input text
+
