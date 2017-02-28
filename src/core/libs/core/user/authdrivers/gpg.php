@@ -136,7 +136,7 @@ class gpg implements AuthDriverInterface{
 	 * @return void
 	 */
 	public function renderLogin($form_options = []) {
-		$form = new \Form($form_options);
+		$form = new \Core\Forms\Form($form_options);
 		$form->set('callsMethod', 'GPGAuthController::LoginHandler');
 
 		$form->addElement('text', array('name' => 'email', 'title' => 'Email', 'required' => true));
@@ -155,7 +155,7 @@ class gpg implements AuthDriverInterface{
 	 */
 	public function renderRegister() {
 		/** @var \Form $form */
-		$form = new \Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'GPGAuthController::RegisterHandler');
 
 		$form->addElement('hidden', ['name' => 'redirect', 'value' => CUR_CALL]);

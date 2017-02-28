@@ -191,7 +191,7 @@ class Table implements \Iterator {
 	 */
 	public function getEditForm(){
 		if($this->_editform === null){
-			$this->_editform = new \Form();
+			$this->_editform = new \Core\Forms\Form();
 			$this->_editform->set('orientation', 'vertical');
 		}
 

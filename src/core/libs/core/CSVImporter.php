@@ -224,7 +224,7 @@ class CSVImporter {
 	private function _renderImport1(){
 		$tmpl = Template::Factory('includes/csvimporter/import1.tpl');
 		
-		$form = new \Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'Core\\CSVImporter::FormHandler1');
 		$form->addElement('system', ['name' => 'key', 'value' => $this->key]);
 		$form->addElement(
@@ -268,7 +268,7 @@ class CSVImporter {
 		}
 		$colcount = sizeof($header);
 
-		$form = new \Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'Core\\CSVImporter::FormHandler2');
 		$form->addElement('system', ['name' => 'key', 'value' => $this->key]);
 		$form->addElement('hidden', ['name' => 'cancel', 'value' => 0]);

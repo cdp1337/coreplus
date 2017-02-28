@@ -296,7 +296,7 @@ class FileMetaHelper implements \ArrayAccess {
 	 * @return \Form
 	 */
 	public function getForm($prefix = 'metas'){
-		$form = new \Form();
+		$form = new \Core\Forms\Form();
 		$this->addElementsToForm($form, $prefix);
 		return $form;
 	}
