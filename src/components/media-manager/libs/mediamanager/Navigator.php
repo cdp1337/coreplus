@@ -312,7 +312,7 @@ class Navigator {
 
 		// Only certain people are allowed the rights to upload here.
 		if($this->canupload && $this->useuploader){
-			$uploadform = new \Form();
+			$uploadform = new \Core\Forms\Form();
 			//$uploadform->set('action', \Core\resolve_link('/mediamanagernavigator/upload'));
 			$uploadform->addElement(
 				'multifile',
