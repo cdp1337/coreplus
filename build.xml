@@ -134,6 +134,7 @@
 			<arg value="-Dsonar.projectName=${sonar.projectName}"/>
 			<arg value="-Dsonar.projectVersion=${sonar.projectVersion}"/>
 			<arg value="-Dsonar.sources=${sonar.sources}"/>
+			<arg value="-Dsonar.excludes=${sonar.excludes}"/>
 		</exec>
 	</target>
 

@@ -119,3 +119,4 @@ data.import.custom.datafile=
 #sonar.projectName=CorePlus
 #sonar.projectVersion=1.0
 #sonar.sources=src
+#sonar.exclusions=src/files/*,src/core/bootstrap.compiled.php
