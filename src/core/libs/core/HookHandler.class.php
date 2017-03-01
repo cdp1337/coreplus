@@ -51,7 +51,7 @@ class HookHandler implements ISingleton {
 	 */
 	public static function AttachToHook($hookName, $callFunction) {
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
-		Core\Utilities\Logger\write_debug('Registering function ' . $callFunction . ' to hook ' . $hookName);
+		\Core\log_verbose('Registering function ' . $callFunction . ' to hook ' . $hookName);
 		//if(!isset(HookHandler::$RegisteredHooks[$hookName])) HookHandler::$RegisteredHooks[$hookName] = array();
 		if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
 
@@ -77,7 +77,7 @@ class HookHandler implements ISingleton {
 	public static function RegisterHook(Hook $hook) {
 		$name = $hook->getName();
 
-		Core\Utilities\Logger\write_debug('Registering new hook [' . $name . ']');
+		\Core\log_verbose('Registering new hook [' . $name . ']');
 
 		if(isset(HookHandler::$RegisteredHooks[$name]) && FULL_DEBUG){
 			trigger_error('Registering hook that is already registered [' . $name . ']', E_USER_NOTICE);
@@ -114,15 +114,13 @@ class HookHandler implements ISingleton {
 		if(!Core::GetComponent()) return null;
 
 		$hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
-		Core\Utilities\Logger\write_debug('Dispatching hook ' . $hookName);
-		//echo "Calling hook $hookName<br>";
-		//var_dump(HookHandler::$RegisteredHooks[$hookName]);
+		
 		if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
-			trigger_error('Tried to dispatch an undefined hook ' . $hookName, E_USER_NOTICE);
+			//\Core\log_notice('Tried to dispatch an undefined hook ' . $hookName);
 			return null;
 		}
-
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatching hook ' . $hookName);
+		
+		\Core\log_debug('Dispatching hook ' . $hookName);
 
 		$args = func_get_args();
 		// Drop off the hook name from the arguments.
@@ -131,8 +129,7 @@ class HookHandler implements ISingleton {
 		$hook   = HookHandler::$RegisteredHooks[$hookName];
 		$result = call_user_func_array(array(&$hook, 'dispatch'), $args);
 
-		Core\Utilities\Logger\write_debug('Dispatched hook ' . $hookName);
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatched hook ' . $hookName);
+		\Core\log_verbose('Dispatching hook ' . $hookName . ' completed');
 		return $result;
 	}
 
@@ -314,6 +311,8 @@ class Hook {
 		// If the type is set to something and the call type is that
 		// OR
 		// The call type is not set/null.
+		
+		\Core\log_verbose('Calling Hook Binding ' . $call['call']);
 
 		if(strpos($call['call'], '::') !== false){
 			// Make sure this class exists first.
@@ -336,7 +335,7 @@ class Hook {
 			$result = array();
 		}
 
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Called Hook Binding ' . $call['call']);
+		\Core\log_debug('Called Hook Binding ' . $call['call']);
 		return $result;
 	}
 

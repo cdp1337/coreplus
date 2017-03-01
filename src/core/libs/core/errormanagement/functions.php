@@ -131,35 +131,41 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 			$type  = 'error';
 			$class = 'error';
 			$code  = 'PHP Error';
+			$level = LOG_LEVEL_ERROR;
 			break;
 		case E_WARNING:
 		case E_USER_WARNING:
-			$type = 'error';
+			$type  = 'error';
 			$class = 'warning';
-			$code = 'PHP Warning';
+			$code  = 'PHP Warning';
+			$level = LOG_LEVEL_WARNING;
 			break;
 		case E_NOTICE:
 		case E_USER_NOTICE:
-			$type = 'info';
+			$type  = 'info';
 			$class = 'info';
-			$code = 'PHP Notice';
+			$code  = 'PHP Notice';
+			$level = LOG_LEVEL_INFO;
 			break;
 		case E_DEPRECATED:
 		case E_USER_DEPRECATED:
-			$type = 'info';
+			$type  = 'info';
 			$class = 'deprecated';
-			$code = 'PHP Deprecated Notice';
+			$code  = 'PHP Deprecated Notice';
+			$level = LOG_LEVEL_INFO;
 			break;
 		case E_STRICT:
-			$type = 'info';
+			$type  = 'info';
 			$class = 'warning';
-			$code = 'PHP Strict Warning';
+			$code  = 'PHP Strict Warning';
+			$level = LOG_LEVEL_INFO;
 			$suppressed = true;
 			break;
 		default:
-			$type = 'info';
+			$type  = 'info';
 			$class = 'unknown';
-			$code = 'Unknown PHP Error [' . $errno . ']';
+			$code  = 'Unknown PHP Error [' . $errno . ']';
+			$level = LOG_LEVEL_INFO;
 			break;
 	}
 
@@ -173,47 +179,42 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 		$code .= ' @SUPPRESSED';
 	}
 
-	// All errors/warnings/notices get logged!
+	// Format the location of the source of this error a little better.
 	if($errfile && strpos($errfile, ROOT_PDIR) === 0){
-		$details = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
+		$location = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
 	}
 	elseif($errfile){
-		$details = '[src: ' . $errfile . ':' . $errline . '] ';
+		$location = '[src: ' . $errfile . ':' . $errline . '] ';
 	}
 	else{
-		$details = '';
+		$location = '';
 	}
 
 	try{
 		if(!\Core::GetComponent()){
-			// SQUAK!  Core isn't even loaded yet!
+			// If Core can't be loaded, then only basic logging can be done.
+			error_log($errstr);
 			return;
 		}
+		
+		$entry = new \Core\Utilities\Logger\LogEntry();
+		$entry->level = $level;
+		$entry->type = $type;
+		$entry->code = $code;
+		$entry->message = $location . $errstr;
+		\Core\Utilities\Logger\Logger::Log($entry);
 
 		// Allow external systems to hook into this event.
 		\HookHandler::DispatchHook('/core/error_handler', $code, $errstr);
-
-		$log = \SystemLogModel::Factory();
-		$log->setFromArray([
-			'type'    => $type,
-			'code'    => $code,
-			'message' => $details . $errstr
-		]);
-		$log->save();
 	}
 	catch(\Exception $e){
-		// meh, try a traditional log.
+		// Something bad happened... try the old school version.
 		try{
-			if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-				$log = new LogFile($type);
-				$log->write($details . $errstr, $code);
-			}
-			else{
-				error_log($details . $errstr);
-			}
+			error_log($details . $errstr);
+			error_log($e->getMessage());
 		}
 		catch(\Exception $e){
-			// Really meh now!
+			// ...... I give up.
 		}
 	}
 
@@ -233,7 +234,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 		}
 	}
 
-	// If it's a fatal error and it's not in development mode, simply display a friendly error page instead.
+	// If it's a fatal error, simply display a friendly error page instead.
 	if($fatal){
 		if(EXEC_MODE == 'WEB'){
 			require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');

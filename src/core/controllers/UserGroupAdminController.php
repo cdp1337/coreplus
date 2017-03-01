@@ -249,6 +249,66 @@ class UserGroupAdminController extends Controller_2_1{
 		\Core\set_message('Removed group successfully', 'success');
 		\core\redirect('/usergroupadmin');
 	}
+	
+	/**
+	 * Admin page to render a report view of the current groups and all users attached to those groups.
+	 */
+	public function report(){
+		$view = $this->getView();
+
+		$permissionmanager = \Core\user()->checkAccess('p:/user/permissions/manage');
+		
+		$factory = new ModelFactory('UserGroupModel');
+
+		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled()){
+			if(MultiSiteHelper::GetCurrentSiteID()){
+				// Child site, only display global and site-specific sites.
+				$w = new \Core\Datamodel\DatasetWhereClause();
+				$w->setSeparator('or');
+				$w->addWhere('site = ' . MultiSiteHelper::GetCurrentSiteID());
+				$w->addWhere('site = -1');
+				$factory->where($w);
+
+				$displayglobal = true;
+				$multisite = false;
+			}
+			else {
+				// Root site, display all groups across all sites.
+				$factory->where('site != -2');
+				$displayglobal = false;
+				$multisite = true;
+			}
+			$site = MultiSiteHelper::GetCurrentSiteID();
+		}
+		else{
+			$displayglobal = false;
+			$multisite = false;
+			$site = null;
+		}
+
+		$factory->order('name');
+		$groups = $factory->get();
+		$data = [];
+		
+		// For each group, give me all the users attached to that group.
+		foreach($groups as $g){
+			/** @var $g UserGroupModel */
+			
+			$uugs = $g->getLink('UserUserGroup');
+			$users = [];
+			foreach($uugs as $uug){
+				$users[] = $uug->getLink('User');
+			}
+			
+			$data[] = [
+				'group' => $g,
+				'users' => $users
+			];
+		}
+		
+		$view->title = 't:STRING_USER_GROUP_REPORT';
+		$view->assign('data', $data);
+	}
 
 	/**
 	 * Set the site permissions to a given Form object.

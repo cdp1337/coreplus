@@ -227,7 +227,7 @@ class PageRequest {
 	 * Execute the controller and method this page request points to.
 	 */
 	public function execute() {
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->execute()');
+		\Core\log_debug('Starting PageRequest->execute()');
 
 		if($this->isCacheable()){
 			$uakey = \Core\UserAgent::Construct()->getPseudoIdentifier();
@@ -666,14 +666,14 @@ class PageRequest {
 
 		HookHandler::DispatchHook('/core/page/postexecute');
 
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
+		\Core\log_debug('Completed PageRequest->execute()');
 	}
 
 	/**
 	 * Render the View to the browser.
 	 */
 	public function render(){
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->render()');
+		\Core\log_debug('Starting PageRequest->render()');
 
 		$view = $this->getView();
 		$page = $this->getPageModel();

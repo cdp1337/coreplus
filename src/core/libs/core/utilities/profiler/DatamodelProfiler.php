@@ -153,7 +153,7 @@ class DatamodelProfiler {
 			$callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
 		}
 
-		\Core\Utilities\Logger\write_debug('DatamodelProfiler: [' . $type . '] ' . $query);
+		\Core\log_verbose('DatamodelProfiler: [' . $type . '] ' . $query);
 
 		$this->_last[] = [
 			'start' => microtime(true),
@@ -206,7 +206,7 @@ class DatamodelProfiler {
 
 		if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 			if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
-				\Core\Utilities\Logger\append_to('query', '[' . $timeFormatted . '] ' . $last['query'], 0);
+				\Core\log_warning('[' . $timeFormatted . '] ' . $last['query'], 'Slow Query');
 			}
 		}
 	}
@@ -253,7 +253,7 @@ class DatamodelProfiler {
 
 		if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 			if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
-				\Core\Utilities\Logger\append_to('query', '[' . $timeFormatted . '] ' . $last['query'], 0);
+				\Core\log_warning('[' . $timeFormatted . '] ' . $last['query'], 'Slow Query');
 			}
 		}
 	}

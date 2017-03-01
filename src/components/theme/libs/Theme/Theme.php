@@ -109,7 +109,7 @@ class Theme{
 			CDN_TYPE == 'local' &&
 			$this->getKeyName() == \ConfigHandler::Get('/theme/selected')
 		){
-			\Core\Utilities\Logger\write_debug('Auto-installing assets for theme [' . $this->getName() . ']');
+			\Core\log_verbose('Auto-installing assets for theme [' . $this->getName() . ']');
 			$this->_parseAssets();
 		}
 
@@ -794,7 +794,7 @@ class Theme{
 		$action = $install ? 'Installing' : 'Uninstalling';
 		$set    = $install ? 'Set' : 'Unset';
 
-		\Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
+		\Core\log_verbose($action . ' configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
@@ -1074,7 +1074,7 @@ class Theme{
 		$action = $install ? 'Installing' : 'Uninstalling';
 		$set    = $install ? 'Set' : 'Unset';
 
-		\Core\Utilities\Logger\write_debug($action . ' skins for ' . $this->getName());
+		\Core\log_verbose($action . ' skins for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('skins');

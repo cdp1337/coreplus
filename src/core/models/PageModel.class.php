@@ -1450,6 +1450,22 @@ class PageModel extends Model {
 
 		return round($long_number, 5);
 	}
+	
+	/**
+	 * Get the title of this page, (with automatic i18n translation)
+	 *
+	 * @return string
+	 */
+	public function getTitle(){
+		$t = $this->get('title');
+		
+		if(strpos($t, 't:') === 0){
+			return t(substr($t, 2));
+		}
+		else{
+			return $t;
+		}
+	}
 
 	/**
 	 * Get the *automatic* SEO title for this page.
@@ -1460,7 +1476,6 @@ class PageModel extends Model {
 	 */
 	public function getSEOTitle(){
 		$metatitle = $this->getMeta('title');
-		$title = $this->get('title');
 		$config = \ConfigHandler::Get('/core/page/title_template');
 
 		if($metatitle && $metatitle->get('meta_value_title')){
@@ -1473,7 +1488,7 @@ class PageModel extends Model {
 		}
 		else{
 			// Otherwise, just pull the page's title.
-			$t = $title;
+			$t = $this->getTitle();
 		}
 
 
@@ -1841,9 +1856,9 @@ class PageModel extends Model {
 			//Replaced with the published date of the page
 			'%%date%%' => \Core\Date\DateTime::FormatString($this->get('published'), \Core\Date\DateTime::SHORTDATE),
 			//Replaced with the title of the page
-			'%%title%%' => $this->get('title'),
+			'%%title%%' => $this->getTitle(),
 			//Replaced with the title of the parent page of the current page
-			'%%parent_title%%' => ($parent ? $parent->get('title') : ''),
+			'%%parent_title%%' => ($parent ? $parent->getTitle() : ''),
 			//The site's name
 			'%%sitename%%' => SITENAME,
 			//Replaced with the page excerpt (or auto-generated if it does not exist)

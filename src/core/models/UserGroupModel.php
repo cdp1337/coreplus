@@ -61,7 +61,8 @@ class UserGroupModel extends Model {
 			)
 		),
 		'permissions' => array(
-			'type' => Model::ATT_TYPE_TEXT,
+			'type' => Model::ATT_TYPE_DATA,
+			'encoding' => Model::ATT_ENCODING_JSON,
 			'formtype' => 'disabled',
 			'comment' => 'json-encoded array of permissions this group has'
 		),
@@ -104,14 +105,14 @@ class UserGroupModel extends Model {
 	 * @return array
 	 */
 	public function getPermissions(){
-		$p = json_decode($this->get('permissions'), true);
-
-		return $p ? $p : array();
+		$p = $this->get('permissions');
+		
+		return is_array($p) ? $p : [];
 	}
 
 	public function setPermissions($permissions){
 		if(sizeof($permissions) == 0){
-			$this->set('permissions', '');
+			$this->set('permissions', null);
 		}
 		else{
 
@@ -133,7 +134,7 @@ class UserGroupModel extends Model {
 			// Don't forget to re-index the keys.... just because.
 			$permissions = array_values($permissions);
 
-			$this->set('permissions', json_encode($permissions));
+			$this->set('permissions', $permissions);
 		}
 	}
 

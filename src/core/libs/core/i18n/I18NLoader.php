@@ -289,6 +289,7 @@ class I18NLoader {
 		$files = [];
 		$dirChecks = [];
 
+		\Core\log_verbose('I18NLoader: Scanning components for strings.yml files');
 		foreach(\Core::GetComponents() as $c){
 			/** @var \Component_2_1 $c */
 			if($c->getName() == 'core'){
@@ -311,12 +312,14 @@ class I18NLoader {
 				$files[] = $dir . 'strings.yml';
 			}
 		}
-
+		
+		\Core\log_verbose('I18NLoader: ' . sizeof($files) . ' strings.yml files located!');
 		self::$Strings = [];
 
 		foreach($files as $f){
 			$yml = new \Spyc();
 			$r = $yml->loadFile($f);
+			\Core\log_verbose('I18NLoader: Spyc loaded ' . $f);
 			foreach($r as $k => $dat){
 				foreach($dat as $lang => $s){
 					// k is the string KEY

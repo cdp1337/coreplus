@@ -27,18 +27,31 @@
  *
  * #### Image Types &amp; Animations
  *
- * As of Core 3.3.0, image types are preserved, so if a .jpg is requested, an image/jpeg is returned.
+ * *Core 3.3.0* Image types are preserved, so if a .jpg is requested, an image/jpeg is returned.
  * This changed from the previous behaviour where all images were converted to a PNG.
+ * 
+ * *Core 6.2.0* SVG images are now supported natively
  *
- * Supported image types are `.jp[e]g`, `.png`, and `.gif`.
+ * Supported image types are:
+ * 
+ * * JPEGs (.jpg & .jpeg image/jpeg)
+ * * PNGs (.png image/png)
+ * * GIFs (.gif image/gif)
+ * * Animated GIFs (.gif image/gif)
+ * * Scalable Vector Graphics (.svg image/svg+xml)
  *
  * If an animated gif is resized, the server will attempt to preserve the animation on the resized image.
  * This is done via imagemagick, (so that library needs to be present on the server in order for this trick to work).
  *
  * #### SEO Data
  *
- * As of Core 3.2.0, alt tags are automatically added to every image that does not have the alt attribute explicitly set.
- * This alt name is pulled from the filename of the image, with automatic capitalization and '_' => (space) converting.
+ * *Core 3.2.0* Alt tags are automatically added to every image that does not have the alt attribute explicitly set.
+ * -This alt name is pulled from the filename of the image, with automatic capitalization and '_' => (space) converting.-
+ * This alt name is first checked in the database for the user-definable title of the image.
+ * If that returns nothing, the filename is used instead with automatic capitalization and formatting.
+ * 
+ * **Performance Reminder** If performance is required and this image is not important,
+ * (such as a tiny page icon), PLEASE include the alt tag otherwise a database call is created for each image!
  *
  * #### Smarty Parameters
  *
@@ -85,9 +98,9 @@
  *
  * #### Example Usage
  *
- * <pre>
+ * ``` {.syntax-smarty}
  * {img src="public/gallery/photo123.png" width="123" height="123" placeholder="photo" alt="My photo 123"}
- * </pre>
+ * ```
  *
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
  * @param Smarty $smarty  Parent Smarty template object

@@ -56,6 +56,13 @@ body.page-user-view, body.page-user-me {
 	}
 }
 
+/**
+ * Styles for the user group administration, spefically the report page
+ */
+.page-usergroupadmin-report .group {
+	page-break-inside: avoid;
+}
+
 @media only screen and (max-width: $breakpoint-mobile){
 	body.page-user-view, body.page-user-me {
 		.user-side-info {

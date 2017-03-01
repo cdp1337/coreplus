@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 28 Feb 2017 14:34:13 -0500
+ * @compiled Tue, 28 Feb 2017 20:34:09 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -454,6 +454,48 @@ return true;
 }
 return false;
 }
+function log_verbose($message){
+$entry = new Utilities\Logger\LogEntry();
+$entry->level = LOG_LEVEL_VERBOSE;
+$entry->type = 'debug';
+$entry->message = $message;
+Utilities\Logger\Logger::Log($entry);
+}
+function log_debug($message){
+$entry = new Utilities\Logger\LogEntry();
+$entry->level = LOG_LEVEL_DEBUG;
+$entry->type = 'debug';
+$entry->message = $message;
+Utilities\Logger\Logger::Log($entry);
+}
+function log_info($message){
+$entry = new Utilities\Logger\LogEntry();
+$entry->level = LOG_LEVEL_INFO;
+$entry->type = 'info';
+$entry->message = $message;
+Utilities\Logger\Logger::Log($entry);
+}
+function log_notice($message){
+$entry = new Utilities\Logger\LogEntry();
+$entry->level = LOG_LEVEL_INFO;
+$entry->type = 'error';
+$entry->message = $message;
+Utilities\Logger\Logger::Log($entry);
+}
+function log_warning($message){
+$entry = new Utilities\Logger\LogEntry();
+$entry->level = LOG_LEVEL_WARNING;
+$entry->type = 'info';
+$entry->message = $message;
+Utilities\Logger\Logger::Log($entry);
+}
+function log_error($message){
+$entry = new Utilities\Logger\LogEntry();
+$entry->level = LOG_LEVEL_WARNING;
+$entry->type = 'error';
+$entry->message = $message;
+Utilities\Logger\Logger::Log($entry);
+}
 function FormatSize($filesize, $round = 2){
 return \Core\Filestore\format_size($filesize, $round);
 }
@@ -850,12 +892,13 @@ self::$_DefaultProfiler = $this;
 public function record($event){
 $now = microtime(true);
 $time = $now - $this->_microtime;
-$this->_events[] = array(
+$event = array(
 'event'     => $event,
 'microtime' => $now,
 'timetotal' => $time,
 'memory'  => memory_get_usage(false),
 );
+$this->_events[] = $event;
 }
 public function getTime(){
 return microtime(true) - $this->_microtime;
@@ -870,8 +913,13 @@ return \Core\time_duration_format($time, 4);
 public function getEventTimesFormatted(){
 $out = '';
 foreach ($this->getEvents() as $t) {
-$in = round($t['timetotal'], 5) * 1000;
-$dcm = I18NLoader::GetLocaleConv('decimal_point');
+$out .= $this->_formatEvent($t) . "\n";
+}
+return $out;
+}
+private function _formatEvent($event){
+$in = round($event['timetotal'], 5) * 1000;
+$dcm = class_exists('I18NLoader') ? I18NLoader::GetLocaleConv('decimal_point') : '.';
 if ($in == 0){
 $time = '0000' . $dcm . '00 ms';
 }
@@ -881,11 +929,9 @@ $whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
 $dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
 $time = $whole . $dcm . $dec . ' ms';
 }
-$mem = '[mem: ' . \Core\Filestore\format_size($t['memory']) . '] ';
-$event = $t['event'];
-$out .= "[$time] $mem- $event" . "\n";
-}
-return $out;
+$mem = '[mem: ' . \Core\Filestore\format_size($event['memory']) . '] ';
+$event = $event['event'];
+return "[$time] $mem- $event";
 }
 public static function GetDefaultProfiler(){
 if(self::$_DefaultProfiler === null){
@@ -953,7 +999,7 @@ break;
 else{
 $callinglocation = ['**SKIPPED**  Please enable FULL_DEBUG to see the calling stack.'];
 }
-\Core\Utilities\Logger\write_debug('DatamodelProfiler: [' . $type . '] ' . $query);
+\Core\log_verbose('DatamodelProfiler: [' . $type . '] ' . $query);
 $this->_last[] = [
 'start' => microtime(true),
 'type' => $type,
@@ -996,7 +1042,7 @@ Session::Set('datamodel_profiler_events/writes', Session::Get('datamodel_profile
 }
 if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
-\Core\Utilities\Logger\append_to('query', '[' . $timeFormatted . '] ' . $last['query'], 0);
+\Core\log_warning('[' . $timeFormatted . '] ' . $last['query'], 'Slow Query');
 }
 }
 }
@@ -1034,7 +1080,7 @@ Session::Set('datamodel_profiler_events/writes', Session::Get('datamodel_profile
 }
 if(defined('DMI_QUERY_LOG_TIMEOUT') && DMI_QUERY_LOG_TIMEOUT >= 0){
 if(DMI_QUERY_LOG_TIMEOUT == 0 || ($time * 1000) >= DMI_QUERY_LOG_TIMEOUT ){
-\Core\Utilities\Logger\append_to('query', '[' . $timeFormatted . '] ' . $last['query'], 0);
+\Core\log_warning('[' . $timeFormatted . '] ' . $last['query'], 'Slow Query');
 }
 }
 }
@@ -1110,35 +1156,109 @@ return self::$_DefaultProfiler;
 
 namespace  {
 
-### REQUIRE_ONCE FROM core/libs/core/utilities/logger/functions.php
+### REQUIRE_ONCE FROM core/libs/core/utilities/logger/LogEntry.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Utilities\Logger {
+class LogEntry {
+public $level = \LOG_LEVEL_INFO;
+public $type = 'info';
+public $message = null;
+public $code = null;
+public $details = null;
+public $user = null;
+public $icon = null;
+public $source = null;
+}
+} // ENDING NAMESPACE Core\Utilities\Logger
+
+namespace  {
+
+### REQUIRE_ONCE FROM core/libs/core/utilities/logger/Logger.php
 } // ENDING GLOBAL NAMESPACE
 namespace Core\Utilities\Logger {
 use Core\Utilities\Profiler\Profiler;
-const DEBUG_LEVEL_LOG = 1; // Basic debugging written to the error log.
-const DEBUG_LEVEL_FULL = '5'; // Core debug level, typically not required unless working on the core.
-function write_debug($message, $level = DEBUG_LEVEL_FULL){
-if($level >= DEBUG_LEVEL_FULL && !FULL_DEBUG) return;
-$profiler = Profiler::GetDefaultProfiler();
-$time = $profiler->getTime();
-$time = \Core\time_duration_format($time, 2);
-$time = str_pad($time, 10, '0', STR_PAD_LEFT);
-if (EXEC_MODE == 'CLI'){
-echo '[ DEBUG ' . $time . ' ] - ' . $message . "\n";
+class Logger {
+private static $_LogFiles = [];
+public static function Log(LogEntry $entry){
+try{
+if(class_exists('ConfigHandler')){
+$logLevelDB = \ConfigHandler::Get('/core/logs/db/level');
+$logLevelFile = \ConfigHandler::Get('/core/logs/level');
+if($logLevelDB === null){
+$logLevelDB = LOG_LEVEL_INFO;
 }
-elseif($level == DEBUG_LEVEL_LOG){
-error_log('[ DEBUG ' . $time . ' ] - ' . $message);
+if($logLevelFile === null){
+$logLevelFile = LOG_LEVEL_WARNING;
+}
 }
 else{
-echo '<pre class="xdebug-var-dump screen">[' . $time . '] ' . $message . '</pre>';
+$logLevelDB = LOG_LEVEL_INFO;
+$logLevelFile = LOG_LEVEL_WARNING;
 }
 }
-function append_to($filebase, $message, $code = null){
+catch(\Exception $ex){
+$logLevelDB = LOG_LEVEL_INFO;
+$logLevelFile = LOG_LEVEL_WARNING;
+}
+if(
+(defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE && $entry->level <= LOG_LEVEL_DEBUG) ||
+(defined('DEVELOPMENT_MODE') && DEVELOPMENT_MODE && FULL_DEBUG)
+){
+switch($entry->level){
+case LOG_LEVEL_ERROR:
+$prefix = COLOR_ERROR . '(' . $entry->type . ')' . COLOR_RESET . ' ';
+break;
+case LOG_LEVEL_WARNING:
+$prefix = COLOR_WARNING . '(' . $entry->type . ')' . COLOR_RESET . ' ';
+break;
+case LOG_LEVEL_DEBUG:
+case LOG_LEVEL_VERBOSE:
+$prefix = COLOR_DEBUG . '(' . $entry->type . ')' . COLOR_RESET . ' ';
+break;
+default:
+$prefix = '';
+}
+Profiler::GetDefaultProfiler()->record($prefix . $entry->message);
+}
+if($entry->level <= $logLevelFile){
+try{
 if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-$log = new LogFile($filebase);
-$log->write($message, $code);
+$log = self::_GetLogFile($entry->type);
+$log->write($entry->message, $entry->code);
 }
 else{
-error_log($message);
+error_log('[' . $entry->type . '] ' . $entry->message);
+}
+}
+catch (Exception $ex) {
+error_log('[' . $entry->type . '] ' . $entry->message);
+error_log('Additionally ' . $ex->getMessage());
+}
+}
+if($entry->level <= $logLevelDB && class_exists('\\SystemLogModel')){
+try{
+$log = \SystemLogModel::Factory();
+$log->setFromArray([
+'type'             => $entry->type,
+'code'             => $entry->code,
+'message'          => $entry->message,
+'details'          => $entry->details,
+'icon'             => $entry->icon,
+'affected_user_id' => $entry->user,
+'source'           => $entry->source,
+]);
+$log->save();
+}
+catch (Exception $ex) {
+error_log('Unable to record DB log entry due to: ' . $ex->getMessage());
+}
+}
+}
+private static function _GetLogFile($type): LogFile{
+if(!isset(self::$_LogFiles[$type])){
+self::$_LogFiles[$type] = new LogFile($type);
+}
+return self::$_LogFiles[$type];
 }
 }
 } // ENDING NAMESPACE Core\Utilities\Logger
@@ -1213,10 +1333,13 @@ define('SECONDS_ONE_WEEK',   604800);  // 7 days
 define('SECONDS_TWO_WEEK',   1209600); // 14 days
 define('SECONDS_ONE_MONTH',  2629800); // 30.4375 days
 define('SECONDS_TWO_MONTH',  5259600); // 60.8750 days
+define('LOG_LEVEL_ERROR', 1);
+define('LOG_LEVEL_WARNING', 2);
+define('LOG_LEVEL_INFO', 3);
+define('LOG_LEVEL_DEBUG', 4);
+define('LOG_LEVEL_VERBOSE', 5);
 
 
-Core\Utilities\Logger\write_debug('Starting Application');
-Core\Utilities\Logger\write_debug('Loading pre-include files');
 ### REQUIRE_ONCE FROM core/bootstrap_preincludes.php
 ### REQUIRE_ONCE FROM core/libs/core/ISingleton.interface.php
 Interface ISingleton {
@@ -3044,9 +3167,6 @@ return;
 }
 public function save($defer = false) {
 $classname = strtolower(get_called_class());
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-'Issuing save() on ' . $classname . ' ' . $this->getLabel()
-);
 $save = false;
 if(!$this->_exists){
 $save = true;
@@ -3067,9 +3187,6 @@ break;
 }
 }
 if(!$save){
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-'No column detected as changed, skipping save.'
-);
 return false;
 }
 if(isset(self::$_ModelSupplementals[$classname])){
@@ -3109,16 +3226,10 @@ $this->set($localk, $model->get($remotek));
 }
 if ($this->_exists){
 $changed = $this->_saveExisting();
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-'Saved existing record to database'
-);
 }
 else{
 $this->_saveNew($defer);
 $changed = true;
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-'Saved new record to database'
-);
 }
 foreach($this->_linked as $k => $l){
 switch($l['link']){
@@ -6462,9 +6573,17 @@ $long_number = $order - $months;
 $long_number += 10;
 return round($long_number, 5);
 }
+public function getTitle(){
+$t = $this->get('title');
+if(strpos($t, 't:') === 0){
+return t(substr($t, 2));
+}
+else{
+return $t;
+}
+}
 public function getSEOTitle(){
 $metatitle = $this->getMeta('title');
-$title = $this->get('title');
 $config = \ConfigHandler::Get('/core/page/title_template');
 if($metatitle && $metatitle->get('meta_value_title')){
 $t = $metatitle->get('meta_value_title');
@@ -6473,7 +6592,7 @@ elseif($config){
 $t = $this->_parseTemplateString($config);
 }
 else{
-$t = $title;
+$t = $this->getTitle();
 }
 if(ConfigHandler::Get('/core/page/title_remove_stop_words')){
 $stopwords = \Core\get_stop_words();
@@ -6674,8 +6793,8 @@ $bodysnippet = substr(strip_tags($this->get('body')), 0, 150);
 $author = $this->getAuthor();
 $rep = [
 '%%date%%' => \Core\Date\DateTime::FormatString($this->get('published'), \Core\Date\DateTime::SHORTDATE),
-'%%title%%' => $this->get('title'),
-'%%parent_title%%' => ($parent ? $parent->get('title') : ''),
+'%%title%%' => $this->getTitle(),
+'%%parent_title%%' => ($parent ? $parent->getTitle() : ''),
 '%%sitename%%' => SITENAME,
 '%%excerpt%%' => ($metadescription ? $metadescription->get('meta_value_title') : $bodysnippet),
 '%%tag%%' => '',
@@ -7374,27 +7493,6 @@ return $ua->getAsHTML() . ' ' . $ip->getAsHTML(true) . ' ' . $this->get('ip_addr
 }
 else{
 return parent::render($key);
-}
-}
-public function save($defer = false){
-if(Core::IsComponentAvailable('core')){
-$isnew = !$this->exists();
-$ret = parent::save($defer);
-if(!$ret){
-return $ret;
-}
-if(!$isnew){
-return $ret;
-}
-}
-if(
-($this->get('type') == 'error' || $this->get('type') == 'security') &&
-$this->get('details')
-){
-Core\Utilities\Logger\append_to($this->get('type'), $this->get('message') . "\n" . $this->get('details'), $this->get('code'));
-}
-else{
-Core\Utilities\Logger\append_to($this->get('type'), $this->get('message'), $this->get('code'));
 }
 }
 public function getControlLinks() {
@@ -9118,7 +9216,8 @@ public static $Schema = array(
 )
 ),
 'permissions' => array(
-'type' => Model::ATT_TYPE_TEXT,
+'type' => Model::ATT_TYPE_DATA,
+'encoding' => Model::ATT_ENCODING_JSON,
 'formtype' => 'disabled',
 'comment' => 'json-encoded array of permissions this group has'
 ),
@@ -9151,12 +9250,12 @@ $this->_linked['UserUserGroup'] = [
 parent::__construct($id);
 }
 public function getPermissions(){
-$p = json_decode($this->get('permissions'), true);
-return $p ? $p : array();
+$p = $this->get('permissions');
+return is_array($p) ? $p : [];
 }
 public function setPermissions($permissions){
 if(sizeof($permissions) == 0){
-$this->set('permissions', '');
+$this->set('permissions', null);
 }
 else{
 $allperms = Core::GetPermissions();
@@ -9170,7 +9269,7 @@ unset($permissions[$k]);
 }
 }
 $permissions = array_values($permissions);
-$this->set('permissions', json_encode($permissions));
+$this->set('permissions', $permissions);
 }
 }
 public function _validateName($key){
@@ -9518,7 +9617,7 @@ $this->_execMode = strtoupper($mode);
 }
 $this->_name    = $this->_xmlloader->getRootDOM()->getAttribute('name');
 $this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
-Core\Utilities\Logger\write_debug('Loading metadata for component [' . $this->_name . ']');
+\Core\log_verbose('Loading metadata for component [' . $this->_name . ']');
 $dat = ComponentFactory::_LookupComponentData($this->_name);
 if (!$dat) return;
 $this->_versionDB   = $dat['version'];
@@ -9724,7 +9823,7 @@ public function loadFiles() {
 if(!$this->isInstalled()) return false;
 if(!$this->isEnabled()) return false;
 if($this->_filesloaded) return true;
-Core\Utilities\Logger\write_debug('Loading files for component [' . $this->getName() . ']');
+\Core\log_verbose('Loading files for component [' . $this->getName() . ']');
 $dir = $this->getBaseDir();
 foreach ($this->_xmlloader->getElements('/includes/include') as $f) {
 require_once($dir . $f->getAttribute('filename'));
@@ -9748,7 +9847,7 @@ foreach ($this->_xmlloader->getElements('/forms/formelement') as $node) {
 }
 }
 if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
-Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
+\Core\log_verbose('Auto-installing assets for component [' . $this->getName() . ']');
 $this->_parseAssets();
 }
 $this->_filesloaded = true;
@@ -10590,7 +10689,7 @@ $overallChanges  = [];
 $overallAction   = $install ? 'Installing' : 'Uninstalling';
 $overallActioned = $install ? 'Installed' : 'Uninstalled';
 $overallSet      = $install ? 'Set' : 'Remove';
-Core\Utilities\Logger\write_debug($overallAction . ' Widgets for ' . $this->getName());
+\Core\log_verbose($overallAction . ' Widgets for ' . $this->getName());
 if(!$install){
 die('@todo Support uninstalling widgets via _parseWidgets!');
 }
@@ -10647,7 +10746,7 @@ $node   = $this->_xmlloader->getElement('dbschema');
 $prefix = $node->getAttribute('prefix');
 $db     = \Core\db();
 $changes = array();
-Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
+\Core\log_verbose('Installing database schema for ' . $this->getName());
 $classes = $this->getModelList();
 foreach ($classes as $m => $file) {
 if(!class_exists($m)) require_once($file);
@@ -10693,7 +10792,7 @@ $assetbase = CDN_LOCAL_ASSETDIR;
 $theme     = ConfigHandler::Get('/theme/selected');
 $change    = '';
 $changes   = array();
-Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
+\Core\log_verbose('Installing assets for ' . $this->getName());
 foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
 $b = $this->getBaseDir();
 $newfilename = 'assets/' . substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
@@ -10773,7 +10872,7 @@ public function _parseConfigs($install = true, $verbosity = 0) {
 $changes = array();
 $action = $install ? 'Installing' : 'Uninstalling';
 $set    = $install ? 'Set' : 'Removed';
-Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
+\Core\log_verbose($action . ' configs for ' . $this->getName());
 $node = $this->_xmlloader->getElement('configs');
 $componentName = $this->getKeyName();
 foreach ($node->getElementsByTagName('config') as $confignode) {
@@ -10835,7 +10934,7 @@ public function _parseUserConfigs($install = true, $verbosity = 0) {
 if(!class_exists('UserConfigModel')) return false;
 $changes = array();
 $action = $install ? 'Installing' : 'Uninstalling';
-Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
+\Core\log_verbose($action . ' User Configs for ' . $this->getName());
 $node = $this->_xmlloader->getElement('userconfigs', false);
 if($node){
 trigger_error('Use of the &lt;userconfigs/&gt; metatag is deprecated in favour of the &lt;users/&gt; metatag.  (In the ' . $this->getName() . ' component)', E_USER_DEPRECATED);
@@ -10922,7 +11021,7 @@ return (sizeof($changes)) ? $changes : false;
 public function _parsePages($install = true, $verbosity = 0) {
 $changes = array();
 $overallAction = $install ? 'Installing' : 'Uninstalling';
-Core\Utilities\Logger\write_debug($overallAction . ' pages for ' . $this->getName());
+\Core\log_verbose($overallAction . ' pages for ' . $this->getName());
 $node = $this->_xmlloader->getElement('pages');
 foreach ($node->getElementsByTagName('page') as $subnode) {
 $baseurl = $subnode->getAttribute('baseurl');
@@ -11248,7 +11347,7 @@ while ($filesize >= 1024) {
 $c++;
 $filesize = $filesize / 1024;
 }
-return I18NLoader::FormatNumber($filesize, $round) . ' ' . $suf[$c];
+return (class_exists('I18NLoader') ? I18NLoader::FormatNumber($filesize, $round) : round($filesize, $round)) . ' ' . $suf[$c];
 }
 function get_asset_path(){
 static $_path;
@@ -12636,13 +12735,13 @@ private function _resizeTo(Filestore\File $file, $width, $height, $mode){
 if(!$this->isImage()){
 return;
 }
-\Core\Utilities\Logger\write_debug('Resizing image ' . $this->getFilename('') . ' to ' . $width . 'x' . $height . $mode);
+\Core\log_verbose('Resizing image ' . $this->getFilename('') . ' to ' . $width . 'x' . $height . $mode);
 $m = $this->getMimetype();
 $file->putContents('');
 if($m == 'image/gif' && exec('which convert 2>/dev/null')){
 $resize = escapeshellarg($mode . $width . 'x' . $height);
 exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
-\Core\Utilities\Logger\write_debug('Resizing complete (via convert)');
+\Core\log_verbose('Resizing complete (via convert)');
 return;
 }
 switch ($m) {
@@ -12653,7 +12752,7 @@ $thumbHeight = $height;
 if($width <= 200 && $height <= 200 && function_exists('exif_thumbnail')){
 $img = exif_thumbnail($this->getFilename(), $thumbWidth, $thumbHeight, $thumbType);
 if($img){
-\Core\Utilities\Logger\write_debug('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
+\Core\log_verbose('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
 $file->putContents($img);
 $img = imagecreatefromjpeg($file->getFilename());
 }
@@ -12672,7 +12771,7 @@ case 'image/gif':
 $img = imagecreatefromgif($this->getFilename());
 break;
 default:
-\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
+\Core\log_verbose('Resizing complete (failed, not sure what it was)');
 return;
 }
 if ($img) {
@@ -12737,18 +12836,18 @@ imagedestroy($img);
 switch ($m) {
 case 'image/jpeg':
 imagejpeg($img2, $file->getFilename(), 60);
-\Core\Utilities\Logger\write_debug('Resizing complete (via imagejpeg)');
+\Core\log_verbose('Resizing complete (via imagejpeg)');
 break;
 case 'image/png':
 imagepng($img2, $file->getFilename(), 9);
-\Core\Utilities\Logger\write_debug('Resizing complete (via imagepng)');
+\Core\log_verbose('Resizing complete (via imagepng)');
 break;
 case 'image/gif':
 imagegif($img2, $file->getFilename());
-\Core\Utilities\Logger\write_debug('Resizing complete (via imagegif)');
+\Core\log_verbose('Resizing complete (via imagegif)');
 break;
 default:
-\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
+\Core\log_verbose('Resizing complete (failed, not sure what it was)');
 return;
 }
 }
@@ -15335,35 +15434,41 @@ $fatal = true;
 $type  = 'error';
 $class = 'error';
 $code  = 'PHP Error';
+$level = LOG_LEVEL_ERROR;
 break;
 case E_WARNING:
 case E_USER_WARNING:
-$type = 'error';
+$type  = 'error';
 $class = 'warning';
-$code = 'PHP Warning';
+$code  = 'PHP Warning';
+$level = LOG_LEVEL_WARNING;
 break;
 case E_NOTICE:
 case E_USER_NOTICE:
-$type = 'info';
+$type  = 'info';
 $class = 'info';
-$code = 'PHP Notice';
+$code  = 'PHP Notice';
+$level = LOG_LEVEL_INFO;
 break;
 case E_DEPRECATED:
 case E_USER_DEPRECATED:
-$type = 'info';
+$type  = 'info';
 $class = 'deprecated';
-$code = 'PHP Deprecated Notice';
+$code  = 'PHP Deprecated Notice';
+$level = LOG_LEVEL_INFO;
 break;
 case E_STRICT:
-$type = 'info';
+$type  = 'info';
 $class = 'warning';
-$code = 'PHP Strict Warning';
+$code  = 'PHP Strict Warning';
+$level = LOG_LEVEL_INFO;
 $suppressed = true;
 break;
 default:
-$type = 'info';
+$type  = 'info';
 $class = 'unknown';
-$code = 'Unknown PHP Error [' . $errno . ']';
+$code  = 'Unknown PHP Error [' . $errno . ']';
+$level = LOG_LEVEL_INFO;
 break;
 }
 if($suppressed){
@@ -15373,36 +15478,31 @@ return;
 $code .= ' @SUPPRESSED';
 }
 if($errfile && strpos($errfile, ROOT_PDIR) === 0){
-$details = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
+$location = '[src: ' . '/' . substr($errfile, strlen(ROOT_PDIR)) . ':' . $errline . '] ';
 }
 elseif($errfile){
-$details = '[src: ' . $errfile . ':' . $errline . '] ';
+$location = '[src: ' . $errfile . ':' . $errline . '] ';
 }
 else{
-$details = '';
+$location = '';
 }
 try{
 if(!\Core::GetComponent()){
+error_log($errstr);
 return;
 }
+$entry = new \Core\Utilities\Logger\LogEntry();
+$entry->level = $level;
+$entry->type = $type;
+$entry->code = $code;
+$entry->message = $location . $errstr;
+\Core\Utilities\Logger\Logger::Log($entry);
 \HookHandler::DispatchHook('/core/error_handler', $code, $errstr);
-$log = \SystemLogModel::Factory();
-$log->setFromArray([
-'type'    => $type,
-'code'    => $code,
-'message' => $details . $errstr
-]);
-$log->save();
 }
 catch(\Exception $e){
 try{
-if(class_exists('Core\\Utilities\\Logger\\LogFile')){
-$log = new LogFile($type);
-$log->write($details . $errstr, $code);
-}
-else{
 error_log($details . $errstr);
-}
+error_log($e->getMessage());
 }
 catch(\Exception $e){
 }
@@ -15629,7 +15729,6 @@ return $string->getTranslation();
 
 
 
-Core\Utilities\Logger\write_debug('Loading hook handler');
 ### REQUIRE_ONCE FROM core/libs/core/HookHandler.class.php
 class HookHandler implements ISingleton {
 private static $RegisteredHooks = array();
@@ -15646,7 +15745,7 @@ return self::singleton();
 }
 public static function AttachToHook($hookName, $callFunction) {
 $hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
-Core\Utilities\Logger\write_debug('Registering function ' . $callFunction . ' to hook ' . $hookName);
+\Core\log_verbose('Registering function ' . $callFunction . ' to hook ' . $hookName);
 if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
 if (!isset(self::$EarlyRegisteredHooks[$hookName])) self::$EarlyRegisteredHooks[$hookName] = array();
 self::$EarlyRegisteredHooks[$hookName][] = array('call' => $callFunction);
@@ -15656,7 +15755,7 @@ HookHandler::$RegisteredHooks[$hookName]->attach($callFunction);
 }
 public static function RegisterHook(Hook $hook) {
 $name = $hook->getName();
-Core\Utilities\Logger\write_debug('Registering new hook [' . $name . ']');
+\Core\log_verbose('Registering new hook [' . $name . ']');
 if(isset(HookHandler::$RegisteredHooks[$name]) && FULL_DEBUG){
 trigger_error('Registering hook that is already registered [' . $name . ']', E_USER_NOTICE);
 }
@@ -15676,18 +15775,15 @@ HookHandler::RegisterHook($hook);
 public static function DispatchHook($hookName, $args = null) {
 if(!Core::GetComponent()) return null;
 $hookName = strtolower($hookName); // Case insensitive will prevent errors later on.
-Core\Utilities\Logger\write_debug('Dispatching hook ' . $hookName);
 if (!isset(HookHandler::$RegisteredHooks[$hookName])) {
-trigger_error('Tried to dispatch an undefined hook ' . $hookName, E_USER_NOTICE);
 return null;
 }
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatching hook ' . $hookName);
+\Core\log_debug('Dispatching hook ' . $hookName);
 $args = func_get_args();
 array_shift($args);
 $hook   = HookHandler::$RegisteredHooks[$hookName];
 $result = call_user_func_array(array(&$hook, 'dispatch'), $args);
-Core\Utilities\Logger\write_debug('Dispatched hook ' . $hookName);
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Dispatched hook ' . $hookName);
+\Core\log_verbose('Dispatching hook ' . $hookName . ' completed');
 return $result;
 }
 public static function GetAllHooks() {
@@ -15762,6 +15858,7 @@ break;
 return $return;
 }
 public function callBinding($call, $args){
+\Core\log_verbose('Calling Hook Binding ' . $call['call']);
 if(strpos($call['call'], '::') !== false){
 $parts = explode('::', $call['call']);
 if(!class_exists($parts[0])){
@@ -15778,7 +15875,7 @@ $result = call_user_func_array($call['call'], $args);
 if($this->returnType == self::RETURN_TYPE_ARRAY && !is_array($result)){
 $result = array();
 }
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Called Hook Binding ' . $call['call']);
+\Core\log_debug('Called Hook Binding ' . $call['call']);
 return $result;
 }
 public function __toString() {
@@ -15798,7 +15895,6 @@ HookHandler::singleton();
 
 
 $preincludes_time = microtime(true);
-Core\Utilities\Logger\write_debug('Loading core system');
 ### REQUIRE_ONCE FROM core/libs/core/Core.class.php
 use Core\Session;
 class Core implements ISingleton {
@@ -15899,7 +15995,7 @@ if ($this->_components) return null;
 $this->_components = array();
 $this->_libraries  = array();
 $tempcomponents    = false;
-Core\Utilities\Logger\write_debug('Starting loading of component metadata');
+\Core\log_verbose('Starting loading of component metadata');
 if(DEVELOPMENT_MODE){
 $enablecache = false;
 }
@@ -15907,7 +16003,7 @@ else{
 $enablecache = true;
 }
 if($enablecache){
-Core\Utilities\Logger\write_debug('Checking core-components cache');
+\Core\log_verbose('Checking core-components cache');
 $tempcomponents = \Core\Cache::Get('core-components', (3600 * 24));
 if($tempcomponents !== false){
 foreach ($tempcomponents as $c) {
@@ -15922,10 +16018,9 @@ $tempcomponents = false;
 }
 }
 if(!$enablecache || $tempcomponents == false){
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Scanning for component.xml files manually');
-Core\Utilities\Logger\write_debug('Scanning for component.xml files manually');
+\Core\log_debug('Scanning for component.xml files manually');
 $tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
-Core\Utilities\Logger\write_debug('Core component loaded');
+\Core\log_verbose('Core component loaded');
 $dh = opendir(ROOT_PDIR . 'components');
 if (!$dh) throw new CoreException('Unable to open directory [' . ROOT_PDIR . 'components/] for reading.');
 while (($file = readdir($dh)) !== false) {
@@ -15933,7 +16028,7 @@ if ($file{0} == '.') continue;
 if (!is_dir(ROOT_PDIR . 'components/' . $file)) continue;
 if (!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
 $c = ComponentFactory::Load(ROOT_PDIR . 'components/' . $file . '/component.xml');
-Core\Utilities\Logger\write_debug('Opened component ' . $file);
+\Core\log_verbose('Opened component ' . $file);
 $file = strtolower($file);
 if (!$c->isValid()) {
 if (DEVELOPMENT_MODE) {
@@ -15945,7 +16040,7 @@ $tempcomponents[$file] = $c;
 unset($c);
 }
 closedir($dh);
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component XML files scanned');
+\Core\log_debug('Component XML files scanned');
 foreach ($tempcomponents as $c) {
 try {
 $c->load();
@@ -15960,13 +16055,12 @@ die();
 }
 }
 if($enablecache){
-Core\Utilities\Logger\write_debug(' * Caching core-components for next pass');
+\Core\log_verbose(' * Caching core-components for next pass');
 \Core\Cache::Set('core-components', $tempcomponents, (3600 * 24));
 }
 }
 $list = $tempcomponents;
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component metadata loaded, starting registration');
-Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
+\Core\log_debug(' * Component metadata loaded, starting registration');
 foreach($list as $n => $c){
 if($c->isInstalled() && !$c->isEnabled()){
 $this->_componentsDisabled[$n] = $c;
@@ -16047,9 +16141,7 @@ unset($list[ $n ]);
 foreach ($list as $n => $c) {
 $this->_componentsDisabled[$n] = $c;
 if ($c->error & Component_2_1::ERROR_WRONGEXECMODE) continue;
-if (DEVELOPMENT_MODE) {
-SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
-}
+\Core\log_warning('Could not load installed component ' . $n . ' due to a failed requirement: ' . $c->getErrors(','), '/core/component/missingrequirement');
 }
 if(class_exists('ThemeHandler')){
 foreach(ThemeHandler::GetAllThemes() as $theme){
@@ -16553,7 +16645,6 @@ return $licenses;
 spl_autoload_register('Core::CheckClass');
 
 
-Core\Utilities\Logger\write_debug('Loading configs');
 ### REQUIRE_ONCE FROM core/libs/core/ConfigHandler.class.php
 class ConfigHandler implements ISingleton {
 private static $Instance = null;
@@ -16637,7 +16728,7 @@ return null;
 }
 }
 private function _loadDB(){
-Core\Utilities\Logger\write_debug('Config data loading from database');
+\Core\log_verbose('Config data loading from database');
 $this->_clearCache();
 $fac = ConfigModel::Find();
 foreach ($fac as $config) {
@@ -16648,7 +16739,7 @@ if($config->get('mapto') && !defined($config->get('mapto'))){
 define($config->get('mapto'), $val);
 }
 }
-Core\Utilities\Logger\write_debug('Config data loaded from database');
+\Core\log_verbose('Config data loaded from database');
 }
 public static function Singleton() {
 if (self::$Instance === null) {
@@ -16731,7 +16822,6 @@ var_dump(ConfigHandler::$cacheFromDB);
 
 
 ConfigHandler::Singleton();
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Configuration loaded and available');
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if (!$core_settings) {
 if(EXEC_MODE == 'WEB'){
@@ -16742,6 +16832,7 @@ else{
 die('Please install core plus through the web interface first!' . "\n");
 }
 }
+\Core\log_verbose('Core framework and base dependencies ready');
 if (!DEVELOPMENT_MODE) {
 ini_set('display_errors', 0);
 ini_set('html_errors', 0);
@@ -17177,7 +17268,6 @@ $rooturlSSL, $curcall, $ssl, $gnupgdir, $host, $sslmode, $tmpdir, $relativereque
 $core_settings
 );
 $maindefines_time = microtime(true);
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
 try {
 $dbconn = DMI::GetSystemDMI();
 ConfigHandler::_DBReadyHook();
@@ -17192,7 +17282,6 @@ require(ROOT_PDIR . 'core/templates/halt_pages/fatal_error.inc.html');
 die();
 }
 }
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus Data Model Interface loaded and ready');
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time, $dbconn);
 if(!defined('FTP_USERNAME')){
 define('FTP_USERNAME', ConfigHandler::Get('/core/ftp/username'));
@@ -17234,7 +17323,7 @@ die();
 }
 }
 HookHandler::DispatchHook('/core/components/loaded');
-$profiler->record('Components Load Complete');
+\Core\log_debug('Components Load Complete');
 ### REQUIRE_ONCE FROM core/bootstrap_postincludes.php
 if(!defined('SMARTY_DIR')){
 define('SMARTY_DIR', ROOT_PDIR . 'core/libs/smarty/');
@@ -19781,9 +19870,7 @@ return $this->_fetchCache;
 }
 try{
 $body = $this->fetchBody();
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-'Fetched application content from within View->fetch() for ' . $this->templatename
-);
+\Core\log_debug('Fetched application content from within View->fetch() for ' . $this->templatename);
 }
 catch(Exception $e){
 $this->error = View::ERROR_SERVERERROR;
@@ -21285,7 +21372,7 @@ $this->_pageview = new View();
 return $this->_pageview;
 }
 public function execute() {
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->execute()');
+\Core\log_debug('Starting PageRequest->execute()');
 if($this->isCacheable()){
 $uakey = \Core\UserAgent::Construct()->getPseudoIdentifier();
 $urlkey = $this->host . $this->uri;
@@ -21571,10 +21658,10 @@ if(!isset($view->meta['title'])){
 $view->meta['title'] = $page->getSEOTitle();
 }
 HookHandler::DispatchHook('/core/page/postexecute');
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Completed PageRequest->execute()');
+\Core\log_debug('Completed PageRequest->execute()');
 }
 public function render(){
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Starting PageRequest->render()');
+\Core\log_debug('Starting PageRequest->render()');
 $view = $this->getView();
 $page = $this->getPageModel();
 if ($view->error == View::ERROR_ACCESSDENIED || $view->error == View::ERROR_NOTFOUND) {
@@ -22065,11 +22152,11 @@ $geopostal   = '';
 }
 else{
 $reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
-$profiler->record('Initialized GeoLite Database');
+\Core\log_debug('Initialized GeoLite Database');
 $geo = $reader->cityIspOrg(REMOTE_IP);
-$profiler->record('Read GeoLite Database');
+\Core\log_debug('Read GeoLite Database');
 $reader->close();
-$profiler->record('Closed GeoLite Database');
+\Core\log_debug('Closed GeoLite Database');
 $geocity = $geo->city->name;
 if(isset($geo->subdivisions[0]) && $geo->subdivisions[0] !== null){
 $geoprovinceobj = $geo->subdivisions[0];

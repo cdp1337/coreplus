@@ -286,7 +286,7 @@ class Core implements ISingleton {
 		$this->_components = array();
 		$this->_libraries  = array();
 		$tempcomponents    = false;
-		Core\Utilities\Logger\write_debug('Starting loading of component metadata');
+		\Core\log_verbose('Starting loading of component metadata');
 
 		// If the site is in DEVELOPMENT mode, component caching would probably be a bad idea; ie: the developer probably wants
 		// those component files loaded everytime.
@@ -300,7 +300,7 @@ class Core implements ISingleton {
 		// Is there a cache of elements available?  This is a primary system cache that greatly increases performance,
 		// since it will no longer have to run through each component.xml file to register each one.
 		if($enablecache){
-			Core\Utilities\Logger\write_debug('Checking core-components cache');
+			\Core\log_verbose('Checking core-components cache');
 			// Try to load up the cached components and check them first.
 			$tempcomponents = \Core\Cache::Get('core-components', (3600 * 24));
 
@@ -321,12 +321,11 @@ class Core implements ISingleton {
 
 
 		if(!$enablecache || $tempcomponents == false){
-			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Scanning for component.xml files manually');
-			Core\Utilities\Logger\write_debug('Scanning for component.xml files manually');
+			\Core\log_debug('Scanning for component.xml files manually');
 
 			// Core is first, (obviously)
 			$tempcomponents['core'] = ComponentFactory::Load(ROOT_PDIR . 'core/component.xml');
-			Core\Utilities\Logger\write_debug('Core component loaded');
+			\Core\log_verbose('Core component loaded');
 
 			// First, build my cache of components, regardless if the component is installed or not.
 			$dh = opendir(ROOT_PDIR . 'components');
@@ -344,9 +343,8 @@ class Core implements ISingleton {
 				// Skip directories that do not have a readable component.xml file.
 				if (!is_readable(ROOT_PDIR . 'components/' . $file . '/component.xml')) continue;
 
-				//Core\Utilities\Logger\write_debug(' * Loading component ' . $file);
 				$c = ComponentFactory::Load(ROOT_PDIR . 'components/' . $file . '/component.xml');
-				Core\Utilities\Logger\write_debug('Opened component ' . $file);
+				\Core\log_verbose('Opened component ' . $file);
 
 				// All further operations are case insensitive.
 				// The original call to Component needs to be case sensitive because it sets the filename to pull.
@@ -365,7 +363,7 @@ class Core implements ISingleton {
 				unset($c);
 			}
 			closedir($dh);
-			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component XML files scanned');
+			\Core\log_debug('Component XML files scanned');
 
 			// Now I probably could actually load the components!
 
@@ -390,15 +388,14 @@ class Core implements ISingleton {
 
 			// Cache this list!
 			if($enablecache){
-				Core\Utilities\Logger\write_debug(' * Caching core-components for next pass');
+				\Core\log_verbose(' * Caching core-components for next pass');
 				\Core\Cache::Set('core-components', $tempcomponents, (3600 * 24));
 			}
 		}
 
 		$list = $tempcomponents;
 
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Component metadata loaded, starting registration');
-		Core\Utilities\Logger\write_debug(' * Component metadata loaded, starting registration');
+		\Core\log_debug(' * Component metadata loaded, starting registration');
 
 		// Move any disabled component over to the disabled array.
 		foreach($list as $n => $c){
@@ -530,10 +527,8 @@ class Core implements ISingleton {
 
 			// Ignore anything with the execmode different, those should be minor notices for debugging if anything.
 			if ($c->error & Component_2_1::ERROR_WRONGEXECMODE) continue;
-
-			if (DEVELOPMENT_MODE) {
-				SystemLogModel::LogErrorEvent('/core/component/missingrequirement', 'Could not load installed component ' . $n . ' due to requirement failed.', $c->getErrors());
-			}
+			
+			\Core\log_warning('Could not load installed component ' . $n . ' due to a failed requirement: ' . $c->getErrors(','), '/core/component/missingrequirement');
 		}
 
 		// Don't forget to load the themes too!

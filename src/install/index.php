@@ -72,13 +72,8 @@ session_start();
 
 /********************* Initial system defines *********************************/
 require_once(__DIR__ . '/../core/bootstrap_predefines.php');
-Core\Utilities\Logger\write_debug('Starting Application');
-
 
 /********************** Critical file inclusions ******************************/
-Core\Utilities\Logger\write_debug('Loading pre-include files');
-require_once(__DIR__ . '/../core/bootstrap_preincludes.php');
-
 
 require_once(ROOT_PDIR . 'core/libs/core/templates/TemplateInterface.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/Exception.php');

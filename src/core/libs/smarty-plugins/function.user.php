@@ -22,21 +22,34 @@
 /**
  * Convert a user id to a username and display that to the template.
  *
- * @todo Finish documentation of smarty_function_user
- *
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
  * @param Smarty $smarty  Parent Smarty template object
  *
  * @return string
  * @throws SmartyException
- *
- * <h3>Usage Example</h3>
- *
- * <p>Typical usage for the Smarty user function</p>
- *
- * <code lang="text/html">
- * User Name: {user $userid}&lt;br/&gt;
- * </code>
+ * 
+ * ### Attributes
+ * 
+ * #### Indexed Attribute 0 / "user"
+ * 
+ * The first parameter, or the user="" parameter should be the user ID
+ * or the user object of the user to render.  This is a required field.
+ * 
+ * #### link
+ * 
+ * Optionally set link=1 to display a link to the user profile.
+ * 
+ * ### Examples
+ * 
+ * ``` {.syntax-html}
+ * 
+ * <!-- Display User Name: foobar -->
+ * User Name: {user $userid}
+ * 
+ * <!-- Display a link to it along with the output. -->
+ * User: {user $userid link=1}
+ * 
+ * ```
  */
 function smarty_function_user($params, $smarty){
 	if(isset($params['user'])){
@@ -48,12 +61,24 @@ function smarty_function_user($params, $smarty){
 	else{
 		throw new SmartyException('Required parameter [user] not provided for user!');
 	}
-
-	/** @var UserModel $user */
-	$user = UserModel::Construct($userid);
+	
+	$link = isset($params['link']) ? $params['link'] : false;
+	
+	if($userid instanceof \UserModel){
+		$user = $userid;
+	}
+	else{
+		/** @var UserModel $user */
+		$user = UserModel::Construct($userid);
+	}
 
 	if(!$user) return '';
 
 	$username = $user->getDisplayName();
+	
+	if($link){
+		// Wrap the username with an A to the user page.
+		$username = '<a href="' . \Core\resolve_link('/user/view/' . $user->get('id')) . '">' . $username . '</a>';
+	}
 	return $username;
 }

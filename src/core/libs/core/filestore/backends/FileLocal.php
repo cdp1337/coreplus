@@ -1086,7 +1086,7 @@ class FileLocal implements Filestore\File {
 			return;
 		}
 
-		\Core\Utilities\Logger\write_debug('Resizing image ' . $this->getFilename('') . ' to ' . $width . 'x' . $height . $mode);
+		\Core\log_verbose('Resizing image ' . $this->getFilename('') . ' to ' . $width . 'x' . $height . $mode);
 
 		$m = $this->getMimetype();
 
@@ -1100,7 +1100,7 @@ class FileLocal implements Filestore\File {
 			$resize = escapeshellarg($mode . $width . 'x' . $height);
 			exec('convert ' . escapeshellarg($this->getFilename()) . ' -resize ' . $resize . ' ' . escapeshellarg($file->getFilename()));
 
-			\Core\Utilities\Logger\write_debug('Resizing complete (via convert)');
+			\Core\log_verbose('Resizing complete (via convert)');
 			return;
 		}
 
@@ -1122,7 +1122,7 @@ class FileLocal implements Filestore\File {
 					// using the thumbnail is counter-productive!
 					$img = exif_thumbnail($this->getFilename(), $thumbWidth, $thumbHeight, $thumbType);
 					if($img){
-						\Core\Utilities\Logger\write_debug('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
+						\Core\log_verbose('JPEG has thumbnail data of ' . $thumbWidth . 'x' . $thumbHeight . '!');
 						$file->putContents($img);
 						$img = imagecreatefromjpeg($file->getFilename());
 					}
@@ -1143,7 +1143,7 @@ class FileLocal implements Filestore\File {
 				break;
 			default:
 				// Hmmm...
-				\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
+				\Core\log_verbose('Resizing complete (failed, not sure what it was)');
 				return;
 		}
 		if ($img) {
@@ -1234,19 +1234,19 @@ class FileLocal implements Filestore\File {
 			switch ($m) {
 				case 'image/jpeg':
 					imagejpeg($img2, $file->getFilename(), 60);
-					\Core\Utilities\Logger\write_debug('Resizing complete (via imagejpeg)');
+					\Core\log_verbose('Resizing complete (via imagejpeg)');
 					break;
 				case 'image/png':
 					imagepng($img2, $file->getFilename(), 9);
-					\Core\Utilities\Logger\write_debug('Resizing complete (via imagepng)');
+					\Core\log_verbose('Resizing complete (via imagepng)');
 					break;
 				case 'image/gif':
 					imagegif($img2, $file->getFilename());
-					\Core\Utilities\Logger\write_debug('Resizing complete (via imagegif)');
+					\Core\log_verbose('Resizing complete (via imagegif)');
 					break;
 				default:
 					// Hmmm...
-					\Core\Utilities\Logger\write_debug('Resizing complete (failed, not sure what it was)');
+					\Core\log_verbose('Resizing complete (failed, not sure what it was)');
 					return;
 			}
 		}

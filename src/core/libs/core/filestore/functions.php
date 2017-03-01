@@ -44,7 +44,7 @@ function format_size($filesize, $round = 2) {
 		$filesize = $filesize / 1024;
 	}
 
-	return I18NLoader::FormatNumber($filesize, $round) . ' ' . $suf[$c];
+	return (class_exists('I18NLoader') ? I18NLoader::FormatNumber($filesize, $round) : round($filesize, $round)) . ' ' . $suf[$c];
 }
 
 /**

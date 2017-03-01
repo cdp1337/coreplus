@@ -740,6 +740,54 @@ function compare_strings($val1, $val2) {
 }
 
 
+function log_verbose($message){
+	$entry = new Utilities\Logger\LogEntry();
+	$entry->level = LOG_LEVEL_VERBOSE;
+	$entry->type = 'debug';
+	$entry->message = $message;
+	Utilities\Logger\Logger::Log($entry);
+}
+
+function log_debug($message){
+	$entry = new Utilities\Logger\LogEntry();
+	$entry->level = LOG_LEVEL_DEBUG;
+	$entry->type = 'debug';
+	$entry->message = $message;
+	Utilities\Logger\Logger::Log($entry);
+}
+
+function log_info($message){
+	$entry = new Utilities\Logger\LogEntry();
+	$entry->level = LOG_LEVEL_INFO;
+	$entry->type = 'info';
+	$entry->message = $message;
+	Utilities\Logger\Logger::Log($entry);
+}
+
+function log_notice($message){
+	$entry = new Utilities\Logger\LogEntry();
+	$entry->level = LOG_LEVEL_INFO;
+	$entry->type = 'error';
+	$entry->message = $message;
+	Utilities\Logger\Logger::Log($entry);
+}
+
+function log_warning($message){
+	$entry = new Utilities\Logger\LogEntry();
+	$entry->level = LOG_LEVEL_WARNING;
+	$entry->type = 'info';
+	$entry->message = $message;
+	Utilities\Logger\Logger::Log($entry);
+}
+
+function log_error($message){
+	$entry = new Utilities\Logger\LogEntry();
+	$entry->level = LOG_LEVEL_WARNING;
+	$entry->type = 'error';
+	$entry->message = $message;
+	Utilities\Logger\Logger::Log($entry);
+}
+
 /**
  * Utility function to translate a filesize in bytes into a human-readable version.
  *

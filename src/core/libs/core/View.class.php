@@ -558,9 +558,7 @@ class View {
 
 		try{
 			$body = $this->fetchBody();
-			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-				'Fetched application content from within View->fetch() for ' . $this->templatename
-			);
+			\Core\log_debug('Fetched application content from within View->fetch() for ' . $this->templatename);
 		}
 		catch(Exception $e){
 			$this->error = View::ERROR_SERVERERROR;

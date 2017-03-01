@@ -237,8 +237,8 @@ class Component_2_1 {
 
 		$this->_name    = $this->_xmlloader->getRootDOM()->getAttribute('name');
 		$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
-
-		Core\Utilities\Logger\write_debug('Loading metadata for component [' . $this->_name . ']');
+		
+		\Core\log_verbose('Loading metadata for component [' . $this->_name . ']');
 
 		// Load the database information, if there is any.
 		$dat = ComponentFactory::_LookupComponentData($this->_name);
@@ -667,7 +667,7 @@ class Component_2_1 {
 		if(!$this->isEnabled()) return false;
 		if($this->_filesloaded) return true;
 
-		Core\Utilities\Logger\write_debug('Loading files for component [' . $this->getName() . ']');
+		\Core\log_verbose('Loading files for component [' . $this->getName() . ']');
 
 		$dir = $this->getBaseDir();
 
@@ -707,7 +707,7 @@ class Component_2_1 {
 		}
 
 		if(DEVELOPMENT_MODE && defined('AUTO_INSTALL_ASSETS') && AUTO_INSTALL_ASSETS && EXEC_MODE == 'WEB' && CDN_TYPE == 'local'){
-			Core\Utilities\Logger\write_debug('Auto-installing assets for component [' . $this->getName() . ']');
+			\Core\log_verbose('Auto-installing assets for component [' . $this->getName() . ']');
 			$this->_parseAssets();
 		}
 
@@ -2027,7 +2027,7 @@ class Component_2_1 {
 		$overallActioned = $install ? 'Installed' : 'Uninstalled';
 		$overallSet      = $install ? 'Set' : 'Remove';
 
-		Core\Utilities\Logger\write_debug($overallAction . ' Widgets for ' . $this->getName());
+		\Core\log_verbose($overallAction . ' Widgets for ' . $this->getName());
 
 		if(!$install){
 			die('@todo Support uninstalling widgets via _parseWidgets!');
@@ -2120,7 +2120,7 @@ class Component_2_1 {
 
 		$changes = array();
 
-		Core\Utilities\Logger\write_debug('Installing database schema for ' . $this->getName());
+		\Core\log_verbose('Installing database schema for ' . $this->getName());
 
 		// Get the table structure as it exists in the database first, this will be the comparison point.
 		$classes = $this->getModelList();
@@ -2195,7 +2195,7 @@ class Component_2_1 {
 		$change    = '';
 		$changes   = array();
 
-		Core\Utilities\Logger\write_debug('Installing assets for ' . $this->getName());
+		\Core\log_verbose('Installing assets for ' . $this->getName());
 
 		foreach ($this->_xmlloader->getElements('/assets/file') as $node) {
 			/** @var DOMElement $node */
@@ -2335,7 +2335,7 @@ class Component_2_1 {
 		$action = $install ? 'Installing' : 'Uninstalling';
 		$set    = $install ? 'Set' : 'Removed';
 
-		Core\Utilities\Logger\write_debug($action . ' configs for ' . $this->getName());
+		\Core\log_verbose($action . ' configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
@@ -2438,7 +2438,7 @@ class Component_2_1 {
 
 		$action = $install ? 'Installing' : 'Uninstalling';
 
-		Core\Utilities\Logger\write_debug($action . ' User Configs for ' . $this->getName());
+		\Core\log_verbose($action . ' User Configs for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('userconfigs', false);
@@ -2568,7 +2568,7 @@ class Component_2_1 {
 
 		$overallAction = $install ? 'Installing' : 'Uninstalling';
 
-		Core\Utilities\Logger\write_debug($overallAction . ' pages for ' . $this->getName());
+		\Core\log_verbose($overallAction . ' pages for ' . $this->getName());
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('pages');

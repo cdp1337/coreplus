@@ -47,7 +47,8 @@ umask(0);
 require_once(__DIR__ . '/functions/Core.functions.php');
 require_once(__DIR__ . '/libs/core/utilities/profiler/Profiler.php');
 require_once(__DIR__ . '/libs/core/utilities/profiler/DatamodelProfiler.php');
-require_once(__DIR__ . '/libs/core/utilities/logger/functions.php');
+require_once(__DIR__ . '/libs/core/utilities/logger/LogEntry.php');
+require_once(__DIR__ . '/libs/core/utilities/logger/Logger.php');
 $profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
 
 // gogo i18n!
@@ -55,41 +56,22 @@ mb_internal_encoding('UTF-8');
 
 /********************* Initial system defines *********************************/
 require_once(__DIR__ . '/bootstrap_predefines.php');
-Core\Utilities\Logger\write_debug('Starting Application');
-
 
 /********************** Critical file inclusions ******************************/
-Core\Utilities\Logger\write_debug('Loading pre-include files');
 require_once(__DIR__ . '/bootstrap_preincludes.php');
 
-
-// __TODO__ Make this errorHandler accept 'hooks' to be fired when a critical error is occured.
-// This can include rendering an HTML file to the browser, or some other action.
-//error_reporting ( E_ALL ) ;
-//require_once("core/classes/ErrorHandler.class.php");
-
-
 // Load the hook handler, which will allow cross-library/module communication abstractly.
-Core\Utilities\Logger\write_debug('Loading hook handler');
 require_once(ROOT_PDIR . "core/libs/core/HookHandler.class.php");
-
 
 // Pre includes are ready.
 $preincludes_time = microtime(true);
 
 // And start the core!
-Core\Utilities\Logger\write_debug('Loading core system');
-//require_once(ROOT_PDIR . 'core/libs/core/InstallTask.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
-//Core::Singleton();
-
 
 // Configuration handler, for loading any config variable/constant from XML data or the database.
-Core\Utilities\Logger\write_debug('Loading configs');
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
 ConfigHandler::Singleton();
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Configuration loaded and available');
-
 
 // Give me core settings!
 // This will do the defines for the site, and provide any core variables to get started.
@@ -108,6 +90,7 @@ if (!$core_settings) {
 		die('Please install core plus through the web interface first!' . "\n");
 	}
 }
+\Core\log_verbose('Core framework and base dependencies ready');
 
 
 /**
@@ -772,8 +755,6 @@ $maindefines_time = microtime(true);
 
 /**************************  START EXECUTION *****************************/
 
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus bootstrapped and application starting');
-
 // Datamodel, GOGO!
 //require_once(ROOT_PDIR . 'core/libs/core/datamodel/DMI.class.php');
 try {
@@ -798,8 +779,6 @@ catch (Exception $e) {
 		die();
 	}
 }
-\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record('Core Plus Data Model Interface loaded and ready');
-
 
 unset($start_time, $predefines_time, $preincludes_time, $maindefines_time, $dbconn);
 
@@ -891,7 +870,7 @@ if (EXEC_MODE == 'WEB') {
 //ThemeHandler::Load();
 
 HookHandler::DispatchHook('/core/components/loaded');
-$profiler->record('Components Load Complete');
+\Core\log_debug('Components Load Complete');
 
 /**
  * All the post includes, these are here for performance reasons, (they can get compiled into the compiled bootstrap)
@@ -912,14 +891,14 @@ if(Core::IsComponentAvailable('geographic-codes') && class_exists('GeoIp2\\Datab
 		}
 		else{
 			$reader = new GeoIp2\Database\Reader(ROOT_PDIR . 'components/geographic-codes/libs/maxmind-geolite-db/GeoLite2-City.mmdb');
-			$profiler->record('Initialized GeoLite Database');
+			\Core\log_debug('Initialized GeoLite Database');
 
 			$geo = $reader->cityIspOrg(REMOTE_IP);
 			//$geo = $reader->cityIspOrg('67.149.214.236');
-			$profiler->record('Read GeoLite Database');
+			\Core\log_debug('Read GeoLite Database');
 
 			$reader->close();
-			$profiler->record('Closed GeoLite Database');
+			\Core\log_debug('Closed GeoLite Database');
 
 			$geocity = $geo->city->name;
 			// Some IP addresses do not resolve as a valid province.

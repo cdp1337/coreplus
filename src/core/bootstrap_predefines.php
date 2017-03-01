@@ -193,3 +193,9 @@ define('SECONDS_ONE_WEEK',   604800);  // 7 days
 define('SECONDS_TWO_WEEK',   1209600); // 14 days
 define('SECONDS_ONE_MONTH',  2629800); // 30.4375 days
 define('SECONDS_TWO_MONTH',  5259600); // 60.8750 days
+
+define('LOG_LEVEL_ERROR', 1);
+define('LOG_LEVEL_WARNING', 2);
+define('LOG_LEVEL_INFO', 3);
+define('LOG_LEVEL_DEBUG', 4);
+define('LOG_LEVEL_VERBOSE', 5);

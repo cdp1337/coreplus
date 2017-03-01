@@ -517,10 +517,6 @@ class Model implements ArrayAccess {
 
 		$classname = strtolower(get_called_class());
 
-		\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-			'Issuing save() on ' . $classname . ' ' . $this->getLabel()
-		);
-
 		// Only do the same operation if it's been changed.
 		// This is actually a little more in depth than simply seeing if it's been modified, as I also
 		// have to look into the linked classes and see if it exists
@@ -549,9 +545,6 @@ class Model implements ArrayAccess {
 		}
 
 		if(!$save){
-			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-				'No column detected as changed, skipping save.'
-			);
 			return false;
 		}
 
@@ -616,17 +609,11 @@ class Model implements ArrayAccess {
 
 		if ($this->_exists){
 			$changed = $this->_saveExisting();
-			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-				'Saved existing record to database'
-			);
 		}
 		else{
 			// Inserts can be deferred!
 			$this->_saveNew($defer);
 			$changed = true;
-			\Core\Utilities\Profiler\Profiler::GetDefaultProfiler()->record(
-				'Saved new record to database'
-			);
 		}
 
 

@@ -103,13 +103,21 @@ class Profiler {
 		// Find the differences between the first and now.
 		$time = $now - $this->_microtime;
 
-		// And record!
-		$this->_events[] = array(
+		$event = array(
 			'event'     => $event,
 			'microtime' => $now,
 			'timetotal' => $time,
 			'memory'  => memory_get_usage(false),
 		);
+		
+		/*if(EXEC_MODE == 'CLI'){
+			// Print these immediately instead of recording.
+			echo $this->_formatEvent($event) . "\n";
+		}
+		else{*/
+			// Otherwise record!
+			$this->_events[] = $event;
+		//}
 	}
 
 	/**
@@ -153,27 +161,31 @@ class Profiler {
 	public function getEventTimesFormatted(){
 		$out = '';
 		foreach ($this->getEvents() as $t) {
-			$in = round($t['timetotal'], 5) * 1000;
-			$dcm = I18NLoader::GetLocaleConv('decimal_point');
-
-			if ($in == 0){
-				$time = '0000' . $dcm . '00 ms';
-			}
-			else{
-				$parts = explode($dcm, $in);
-				$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
-				$dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
-				$time = $whole . $dcm . $dec . ' ms';
-			}
-
-			$mem = '[mem: ' . \Core\Filestore\format_size($t['memory']) . '] ';
-
-			$event = $t['event'];
-
-			$out .= "[$time] $mem- $event" . "\n";
+			$out .= $this->_formatEvent($t) . "\n";
 		}
 
 		return $out;
+	}
+	
+	private function _formatEvent($event){
+		$in = round($event['timetotal'], 5) * 1000;
+		$dcm = class_exists('I18NLoader') ? I18NLoader::GetLocaleConv('decimal_point') : '.';
+
+		if ($in == 0){
+			$time = '0000' . $dcm . '00 ms';
+		}
+		else{
+			$parts = explode($dcm, $in);
+			$whole = str_pad($parts[0], 4, 0, STR_PAD_LEFT);
+			$dec   = (isset($parts[1])) ? str_pad($parts[1], 2, 0, STR_PAD_RIGHT) : '00';
+			$time = $whole . $dcm . $dec . ' ms';
+		}
+
+		$mem = '[mem: ' . \Core\Filestore\format_size($event['memory']) . '] ';
+
+		$event = $event['event'];
+
+		return "[$time] $mem- $event";
 	}
 
 	/**

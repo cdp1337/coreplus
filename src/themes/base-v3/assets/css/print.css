@@ -1987,81 +1987,86 @@ header.page-header .listing-schema-information .listing-schema-address-address {
   display: block;
 }
 
+/* line 23, ../scss/_content.scss */
+.inner-wrapper {
+  clear: both;
+}
+
 /*pre code {
 	display: block;
 	padding: 0.5em 1em;
 	border: 1px solid;
 }*/
-/* line 29, ../scss/_content.scss */
+/* line 33, ../scss/_content.scss */
 ul {
   list-style-type: disc;
   margin-left: 1em;
 }
 
-/* line 34, ../scss/_content.scss */
+/* line 38, ../scss/_content.scss */
 ol {
   list-style-type: decimal;
   margin-left: 1em;
 }
 
-/* line 39, ../scss/_content.scss */
+/* line 43, ../scss/_content.scss */
 h1 {
   font-size: 2em;
 }
 
-/* line 43, ../scss/_content.scss */
+/* line 47, ../scss/_content.scss */
 h2 {
   font-size: 1.75em;
 }
 
-/* line 47, ../scss/_content.scss */
+/* line 51, ../scss/_content.scss */
 h3 {
   font-size: 1.5em;
 }
 
-/* line 51, ../scss/_content.scss */
+/* line 55, ../scss/_content.scss */
 h4 {
   font-size: 1.25em;
 }
 
-/* line 55, ../scss/_content.scss */
+/* line 59, ../scss/_content.scss */
 h5 {
   font-size: 1.15em;
 }
 
-/* line 59, ../scss/_content.scss */
+/* line 63, ../scss/_content.scss */
 h6 {
   font-size: 1em;
 }
 
-/* line 63, ../scss/_content.scss */
+/* line 67, ../scss/_content.scss */
 aside.markdown-toc {
   float: left;
   margin-right: 1em;
 }
-/* line 67, ../scss/_content.scss */
+/* line 71, ../scss/_content.scss */
 aside.markdown-toc ul {
   margin-left: 1em;
 }
 
-/* line 72, ../scss/_content.scss */
+/* line 76, ../scss/_content.scss */
 .useragent-pretty-browser, .useragent-pretty-platform, .useragent-pretty-device {
   display: inline-block;
 }
 
-/* line 78, ../scss/_content.scss */
+/* line 82, ../scss/_content.scss */
 footer.page-footer {
   padding-top: 2em;
 }
-/* line 82, ../scss/_content.scss */
+/* line 86, ../scss/_content.scss */
 footer.page-footer .listing-schema-information {
   font-size: 75%;
 }
-/* line 85, ../scss/_content.scss */
+/* line 89, ../scss/_content.scss */
 footer.page-footer .listing-schema-information .listing-schema-address-address {
   display: block;
 }
-/* line 90, ../scss/_content.scss */
+/* line 94, ../scss/_content.scss */
 footer.page-footer .legal-notice {
   font-size: 75%;
 }
@@ -2074,7 +2079,11 @@ footer.page-footer .legal-notice {
 }
 
 /* line 1, ../scss/_print.scss */
-.screen {
+.screen,
+menu.controls,
+menu.controls-prerendered,
+header .site-social-links,
+footer .site-social-links {
   display: none !important;
 }
 

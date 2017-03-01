@@ -187,7 +187,7 @@ class Table implements \Iterator {
 	/**
 	 * Get the edit form for this listing table.
 	 *
-	 * @return \Form
+	 * @return \Core\Forms\Form
 	 */
 	public function getEditForm(){
 		if($this->_editform === null){

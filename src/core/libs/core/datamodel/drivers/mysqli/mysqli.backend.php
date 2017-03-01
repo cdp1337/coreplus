@@ -1152,7 +1152,7 @@ class mysqli_backend implements BackendInterface {
 		}
 		
 		if(!\Core\compare_values($oldSchema->indexes, $newSchema->indexes)){
-			\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Indexes Different');
+			\Core\log_verbose('MySQLi Backend::_schemasDiffer: Indexes Different');
 			return true;
 		}
 		
@@ -1174,9 +1174,9 @@ class mysqli_backend implements BackendInterface {
 			$c2String = $this->_getColumnString($c2);
 			
 			if($c1String != $c2String){
-				\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: Column ' . $c1->field . ' Different');
-				\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: C1 == ' . $c1String);
-				\Core\Utilities\Logger\write_debug('MySQLi Backend::_schemasDiffer: C2 == ' . $c2String);
+				\Core\log_verbose('MySQLi Backend::_schemasDiffer: Column ' . $c1->field . ' Different');
+				\Core\log_verbose('MySQLi Backend::_schemasDiffer: C1 == ' . $c1String);
+				\Core\log_verbose('MySQLi Backend::_schemasDiffer: C2 == ' . $c2String);
 				return true;
 			}
 		}

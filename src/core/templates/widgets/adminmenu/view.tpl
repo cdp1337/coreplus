@@ -19,7 +19,14 @@
 							<li>
 								{if $page->getLogo()}
 									{a href=$page->get('baseurl') title="`$title|escape`" class="has-image"}
-										{img file=$page->getLogo() dimensions="24x24"}
+									{*
+									 * Ensure that all optional attributes are defined here because we do not want
+									 * the system polling the database for user-definable image attributes
+									 * for a bunch of simple page icons!
+									 *
+									 * `alt` is a great example; it queries the database if left empty.
+									 *}
+										{img file=$page->getLogo() dimensions="24x24" alt="`$title|escape`"}
 										{$title}
 									{/a}
 								{else}

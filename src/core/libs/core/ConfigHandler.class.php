@@ -170,7 +170,7 @@ class ConfigHandler implements ISingleton {
 	}
 
 	private function _loadDB(){
-		Core\Utilities\Logger\write_debug('Config data loading from database');
+		\Core\log_verbose('Config data loading from database');
 		// Clear out the cache, (if it has any)
 		$this->_clearCache();
 
@@ -190,7 +190,7 @@ class ConfigHandler implements ISingleton {
 			}
 		}
 		
-		Core\Utilities\Logger\write_debug('Config data loaded from database');
+		\Core\log_verbose('Config data loaded from database');
 	}
 
 	/**

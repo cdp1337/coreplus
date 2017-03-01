@@ -192,39 +192,6 @@ class SystemLogModel extends Model {
 			return parent::render($key);
 		}
 	}
-
-	public function save($defer = false){
-
-		if(Core::IsComponentAvailable('core')){
-			$isnew = !$this->exists();
-	
-			$ret = parent::save($defer);
-	
-			// No change happened, nothing extra to do.
-			if(!$ret){
-				return $ret;
-			}
-	
-			// Wasn't a previously new model?  Also nothing to do beyond.
-			if(!$isnew){
-				return $ret;
-			}
-		}
-
-		// @todo email message function
-
-		// log message (to file).
-		if(
-			($this->get('type') == 'error' || $this->get('type') == 'security') &&
-			$this->get('details')
-		){
-			Core\Utilities\Logger\append_to($this->get('type'), $this->get('message') . "\n" . $this->get('details'), $this->get('code'));
-		}
-		else{
-			Core\Utilities\Logger\append_to($this->get('type'), $this->get('message'), $this->get('code'));
-		}
-
-	}
 	
 	public function getControlLinks() {
 		$r = [];

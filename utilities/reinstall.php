@@ -67,11 +67,12 @@ require_once(ROOT_PDIR . 'core/libs/core/templates/Exception.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/backends/PHTML.php');
 require_once(ROOT_PDIR . 'install/classes/InstallerStep.php');
 require_once(ROOT_PDIR . 'core/functions/Core.functions.php');
-require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/functions.php');
+require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/LogEntry.php');
+require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/Logger.php');
 require_once(ROOT_PDIR . 'install/utilities.php');
 require_once(ROOT_PDIR . 'core/libs/core/utilities/profiler/Profiler.php');
 require_once(ROOT_PDIR . 'core/libs/core/utilities/profiler/DatamodelProfiler.php');
-require_once(ROOT_PDIR . 'core/libs/core/utilities/logger/functions.php');
+
 
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
 
