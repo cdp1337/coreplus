@@ -1776,9 +1776,8 @@ class Component_2_1 {
 		}
 
 		if(is_array($changes) && sizeof($changes)){
-			SystemLogModel::LogInfoEvent('/updater/component/install', 'Component ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+			\Core\log_info('Component ' . $this->getName() . ' installed successfully!', '/updater/component/install', implode("\n", $changes));
 		}
-
 
 		// Yay, it should be installed now.	Update the version in the database.
 		$c = new ComponentModel($this->_name);

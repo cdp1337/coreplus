@@ -1,28 +1,20 @@
-<table class="preflightcheckstep">
+<div class="preflightcheckstep">
 	<?php foreach($tests as $test): ?>
-		<tr>
-			<td class="title"><?php echo $test['title']; ?></td>
-			<td class="status-<?php echo $test['status']; ?>"><?php echo $test['status']; ?></td>
-			<td><?php echo $test['message']; ?></td>
-		</tr>
-		<?php if($test['description']): ?>
-			<tr>
-				<td colspan="3" class="checklist-description">
-					<?php echo $test['description']; ?>
-				</td>
-			</tr>
-		<?php endif; ?>
+		<p>
+			<i class="check-<?php echo $test['status']; ?>" title="<?php echo $test['status']; ?>"></i>
+			
+			<span class="check-title"><?php echo $test['title']; ?></span>
+
+			<span class="check-message"><?php echo $test['message']; ?></span>
+		</p>
 		<?php if(isset($test['fix']) && $test['fix']): ?>
-			<tr>
-				<td colspan="3" class="checklist-quickfix">
-					<strong>Quick Fix: </strong>
-					<p>Execute the following in a shell window or contact your server administrator for assistance.</p>
-					<pre><?php echo $test['fix']; ?></pre>
-				</td>
-			</tr>
+			<div class="check-quickfix">
+				<p><strong>Quick Fix: </strong> Execute the following in a shell window or contact your server administrator for assistance.</p>
+				<pre><?php echo $test['fix']; ?></pre>
+			</div>
 		<?php endif; ?>
 	<?php endforeach; ?>
-</table>
+</div>
 
 <br/>
 
@@ -30,7 +22,7 @@
 
 <?php if($good): ?>
 	<form action="" method="POST">
-		<input type="submit" style="float:right;" value="Next"/>
+		<input type="submit" style="float:right;" value="Next &raquo;"/>
 	</form>
 <?php endif; ?>
 

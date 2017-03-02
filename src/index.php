@@ -80,7 +80,7 @@ try{
 	if(!$skipcompiled && file_exists('core/bootstrap.compiled.php')) require_once('core/bootstrap.compiled.php');
 	else require_once('core/bootstrap.php');
 
-	$request   = PageRequest::GetSystemRequest();
+	$request = PageRequest::GetSystemRequest();
 	$request->execute();
 	$request->render();	
 }

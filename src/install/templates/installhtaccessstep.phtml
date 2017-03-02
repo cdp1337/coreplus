@@ -1,16 +1,39 @@
-<p class="message-note">
-	Unable to write .htaccess directly.
+<?php if($status == 'good'): ?>
+<p class="message-success">
+	The .htaccess is either ready or can be created!  Just click Next to proceed with this step.
 </p>
+<?php elseif(isset($message)): ?>
+	<p class="message-note">
+		<?php echo $message; ?>
+	</p>
+<?php else: ?>
+	<p class="message-note">
+		Unable to write .htaccess directly.
+	</p>
+	
+	<p>
+		To resolve this, please do one of two steps.
+	</p>
+	<ol>
+		<li>Run <code>chown <?php echo exec('whoami'); ?> "<?php echo ROOT_PDIR; ?>"</code></li>
+		<li>Copy and Paste the contents below into <?php echo ROOT_PDIR;?>.htaccess</li>
+	</ol>
+<?php endif; ?>
 
-<p>
-	To ensure the site can utilize URLs correctly and to tweak apache's
-	behaviour a little, a custom htaccess must be used.  The installer is unable to write to
-	<?php echo ROOT_PDIR; ?>, so please copy the below contents into a file called ".htaccess" and
-	click <a href="" class="button">Re-Check</a> when ready.
-</p>
-
+<?php if(isset($contents)): ?>
 <textarea style="width:100%; height: 300px;"><?php echo $contents; ?>
 </textarea>
+<?php endif; ?>
 
 <br/><br/>
-<a href="" class="button">Re-Check</a>
+
+<?php if($status == 'good'): ?>
+	<form action="" method="POST">
+		<a href="?step=<?php echo $current_step - 1; ?>" class="button">&laquo; Back</a>
+		<input type="submit" style="float:right;" value="Next &raquo;"/>
+	</form>
+<?php else: ?>
+	<a href="?step=<?php echo $current_step - 1; ?>" class="button">&laquo; Back</a>
+	<a href="" class="button">Re-Check</a>
+<?php endif; ?>
+

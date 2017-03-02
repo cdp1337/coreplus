@@ -21,13 +21,8 @@
  * @author Charlie Powell <charlie@evalagency.com>
  */
 
-// I expect some configuration options....
-if(PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')){
-	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
-}
-
-if (PHP_VERSION < '5.4.0') {
-	die('This application requires at least PHP 5.4 to run!');
+if (PHP_VERSION < '7.0.0') {
+	die('Please install PHP 7.0 or greater to run this application.  For a howto, you may refer to https://portal.eval.bz/tech-guides/install-php-on-linux');
 }
 
 // Damn suPHP, I can handle my own permissions, TYVM
@@ -52,12 +47,15 @@ define('CUR_CALL', ROOT_WDIR . 'install/');
 // Start a timer for performance tuning purposes.
 require_once(__DIR__ . '/../core/libs/core/utilities/profiler/Profiler.php');
 require_once(__DIR__ . '/../core/libs/core/utilities/profiler/DatamodelProfiler.php');
-require_once(__DIR__ . '/../core/libs/core/utilities/logger/functions.php');
+require_once(__DIR__ . '/../core/libs/core/utilities/logger/LogEntry.php');
+require_once(__DIR__ . '/../core/libs/core/utilities/logger/Logger.php');
 $profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
 
-// gogo i18n!
-mb_internal_encoding('UTF-8');
 
+if(function_exists('mb_internal_encoding')){
+	// gogo i18n!
+	mb_internal_encoding('UTF-8');
+}
 
 if(!is_dir(TMP_DIR)){
 	mkdir(TMP_DIR, 0755, true);
@@ -74,11 +72,17 @@ session_start();
 require_once(__DIR__ . '/../core/bootstrap_predefines.php');
 
 /********************** Critical file inclusions ******************************/
-
+require_once(ROOT_PDIR . 'core/libs/core/ISingleton.interface.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/TemplateInterface.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/Exception.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/Template.php');
 require_once(ROOT_PDIR . 'core/libs/core/templates/backends/PHTML.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/functions.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/Factory.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/File.interface.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/backends/FileLocal.php');
+require_once(ROOT_PDIR . 'core/libs/core/XMLLoader.class.php');
+require_once(ROOT_PDIR . 'core/libs/core/filestore/Contents.interface.php');
 
 //require_once(ROOT_PDIR . 'core/libs/core/Exception.php');
 require_once(ROOT_PDIR . 'install/classes/InstallerStep.php');
@@ -161,6 +165,11 @@ if(file_exists('/etc/lsb-release')){
 		$family = 'debian';
 	}
 }
+elseif(file_exists('/etc/debian_version')){
+	$distro = 'Debian';
+	$version = file_get_contents('/etc/debian_version');
+	$family = 'debian';
+}
 elseif(file_exists('/etc/redhat-release')){
 	$line = file_get_contents('/etc/redhat-release');
 	$family = 'redhat';
@@ -196,13 +205,25 @@ $steps = array(
 	'PerformInstallStep',
 );
 
-foreach ($steps as $step) {
+// Use the GET variable to track the current step.
+if(isset($_GET['step'])){
+	$stepUser = (int)$_GET['step'];
+}
+else{
+	$stepUser = 1;
+}
+
+foreach ($steps as $idx => $step) {
 	require_once(ROOT_PDIR . 'install/steps/' . $step . '.php');
 	$reflection = new ReflectionClass('Core\\Installer\\' . $step);
 	/** @var $stepobject Core\Installer\InstallerStep */
 	$stepobject = $reflection->newInstance();
+	$stepobject->stepCurrent = $idx + 1;
 
-	if(!$stepobject->hasPassed()){
+	if($stepobject->stepCurrent == $stepUser){
+		$stepobject->stepTotal   = sizeof($steps);
+		$stepobject->stepProgress = round($stepobject->stepCurrent / $stepobject->stepTotal * 100, 0);
+		
 		$stepobject->execute();
 		$stepobject->render();
 		die();

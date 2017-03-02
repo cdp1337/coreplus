@@ -17,15 +17,13 @@ namespace Core\Installer;
  */
 class PerformInstallStep extends InstallerStep {
 	public function execute(){
+		require_once(ROOT_PDIR . 'core/bootstrap_preincludes.php');
 		require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
-		require_once(ROOT_PDIR . 'core/libs/core/ComponentHandler.class.php');
-		require_once(ROOT_PDIR . 'core/helpers/UpdaterHelper.class.php');
-
-		// Is the system not installed yet?
-		//if(!\Core\DB()->tableExists(DB_PREFIX . 'component')){
-
+		require_once(ROOT_PDIR . 'core/libs/core/datamodel/Schema.php');
+		require_once(ROOT_PDIR . 'core/libs/core/cli/CLI.class.php');
 
 		try{
+			\Core\Utilities\Logger\Logger::$Logstdout = true;
 			\Core::LoadComponents();
 
 			//\ThemeHandler::GetTheme('default')->install();
@@ -34,12 +32,11 @@ class PerformInstallStep extends InstallerStep {
 			unset($_SESSION['passes']);
 			// Yup, that's it!
 			// The core system handles all installs automatically.
-			\core\redirect(ROOT_WDIR);
+			die('<a href="' . ROOT_WDIR . '">Continue to Core!</a>');
 		}
 		catch(\Exception $e){
 			$this->getTemplate()->assign('errors', $e->getMessage());
 			$this->getTemplate()->assign('component', 'Core Plus');
 		}
-
 	}
 }

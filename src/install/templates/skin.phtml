@@ -4,7 +4,7 @@
 		<link rel="stylesheet" href="assets/style.css"/>
 		<script src="assets/jquery-1.7.1.min.js"></script>
 
-		<title><?php echo $title; ?></title>
+		<title>Core Plus Installation Step <?php echo $step_current; ?> of <?php echo $step_total; ?></title>
 	</head>
 
 	<body>
@@ -13,7 +13,9 @@
 				<img src="assets/logo.png" alt="Core Plus Installation"/><br/>
 				<?php echo $title; ?>
 			</header>
-
+			
+			<progress max="<?php echo $step_total; ?>" value="<?php echo $step_current; ?>" style="width:100%;"></progress>
+			
 			<section><?php echo $body; ?></section>
 			
 			<footer></footer>

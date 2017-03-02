@@ -9,6 +9,7 @@
 
 namespace Core\Installer;
 
+require_once(ROOT_PDIR . 'core/libs/core/BaconIpsumGenerator.class.php');
 
 /**
  * Provide the user a UI to set configuration values that will get saved back to the configuration.xml file.
@@ -17,36 +18,120 @@ namespace Core\Installer;
  */
 class SetupConfigurationStep extends InstallerStep{
 	public function execute(){
+		
+		$tpl = $this->getTemplate();
+		$this->title = 'Configuration';
 
 		// If there's already a configuration file present... just skip to the next.
-		if(file_exists(ROOT_PDIR . '/config/configuration.xml')){
+		/*if(file_exists(ROOT_PDIR . '/config/configuration.xml')){
 			$this->setAsPassed();
 			reload();
-		}
+		}*/
 
 		// This will contain the temporary configuration values for the installer.
 		if(!isset($_SESSION['configs'])) $_SESSION['configs'] = [];
 
-		$xml = new \XMLLoader();
-		$xml->setRootName('configuration');
-		$xml->loadFromFile(ROOT_PDIR . 'config/configuration.example.xml');
+		if(file_exists(ROOT_PDIR . 'config/configuration.example.xml') && is_readable(ROOT_PDIR . 'config/configuration.example.xml')){
+			$xml = new \XMLLoader();
+			$xml->setRootName('configuration');
+			$xml->loadFromFile(ROOT_PDIR . 'config/configuration.example.xml');
+			$elements = $xml->getElements('return|define');
+		}
+		else{
+			$tpl->assign('message', 'Unable to load ' . ROOT_PDIR . 'config/configuration.example.xml!  Please ensure that ' . exec('whoami') . ' has access to that directory.');
+			return;
+		}
+		
+		if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
+			$tpl->assign(
+				'message', 
+				'configuration.xml is installed and ready!  If you would like to reconfigure the site, please edit that file manually or remove it altogether.  Otherwise, press Next to continue.'
+			);
+			$tpl->assign('message_type', 'success');
+			
+			if($_SERVER['REQUEST_METHOD'] == 'POST'){
+				reload($this->stepCurrent + 1);
+			}
+			
+			return;
+		}
+		
 		$formelements = [];
+		
+		// Use Bacon ipsum to generate a secret passphrase for the user.
+		$bacon = new \BaconIpsumGenerator();
+		$baconWords = $bacon->getWord(rand(8,12));
+		// Remove spaces
+		$baconWords = str_replace(' ', '', $baconWords);
+		
+		// Manipulate the string a bit to add some complexity.
+		for($i = 0; $i < strlen($baconWords); $i++){
+			$change = rand(0, 50);
+			if($change < 30){
+				continue;
+			}
+			elseif($change < 45){
+				$baconWords{$i} = strtoupper($baconWords{$i});
+			}
+			elseif($change < 47){
+				$set = ['!', '@', '#', '$', '%', '^', '&', '&', '*', '(', ')', '{', '}', '[', ']', '?', '~'];
+				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
+			}
+			else{
+				$set = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
+			}
+		}
 
 		// Since we're pulling from the ant version, set some nice defaults for the user.
 		$valuedefaults = [
-			'@{db.server}@' => 'localhost',
-			'@{db.port}@' => '3306',
-			'@{db.type}@' => 'mysqli',
-			'@{db.name}@' => '',
-			'@{db.user}@' => '',
-			'@{db.pass}@' => '',
-			'@{devmode}@' => 'false',
-			'/tmp/coreplus-web/' => '/tmp/' . $_SERVER['HTTP_HOST'] . '-web/',
-			'/tmp/coreplus-cli/' => '/tmp/' . $_SERVER['HTTP_HOST'] . '-cli/',
-			'RANDOM' => \Core\random_hex(96),
+			'database_server' => [
+				'template' => '@{db.server}@',
+				'default' => 'localhost',
+			],
+			'database_port' => [
+				'template' => '@{db.port}@',
+				'default' => '3306',
+			],
+			'database_type' => [
+				'template' => '@{db.type}@',
+				'default' => 'mysqli',
+			],
+			'database_name' => [
+				'template' => '@{db.name}@',
+				'default' => 'localhost',
+			],
+			'database_user' => [
+				'template' => '@{db.user}@',
+				'default' => 'localhost',
+			],
+			'database_pass' => [
+				'template' => '@{db.pass}@',
+				'default' => 'localhost',
+			],
+			'SERVER_ID' => [
+				'template' => 'RANDOM',
+				'default' => \Core\random_hex(32),
+			],
+			'DEVELOPMENT_MODE' => [
+				'template' => '@{devmode}@',
+				'default' => 'false',
+			],
+			'tmp_dir_web' => [
+				'template' => '/tmp/coreplus-web/',
+				'default' => '/tmp/' . $_SERVER['HTTP_HOST'] . '-web/',
+			],
+			'tmp_dir_cli' => [
+				'template' => '/tmp/coreplus-cli/',
+				'default' => '/tmp/' . $_SERVER['HTTP_HOST'] . '-cli/',
+			],
+			'SECRET_ENCRYPTION_PASSPHRASE' => [
+				'template' => 'RANDOM',
+				'default' => $baconWords,
+			],
 		];
 
-		$elements = $xml->getElements('return|define');
+		
 		foreach($elements as $el){
 			$node        = $el->nodeName;
 			$name        = $el->getAttribute('name');
@@ -84,8 +169,8 @@ class SetupConfigurationStep extends InstallerStep{
 			}
 
 			// Since we're pulling from the ant version, set some nice defaults for the user.
-			if(isset($valuedefaults[$value])){
-				$value = $valuedefaults[$value];
+			if(isset($valuedefaults[$name]) && $value == $valuedefaults[$name]['template']){
+				$value = $valuedefaults[$name]['default'];
 			}
 
 			// Save the value?
@@ -118,6 +203,9 @@ class SetupConfigurationStep extends InstallerStep{
 				'advanced'    => $advanced,
 			];
 		}
+		
+		// Assign these elements to the template.
+		$tpl->assign('formelements', $formelements);
 
 
 		// If it's a POST... try the settings and if valid, proceed.
@@ -125,48 +213,24 @@ class SetupConfigurationStep extends InstallerStep{
 		$instructions = null;
 
 		if($_SERVER['REQUEST_METHOD'] == 'POST'){
-			if($message === null){
-				$connectionresults = $this->testDatabaseConnection();
-				if($connectionresults['status'] != 'passed'){
-					//var_dump($connectionresults); die();
-					$message = $connectionresults['message'];
-					$instructions = $connectionresults['instructions'];
-				}
-			}
-
-			if($message === null){
-				// Test the assets too!
-				$results = $this->testDirectoryWritable('assets/');
-				if($results['status'] != 'passed'){
-					//var_dump($connectionresults); die();
-					$message = $results['message'];
-					$instructions = $results['instructions'];
-				}
-			}
-
-			if($message === null){
-				// Test the assets too!
-				$results = $this->testDirectoryWritable('public/');
-				if($results['status'] != 'passed'){
-					//var_dump($connectionresults); die();
-					$message = $results['message'];
-					$instructions = $results['instructions'];
-				}
+			$connectionresults = $this->testDatabaseConnection();
+			if($connectionresults['status'] != 'passed'){
+				//var_dump($connectionresults); die();
+				$message = $connectionresults['message'];
+				$instructions = $connectionresults['instructions'];
 			}
 
 
 			if($message === null){
 				// Still null after all the tests have ran?
 				// w00t!
-				$this->setAsPassed();
-				reload();
+				//$this->setAsPassed();
+				reload($this->stepCurrent + 1);
 			}
 		}
 
-		$this->getTemplate()->assign('message', $message);
-		$this->getTemplate()->assign('instructions', $instructions);
-		$this->getTemplate()->assign('formelements', $formelements);
-		//var_dump($formelements);// die();
+		$tpl->assign('message', $message);
+		$tpl->assign('instructions', $instructions);
 	}
 
 	/**
@@ -318,57 +382,5 @@ EOD;
 		}
 
 		return $instructions;
-	}
-
-	private function testDirectoryWritable($dir){
-		
-		// The configuration wouldn't be ready yet... make sure the calling methods have the appropriate constants defined.
-		if(!defined('FTP_USERNAME')){
-			define('FTP_USERNAME', $_SESSION['configs']['FTP_USERNAME']);
-		}
-		if(!defined('FTP_PASSWORD')){
-			define('FTP_PASSWORD', $_SESSION['configs']['FTP_PASSWORD']);
-		}
-		if(!defined('FTP_PATH')){
-			define('FTP_PATH', $_SESSION['configs']['FTP_PATH']);
-		}
-		if(!defined('CDN_TYPE')){
-			define('CDN_TYPE', $_SESSION['configs']['CDN_TYPE']);
-		}
-		if(!defined('CDN_LOCAL_ASSETDIR')){
-			define('CDN_LOCAL_ASSETDIR', $_SESSION['configs']['CDN_LOCAL_ASSETDIR']);
-		}
-		if(!defined('CDN_LOCAL_PUBLICDIR')){
-			define('CDN_LOCAL_PUBLICDIR', $_SESSION['configs']['CDN_LOCAL_PUBLICDIR']);
-		}
-
-		/** @var $dir \Directory_Backend */
-		$dir = \Core\directory($dir);
-		if(!$dir->isWritable()){
-			$dirname = $dir->getPath();
-			$whoami = trim(`whoami`);
-			$instructions = <<<EOD
-<strong>GUI, FTP, or Web Management Method</strong>
-<p>
-Right click on the directory and set "group" and "other" to writable and executable.
-<p>
-<strong>CLI Lazy (insecure) Method</strong>
-<p>
-<pre>chmod -R a+wx "$dirname"</pre>
-</p>
-<strong>CLI Secure Method</strong>
-<p>
-<pre>sudo chown -R $whoami "$dirname"</pre>
-</p>
-EOD;
-			return [
-				'status' => 'failed',
-				'message' => $dir->getPath() . ' is not writable.',
-				'instructions' => $instructions,
-			];
-		}
-		else{
-			return ['status' => 'passed', 'message' => $dir->getPath() . ' is writable.', 'instructions' => ''];
-		}
 	}
 }

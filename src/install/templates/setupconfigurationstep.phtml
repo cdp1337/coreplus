@@ -1,73 +1,68 @@
-<?php if($message): ?>
-	<p class="message-error">Whoopsie! <?php echo $message; ?></p>
+<?php if(isset($message)): ?>
+	<p class="message-<?php echo isset($message_type) ? $message_type : 'error' ?>"><?php echo $message; ?></p>
 <?php endif; ?>
 
-<?php if($instructions): ?>
+<?php if(isset($instructions)): ?>
 	<br/>
-	<div class="formelement formcheckboxinput" style="float:right;">
-		<label for="solutions-toggle">Toggle Instructions/Solution</label>
-		<input type="checkbox" id="solutions-toggle"/>
-	</div>
-	<div class="clear"></div>
-	<div class="message-tutorial solutions" style="display:none;">
+	<div class="message-tutorial solutions">
 		<?php echo $instructions; ?>
 	</div>
 	<hr/>
 <?php endif; ?>
 
-
 <form action="" method="POST">
-
-	<div class="formelement formcheckboxinput" style="float:right;">
-		<label for="advanced-options">Toggle Advanced Options</label>
-		<input type="checkbox" id="advanced-options"/>
-	</div>
-	<div class="clear"></div>
-	<br/>
-
-	<?php foreach($formelements as $el): ?>
-		<div class="formelement form<?php echo $el['type']; ?>input <?php if($el['advanced']) echo 'advanced'; ?>">
-			<div class="formelement-labelinputgroup">
-				<label for="formelement-<?php echo $el['name']; ?>"><?php echo $el['title']; ?></label>
-
-				<?php if($el['type'] == 'select'): ?>
-					<select name="<?php echo $el['name']; ?>" id="formelement-<?php echo $el['name']; ?>" >
-						<?php foreach($el['options'] as $opt): ?>
-							<option value="<?php echo $opt; ?>" <?php if($opt == $el['value']) echo ' selected="selected"'; ?>>
-								<?php echo $opt; ?>
-							</option>
-						<?php endforeach; ?>
-					</select>
-				<?php elseif($el['type'] == 'checkbox'): ?>
-					<input type="checkbox"
-						name="<?php echo $el['name']; ?>"
-						id="formelement-<?php echo $el['name']; ?>"
-						value="1"
-						<?php if($el['value'] == 'true') echo ' checked="checked"'; ?>
-					/>
-				<?php else: ?>
-					<input
-						type="<?php echo $el['type']; ?>"
-						name="<?php echo $el['name']; ?>"
-						id="formelement-<?php echo $el['name']; ?>"
-						value="<?php echo htmlentities($el['value']); ?>"
-					/>
-				<?php endif; ?>
-			</div>
-
-			<div class="clear"></div>
-
-			<?php if($el['description']): ?>
-				<div class="formdescription"><?php echo $el['description']; ?></div>
-			<?php endif; ?>
-
+	<?php if(isset($formelements) && is_array($formelements)): ?>
+		<div class="formelement formcheckboxinput" style="float:right;">
+			<label for="advanced-options">Toggle Advanced Options</label>
+			<input type="checkbox" id="advanced-options"/>
 		</div>
-	<?php endforeach; ?>
+		<div class="clear"></div>
+		<br/>
 
+		<?php foreach($formelements as $el): ?>
+			<div class="formelement form<?php echo $el['type']; ?>input <?php if($el['advanced']) echo 'advanced'; ?>">
+				<div class="formelement-labelinputgroup">
+					<label for="formelement-<?php echo $el['name']; ?>"><?php echo $el['title']; ?></label>
+
+					<?php if($el['type'] == 'select'): ?>
+						<select name="<?php echo $el['name']; ?>" id="formelement-<?php echo $el['name']; ?>" >
+							<?php foreach($el['options'] as $opt): ?>
+								<option value="<?php echo $opt; ?>" <?php if($opt == $el['value']) echo ' selected="selected"'; ?>>
+									<?php echo $opt; ?>
+								</option>
+							<?php endforeach; ?>
+						</select>
+					<?php elseif($el['type'] == 'checkbox'): ?>
+						<input type="checkbox"
+							name="<?php echo $el['name']; ?>"
+							id="formelement-<?php echo $el['name']; ?>"
+							value="1"
+							<?php if($el['value'] == 'true') echo ' checked="checked"'; ?>
+						/>
+					<?php else: ?>
+						<input
+							type="<?php echo $el['type']; ?>"
+							name="<?php echo $el['name']; ?>"
+							id="formelement-<?php echo $el['name']; ?>"
+							value="<?php echo htmlentities($el['value']); ?>"
+						/>
+					<?php endif; ?>
+				</div>
+
+				<div class="clear"></div>
+
+				<?php if($el['description']): ?>
+					<div class="formdescription"><?php echo $el['description']; ?></div>
+				<?php endif; ?>
+
+			</div>
+		<?php endforeach; ?>
+
+	<?php endif; ?>
 	<br/>
-	<input type="submit" value="Save" style="float:right;"/>
+	<a href="?step=<?php echo $current_step - 1; ?>" class="button">&laquo; Back</a>
+	<input type="submit" value="Next &raquo;" style="float:right;"/>
 </form>
-
 
 
 <script>

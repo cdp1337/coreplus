@@ -2,20 +2,18 @@ body {
 	text-align:center;
 	padding:0;
 	margin:0;
-	background:white;
-	text-shadow:1px 1px 4px rgba(28, 43, 13, 0.3);
-	font-size:10pt;
+	background: #8CADCF;
 }
 #wrapper {
-	width:75%;
+	min-width: 700px;
+	max-width: 75%;
 	margin:0 auto;
 	text-align:left;
 	background: #f5fafc;
 	padding:10px;
-	border-radius: 0 0 10px 10px;
-	box-shadow:0 1px 10px rgba(3,3,3,0.5);
-	-moz-box-shadow:0 1px 10px rgba(3,3,3,0.5);
-	-webkit-box-shadow:0 1px 10px rgba(3,3,3,0.5);
+	box-shadow:0 1px 10px #D9934A;
+	-moz-box-shadow:0 1px 10px #D9934A;
+	-webkit-box-shadow:0 1px 10px #D9934A;
 }
 #header, #footer { 
 	height:20px;
@@ -23,7 +21,9 @@ body {
 
 
 a { color:#1C2B0D; }
-a:hover { text-shadow:1px 1px 0px rgba(28, 43, 13, 0.9);}
+a:hover {
+	text-shadow:1px 1px 0px rgba(28, 43, 13, 0.24);
+}
 pre { 
 	background:black;
 	border:1px solid #3F3;
@@ -80,7 +80,7 @@ a.button,
 span.button {
 	display: inline-block;
 	position: relative;
-	padding:0 1em;
+	padding:0 1.5em;
 	margin-right:.1em;
 	text-decoration: none !important;
 	cursor: pointer;
@@ -88,53 +88,35 @@ span.button {
 	zoom: 1;
 	/* the overflow property removes extra width in IE */
 	overflow: visible;
-	line-height: 1.4;
-	background-repeat:no-repeat;
-
-
-	background: #f6f8f9; /* Old browsers */
-	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 49%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(49%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
-
-	border:2px outset rgba(80, 84, 87, 0.52);
-	color: #444;
+	line-height: 1.8;
+	background: rgb(229, 254, 223);
+	border:2px outset rgba(60, 60, 60, 0.81);
+	color: #353535;
 	font-weight:normal;
-	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+	font-size: 1.2em;
 }
 
 input[type="submit"], button {
-	padding:0 1em;
+	padding:0 1.5em;
 	margin-right:.1em;
 	cursor: pointer;
 	text-align: center;
 	zoom: 1;
 	/* the overflow property removes extra width in IE */
 	overflow: visible;
-	line-height: 1.4;
-	background-repeat:no-repeat;
-
-
-	background: #f6f8f9; /* Old browsers */
-	background: -moz-linear-gradient(top, #f6f8f9 0%, #e5ebee 49%, #d7dee3 51%, #f5f7f9 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f8f9), color-stop(49%,#e5ebee), color-stop(51%,#d7dee3), color-stop(100%,#f5f7f9)); /* Chrome,Safari4+ */
-	background: -webkit-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Chrome10+,Safari5.1+ */
-	background: -o-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* Opera 11.10+ */
-	background: -ms-linear-gradient(top, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* IE10+ */
-	background: linear-gradient(to bottom, #f6f8f9 0%,#e5ebee 49%,#d7dee3 51%,#f5f7f9 100%); /* W3C */
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f8f9', endColorstr='#f5f7f9',GradientType=0 ); /* IE6-9 */
-
-	border:2px outset rgba(80, 84, 87, 0.52);
-	color: #444;
+	line-height: 1.8;
+	background: rgb(229, 254, 223);
+	border:2px outset rgba(60, 60, 60, 0.81);
+	color: #353535;
 	font-weight:normal;
-	border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px;
+	font-size: 1.2em;
 }
 
-a.button:hover { text-decoration:none; background-color: #50a3a5;}
+a.button:hover,
+input[type="submit"]:hover {
+	text-decoration:none;
+	background-color: #a4fca2;
+}
 
 a.button[disabled=disabled]{
 	background-color: rgba(62, 126, 128, 0.49);
@@ -233,21 +215,31 @@ body .pagecontent .message-tutorial a {
 
 
 
-
-
-.preflightcheckstep .title {
-	padding-top: 1em;
+.preflightcheckstep i.check-passed,
+.preflightcheckstep i.check-error,
+.preflightcheckstep i.check-warning {
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	width: 2em;
+	height: 2em;
+	display: inline-block;
+	vertical-align: middle;
 }
-.preflightcheckstep .status-passed {
-	color: green;
+.preflightcheckstep i.check-passed {
+	background-image: url('good.png');
 }
-.preflightcheckstep .status-warning {
-	color: yellow;
+.preflightcheckstep i.check-error {
+	background-image: url('error.png');
 }
-.preflightcheckstep .status-error {
-	color: red;
+.preflightcheckstep i.check-warning {
+	background-image: url('warn.png');
 }
-.preflightcheckstep .checklist-description {
+.preflightcheckstep .check-title {
+	display: inline-block;
+	min-width: 13em;
+	padding-right: 1em;
+}
+.preflightcheckstep .check-message {
 	color: #666;
 	font-size: 90%;
 }

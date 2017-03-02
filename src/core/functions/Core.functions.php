@@ -740,51 +740,63 @@ function compare_strings($val1, $val2) {
 }
 
 
-function log_verbose($message){
+function log_verbose($message, $code = null, $details = null){
 	$entry = new Utilities\Logger\LogEntry();
-	$entry->level = LOG_LEVEL_VERBOSE;
-	$entry->type = 'debug';
+	$entry->level   = LOG_LEVEL_VERBOSE;
+	$entry->type    = 'debug';
 	$entry->message = $message;
+	$entry->code    = $code;
+	$entry->details = $details;
 	Utilities\Logger\Logger::Log($entry);
 }
 
-function log_debug($message){
+function log_debug($message, $code = null, $details = null){
 	$entry = new Utilities\Logger\LogEntry();
-	$entry->level = LOG_LEVEL_DEBUG;
-	$entry->type = 'debug';
+	$entry->level   = LOG_LEVEL_DEBUG;
+	$entry->type    = 'debug';
 	$entry->message = $message;
+	$entry->code    = $code;
+	$entry->details = $details;
 	Utilities\Logger\Logger::Log($entry);
 }
 
-function log_info($message){
+function log_info($message, $code = null, $details = null){
 	$entry = new Utilities\Logger\LogEntry();
-	$entry->level = LOG_LEVEL_INFO;
-	$entry->type = 'info';
+	$entry->level   = LOG_LEVEL_INFO;
+	$entry->type    = 'info';
 	$entry->message = $message;
+	$entry->code    = $code;
+	$entry->details = $details;
 	Utilities\Logger\Logger::Log($entry);
 }
 
-function log_notice($message){
+function log_notice($message, $code = null, $details = null){
 	$entry = new Utilities\Logger\LogEntry();
-	$entry->level = LOG_LEVEL_INFO;
-	$entry->type = 'error';
+	$entry->level   = LOG_LEVEL_INFO;
+	$entry->type    = 'error';
 	$entry->message = $message;
+	$entry->code    = $code;
+	$entry->details = $details;
 	Utilities\Logger\Logger::Log($entry);
 }
 
-function log_warning($message){
+function log_warning($message, $code = null, $details = null){
 	$entry = new Utilities\Logger\LogEntry();
-	$entry->level = LOG_LEVEL_WARNING;
-	$entry->type = 'info';
+	$entry->level   = LOG_LEVEL_WARNING;
+	$entry->type    = 'info';
 	$entry->message = $message;
+	$entry->code    = $code;
+	$entry->details = $details;
 	Utilities\Logger\Logger::Log($entry);
 }
 
-function log_error($message){
+function log_error($message, $code = null, $details = null){
 	$entry = new Utilities\Logger\LogEntry();
-	$entry->level = LOG_LEVEL_WARNING;
-	$entry->type = 'error';
+	$entry->level   = LOG_LEVEL_WARNING;
+	$entry->type    = 'error';
 	$entry->message = $message;
+	$entry->code    = $code;
+	$entry->details = $details;
 	Utilities\Logger\Logger::Log($entry);
 }
 

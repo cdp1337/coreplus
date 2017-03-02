@@ -1,14 +1,27 @@
-<p class="message-note">
-	Unable to write config/configuration.xml directly.
-</p>
+<?php if(isset($message)): ?>
+	<p class="message-success">
+		<?php echo $message; ?>
+	</p>
+<?php endif; ?>
 
-<p>
-	Please copy the contents below into <?php echo ROOT_PDIR; ?>/config/configuration.xml and
-	click <a href="" class="button">Re-Check</a> when ready.
-</p>
+<?php if(isset($contents)): ?>
+	<p class="message-note">
+		Unable to write config/configuration.xml directly.
+	</p>
 
-<textarea style="width:100%; height: 300px;"><?php echo $contents; ?>
-</textarea>
+	<p>
+		Please copy the contents below into <?php echo ROOT_PDIR; ?>/config/configuration.xml and Re-Check when ready.
+	</p>
 
-<br/><br/>
-<a href="" class="button">Re-Check</a>
+	<textarea style="width:100%; height: 300px;"><?php echo $contents; ?>
+	</textarea>
+	
+	<br/><br/>
+	<a href="?step=<?php echo $current_step - 1; ?>" class="button">&laquo; Back</a>
+	<a href="" class="button">Re-Check</a>
+<?php else: ?>
+	
+	<br/><br/>
+	<a href="?step=<?php echo $current_step - 1; ?>" class="button">&laquo; Back</a>
+	<a href="?step=<?php echo $current_step + 1; ?>" class="button" style="float:right;">Next &raquo;</a>
+<?php endif; ?>

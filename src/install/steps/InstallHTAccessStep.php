@@ -19,33 +19,50 @@ class InstallHTAccessStep extends InstallerStep {
 	public function execute(){
 		$this->title = '.htaccess Setup';
 		$tpl = $this->getTemplate();
-
-		// Try to write the file.  If I can't, display what it needs to be along with instructions.
-		// Check the for the presence of the .htaccess file.  I always forget that bastard otherwise.
-		if(!file_exists(ROOT_PDIR . '.htaccess')){
-			$fdata = file_get_contents(ROOT_PDIR . 'htaccess.example');
-
-			$replaces = [
-				'@{rewritebase}@' => ROOT_WDIR,
-				'@{build.time}@' => date('r'),
-			];
-			$fdata = str_replace(array_keys($replaces), array_values($replaces), $fdata);
-
-			if(is_writable(ROOT_PDIR)){
-				// Just automatically copy it over, (with the necessary tranformations).
+		
+		$e = file_exists(ROOT_PDIR . '.htaccess');
+		$r = ($e && is_readable(ROOT_PDIR . '.htaccess'));
+		$w = is_writable(ROOT_PDIR);
+		
+		// Load the example version and perform the necessary string replacements.
+		$fdata = file_get_contents(ROOT_PDIR . 'htaccess.example');
+		$replaces = [
+			'@{rewritebase}@' => ROOT_WDIR,
+			'@{build.time}@' => date('r'),
+		];
+		$fdata = str_replace(array_keys($replaces), array_values($replaces), $fdata);
+		
+		if($_SERVER['REQUEST_METHOD'] == 'POST'){
+			// user clicked "next"
+			if(!$e && $w){
 				file_put_contents(ROOT_PDIR . '.htaccess', $fdata);
 				$this->setAsPassed();
-				reload();
-				// :)
+				reload($this->stepCurrent + 1);
 			}
-			else{
-				// Display the instructions to the user.
-				$tpl->assign('contents', $fdata);
+			elseif($e){
+				$this->setAsPassed();
+				reload($this->stepCurrent + 1);
 			}
 		}
+		
+		if($e && $r){
+			// Exists AND readable; inform the user that everything is ready and continue on.
+			$tpl->assign('status', 'good');
+			return;
+		}
+		elseif($e && !$r){
+			// Exists but is not readable.  This is a strange fringe case.
+			$tpl->assign('status', 'error');
+			$tpl->assign('message', 'There seems to be a problem with the permissions on ' . ROOT_PDIR . '.htaccess .  Please check that ' . exec('whoami') . ' can access that file.');
+		}
+		elseif(!$e && $w){
+			// Does not exist, but is writable.
+			$tpl->assign('status', 'good');
+		}
 		else{
-			$this->setAsPassed();
-			reload();
+			// Doesn't exist and not writable, or some other weird scenario.
+			$tpl->assign('status', 'error');
+			$tpl->assign('contents', $fdata);
 		}
 	}
 }

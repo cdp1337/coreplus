@@ -18,60 +18,50 @@ use Core\Session;
  */
 class InstallConfigurationStep extends InstallerStep{
 	public function execute(){
+		
+		$this->title = 'Deploy Configuration';
+		$tpl = $this->getTemplate();
 
 		// If it exists and is good, nothing else needs to be done, (other than flush the session data)
 		// This is hit if the user has to manually copy in the configuration.xml data.
-		if(file_exists(ROOT_PDIR . '/config/configuration.xml')){
+		/*if(file_exists(ROOT_PDIR . '/config/configuration.xml')){
 			unset($_SESSION['configs']);
 			$this->setAsPassed();
 			reload();
-		}
-
+		}*/
+		
 		// Load in the configuration example, merge in the SESSION data, and apply them or display the code.
 		$xml = new \XMLLoader();
 		$xml->setRootName('configuration');
 		$xml->loadFromFile(ROOT_PDIR . 'config/configuration.example.xml');
-
 		$elements = $xml->getElements('return|define');
 		foreach($elements as $el){
 			$name        = $el->getAttribute('name');
 			$children    = $el->childNodes;
 
 			foreach($children as $c){
-				if($c->nodeName == 'value'){
-					// This one requires a random string.
-					if($name == 'SECRET_ENCRYPTION_PASSPHRASE' && isset($_SESSION['configs'][$name]) && $_SESSION['configs'][$name] == 'RANDOM'){
-						$value = \Core\random_hex(96);
-						$c->nodeValue = $value;
-					}
-					elseif($name == 'SERVER_ID' && isset($_SESSION['configs'][$name]) && $_SESSION['configs'][$name] == 'RANDOM'){
-						// The server ID is a 32-digit random string.
-						$value = \Core\random_hex(32);
-						$c->nodeValue = $value;
-					}
-					// An override is provided, use that and overwrite the xml.
-					elseif(isset($_SESSION['configs'][$name])){
-						$value = $_SESSION['configs'][$name];
-						$c->nodeValue = $value;
-					}
+				// Iterate through each child node of this return or define looking for the 'value' node.
+				if($c->nodeName == 'value' && isset($_SESSION['configs'][$name])){
+					// An override from the user is available for this value, use that instead!
+					$c->nodeValue = $_SESSION['configs'][$name];
 				}
 			}
 		}
 
-		// Try to save this back down.
 		$fdata = $xml->asPrettyXML();
-
-		if(is_writable(ROOT_PDIR . '/config')){
+		
+		if(file_exists(ROOT_PDIR . '/config/configuration.xml')){
+			$tpl->assign('message', 'configuration.xml has already been deployed!  Click next to continue.');
+		}
+		elseif(is_writable(ROOT_PDIR . '/config')){
 			// Just automatically copy it over, (with the necessary tranformations).
 			file_put_contents(ROOT_PDIR . 'config/configuration.xml', $fdata);
 			unset($_SESSION['configs']);
-			$this->setAsPassed();
-			reload();
-			// :)
+			$tpl->assign('message', 'configuration.xml was automatically deployed with the configured parameters!  Click next to continue.');
 		}
 		else{
 			// Display the instructions to the user.
-			$this->getTemplate()->assign('contents', $fdata);
+			$tpl->assign('contents', $fdata);
 		}
 	}
 }

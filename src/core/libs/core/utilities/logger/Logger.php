@@ -28,6 +28,11 @@ use Core\Utilities\Profiler\Profiler;
  */
 class Logger {
 	
+	/**
+	 * @var boolean Set to true to force all log entries to write directly to stdout.
+	 */
+	public static $Logstdout = false;
+	
 	private static $_LogFiles = [];
 	
 	public static function Log(LogEntry $entry){
@@ -80,6 +85,30 @@ class Logger {
 			}
 			
 			Profiler::GetDefaultProfiler()->record($prefix . $entry->message);
+		}
+		
+		// Print to stdout?
+		if(self::$Logstdout && $entry->level <= LOG_LEVEL_INFO && class_exists('\\Core\\CLI\CLI')){
+			
+			if($entry->details){
+				\Core\CLI\CLI::PrintLine($entry->details);
+			}
+			
+			// Format the line prefix for the profiler
+			switch($entry->level){
+				case LOG_LEVEL_ERROR:
+					\Core\CLI\CLI::PrintError($entry->message);
+					break;
+				case LOG_LEVEL_WARNING:
+					\Core\CLI\CLI::PrintWarning($entry->message);
+					break;
+				case LOG_LEVEL_DEBUG:
+				case LOG_LEVEL_VERBOSE:
+					\Core\CLI\CLI::PrintLine($entry->message, COLOR_DEBUG);
+					break;
+				default:
+					\Core\CLI\CLI::PrintLine($entry->message);
+			}
 		}
 		
 		// If the site is configured to record a flat file for log entries, do that now.

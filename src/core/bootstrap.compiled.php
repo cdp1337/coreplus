@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 28 Feb 2017 20:34:09 -0500
+ * @compiled Wed, 01 Mar 2017 21:27:03 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -65,11 +65,8 @@
 
 namespace  {
 if (basename($_SERVER['SCRIPT_NAME']) == 'bootstrap.php') die('You cannot call that file directly.');
-if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
-die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
-}
-if (PHP_VERSION < '5.4.0') {
-die('This application requires at least PHP 5.4 to run!');
+if (PHP_VERSION < '7.0.0') {
+die('Please install PHP 7.0 or greater to run this application.  For a howto, you may refer to https://portal.eval.bz/tech-guides/install-php-on-linux');
 }
 umask(0);
 ### REQUIRE_ONCE FROM core/functions/Core.functions.php
@@ -454,46 +451,58 @@ return true;
 }
 return false;
 }
-function log_verbose($message){
+function log_verbose($message, $code = null, $details = null){
 $entry = new Utilities\Logger\LogEntry();
-$entry->level = LOG_LEVEL_VERBOSE;
-$entry->type = 'debug';
+$entry->level   = LOG_LEVEL_VERBOSE;
+$entry->type    = 'debug';
 $entry->message = $message;
+$entry->code    = $code;
+$entry->details = $details;
 Utilities\Logger\Logger::Log($entry);
 }
-function log_debug($message){
+function log_debug($message, $code = null, $details = null){
 $entry = new Utilities\Logger\LogEntry();
-$entry->level = LOG_LEVEL_DEBUG;
-$entry->type = 'debug';
+$entry->level   = LOG_LEVEL_DEBUG;
+$entry->type    = 'debug';
 $entry->message = $message;
+$entry->code    = $code;
+$entry->details = $details;
 Utilities\Logger\Logger::Log($entry);
 }
-function log_info($message){
+function log_info($message, $code = null, $details = null){
 $entry = new Utilities\Logger\LogEntry();
-$entry->level = LOG_LEVEL_INFO;
-$entry->type = 'info';
+$entry->level   = LOG_LEVEL_INFO;
+$entry->type    = 'info';
 $entry->message = $message;
+$entry->code    = $code;
+$entry->details = $details;
 Utilities\Logger\Logger::Log($entry);
 }
-function log_notice($message){
+function log_notice($message, $code = null, $details = null){
 $entry = new Utilities\Logger\LogEntry();
-$entry->level = LOG_LEVEL_INFO;
-$entry->type = 'error';
+$entry->level   = LOG_LEVEL_INFO;
+$entry->type    = 'error';
 $entry->message = $message;
+$entry->code    = $code;
+$entry->details = $details;
 Utilities\Logger\Logger::Log($entry);
 }
-function log_warning($message){
+function log_warning($message, $code = null, $details = null){
 $entry = new Utilities\Logger\LogEntry();
-$entry->level = LOG_LEVEL_WARNING;
-$entry->type = 'info';
+$entry->level   = LOG_LEVEL_WARNING;
+$entry->type    = 'info';
 $entry->message = $message;
+$entry->code    = $code;
+$entry->details = $details;
 Utilities\Logger\Logger::Log($entry);
 }
-function log_error($message){
+function log_error($message, $code = null, $details = null){
 $entry = new Utilities\Logger\LogEntry();
-$entry->level = LOG_LEVEL_WARNING;
-$entry->type = 'error';
+$entry->level   = LOG_LEVEL_WARNING;
+$entry->type    = 'error';
 $entry->message = $message;
+$entry->code    = $code;
+$entry->details = $details;
 Utilities\Logger\Logger::Log($entry);
 }
 function FormatSize($filesize, $round = 2){
@@ -1021,7 +1030,7 @@ if($last['type'] == 'read'){
 else{
 ++$this->_writes;
 }
-if(DEVELOPMENT_MODE){
+if(DEVELOPMENT_MODE && class_exists('\\Core\\Session')){
 $events = Session::Get('datamodel_profiler_events/events', []);
 $events[] = array(
 'query'  => $last['query'],
@@ -1178,6 +1187,7 @@ namespace  {
 namespace Core\Utilities\Logger {
 use Core\Utilities\Profiler\Profiler;
 class Logger {
+public static $Logstdout = false;
 private static $_LogFiles = [];
 public static function Log(LogEntry $entry){
 try{
@@ -1219,6 +1229,25 @@ default:
 $prefix = '';
 }
 Profiler::GetDefaultProfiler()->record($prefix . $entry->message);
+}
+if(self::$Logstdout && $entry->level <= LOG_LEVEL_INFO && class_exists('\\Core\\CLI\CLI')){
+if($entry->details){
+\Core\CLI\CLI::PrintLine($entry->details);
+}
+switch($entry->level){
+case LOG_LEVEL_ERROR:
+\Core\CLI\CLI::PrintError($entry->message);
+break;
+case LOG_LEVEL_WARNING:
+\Core\CLI\CLI::PrintWarning($entry->message);
+break;
+case LOG_LEVEL_DEBUG:
+case LOG_LEVEL_VERBOSE:
+\Core\CLI\CLI::PrintLine($entry->message, COLOR_DEBUG);
+break;
+default:
+\Core\CLI\CLI::PrintLine($entry->message);
+}
 }
 if($entry->level <= $logLevelFile){
 try{
@@ -1266,7 +1295,9 @@ return self::$_LogFiles[$type];
 namespace  {
 
 $profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
+if(function_exists('mb_internal_encoding')){
 mb_internal_encoding('UTF-8');
+}
 ### REQUIRE_ONCE FROM core/bootstrap_predefines.php
 if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
 die('This application cannot run with magic_quotes_gpc enabled, please disable them now!' . "\n");
@@ -2957,7 +2988,7 @@ if(!file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile)){
 throw new DMI_Exception('Could not locate backend file for ' . $class);
 }
 require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile);
-if(file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
+if(class_exists('\\Core\\Datamodel\\Schema') && file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
 require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile);
 }
 $this->_backend = new $class();
@@ -2975,8 +3006,8 @@ self::$_Interface = new DMI();
 if(file_exists(ROOT_PDIR . 'config/configuration.xml')){
 $cs = ConfigHandler::LoadConfigFile("configuration");
 }
-elseif(\Core\Session::Get('configs/*') !== null){
-$cs = \Core\Session::Get('configs/*');
+elseif(isset($_SESSION['configs'])){
+$cs = $_SESSION['configs'];
 }
 else{
 throw new DMI_Exception('No database settings defined for the DMI');
@@ -10536,7 +10567,7 @@ $changes[] = 'Ignoring unsupported install directive: [' . $child->nodeName . ']
 }
 }
 if(is_array($changes) && sizeof($changes)){
-SystemLogModel::LogInfoEvent('/updater/component/install', 'Component ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+\Core\log_info('Component ' . $this->getName() . ' installed successfully!', '/updater/component/install', implode("\n", $changes));
 }
 $c = new ComponentModel($this->_name);
 $c->set('version', $this->_version);
@@ -16720,8 +16751,11 @@ else{
 return $this->_cacheFromDB[$key]->getValue();
 }
 }
-elseif(\Core\Session::Get('configs/' . $key) !== null){
+elseif(class_exists('\\Core\\Session') && \Core\Session::Get('configs/' . $key) !== null){
 return \Core\Session::Get('configs/' . $key);
+}
+elseif(isset($_SESSION['configs']) && is_array($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
+return $_SESSION['configs'][$key];
 }
 else{
 return null;
@@ -16821,12 +16855,18 @@ var_dump(ConfigHandler::$cacheFromDB);
 }
 
 
+try{
 ConfigHandler::Singleton();
+}
+catch (Exception $ex) {
+if(is_dir(ROOT_PDIR . 'install/')){
+die("Unable to load the configuration, may you need to <a href=\"install/\">install Core Plus</a>?");
+}
+}
 $core_settings = ConfigHandler::LoadConfigFile("configuration");
 if (!$core_settings) {
 if(EXEC_MODE == 'WEB'){
-$newURL = 'install/';
-die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to hard-refresh this page a time or two if you just installed)");
+die("Please <a href=\"install/\">install Core Plus.</a>");
 }
 else{
 die('Please install core plus through the web interface first!' . "\n");
@@ -21328,7 +21368,7 @@ elseif( $uri{0} != '/' ){
 $uri = '/' . $uri;
 }
 $this->_rawPageData = PageModel::SplitBaseURL($uri);
-$this->host = SERVERNAME;
+$this->host = defined('SERVERNAME') ? SERVERNAME : $_SERVER['HTTP_HOST'];
 $this->uri = $uri;
 $this->uriresolved = $this->_rawPageData['rewriteurl'];
 $this->protocol    = isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0';

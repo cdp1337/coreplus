@@ -149,8 +149,8 @@ class ConfigHandler implements ISingleton {
 	 */
 	private function _get($key){
 
-		// If it's a standard config, pull the value from config.
 		if(isset($this->_cacheFromDB[$key])){
+			// If it's a standard config, pull the value from config.
 			// Is it already overridden?
 			if(isset($this->_overrides[$key])){
 				return ConfigModel::TranslateValue($this->_cacheFromDB[$key]->get('type'), $this->_overrides[$key]);
@@ -159,12 +159,17 @@ class ConfigHandler implements ISingleton {
 				return $this->_cacheFromDB[$key]->getValue();
 			}
 		}
-		// Not there either?  Allow the SESSION to contain config variables.  This is critical for installation.
-		elseif(\Core\Session::Get('configs/' . $key) !== null){
+		elseif(class_exists('\\Core\\Session') && \Core\Session::Get('configs/' . $key) !== null){
+			// Not there either?  Allow the SESSION to contain config variables.  This is critical for installation.
 			return \Core\Session::Get('configs/' . $key);
 		}
-		// Else, just return null.
+		elseif(isset($_SESSION['configs']) && is_array($_SESSION['configs']) && isset($_SESSION['configs'][$key])){
+			// If the site is not installed yet, it may be available in the raw SESSION variable.
+			// THis happens on /install.
+			return $_SESSION['configs'][$key];
+		}
 		else{
+			// Else, just return null.
 			return null;
 		}
 	}

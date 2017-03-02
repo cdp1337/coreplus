@@ -78,7 +78,7 @@ class DMI {
 		require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $backendfile);
 
 		// Include the schemas too?
-		if(file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
+		if(class_exists('\\Core\\Datamodel\\Schema') && file_exists(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile)){
 			require_once(__DMI_PDIR . 'drivers/' . $backend . '/' . $schemafile);
 		}
 
@@ -130,9 +130,11 @@ class DMI {
 			// This will only be done if the configuration file exists.
 			$cs = ConfigHandler::LoadConfigFile("configuration");
 		}
-		elseif(\Core\Session::Get('configs/*') !== null){
+		elseif(isset($_SESSION['configs'])){
 			// If the file doesn't exist, (ie: during installation), I need to check the session data.
-			$cs = \Core\Session::Get('configs/*');
+			// This MUST rely on the native SESSION variable and not Core's database driven data,
+			// because the site is not installed at this point and the database has not been established yet.
+			$cs = $_SESSION['configs'];
 		}
 		else{
 			throw new DMI_Exception('No database settings defined for the DMI');

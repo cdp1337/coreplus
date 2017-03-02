@@ -30,14 +30,8 @@
 // The bootstrap cannot be called directly.
 if (basename($_SERVER['SCRIPT_NAME']) == 'bootstrap.php') die('You cannot call that file directly.');
 
-
-// I expect some configuration options....
-if (PHP_VERSION < '6.0.0' && ini_get('magic_quotes_gpc')) {
-	die('This application cannot run with magic_quotes_gpc enabled, please disable them now!');
-}
-
-if (PHP_VERSION < '5.4.0') {
-	die('This application requires at least PHP 5.4 to run!');
+if (PHP_VERSION < '7.0.0') {
+	die('Please install PHP 7.0 or greater to run this application.  For a howto, you may refer to https://portal.eval.bz/tech-guides/install-php-on-linux');
 }
 
 // Damn suPHP, I can handle my own permissions, TYVM
@@ -51,8 +45,10 @@ require_once(__DIR__ . '/libs/core/utilities/logger/LogEntry.php');
 require_once(__DIR__ . '/libs/core/utilities/logger/Logger.php');
 $profiler = new Core\Utilities\Profiler\Profiler('Core Plus');
 
-// gogo i18n!
-mb_internal_encoding('UTF-8');
+if(function_exists('mb_internal_encoding')){
+	// gogo i18n!
+	mb_internal_encoding('UTF-8');
+}
 
 /********************* Initial system defines *********************************/
 require_once(__DIR__ . '/bootstrap_predefines.php');
@@ -71,7 +67,14 @@ require_once(ROOT_PDIR . 'core/libs/core/Core.class.php');
 
 // Configuration handler, for loading any config variable/constant from XML data or the database.
 require_once(ROOT_PDIR . "core/libs/core/ConfigHandler.class.php");
-ConfigHandler::Singleton();
+try{
+	ConfigHandler::Singleton();
+}
+catch (Exception $ex) {
+	if(is_dir(ROOT_PDIR . 'install/')){
+		die("Unable to load the configuration, may you need to <a href=\"install/\">install Core Plus</a>?");
+	}
+}
 
 // Give me core settings!
 // This will do the defines for the site, and provide any core variables to get started.
@@ -79,12 +82,8 @@ $core_settings = ConfigHandler::LoadConfigFile("configuration");
 
 if (!$core_settings) {
 	if(EXEC_MODE == 'WEB'){
-		$newURL = 'install/';
-		//header('HTTP/1.1 302 Moved Temporarily');
-		//header("Location:" . $newURL);
 		// This is not just redirected automatically because many browsers remember the redirect and just insist on redirecting from / to /install!
-		// The notice about needing to refresh the page is again, because browsers may cache the install message.
-		die("Please <a href=\"{$newURL}\">install Core Plus.</a><br/><br/>(You may need to hard-refresh this page a time or two if you just installed)");
+		die("Please <a href=\"install/\">install Core Plus.</a>");
 	}
 	else{
 		die('Please install core plus through the web interface first!' . "\n");

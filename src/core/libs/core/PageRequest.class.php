@@ -141,7 +141,7 @@ class PageRequest {
 		// Split this URL, it'll be used somewhere.
 		$this->_rawPageData = PageModel::SplitBaseURL($uri);
 
-		$this->host = SERVERNAME;
+		$this->host = defined('SERVERNAME') ? SERVERNAME : $_SERVER['HTTP_HOST'];
 		$this->uri = $uri;
 
 		$this->uriresolved = $this->_rawPageData['rewriteurl'];

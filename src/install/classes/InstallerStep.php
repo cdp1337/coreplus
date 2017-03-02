@@ -21,6 +21,10 @@ abstract class InstallerStep {
 	private $_template;
 
 	public $title = '';
+	
+	public $stepTotal;
+	public $stepCurrent;
+	public $stepProgress;
 
 	public function execute(){
 
@@ -36,6 +40,9 @@ abstract class InstallerStep {
 		$skin = Templates\Template::Factory(ROOT_PDIR . 'install/templates/skin.phtml');
 		$skin->assign('title', $title);
 		$skin->assign('body', $body);
+		$skin->assign('step_total', $this->stepTotal);
+		$skin->assign('step_current', $this->stepCurrent);
+		$skin->assign('step_progress', $this->stepProgress);
 		$skin->render(ROOT_PDIR . 'install/templates/skin.phtml');
 	}
 
@@ -51,6 +58,9 @@ abstract class InstallerStep {
 			$template = str_replace('Core\\Installer\\', '', $c);
 			$template = strtolower($template);
 			$this->_template = Templates\Template::Factory(ROOT_PDIR . 'install/templates/' . $template . '.phtml');
+			
+			// Assign the current step number.
+			$this->_template->assign('current_step', $this->stepCurrent);
 		}
 
 		return $this->_template;

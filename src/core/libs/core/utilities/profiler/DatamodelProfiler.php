@@ -182,7 +182,7 @@ class DatamodelProfiler {
 			++$this->_writes;
 		}
 
-		if(DEVELOPMENT_MODE){
+		if(DEVELOPMENT_MODE && class_exists('\\Core\\Session')){
 			// Add this data to the SESSION if the site is currently in DEV mode.
 			$events = Session::Get('datamodel_profiler_events/events', []);
 			$events[] = array(

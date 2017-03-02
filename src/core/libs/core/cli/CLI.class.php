@@ -281,6 +281,13 @@ class CLI {
 				self::PrintLine($l, $color);
 			}
 		}
+		elseif(strpos($line, "\n") !== false){
+			// This is a multi-line string, re-run this script on each line for proper formatting.
+			$lines = explode("\n", $line);
+			foreach($lines as $l){
+				self::PrintLine($l, $color);
+			}
+		}
 		else{
 			$nl = (EXEC_MODE == 'WEB') ? NL . '<br/>' : NL;
 
