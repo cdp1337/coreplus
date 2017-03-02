@@ -12,7 +12,17 @@
 	</p>
 {/if}
 
-{if $showusercreate}
+{if $rewrite_not_available}
+	<p class="message-tutorial">
+		Rewrite URLs do not appear to be working!  This is usually caused by an "AllowOverride None"
+		directive in a system file.
+		
+		{if $rewrite_config}
+			<br/><br/>Try checking in {$rewrite_config} for that directive and change it to "AllowOverride All"
+			followed by a restart command to Apache.
+		{/if}
+	</p>
+{elseif $showusercreate}
 	<p class="message-info">Please create the administrative user account.  This first account will be granted with full access to the site.</p>
 	{widget baseurl="user/register"}
 {else}
