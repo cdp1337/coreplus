@@ -235,7 +235,7 @@ class SetupConfigurationStep extends InstallerStep{
 				$baconWords{$i} = strtoupper($baconWords{$i});
 			}
 			elseif($change < 47){
-				$set = ['!', '@', '#', '$', '%', '^', '&', '&', '*', '(', ')', '{', '}', '[', ']', '?', '~'];
+				$set = ['!', '@', '#', '$', '%', '^', '*', '(', ')', '{', '}', '[', ']', '?', '~'];
 				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
 			}
 			else{
