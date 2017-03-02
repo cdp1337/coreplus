@@ -113,9 +113,13 @@ class DateInput extends TextInput {
 
 		// Does the value need to be transposed to a specific display format?
 		if(isset($this->_attributes['displayformat'])){
-			if(is_numeric($this->get('value'))){
-				$dt = new CoreDateTime($this->get('value'));
-				$formattedvalue = $dt->getFormatted($this->_attributes['displayformat']);
+			$v = $this->get('value');
+			if($v === 0 || $v === '0'){
+				$this->_attributes['value'] = '';
+			}
+			elseif(is_numeric($v)){
+				$dt = new \Core\Date\DateTime($v);
+				$formattedvalue = $dt->format($this->_attributes['displayformat']);
 				$this->_attributes['value'] = $formattedvalue;
 			}
 		}
@@ -133,8 +137,8 @@ class DateInput extends TextInput {
 		}
 		elseif(isset($this->_attributes['saveformat']) && !is_numeric($value)){
 			// Set value succeeded, now I can convert the string to an int, (if requested).
-			$dt = new CoreDateTime($value);
-			$value = $dt->getFormatted($this->_attributes['saveformat'], \Core\Date\Timezone::TIMEZONE_DEFAULT);
+			$dt = new \Core\Date\DateTime($value);
+			$value = $dt->format($this->_attributes['saveformat'], \Core\Date\Timezone::TIMEZONE_DEFAULT);
 			return parent::setValue($value);
 		}
 		else{
