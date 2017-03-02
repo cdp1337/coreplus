@@ -59,29 +59,14 @@ class SetupConfigurationStep extends InstallerStep{
 		$formelements = [];
 		
 		// Use Bacon ipsum to generate a secret passphrase for the user.
-		$bacon = new \BaconIpsumGenerator();
-		$baconWords = $bacon->getWord(rand(8,12));
-		// Remove spaces
-		$baconWords = str_replace(' ', '', $baconWords);
+		$encryptionPassphrase = $this->_generatePassphrase(rand(8, 12));
 		
-		// Manipulate the string a bit to add some complexity.
-		for($i = 0; $i < strlen($baconWords); $i++){
-			$change = rand(0, 50);
-			if($change < 30){
-				continue;
-			}
-			elseif($change < 45){
-				$baconWords{$i} = strtoupper($baconWords{$i});
-			}
-			elseif($change < 47){
-				$set = ['!', '@', '#', '$', '%', '^', '&', '&', '*', '(', ')', '{', '}', '[', ']', '?', '~'];
-				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
-			}
-			else{
-				$set = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
-			}
-		}
+		// Generate a new for the database password.
+		$databasePassphrase = $this->_generatePassphrase(rand(4, 6));
+		
+		// Similar treatment for the database user; random info.
+		$databaseUser = 'coreplus' . strtolower(\Core\random_hex(4));
+		$databaseName = 'coreplus' . strtolower(\Core\random_hex(4));
 
 		// Since we're pulling from the ant version, set some nice defaults for the user.
 		$valuedefaults = [
@@ -99,15 +84,15 @@ class SetupConfigurationStep extends InstallerStep{
 			],
 			'database_name' => [
 				'template' => '@{db.name}@',
-				'default' => 'localhost',
+				'default' => $databaseName,
 			],
 			'database_user' => [
 				'template' => '@{db.user}@',
-				'default' => 'localhost',
+				'default' => $databaseUser,
 			],
 			'database_pass' => [
 				'template' => '@{db.pass}@',
-				'default' => 'localhost',
+				'default' => $databasePassphrase,
 			],
 			'SERVER_ID' => [
 				'template' => 'RANDOM',
@@ -127,7 +112,7 @@ class SetupConfigurationStep extends InstallerStep{
 			],
 			'SECRET_ENCRYPTION_PASSPHRASE' => [
 				'template' => 'RANDOM',
-				'default' => $baconWords,
+				'default' => $encryptionPassphrase,
 			],
 		];
 
@@ -231,6 +216,35 @@ class SetupConfigurationStep extends InstallerStep{
 
 		$tpl->assign('message', $message);
 		$tpl->assign('instructions', $instructions);
+	}
+	
+	private function _generatePassphrase($wordLength){
+		// Use Bacon ipsum to generate a secret passphrase for the user.
+		$bacon = new \BaconIpsumGenerator();
+		$baconWords = $bacon->getWord($wordLength);
+		// Remove spaces
+		$baconWords = str_replace(' ', '', $baconWords);
+		
+		// Manipulate the string a bit to add some complexity.
+		for($i = 0; $i < strlen($baconWords); $i++){
+			$change = rand(0, 50);
+			if($change < 30){
+				continue;
+			}
+			elseif($change < 45){
+				$baconWords{$i} = strtoupper($baconWords{$i});
+			}
+			elseif($change < 47){
+				$set = ['!', '@', '#', '$', '%', '^', '&', '&', '*', '(', ')', '{', '}', '[', ']', '?', '~'];
+				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
+			}
+			else{
+				$set = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+				$baconWords{$i} = $set[ rand(0, sizeof($set) - 1) ];
+			}
+		}
+		
+		return $baconWords;
 	}
 
 	/**
