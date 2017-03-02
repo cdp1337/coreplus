@@ -527,41 +527,22 @@ function resolve_asset_directory($filename){
 		// Allow the fully resolved name to be passed in
 		$filename = substr($filename, strlen($resolved));
 	}
-
-	//var_dump($filename);
-
+	
+	
 	// I need to check the custom, current theme, and finally default locations for the file.
-	$theme = \ConfigHandler::Get('/theme/selected');
 	switch(CDN_TYPE){
 		case 'local':
 			if(\Core\ftp()){
-				// FTP has its own sub-type.
-				$custom  = new Backends\DirectoryFTP($resolved  . 'custom/' . $filename);
-				$themed  = new Backends\DirectoryFTP($resolved  . $theme . '/' . $filename);
-				$default = new Backends\DirectoryFTP($resolved  . 'default/' . $filename);
+				return new Backends\DirectoryFTP($resolved . $filename);
 			}
 			else{
-				$custom  = new Backends\DirectoryLocal($resolved  . 'custom/' . $filename);
-				$themed  = new Backends\DirectoryLocal($resolved  . $theme . '/' . $filename);
-				$default = new Backends\DirectoryLocal($resolved  . 'default/' . $filename);
+				return new Backends\DirectoryLocal($resolved . $filename);
 			}
 
 			break;
 		default:
 			throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
 			break;
-	}
-
-	if($custom->exists()){
-		// If there is a custom asset installed, USE THAT FIRST!
-		return $custom;
-	}
-	elseif($themed->exists()){
-		// Otherwise, the themes can override component assets too.
-		return $themed;
-	}
-	else{
-		return $default;
 	}
 }
 
