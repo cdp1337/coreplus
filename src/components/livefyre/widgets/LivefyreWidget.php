@@ -10,7 +10,7 @@
 /**
  * Class LivefyreWidget description
  */
-class LivefyreWidget extends Widget_2_1{
+class LivefyreWidget extends \Core\Widget{
 	public function view(){
 		$page = PageRequest::GetSystemRequest();
 		$pageview = $page->getView();
