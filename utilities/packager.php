@@ -34,6 +34,8 @@ if(!isset($_SERVER['SHELL'])){
 define('ROOT_PDIR', realpath(dirname(__DIR__) . '/src/') . '/');
 define('ROOT_WDIR', '/');
 define('BASE_DIR', realpath(dirname(__DIR__)) . '/');
+// It is unsafe to run the packager when not in development mode due to caching issues.
+define('DEVELOPMENT_MODE', true);
 
 // Include the core bootstrap, this will get the system functional.
 require_once(ROOT_PDIR . 'core/bootstrap.php');
