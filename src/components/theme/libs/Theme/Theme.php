@@ -717,14 +717,17 @@ class Theme{
 
 		$changes = $this->_performInstall($verbose);
 
-		// Set the defalt skins too!
+		// Set the default skins too!
 		// This is ONLY on install, (so as to not override any user-set options).
 		$default = $this->_parseSkins(true, $verbose);
-		if(is_array($default)){
+
+		// If $changes is "false" sizeof will return 1 ( it's an alias of count() ).
+		// so let's compare $changes with false instead!
+		if(is_array($default) && $changes !== false){
 			$changes += $default;
 		}
 
-		if(is_array($changes) && sizeof($changes)){
+		if(is_array($changes) && $changes !== false){
 			\SystemLogModel::LogInfoEvent('/updater/theme/install', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
 		}
 

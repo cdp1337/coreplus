@@ -110,3 +110,13 @@ data.import.production.datadir=/home/example/backups/
 # Any developer-specific operations to perform after import.
 # This file must be located inside the data/ directory of the project.
 data.import.custom.datafile=
+
+# SonarQube specific properties
+# All properties are required.
+#sonar.host.url=
+#sonar.login=
+#sonar.projectKey=
+#sonar.projectName=CorePlus
+#sonar.projectVersion=1.0
+#sonar.sources=src
+#sonar.exclusions=src/files/**,src/core/bootstrap.compiled.php

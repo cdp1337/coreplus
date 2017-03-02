@@ -126,6 +126,18 @@
 		</apply>
 	</target>
 
+	<target name="sonar" depends="compile">
+		<exec executable="${basedir}/vendor/sonarqube/sonar-scanner-2.8/bin/sonar-scanner">
+			<arg value="-Dsonar.host.url=${sonar.host.url}"/>
+			<arg value="-Dsonar.login=${sonar.login}"/>
+			<arg value="-Dsonar.projectKey=${sonar.projectKey}"/>
+			<arg value="-Dsonar.projectName=${sonar.projectName}"/>
+			<arg value="-Dsonar.projectVersion=${sonar.projectVersion}"/>
+			<arg value="-Dsonar.sources=${sonar.sources}"/>
+			<arg value="-Dsonar.exclusions=${sonar.exclusions}"/>
+		</exec>
+	</target>
+
 	<target name="phploc" depends="clean_src" description="Measure project size using PHPLOC">
 		<exec executable="/opt/php/phploc">
 			<arg value="--log-csv"/>
