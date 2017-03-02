@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.0" logo="zabbix-logo.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.0" logo="assets/images/zabbix-agent.png">
 	<description>
 		Monitoring agent for the Zabbix system.  Sends system health reports to the monitoring server every minute.
 	</description>
@@ -11,7 +11,6 @@
 			<controller name="ZabbixAgentController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="6178d09a5d286a236c69391046615b2b"/>
-		<file filename="zabbix-logo.png" md5="b85c2ab6920a8390a5187c9aeebe463a"/>
 	</files>
 	<hooks>
 		<hook name="/cron/1-minute" call="ZabbixAgentController::_SendStatus"/>
@@ -24,7 +23,13 @@
 	</configs>
 	<view/>
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<assets>
+		<file filename="assets/images/zabbix-agent.png" md5="b85c2ab6920a8390a5187c9aeebe463a"/>
+	</assets>
 </component>
 

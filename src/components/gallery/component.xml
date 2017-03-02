@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Gallery" execmode="web" logo="gallery.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Gallery" execmode="web" logo="assets/images/gallery.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="user" type="library"/>
 	</requires>
 	<permissions>
@@ -44,15 +44,14 @@
 		<file filename="controllers/GalleryWidgetController.php" md5="b1edab7f0bcc9c1b77e96321b1b0472d">
 			<controller name="GalleryWidgetController"/>
 		</file>
-		<file filename="gallery.png" md5="74f07e64024e5129ea294e313352d352"/>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
 			<class name="GalleryFormHandler"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="71f7b10abf27df1b17a528d60e3d9d40"/>
-		<file filename="models/GalleryAlbumModel.php" md5="576e6c557060d6205869977a003fd67a">
+		<file filename="models/GalleryAlbumModel.php" md5="7e16e200b33cc47738deb91184977e56">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="5be45d5b42a08304e0a726d7e829d817">
+		<file filename="models/GalleryImageModel.php" md5="e4d9546d553020fa497245986cc5275a">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
@@ -64,6 +63,7 @@
 	<assets>
 		<file filename="assets/css/gallery.css" md5="9d25741fa7d4c19808f4d2527eaa4b97"/>
 		<file filename="assets/gallery-arrow.png" md5="16bc541d24d9c8d5a124369eb51a4f8e"/>
+		<file filename="assets/images/gallery.png" md5="74f07e64024e5129ea294e313352d352"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-140.png" md5="0d6f5d18020961db2d13f3f39940bcc1"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-210.png" md5="ba153cf5bb8065ea1b472fca35a6189b"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery.png" md5="ed55d46d67fa34a10801b670d32652e5"/>
@@ -108,5 +108,13 @@
 		<upgrade from="2.0.1" to="2.0.2"/>
 		<upgrade from="2.0.2" to="2.0.3"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Google" execmode="web" logo="google.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Google" execmode="web" logo="assets/images/google.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide version="3.12" name="GoogleMaps" type="library"/>
@@ -30,10 +30,9 @@
 	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="83fdfb0155d9d2645aea0b573367d2e2"/>
-		<file filename="controllers/GoogleController.php" md5="21f07eb63575bb6a8fb82209f14fbc49">
+		<file filename="controllers/GoogleController.php" md5="fc6bb54b8eed36c32a4924af66860e58">
 			<controller name="GoogleController"/>
 		</file>
-		<file filename="google.png" md5="224c385de2902523e856dab565b463fd"/>
 		<file filename="i18n/strings.yml" md5="25e02654a405f03e4b0a309b9458f626"/>
 		<file filename="libs/google/CSE/Helper.php" md5="c38f429641fc9c6a15744ecb4e86dba7">
 			<class name="Google\CSE\Helper"/>
@@ -75,5 +74,17 @@
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="a3fc7915404242b727080991ab014cda"/>
 	</view>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="Nicholas Hinsch" email="nicholas@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
+	<assets>
+		<file filename="assets/images/google.png" md5="224c385de2902523e856dab565b463fd"/>
+	</assets>
 </component>
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.2.0-1" name="Facebook" execmode="web" logo="facebook.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.2.0-1" name="Facebook" execmode="web" logo="assets/images/facebook.png">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/usermodel" call="FacebookController::GetUserControlLinks"/>
@@ -11,7 +11,7 @@
 	</provides>
 	<requires>
 		<require name="user" type="library" version="2.8.0"/>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<description>
 		Facebook login and other API integration support.
@@ -45,7 +45,6 @@
 		<file filename="controllers/FacebookController.php" md5="65c521bf86751543da77d3fb5b2949cb">
 			<controller name="FacebookController"/>
 		</file>
-		<file filename="facebook.png" md5="a6143066f20ed05942ef66b3b53f2ccd"/>
 		<file filename="i18n/strings.yml" md5="786b028b60fcdaaeeff698e0f2658703"/>
 		<file filename="libs/facebook/Authentication/AccessToken.php" md5="451414ef968667fc50d5b3bb5c513ecf">
 			<class name="Facebook\Authentication\AccessToken"/>
@@ -272,7 +271,7 @@
 		</file>
 		<file filename="libs/facebook/autoload.php" md5="c04d2b9ddf706e44582d8ba40b47e8b2"/>
 		<file filename="libs/facebook/polyfills.php" md5="4fc8e0222629eb59925be0ba7ae58539"/>
-		<file filename="widgets/FacebookWidget.php" md5="fdb60f6c5cfefd6d5d52db5182f51fbd">
+		<file filename="widgets/FacebookWidget.php" md5="f9fc63cc5a90c85de6f1b85561f8ef51">
 			<class name="FacebookWidget"/>
 		</file>
 	</files>
@@ -296,8 +295,17 @@
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
+		<file filename="assets/images/facebook.png" md5="a6143066f20ed05942ef66b3b53f2ccd"/>
 		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
 		<file filename="assets/js/facebook/login.min.js" md5="47160cc5f84a321aba41e44d4e786d22"/>
 	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

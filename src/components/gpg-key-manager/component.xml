@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GPG Key Manager" version="1.0.0" logo="logo.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GPG Key Manager" version="1.0.0" logo="assets/images/gpg-key-manager.png">
 	<pages>
 		<page baseurl="/gpgkeymanager" title="t:STRING_GPGKEYMANAGER" admin="1" access="g:admin" group="t:STRING_ADMIN" image="assets/images/actions/kgpg_key2_kopete.png"/>
 	</pages>
@@ -11,7 +11,6 @@
 			<controller name="GPGKeyManagerController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="8310ed31da8078e2e0c28502b8decba9"/>
-		<file filename="logo.png" md5="fb39282d5467bef30c0e583e9539342e"/>
 	</files>
 	<view>
 		<file filename="templates/pages/gpgkeymanager/generate.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -19,7 +18,13 @@
 		<file filename="templates/pages/gpgkeymanager/upload.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 	</view>
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<assets>
+		<file filename="assets/images/gpg-key-manager.png" md5="fb39282d5467bef30c0e583e9539342e"/>
+	</assets>
 </component>
 

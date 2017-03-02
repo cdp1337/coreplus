@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 01 Mar 2017 21:27:03 -0500
+ * @compiled Thu, 02 Mar 2017 06:09:39 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -9758,8 +9758,10 @@ $icon = $this->_xmlloader->getRootDOM()->getAttribute('logo');
 if(strpos($icon, '://') !== false){
 return null;
 }
-$full = $this->getBaseDir() . $icon;
-$file = Core\Filestore\Factory::File($full);
+$file = Core\Filestore\Factory::File($icon);
+if($file->_type != 'asset'){
+return null;
+}
 return $file;
 }
 else{

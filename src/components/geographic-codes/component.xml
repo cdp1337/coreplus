@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Geographic Codes" execmode="both" logo="geo.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Geographic Codes" execmode="both" logo="assets/images/geographic-codes.png">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -13,10 +13,10 @@
 		<file filename="CHANGELOG" md5="4d8fdce2f5e5a88db9dd9195a03e7db8"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
 		<file filename="assets/scss/geographic-codes.scss" md5="3f365b9b9738e830d8fa81cf03d87aa8"/>
-		<file filename="classes/GeoAddressFormInput.php" md5="70d2051369a72c2309fdbfd64de550e0">
+		<file filename="classes/GeoAddressFormInput.php" md5="d15cab6ad272543ba639bfd45301a780">
 			<class name="GeoAddressFormInput"/>
 		</file>
-		<file filename="classes/GeoProvinceFormInput.php" md5="e8678cb121501bf6dffbace6cc414cf6">
+		<file filename="classes/GeoProvinceFormInput.php" md5="b768aef1c0266131693407c16e38a55c">
 			<class name="GeoProvinceFormInput"/>
 		</file>
 		<file filename="controllers/GeoAddressController.php" md5="91792353e30098794c50b62a13a930e3">
@@ -28,8 +28,7 @@
 		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
 		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
-		<file filename="geo.png" md5="faaf49668cd64f9a28a373c19edb6233"/>
-		<file filename="geocode/IPLookup.php" md5="7e5765098bc146091e884467cba6b79b">
+		<file filename="geocode/IPLookup.php" md5="26764c4dbe1f838eb1e516e0733c74d8">
 			<class name="geocode\IPLookup"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="e0413b837b6f3822c0f91913ae3b37fc"/>
@@ -183,12 +182,13 @@
 		<file filename="models/GeoProvinceModel.php" md5="95a1e0afccc24541473b6afdb03683dd">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="smarty-plugins/function.geoiplookup.php" md5="0c798c3fe45d336e77d82a647c06e717"/>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="d781f99707c1b0fb278e180d75f75e8f"/>
 	</files>
 	<assets>
 		<file filename="assets/css/geographic-codes.css" md5="487b7f3d62f0b4ac7095921ee0c827f4"/>
 		<file filename="assets/css/geographic-codes.css.map" md5="115900926f461af9bded0ea0038da843"/>
 		<file filename="assets/css/geographic-codes.min.css" md5="48e52d7aac6cf8114d325f2bd09a91e4"/>
+		<file filename="assets/images/geographic-codes.png" md5="faaf49668cd64f9a28a373c19edb6233"/>
 	</assets>
 	<install>
 		<sql file="datafiles/countries_bulk.sql"/>
@@ -214,11 +214,19 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
 	<view>
-		<file filename="templates/forms/elements/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>
-		<file filename="templates/forms/elements/geoprovinceforminput.tpl" md5="81293c83083068a69db2dedf7b4db16c"/>
+		<file filename="templates/includes/forms/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>
+		<file filename="templates/includes/forms/geoprovinceforminput.tpl" md5="81293c83083068a69db2dedf7b4db16c"/>
 	</view>
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

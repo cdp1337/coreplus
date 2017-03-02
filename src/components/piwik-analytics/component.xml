@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Piwik Analytics" execmode="web" logo="favicon.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Piwik Analytics" execmode="web" logo="assets/images/piwik-analytics.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<hooks>
 		<hook name="/core/page/preexecute" call="\Piwik\PiwikHelper::InstallTracking"/>
@@ -29,10 +29,9 @@
 	</view>
 	<files>
 		<file filename="CHANGELOG" md5="5838ca953cfdcc1a902ebff46a04b2be"/>
-		<file filename="controllers/PiwikController.php" md5="92170b882f746995b022db1e61697ea1">
+		<file filename="controllers/PiwikController.php" md5="67ae68aed293abc613f5132fc7d854ad">
 			<controller name="PiwikController"/>
 		</file>
-		<file filename="favicon.png" md5="b5a8b909b721a7d4e91e5724ce43df1c"/>
 		<file filename="libs/devicedetector/Cache/Cache.php" md5="eec9f30425cf26ba1d8041f6809abf9f">
 			<interface name="DeviceDetector\Cache\Cache"/>
 		</file>
@@ -529,6 +528,7 @@
 		<file filename="assets/images/os/XBT.gif" md5="c0f572e03ffaf7d38c78fcbb7fba84cf"/>
 		<file filename="assets/images/os/XBX.gif" md5="e3e0eaa5daa2903bab1e0e9ea3ef1d46"/>
 		<file filename="assets/images/os/YNS.gif" md5="f4d8502e11b209c209fcee3312a33139"/>
+		<file filename="assets/images/piwik-analytics.png" md5="b5a8b909b721a7d4e91e5724ce43df1c"/>
 		<file filename="assets/images/piwik_logo.png" md5="07fef632b699f34c32337af65bda9d46"/>
 		<file filename="assets/images/screens/camera.png" md5="f948997fff235b4bbdece324d9054969"/>
 		<file filename="assets/images/screens/carbrowser.png" md5="fcbb6fa6a2c617418df8b17299d3d7fb"/>
@@ -554,5 +554,13 @@
 		<upgrade from="1.3.0" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

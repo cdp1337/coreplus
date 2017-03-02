@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.3" logo="cron.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.3" logo="assets/images/cron.png">
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
@@ -19,7 +19,7 @@
 		<hook name="/cron/1-minute" call="CronPersistentJobModel::CheckJobs"/>
 	</hooks>
 	<requires>
-		<require name="core" type="component" version="6.1.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<permissions>
 		<permission key="/cron/viewlog" description="View log of cron jobs that have run"/>
@@ -45,19 +45,18 @@
 		<file filename="classes/CronHelper.php" md5="592a77bef59ee2d228cc91687b668511">
 			<class name="CronHelper"/>
 		</file>
-		<file filename="controllers/CronController.php" md5="dfed0e33690af3ebf3ce0c1c8add4f8e">
+		<file filename="controllers/CronController.php" md5="a1d6d43dabdc999885ab89edb4522faa">
 			<controller name="CronController"/>
 		</file>
-		<file filename="cron.png" md5="b981e3a09ce77af4b06a4fbe2413f9c4"/>
 		<file filename="i18n/strings.yml" md5="bcd7fb13bd63b13496794b860b627c50"/>
 		<file filename="models/CronLogModel.php" md5="a009f692f5f5485638c0ed1257f1550c">
 			<class name="CronLogModel"/>
 		</file>
-		<file filename="models/CronPersistentJobModel.php" md5="7e1cd6a7d3d9ad92dfcad38137081bbc">
+		<file filename="models/CronPersistentJobModel.php" md5="689ac038fd46146568a66b4551c8125b">
 			<class name="CronPersistentJobModel"/>
 		</file>
 		<file filename="upgrades/202_remove_cron_entries.php" md5="1126db9bdf0acd988f752740b681b7cc"/>
-		<file filename="widgets/CronWidget.php" md5="ecb11a7ef265b06f100e133796b4530d">
+		<file filename="widgets/CronWidget.php" md5="5a75f1349c31a01476b18231ef8e44b2">
 			<class name="CronWidget"/>
 		</file>
 	</files>
@@ -86,6 +85,7 @@
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
+		<file filename="assets/images/cron.png" md5="b981e3a09ce77af4b06a4fbe2413f9c4"/>
 	</assets>
 </component>
 

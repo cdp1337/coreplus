@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-6" name="jPlayer" execmode="web" logo="jplayer_logo.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-6" name="jPlayer" execmode="web" logo="assets/images/jplayer.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="JQuery" type="library" version="1.4" operation="ge"/>
 	</requires>
 	<provides>
@@ -24,7 +24,6 @@
 		<file filename="jPlayer.class.php" md5="d55160306298b4ff5a0ca70a259518b5">
 			<class name="jPlayer"/>
 		</file>
-		<file filename="jplayer_logo.png" md5="d4d05cb1f681043cef03c0cc52da5f29"/>
 		<file filename="source/Jplayer.as" md5="23d49380b77459bf3ac71dcb08c6bc68"/>
 		<file filename="source/Jplayer.fla" md5="c6c6cda92c97d94640b62b75b5de3044"/>
 		<file filename="source/add-on/jplayer.playlist.js" md5="db507525d94792ed399ce529b11f7475"/>
@@ -42,6 +41,7 @@
 		<file filename="assets/css/skin/jplayer.blue.monday.seeking.gif" md5="6459e146ed61caa28e8ede05beb520b8"/>
 		<file filename="assets/css/skin/jplayer.blue.monday.video.play.png" md5="d736613748cb6f59e1ce86db5e58bee0"/>
 		<file filename="assets/css/skin/spirites_blue.monday_2011.psd" md5="0afab271084584b60d4f642bd9d60d4f"/>
+		<file filename="assets/images/jplayer.png" md5="d4d05cb1f681043cef03c0cc52da5f29"/>
 		<file filename="assets/js/jplayer.playlist.min.js" md5="58f29924f2e0951ab6cbeb7e502d350e"/>
 		<file filename="assets/js/jquery.jplayer.inspector.js" md5="c009339d6136287c282eca94144f12c7"/>
 		<file filename="assets/js/jquery.jplayer.inspector.min.js" md5="6e75b38ef6acda483c54f35d5fcb2986"/>
@@ -50,5 +50,8 @@
 		<file filename="assets/js/popcorn.jplayer.min.js" md5="cca3c285c2f87924ec91073f16acc6d6"/>
 		<file filename="assets/swf/Jplayer.swf" md5="f85e71a50abbaf2a1866ef16d392a420"/>
 	</assets>
+	<authors>
+		<author name="Mark J Panaghiston"/>
+	</authors>
 </component>
 

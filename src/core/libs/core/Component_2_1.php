@@ -292,54 +292,10 @@ class Component_2_1 {
 			$this->_xmlloader->removeElements('/smartyplugins');
 		}
 
-		/*
-		///////////////  Handle the hard-set pages, ie: admin ones \\\\\\\\\\\\\
-		if(!isset($viewclasses)) $viewclasses = array();
-		foreach($viewclasses as $c){
-			// Should end in Controller.
-			if(strlen($c) - strpos($c, 'Controller') == 10) $c = substr($c, 0, -10);
-			$data = Dataset::Init()->table('page')->select('*')->where("baseurl = /$c", 'admin=1', 'fuzzy=0')->execute();
-			
-			//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
-			foreach($data as $row){
-				$node = $this->_xmlloader->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
-				$node->setAttribute('admin', $row['admin']);
-				$node->setAttribute('widget', $row['widget']);
-				$node->setAttribute('access', $row['access']);
-				$node->setAttribute('title', $row['title']);
-			}
-			
-			$data = Dataset::Init()->table('page')->select('*')->where("baseurl LIKE /$c/%", 'admin=1', 'fuzzy=0')->execute();
-			
-			//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "page WHERE ( `baseurl` = '/$c' OR `baseurl` LIKE '/$c/%' ) AND `fuzzy` = '0' AND `admin` = '1'");
-			foreach($data as $row){
-				$node = $this->_xmlloader->getElement('/pages/page[@baseurl="' . $row['baseurl'] . '"]');
-				$node->setAttribute('admin', $row['admin']);
-				$node->setAttribute('widget', $row['widget']);
-				$node->setAttribute('access', $row['access']);
-				$node->setAttribute('title', $row['title']);
-			}
-		}
-		*/
-
-		/*
-		///////////////////////  Handle the config options \\\\\\\\\\\\\\\\\\\\\
-		$data = Dataset::Init()->table('config')->select('*')->where('key LIKE /' . $this->getName() . '/%')->execute();
-		//$rs = DB::Execute("SELECT * FROM " . DB_PREFIX . "config WHERE `key` LIKE '/" . $this->getName() . "/%'");
-		foreach($data as $row){
-			$node = $this->_xmlloader->getElement('/configs/config[@key="' . $row['key'] . '"]');
-			$node->setAttribute('type', $row['type']);
-			$node->setAttribute('default', $row['default_value']);
-			$node->setAttribute('description', $row['description']);
-			
-			if($row['options']) $node->setAttribute('options', $row['options']);
-			else $node->removeAttribute('options');
-		}
-		*/
-
 		// This needs to be the final step... write the XML doc back to the file.
 		$XMLFilename = $this->_file->getFilename();
-		//echo $this->asPrettyXML(); // DEBUG //
+		
+		//echo $this->_xmlloader->asPrettyXML(); die(); // DEBUG //
 		if ($minified) {
 			file_put_contents($XMLFilename, $this->_xmlloader->asMinifiedXML());
 		}
@@ -462,10 +418,11 @@ class Component_2_1 {
 				return null;
 			}
 			
-			// And it must exist relative to the base directory of this component.
-			$full = $this->getBaseDir() . $icon;
-			
-			$file = Core\Filestore\Factory::File($full);
+			$file = Core\Filestore\Factory::File($icon);
+			if($file->_type != 'asset'){
+				// Non-asset images do not play well with various utilities in Core.
+				return null;
+			}
 			
 			return $file;
 		}

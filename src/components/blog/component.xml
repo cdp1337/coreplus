@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Blog" execmode="web" logo="blog.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Blog" execmode="web" logo="assets/images/blog.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="tags" type="component"/>
 		<require name="JQuery-Full" type="component" version="1.9"/>
 	</requires>
@@ -15,7 +15,6 @@
 	<files>
 		<file filename="CHANGELOG" md5="bdcac7ac092f8cc30716b012787cd4f3"/>
 		<file filename="assets/scss/blog.scss" md5="633b1b43c66a5bdd53ca9b26da8c7f7c"/>
-		<file filename="blog.png" md5="ac1c1b821f637fbb4b3a601035109acf"/>
 		<file filename="controllers/BlogController.php" md5="2e88eb2cf41b330ca1dbcc7d1545294c">
 			<controller name="BlogController"/>
 		</file>
@@ -24,10 +23,10 @@
 		</file>
 		<file filename="i18n/en.ini" md5="033a5d71241a8b609d2af90689697c49"/>
 		<file filename="i18n/strings.yml" md5="b74967b9e40c4dedb4837617ad19d69a"/>
-		<file filename="models/BlogArticleModel.php" md5="bc7593d890b49e65cca1257710d792fa">
+		<file filename="models/BlogArticleModel.php" md5="d7c5c7ed19c519a8eb9cb183b28dd447">
 			<class name="BlogArticleModel"/>
 		</file>
-		<file filename="models/BlogModel.php" md5="351211e4d6129f5e02929a847bc564ce">
+		<file filename="models/BlogModel.php" md5="d108dd31e80f5acb9cc74aa4cff4730a">
 			<class name="BlogModel"/>
 		</file>
 		<file filename="upgrades/121_to_130.php" md5="74f9e19bffde5be37788a696b7790b46"/>
@@ -137,6 +136,7 @@
 		<file filename="assets/css/blog.css" md5="8279a7ad097c30ae289799bd49761f13"/>
 		<file filename="assets/css/blog.css.map" md5="d30c043ff849da43fc6c59e82a7697a6"/>
 		<file filename="assets/css/blog.min.css" md5="b8b393a570532078d6f516e329d4583e"/>
+		<file filename="assets/images/blog.png" md5="ac1c1b821f637fbb4b3a601035109acf"/>
 		<file filename="assets/images/previews/templates/widgets/blog/blog-listing-01.png" md5="9d3e042eae34b7c1e0a79f8b357ba3e7"/>
 		<file filename="assets/images/previews/templates/widgets/blog/blog-listing-140.png" md5="23f0262e8cd4a60220bc58365700f2e3"/>
 		<file filename="assets/images/previews/templates/widgets/blog/blog-listing-210.png" md5="94e8fdacd5ea8f0b85299b870596f5eb"/>
@@ -152,5 +152,13 @@
 		<file filename="assets/js/blog-waypoint-scroll.js" md5="33b327ff598cb3c05f8a2d109ca6d9f9"/>
 		<file filename="assets/js/blog-waypoint-scroll.min.js" md5="7b9efd6a0e44144b4ebc9e4f3a97a601"/>
 	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

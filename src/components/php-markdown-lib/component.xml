@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP Markdown Lib" version="1.7.0" logo="php-markdown-lib.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP Markdown Lib" version="1.7.0" logo="assets/images/php-markdown-lib.png">
 	<requires>
-		<require name="core" type="component" version="6.1.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<files>
 		<file filename="CHANGELOG" md5="4af8ceff05dcc648c21dffa2eba6cb6a"/>
@@ -10,7 +10,10 @@
 		<file filename="Readme.md" md5="56053198424aae8f0661ca0e7d1d9f58"/>
 		<file filename="Readme.php" md5="06c70305f1837db551b08b5e5729c55b"/>
 		<file filename="composer.json" md5="f3c5c68eb29718d028ec13b97362485d"/>
-		<file filename="libs/Core/MarkdownProcessor.php" md5="f71cf71100984f17f1fa40885654a1e1">
+		<file filename="libs/Core/Forms/MarkdownInput.php" md5="19d870fa6d46bdd9c0c92897209f0846">
+			<class name="Core\Forms\MarkdownInput"/>
+		</file>
+		<file filename="libs/Core/MarkdownProcessor.php" md5="1e4d950a6898220a76287e60ecd6ea79">
 			<class name="Core\MarkdownProcessor"/>
 		</file>
 		<file filename="libs/Michelf/Markdown.inc.php" md5="f998ac3927b4c09a63be0e8057ed1838"/>
@@ -26,14 +29,22 @@
 			<interface name="Michelf\MarkdownInterface"/>
 		</file>
 		<file filename="markdown.md" md5="462ca5b5d94ee7113eb0cab761cadf30"/>
-		<file filename="php-markdown-lib.png" md5="d190443d677bd4999176ce5bb8bb874f"/>
 	</files>
+	<view>
+		<file filename="templates/includes/forms/markdowninput.tpl" md5="39d600c155d7dc6f6e28a8d6e1661747"/>
+	</view>
 	<authors>
 		<author name="Michel Fortin" email="michel.fortin@michelf.com"/>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
 	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
 		<license url="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</license>
 	</licenses>
+	<assets>
+		<file filename="assets/images/php-markdown-lib.png" md5="d190443d677bd4999176ce5bb8bb874f"/>
+	</assets>
 </component>
 

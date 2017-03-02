@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="Navigation" execmode="web" logo="navigation.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="Navigation" execmode="web" logo="assets/images/navigation.png">
 	<requires>
-		<require name="core" type="component" operation="ge" version="6.0.0"/>
+		<require name="core" type="component" operation="ge" version="6.2.0"/>
 	</requires>
 	<pages>
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="t:STRING_CONTENT" access="g:admin" admin="1"/>
@@ -10,19 +10,18 @@
 	<files>
 		<file filename="CHANGELOG" md5="bc23e2cda1bb070e0d350fc8b1ec936f"/>
 		<file filename="assets/scss/navigation.scss" md5="271eb2ce6a8d6329b27d67e25dda8a33"/>
-		<file filename="controllers/NavigationController.php" md5="41c3ab9c23116ebbaccaead3a7795b74">
+		<file filename="controllers/NavigationController.php" md5="c386e82a5c30274e1543276494670ee1">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="cc216c0980d987e5790e2b56afc57c6d"/>
-		<file filename="models/Navigation.model.php" md5="73779a6c198f0fe90a9fcbdf7e17cfd0">
+		<file filename="models/Navigation.model.php" md5="932ea911a691d96aca2c01b94697aa93">
 			<class name="NavigationModel"/>
 		</file>
 		<file filename="models/NavigationEntry.model.php" md5="7ffd8b1caa8a10b3ed018984ea2b5c7a">
 			<class name="NavigationEntryModel"/>
 		</file>
-		<file filename="navigation.png" md5="15107b97e4f5b4d5fe1636d7fc2d0835"/>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="d7b466a521859a4670ce8e0d98b7fa5c"/>
-		<file filename="widgets/NavigationWidget.php" md5="5b67911d06dd94794a517c82dfcc1845">
+		<file filename="widgets/NavigationWidget.php" md5="5e60c9c4aea841934b87f13cff6732f9">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -50,6 +49,7 @@
 		<file filename="assets/css/navigation.css" md5="524609c4329abb8375ff4d5b033393ed"/>
 		<file filename="assets/css/navigation.css.map" md5="7e4208c06ec35b93a8f8a74cfad68b06"/>
 		<file filename="assets/css/navigation.min.css" md5="6da274abebbf23ae72dc4f016e946c14"/>
+		<file filename="assets/images/navigation.png" md5="15107b97e4f5b4d5fe1636d7fc2d0835"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-140.png" md5="b802371dccad4efd732bc4d64fc6a6fc"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-210.png" md5="0707ae53fa3b89eecc1f2624abd366f3"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children-140.png" md5="a825bcc2dbed754cb091d733233acf88"/>
@@ -93,5 +93,13 @@
 		<upgrade from="2.6.0" to="2.6.1"/>
 		<upgrade from="2.6.1" to="2.6.2"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

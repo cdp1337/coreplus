@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Security-Suite" execmode="web" logo="lock.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Security-Suite" execmode="web" logo="assets/images/security-suite.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
 	</requires>
 	<configs>
@@ -51,7 +51,7 @@
 	</description>
 	<files>
 		<file filename="CHANGELOG" md5="055780ce4e86ec642744fd8c39264d53"/>
-		<file filename="controllers/SecurityController.php" md5="f20afeff9fe1057fba042c50b56133e8">
+		<file filename="controllers/SecurityController.php" md5="8ea5c71487fe4b0ac3e70f26296abab9">
 			<controller name="SecurityController"/>
 		</file>
 		<file filename="controllers/WPHoneypotController.php" md5="3acd01b4e34da133ad7b433b1c8b2ac2">
@@ -77,7 +77,6 @@
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
-		<file filename="lock.png" md5="ad92860dc048374ea7527ad60376d89e"/>
 		<file filename="models/IpBlacklistModel.php" md5="679111ba5457e122be3a6ff1a975bdac">
 			<class name="IpBlacklistModel"/>
 		</file>
@@ -91,7 +90,7 @@
 			<class name="sfsBlacklistModel"/>
 		</file>
 		<file filename="upgrades/120_to_130.php" md5="b7175159159ee66569a68c74b782d528"/>
-		<file filename="widgets/SecurityWidget.php" md5="941b2fca17e291f460f790c0d03befc4">
+		<file filename="widgets/SecurityWidget.php" md5="d8b9fba7d0deb4edebcfc1c3feec29c9">
 			<class name="SecurityWidget"/>
 		</file>
 	</files>
@@ -118,9 +117,18 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
 	<assets>
+		<file filename="assets/images/security-suite.png" md5="ad92860dc048374ea7527ad60376d89e"/>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>
 		<file filename="assets/wp-admin/css/wpcom.css" md5="faab35031e9109d28fc8435eb635c3af"/>
 		<file filename="assets/wp-includes/css/buttons.min.css" md5="f3dcaa18ed8e6638089d4e1a196ccae9"/>
 	</assets>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

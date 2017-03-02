@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-2" name="FontAwesome" execmode="web" logo="fontawesome.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.6.1-2" name="FontAwesome" execmode="web" logo="assets/images/fontawesome.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<provides>
 		<scriptlibrary name="fontawesome" call="FontAwesome::Load"/>
@@ -35,7 +35,6 @@
 		<file filename="assets/scss/_variables.scss" md5="44e534202b9f40532148f736fae8dd69"/>
 		<file filename="assets/scss/font-awesome.scss" md5="e5ae09005974241ba8947f652f6f1ab7"/>
 		<file filename="fontawesome.pdf" md5="9a251b8d451138e739e7200ed25391f4"/>
-		<file filename="fontawesome.png" md5="5883a8e2b307a8c16af7d68bdb63eb27"/>
 	</files>
 	<assets>
 		<file filename="assets/CONTRIBUTING.md" md5="51163d4979d1e0371aab27b8d29ea4b9"/>
@@ -49,6 +48,7 @@
 		<file filename="assets/fonts/fontawesome-webfont.ttf" md5="fb650aaf10736ffb9c4173079616bf01"/>
 		<file filename="assets/fonts/fontawesome-webfont.woff" md5="891e3f340c1126b4c7c142e5f6e86816"/>
 		<file filename="assets/fonts/fontawesome-webfont.woff2" md5="926c93d201fe51c8f351e858468980c3"/>
+		<file filename="assets/images/fontawesome.png" md5="5883a8e2b307a8c16af7d68bdb63eb27"/>
 	</assets>
 	<upgrades>
 		<upgrade from="2.0" to="2.0~core2"/>
@@ -61,5 +61,8 @@
 		<upgrade from="4.0.3~core4" to="4.6.1-1"/>
 		<upgrade from="4.6.1-1" to="4.6.1-2"/>
 	</upgrades>
+	<licenses>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
+	</licenses>
 </component>
 
