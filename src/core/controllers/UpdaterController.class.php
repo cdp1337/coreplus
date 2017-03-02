@@ -949,7 +949,17 @@ class UpdaterController extends Controller_2_1 {
 		
 		$checks      = [];
 		$updateSites = UpdateSiteModel::Find();
-		$updates     = UpdaterHelper::GetUpdates();
+		try{
+			$updates = UpdaterHelper::GetUpdates();
+		}
+		catch (Exception $ex) {
+			$checks[] = \Core\HealthCheckResult::ConstructError($ex->getMessage(), null, null);
+			$updates = [
+				'components' => [],
+				'themes' => [],
+			];
+		}
+		
 		
 		// Scan through the update sites and ensure that they are available and set.
 		if(!sizeof($updateSites)){

@@ -1725,7 +1725,7 @@ class AdminController extends Controller_2_1 {
 
 		$checks      = [];
 
-		if(version_compare(phpversion(), '5.5.0', '<')){
+		if(version_compare(phpversion(), '7.0.0', '<')){
 			$checks[] = \Core\HealthCheckResult::ConstructWarn(
 				t('STRING_CHECK_PHP_S_TOO_OLD', phpversion()),
 				t('MESSAGE_WARNING_PHP_S_TOO_OLD', phpversion()),
@@ -1864,7 +1864,13 @@ class AdminController extends Controller_2_1 {
 			}
 
 			// Check this component's license data as well by performing an actual query against the licensing server.
-			$c->queryLicenser();
+			try{
+				$c->queryLicenser();
+			}
+			catch (Exception $ex) {
+				$checks[] = \Core\HealthCheckResult::ConstructError($ex->getMessage(), null, null);
+			}
+			
 			
 			$licenseCheck = $c->getLicenseData();
 			if(sizeof($licenseCheck)){
