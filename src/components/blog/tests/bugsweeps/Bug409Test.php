@@ -7,6 +7,8 @@
  * @package Blog
  */
 
+use PHPUnit\Framework\TestCase;
+
 
 /**
  * Class Bug409Test
@@ -15,7 +17,7 @@
  *
  * @package Blog
  */
-class Bug409Test extends PHPUnit_Framework_TestCase {
+class Bug409Test extends TestCase {
 
 	/**
 	 * @var BlogModel

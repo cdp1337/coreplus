@@ -7,7 +7,9 @@
  * These will be deprecated as of 3.1 in favour of the Core\Date systems.
  */
 
-class LegacyDateTimeTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class LegacyDateTimeTest extends TestCase {
 	public function testTimeGetCurrentGMT(){
 		$ref = new DateTime(null, new DateTimeZone('UTC'));
 

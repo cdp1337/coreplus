@@ -1,12 +1,14 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: charlie
  * Date: 7/21/16
  * Time: 5:07 PM
  */
-class XMLLoaderTest extends PHPUnit_Framework_TestCase{
+
+use PHPUnit\Framework\TestCase;
+
+class XMLLoaderTest extends TestCase{
 	
 	public static $XMLFile;
 

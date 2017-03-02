@@ -7,6 +7,8 @@
  * @package Core\Filestore
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class FileLocalTest
  *
@@ -14,7 +16,7 @@
  * @see core/libs/core/filestore/File.interface.php
  * @see core/libs/core/filestore/backends/FileLocal.php
  */
-class FileLocalTest extends PHPUnit_Framework_TestCase {
+class FileLocalTest extends TestCase {
 
 	/**
 	 * Test the getFilesize method

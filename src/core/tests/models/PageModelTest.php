@@ -20,9 +20,10 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+use PHPUnit\Framework\TestCase;
  
 
-class PageModelTest extends PHPUnit_Framework_TestCase {
+class PageModelTest extends TestCase {
 	public function testAdmin(){
 
 		// Basic Construct should return one result.

@@ -1,8 +1,9 @@
 <?php
 
 namespace Html2Text;
+use PHPUnit\Framework\TestCase;
 
-class ListTest extends \PHPUnit_Framework_TestCase
+class ListTest extends TestCase
 {
     public function testList()
     {

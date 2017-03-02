@@ -7,7 +7,9 @@
  * @package Core\Utilities\Logger
  */
 
-class LogFileTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class LogFileTest extends TestCase {
 	/**
 	 * Test that a message can be written to a log file.
 	 *

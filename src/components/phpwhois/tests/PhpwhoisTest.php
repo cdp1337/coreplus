@@ -7,6 +7,8 @@
  * @package phpwhois
  */
 
+use PHPUnit\Framework\TestCase;
+
 if(!class_exists('phpwhois\\Whois')){
 	require_once(__DIR__ . '/../src/phpwhois/whois.main.php');
 }
@@ -16,7 +18,7 @@ if(!class_exists('phpwhois\\Whois')){
  *
  * @package phpwhois
  */
-class PhpwhoisTest extends PHPUnit_Framework_TestCase {
+class PhpwhoisTest extends TestCase {
 	/**
 	 * Test google.com
 	 */

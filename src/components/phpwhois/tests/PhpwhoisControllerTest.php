@@ -7,12 +7,14 @@
  * @package phpwhois
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class PhpwhoisControllerTest
  *
  * @package phpwhois
  */
-class PhpwhoisControllerTest extends PHPUnit_Framework_TestCase {
+class PhpwhoisControllerTest extends TestCase {
 	/**
 	 * Test a lookup to localhost and make sure that it returns appropriate information.
 	 */

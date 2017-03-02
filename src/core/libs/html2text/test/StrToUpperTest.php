@@ -1,8 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../lib/Html2Text/Html2Text.php';
 
-class StrToUpperTest extends PHPUnit_Framework_TestCase
+class StrToUpperTest extends TestCase
 {
     public $input =<<<EOT
 <h1>Will be UTF-8 (äöüèéилčλ) uppercased</h1>

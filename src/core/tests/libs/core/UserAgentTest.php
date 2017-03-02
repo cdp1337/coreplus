@@ -7,7 +7,9 @@
  *
  */
 
-class UserAgentTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class UserAgentTest extends TestCase {
 	public function testAgents(){
 		$tests = [
 			[

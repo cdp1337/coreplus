@@ -1,8 +1,10 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 require_once __DIR__.'/../lib/Html2Text/Html2Text.php';
 
-class LinkOverrideTest extends PHPUnit_Framework_TestCase
+class LinkOverrideTest extends TestCase
 {
     public $input =<<< EOT
 <a href="http://example.com" class="_html2text_link_nextline">Link text</a>

@@ -8,10 +8,12 @@
  * Time: 6:19 PM
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  *
  */
-class SFSTest extends PHPUnit_Framework_TestCase {
+class SFSTest extends TestCase {
 
 	/**
 	 * Test to verify that the import is working.  This will verify that the syste can import the zipped CSV from the website.

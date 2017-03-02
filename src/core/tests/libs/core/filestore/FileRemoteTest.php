@@ -7,6 +7,8 @@
  * @package Core\Filestore
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class FileRemoteTest
  *
@@ -14,7 +16,7 @@
  * @see core/libs/core/filestore/File.interface.php
  * @see core/libs/core/filestore/backends/FileRemote.php
  */
-class FileRemoteTest extends PHPUnit_Framework_TestCase {
+class FileRemoteTest extends TestCase {
 
 	protected $_testimage;
 	protected $_testfile;

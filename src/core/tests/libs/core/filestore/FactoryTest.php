@@ -8,7 +8,9 @@
  *
  */
 
-class FactoryTest extends PHPUnit_Framework_TestCase {
+use PHPUnit\Framework\TestCase;
+
+class FactoryTest extends TestCase {
 
 	public function testFileAsset(){
 		$asset = \Core\Filestore\Factory::File('asset/js/core.js');

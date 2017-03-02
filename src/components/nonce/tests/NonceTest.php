@@ -7,6 +7,8 @@
  * @package Nonce
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class NonceTest
  *
@@ -14,7 +16,7 @@
  *
  * @package Nonce
  */
-class NonceTest extends PHPUnit_Framework_TestCase {
+class NonceTest extends TestCase {
 	/**
 	 * Test the creation and validation of a good nonce.
 	 *

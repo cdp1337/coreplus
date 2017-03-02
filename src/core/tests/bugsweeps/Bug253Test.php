@@ -7,12 +7,14 @@
  * @package Core
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class description here
  *
  * @package Core
  */
-class Bug253Test extends PHPUnit_Framework_TestCase {
+class Bug253Test extends TestCase {
 	public function testBug(){
 		$testcomponent = new Component_2_1(ROOT_PDIR . 'core/tests/testcomponent.xml');
 		$this->assertInstanceOf('Component_2_1', $testcomponent);

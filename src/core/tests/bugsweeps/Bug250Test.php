@@ -1,10 +1,12 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class Bug250Test
  * Test for pages that are not defined as "selectable" will not appear in the dropdown.
  */
-class Bug250Test extends PHPUnit_Framework_TestCase {
+class Bug250Test extends TestCase {
 
 	public function testBug(){
 		$selectablepage = PageModel::Find(['selectable' => 1], null);

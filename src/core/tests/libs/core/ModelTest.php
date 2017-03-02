@@ -20,9 +20,11 @@
  * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 
+use PHPUnit\Framework\TestCase;
+
  
 
-class ModelTest extends PHPUnit_Framework_TestCase {
+class ModelTest extends TestCase {
 	public function testValidationNotBlank(){
 		$this->assertEquals(1, preg_match(Model::VALIDATION_NOTBLANK, 'Blah'));
 		$this->assertEquals(0, preg_match(Model::VALIDATION_NOTBLANK, ''));

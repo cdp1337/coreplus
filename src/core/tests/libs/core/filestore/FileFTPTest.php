@@ -7,6 +7,8 @@
  * @package Core\Filestore
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class FileFTPTest
  *
@@ -15,7 +17,7 @@
  *
  * @package Core\Filestore
  */
-class FileFTPTest extends PHPUnit_Framework_TestCase {
+class FileFTPTest extends TestCase {
 
 	protected $_ftp;
 

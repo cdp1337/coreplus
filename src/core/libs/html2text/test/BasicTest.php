@@ -1,8 +1,9 @@
 <?php
 
 namespace Html2Text;
+use PHPUnit\Framework\TestCase;
 
-class BasicTest extends \PHPUnit_Framework_TestCase
+class BasicTest extends TestCase
 {
     public function testBasicUsageInReadme()
     {

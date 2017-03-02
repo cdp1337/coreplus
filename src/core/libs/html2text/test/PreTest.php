@@ -1,8 +1,9 @@
 <?php
 
 namespace Html2Text;
+use PHPUnit\Framework\TestCase;
 
-class PreTest extends \PHPUnit_Framework_TestCase
+class PreTest extends TestCase
 {
     public function testPre()
     {

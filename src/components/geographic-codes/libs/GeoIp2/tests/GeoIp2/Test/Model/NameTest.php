@@ -3,8 +3,9 @@
 namespace GeoIp2\Test\Model;
 
 use GeoIp2\Model\Country;
+use PHPUnit\Framework\TestCase;
 
-class NameTest extends \PHPUnit_Framework_TestCase
+class NameTest extends TestCase
 {
     public $raw = array(
         'continent' => array(

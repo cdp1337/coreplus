@@ -3,8 +3,9 @@
 namespace GeoIp2\Test\Model;
 
 use GeoIp2\Model\Omni;
+use PHPUnit\Framework\TestCase;
 
-class OmniTest extends \PHPUnit_Framework_TestCase
+class OmniTest extends TestCase
 {
 
     public function testFull()

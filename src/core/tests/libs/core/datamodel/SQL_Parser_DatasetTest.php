@@ -7,12 +7,14 @@
  * @package Core\Datamodel
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class SQL_Parser_DatasetTest
  *
  * @package Core\Datamodel
  */
-class SQL_Parser_DatasetTest extends PHPUnit_Framework_TestCase {
+class SQL_Parser_DatasetTest extends TestCase {
 	/**
 	 * Test that a simple SELECT statement parses
 	 */

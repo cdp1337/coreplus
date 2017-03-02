@@ -1,8 +1,9 @@
 <?php
 
 namespace Html2Text;
+use PHPUnit\Framework\TestCase;
 
-class ConstructorTest extends \PHPUnit_Framework_TestCase
+class ConstructorTest extends TestCase
 {
     public function testConstructor()
     {

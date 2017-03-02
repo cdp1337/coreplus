@@ -1,5 +1,8 @@
 <?php
-class BlogTest extends PHPUnit_Framework_TestCase {
+
+use PHPUnit\Framework\TestCase;
+
+class BlogTest extends TestCase {
 
 	public static $TestBlogID = null;
 

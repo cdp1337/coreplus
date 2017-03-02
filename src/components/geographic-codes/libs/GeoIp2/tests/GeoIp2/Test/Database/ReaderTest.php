@@ -3,8 +3,9 @@
 namespace GeoIp2\Test\WebService;
 
 use GeoIp2\Database\Reader;
+use PHPUnit\Framework\TestCase;
 
-class ReaderTest extends \PHPUnit_Framework_TestCase
+class ReaderTest extends TestCase
 {
     public function testDefaultLocale()
     {

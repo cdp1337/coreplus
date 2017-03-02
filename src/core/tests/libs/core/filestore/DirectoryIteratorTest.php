@@ -3,8 +3,9 @@
 namespace Core\Filestore;
 
 use Core\Filestore\Backends\DirectoryLocal;
+use PHPUnit\Framework\TestCase;
 
-class DirectoryIteratorTest extends \PHPUnit_Framework_TestCase {
+class DirectoryIteratorTest extends TestCase {
 
 	/**
 	 * @return DirectoryLocal

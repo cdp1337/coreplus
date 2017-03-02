@@ -8,12 +8,14 @@
 
 namespace Core\Datamodel;
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * This will test the currently selected BackendInterface in the system.
  *
  * @package Core\Datamodel
  */
-class DatasetTest extends \PHPUnit_Framework_TestCase {
+class DatasetTest extends TestCase {
 
 	/**
 	 * 

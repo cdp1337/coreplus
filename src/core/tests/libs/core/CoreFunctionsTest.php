@@ -7,12 +7,14 @@
  * @package Core
  */
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Class CoreFunctionsTest
  *
  * @package Core
  */
-class CoreFunctionsTest extends PHPUnit_Framework_TestCase {
+class CoreFunctionsTest extends TestCase {
 	/**
 	 * Tests that \Core\str_to_url is functioning properly.
 	 */

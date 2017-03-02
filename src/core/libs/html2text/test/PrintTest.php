@@ -1,8 +1,9 @@
 <?php
 
 namespace Html2Text;
+use PHPUnit\Framework\TestCase;
 
-class PrintTest extends \PHPUnit_Framework_TestCase
+class PrintTest extends TestCase
 {
 	const TEST_HTML = 'Hello, &quot;<b>world</b>&quot;';
 	const EXPECTED = 'Hello, "WORLD"';

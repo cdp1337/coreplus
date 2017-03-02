@@ -1,8 +1,9 @@
 <?php
 
 namespace Html2Text;
+use PHPUnit\Framework\TestCase;
 
-class BlockquoteTest extends \PHPUnit_Framework_TestCase
+class BlockquoteTest extends TestCase
 {
     public function testBlockquote()
     {

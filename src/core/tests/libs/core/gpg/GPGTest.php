@@ -1,12 +1,14 @@
 <?php
 
+use PHPUnit\Framework\TestCase;
+
 /**
  * Created by PhpStorm.
  * User: charlie
  * Date: 11/17/15
  * Time: 3:05 PM
  */
-class GPGTest extends PHPUnit_Framework_TestCase {
+class GPGTest extends TestCase {
 
 	public $fingerprint = '4E7330EB2A84D7479B719FF33F20C906B04EFAD6';
 	public $key         = 'B04EFAD6';
