@@ -78,6 +78,7 @@ elif [ "$OSFAMILY" == "debian" ]; then
 		    libapache2-mod-php7.0 \
 			mariadb-client-10.0 \
 			mariadb-server-10.0
+		a2enmod rewrite
 		a2enmod php7.0
 	fi
 
