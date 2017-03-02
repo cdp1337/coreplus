@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 02 Mar 2017 06:09:39 -0500
+ * @compiled Thu, 02 Mar 2017 07:01:47 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -11646,32 +11646,18 @@ $filename = substr($filename, 6);
 elseif(strpos($filename, $resolved) === 0){
 $filename = substr($filename, strlen($resolved));
 }
-$theme = \ConfigHandler::Get('/theme/selected');
 switch(CDN_TYPE){
 case 'local':
 if(\Core\ftp()){
-$custom  = new Backends\DirectoryFTP($resolved  . 'custom/' . $filename);
-$themed  = new Backends\DirectoryFTP($resolved  . $theme . '/' . $filename);
-$default = new Backends\DirectoryFTP($resolved  . 'default/' . $filename);
+return new Backends\DirectoryFTP($resolved . $filename);
 }
 else{
-$custom  = new Backends\DirectoryLocal($resolved  . 'custom/' . $filename);
-$themed  = new Backends\DirectoryLocal($resolved  . $theme . '/' . $filename);
-$default = new Backends\DirectoryLocal($resolved  . 'default/' . $filename);
+return new Backends\DirectoryLocal($resolved . $filename);
 }
 break;
 default:
 throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
 break;
-}
-if($custom->exists()){
-return $custom;
-}
-elseif($themed->exists()){
-return $themed;
-}
-else{
-return $default;
 }
 }
 function resolve_public_directory($filename){
