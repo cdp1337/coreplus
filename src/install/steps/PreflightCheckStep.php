@@ -239,12 +239,20 @@ class PreflightCheckStep extends InstallerStep {
 		// This will only be the case if php is running in native mode.
 		if(function_exists('apache_get_modules')){
 			if(!in_array('mod_rewrite', apache_get_modules())){
-				// @todo Write blog post about mod_rewrite and how to enable it on different servers.
+				
+				switch(SERVER_FAMILY){
+					case 'debian':
+						$fix = 'a2enmod rewrite' . NL . 'systemctl restart apache2';
+						break;
+					default:
+						$fix = null;
+				}
+				
 				return [
 					'title' => 'Mod Rewrite',
 					'status' => 'error',
 					'message' => 'mod_rewrite is not available',
-					'description' => 'In order to use Core Plus, the apache module mod_rewrite must be installed and enabled!'
+					'fix' => $fix,
 				];
 			}
 			else{
@@ -252,7 +260,6 @@ class PreflightCheckStep extends InstallerStep {
 					'title' => 'Mod Rewrite',
 					'status' => 'passed',
 					'message' => 'mod_rewrite is available!',
-					'description' => 'The module "mod_rewrite" was located as a native apache module.',
 				];
 			}
 		}
@@ -269,7 +276,6 @@ class PreflightCheckStep extends InstallerStep {
 						'title' => 'Mod Rewrite',
 						'status' => 'warning',
 						'message' => 'mod_rewrite may not available',
-						'description' => 'Preliminary tests show that url rewriting may not be available.  If this is the case, you will not be able to fully use Core Plus.  Proceed with caution.'
 					];
 				}
 				else{
@@ -277,7 +283,6 @@ class PreflightCheckStep extends InstallerStep {
 						'title' => 'Mod Rewrite',
 						'status' => 'passed',
 						'message' => 'mod_rewrite is available!',
-						'description' => 'The native module could not located, but work-around tests confirmed that it is indeed functioning.',
 					];
 				}
 			}
