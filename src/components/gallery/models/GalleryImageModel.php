@@ -188,13 +188,13 @@ class GalleryImageModel extends Model {
 		}
 	}
 
-	public function get($k){
+	public function get($k, $format = null){
 		switch($k){
 			case 'baseurl':
 			case 'rewriteurl':
 				return $this->getRewriteURL();
 			default:
-				return parent::get($k);
+				return parent::get($k, $format);
 		}
 	}
 

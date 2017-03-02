@@ -63,19 +63,19 @@ class BlogModel extends Model {
 		parent::__construct($key);
 	}
 
-	public function get($k) {
+	public function get($k, $format = null) {
 		$k = strtolower($k);
 		switch ($k) {
 			case 'baseurl':
-				return '/blog/view/' . parent::get('id');
+				return '/blog/view/' . parent::get('id', $format);
 			case 'access':
 			case 'created':
 			case 'title':
 			case 'rewriteurl':
 			case 'updated':
-				return $this->getLink('Page')->get($k);
+				return $this->getLink('Page')->get($k, $format);
 			default:
-				return parent::get($k);
+				return parent::get($k, $format);
 		}
 	}
 

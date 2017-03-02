@@ -133,7 +133,7 @@ class BlogArticleModel extends Model {
 		parent::__construct($key);
 	}
 
-	public function get($k) {
+	public function get($k, $format = null) {
 		$k = strtolower($k);
 		switch ($k) {
 			case 'baseurl':
@@ -142,9 +142,9 @@ class BlogArticleModel extends Model {
 			case 'rewriteurl':
 				//return $this->getLink('Blog')->get('rewriteurl') . '/' . $this->_data['id'] .
 				//  '-' . \Core\str_to_url($this->_data['title']);
-				return $this->getLink('Page')->get('rewriteurl');
+				return $this->getLink('Page')->get('rewriteurl', $format);
 			default:
-				return parent::get($k);
+				return parent::get($k, $format);
 		}
 	}
 

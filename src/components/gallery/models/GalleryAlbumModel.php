@@ -124,20 +124,20 @@ class GalleryAlbumModel extends Model {
 		parent::__construct($key);
 	}
 
-	public function get($k) {
+	public function get($k, $format = null) {
 		$k = strtolower($k);
 		switch($k){
 			case 'baseurl':
-				return '/gallery/view/' . parent::get('id');
+				return '/gallery/view/' . parent::get('id', $format);
 				break;
 			case 'title':
-				return $this->getLink('Page')->get('title');
+				return $this->getLink('Page')->get('title', $format);
 				break;
 			case 'rewriteurl':
-				return $this->getLink('Page')->get('rewriteurl');
+				return $this->getLink('Page')->get('rewriteurl', $format);
 				break;
 			default:
-				return parent::get($k);
+				return parent::get($k, $format);
 		}
 	}
 
