@@ -103,6 +103,22 @@ class PreflightCheckStep extends InstallerStep {
 					'suse' => 'Recompile PHP with the "--with-zlib" flag!',
 				]
 			),
+			$this->testExtension(
+				'mysqli_connect',
+				'Database MySQLi/MariaDB',
+				'php-mysql',
+				[
+					'debian' => 'apt-get install php7.0-mysql' . NL . 'systemctl restart apache2' . 
+						NL . '// And if you need a local server for MariaDB:' . 
+						NL . 'apt-get install mariadb-client-10.0 mariadb-server-10.0',
+					'redhat' => 'yum install php7.0-mysql' . NL . 'systemctl restart apache2' . 
+						NL . '// And if you need a local server for MariaDB:' . 
+						NL . 'apt-get install mariadb-client-10.0 mariadb-server-10.0',
+					'suse' => 'zypper install php7.0-mysql' . NL . 'systemctl restart apache2' . 
+						NL . '// And if you need a local server for MariaDB:' . 
+						NL . 'apt-get install mariadb-client-10.0 mariadb-server-10.0',
+				]
+			),
 			$this->testRewrite(),
 			$this->testHTAccessFile(),
 			$this->testConfigFile(),
@@ -110,7 +126,7 @@ class PreflightCheckStep extends InstallerStep {
 			$this->testNDirectory('files', 'Files'),
 			$this->testNDirectory('themes/custom', 'Custom Theming'),
 		);
-
+		
 		// Run through all these checks and see if there were any errors.
 		$good = true;
 		foreach($tests as $test){
