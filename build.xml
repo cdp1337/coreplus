@@ -263,20 +263,26 @@
 
 			<!-- Ignore files -->
 			<arg value="-i"/>
-			<arg value="${basedir}/src/core/bootstrap.compiled.php,${basedir}/src/core/libs/smarty/*,${basedir}/src/core/libs/phpmailer/*,${basedir}/src/core/libs/aws-sdk/*"/>
+			<arg value="${basedir}/src/core/bootstrap.compiled.php,${basedir}/src/core/libs/smarty/*,${basedir}/src/core/libs/phpmailer/*,${basedir}/src/core/libs/aws-sdk/*,${basedir}/src/components/*"/>
 
 			<!-- Page title -->
 			<arg value="--title"/>
-			<arg value="Core Plus"/>
+			<arg value="Core Plus Framework API Documentation"/>
 
 			<!-- Scan and log private and @internal methods too -->
 			<arg value="--parseprivate"/>
 
-			<!-- Include Sourcecode -->
-			<arg value="--sourcecode"/>
-
+			<arg value="--template"/>
+			<arg value="xml"/>
+			
 			<!-- SSSH -->
 			<arg value="--quiet"/>
+		</exec>
+		
+		<!-- Now, run the markdown converter. -->
+		<exec executable="${basedir}/vendor/phpdoc-md-master/bin/phpdocmd">
+			<arg value="${basedir}/build/phpdoc/structure.xml"/>
+			<arg value="${basedir}/docs/phpdoc"/>
 		</exec>
 	</target>
 
