@@ -275,9 +275,9 @@ class UpdaterController extends Controller_2_1 {
 			$password = $request->getPost('model[password]');
 
 			// Validate and standardize this repo url.
-			// This is because most people will simply type repo.corepl.us.
+			// This is because most people will simply type corepl.us.
 			if(strpos($url, '://') === false){
-				$url = 'http://' . $url;
+				$url = 'https://' . $url;
 			}
 
 			// Lookup that URL first!
@@ -321,7 +321,7 @@ class UpdaterController extends Controller_2_1 {
 
 			$repo = new RepoXML();
 			$repo->loadFromFile($remote);
-
+			
 			// Make sure the keys are good
 			if(!$repo->validateKeys()){
 				\Core\set_message('There were invalid/unpublished keys in the repo!  Refusing to import.', 'error');
