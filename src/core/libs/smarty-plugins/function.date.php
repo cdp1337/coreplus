@@ -69,7 +69,13 @@ function smarty_function_date($params, $smarty){
 	$format = isset($params['format']) ? $params['format'] : \Core\Date\DateTime::RELATIVE;
 	//$timezone = isset($params['timezone']) ? $params['timezone'] : Time::TIMEZONE_GMT;
 
-	$coredate = new \Core\Date\DateTime($date);
+	try{
+		$coredate = new \Core\Date\DateTime($date);
+	}
+	catch (\Exception $ex){
+		\Core\ErrorManagement\exception_handler($ex);
+		return '';
+	}
 
 	if(isset($params['assign']) && $params['assign']){
 		$smarty->assign($params['assign'], $coredate->format($format));
