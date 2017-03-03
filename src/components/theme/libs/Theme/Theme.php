@@ -801,6 +801,7 @@ class Theme{
 
 		// I need to get the schema definitions first.
 		$node = $this->_xmlloader->getElement('configs');
+		$componentName = 'theme/' . $this->getKeyName();
 		//$prefix = $node->getAttribute('prefix');
 
 		// Now, get every table under this node.
@@ -844,6 +845,7 @@ class Theme{
 			$m->set('mapto', $mapto);
 			$m->set('encrypted', $encrypted);
 			$m->set('form_attributes', $formAtts);
+			$m->set('component', $componentName);
 
 			// Default from the xml, only if it's not already set.
 			if ($m->get('value') === null || !$m->exists()){
