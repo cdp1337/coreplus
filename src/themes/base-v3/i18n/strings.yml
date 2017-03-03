@@ -1,0 +1,94 @@
+---
+MESSAGE_CONFIG_THEME_LISTING_ADDRESS:
+  en: Enter your listing physical address if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_CITY:
+  en: Enter your listing city if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_EMAIL:
+  en: Enter your listing email if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_FAX:
+  en: Enter your listing fax if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_HOURS:
+  en: >
+    Open hours of this business.    For multiple records, please list each record on its own line in the format of "Machine Version Days/Time|Human Readable Version Days/Time".    <br/><br/>    * Multiple days can be listed with commas ',' separating each day.<br/>    * Day or time ranges are specified using a hyphen '-'.<br/>    * Days are specified using the following two-letter combinations: Mo, Tu, We, Th, Fr, Sa, Su.<br/>    * Times are specified using 24:00 time. For example, 3pm is specified as 15:00.<br/>    * EXAMPLE: "Tu,Th 16:00-20:00|Tuesdays and Thursdays 4-8pm"<br/>    * EXAMPLE: "Mo-Su|24-hours a day, 7-days a week!"
+MESSAGE_CONFIG_THEME_LISTING_NAME:
+  en: Enter your business name or organization name to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_PHONE:
+  en: Enter your listing phone number if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_POSTAL:
+  en: Enter your listing zip code if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_PROVINCE:
+  en: Enter your listing state if you want to display it on this site.
+MESSAGE_CONFIG_THEME_LISTING_TYPE:
+  en: Select the listing type if you want to display it on this site.
+MESSAGE_CONFIG_THEME_SITE_LOGO:
+  en: Upload a logo image to use for the main site
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_FACEBOOK:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_FOURSQUARE:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_GENERIC:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_GITHUB:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_GITTIP:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_GPLUS:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_INSTAGRAM:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_LINKEDIN:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_PINTEREST:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_TWITTER:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_VIMEO:
+  en: Enter the fully resolved URL for this social site.
+MESSAGE_CONFIG_THEME_SOCIAL_LINK_YOUTUBE:
+  en: Enter the fully resolved URL for this social site.
+STRING_CONFIG_THEME_LISTING_ADDRESS:
+  en: Site Listing Address
+STRING_CONFIG_THEME_LISTING_CITY:
+  en: Site Listing City
+STRING_CONFIG_THEME_LISTING_EMAIL:
+  en: Site Listing Email
+STRING_CONFIG_THEME_LISTING_FAX:
+  en: Site Listing Fax
+STRING_CONFIG_THEME_LISTING_HOURS:
+  en: Site Listing Hours
+STRING_CONFIG_THEME_LISTING_NAME:
+  en: Site Listing Name
+STRING_CONFIG_THEME_LISTING_PHONE:
+  en: Site Listing Phone
+STRING_CONFIG_THEME_LISTING_POSTAL:
+  en: Site Listing Postal/Zip
+STRING_CONFIG_THEME_LISTING_PROVINCE:
+  en: Site Listing Province/State
+STRING_CONFIG_THEME_LISTING_TYPE:
+  en: Site Listing Type
+STRING_CONFIG_THEME_SITE_LOGO:
+  en: Site Logo
+STRING_CONFIG_THEME_SOCIAL_LINK_FACEBOOK:
+  en: 'Social Link - Facebook'
+STRING_CONFIG_THEME_SOCIAL_LINK_FOURSQUARE:
+  en: 'Social Link - Foursquare'
+STRING_CONFIG_THEME_SOCIAL_LINK_GENERIC:
+  en: 'Social Link - Generic'
+STRING_CONFIG_THEME_SOCIAL_LINK_GITHUB:
+  en: 'Social Link - Github'
+STRING_CONFIG_THEME_SOCIAL_LINK_GITTIP:
+  en: 'Social Link - Gittip'
+STRING_CONFIG_THEME_SOCIAL_LINK_GPLUS:
+  en: 'Social Link - Google Plus'
+STRING_CONFIG_THEME_SOCIAL_LINK_INSTAGRAM:
+  en: 'Social Link - Instagram'
+STRING_CONFIG_THEME_SOCIAL_LINK_LINKEDIN:
+  en: 'Social Link - LinkedIN'
+STRING_CONFIG_THEME_SOCIAL_LINK_PINTEREST:
+  en: 'Social Link - Pinterest'
+STRING_CONFIG_THEME_SOCIAL_LINK_TWITTER:
+  en: 'Social Link - Twitter'
+STRING_CONFIG_THEME_SOCIAL_LINK_VIMEO:
+  en: 'Social Link - Vimeo'
+STRING_CONFIG_THEME_SOCIAL_LINK_YOUTUBE:
+  en: 'Social Link - Youtube'
