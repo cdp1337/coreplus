@@ -923,6 +923,12 @@ EOD;
 		if(($b = strpos($ret['name'], '(')) !== false && strpos($ret['name'], ')') !== false){
 			$ret['comment'] = trim(substr($ret['name'], $b+1, -1));
 			$ret['name'] = trim(substr($ret['name'], 0, $b));
+			
+			// Convert weird characters like "\x3a" to colons.
+			// This seems to be because GPG converts all characters to the hex value.
+			if(strpos($ret['comment'], '\\x') !== false){
+				$ret['comment'] = html_entity_decode(preg_replace(':\\\\x([234][0-9a-f]):', '&#x$1;', $ret['comment']));
+			}
 		}
 
 		return $ret;

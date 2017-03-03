@@ -177,7 +177,7 @@ class PrimaryKey extends Key {
 				$files = explode("\n", $o['error']);
 
 				foreach($files as $f){
-					if($f){
+					if($f && strpos($f, 'gpg:') !== 0){
 						$this->_photos[] = \Core\Filestore\Factory::File($f);
 					}
 				}
@@ -387,14 +387,15 @@ class PrimaryKey extends Key {
 			case 'pub':
 			case 'sec':
 				// Primary key, either public or secret.
-				if(sizeof($parts) == 16) {
+				
+				$s = sizeof($parts);
+				
+				if($s == 19 || $s == 16 || $s == 13){
+					// Public keys on newer versions of GPG have 19 parts.
 					// Secret keys often have 16 parts, but the 13 length can handle it.
 					self::_ParseKeyLine13($parts, $this);
 				}
-				elseif(sizeof($parts) == 13) {
-					self::_ParseKeyLine13($parts, $this);
-				}
-				elseif(sizeof($parts) == 11){
+				elseif($s == 11){
 					// Public keys BEFORE being imported, eg: examine, will have only 11 parts.
 					// This also includes integrated UID data.
 					self::_ParseKeyLine11($parts, $this);
@@ -411,7 +412,11 @@ class PrimaryKey extends Key {
 			case 'uid':
 				// UID sub key
 				$uid = new UID();
-				if(sizeof($parts) == 11) {
+				$s = sizeof($parts);
+				
+				if($s == 19 || $s == 11){
+					// New versions of GPG have 19 parts to UIDs.
+					// Older versions use 11.
 					self::_ParseSubUIDLine11($parts, $uid);
 				}
 				else {
