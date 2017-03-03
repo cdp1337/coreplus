@@ -186,7 +186,7 @@ class PackageRepositoryController extends Controller_2_1 {
 			krsort($allCoreVersions, SORT_NATURAL);
 			$allCoreVersions = array_merge(['' => '-- All Versions --'], $allCoreVersions);
 			
-			$versionSelector = new Form();
+			$versionSelector = new \Core\Forms\Form();
 			$versionSelector->set('method', 'get');
 			$versionSelector->addElement('select', ['name' => 'packager', 'options' => $allCoreVersions, 'value' => $briefVersion]);
 			$versionSelector->addElement('submit', ['value' => 'Filter']);
@@ -325,7 +325,7 @@ class PackageRepositoryController extends Controller_2_1 {
 				'/package_repository/auto_ip_restrict',
 		];
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'AdminController::_ConfigSubmit');
 
 		foreach($keys as $k){

@@ -91,7 +91,7 @@ class GalleryController extends Controller_2_1 {
 		}
 
 		$page = new PageModel('/gallery');
-		$form = Form::BuildFromModel($page);
+		$form = \Core\Forms\Form::BuildFromModel($page);
 		$form->set('callsmethod', 'GalleryController::UpdateListingSave');
 		$form->addElement('submit', array('value' => 'Update Listing'));
 
@@ -149,7 +149,7 @@ class GalleryController extends Controller_2_1 {
 		$m    = new GalleryAlbumModel();
 		$page = $m->getLink('Page');
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->addModel($page, 'page');
 		$form->addModel($m, 'model');
 		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
@@ -189,7 +189,7 @@ class GalleryController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->addModel($page, 'page');
 		$form->addModel($album, 'model');
 		$form->set('callsmethod', 'GalleryFormHandler::SaveAlbum');
@@ -425,7 +425,7 @@ class GalleryController extends Controller_2_1 {
 			$file = $image->getOriginalFile();
 			$meta = new \Core\Filestore\FileMetaHelper($file);
 
-			$form = new Form();
+			$form = new \Core\Forms\Form();
 			$form->addModel($image, 'image');
 			$meta->addElementsToForm($form, 'metas');
 
@@ -694,7 +694,7 @@ class GalleryController extends Controller_2_1 {
 
 
 		if($uploader){
-			$uploadform = new Form();
+			$uploadform = new \Core\Forms\Form();
 			$uploadform->set('action', \Core\resolve_link('/gallery/images_update/' . $album->get('id')));
 			$uploadform->addElement(
 				'multifile',

@@ -113,7 +113,7 @@ class GalleryWidgetController extends Controller_2_1{
 
 
 		$isnew = !$model->exists();
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'GalleryFormHandler::SaveWidgetHandler');
 
 		$form->addElement('system', array('name' => 'id', 'value' => $request->getParameter(0)));

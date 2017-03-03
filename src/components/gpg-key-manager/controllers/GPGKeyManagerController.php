@@ -180,7 +180,7 @@ class GPGKeyManagerController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 		
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'GPGKeyManagerController::_GenerateSave');
 		$form->addElement(
 			'text',
@@ -264,7 +264,7 @@ class GPGKeyManagerController extends Controller_2_1 {
 			return View::ERROR_ACCESSDENIED;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'GPGKeyManagerController::_UploadSave');
 		
 		$form->addElement(

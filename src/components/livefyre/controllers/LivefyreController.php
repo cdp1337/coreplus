@@ -30,7 +30,7 @@ class LivefyreController extends Controller_2_1{
 		$siteid = ConfigHandler::Get('/livefyre/siteid');
 
 		// Generate the form to either set or update the siteid.
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('method', 'POST');
 		$form->addElement('text', ['name' => 'siteid', 'title' => 'Site ID', 'value' => $siteid]);
 

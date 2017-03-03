@@ -97,7 +97,7 @@ class BlogController extends Controller_2_1 {
 
 		$view = $this->getView();
 		$page = new PageModel('/blog');
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'BlogHelper::BlogIndexFormHandler');
 
 		$form->addModel($page, 'page');
@@ -167,7 +167,7 @@ class BlogController extends Controller_2_1 {
 
 		$view = $this->getView();
 		$blog = new BlogModel();
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'BlogHelper::BlogFormHandler');
 
 		$form->addModel($blog->getLink('Page'), 'page');
@@ -196,7 +196,7 @@ class BlogController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'BlogHelper::BlogFormHandler');
 
 		$form->addModel($blog->getLink('Page'), 'page');

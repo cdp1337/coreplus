@@ -16,7 +16,7 @@ abstract class BlogHelper {
 		$blog = $article->getLink('Blog');
 		$page->set('parenturl', $blog->get('baseurl'));
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'BlogHelper::BlogArticleFormHandler');
 
 		$form->addModel($page, 'page');

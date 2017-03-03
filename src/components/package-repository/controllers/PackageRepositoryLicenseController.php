@@ -195,13 +195,13 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 			$genForm = null;
 		}
 		else{
-			$genForm = new Form();
+			$genForm = new \Core\Forms\Form();
 			$genForm->set('callsmethod', 'PackageRepositoryLicenseController::LicenseKeySave');
 			
 			$privates = $gpg->listSecretKeys();
 			if(sizeof($privates)){
 				// There is at least one private key installed on the system already! :)
-				$tab0 = new FormTabsGroup(['name' => 'tabsel', 'title' => 'Select Key']);
+				$tab0 = new \Core\Forms\TabsGroup(['name' => 'tabsel', 'title' => 'Select Key']);
 				$opts = ['' => '-- Select Existing Key --'];
 				foreach($privates as $p){
 					// I need to convert this to the public version so I can get the information attached!
@@ -222,8 +222,8 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 				$genForm->addElement($tab0);
 			}
 			
-			$tab1 = new FormTabsGroup(['name' => 'tabgen', 'title' => 'Generate Key']);
-			$tab2 = new FormTabsGroup(['name' => 'tabman', 'title' => 'Upload Key']);
+			$tab1 = new \Core\Forms\TabsGroup(['name' => 'tabgen', 'title' => 'Generate Key']);
+			$tab2 = new \Core\Forms\TabsGroup(['name' => 'tabman', 'title' => 'Upload Key']);
 			
 			$tab1->addElement(
 				'text',
@@ -277,7 +277,7 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 		}
 		
 		$feature = new PackageRepositoryFeatureModel();
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'PackageRepositoryLicenseController::FeatureSave');
 		$form->addModel($feature);
 		$form->addElement('submit', ['value' => t('STRING_PACKAGE_REPOSITORY_LICENSE_FEATURE_CREATE')]);
@@ -305,7 +305,7 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 		
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'PackageRepositoryLicenseController::FeatureSave');
 		$form->addModel($feature);
 		$form->addElement('submit', ['value' => t('STRING_PACKAGE_REPOSITORY_LICENSE_FEATURE_UPDATE')]);
@@ -332,7 +332,7 @@ class PackageRepositoryLicenseController extends Controller_2_1 {
 			return View::ERROR_NOTFOUND;
 		}
 
-		$form = new Form();
+		$form = new \Core\Forms\Form();
 		$form->set('callsmethod', 'PackageRepositoryLicenseController::_SaveLicense');
 		$form->addModel($model);
 		
