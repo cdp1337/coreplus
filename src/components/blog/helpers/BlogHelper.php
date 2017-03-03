@@ -73,7 +73,7 @@ abstract class BlogHelper {
 	 * @param Form $form
 	 * @return string Redirect URL
 	 */
-	public static function BlogFormHandler(Form $form) {
+	public static function BlogFormHandler(\Core\Forms\Form $form) {
 		$model = $form->getModel();
 		/** @var PageModel $page */
 		$page = $form->getModel('page');
@@ -108,7 +108,7 @@ abstract class BlogHelper {
 	 * @param Form $form
 	 * @return string Redirect URL
 	 */
-	public static function BlogArticleFormHandler(Form $form) {
+	public static function BlogArticleFormHandler(\Core\Forms\Form $form) {
 		try{
 			/** @var $page PageModel */
 			$page = $form->getModel('page');
@@ -224,7 +224,7 @@ abstract class BlogHelper {
 	 *
 	 * @return bool|mixed|null
 	 */
-	public static function BlogIndexFormHandler(Form $form){
+	public static function BlogIndexFormHandler(\Core\Forms\Form $form){
 		try{
 			/** @var PageModel $page */
 			$page = $form->getModel('page');

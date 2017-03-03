@@ -27,7 +27,7 @@ class BlogTest extends TestCase {
 		// The returned data should have a "form" available.  This is the actual creation form.
 		/** @var $form Form */
 		$form = $view->getVariable('form');
-		$this->assertInstanceOf('Form', $form, 'Checking that the form is set from the blog create controller');
+		$this->assertInstanceOf('\\Core\\Forms\\Form', $form, 'Checking that the form is set from the blog create controller');
 
 		// Set some variables on the form
 		$form->getElement('page[title]')->set('value', $title);
@@ -51,6 +51,7 @@ class BlogTest extends TestCase {
 		// Go to the page and make sure that it loads up!
 		$request = new PageRequest('/blog/view/' . self::$TestBlogID);
 		$request->execute();
+		
 		$view = $request->getView();
 		$this->assertEquals(200, $view->error, 'Checking that public blog page exists');
 
