@@ -749,7 +749,7 @@ class GalleryController extends Controller_2_1 {
 		}
 	}
 
-	public static function ImagesUpdateSaveHandler(Form $form) {
+	public static function ImagesUpdateSaveHandler(\Core\Forms\Form $form) {
 		try{
 			/** @var $image GalleryImageModel */
 			$image = $form->getModel('image');
@@ -806,9 +806,9 @@ class GalleryController extends Controller_2_1 {
 	 * associated to it, other than the page.
 	 *
 	 * @static
-	 * @param Form $form
+	 * @param \Core\Forms\Form $form
 	 */
-	public static function UpdateListingSave(Form $form) {
+	public static function UpdateListingSave(\Core\Forms\Form $form) {
 		$model = $form->getModel();
 		$model->save();
 

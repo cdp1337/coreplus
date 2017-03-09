@@ -6,10 +6,10 @@ abstract class GalleryFormHandler{
 	 * Save a new or existing album
 	 *
 	 * @static
-	 * @param Form $form
+	 * @param \Core\Forms\Form $form
 	 * @return mixed
 	 */
-	public static function SaveAlbum(Form $form){
+	public static function SaveAlbum(\Core\Forms\Form $form){
 
 		/** @var GalleryAlbumModel $model */
 		$model = $form->getModel('model');
@@ -36,7 +36,7 @@ abstract class GalleryFormHandler{
 		return $page->getResolvedURL();
 	}
 
-	public static function SaveWidgetHandler(Form $form){
+	public static function SaveWidgetHandler(\Core\Forms\Form $form){
 		$id = $form->getElement('id')->get('value');
 		// ID can be null, that just means it's a new widget!
 
