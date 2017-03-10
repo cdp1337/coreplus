@@ -49,36 +49,59 @@
   list-style: none;
 }
 /* line 54, ../../scss/theme/admin.scss */
+.page-theme .directory-listing li:hover > span {
+  font-weight: bold;
+}
+/* line 58, ../../scss/theme/admin.scss */
+.page-theme .directory-listing li i, .page-theme .directory-listing li img {
+  font-size: 22px;
+  padding-right: 0.5em;
+}
+/* line 62, ../../scss/theme/admin.scss */
 .page-theme .directory-listing li span {
   line-height: 28px;
 }
-/* line 59, ../../scss/theme/admin.scss */
+/* line 66, ../../scss/theme/admin.scss */
+.page-theme .directory-listing li .folder-name,
+.page-theme .directory-listing li .filename {
+  display: inline-block;
+  min-width: 11em;
+  padding-right: 1em;
+}
+/* line 72, ../../scss/theme/admin.scss */
+.page-theme .directory-listing li .folder-children-count {
+  opacity: 0.8;
+  font-size: 85%;
+}
+/* line 76, ../../scss/theme/admin.scss */
+.page-theme .directory-listing li .file-modified {
+  opacity: 0.8;
+  font-size: 85%;
+  padding-right: 1em;
+}
+/* line 83, ../../scss/theme/admin.scss */
 .page-theme .directory-listing .collapsed ul {
   display: none;
 }
-/* line 62, ../../scss/theme/admin.scss */
+/* line 86, ../../scss/theme/admin.scss */
 .page-theme .directory-listing .expanded-hint, .page-theme .directory-listing .collapsed-hint {
   cursor: pointer;
 }
-/* line 65, ../../scss/theme/admin.scss */
+/* line 89, ../../scss/theme/admin.scss */
 .page-theme .directory-listing .collapsed > .expanded-hint {
   display: none;
 }
-/* line 68, ../../scss/theme/admin.scss */
+/* line 92, ../../scss/theme/admin.scss */
 .page-theme .directory-listing .expanded > .collapsed-hint {
   display: none;
 }
-/* line 72, ../../scss/theme/admin.scss */
-.page-theme .directory-listing .filename {
-  display: inline-block;
-  width: 120px;
-}
-/* line 77, ../../scss/theme/admin.scss */
+/* line 96, ../../scss/theme/admin.scss */
 .page-theme .directory-listing .inline-control {
   display: inline-block;
-  font-size: 85%;
   white-space: nowrap;
-  width: 120px;
+  font-size: 90%;
+  min-width: 5em;
+  padding-right: 1em;
 }
 
 /*# sourceMappingURL=admin.css.map */

@@ -103,6 +103,9 @@ class ThemeController extends Controller_2_1{
 					'file' => $file,
 					'obj' => $newobj,
 					'component' => $name,
+					'haswidgets' => false,
+					'has_stylesheets' => false,
+					'type' => 'asset',
 				);
 			}
 		}
@@ -167,7 +170,8 @@ class ThemeController extends Controller_2_1{
 					'obj' => $newobj,
 					'haswidgets' => $tpl->hasWidgetAreas(),
 					'component' => $component,
-					'has_stylesheets' => $tpl->hasOptionalStylesheets()
+					'has_stylesheets' => $tpl->hasOptionalStylesheets(),
+					'type' => 'template',
 				);
 			}
 		}
@@ -191,7 +195,7 @@ class ThemeController extends Controller_2_1{
 				}
 			}
 		}
-
+		
 		$siteskinform = new \Core\Forms\Form();
 		$siteskinform->set('callsmethod', 'ThemeController::SaveSiteSkins');
 		$opts = ['' => '-- Public Default --'];
@@ -221,59 +225,48 @@ class ThemeController extends Controller_2_1{
 		if($customdest->isWritable()){
 			$sets = [
 				[
+					'title' => 't:STRING_SAVE_CUSTOM_CSS',
 					'file' => 'css/custom.css',
 				    'form' => null,
 				],
 				[
+					'title' => 't:STRING_SAVE_CUSTOM_PRINT_CSS',
 					'file' => 'css/custom_print.css',
 					'form' => null,
 				],
 			];
 
 			foreach($sets as $k => $set){
-				// Load the editor for the custom CSS file, as this is a very common thing to do!
-				$file = $set['file'];
-				// And try to look up and find this damn file...
-				$srcdirs = array();
-				$srcdirs[] = ROOT_PDIR . 'themes/custom/assets/';
-				$srcdirs[] = ROOT_PDIR . 'themes/' . ConfigHandler::Get('/theme/selected') . '/assets/';
-				foreach(Core::GetComponents() as $c){
-					if($c->getAssetDir()){
-						$srcdirs[] = $c->getAssetDir();
-					}
-				}
-				foreach($srcdirs as $dir){
-					if(file_exists($dir . $file)){
-						$file = $dir . $file;
-						break;
-					}
-				}
-
-				$fh = \Core\Filestore\Factory::File($file);
+				// Load the editor for the custom CSS file, as editing site CSS is a very common thing to do!
+				$file  = $set['file'];
+				$title = $set['title'];
+				
+				// This file must ALWAYS be in themes/custom.
+				$fh = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/assets/' . $file);
 				$content = $fh->getContents();
 
 				$m = new ThemeTemplateChangeModel();
 				$m->set('content', $content);
-				$m->set('filename', 'assets/css/custom.css');
+				$m->set('filename', 'assets/' . $file);
 
 				$form = \Core\Forms\Form::BuildFromModel($m);
 
 				$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
 				// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
 				//$form->addElement('system', array('name' => 'revision', 'value' => $revision));
-				$form->addElement('system', array('name' => 'file', 'value' => 'assets/' . $set['file']));
+				$form->addElement('system', array('name' => 'file', 'value' => 'assets/' . $file));
 				$form->addElement('system', array('name' => 'filetype', 'value' => 'file'));
 				// No one uses this anyways!
 				$form->switchElementType('model[comment]', 'hidden');
 
 				$form->getElement('model[content]')->set('id', 'custom_content_' . $k);
 
-				$form->addElement('submit', array('value' => 'Save Custom CSS'));
+				$form->addElement('submit', array('value' => $title));
 
 				// Save it back down to the original array
 				$sets[$k]['form'] = $form;
 			}
-
+			
 			$cssform = $sets[0]['form'];
 			$cssprintform = $sets[1]['form'];
 		}
@@ -849,8 +842,8 @@ class ThemeController extends Controller_2_1{
 
 	public static function _SaveEditorHandler(\Core\Forms\Form $form){
 		$newmodel = $form->getModel();
-		$file = $form->getElement('file')->get('value');
-		$activefile = $form->getElement('filetype')->get('value');
+		$file = $form->getElementValue('file');
+		$activefile = $form->getElementValue('filetype');
 		// The inbound file types depends on how to read the file.
 		switch($activefile){
 			case 'template':

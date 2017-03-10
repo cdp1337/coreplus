@@ -50,9 +50,33 @@
 		li {
 			margin-left: 1em;
 			list-style: none;
+			
+			&:hover > span {
+				font-weight: bold;
+			}
 
+			i, img{
+				font-size: 22px;
+				padding-right: 0.5em;
+			}
 			span {
 				line-height: 28px;
+			}
+			
+			.folder-name,
+			.filename {
+				display: inline-block;
+				min-width: 11em;
+				padding-right: 1em;
+			}
+			.folder-children-count {
+				opacity: 0.8;
+				font-size: 85%;
+			}
+			.file-modified {
+				opacity: 0.8;
+				font-size: 85%;
+				padding-right: 1em;
 			}
 		}
 
@@ -68,17 +92,13 @@
 		.expanded > .collapsed-hint{
 			display:none;
 		}
-
-		.filename {
-			display: inline-block;
-			width: 120px;
-		}
-
+		
 		.inline-control {
 			display: inline-block;
-			font-size: 85%;
 			white-space: nowrap;
-			width: 120px;
+			font-size: 90%;
+			min-width: 5em;
+			padding-right: 1em;
 		}
 	}
 }

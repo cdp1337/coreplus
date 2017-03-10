@@ -229,10 +229,10 @@
 		{if $cssform}
 			<p class="message-tutorial">
 				This stylesheet allows you to add custom styles to your site.
+				
+				{a href="/theme/editor?file=assets/css/custom.css"}view all revisions{/a}.
 			</p>
-			{a href="/theme/editor?file=assets/css/custom.css" class="button"}
-				<span>Open Full Editor</span>
-			{/a}
+			
 			<div id="theme-editor-wysiwyg">
 				{$cssform->render()}
 			</div>
@@ -250,47 +250,34 @@
 		<p class="message-tutorial">
 			This stylesheet allows you to add custom styles to the print styles of your site.<br/><br/>
 			Print styles take effect automatically when a page is printed and for operations such as PDF generation.
+			You can also
+			{a href="/theme/editor?file=assets/css/custom_print.css"}view all revisions{/a}.
 		</p>
-		{a href="/theme/editor?file=assets/css/custom_print.css" class="button"}
-			<span>Open Full Editor</span>
-		{/a}
+		
 		<div id="theme-editor-wysiwyg">
 			{$cssprintform->render()}
 		</div>
 	</div>
 {/if}
 
-{function name=printAssetList}
-	<ul>
-		{foreach $items as $key => $item}
-			<li class="collapsed">
-				{if isset($item.obj)}
-					{*<img src="{$item.obj->getMimetypeIconURL('24x24')}"/>*}
-					<span>{$key}</span>
-					<a href="{$url_themeeditor}?file={$item.file}" title="Edit Asset"><i class="icon icon-pencil"></i></a>
-				{else}
-					<i class="icon icon-folder-close collapsed-hint"></i>
-					<i class="icon icon-folder-open expanded-hint"></i>
-					<span>{$key}</span>
-					{call name=printAssetList items=$item}
-				{/if}
-			</li>
-		{/foreach}
-	</ul>
-{/function}
-
 
 {function name=printTemplateList}
 	<ul>
 		{foreach $items as $key => $item}
-			<li class="collapsed">
-				{if isset($item.obj)}
-					{*img file=$item.obj dimensions="24x24"*}
+			{if isset($item.obj)}
+				<li class="file">
+					{assign var="imgsrc" value="`$item.obj->getPreviewURL('22x22')`"}
+					{*img file=$item.obj dimensions="24x24" alt="thing" assign="imgsrc"*}
+					
+					<img src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" data-src="{$imgsrc}" data-isloaded="0"/>
 					<span class="filename" title="{$key|escape}">{$key}</span>
+					
+					<span class="file-modified" title="Date Modified">{date format="SDT" $item.obj->getMTime()}</span>
+					
 					{if $item.haswidgets}
 						<a class="inline-control" href="{$url_themewidgets}?page={$item.file}" title="Manage Widgets">
 							<i class="icon icon-cogs"></i>
-							<span>Manage Widgets</span>
+							<span>Widgets</span>
 						</a>
 					{/if}
 					{if $item.has_stylesheets}
@@ -299,23 +286,35 @@
 							<span>Optional Stylesheets</span>
 						</a>
 					{/if}
-					<a class="inline-control" href="{$url_themeeditor}?template={$item.file}" title="Edit Template">
-						<i class="icon icon-pencil"></i>
-						<span>Edit Template</span>
-					</a>
-				{else}
-					<i class="icon icon-folder-close collapsed-hint" title="Click to expand"></i>
-					<i class="icon icon-folder-open expanded-hint" title="Click to close"></i>
-					<span>{$key}</span>
-					{call name=printTemplateList items=$item}
-				{/if}
-			</li>
+					{if $item.type == 'template'}
+						<a class="inline-control" href="{$url_themeeditor}?template={$item.file}" title="Edit Template">
+							<i class="icon icon-pencil"></i>
+							<span>Edit</span>
+						</a>
+					{/if}
+					{* <a href="{$url_themeeditor}?file={$item.file}" title="Edit Asset"><i class="icon icon-pencil"></i></a> *}
+				</li>
+			{else}
+				<li class="collapsed">
+					<span class="collapsed-hint" title="Click to expand">
+						<i class="icon icon-folder-close"></i>
+						<span class="folder-name">{$key}</span>
+						<span class="folder-children-count">{t 'STRING_N_ITEM' sizeof($item)}</span>
+					</span>
+					<span class="expanded-hint" title="Click to close">
+						<i class="icon icon-folder-open"></i>
+						<span class="folder-name">{$key}</span>
+					</span>
+					
+					{call name=printTemplateList items=$item}	
+				</li>
+			{/if}
 		{/foreach}
 	</ul>
 {/function}
 
 {if !$multisite}
-	<fieldset class="collapsed collapsible theme-section">
+	<fieldset class="collapsed collapsible theme-section" id="theme-expandable-assets">
 		<h3 class="fieldset-title">
 			Assets
 			<i class="icon icon-chevron-down expandable-hint"></i>
@@ -325,14 +324,15 @@
 			Assets are stylesheets, javascript files, and other static resources used by components that get installed to your CDN.
 		</p>
 		<div class="directory-listing">
-			{call name=printAssetList items=$assets.assets}
+			{*call name=printAssetList items=$assets.assets*}
+			{call name=printTemplateList items=$assets.assets}
 		</div>
 	</fieldset>
 {/if}
 
 
 {if sizeof($templates) && !$multisite}
-	<fieldset class="collapsed collapsible theme-section">
+	<fieldset class="collapsed collapsible theme-section" id="theme-expandable-templates">
 		<h3 class="fieldset-title">
 			Templates
 			<i class="icon icon-chevron-down expandable-hint"></i>
@@ -356,7 +356,25 @@
 		return false;
 	});
 	$('.collapsed-hint').click(function(){
-		$(this).closest('li').removeClass('collapsed').addClass('expanded');
+		var $this = $(this),
+			$li = $this.closest('li'),
+			$immediateFiles = $li.children('ul').children('li.file');
+		
+		$li.removeClass('collapsed').addClass('expanded');
+		
+		// Now, run through every img located herein and set the src if necessary.
+		// This facilitates the lazy-loading operation.
+		$immediateFiles.each(function(){
+			var $ct = $(this),
+				$img = $ct.children('img');
+			//console.log($img);
+			//console.log($img.data('isloaded'));
+			if($img.data('isloaded') === 0){
+				$img.attr('src', $img.data('src'));
+				$img.data('isloaded', 1);
+			}
+		});
+		
 		return false;
 	});
 </script>{/script}
