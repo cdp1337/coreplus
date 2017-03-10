@@ -1,10 +1,20 @@
 ---
+MESSAGE_GALLERY_WIDGET_ALBUM_SELECT:
+  en: "Select the source of the album to pull thumbnails from."
+MESSAGE_GALLERY_WIDGET_COUNT:
+  en: "Select how many thumbnails to display"
+MESSAGE_GALLERY_WIDGET_DIMENSIONS:
+  en: "Enter the desired thumbnail dimensions, in the format of (for example), 100x75, width then height separated by an 'x' and no spaces."
+MESSAGE_GALLERY_WIDGET_ORDER:
+  en: "Select the order in which to display thumbnails"
+MESSAGE_GALLERY_WIDGET_USE_AJAX:
+  en: "Check to use javascript for viewing files as opposed to redirecting to the full page."
 MESSAGE_MODEL_GALLERYALBUMMODEL_ACCEPTTYPES:
-  en: "Select the type of files allowed for this album."
+  en: Select the type of files allowed for this album.
 MESSAGE_MODEL_GALLERYALBUMMODEL_CREATED:
   en: ""
 MESSAGE_MODEL_GALLERYALBUMMODEL_EDITPERMISSIONS:
-  en: "Select who can edit this gallery, including URL, title, and image order."
+  en: Select who can edit this gallery, including URL, title, and image order.
 MESSAGE_MODEL_GALLERYALBUMMODEL_ID:
   en: ""
 MESSAGE_MODEL_GALLERYALBUMMODEL_SITE:
@@ -16,7 +26,7 @@ MESSAGE_MODEL_GALLERYALBUMMODEL_TITLE:
 MESSAGE_MODEL_GALLERYALBUMMODEL_UPDATED:
   en: ""
 MESSAGE_MODEL_GALLERYALBUMMODEL_UPLOADPERMISSIONS:
-  en: "Select who can add new files to this album."
+  en: Select who can add new files to this album.
 MESSAGE_MODEL_GALLERYIMAGEMODEL_ALBUMID:
   en: ""
 MESSAGE_MODEL_GALLERYIMAGEMODEL_CREATED:
@@ -26,7 +36,7 @@ MESSAGE_MODEL_GALLERYIMAGEMODEL_DATETAKEN:
 MESSAGE_MODEL_GALLERYIMAGEMODEL_EXIFDATA:
   en: ""
 MESSAGE_MODEL_GALLERYIMAGEMODEL_FILE:
-  en: "Upload a different file to replace this one"
+  en: Upload a different file to replace this one
 MESSAGE_MODEL_GALLERYIMAGEMODEL_ID:
   en: ""
 MESSAGE_MODEL_GALLERYIMAGEMODEL_LATITUDE:
@@ -38,7 +48,7 @@ MESSAGE_MODEL_GALLERYIMAGEMODEL_LONGITUDE:
 MESSAGE_MODEL_GALLERYIMAGEMODEL_PREVIEWFILE:
   en: ""
 MESSAGE_MODEL_GALLERYIMAGEMODEL_PREVIEWSIZE:
-  en: "Set the desired preview size in this album."
+  en: Set the desired preview size in this album.
 MESSAGE_MODEL_GALLERYIMAGEMODEL_ROTATION:
   en: ""
 MESSAGE_MODEL_GALLERYIMAGEMODEL_TITLE:
@@ -49,57 +59,67 @@ MESSAGE_MODEL_GALLERYIMAGEMODEL_UPLOADERID:
   en: ""
 MESSAGE_MODEL_GALLERYIMAGEMODEL_WEIGHT:
   en: ""
+STRING_GALLERY_WIDGET_ALBUM_SELECT:
+  en: "Album Source"
+STRING_GALLERY_WIDGET_COUNT:
+  en: "Thumbnail Count"
+STRING_GALLERY_WIDGET_DIMENSIONS:
+  en: "Thumbnail Dimensions"
+STRING_GALLERY_WIDGET_ORDER:
+  en: "Order"
+STRING_GALLERY_WIDGET_USE_AJAX:
+  en: "Use Ajax for Viewing"
 STRING_MODEL_GALLERYALBUMMODEL_ACCEPTTYPES:
-  en: "Accept File Types"
+  en: Accept File Types
 STRING_MODEL_GALLERYALBUMMODEL_CREATED:
-  en: "Created"
+  en: Created
 STRING_MODEL_GALLERYALBUMMODEL_EDITPERMISSIONS:
-  en: "Edit Permissions"
+  en: Edit Permissions
 STRING_MODEL_GALLERYALBUMMODEL_ID:
-  en: "ID"
+  en: ID
 STRING_MODEL_GALLERYALBUMMODEL_SITE:
-  en: "Site"
+  en: Site
 STRING_MODEL_GALLERYALBUMMODEL_STORE_TYPE:
-  en: "Store Type"
+  en: Store Type
 STRING_MODEL_GALLERYALBUMMODEL_TITLE:
-  en: "Title"
+  en: Title
 STRING_MODEL_GALLERYALBUMMODEL_UPDATED:
-  en: "Updated"
+  en: Updated
 STRING_MODEL_GALLERYALBUMMODEL_UPLOADPERMISSIONS:
-  en: "Upload Permissions"
+  en: Upload Permissions
 STRING_MODEL_GALLERYIMAGEMODEL_ALBUMID:
-  en: "Album ID"
+  en: Album ID
 STRING_MODEL_GALLERYIMAGEMODEL_CREATED:
-  en: "Created"
+  en: Created
 STRING_MODEL_GALLERYIMAGEMODEL_DATETAKEN:
-  en: "Date Taken"
+  en: Date Taken
 STRING_MODEL_GALLERYIMAGEMODEL_EXIFDATA:
-  en: "EXIF Data"
+  en: EXIF Data
 STRING_MODEL_GALLERYIMAGEMODEL_FILE:
-  en: "File"
+  en: File
 STRING_MODEL_GALLERYIMAGEMODEL_ID:
-  en: "ID"
+  en: ID
 STRING_MODEL_GALLERYIMAGEMODEL_LATITUDE:
-  en: "Geo Latitude"
+  en: Geo Latitude
 STRING_MODEL_GALLERYIMAGEMODEL_LOCATION:
-  en: "Location"
+  en: Location
 STRING_MODEL_GALLERYIMAGEMODEL_LONGITUDE:
-  en: "Geo Longitude"
+  en: Geo Longitude
 STRING_MODEL_GALLERYIMAGEMODEL_PREVIEWFILE:
-  en: "Preview File"
+  en: Preview File
 STRING_MODEL_GALLERYIMAGEMODEL_PREVIEWSIZE:
-  en: "Preview Size"
+  en: Preview Size
 STRING_MODEL_GALLERYIMAGEMODEL_ROTATION:
-  en: "Rotation"
+  en: Rotation
 STRING_MODEL_GALLERYIMAGEMODEL_TITLE:
-  en: "Title"
+  en: Title
 STRING_MODEL_GALLERYIMAGEMODEL_UPDATED:
-  en: "Updated"
+  en: Updated
 STRING_MODEL_GALLERYIMAGEMODEL_UPLOADERID:
-  en: "Uploader"
+  en: Uploader
 STRING_MODEL_GALLERYIMAGEMODEL_WEIGHT:
-  en: "Weight (Order)"
+  en: Weight (Order)
 STRING_PERMISSION_GALLERY:
-  en: "Manage Gallery"
+  en: Manage Gallery
 STRING_PERMISSION_GALLERY_MANAGE_ALL:
-  en: "Manage All Galleries"
+  en: Manage All Galleries

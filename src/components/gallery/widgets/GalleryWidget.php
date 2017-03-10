@@ -24,18 +24,42 @@ class GalleryWidget extends \Core\Widget {
     public $displaySettings = [
 		'album' => [
 			'type' => 'select',
+			'title' => 't:STRING_GALLERY_WIDGET_ALBUM_SELECT',
+			'description' => 't:MESSAGE_GALLERY_WIDGET_ALBUM_SELECT',
 			'value' => '',
+			'source' => 'GalleryWidget::GetAlbumsAsOptions',
 		],
 		'count' => [
+			'type' => 'select',
+			'title' => 't:STRING_GALLERY_WIDGET_COUNT',
+			'description' => 't:MESSAGE_GALLERY_WIDGET_COUNT',
 			'value' => '5',
+			'options' => [
+				1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 
+				11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+				21, 22, 23, 24, 25, 26, 27, 28, 29, 30
+			]
 		],
 		'order' => [
+			'type' => 'select',
+			'title' => 't:STRING_GALLERY_WIDGET_ORDER',
+			'description' => 't:MESSAGE_GALLERY_WIDGET_ORDER',
 			'value' => 'weight',
+			'options' => [
+				'weight' => 'Standard Order',
+				'created desc' => 'Date (Newest First)',
+				'random' => 'Random',
+			]
 		],
 		'dimensions' => [
+			'title' => 't:STRING_GALLERY_WIDGET_DIMENSIONS',
+			'description' => 't:MESSAGE_GALLERY_WIDGET_DIMENSIONS',
 			'value' => '100x75',
 		],
-		'uselightbox' => [
+		'useajax' => [
+			'type' => 'checkbox',
+			'title' => 't:STRING_GALLERY_WIDGET_USE_AJAX',
+			'description' => 't:MESSAGE_GALLERY_WIDGET_USE_AJAX',
 			'value' => false,
 		]
 	];
@@ -58,8 +82,11 @@ class GalleryWidget extends \Core\Widget {
 		$order      = $this->getDisplaySetting('order');
 		$albumid    = $this->getDisplaySetting('album');
 		$count      = $this->getDisplaySetting('count');
-		$lightbox   = $this->getDisplaySetting('uselightbox') && Core::IsComponentAvailable('jquery-lightbox');
+		$lightbox   = $this->getDisplaySetting('useajax') && Core::IsComponentAvailable('jquery-lightbox');
 		$dimensions = $this->getDisplaySetting('dimensions');
+		
+		// @todo Lightbox viewing is broke currently, fix this!
+		$lightbox = false;
 		
 		$factory = new ModelFactory('GalleryImageModel');
 		if($order == 'random'){
@@ -86,5 +113,20 @@ class GalleryWidget extends \Core\Widget {
 		$view->assign('dimensions', $dimensions);
 		$view->assign('link', $link);
 		$view->assign('uselightbox', $lightbox);
+	}
+	
+	/**
+	 * Get the gallery albums on this site as options; useful for the album option.
+	 * 
+	 * @return array
+	 */
+	public static function GetAlbumsAsOptions(){
+		$albums = GalleryAlbumModel::Find(null, null, 'title');
+		$albumopts = array('' => 'All Galleries');
+		foreach($albums as $album){
+			$albumopts[ $album->get('id') ] = $album->get('title');
+		}
+		
+		return $albumopts;
 	}
 }
