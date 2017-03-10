@@ -653,12 +653,13 @@ class WidgetController extends Controller_2_1 {
 		$form->addModel($instance);
 		
 		// Add any of the widget display settings that may be set in the Widget.
-		foreach($widget->displaySettings as $setting){
+		foreach($widget->displaySettings as $idx => $setting){
 			// Pull the type of the form element from the array, or text as the default.
 			$type = isset($setting['type']) ? $setting['type'] : 'text';
+			$name = isset($setting['name']) ? $setting['name'] : $idx;
 			
 			// Remap the name to a name that the form handler will know about.
-			$setting['name'] = 'display_setting[' . $setting['name'] . ']';
+			$setting['name'] = 'display_setting[' . $name . ']';
 			
 			if($type == 'checkbox'){
 				// This one requires some additional work;

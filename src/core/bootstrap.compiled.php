@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 09 Mar 2017 23:45:42 -0500
+ * @compiled Fri, 10 Mar 2017 15:45:37 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -21046,7 +21046,7 @@ $hash .= $m . '.' . $i['primary'] . ':' . $model->get( $i['primary'] ) . ';';
 }
 foreach ($this->getElements() as $el) {
 if($el->get('name') == '___formid') continue;
-if($el instanceof FormSystemInput){
+if($el instanceof SystemInput){
 $set = true;
 $hash .= get_class($el) . ':' . $el->get('name') . ':' . json_encode($el->get('value')) . ';';
 }
@@ -21054,7 +21054,7 @@ $hash .= get_class($el) . ':' . $el->get('name') . ':' . json_encode($el->get('v
 if(!$set){
 foreach ($this->getElements() as $el) {
 if($el->get('name') == '___formid') continue;
-if(!($el instanceof FormSystemInput)){
+if(!($el instanceof SystemInput)){
 $hash .= get_class($el) . ':' . $el->get('name') . ';';
 }
 }

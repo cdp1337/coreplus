@@ -148,7 +148,7 @@ class Form extends FormGroup {
 
 			// System inputs require the value as well, since they're set by the controller; they're not
 			// meant to be changed.
-			if($el instanceof FormSystemInput){
+			if($el instanceof SystemInput){
 				$set = true;
 				$hash .= get_class($el) . ':' . $el->get('name') . ':' . json_encode($el->get('value')) . ';';
 			}
@@ -165,7 +165,7 @@ class Form extends FormGroup {
 
 				// System inputs require the value as well, since they're set by the controller; they're not
 				// meant to be changed.
-				if(!($el instanceof FormSystemInput)){
+				if(!($el instanceof SystemInput)){
 					$hash .= get_class($el) . ':' . $el->get('name') . ';';
 				}
 			}

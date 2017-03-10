@@ -45,4 +45,26 @@ class SubmitInput extends FormElement {
 
 		$this->_validattributes     = array('accesskey', 'dir', 'disabled', 'id', 'lang', 'name', 'size', 'tabindex', 'width', 'height', 'value', 'style');
 	}
+	
+	/**
+	 * Get the requested attribute from this form element.
+	 * 
+	 * @param string $key
+	 *
+	 * @return mixed
+	 */
+	public function get($key) {
+		if(
+			$key == 'value' &&
+			isset($this->_attributes[$key]) &&
+			$this->_attributes[$key] !== null &&
+			strpos($this->_attributes[$key], 't:') === 0
+		){
+			// This field supports i18n!
+			return t(substr($this->_attributes[$key], 2));
+		}
+		else{
+			return parent::get($key);
+		}
+	}
 }

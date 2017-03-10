@@ -154,12 +154,24 @@ class FormElement {
 				// This should be translated if necessary.
 				$v = isset($this->_attributes[$key]) ? $this->_attributes[$key] : null;
 				if($v !== null && strpos($v, 't:') === 0){
+					// Support I18N on this field.
 					$v = t(substr($v, 2));
 				}
 				return $v;
 			case 'label':
 				// Special case, returns either title or name, whichever is set.
 				$v = (!empty($this->_attributes['title'])) ? $this->_attributes['title'] : $this->get('name');
+				if($v !== null && strpos($v, 't:') === 0){
+					// Support I18N on this field.
+					$v = t(substr($v, 2));
+				}
+				return $v;
+			case 'description':
+				$v = (isset($this->_attributes[$key])) ? $this->_attributes[$key] : null;
+				if($v !== null && strpos($v, 't:') === 0){
+					// Support I18N on this field.
+					$v = t(substr($v, 2));
+				}
 				return $v;
 			case 'id':
 				// ID is also a special case, it can use the name if not defined otherwise.
