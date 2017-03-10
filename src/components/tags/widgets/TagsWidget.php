@@ -1,6 +1,6 @@
 <?php
 
-class TagsWidget extends Widget_2_1 {
+class TagsWidget extends \Core\Widget {
 	public function display(){
 		$view = $this->getView();
 		$request = $this->getRequest();

@@ -29,7 +29,7 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class BlogWidget extends Widget_2_1 {
+class BlogWidget extends \Core\Widget {
 	public $is_simple = true;
 
 	public $settings = [

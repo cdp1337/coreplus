@@ -199,8 +199,10 @@ class WidgetInstanceModel extends Model {
 			// Pass in any display settings saved in this instance.
 			$settings = $this->get('display_settings');
 			foreach($this->_widget->displaySettings as $idx => $dat){
-				if(isset($settings[ $dat['name'] ])){
-					$this->_widget->displaySettings[$idx]['value'] = $settings[ $dat['name'] ];
+				$name = isset($dat['name']) ? $dat['name'] : $idx;
+				
+				if(isset($settings[ $name ])){
+					$this->_widget->displaySettings[$idx]['value'] = $settings[ $name ];
 				}
 			}
 		}
@@ -290,7 +292,15 @@ class WidgetInstanceModel extends Model {
 		// Pass in any base and customer parameters
 		$c->_params = array_merge($c->_params, $parameters);
 
-		$return = call_user_func([$c, $pagedat['method']]);
+		try{
+			$return = call_user_func([$c, $pagedat['method']]);
+		}
+		catch (Exception $ex) {
+			$view->error = View::ERROR_SERVERERROR;
+			\Core\ErrorManagement\exception_handler($ex);
+			return $view;
+		}
+		
 		if (is_int($return)) {
 			// A generic error code was returned.  Create a View with that code and return that instead.
 			$view        = new View();

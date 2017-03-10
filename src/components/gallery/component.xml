@@ -15,7 +15,7 @@
 		<pagecreate title="Gallery" baseurl="/gallery/create"/>
 	</pages>
 	<widgets>
-		<widgetcreate title="Gallery" baseurl="/gallerywidget/create"/>
+		<widget baseurl="/gallery/view" title="Gallery Widget"/>
 	</widgets>
 	<description>
 		Gallery browsing system capable of building rich albums for images, video, audio, and other media!

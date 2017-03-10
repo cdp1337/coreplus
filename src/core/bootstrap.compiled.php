@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 09 Mar 2017 01:17:00 -0500
+ * @compiled Thu, 09 Mar 2017 23:45:42 -0500
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -19768,6 +19768,9 @@ return (array_key_exists($key, $p)) ? $p[$key] : null;
 public function getTemplate() {
 if (!$this->_template) {
 $this->_template = \Core\Templates\Template::Factory($this->templatename);
+if(!$this->_template){
+throw new \Exception('Unable to load template file ' . $this->templatename);
+}
 $this->_template->setView($this);
 }
 return $this->_template;
@@ -20688,8 +20691,11 @@ public function getPreviewImage(){
 return 'assets/images/placeholders/generic.png';
 }
 public function getDisplaySetting($key){
-foreach($this->displaySettings as $dat){
-if($dat['name'] == $key){
+foreach($this->displaySettings as $idx => $dat){
+if(
+$idx == $key ||
+(isset($dat['name']) && $dat['name'] == $key)
+){
 return $dat['value'];
 }
 }

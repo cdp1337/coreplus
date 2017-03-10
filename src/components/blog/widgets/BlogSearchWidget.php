@@ -51,7 +51,7 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class BlogSearchWidget extends Widget_2_1 {
+class BlogSearchWidget extends \Core\Widget {
 	public $is_simple = true;
 
 	public $settings = [

@@ -6,7 +6,7 @@
  * Time: 10:06 PM
  * To change this template use File | Settings | File Templates.
  */
-class UserProfileWidget extends Widget_2_1{
+class UserProfileWidget extends \Core\Widget{
 	public function badge(){
 		$view = $this->getView();
 		$request = $this->getRequest();

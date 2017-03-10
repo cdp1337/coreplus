@@ -338,12 +338,19 @@ class View {
 	 * Get the template responsible for rendering this View's body content.
 	 *
 	 * Based on templatename.
+	 * 
+	 * @throws \Exception
 	 *
 	 * @return Core\Templates\TemplateInterface
 	 */
 	public function getTemplate() {
 		if (!$this->_template) {
 			$this->_template = \Core\Templates\Template::Factory($this->templatename);
+			
+			if(!$this->_template){
+				throw new \Exception('Unable to load template file ' . $this->templatename);
+			}
+			
 			// Ensure that the template is linked to this View correctly.
 			$this->_template->setView($this);
 		}

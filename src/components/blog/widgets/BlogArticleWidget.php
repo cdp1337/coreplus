@@ -51,7 +51,7 @@
  * @author Charlie Powell <charlie@evalagency.com>
  *
  */
-class BlogArticleWidget extends Widget_2_1 {
+class BlogArticleWidget extends \Core\Widget {
 	public $is_simple = true;
 
 	public $settings = [

@@ -281,8 +281,11 @@ class Widget {
 	 * @return mixed
 	 */
 	public function getDisplaySetting($key){
-		foreach($this->displaySettings as $dat){
-			if($dat['name'] == $key){
+		foreach($this->displaySettings as $idx => $dat){
+			if(
+				$idx == $key ||
+				(isset($dat['name']) && $dat['name'] == $key)
+			){
 				return $dat['value'];
 			}
 		}
