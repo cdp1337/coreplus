@@ -11,7 +11,6 @@
 	<pages>
 		<page baseurl="/gallery" admin="0" access="*" title="Gallery Listings"/>
 		<page baseurl="/gallery/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Albums Administration" group="t:STRING_CONTENT"/>
-		<page baseurl="/gallerywidget/admin" admin="1" access="p:/gallery/manage_all" title="Gallery Widgets Administration" group="t:STRING_CONTENT" parenturl="/admin"/>
 		<pagecreate title="Gallery" baseurl="/gallery/create"/>
 	</pages>
 	<widgets>
@@ -32,22 +31,17 @@
 		<file filename="templates/pages/gallery/view-image.tpl" md5="719395942bc61b941e78cdfc8ef3dd74"/>
 		<file filename="templates/pages/gallery/view-video.tpl" md5="9f81030e6586e441e1898f52dac71732"/>
 		<file filename="templates/pages/gallery/view.tpl" md5="420b730f02a25fa28a47bf30feef2561"/>
-		<file filename="templates/pages/gallerywidget/admin.tpl" md5="71bbd8c87b269337e47f6e7ee126d59d"/>
-		<file filename="templates/pages/gallerywidget/update.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
 		<file filename="CHANGELOG" md5="d8be178a118ef6cb409a9e7cbd7589bd"/>
-		<file filename="controllers/GalleryController.php" md5="fcc0907fc6b91edcd7797231b793afa9">
+		<file filename="controllers/GalleryController.php" md5="dcb6031b498e5065b5ce807d0cefbcfa">
 			<controller name="GalleryController"/>
 		</file>
-		<file filename="controllers/GalleryWidgetController.php" md5="b1edab7f0bcc9c1b77e96321b1b0472d">
-			<controller name="GalleryWidgetController"/>
-		</file>
-		<file filename="helpers/GalleryFormHandler.class.php" md5="ceaf744fa429e3edaff24e8d4ef62621">
+		<file filename="helpers/GalleryFormHandler.class.php" md5="dc4d2b3f6520f27819e62b5de40d7e19">
 			<class name="GalleryFormHandler"/>
 		</file>
-		<file filename="i18n/strings.yml" md5="71f7b10abf27df1b17a528d60e3d9d40"/>
+		<file filename="i18n/strings.yml" md5="9b1e4946745f03358a564c916ed325b3"/>
 		<file filename="models/GalleryAlbumModel.php" md5="7e16e200b33cc47738deb91184977e56">
 			<class name="GalleryAlbumModel"/>
 		</file>
@@ -56,7 +50,7 @@
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
 		<file filename="upgrades/143_to_144_filepathchange.php" md5="c18cc4452f6f806c4b91f82e48f25e73"/>
-		<file filename="widgets/GalleryWidget.php" md5="e1e520a5f6f06ffa79016e306ca590cd">
+		<file filename="widgets/GalleryWidget.php" md5="9c3d4e93a6e02f7edacf5aec2dd3c666">
 			<class name="GalleryWidget"/>
 		</file>
 	</files>
@@ -107,6 +101,11 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
 		<upgrade from="2.0.2" to="2.0.3"/>
+		<upgrade from="next" to="next">
+			<dataset action="delete" table="page">
+				<datasetwhere>baseurl = /gallerywidget/admin</datasetwhere>
+			</dataset>
+		</upgrade>
 	</upgrades>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
