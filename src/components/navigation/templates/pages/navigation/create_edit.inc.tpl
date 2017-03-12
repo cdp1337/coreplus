@@ -11,10 +11,14 @@
 <fieldset>
 	<legend> Entries</legend>
 
-	<a class="button add-entry-int-btn" href="#" title="Add Internal Link"><i class="icon icon-add"></i> Add Internal Link</a>
-	<a class="button add-entry-ext-btn" href="#" title="Add External Link"><i class="icon icon-add"></i> Add External Link</a>
-	<a class="button add-entry-none-btn" href="#" title="Add Text Label"><i class="icon icon-add"></i> Add Text Label</a>
+	<div class="button-group">
+		<a class="button add-entry-int-btn" href="#" title="Add Internal Link"><i class="icon icon-add"></i> Internal Link</a>
+		<a class="button add-entry-ext-btn" href="#" title="Add External Link"><i class="icon icon-add"></i> External Link</a>
+		<a class="button add-entry-none-btn" href="#" title="Add Text Label"><i class="icon icon-add"></i> Text Label</a>
+	</div>
 
+	<hr style="clear:both;"/>
+	
 	<!-- Create new entry heading -->
 	<ol class="sortable-listing navigation-edit-entries" id="entry-listings"></ol>
 

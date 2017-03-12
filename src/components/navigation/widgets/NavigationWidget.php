@@ -22,6 +22,16 @@
  */
 
 class NavigationWidget extends \Core\Widget {
+	
+	public $displaySettings = [
+		'image_dimensions' => [
+			'type' => Model::ATT_TYPE_STRING,
+			'value' => '100x75',
+			'title' => 't:STRING_NAVIGATION_WIDGET_IMAGE_DIMENSIONS',
+			'description' => 't:MESSAGE_NAVIGATION_WIDGET_IMAGE_DIMENSIONS',
+		],
+	];
+	
 	public function view() {
 		$view       = $this->getView();
 		$m          = NavigationModel::Construct($this->getParameter(0));
@@ -32,6 +42,17 @@ class NavigationWidget extends \Core\Widget {
 
 		// Get the entries for this model as well.
 		$entries = $m->getLink('NavigationEntry', 'weight ASC');
+		
+		// Map the display settings to a simple array for the template to use.
+		$displaySettings = [];
+		foreach($this->displaySettings as $idx => $val){
+			if(isset($val['name'])){
+				$displaySettings[ $val['name'] ] = $val['value'];
+			}
+			else{
+				$displaySettings[$idx] = $val['value'];
+			}
+		}
 
 		// View won't quite just have a flat list of entries, as they need to be checked and sorted
 		// into a nested array.
@@ -132,8 +153,9 @@ class NavigationWidget extends \Core\Widget {
 		$view->title        = $m->get('title');
 		$view->access       = $m->get('access');
 		//$view->templatename = '/widgets/navigation/view.tpl';
-		$view->assignVariable('model', $m);
-		$view->assignVariable('entries', $sortedentries);
+		$view->assign('model', $m);
+		$view->assign('entries', $sortedentries);
+		$view->assign('display_settings', $displaySettings);
 	}
 
 	/**

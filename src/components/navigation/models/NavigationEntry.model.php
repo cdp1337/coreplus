@@ -89,6 +89,24 @@ class NavigationEntryModel extends Model {
 				break;
 		}
 	}
+	
+	/**
+	 * Get the associated page model for this entry, if available.
+	 * 
+	 * @return null|PageModel
+	 */
+	public function getPageModel(){
+		// This is only supported with local/internal pages.
+		if($this->get('type') != 'int'){
+			return null;
+		}
+		
+		if(!$this->get('baseurl')){
+			return null;
+		}
+		
+		return PageModel::Construct($this->get('baseurl'));
+	}
 
 	/**
 	 * Get the access string of the current page, if possible.

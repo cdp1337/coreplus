@@ -22,28 +22,28 @@
  */
 class NavigationModel extends Model {
 	public static $Schema = array(
-		'id'      => array(
+		'id'      => [
 			'type'     => Model::ATT_TYPE_ID,
 			'required' => true,
 			'null'     => false,
-		),
-		'site' => array(
+		],
+		'site' => [
 			'type' => Model::ATT_TYPE_SITE,
 			'formtype' => 'system',
-		),
-		'name'    => array(
+		],
+		'name'    => [
 			'type'      => Model::ATT_TYPE_STRING,
 			'maxlength' => 128,
 			'null'      => false,
-		),
-		'created' => array(
+		],
+		'created' => [
 			'type' => Model::ATT_TYPE_CREATED,
 			'null' => false,
-		),
-		'updated' => array(
+		],
+		'updated' => [
 			'type' => Model::ATT_TYPE_UPDATED,
 			'null' => false,
-		),
+		],
 	);
 
 	public static $Indexes = array(
