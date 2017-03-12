@@ -1,0 +1,53 @@
+/**
+ * This is a print-only version of the main styles.scss for the use
+ * of print-only pages such as PDF generation and "print" ready page views,
+ * (for those strange cases where a client wants a print version on-screen).
+ *
+ * The only notable changes here is that it does not include the screen stylesheet
+ * and has no container around the print styles, (so they apply to everything).
+ */
+
+// Normalize styling.
+@import "vendor/normalize";
+
+// Bourbon base styles.
+@import "vendor/bourbon/bourbon";
+
+// Variables is used by Bitters, and defined outside vendor for customizations.
+@import "variables";
+@import "vendor/bitters/base";
+
+// Bourbon grid system, Neat.
+@import "vendor/neat/neat";
+
+// Start Core-specific components
+@import "form_elements";
+@import "debugging";
+@import "controls";
+@import "filters_and_pagination";
+@import "listing_tables";
+@import "messages";
+@import "layout";
+@import "collapsible_fieldsets";
+@import "pages/updater";
+@import "pages/widgets";
+@import "pages/theme";
+@import "content";
+
+#admin-bar {
+	@include clearfix;
+}
+
+@import "_print";
+
+a.agplv3-tag {
+	display: inline-block;
+	padding: 0 0.25em;
+	color: #636;
+
+	&:hover {
+		border-radius: 0.5em;
+		background-color: #636;
+		color: white;
+	}
+}
