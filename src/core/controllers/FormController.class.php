@@ -161,7 +161,7 @@ class FormController extends Controller_2_1 {
 
 						$dat['class'] = 'insertable';
 
-						$insertableelement = FormElement::Factory($type, $dat);
+						$insertableelement = \Core\Forms\FormElement::Factory($type, $dat);
 						$form->addElementAfter($insertableelement, $lastelementadded);
 						$lastelementadded = $insertableelement;
 					}
