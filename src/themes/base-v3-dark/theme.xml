@@ -2,6 +2,9 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.3" name="Base V3 Dark">
 	<assets>
+		<file filename="assets/css/jquery-ui-1.11.4.css" md5="d1e78ac1cf604f1c82cecaf778251345"/>
+		<file filename="assets/css/jquery-ui-1.11.4.css.map" md5="da62021488f619aa6138941beeba5dd0"/>
+		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="94e809ff6a4b7e034ea01ddc9b4b9581"/>
 		<file filename="assets/css/print.css" md5="4640ecdf25621fa4ce61b3da316f1605"/>
 		<file filename="assets/css/print.css.map" md5="1674538990a1f9b043fae21c5a39229e"/>
 		<file filename="assets/css/print.min.css" md5="c66ac178433a9941d2f6e5bb60925277"/>
@@ -68,6 +71,7 @@
 		<file filename="assets/scss/_responsive.scss" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
 		<file filename="assets/scss/_variables.scss" md5="06ad866a34daab5a4155e5bca7a48740"/>
+		<file filename="assets/scss/jquery-ui-1.11.4.scss" md5="954f813465bd8f2bca131e2352b4b46d"/>
 		<file filename="assets/scss/pages/_admin_health.scss" md5="9c02894ad0929bfc414cf75c7fa0e208"/>
 		<file filename="assets/scss/pages/_admin_log.scss" md5="765f4eaaaddad7b952ae7a362d1a9d30"/>
 		<file filename="assets/scss/pages/_admin_pages.scss" md5="e77e46e4e2828c4efae4dd11527ff267"/>
