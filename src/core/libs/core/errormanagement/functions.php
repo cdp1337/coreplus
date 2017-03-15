@@ -210,7 +210,7 @@ function error_handler($errno, $errstr, $errfile, $errline, $errcontext = null){
 	catch(\Exception $e){
 		// Something bad happened... try the old school version.
 		try{
-			error_log($details . $errstr);
+			error_log($errstr);
 			error_log($e->getMessage());
 		}
 		catch(\Exception $e){
