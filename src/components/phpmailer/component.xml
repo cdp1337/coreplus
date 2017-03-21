@@ -1,12 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHPMailer" version="5.2.21-1" logo="assets/images/phpmailer.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHPMailer" version="5.2.22-1" logo="assets/images/phpmailer.png">
+	<provides>
+		<emailbackend name="PHPMailer - SMTP" class="PHPMailerCore\SMTP"/>
+		<emailbackend name="PHPMailer - mail" class="PHPMailerCore\Mail"/>
+		<emailbackend name="PHPMailer - Sendmail" class="PHPMailerCore\Sendmail"/>
+	</provides>
+	<configs>
+		<config key="/phpmailer/sendmail/path" type="string" default=""/>
+		<config key="/phpmailer/smtp/host" type="string" default=""/>
+		<config key="/phpmailer/smtp/security" type="enum" options="none|ssl|tls" default="none"/>
+		<config key="/phpmailer/smtp/port" type="string" default=""/>
+		<config key="/phpmailer/smtp/auth" type="enum" default="LOGIN" options="NONE|LOGIN|PLAIN|NTLM"/>
+		<config key="/phpmailer/smtp/domain" type="string" default=""/>
+		<config key="/phpmailer/smtp/user" type="string" default=""/>
+		<config key="/phpmailer/smtp/password" type="string" default=""/>
+	</configs>
 	<files>
-		<file filename="CHANGELOG" md5="79b464c4ff11e277ed9df9f944fb98c3"/>
+		<file filename="CHANGELOG" md5="c73683f62fa3746b14ca6577b1fbb850"/>
 		<file filename="README.md" md5="0093c14d52936a5818ed874cd5947140"/>
+		<file filename="libs/PHPMailerCore/EmailBackend.php" md5="52b50f3df193dc68cb4bbfc72de099e6">
+			<class name="PHPMailerCore\EmailBackend"/>
+		</file>
+		<file filename="libs/PHPMailerCore/Mail.php" md5="0d9d1df8f78b8e189a38d543080c6192">
+			<class name="PHPMailerCore\Mail"/>
+		</file>
+		<file filename="libs/PHPMailerCore/SMTP.php" md5="ff39b997827271f48e5509186c55c717">
+			<class name="PHPMailerCore\SMTP"/>
+		</file>
+		<file filename="libs/PHPMailerCore/Sendmail.php" md5="059cd23ec08b03035c9e7a5a2058e3d8">
+			<class name="PHPMailerCore\Sendmail"/>
+		</file>
 		<file filename="libs/phpmailer/LICENSE" md5="1e22b70bead0fa0848a119546e610da5"/>
-		<file filename="libs/phpmailer/VERSION" md5="9b461961caf464a4c12aad40fd32b786"/>
-		<file filename="libs/phpmailer/class.phpmailer.php" md5="144c97f0e87be1e388fbcba40723a53f">
+		<file filename="libs/phpmailer/VERSION" md5="18a50e89798a7f12fb71cf130586712f"/>
+		<file filename="libs/phpmailer/class.phpmailer.php" md5="c1343427a15458c024494caa3a1e9bc3">
 			<class name="PHPMailer"/>
 			<class name="phpmailerException"/>
 		</file>
@@ -16,10 +43,10 @@
 		<file filename="libs/phpmailer/class.phpmaileroauthgoogle.php" md5="58bde497cccfc3615bdc87ee68750351">
 			<class name="PHPMailerOAuthGoogle"/>
 		</file>
-		<file filename="libs/phpmailer/class.pop3.php" md5="36cfcc39d63c549ab9e75382f64c9733">
+		<file filename="libs/phpmailer/class.pop3.php" md5="36fd1f07e9161bbf02d6456892dc6b24">
 			<class name="POP3"/>
 		</file>
-		<file filename="libs/phpmailer/class.smtp.php" md5="75fb6c0ffeab3bd5f83d26f00d48357d">
+		<file filename="libs/phpmailer/class.smtp.php" md5="eaf2322fced76ad1bd3e3d1e9e4e35df">
 			<class name="SMTP"/>
 		</file>
 		<file filename="libs/phpmailer/composer.json" md5="ca5abc72444d9608a35c39f9064c139b"/>
@@ -27,7 +54,7 @@
 			<class name="EasyPeasyICS"/>
 		</file>
 		<file filename="libs/phpmailer/extras/README.md" md5="3af32e2f15941ec05f64085a250753b8"/>
-		<file filename="libs/phpmailer/extras/htmlfilter.php" md5="e08fd4e987a58d19c3190666a52ddc5b"/>
+		<file filename="libs/phpmailer/extras/htmlfilter.php" md5="96e032c0bd341c651461fe6cf1e5670a"/>
 		<file filename="libs/phpmailer/extras/ntlm_sasl_client.php" md5="78623acb616b3e653b1ac83e9904192e">
 			<class name="ntlm_sasl_client_class"/>
 		</file>
@@ -80,19 +107,24 @@
 		<file filename="libs/phpmailer/language/phpmailer.lang-vi.php" md5="13ac94e759a8baeb4f8b6d186ed9a0b6"/>
 		<file filename="libs/phpmailer/language/phpmailer.lang-zh.php" md5="4099efcb36a6e5609d30d5498fa5c6ff"/>
 		<file filename="libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="f903e36d8c3094f11c1829bc664cc0ac"/>
+		<file filename="upgrades/install-migrate-configs.php" md5="385aaebb94d5631ab6c0270018e8eec1"/>
 	</files>
 	<view/>
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
+	<assets>
+		<file filename="assets/images/phpmailer.png" md5="47e4bc7f11c6e2007caa8363e36c407f"/>
+	</assets>
+	<install>
+		<php file="upgrades/install-migrate-configs.php"/>
+	</install>
+	<upgrades>
+		<upgrade from="5.2.21-1" to="5.2.22-1"/>
+	</upgrades>
 	<authors>
-		<author name="Marcus Bointon (Synchro/coolbru)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon (@Synchro)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Jim Jagielski (jimjag)" email="jimjag@gmail.com"/>
-		<author name="Jim Jagielski" email="jimjag@gmail.com"/>
-		<author name="Andy Prevost (codeworxtech)" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Andy Prevost" email="codeworxtech@users.sourceforge.net"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="charlie"/>
 		<author name="Brent R. Matzelle (original founder)"/>
 		<author name="@sherryl4george"/>
 		<author name="Chris Ryan"/>
@@ -108,6 +140,13 @@
 		<author name="Yoshi Sakai &lt;http://bluemooninc.jp/&gt;"/>
 		<author name="Jyry Kuukanen"/>
 		<author name="LiuXin &lt;http://www.80x86.cn/blog/&gt;"/>
+		<author name="Marcus Bointon (Synchro/coolbru)" email="phpmailer@synchromedia.co.uk"/>
+		<author name="Marcus Bointon (@Synchro)" email="phpmailer@synchromedia.co.uk"/>
+		<author name="Marcus Bointon" email="phpmailer@synchromedia.co.uk"/>
+		<author name="Jim Jagielski (jimjag)" email="jimjag@gmail.com"/>
+		<author name="Jim Jagielski" email="jimjag@gmail.com"/>
+		<author name="Andy Prevost (codeworxtech)" email="codeworxtech@users.sourceforge.net"/>
+		<author name="Andy Prevost" email="codeworxtech@users.sourceforge.net"/>
 		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
 		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
 		<author name="Manuel Reinhard" email="manu@sprain.ch"/>
@@ -164,8 +203,10 @@
 		<author name="Michal Tinka" email="michaltinka@gmail.com"/>
 		<author name="Ivan" email="web AT microstudi DOT com"/>
 	</authors>
-	<assets>
-		<file filename="assets/images/phpmailer.png" md5="47e4bc7f11c6e2007caa8363e36c407f"/>
-	</assets>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

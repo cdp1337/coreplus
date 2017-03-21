@@ -1,3 +1,6 @@
+PHPMailer 5.2.22-1
+
+
 PHPMailer 5.2.21-1
 
 	* Initial migration from Core to its own component.
