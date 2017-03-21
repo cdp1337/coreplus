@@ -1,10 +1,5 @@
 <p>This is a test email!</p>
 
-<ul>
-	{foreach $debugs as $line}
-		<li>{$line}</li>
-	{/foreach}
-</ul>
 
 <p class="message-success">
 	This is a success message!

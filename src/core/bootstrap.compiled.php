@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 10 Mar 2017 15:45:37 -0500
+ * @compiled Tue, 21 Mar 2017 08:59:28 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -9832,6 +9832,16 @@ $pages[] = [
 }
 return $pages;
 }
+public function getEmailBackends(){
+$backends = [];
+$node = $this->_xmlloader->getElement('provides');
+foreach ($node->getElementsByTagName('emailbackend') as $subnode) {
+$name  = $subnode->getAttribute('name');
+$class = $subnode->getAttribute('class');
+$backends[$class] = $name;
+}
+return $backends;
+}
 public function setAuthors($authors) {
 $this->_xmlloader->removeElements('/authors');
 foreach ($authors as $a) {
@@ -15520,7 +15530,7 @@ $entry->message = $location . $errstr;
 }
 catch(\Exception $e){
 try{
-error_log($details . $errstr);
+error_log($errstr);
 error_log($e->getMessage());
 }
 catch(\Exception $e){

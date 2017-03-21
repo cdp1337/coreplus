@@ -131,7 +131,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="713e626b88a4f6c634b37783c52cdada"/>
 		<file filename="core/bootstrap_predefines.php" md5="d267aad3079f4058579f0d31cbdee4a2"/>
 		<file filename="core/bootstrap_preincludes.php" md5="c3deceae3d39082ed940dcf6aea27061"/>
-		<file filename="core/controllers/AdminController.php" md5="6a35fef9c995b921fc117c8bd6bd8bd2">
+		<file filename="core/controllers/AdminController.php" md5="833457af38c2851d198e16f0e208ee3e">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="6bff355ac8598a8507e8dddd00a1407f">
@@ -203,7 +203,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="aca17a836efbe8c477af0e63ada255bb">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="3256c9080ea842048c58e5c499fdfd79">
+		<file filename="core/libs/core/Component_2_1.php" md5="ca22dbf3d8448fd48abcb0fc9b3d3415">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e5bb3fbfe323ea6ac67d29acffc3a4de">
@@ -221,10 +221,10 @@
 		<file filename="core/libs/core/DB.class.php" md5="d20f8c7733c5c262c01f920004f3aab5">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="2e15cb412188b2deb783e3e865bc3965">
-			<class name="Email"/>
+		<file filename="core/libs/core/Email.php" md5="a887dfd72e10783f802872a1eb650097">
+			<class name="Core\Email"/>
 		</file>
-		<file filename="core/libs/core/EmailInterface.php" md5="6fcfe3ff961f4bba4cc13590a9d5cdb0">
+		<file filename="core/libs/core/EmailInterface.php" md5="c8a471c1978c94907531a13a8e555a00">
 			<interface name="Core\EmailInterface"/>
 		</file>
 		<file filename="core/libs/core/Exceptions.php" md5="8b4d0342bbee5b64ae877ada9a174097">
@@ -1502,7 +1502,7 @@
 	</files>
 	<view searchdir="core/templates">
 		<file filename="core/templates/emails/admin/health_report.tpl" md5="06c7bb879f5d92402992217437299337"/>
-		<file filename="core/templates/emails/admin/test_email.tpl" md5="c5eec2c6d33f52a34ee309a1d49349fa"/>
+		<file filename="core/templates/emails/admin/test_email.tpl" md5="19277b0ca169316063899195182d038a"/>
 		<file filename="core/templates/emails/user/activation.tpl" md5="7cdb992418a86922f94a7c5910224a1f"/>
 		<file filename="core/templates/emails/user/admin_password.tpl" md5="e75c3a6f5c753fd41f1ea4f90533120c"/>
 		<file filename="core/templates/emails/user/datastoreauth_forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
@@ -1699,7 +1699,11 @@
 		<!-- System Email Options -->
 		<config key="/core/email/from" type="string" default=""/>
 		<config key="/core/email/from_name" type="string" default=""/>
-		<config key="/core/email/mailer" type="enum" options="smtp|sendmail|mail" default="mail"/>
+		<config key="/core/email/mailer" type="string" default=""/>
+		<config key="/core/email/verify_with_dns" type="boolean" default="0"/>
+		<config key="/core/email/enable_sending" type="boolean" default="1"/>
+		<config key="/core/email/sandbox_to" type="string"/>
+		<!-- Legacy email options, keep here to allow for upgrade scripts. -->
 		<config key="/core/email/sendmail_path" type="string" default=""/>
 		<config key="/core/email/smtp_host" type="string" default=""/>
 		<config key="/core/email/smtp_security" type="enum" options="none|ssl|tls" default="none"/>
@@ -1708,9 +1712,6 @@
 		<config key="/core/email/smtp_domain" type="string" default=""/>
 		<config key="/core/email/smtp_user" type="string" default=""/>
 		<config key="/core/email/smtp_password" type="string" default=""/>
-		<config key="/core/email/verify_with_dns" type="boolean" default="0"/>
-		<config key="/core/email/enable_sending" type="boolean" default="1"/>
-		<config key="/core/email/sandbox_to" type="string"/>
 		<!-- Security Options -->
 		<config key="/core/security/x-frame-options" type="string" default="SAMEORIGIN"/>
 		<config key="/core/security/csp-frame-ancestors" type="string" default=""/>
