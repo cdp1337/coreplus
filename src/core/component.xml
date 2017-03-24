@@ -1699,7 +1699,7 @@
 		<!-- System Email Options -->
 		<config key="/core/email/from" type="string" default=""/>
 		<config key="/core/email/from_name" type="string" default=""/>
-		<config key="/core/email/mailer" type="string" default=""/>
+		<config key="/core/email/mailer" type="string" default="" form-attributes="type:select;source:\Core\Email::GetBackends"/>
 		<config key="/core/email/verify_with_dns" type="boolean" default="0"/>
 		<config key="/core/email/enable_sending" type="boolean" default="1"/>
 		<config key="/core/email/sandbox_to" type="string"/>

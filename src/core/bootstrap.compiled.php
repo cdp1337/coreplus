@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Tue, 21 Mar 2017 08:59:28 -0400
+ * @compiled Fri, 24 Mar 2017 18:11:45 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -8259,14 +8259,14 @@ $a[] = array(
 return array_merge($a, parent::getControlLinks());
 }
 public function sendWelcomeEmail(){
-$email = new \Email();
+$email = new \Core\Email();
 $email->templatename = 'emails/user/registration.tpl';
 $email->assign('user', $this);
 $email->assign('sitename', SITENAME);
 $email->assign('rooturl', ROOT_URL);
 $email->assign('loginurl', \Core\resolve_link('/user/login'));
 $email->setSubject('Welcome to ' . SITENAME);
-$email->to($this->get('email'));
+$email->setTo($this->get('email'));
 $email->send();
 }
 public function getEditableFields(){

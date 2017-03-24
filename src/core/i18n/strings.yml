@@ -743,7 +743,7 @@ MESSAGE_SUCCESS_PAGE_UNPUBLISHED:
 MESSAGE_SUCCESS_PHP_S_OK:
   en: PHP Version [%1%] is good!
 MESSAGE_SUCCESS_PLEASE_CHECK_EMAIL_FOR_PASSWORD_RESET_INSTRUCTIONS:
-  en: ""
+  en: "Please check your email for password reset instructions."
 MESSAGE_SUCCESS_PUBLIC_DIRECTORY_S_OK:
   en: Public directory [%1%] exists and is writable!
 MESSAGE_SUCCESS_ROOT_DIRECTORY_S_OK:

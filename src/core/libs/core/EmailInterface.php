@@ -125,7 +125,7 @@ interface EmailInterface {
 	/**
 	 * Set the Reply To address for this email.
 	 *
-	 * @param $address
+	 * @param string $address
 	 * @param string $name
 	 * 
 	 * @return \Core\EmailInterface
@@ -141,7 +141,7 @@ interface EmailInterface {
 	 * and the alt body is set as plain text.
 	 *
 	 * @param string  $body
-	 * @param boolean $ishtml Set to true if the $body is HTML.
+	 * @param bool $ishtml Set to true if the $body is HTML.
 	 * 
 	 * @return \Core\EmailInterface
 	 */
@@ -206,7 +206,7 @@ interface EmailInterface {
 	/**
 	 * Add a Reply To address for this email.
 	 *
-	 * @param $address
+	 * @param string $address
 	 * @param string $name
 	 * 
 	 * @return \Core\EmailInterface

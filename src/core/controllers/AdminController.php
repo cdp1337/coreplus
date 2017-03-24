@@ -1430,14 +1430,14 @@ class AdminController extends Controller_2_1 {
 			'/core/email/from_name',
 			'/core/email/sandbox_to',
 			'/core/email/mailer',
-			'/core/email/sendmail_path',
+			/*'/core/email/sendmail_path',
 			'/core/email/smtp_auth',
 			'/core/email/smtp_host',
 			'/core/email/smtp_domain',
 			'/core/email/smtp_user',
 			'/core/email/smtp_password',
 			'/core/email/smtp_port',
-			'/core/email/smtp_security',
+			'/core/email/smtp_security',*/
 		];
 
 		$form = new \Core\Forms\Form();

@@ -262,9 +262,9 @@ class DatastoreAuthController extends Controller_2_1 {
 
 			$link = '/datastoreauth/forgotpassword/' . $nonce;
 
-			$e = new Email();
+			$e = new \Core\Email();
 			$e->setSubject('Forgot Password Request');
-			$e->to($u->get('email'));
+			$e->setTo($u->get('email'));
 			$e->templatename = 'emails/user/datastoreauth_forgotpassword.tpl';
 			$e->assign('link', \Core\resolve_link($link));
 			$e->assign('ip', REMOTE_IP);
@@ -507,9 +507,9 @@ class DatastoreAuthController extends Controller_2_1 {
 
 			$link = '/datastoreauth/forgotpassword?e=' . urlencode($u->get('email')) . '&n=' . $nonce;
 
-			$email = new \Email();
+			$email = new \Core\Email();
 			$email->setSubject('Initial Password Request');
-			$email->to($u->get('email'));
+			$email->setTo($u->get('email'));
 			$email->assign('link', \Core\resolve_link($link));
 			$email->assign('ip', REMOTE_IP);
 			$email->templatename = 'emails/user/initialpassword.tpl';
@@ -699,8 +699,8 @@ class DatastoreAuthController extends Controller_2_1 {
 			\SystemLogModel::LogSecurityEvent('/user/password', 'Password changed (administratively)', null, $user->get('id'));
 			
 			// Send an email to this user notifying them of the new password.
-			$email = new Email();
-			$email->to($user->get('email'));
+			$email = new \Core\Email();
+			$email->setTo($user->get('email'));
 			$email->setSubject('New Password Set');
 			$email->templatename = 'emails/user/admin_password.tpl';
 			$email->assign('user', $user);

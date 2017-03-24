@@ -261,14 +261,14 @@ EOD;
 		}
 
 
-		$email = new \Email();
+		$email = new \Core\Email();
 		$email->templatename = 'emails/user/gpgauth_key_verification.tpl';
 		$email->setSubject('GPG Key Change Request');
 		$email->assign('key', $fingerprint);
 		$email->assign('sentence', $sentence);
 		$email->assign('user', $user);
 		$email->assign('cmd', $cmd);
-		$email->to($user->get('email'));
+		$email->setTo($user->get('email'));
 		$email->setEncryption($fingerprint);
 
 		\SystemLogModel::LogSecurityEvent('/user/gpg/submit', 'Verification requested for key ' . $fingerprint, null, $user->get('id'));

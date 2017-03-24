@@ -63,6 +63,8 @@ class Email implements EmailInterface {
 	 */
 	private $_encryption = false;
 	
+	private $_isDebug = false;
+	
 	public function __construct() {
 		$backend = \ConfigHandler::Get('/core/email/mailer');
 		if(class_exists($backend)){
@@ -245,18 +247,18 @@ class Email implements EmailInterface {
 		// Passthru Only
 		return $this->_backend->clearRecipients();
 	}
-	
+
+
 	public function disableDebug() {
-		// Passthru Only
+		$this->_isDebug = false;
 		return $this->_backend->disableDebug();
 	}
 
 	public function enableDebug() {
-		// Passthru Only
+		$this->_isDebug = true;
 		return $this->_backend->enableDebug();
 	}
 
-	
 	/**
 	 * Assign a value to this email template.
 	 *
@@ -370,7 +372,7 @@ class Email implements EmailInterface {
 		if(sizeof($errors)){
 			$log->set('type', 'error');
 			$log->set('message', 'FAILED to send ' . $this->_backend->getSubject() . ' to ' . $to);
-			$log->set('details', implode($errors) . "\n" . $this->_backend->getFullEML());
+			$log->set('details', implode("\n", $errors) . "\n" . $this->_backend->getFullEML());
 		}
 		else {
 			$log->set('type', 'info');
@@ -378,6 +380,11 @@ class Email implements EmailInterface {
 			$log->set('details', $this->_backend->getFullEML());
 		}
 		$log->save();
+		
+		// Lastly if there were errors...
+		if(sizeof($errors)){
+			throw new \Exception(implode("\n<br/>", $errors));
+		}
 	}
 
 	/**
