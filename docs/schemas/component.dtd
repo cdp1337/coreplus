@@ -49,7 +49,7 @@
 	Provides element is a list of provide statements indicating what this component has.
 	A <provides> block MUST have one or more <provide> statement within.
 -->
-<!ELEMENT provides (provide|scriptlibrary)+>
+<!ELEMENT provides (provide|scriptlibrary|emailbackend)+>
 
 <!ELEMENT provide EMPTY>
 <!ATTLIST provide
@@ -61,7 +61,16 @@ type (component|library) "library"
 <!ATTLIST scriptlibrary
 	name CDATA #REQUIRED
 	call CDATA #IMPLIED
-	>
+>
+
+<!--
+This component provides an email backend that can be used by the site.
+-->
+<!ELEMENT emailbackend EMPTY>
+<!ATTLIST emailbackend
+	name CDATA #REQUIRED
+	class CDATA #REQUIRED
+>
 
 <!ELEMENT forms (formelement)>
 <!ELEMENT formelement EMPTY>

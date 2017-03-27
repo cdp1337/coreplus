@@ -1429,15 +1429,15 @@ class AdminController extends Controller_2_1 {
 			'/core/email/from',
 			'/core/email/from_name',
 			'/core/email/sandbox_to',
-			'/core/email/mailer',
-			'/core/email/sendmail_path',
+			//'/core/email/mailer',
+			/*'/core/email/sendmail_path',
 			'/core/email/smtp_auth',
 			'/core/email/smtp_host',
 			'/core/email/smtp_domain',
 			'/core/email/smtp_user',
 			'/core/email/smtp_password',
 			'/core/email/smtp_port',
-			'/core/email/smtp_security',
+			'/core/email/smtp_security',*/
 		];
 
 		$form = new \Core\Forms\Form();
@@ -1451,6 +1451,15 @@ class AdminController extends Controller_2_1 {
 			$form->addElement($f);
 		}
 		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
+		
+		$backends = \Core\Email::GetBackends();
+		$backend = ConfigHandler::Get('/core/email/mailer');
+		if(isset($backends[$backend])){
+			\Core\set_message('t:MESSAGE_INFO_EMAIL_CURRENT_BACKEND_IS_S', $backends[$backend]);
+		}
+		else{
+			\Core\set_message('t:MESSAGE_ERROR_EMAIL_NO_BACKEND_CONFIGURED');
+		}
 
 		$view->title = 'Email Options &amp; Diagnostics';
 		$view->assign('form', $form);
@@ -1480,17 +1489,18 @@ class AdminController extends Controller_2_1 {
 
 		$dest         = $request->getPost('email');
 		$method       = ConfigHandler::Get('/core/email/mailer');
+		/*
 		$smtpHost     = ConfigHandler::Get('/core/email/smtp_host');
 		$smtpUser     = ConfigHandler::Get('/core/email/smtp_user');
 		$smtpPass     = ConfigHandler::Get('/core/email/smtp_password');
 		$smtpPort     = ConfigHandler::Get('/core/email/smtp_port');
 		$smtpSec      = ConfigHandler::Get('/core/email/smtp_security');
-		$sendmailPath = ConfigHandler::Get('/core/email/sendmail_path');
+		$sendmailPath = ConfigHandler::Get('/core/email/sendmail_path');*/
 		$emailDebug   = [];
 
-		$emailDebug[] = 'Sending Method: ' . $method;
+		//$emailDebug[] = 'Sending Method: ' . $method;
 
-		switch($method){
+		/*switch($method){
 			case 'smtp':
 				$emailDebug[] = 'SMTP Host: ' . $smtpHost . ($smtpPort ? ':' . $smtpPort : '');
 				$emailDebug[] = 'SMTP User/Pass: ' . ($smtpUser ? $smtpUser . '//' . ($smtpPass ? '*** saved ***' : 'NO PASS') : 'Anonymous');
@@ -1499,18 +1509,18 @@ class AdminController extends Controller_2_1 {
 			case 'sendmail':
 				$emailDebug[] = 'Sendmail Path: ' . $sendmailPath;
 				break;
-		}
+		}*/
 
 		CLI::PrintHeader('Sending test email to ' . $dest);
 
 		CLI::PrintActionStart('Initializing Email System');
 		try{
-			$email = new Email();
-			$email->addAddress($dest);
+			$email = new \Core\Email();
+			$email->setTo($dest);
 			$email->setSubject('Test Email');
 			$email->templatename = 'emails/admin/test_email.tpl';
-			$email->assign('debugs', $emailDebug);
-			$email->getMailer()->SMTPDebug = 2;
+			$email->enableDebug();
+			//$email->assign('debugs', $emailDebug);
 
 			CLI::PrintActionStatus(true);
 		}
@@ -1534,11 +1544,8 @@ class AdminController extends Controller_2_1 {
 			CLI::PrintLine(explode("\n", $e->getTraceAsString()));
 		}
 
-		CLI::PrintHeader('Sent Headers:');
-		CLI::PrintLine(explode("\n", $email->getMailer()->CreateHeader()));
-
-		CLI::PrintHeader('Sent Body:');
-		CLI::PrintLine(explode("\n", $email->getMailer()->CreateBody()));
+		CLI::PrintHeader('Sent Data:');
+		CLI::PrintLine(explode("\n", $email->getFullEML()));
 	}
 
 	public static function _WidgetCreateUpdateHandler(\Core\Forms\Form $form){

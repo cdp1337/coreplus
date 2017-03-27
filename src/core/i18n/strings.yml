@@ -42,10 +42,7 @@ MESSAGE_CONFIG_CORE_AWS_CANONICALID:
     Your CanonicalUser ID. Used for setting access control settings in AmazonS3.
     Found in the AWS Security Credentials.
 MESSAGE_CONFIG_CORE_AWS_CANONICALNAME:
-  en: >
-    Your CanonicalUser DisplayName. Used for setting access control settings in
-    AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome,
-    AWS_CANONICAL_NAME&quot;).
+  en: 'Your CanonicalUser DisplayName. Used for setting access control settings in AmazonS3. Found in the AWS Security Credentials (i.e. &quot;Welcome, AWS_CANONICAL_NAME&quot;).'
 MESSAGE_CONFIG_CORE_AWS_KEY:
   en: Amazon Web Services Key. Found in the AWS Security Credentials.
 MESSAGE_CONFIG_CORE_AWS_SECRETKEY:
@@ -53,13 +50,11 @@ MESSAGE_CONFIG_CORE_AWS_SECRETKEY:
 MESSAGE_CONFIG_CORE_CACHE_BACKEND:
   en: apc; file; memcache; xcache; BLAH
 MESSAGE_CONFIG_CORE_EMAIL_ENABLE_SENDING:
-  en: >
-    Set to false to disable sending emails globally.  Useful for development or
-    stage environments.
+  en: 'Set to false to disable sending emails globally.  Useful for development or stage environments.'
 MESSAGE_CONFIG_CORE_EMAIL_FROM:
-  en: Email address emails should be sent 'from' by default.
+  en: "Email address emails should be sent 'from' by default."
 MESSAGE_CONFIG_CORE_EMAIL_FROM_NAME:
-  en: Name emails should be sent 'from' by default.
+  en: "Name emails should be sent 'from' by default."
 MESSAGE_CONFIG_CORE_EMAIL_MAILER:
   en: Email mailer backend used to send emails.
 MESSAGE_CONFIG_CORE_EMAIL_SANDBOX_TO:
@@ -67,31 +62,23 @@ MESSAGE_CONFIG_CORE_EMAIL_SANDBOX_TO:
     Set to an email address to override all emails to be forwarded to a given email.
     Useful for development or stage environments.
 MESSAGE_CONFIG_CORE_EMAIL_SENDMAIL_PATH:
-  en: >
-    Set to the absolute path for sendmail, (please consult your system administrator
-    if you do not know what this is).
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_AUTH:
-  en: >
-    Select the authentication type for the SMTP server.  Most servers support LOGIN,
-    M$ Exchange supports NTLM.
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_DOMAIN:
-  en: If authenticating to a M$ Exchange server, set the domain name here.
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_HOST:
-  en: SMTP Host for sending emails through.
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_PASSWORD:
-  en: SMTP Password, (if required).
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_PORT:
-  en: >
-    SMTP Port to send over, probably 25 if encryption is disabled, 465 or 587 if
-    enabled.
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_SECURITY:
-  en: Security mode for connecting to the SMTP server
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_SMTP_USER:
-  en: SMTP username.
+  en: ""
 MESSAGE_CONFIG_CORE_EMAIL_VERIFY_WITH_DNS:
-  en: >
-    Verify email domains via DNS lookups.  May slow down email validation slightly,
-    but ensures a valid domain.
+  en: 'Verify email domains via DNS lookups.  May slow down email validation slightly, but ensures a valid domain.'
 MESSAGE_CONFIG_CORE_FILESTORE_ASSETVERSION:
   en: >
     Auto-incrementer for the asset version; incremented by calling reinstall on the
@@ -106,6 +93,10 @@ MESSAGE_CONFIG_CORE_LOGS_DB_KEEP:
   en: >
     Keep database logs for a given amount of time, or 0 to keep all logs
     indefinitely.
+MESSAGE_CONFIG_CORE_LOGS_DB_LEVEL:
+  en: ""
+MESSAGE_CONFIG_CORE_LOGS_LEVEL:
+  en: ""
 MESSAGE_CONFIG_CORE_LOGS_ROTATE_COMPRESS:
   en: Compress log files after rotation.
 MESSAGE_CONFIG_CORE_LOGS_ROTATE_FREQUENCY:
@@ -119,41 +110,21 @@ MESSAGE_CONFIG_CORE_PAGE_INDEXABLE:
     Indexable status for pages, set to allow to allow pages to be indexable or not,
     set to deny to force all pages to be noindex.
 MESSAGE_CONFIG_CORE_PAGE_TEASER_TEMPLATE:
-  en: >
-    The meta description (aka teaser), template on pages.  You can enter various
-    keywords here to have them automatically replaced with the appropriate values.
-    Please note, this only applies to page that contain a blank meta
-    description/teaser value.&lt;br/&gt;&lt;br/&gt;  If this is blank, then
-    &lt;em&gt;no&lt;/em&gt; automatic teaser is generated.
+  en: 'The meta description (aka teaser), template on pages.  You can enter various keywords here to have them automatically replaced with the appropriate values. Please note, this only applies to page that contain a blank meta description/teaser value.&lt;br/&gt;&lt;br/&gt;  If this is blank, then &lt;em&gt;no&lt;/em&gt; automatic teaser is generated.'
 MESSAGE_CONFIG_CORE_PAGE_TITLE_REMOVE_STOP_WORDS:
-  en: >
-    "Stop" words are words that many search engines ignore such as "a", "an", "the",
-    etc. Please note, this only applies to <em>new</em> pages and pages that do not
-    have the SEO title field explicitly set.
+  en: '"Stop" words are words that many search engines ignore such as "a", "an", "the", etc. Please note, this only applies to <em>new</em> pages and pages that do not have the SEO title field explicitly set.'
 MESSAGE_CONFIG_CORE_PAGE_TITLE_TEMPLATE:
-  en: >
-    The title template for SEO titles on pages.  You can enter various keywords here
-    to have them automatically replaced with the appropriate values.  Please note,
-    this only applies to page that do not already have their SEO title explicitly
-    set.  &lt;br/&gt;&lt;br/&gt;If this is blank, then the page title will be used
-    as the SEO title as-is.
+  en: 'The title template for SEO titles on pages.  You can enter various keywords here to have them automatically replaced with the appropriate values.  Please note, this only applies to page that do not already have their SEO title explicitly set.  &lt;br/&gt;&lt;br/&gt;If this is blank, then the page title will be used as the SEO title as-is.'
 MESSAGE_CONFIG_CORE_PAGE_URL_REMOVE_STOP_WORDS:
   en: '&quot;Stop&quot; words are words that many search engines ignore such as &quot;a&quot;, &quot;an&quot;, &quot;the&quot;, etc.  Please note, this only applies to &lt;em&gt;new&lt;/em&gt; pages.'
 MESSAGE_CONFIG_CORE_PERFORMANCE_ANONYMOUS_USER_PAGE_CACHE:
-  en: >
-    Check to enable page-level caching for anonymous users.  This is highly
-    effective for static sites, but strongly recommended against for web
-    applications and dynamic sites.
+  en: 'Check to enable page-level caching for anonymous users.  This is highly effective for static sites, but strongly recommended against for web applications and dynamic sites.'
 MESSAGE_CONFIG_CORE_SECURITY_CSP-FRAME-ANCESTORS:
-  en: >
-    Additional values for the Content-Security-Policy header, frame-ancestors
-    directive. Includes 'self'
+  en: "Additional values for the Content-Security-Policy header, frame-ancestors directive. Includes 'self'"
 MESSAGE_CONFIG_CORE_SECURITY_X-FRAME-OPTIONS:
   en: Value for the X-Frame-Options header.
 MESSAGE_CONFIG_CORE_SESSION_TTL:
-  en: >
-    Time to live for sessions.  Amount of seconds to keep an idle session active
-    before requesting the user to log back in due to inactivity.
+  en: 'Time to live for sessions.  Amount of seconds to keep an idle session active before requesting the user to log back in due to inactivity.'
 MESSAGE_CONFIG_CORE_UPDATER_VERSIONFREEZE:
   en: >
     Lock this version of Core and its libraries at the feature version it is
@@ -167,10 +138,7 @@ MESSAGE_CONFIG_USER_AUTHDRIVERS:
     The auth driver(s) to have enabled on the site, separate multiple drivers with a
     pipe (|)
 MESSAGE_CONFIG_USER_DISPLAYAS:
-  en: >
-    The user field to use for displaying in representation of the user, ie: username
-    or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id
-    used, just the prefix of the email is used.
+  en: "The user field to use for displaying in representation of the user, ie: username or email.  If 'email' is used, the full email is displayed.  If 'emailbase' id used, just the prefix of the email is used."
 MESSAGE_CONFIG_USER_DISPLAYNAME_ANONYMOUS:
   en: What to call guest/unauthenticated users.
 MESSAGE_CONFIG_USER_EDIT_FORM_ELEMENTS:
@@ -211,38 +179,31 @@ MESSAGE_CORE_WIDGET_ADMIN_TITLE:
 MESSAGE_CORE_WIDGET_EDIT_PERMISSIONS:
   en: ""
 MESSAGE_EMAIL_SENDING_DISABLED_TEST_NOT_POSSIBLE:
-  en: Email sending is currently disabled!  No testing is possible.
+  en: 'Email sending is currently disabled!  No testing is possible.'
 MESSAGE_ERROR_BAD_OR_EXPIRED_SESSION:
-  en: Your session has expired or was otherwise invalid.  Please try again.
+  en: 'Your session has expired or was otherwise invalid.  Please try again.'
 MESSAGE_ERROR_CANNOT_SEND_WELCOME_EMAIL:
-  en: >
-    Your account was created, but we were unable to send a welcome email.  The
-    administrator has been notified of this error.
+  en: 'Your account was created, but we were unable to send a welcome email.  The administrator has been notified of this error.'
 MESSAGE_ERROR_CHECK_SERVER_ID_NOT_VALID:
-  en: Your server ID is not valid!  Please update it.
+  en: 'Your server ID is not valid!  Please update it.'
 MESSAGE_ERROR_CLASS_S_NOT_AVAILABLE:
-  en: Class [[%1%]] is not avaiable!
+  en: 'Class [[%1%]] is not avaiable!'
 MESSAGE_ERROR_CLASS_S_NOT_SIMPLE_WIDGET:
-  en: Widget [[%1%]] does not appear to be a 'simple' widget.
+  en: "Widget [[%1%]] does not appear to be a 'simple' widget."
 MESSAGE_ERROR_CLASS_S_NOT_VALID_WIDGET:
-  en: Class [[%1%]] does not appear to be a valid widget!
+  en: 'Class [[%1%]] does not appear to be a valid widget!'
 MESSAGE_ERROR_CORE_WIDGET_S_NOT_FOUND_ON_SYSTEM:
-  en: The widget [[%1%]] could not be located.
+  en: 'The widget [[%1%]] could not be located.'
 MESSAGE_ERROR_CORE_WIDGET_S_NOT_SIMPLE_WIDGET:
-  en: >
-    The widget [[%1%]] does not appear to be a 'simple' widget.  Only simple widgets
-    can be managed through this interface.
+  en: "The widget [[%1%]] does not appear to be a 'simple' widget.  Only simple widgets can be managed through this interface."
 MESSAGE_ERROR_CORE_WIDGET_S_WRONG_PARENT_CLASS:
-  en: The widget [[%1%]] does not extend \Core\Widget.
+  en: 'The widget [[%1%]] does not extend \Core\Widget.'
+MESSAGE_ERROR_EMAIL_NO_BACKEND_CONFIGURED:
+  en: "No email backend is currently set, please install and/or configure one."
 MESSAGE_ERROR_FORM_SUBMISSION_TYPE_DOES_NOT_MATCH:
-  en: >
-    Sorry but the form submission type does not match your request.  Please try
-    again.
+  en: 'Sorry but the form submission type does not match your request.  Please try again.'
 MESSAGE_ERROR_FORM_SUBMISSION_UNHANDLED_EXCEPTION:
-  en: >
-    Sorry but there was an unexpected problem when submitting your request.  The
-    administrator has been notified of this problem, so please try again in a little
-    while.
+  en: 'Sorry but there was an unexpected problem when submitting your request.  The administrator has been notified of this problem, so please try again in a little while.'
 MESSAGE_ERROR_INCORRECT_PASSWORD:
   en: Incorrect password, please try again.
 MESSAGE_ERROR_INSUFFICIENT_ACCESS_PERMISSIONS:
@@ -260,19 +221,15 @@ MESSAGE_ERROR_SERVER_ID_NOT_SET_ADD_TO_CONFIGURATION:
     Your server ID is not set, this means that you will not be able to access
     licensed software!
 MESSAGE_ERROR_UPDATER_SITE_S_OK:
-  en: Updater site [%1%] checked OK!
+  en: 'Updater site [%1%] checked OK!'
 MESSAGE_ERROR_USER_LOGIN_ACCOUNT_DEACTIVATED:
-  en: >
-    Your account has been deactivated.  Please contact an administrator if you feel
-    this was in error.
+  en: 'Your account has been deactivated.  Please contact an administrator if you feel this was in error.'
 MESSAGE_ERROR_USER_LOGIN_ACCOUNT_NOT_ACTIVE:
-  en: >
-    Your account is not active yet.  Please check your email if a link was sent, or
-    consult the administrator to activate your account.
+  en: 'Your account is not active yet.  Please check your email if a link was sent, or consult the administrator to activate your account.'
 MESSAGE_ERROR_USER_LOGIN_EMAIL_NOT_FOUND:
   en: The email you used does not appear to be registered yet.
 MESSAGE_ERROR_USER_LOGIN_INCORRECT_PASSWORD:
-  en: The password you tried is incorrect.  Please try again.
+  en: 'The password you tried is incorrect.  Please try again.'
 MESSAGE_ERROR_USER_LOGIN_MUST_SET_NEW_PASSWORD_UNABLE_TO_SEND_EMAIL:
   en: >
     Your account needs a new password but we were unable to send you an email with
@@ -280,19 +237,17 @@ MESSAGE_ERROR_USER_LOGIN_MUST_SET_NEW_PASSWORD_UNABLE_TO_SEND_EMAIL:
 MESSAGE_ERROR_USER_LOGIN_PASSWORD_AUTH_DISABLED:
   en: Password logins are disabled for your account!
 MESSAGE_ERROR_USER_REGISTER_PASSWORD_MISMATCH:
-  en: >
-    Your passwords do not match!  Please ensure you typed the correct password twice
-    and try again.
+  en: 'Your passwords do not match!  Please ensure you typed the correct password twice and try again.'
 MESSAGE_GENERATE_SECURE_PASSWORD:
   en: Check to generate and send a secure password.
+MESSAGE_INFO_EMAIL_CURRENT_BACKEND_IS_S:
+  en: "Current email backend is [%1%], please use that respective configuration page to change those settings."
 MESSAGE_INFO_NO_CHANGES_PERFORMED:
   en: There were no changes performed.
 MESSAGE_INFO_SERVER_KEY_IS_S:
-  en: Your server key is [%1%]
+  en: 'Your server key is [%1%]'
 MESSAGE_INFO_USER_LOGIN_MUST_SET_NEW_PASSWORD_INSTRUCTIONS_HAVE_BEEN_EMAILED:
-  en: >
-    You must set/change your password before you can login.  An email with
-    instructions has been sent to you.
+  en: 'You must set/change your password before you can login.  An email with instructions has been sent to you.'
 MESSAGE_MODEL_COMPONENTMODEL_ENABLED:
   en: ""
 MESSAGE_MODEL_COMPONENTMODEL_LICENSE:
@@ -374,16 +329,11 @@ MESSAGE_MODEL_PAGEMODEL_DELETEURL:
 MESSAGE_MODEL_PAGEMODEL_EDITURL:
   en: ""
 MESSAGE_MODEL_PAGEMODEL_EXPIRES:
-  en: >
-    Set an amount of time to keep this page in cache.  For pages without dynamic
-    content, feel free to bump this up to several days.
+  en: 'Set an amount of time to keep this page in cache.  For pages without dynamic content, feel free to bump this up to several days.'
 MESSAGE_MODEL_PAGEMODEL_FUZZY:
   en: ""
 MESSAGE_MODEL_PAGEMODEL_INDEXABLE:
-  en: >
-    Set to no to hide this page from the sitemap and mark as not-indexable.  (It is
-    still browseable by end users and bots, just toggled as no-index for bots that
-    play nicely.)
+  en: 'Set to no to hide this page from the sitemap and mark as not-indexable.  (It is still browseable by end users and bots, just toggled as no-index for bots that play nicely.)'
 MESSAGE_MODEL_PAGEMODEL_LAST_TEMPLATE:
   en: ""
 MESSAGE_MODEL_PAGEMODEL_PAGEVIEWS:
@@ -397,15 +347,13 @@ MESSAGE_MODEL_PAGEMODEL_PASSWORD_PROTECTED:
 MESSAGE_MODEL_PAGEMODEL_POPULARITY:
   en: ""
 MESSAGE_MODEL_PAGEMODEL_PUBLISHED:
-  en: >
-    Set this field to some date to override the 'now' behaviour of it.  Useful if
-    you need to mark a page as published on some given date in the future.
+  en: "Set this field to some date to override the 'now' behaviour of it.  Useful if you need to mark a page as published on some given date in the future."
 MESSAGE_MODEL_PAGEMODEL_PUBLISHED_EXPIRES:
-  en: Set this to a date to have the page automatically 'expire' on that date.
+  en: "Set this to a date to have the page automatically 'expire' on that date."
 MESSAGE_MODEL_PAGEMODEL_PUBLISHED_STATUS:
   en: Set to draft to mark this page as a draft and hide it from general users.
 MESSAGE_MODEL_PAGEMODEL_REWRITEURL:
-  en: An optional 'pretty' URL to use for this page instead of the system URL.
+  en: "An optional 'pretty' URL to use for this page instead of the system URL."
 MESSAGE_MODEL_PAGEMODEL_SEARCH_INDEX_PRI:
   en: ""
 MESSAGE_MODEL_PAGEMODEL_SEARCH_INDEX_SEC:
@@ -497,7 +445,7 @@ MESSAGE_MODEL_UPDATESITEMODEL_PASSWORD:
 MESSAGE_MODEL_UPDATESITEMODEL_UPDATED:
   en_US: ""
 MESSAGE_MODEL_UPDATESITEMODEL_URL:
-  en: The URL to access the update site.  Core Plus's official URL is http://corepl.us
+  en: "The URL to access the update site.  Core Plus's official URL is http://corepl.us"
 MESSAGE_MODEL_UPDATESITEMODEL_USERNAME:
   en: ""
 MESSAGE_MODEL_USERACTIVITYMODEL_BASEURL:
@@ -699,8 +647,8 @@ MESSAGE_PLEASE_LOG_IN_OR_REGISTER_TO_VIEW:
 MESSAGE_PLEASE_LOG_IN_TO_VIEW:
   en: Please log in to view this page.
 MESSAGE_PLEASE_S:
-  en: Please [%1%].
-  de: Bitte [%1%].
+  en: 'Please [%1%].'
+  de: 'Bitte [%1%].'
 MESSAGE_PLEASE_SAVE_EMAIL_CONFIGURATION_TUTORIAL_TO_TEST:
   en: |
     Please save any configuration on the other tab first.
@@ -710,8 +658,8 @@ MESSAGE_PLEASE_SAVE_EMAIL_CONFIGURATION_TUTORIAL_TO_TEST:
 MESSAGE_PLEASE_SET_SECURE_PASSWORD:
   en: Please set a secure password.
 MESSAGE_PLEASE_S_OR_S:
-  en: Please [%1%] or [%2%].
-  de: Bitte [%1%] oder [%2%].
+  en: 'Please [%1%] or [%2%].'
+  de: 'Bitte [%1%] oder [%2%].'
 MESSAGE_REGISTER_A_NEW_ACCOUNT:
   en: Sign up for an account!
 MESSAGE_SITE_CONFIGURATION_TUTORIAL:
@@ -721,11 +669,11 @@ MESSAGE_SITE_CONFIGURATION_TUTORIAL:
     if you improperly configure this page.
     <br/><br/>You've been warned, tread with caution ;)
 MESSAGE_SUCCESS_ASSET_DIRECTORY_S_OK:
-  en: Asset directory [%1%] exists and is writable!
+  en: 'Asset directory [%1%] exists and is writable!'
 MESSAGE_SUCCESS_CHECK_SERVER_ID_IS_S:
-  en: Your server ID is [%1%]
+  en: 'Your server ID is [%1%]'
 MESSAGE_SUCCESS_CORE_WIDGET_S_UPDATED:
-  en: The widget [[%1%]] has been successfully updated!
+  en: 'The widget [[%1%]] has been successfully updated!'
 MESSAGE_SUCCESS_CREATED_USER_ACCOUNT:
   en: Registered user account successfully!
 MESSAGE_SUCCESS_DELETED_WIDGET_S:
@@ -733,27 +681,27 @@ MESSAGE_SUCCESS_DELETED_WIDGET_S:
 MESSAGE_SUCCESS_DISABLED_PASSWORD_AUTH:
   en: Disabled password logins successfully!
 MESSAGE_SUCCESS_GPGAUTH_GPG_KEY_S_CURRENTLY_ENABLED:
-  en: Your current GPG key is [%1%] and is enabled.
+  en: 'Your current GPG key is [%1%] and is enabled.'
 MESSAGE_SUCCESS_LOG_DIRECTORY_S_OK:
-  en: Log directory [%1%] exists and is writable!
+  en: 'Log directory [%1%] exists and is writable!'
 MESSAGE_SUCCESS_PAGE_PUBLISHED:
   en: Page published successfully!
 MESSAGE_SUCCESS_PAGE_UNPUBLISHED:
   en: Page unpublished successfully!
 MESSAGE_SUCCESS_PHP_S_OK:
-  en: PHP Version [%1%] is good!
+  en: 'PHP Version [%1%] is good!'
 MESSAGE_SUCCESS_PLEASE_CHECK_EMAIL_FOR_PASSWORD_RESET_INSTRUCTIONS:
-  en: ""
+  en: Please check your email for password reset instructions.
 MESSAGE_SUCCESS_PUBLIC_DIRECTORY_S_OK:
-  en: Public directory [%1%] exists and is writable!
+  en: 'Public directory [%1%] exists and is writable!'
 MESSAGE_SUCCESS_ROOT_DIRECTORY_S_OK:
-  en: Root directory [%1%] exists and is writable!
+  en: 'Root directory [%1%] exists and is writable!'
 MESSAGE_SUCCESS_UPDATED_0_CONFIGURATION:
   en: No configuration options changed.
 MESSAGE_SUCCESS_UPDATED_1_CONFIGURATION:
   en: Updated 1 configuration option successfully!
 MESSAGE_SUCCESS_UPDATED_N_CONFIGURATION:
-  en: Updated [%1%] configuration options successfully!
+  en: 'Updated [%1%] configuration options successfully!'
 MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT:
   en: Updated your profile successfully!
 MESSAGE_SUCCESS_UPDATED_OWN_USER_ACCOUNT_PENDING_APPROVAL:
@@ -767,19 +715,19 @@ MESSAGE_SUCCESS_UPDATED_TRANSLATION_STRINGS:
 MESSAGE_SUCCESS_UPDATED_USER_ACCOUNT:
   en: Updated user account successfully!
 MESSAGE_SUCCESS_UPDATER_COMPONENT_S_OUTDATED_S_AVAILABLE:
-  en: Component [%1%] is at the latest version available ([%2%]).
+  en: 'Component [%1%] is at the latest version available ([%2%]).'
 MESSAGE_SUCCESS_UPDATER_CORE_OUTDATED_S_AVAILABLE:
-  en: Core is at the latest version available ([%1%]).
+  en: 'Core is at the latest version available ([%1%]).'
 MESSAGE_SUCCESS_UPDATER_SITE_S_OK:
-  en: Updater site [%1%] appears to be valid and operational!
+  en: 'Updater site [%1%] appears to be valid and operational!'
 MESSAGE_SUCCESS_UPDATER_THEME_S_OUTDATED_S_AVAILABLE:
-  en: Theme [%1%] is at the latest version available ([%2%]).
+  en: 'Theme [%1%] is at the latest version available ([%2%]).'
 MESSAGE_THERE_ARE_0_REPOSITORIES_AVAILABLE:
   en: There are no repositories avaiable.
 MESSAGE_THERE_ARE_1_REPOSITORIES_AVAILABLE:
   en: There is one repository available.
 MESSAGE_THERE_ARE_N_REPOSITORIES_AVAILABLE:
-  en: There are [%1%] repositories available.
+  en: 'There are [%1%] repositories available.'
 MESSAGE_TUTORIAL_ALL_TRANSLATION_STRINGS_AVAILABLE_CURRENTLY:
   en: >
     This section lists out all translation strings currently available across all
@@ -790,36 +738,21 @@ MESSAGE_TUTORIAL_GPGAUTH_CONFIGURE2_ALT_UPLOAD:
     run the components individually and copy/paste the result of the GPG
     verification here.
 MESSAGE_TUTORIAL_GPGAUTH_CONFIGURE2_CHECK_EMAIL_FOR_INSTRUCTIONS_NOTE_IS_ENCRYPTED:
-  en: >
-    Please check your email and follow the instructions that have been
-    sent.<br/><br/>Note, the email will be encrypted with the GPG public key that
-    you provided to ensure that you have access to the private component!
+  en: 'Please check your email and follow the instructions that have been sent.<br/><br/>Note, the email will be encrypted with the GPG public key that you provided to ensure that you have access to the private component!'
 MESSAGE_TUTORIAL_GPGAUTH_CONFIGURE_ALT_UPLOAD:
   en: >
     Alternatively, you can upload your public key manually by pasting it in below
     and clicking submit.
 MESSAGE_TUTORIAL_GPGAUTH_CONFIGURE_COPY_PASTE_COMMAND_TO_UPLOAD_PUBLIC_KEY:
-  en: >
-    Please copy and paste this command and run it in a terminal window to upload
-    your public key.<br/><br/>If you do not already have GPG setup on your local
-    computer, please @todo INSTRUCTIONS HERE
+  en: 'Please copy and paste this command and run it in a terminal window to upload your public key.<br/><br/>If you do not already have GPG setup on your local computer, please @todo INSTRUCTIONS HERE'
 MESSAGE_TUTORIAL_GPGAUTH_LOGIN2_ALT_UPLOAD:
   en: ""
 MESSAGE_TUTORIAL_GPGAUTH_LOGIN2_COPY_PASTE_COMMAND_TO_LOGIN:
   en: ""
 MESSAGE_TUTORIAL_GPGAUTH_REGISTER_ALT_UPLOAD:
-  en: >
-    Instead of pasting commands into a terminal, you can also manually upload your
-    GPG public key with the form below. <br/><br/> Simply export your public key in
-    ASCII mode and paste the text respresentation below along with your email
-    address.
+  en: 'Instead of pasting commands into a terminal, you can also manually upload your GPG public key with the form below. <br/><br/> Simply export your public key in ASCII mode and paste the text respresentation below along with your email address.'
 MESSAGE_TUTORIAL_GPGAUTH_REGISTER_COPY_PASTE_COMMAND:
-  en: >
-    To register an account on this site, start by running the following command in a
-    local terminal where your public and private GPG keys are available.  <em>(Hint,
-    copy/paste works well here)</em> <br/><br/> You will be prompted for the 8-digit
-    public key fingerprint which will be displayed in the format similar to: "sec
-    4096R/1234ABCD", in that case, enter 1234ABCD.
+  en: 'To register an account on this site, start by running the following command in a local terminal where your public and private GPG keys are available.  <em>(Hint, copy/paste works well here)</em> <br/><br/> You will be prompted for the 8-digit public key fingerprint which will be displayed in the format similar to: "sec 4096R/1234ABCD", in that case, enter 1234ABCD.'
 MESSAGE_TUTORIAL_MANUALLY_UPLOAD_PACKAGE:
   en: >
     You can use this form to upload a TGZ file to manually install a package. Please
@@ -827,14 +760,9 @@ MESSAGE_TUTORIAL_MANUALLY_UPLOAD_PACKAGE:
     repositories, so use caution when uploading files and only install packages from
     trusted sources!
 MESSAGE_TUTORIAL_OVERRIDE_TRANSLATION_STRINGS_FOR_REQUESTED_LANGUAGE:
-  en: >
-    This section allows you to change the strings for the requested language!  These
-    edits persist across software upgrades.
+  en: 'This section allows you to change the strings for the requested language!  These edits persist across software upgrades.'
 MESSAGE_TUTORIAL_SERVER_KEY_INSTALL_TO_CONFIG:
-  en: >
-    Please add the following content to config/configuration.xml via a text editor.
-    If there is already a line for 'SERVER_ID', please just update the value with
-    what is displayed.
+  en: "Please add the following content to config/configuration.xml via a text editor. If there is already a line for 'SERVER_ID', please just update the value with what is displayed."
 MESSAGE_UPLOAD_TGZ_TO_MANUALLY_INSTALL_PACKAGE:
   en: Select a TGZ file to install a component, theme, or Core itself.
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_0_CAPITAL:
@@ -846,53 +774,49 @@ MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_0_NUMBER:
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_0_SYMBOL:
   en: ""
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_1_CAPITAL:
-  en: Password requres at least [%1%] capital letter.
+  en: 'Password requres at least [%1%] capital letter.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_1_CHARACTER:
-  en: Password requres at least [%1%] character.
+  en: 'Password requres at least [%1%] character.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_1_NUMBER:
-  en: Password requres at least [%1%] number.
+  en: 'Password requres at least [%1%] number.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_1_SYMBOL:
-  en: Password requres at least [%1%] symbol.
+  en: 'Password requres at least [%1%] symbol.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_CAPITAL:
-  en: Password requres at least [%1%] capital letters.
+  en: 'Password requres at least [%1%] capital letters.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_CHARACTER:
-  en: Password requres at least [%1%] characters in length.
+  en: 'Password requres at least [%1%] characters in length.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_NUMBER:
-  en: Password requres at least [%1%] numbers.
+  en: 'Password requres at least [%1%] numbers.'
 MESSAGE_USER_PASSWORD_COMPLEXITY_REQUIREMENT_N_SYMBOL:
-  en: Password requres at least [%1%] symbols.
+  en: 'Password requres at least [%1%] symbols.'
 MESSAGE_WARNING_ASSET_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Asset directory [%1%] does not appear to exist, please create it.
+  en: 'Asset directory [%1%] does not appear to exist, please create it.'
 MESSAGE_WARNING_ASSET_DIRECTORY_S_NOT_WRITABLE:
-  en: Asset directory [%1%] is not writable.  Please chmod a+w it.
+  en: 'Asset directory [%1%] is not writable.  Please chmod a+w it.'
 MESSAGE_WARNING_LOG_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Log directory [%1%] does not appear to exist, please create it.
+  en: 'Log directory [%1%] does not appear to exist, please create it.'
 MESSAGE_WARNING_LOG_DIRECTORY_S_NOT_WRITABLE:
-  en: Log directory [%1%] is not writable.  Please chmod a+w it.
+  en: 'Log directory [%1%] is not writable.  Please chmod a+w it.'
 MESSAGE_WARNING_PHP_S_TOO_OLD:
-  en: >
-    Your PHP version [%1%] is too old to properly support Core Plus.  Please upgrade
-    to at least 5.5.
+  en: 'Your PHP version [%1%] is too old to properly support Core Plus.  Please upgrade to at least 5.5.'
 MESSAGE_WARNING_PUBLIC_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Public directory [%1%] does not appear to exist, please create it.
+  en: 'Public directory [%1%] does not appear to exist, please create it.'
 MESSAGE_WARNING_PUBLIC_DIRECTORY_S_NOT_WRITABLE:
-  en: Public directory [%1%] is not writable.  Please chmod a+w it.
+  en: 'Public directory [%1%] is not writable.  Please chmod a+w it.'
 MESSAGE_WARNING_ROOT_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Root directory [%1%] does not appear to exist, please create it.
+  en: 'Root directory [%1%] does not appear to exist, please create it.'
 MESSAGE_WARNING_ROOT_DIRECTORY_S_NOT_WRITABLE:
-  en: Root directory [%1%] is not writable.  Please chmod a+w it.
+  en: 'Root directory [%1%] is not writable.  Please chmod a+w it.'
 MESSAGE_WARNING_SERVER_ID_LEGACY_UPDATE_NOW:
   en: Your server ID is a legacy key, please update it to access licensed software!
 MESSAGE_WARNING_UPDATER_COMPONENT_S_OUTDATED_S_AVAILABLE:
-  en: There is a new version of the component [%1%] available! (Version [%2%]).
+  en: 'There is a new version of the component [%1%] available! (Version [%2%]).'
 MESSAGE_WARNING_UPDATER_CORE_OUTDATED_S_AVAILABLE:
-  en: There is a new version of Core available! (Version [%2%]).
+  en: 'There is a new version of Core available! (Version [%2%]).'
 MESSAGE_WARNING_UPDATER_NO_UPDATE_SITES:
-  en: >
-    There are no update sites installed!  This means that you will not be able to
-    automatically install new software and updates.
+  en: 'There are no update sites installed!  This means that you will not be able to automatically install new software and updates.'
 MESSAGE_WARNING_UPDATER_THEME_S_OUTDATED_S_AVAILABLE:
-  en: There is a new version of the theme [%1%] available! (Version [%2%]).
+  en: 'There is a new version of the theme [%1%] available! (Version [%2%]).'
 STRING_0_DAY:
   en: 0 Days
 STRING_0_HOUR:
@@ -965,23 +889,23 @@ STRING_CHANGE_PASSWORD:
   en: Change Password
   de: Passwort Ändern
 STRING_CHECK_ASSET_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Asset directory [%1%] does not exist
+  en: 'Asset directory [%1%] does not exist'
 STRING_CHECK_ASSET_DIRECTORY_S_NOT_WRITABLE:
-  en: Asset directory [%1%] is not writable
+  en: 'Asset directory [%1%] is not writable'
 STRING_CHECK_LOG_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Log directory [%1%] does not exist
+  en: 'Log directory [%1%] does not exist'
 STRING_CHECK_LOG_DIRECTORY_S_NOT_WRITABLE:
-  en: Log directory [%1%] is not writable
+  en: 'Log directory [%1%] is not writable'
 STRING_CHECK_PHP_S_TOO_OLD:
-  en: PHP Version [%1%] is too old for Core to function correctly
+  en: 'PHP Version [%1%] is too old for Core to function correctly'
 STRING_CHECK_PUBLIC_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Public directory [%1%] does not exist
+  en: 'Public directory [%1%] does not exist'
 STRING_CHECK_PUBLIC_DIRECTORY_S_NOT_WRITABLE:
-  en: Public directory [%1%] is not writable
+  en: 'Public directory [%1%] is not writable'
 STRING_CHECK_ROOT_DIRECTORY_S_DOES_NOT_EXIST:
-  en: Root directory [%1%] does not exist
+  en: 'Root directory [%1%] does not exist'
 STRING_CHECK_ROOT_DIRECTORY_S_NOT_WRITABLE:
-  en: Root directory [%1%] is not writable
+  en: 'Root directory [%1%] is not writable'
 STRING_CHECK_SERVER_ID_NOT_VALID:
   en: Your server ID is not valid!
 STRING_CHECK_UPDATER_NO_UPDATE_SITES:
@@ -1022,33 +946,37 @@ STRING_CONFIG_CORE_EMAIL_MAILER:
 STRING_CONFIG_CORE_EMAIL_SANDBOX_TO:
   en: Sandbox To
 STRING_CONFIG_CORE_EMAIL_SENDMAIL_PATH:
-  en: Sendmail Path
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_AUTH:
-  en: SMTP Authentication Method
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_DOMAIN:
-  en: SMTP Domain
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_HOST:
-  en: SMTP Host
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_PASSWORD:
-  en: SMTP Password
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_PORT:
-  en: SMTP Port
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_SECURITY:
-  en: SMTP Security
+  en: ""
 STRING_CONFIG_CORE_EMAIL_SMTP_USER:
-  en: SMTP User
+  en: ""
 STRING_CONFIG_CORE_EMAIL_VERIFY_WITH_DNS:
   en: Verify with DNS
 STRING_CONFIG_CORE_FILESTORE_ASSETVERSION:
   en: Filestore Asset Version
 STRING_CONFIG_CORE_JAVASCRIPT_MINIFIED:
-  en: Use Minified Javascript & CSS
+  en: 'Use Minified Javascript & CSS'
 STRING_CONFIG_CORE_LANGUAGE_LANGUAGES_ENABLED:
   en: ""
 STRING_CONFIG_CORE_LANGUAGE_SITE_DEFAULT:
   en: Site Default Language
 STRING_CONFIG_CORE_LOGS_DB_KEEP:
   en: Database Log Retention
+STRING_CONFIG_CORE_LOGS_DB_LEVEL:
+  en: ""
+STRING_CONFIG_CORE_LOGS_LEVEL:
+  en: ""
 STRING_CONFIG_CORE_LOGS_ROTATE_COMPRESS:
   en: Compression for Log Rotation
 STRING_CONFIG_CORE_LOGS_ROTATE_FREQUENCY:
@@ -1062,11 +990,11 @@ STRING_CONFIG_CORE_PAGE_INDEXABLE:
 STRING_CONFIG_CORE_PAGE_TEASER_TEMPLATE:
   en: Meta Description Template
 STRING_CONFIG_CORE_PAGE_TITLE_REMOVE_STOP_WORDS:
-  en: Remove &quot;stop&quot; words from titles
+  en: 'Remove &quot;stop&quot; words from titles'
 STRING_CONFIG_CORE_PAGE_TITLE_TEMPLATE:
   en: Page Title Template
 STRING_CONFIG_CORE_PAGE_URL_REMOVE_STOP_WORDS:
-  en: Remove &quot;stop&quot; words from generated URLs
+  en: 'Remove &quot;stop&quot; words from generated URLs'
 STRING_CONFIG_CORE_PERFORMANCE_ANONYMOUS_USER_PAGE_CACHE:
   en: Enable Anonymous-User Page Cache
 STRING_CONFIG_CORE_SECURITY_CSP-FRAME-ANCESTORS:
@@ -1159,7 +1087,7 @@ STRING_DIALECT_Arabic:
 STRING_DIALECT_Argentina:
   en: Argentina
 STRING_DIALECT_Armenian - Armenia:
-  en: Armenian - Armenia
+  en: 'Armenian - Armenia'
 STRING_DIALECT_Australian:
   en: Australian
 STRING_DIALECT_Austria:
@@ -1357,8 +1285,8 @@ STRING_DIALECT_Spain:
   en: Spain
   es: España
 STRING_DIALECT_Spain - Traditional:
-  en: Spain - Traditional
-  es: España - Tradicional
+  en: 'Spain - Traditional'
+  es: 'España - Tradicional'
 STRING_DIALECT_Standard:
   en: Standard
 STRING_DIALECT_Sutu:
@@ -1419,8 +1347,8 @@ STRING_DISPLAYING:
   en: Displaying
   de: Anzeige
 STRING_DISPLAYING_N_THROUGH_N_OF_N_RECORDS:
-  en: Displaying [%1%] - [%2%] of [%3%] records
-  de: Anzeigen [%1%] - [%2%] von [%3%] Dokumentation
+  en: 'Displaying [%1%] - [%2%] of [%3%] records'
+  de: 'Anzeigen [%1%] - [%2%] von [%3%] Dokumentation'
 STRING_DOWNLOAD_CSV:
   en: Download CSV
   de: Herunterladen CSV
@@ -1434,7 +1362,7 @@ STRING_EMAIL_DESTINATION:
   en: Email Address (Destination)
   de: Email Adresse (Ziel)
 STRING_EMAIL_OPTIONS_AND_DIAGNOSTICS:
-  en: Email Options & Diagnostics
+  en: 'Email Options & Diagnostics'
   de: Email Optionen und Diagnostics
 STRING_ENABLED:
   en: Enabled
@@ -1442,7 +1370,7 @@ STRING_ENABLED:
 STRING_ENABLE_PASSWORD_LOGIN:
   en: Enable Password Logins
 STRING_ERROR_UPDATER_SITE_S_OK:
-  en: Updater site [%1%] was not reachable or has an error
+  en: 'Updater site [%1%] was not reachable or has an error'
 STRING_EXCLUDE_ADMIN_PAGES:
   en: Exclude Admin Pages
 STRING_EXPIRES:
@@ -1483,7 +1411,7 @@ STRING_KEEP_DB_LOGS_7_DAYS:
 STRING_KEEP_DB_LOGS_NEVER:
   en: Keep Indefintely
 STRING_KEEP_DB_LOGS_N_MONTH:
-  en: Keep for [%1%] Months
+  en: 'Keep for [%1%] Months'
 STRING_LANG_Afrikaans:
   en: Afrikaans
 STRING_LANG_Albanian:
@@ -1492,7 +1420,7 @@ STRING_LANG_Arabic:
   en: Arabic
   ar: العربية
 STRING_LANG_Armenian - Armenia:
-  en: Armenian - Armenia
+  en: 'Armenian - Armenia'
 STRING_LANG_Basque:
   en: Basque
 STRING_LANG_Bosnian:
@@ -1632,7 +1560,7 @@ STRING_LAST_UPDATED:
   en: Updated
   es: Actualizado
 STRING_LICENSED_TO_S:
-  en: Licensed to [%1%]
+  en: 'Licensed to [%1%]'
 STRING_LICENSED_UNDER:
   en: Licensed under the
 STRING_LOGIN:
@@ -2075,16 +2003,16 @@ STRING_OF_1_RECORDS:
   en: of 1 record
   de: von ein Dokumentation
 STRING_OF_N_RECORDS:
-  en: of [%1%] records
-  de: von [%1%] Dokumentation
+  en: 'of [%1%] records'
+  de: 'von [%1%] Dokumentation'
 STRING_OPTION_PLACEHOLDER_ALL:
-  en: -- All --
+  en: '-- All --'
 STRING_PAGE:
   en: Page
   de: Seite
 STRING_PAGE_N:
-  en: Page [%1%]
-  de: Seite [%1%]
+  en: 'Page [%1%]'
+  de: 'Seite [%1%]'
 STRING_PARENT_URL:
   en: Parent URL
 STRING_PASSWORD:
@@ -2115,7 +2043,7 @@ STRING_PERMISSION_CORE_WIDGETS_MANAGE:
 STRING_PERMISSION_CORE_WIDGETS_VIEW:
   en: View All Widgets
 STRING_PERMISSION_S:
-  en: Permission [%1%]
+  en: 'Permission [%1%]'
 STRING_PERMISSION_USER_ACTIVITY:
   en: ""
 STRING_PERMISSION_USER_ACTIVITY_VIEW:
@@ -2171,7 +2099,7 @@ STRING_SEO_TITLE:
 STRING_SERVER_ID:
   en: Server ID
 STRING_SET_LANGUAGE_TO_S:
-  en: Set language to [%1%]
+  en: 'Set language to [%1%]'
 STRING_SHOW_HIDE_COLUMNS:
   en: Show/Hide Columns
 STRING_SITEMAP:
@@ -2179,13 +2107,13 @@ STRING_SITEMAP:
 STRING_STATUS:
   en: Status
 STRING_SUCCESS_UPDATER_COMPONENT_S_OUTDATED:
-  en: Component [%1%] is up to date
+  en: 'Component [%1%] is up to date'
 STRING_SUCCESS_UPDATER_CORE_OUTDATED:
   en: Core is up to date
 STRING_SUCCESS_UPDATER_SITE_S_OK:
-  en: Updater site [%1%] checked OK
+  en: 'Updater site [%1%] checked OK'
 STRING_SUCCESS_UPDATER_THEME_S_OUTDATED:
-  en: Theme [%1%] is up to date
+  en: 'Theme [%1%] is up to date'
 STRING_SYNC_SEARCHABLE_INDEX:
   en: Sync Searchable Index
 STRING_SYSTEM_CONFIGURATION:
@@ -2208,15 +2136,15 @@ STRING_TEST_FORM_ELEMENT_UIUX:
 STRING_TEST_GENERAL_UIUX:
   en: Test General UI/UX
 STRING_THEME_AND_LAYOUTS:
-  en: Theme & Layouts
+  en: 'Theme & Layouts'
 STRING_THING:
   en: Thing
 STRING_TITLE:
   en: Title
 STRING_TODAY_AT_S:
-  en: Today at [%1%]
+  en: 'Today at [%1%]'
 STRING_TOMORROW_AT_S:
-  en: Tomorrow at [%1%]
+  en: 'Tomorrow at [%1%]'
 STRING_UNPUBLISH_PAGE:
   en: Unpublish Page
 STRING_UPDATE:
@@ -2226,8 +2154,6 @@ STRING_URL:
   en: URL
 STRING_USER:
   en: User
-STRING_USER_GROUP_REPORT:
-  en: "User Group Report"
 STRING_USER_ACTIVITY_DETAILS:
   en: User Activity Details
 STRING_USER_ACTIVITY_OVERVIEW:
@@ -2236,6 +2162,8 @@ STRING_USER_ADMIN:
   en: User Administration
 STRING_USER_GROUP_ADMIN:
   en: User Group Administration
+STRING_USER_GROUP_REPORT:
+  en: User Group Report
 STRING_USER_OPTIONS:
   en: User Options
 STRING_VIEW:
@@ -2248,15 +2176,15 @@ STRING_VIEW_ALL_COMPONENTS:
 STRING_VIEW_ALL_PAGES:
   en: View All Pages
 STRING_WARNING_UPDATER_COMPONENT_S_OUTDATED:
-  en: Component [%1%] has an update available
+  en: 'Component [%1%] has an update available'
 STRING_WARNING_UPDATER_CORE_OUTDATED:
   en: Core has an update available
 STRING_WARNING_UPDATER_THEME_S_OUTDATED:
-  en: Theme [%1%] has an update available
+  en: 'Theme [%1%] has an update available'
 STRING_WELCOME:
   en: Welcome
   de: Willkommen
 STRING_YES:
   en: 'Yes'
 STRING_YESTERDAY_AT_S:
-  en: Yesterday at [%1%]
+  en: 'Yesterday at [%1%]'

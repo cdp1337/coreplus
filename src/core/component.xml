@@ -8,7 +8,6 @@
 		<provide type="library" name="phpass" version="0.3"/>
 		<provide type="library" name="aws-sdk" version="1.0.0"/>
 		<provide type="library" name="smarty" version="3.1.27"/>
-		<provide type="library" name="phpMailer" version="5.2.4"/>
 		<provide type="library" name="user" version="3.0.0"/>
 		<provide type="library" name="sitemap" version="3.0.0"/>
 		<provide type="library" name="JSONjs" version="2015-02-25"/>
@@ -132,7 +131,7 @@
 		<file filename="core/bootstrap_postincludes.php" md5="713e626b88a4f6c634b37783c52cdada"/>
 		<file filename="core/bootstrap_predefines.php" md5="d267aad3079f4058579f0d31cbdee4a2"/>
 		<file filename="core/bootstrap_preincludes.php" md5="c3deceae3d39082ed940dcf6aea27061"/>
-		<file filename="core/controllers/AdminController.php" md5="0776a637f82787d484addf22debf2178">
+		<file filename="core/controllers/AdminController.php" md5="833457af38c2851d198e16f0e208ee3e">
 			<controller name="AdminController"/>
 		</file>
 		<file filename="core/controllers/DatastoreAuthController.php" md5="6bff355ac8598a8507e8dddd00a1407f">
@@ -144,7 +143,7 @@
 		<file filename="core/controllers/FileController.class.php" md5="b35d7028332b345edfb5599e794d7641">
 			<controller name="FileController"/>
 		</file>
-		<file filename="core/controllers/FormController.class.php" md5="be82d0c05e23dab1d157de0470f772c8">
+		<file filename="core/controllers/FormController.class.php" md5="5cdd2d7644d07fde5c2300ae7a8cd350">
 			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/GPGAuthController.php" md5="f76fe086ef03958a8a1563c317d8f8e4">
@@ -156,7 +155,7 @@
 		<file filename="core/controllers/PageController.php" md5="ed393bfa72a4fd41b638ecaeb4ed10a8">
 			<controller name="PageController"/>
 		</file>
-		<file filename="core/controllers/UpdaterController.class.php" md5="1f18dd6023ea952e7e8ccd5554651266">
+		<file filename="core/controllers/UpdaterController.class.php" md5="4901dbc763036daf8784b3d687640bad">
 			<controller name="UpdaterController"/>
 		</file>
 		<file filename="core/controllers/UserActivityController.php" md5="241ba790d4a7660d98b0d85b0ee3197b">
@@ -171,7 +170,7 @@
 		<file filename="core/controllers/UserGroupAdminController.php" md5="3a03efe45785fd62ab054bc488e1ae04">
 			<controller name="UserGroupAdminController"/>
 		</file>
-		<file filename="core/controllers/WidgetController.php" md5="001ca4de8e4495204db1da26ff9a8e85">
+		<file filename="core/controllers/WidgetController.php" md5="e9778a452a13cce4ea25dada5757e8cf">
 			<controller name="WidgetController"/>
 		</file>
 		<file filename="core/functions/Core.functions.php" md5="1a4282a6a8705d986d9e971498544cb9"/>
@@ -204,7 +203,7 @@
 		<file filename="core/libs/core/ComponentHandler.class.php" md5="aca17a836efbe8c477af0e63ada255bb">
 			<class name="ComponentHandler"/>
 		</file>
-		<file filename="core/libs/core/Component_2_1.php" md5="3256c9080ea842048c58e5c499fdfd79">
+		<file filename="core/libs/core/Component_2_1.php" md5="ca22dbf3d8448fd48abcb0fc9b3d3415">
 			<class name="Component_2_1"/>
 		</file>
 		<file filename="core/libs/core/ConfigHandler.class.php" md5="e5bb3fbfe323ea6ac67d29acffc3a4de">
@@ -222,8 +221,11 @@
 		<file filename="core/libs/core/DB.class.php" md5="d20f8c7733c5c262c01f920004f3aab5">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.class.php" md5="2e15cb412188b2deb783e3e865bc3965">
-			<class name="Email"/>
+		<file filename="core/libs/core/Email.php" md5="a887dfd72e10783f802872a1eb650097">
+			<class name="Core\Email"/>
+		</file>
+		<file filename="core/libs/core/EmailInterface.php" md5="c8a471c1978c94907531a13a8e555a00">
+			<interface name="Core\EmailInterface"/>
 		</file>
 		<file filename="core/libs/core/Exceptions.php" md5="8b4d0342bbee5b64ae877ada9a174097">
 			<class name="ModelException"/>
@@ -287,7 +289,7 @@
 		<file filename="core/libs/core/VersionString.php" md5="39e8dd73f8dad279025ba75c50a89148">
 			<class name="Core\VersionString"/>
 		</file>
-		<file filename="core/libs/core/View.class.php" md5="6b38a7c1eb724bcd63492e7f26de9994">
+		<file filename="core/libs/core/View.class.php" md5="cb2ad03ea15b349ed0c40399f31cf250">
 			<class name="View"/>
 		</file>
 		<file filename="core/libs/core/ViewControl.class.php" md5="3c6441b7ab92a5b56b29b5886cfb3f6e">
@@ -306,7 +308,7 @@
 			<class name="ViewMeta_generator"/>
 			<class name="ViewMeta_image"/>
 		</file>
-		<file filename="core/libs/core/Widget.php" md5="165b7742121ee5b14e3649c7ef663c97">
+		<file filename="core/libs/core/Widget.php" md5="144831f815144b75da530a87bdb82892">
 			<class name="Core\Widget"/>
 			<class name="Core\WidgetRequest"/>
 		</file>
@@ -440,7 +442,7 @@
 		<file filename="core/libs/core/date/Timezone.php" md5="fc4d85ea6a007ed9e7ddc354df156d6a">
 			<class name="Core\Date\Timezone"/>
 		</file>
-		<file filename="core/libs/core/errormanagement/functions.php" md5="f57d198c51a2f1007f201fe4225d5023"/>
+		<file filename="core/libs/core/errormanagement/functions.php" md5="ea19a904776f056c041f3012366cd18e"/>
 		<file filename="core/libs/core/filestore/Contents.interface.php" md5="c2d7a52bd3789c5080a2c5a49eb54a89">
 			<interface name="Core\Filestore\Contents"/>
 		</file>
@@ -513,7 +515,7 @@
 		<file filename="core/libs/core/filestore/ftp/FTPMetaFile.php" md5="1b4f685baf1945ceafcab837fcfb1049">
 			<class name="Core\Filestore\FTP\FTPMetaFile"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="c024a52f6e47f5307d8ee689d6925aa8"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="34a48f043d2203855b1887314877b621"/>
 		<file filename="core/libs/core/formatter/CurrencyFormatter.php" md5="1ab429cb1e96149bdb4ff8149ad83067">
 			<class name="Core\Formatter\CurrencyFormatter"/>
 		</file>
@@ -532,7 +534,7 @@
 		<file filename="core/libs/core/forms/CheckboxesInput.php" md5="63bcbc45cef6beed1f87628eae6e2cb3">
 			<class name="Core\Forms\CheckboxesInput"/>
 		</file>
-		<file filename="core/libs/core/forms/DateInput.php" md5="7f2cb82151d577ea8209b10c006473fc">
+		<file filename="core/libs/core/forms/DateInput.php" md5="db874e2398ec41434c03f0b2ac5521f3">
 			<class name="Core\Forms\DateInput"/>
 		</file>
 		<file filename="core/libs/core/forms/DateTimeInput.php" md5="f8ca6bbe6edd4f983e6381fb8e04e9b7">
@@ -541,10 +543,10 @@
 		<file filename="core/libs/core/forms/FileInput.php" md5="081a0ee54a9d0448caeb095f5f57f224">
 			<class name="Core\Forms\FileInput"/>
 		</file>
-		<file filename="core/libs/core/forms/Form.php" md5="f3f7ba5a92abf9ba377a62c96e715fa0">
+		<file filename="core/libs/core/forms/Form.php" md5="e7668ccdda93f824d9dab070d35211a0">
 			<class name="Core\Forms\Form"/>
 		</file>
-		<file filename="core/libs/core/forms/FormElement.php" md5="c42cf4ade271ec86a4015075bd83ae27">
+		<file filename="core/libs/core/forms/FormElement.php" md5="e4ddd80383a7c1e24d890edca92e38ab">
 			<class name="Core\Forms\FormElement"/>
 		</file>
 		<file filename="core/libs/core/forms/FormGroup.php" md5="9ad647db073ef4e7b9690d1eff058a8d">
@@ -584,7 +586,7 @@
 		<file filename="core/libs/core/forms/StateInput.php" md5="41339e26cd6f43e93c7ead1d8f7e9412">
 			<class name="Core\Forms\StateInput"/>
 		</file>
-		<file filename="core/libs/core/forms/SubmitInput.php" md5="af0b1e088999296af1ae780ed7e448e5">
+		<file filename="core/libs/core/forms/SubmitInput.php" md5="4d3fc9f541acd35a88cc471b1642bd2f">
 			<class name="Core\Forms\SubmitInput"/>
 		</file>
 		<file filename="core/libs/core/forms/SystemInput.php" md5="3a6c8fbf2ea91c0426f3400144dd1fcb">
@@ -605,13 +607,13 @@
 		<file filename="core/libs/core/forms/UserInput.php" md5="b435ff86fd04164b3b202fa9eec754f1">
 			<class name="Core\Forms\UserInput"/>
 		</file>
-		<file filename="core/libs/core/gpg/GPG.php" md5="8f9a0dd282686543db7fb0a65d670719">
+		<file filename="core/libs/core/gpg/GPG.php" md5="dea81369fdcf2243200421cc572b6617">
 			<class name="Core\GPG\GPG"/>
 		</file>
 		<file filename="core/libs/core/gpg/Key.php" md5="6951474ca2c92d7edeffe9bf7e29c8eb">
 			<class name="Core\GPG\Key"/>
 		</file>
-		<file filename="core/libs/core/gpg/PrimaryKey.php" md5="c0a65a8a31443aea60049010b4dd69bb">
+		<file filename="core/libs/core/gpg/PrimaryKey.php" md5="ddb9bffa228e2ba528200e9081b48f2e">
 			<class name="Core\GPG\PrimaryKey"/>
 		</file>
 		<file filename="core/libs/core/gpg/PublicKey.php" md5="ff8cef8e7e74ca864264de46fd16b7db">
@@ -620,7 +622,7 @@
 		<file filename="core/libs/core/gpg/SecretKey.php" md5="edc49153d960811f2143e1084bfc13da">
 			<class name="Core\GPG\SecretKey"/>
 		</file>
-		<file filename="core/libs/core/gpg/Signature.php" md5="d8dc3621266b4402194889a8195dedb7">
+		<file filename="core/libs/core/gpg/Signature.php" md5="71446e7b165fa283db632c8f759a8371">
 			<class name="Core\GPG\Signature"/>
 		</file>
 		<file filename="core/libs/core/gpg/UID.php" md5="aae14e65523601f34ab602f2631a7a2f">
@@ -756,49 +758,49 @@
 			<class name="Html2Text\Html2Text"/>
 		</file>
 		<file filename="core/libs/html2text/phpunit.xml.dist" md5="736e94bafda1693e575ae3a8a540ae47"/>
-		<file filename="core/libs/html2text/test/BasicTest.php" md5="41b3a62225181f82e25442c9f2b267d0">
+		<file filename="core/libs/html2text/test/BasicTest.php" md5="a3b69d3e30ae20d861b36e742a1ef918">
 			<class name="Html2Text\BasicTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/BlockquoteTest.php" md5="f64629c4412b2703faac219195299d62">
+		<file filename="core/libs/html2text/test/BlockquoteTest.php" md5="187af53b2243087b641799161b8d4fc1">
 			<class name="Html2Text\BlockquoteTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/ConstructorTest.php" md5="7dc250990769b618ad3b780c5d09fae2">
+		<file filename="core/libs/html2text/test/ConstructorTest.php" md5="af6bb7680a9a046e0df45cc203e74a88">
 			<class name="Html2Text\ConstructorTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/DefinitionListTest.php" md5="c619ed77a00778e642b0eeaba9d9d7f3">
+		<file filename="core/libs/html2text/test/DefinitionListTest.php" md5="4f90bf29a765d6d50773f5d0a2d5ed7f">
 			<class name="Html2Text\DefinitionListTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/HeaderTest.php" md5="6dc62ad4e6b4d8b76e8b7ce38d067907">
+		<file filename="core/libs/html2text/test/HeaderTest.php" md5="28af20394fe684259a8062ceea7fc423">
 			<class name="Html2Text\StrToUpperTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/HtmlCharsTest.php" md5="98ad8686508e53c3b16e825b65b8337e">
+		<file filename="core/libs/html2text/test/HtmlCharsTest.php" md5="d61f925409e27f407992486942a894fe">
 			<class name="Html2Text\HtmlCharsTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/IgnoreSpanTest.php" md5="3232b6a0e66c3e59792afa3e0c1dfcc6">
+		<file filename="core/libs/html2text/test/IgnoreSpanTest.php" md5="3641379057a7e3141e85efd716f8c92a">
 			<class name="IgnoreSpanTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/LinkOverrideTest.php" md5="661558bba25272f72c9d610f8073cf12">
+		<file filename="core/libs/html2text/test/LinkOverrideTest.php" md5="cac1298e42aa76523debe35525385f9a">
 			<class name="LinkOverrideTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/LinkTest.php" md5="35fae6b6dff10b6ff629c0cf90c9d979">
+		<file filename="core/libs/html2text/test/LinkTest.php" md5="3b0988da61e687b3bd9dbc1ee62187ee">
 			<class name="Html2Text\LinkTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/ListTest.php" md5="e6eddb60c1e3b6818bc33b4287915641">
+		<file filename="core/libs/html2text/test/ListTest.php" md5="ed8ce19ae010e7dc3b7fa2435991640a">
 			<class name="Html2Text\ListTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/PreTest.php" md5="857360e18e52de35a5ab4ca57d4e8c41">
+		<file filename="core/libs/html2text/test/PreTest.php" md5="556f4ed6923ee089f8edb895acb9da42">
 			<class name="Html2Text\PreTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/PrintTest.php" md5="6979ed4b2de9876fdd2a5fabbbf483ff">
+		<file filename="core/libs/html2text/test/PrintTest.php" md5="d29ebcad109d0be23691fed19bcec5fd">
 			<class name="Html2Text\PrintTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/SpanTest.php" md5="1ac6e39ba2f138d2180e71e22a4bdcab">
+		<file filename="core/libs/html2text/test/SpanTest.php" md5="c2f1a7b86101c481c2563e22c62bad88">
 			<class name="Html2Text\SpanTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/StrToUpperTest.php" md5="f088b0e81e8b7aff8f6fcc536112b740">
+		<file filename="core/libs/html2text/test/StrToUpperTest.php" md5="8f043305d2dedd26fc06d2871bc98ea9">
 			<class name="StrToUpperTest"/>
 		</file>
-		<file filename="core/libs/html2text/test/TableTest.php" md5="3ae0738f28aeb78f4dce1ac5e28c7924">
+		<file filename="core/libs/html2text/test/TableTest.php" md5="4d1fe48085b44a386827f187b6e26f57">
 			<class name="Html2Text\TableTest"/>
 		</file>
 		<file filename="core/libs/pear/SQL_Parser/SQL/Parser.php" md5="c5e3e042df00eb59a7db38adf585c17f">
@@ -818,82 +820,6 @@
 		<file filename="core/libs/phpass/PasswordHash.php" md5="f767843472f0a498fb9c7f61966c0244">
 			<class name="PasswordHash"/>
 		</file>
-		<file filename="core/libs/phpmailer/LICENSE" md5="1e22b70bead0fa0848a119546e610da5"/>
-		<file filename="core/libs/phpmailer/VERSION" md5="9b461961caf464a4c12aad40fd32b786"/>
-		<file filename="core/libs/phpmailer/class.phpmailer.php" md5="144c97f0e87be1e388fbcba40723a53f">
-			<class name="PHPMailer"/>
-			<class name="phpmailerException"/>
-		</file>
-		<file filename="core/libs/phpmailer/class.phpmaileroauth.php" md5="c708aa1378554c94e8f41c202db5468f">
-			<class name="PHPMailerOAuth"/>
-		</file>
-		<file filename="core/libs/phpmailer/class.phpmaileroauthgoogle.php" md5="58bde497cccfc3615bdc87ee68750351">
-			<class name="PHPMailerOAuthGoogle"/>
-		</file>
-		<file filename="core/libs/phpmailer/class.pop3.php" md5="36cfcc39d63c549ab9e75382f64c9733">
-			<class name="POP3"/>
-		</file>
-		<file filename="core/libs/phpmailer/class.smtp.php" md5="75fb6c0ffeab3bd5f83d26f00d48357d">
-			<class name="SMTP"/>
-		</file>
-		<file filename="core/libs/phpmailer/composer.json" md5="ca5abc72444d9608a35c39f9064c139b"/>
-		<file filename="core/libs/phpmailer/extras/EasyPeasyICS.php" md5="3f5bf5879e0aad7e21c4131ed48ad5eb">
-			<class name="EasyPeasyICS"/>
-		</file>
-		<file filename="core/libs/phpmailer/extras/README.md" md5="3af32e2f15941ec05f64085a250753b8"/>
-		<file filename="core/libs/phpmailer/extras/htmlfilter.php" md5="e08fd4e987a58d19c3190666a52ddc5b"/>
-		<file filename="core/libs/phpmailer/extras/ntlm_sasl_client.php" md5="78623acb616b3e653b1ac83e9904192e">
-			<class name="ntlm_sasl_client_class"/>
-		</file>
-		<file filename="core/libs/phpmailer/get_oauth_token.php" md5="f77be02b7168b338a48d9b80f082898a">
-			<class name="League\OAuth2\Client\Provider\Google"/>
-		</file>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-am.php" md5="46dcd505d56a950198d9aa84385f94a2"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ar.php" md5="312e3d6b9b67338bdbe8cdce5c911278"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-az.php" md5="56d774311cad93c3935f7e0bae385c31"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-be.php" md5="ed20568de7c20ec102935043c8201af2"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-bg.php" md5="20589ae4ffe53e701190e19794731e82"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ca.php" md5="632c0caa936fa9575f6a089c84ffd2cc"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ch.php" md5="94100d2b2dc17ac67579a4499a13d9c2"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-cs.php" md5="11e65c3b0d68cf7257818f2f89464e63"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-da.php" md5="2f2b474f532ab2ee3d92395f3c5b0e0c"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-de.php" md5="e76eef12bcc910c9fb7b6f4c6781658b"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-el.php" md5="a05aa8b2f630a31493922b24b4b93b2e"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-eo.php" md5="20ea24c2c6726ab994abf962f2f55436"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-es.php" md5="211aa866a57987d38fde2bd91a3d7d41"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-et.php" md5="fa5e67af621d49a64d8766a8a5c55386"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fa.php" md5="62ee650e737866d7b819d8f349db92e6"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fi.php" md5="2a9b439722f490ae350f7dbc25198d79"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fo.php" md5="cfd27a7f91f0f4f2a4846cc10839dfd6"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-fr.php" md5="91984be9191a00848a27d526bc30ea64"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-gl.php" md5="b2ca56ae4030b23dad54fcd1770838bc"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-he.php" md5="18049afa12f6341a28464a8240547496"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-hr.php" md5="0b2a5b47bd0b46eb7cbf43b531229539"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-hu.php" md5="b562487c73f60e245d1a1671dc9c1573"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-id.php" md5="2936d77aa9de5df78f74dac6a61c305a"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-it.php" md5="2343321d68a0f537731094d94cb018ce"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ja.php" md5="3cd5d83da61896f05af3b0e3afc4120f"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ka.php" md5="dde630065bad8dfef600c47eecfca2c2"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ko.php" md5="58a5b654f0322ba94713956e9fe2cbde"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-lt.php" md5="95d8e64b4ea89cf7429053f2191b4c56"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-lv.php" md5="70881d6b394785c9c85bfeca355c7e45"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ms.php" md5="d3bf25210a06e7ab8b407f140d5d6612"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-nb.php" md5="a1b040e0649c7af0a015632f7412a73a"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-nl.php" md5="af32d270609306cd370e00a316ca2cb3"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-pl.php" md5="ddbd3d779da4c2a86964361665248b79"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-pt.php" md5="e43a3661566d39f7f6094905c5fa142e"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-pt_br.php" md5="ad1419f4718b2dc93a890414313d7ffb"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ro.php" md5="97dd1085d2495783b04790f9a6d5190f"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-ru.php" md5="ab761bc79974a307b6d482f361c9a70a"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-sk.php" md5="c7ba3b001f45220f9aa7cd6e4101f58c"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-sl.php" md5="da14fff5b9752f8a14be805703fb5e50"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-sr.php" md5="3c5fa2fdcafeca2c11978554048d2acc"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-sv.php" md5="ea5c4060572ebb34b0e409206af22d5a"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-tr.php" md5="5d993dbc0883fe8370310f2b543bd452"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-uk.php" md5="60cf6cf5d5380e7573bed1f2039a6fb6"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-vi.php" md5="13ac94e759a8baeb4f8b6d186ed9a0b6"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh.php" md5="4099efcb36a6e5609d30d5498fa5c6ff"/>
-		<file filename="core/libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="f903e36d8c3094f11c1829bc664cc0ac"/>
 		<file filename="core/libs/smarty-plugins/block.a.php" md5="08e557e86dd21be811f2e3a77e596ef3"/>
 		<file filename="core/libs/smarty-plugins/block.access.php" md5="e7b1cfd2cc78cc7c7b698bf0537d4e95"/>
 		<file filename="core/libs/smarty-plugins/block.css.php" md5="c4b9a1395fab97e278c9d8153018ff9d"/>
@@ -902,7 +828,7 @@
 		<file filename="core/libs/smarty-plugins/function.add_form_element.php" md5="679f8fb41793fe0aca85955543a2e01d"/>
 		<file filename="core/libs/smarty-plugins/function.asset.php" md5="ed857521de6de49a2234b3861a56ab2d"/>
 		<file filename="core/libs/smarty-plugins/function.controls.php" md5="2fc7882b7c8e76fb968432add78c4e03"/>
-		<file filename="core/libs/smarty-plugins/function.date.php" md5="c647258b8fa08f6ebc54fb9768f236ed"/>
+		<file filename="core/libs/smarty-plugins/function.date.php" md5="5e7d09e76f10b1e2ff5740b110142115"/>
 		<file filename="core/libs/smarty-plugins/function.disable_view_cache.php" md5="972846b91970673db39c7d7641a6ec2e"/>
 		<file filename="core/libs/smarty-plugins/function.duration.php" md5="41c1ec50ca43eebd469bcd580ca0e1b7"/>
 		<file filename="core/libs/smarty-plugins/function.email.php" md5="0d5959f3c48fc0f47fcd444525ad9435"/>
@@ -1486,7 +1412,7 @@
 		<file filename="core/models/UserUserGroupModel.php" md5="e25c3ba6befb4d05aae6c6a5ff8bd2b4">
 			<class name="UserUserGroupModel"/>
 		</file>
-		<file filename="core/models/WidgetInstanceModel.class.php" md5="615c18f2aa996b3114b092313d025053">
+		<file filename="core/models/WidgetInstanceModel.class.php" md5="10c0d71dabb9a5ffc53fe6bc6eaa334b">
 			<class name="WidgetInstanceModel"/>
 		</file>
 		<file filename="core/models/WidgetModel.class.php" md5="64b606ff07d15fb78e6d062a7b2ea8a2">
@@ -1525,7 +1451,7 @@
 			<class name="UserWidget"/>
 		</file>
 		<file filename="htaccess.example" md5="180a2e73554496c5a0e7d8a033a0fd49"/>
-		<file filename="index.php" md5="b6c0a15f534b54a8d029461caf488904"/>
+		<file filename="index.php" md5="839a9d15d36c77d3ebde5f264f10b118"/>
 		<file filename="install/assets/error.png" md5="3ccd73cbc4f0af6c02f9444b232f9166"/>
 		<file filename="install/assets/good.png" md5="a92813e1b07a89c8070148e13889f846"/>
 		<file filename="install/assets/jquery-1.7.1.min.js" md5="ddb84c1587287b2df08966081ef063bf"/>
@@ -1576,7 +1502,7 @@
 	</files>
 	<view searchdir="core/templates">
 		<file filename="core/templates/emails/admin/health_report.tpl" md5="06c7bb879f5d92402992217437299337"/>
-		<file filename="core/templates/emails/admin/test_email.tpl" md5="c5eec2c6d33f52a34ee309a1d49349fa"/>
+		<file filename="core/templates/emails/admin/test_email.tpl" md5="19277b0ca169316063899195182d038a"/>
 		<file filename="core/templates/emails/user/activation.tpl" md5="7cdb992418a86922f94a7c5910224a1f"/>
 		<file filename="core/templates/emails/user/admin_password.tpl" md5="e75c3a6f5c753fd41f1ea4f90533120c"/>
 		<file filename="core/templates/emails/user/datastoreauth_forgotpassword.tpl" md5="8463f6b3726164f63e8c838a58a28ba7"/>
@@ -1690,7 +1616,7 @@
 		<file filename="core/templates/pages/updater/keys.tpl" md5="791d3701c162d3bab14700b5ac1926b9"/>
 		<file filename="core/templates/pages/updater/keys_import.tpl" md5="d2208b9bd00c14d6d96fa1ec6cbe1cf2"/>
 		<file filename="core/templates/pages/updater/repos.tpl" md5="98f43f644f6d5f457652a1aa874cbb9f"/>
-		<file filename="core/templates/pages/updater/repos_add.tpl" md5="5f27f816e963d390088e7e49b8fb05f0"/>
+		<file filename="core/templates/pages/updater/repos_add.tpl" md5="74e70202fe9d6a4652575cf050e8ec11"/>
 		<file filename="core/templates/pages/updater/repos_add2.tpl" md5="515c542017ab1f1bbe87298ae349d613"/>
 		<file filename="core/templates/pages/updater/repos_edit.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
 		<file filename="core/templates/pages/updater/update.tpl" md5="dda6c77aed0d5d36ff520c02f1f9c4f9"/>
@@ -1773,7 +1699,11 @@
 		<!-- System Email Options -->
 		<config key="/core/email/from" type="string" default=""/>
 		<config key="/core/email/from_name" type="string" default=""/>
-		<config key="/core/email/mailer" type="enum" options="smtp|sendmail|mail" default="mail"/>
+		<config key="/core/email/mailer" type="string" default="" form-attributes="type:select;source:\Core\Email::GetBackends"/>
+		<config key="/core/email/verify_with_dns" type="boolean" default="0"/>
+		<config key="/core/email/enable_sending" type="boolean" default="1"/>
+		<config key="/core/email/sandbox_to" type="string"/>
+		<!-- Legacy email options, keep here to allow for upgrade scripts. -->
 		<config key="/core/email/sendmail_path" type="string" default=""/>
 		<config key="/core/email/smtp_host" type="string" default=""/>
 		<config key="/core/email/smtp_security" type="enum" options="none|ssl|tls" default="none"/>
@@ -1782,9 +1712,6 @@
 		<config key="/core/email/smtp_domain" type="string" default=""/>
 		<config key="/core/email/smtp_user" type="string" default=""/>
 		<config key="/core/email/smtp_password" type="string" default=""/>
-		<config key="/core/email/verify_with_dns" type="boolean" default="0"/>
-		<config key="/core/email/enable_sending" type="boolean" default="1"/>
-		<config key="/core/email/sandbox_to" type="string"/>
 		<!-- Security Options -->
 		<config key="/core/security/x-frame-options" type="string" default="SAMEORIGIN"/>
 		<config key="/core/security/csp-frame-ancestors" type="string" default=""/>
@@ -3187,6 +3114,7 @@
 		<upgrade from="2.6.6" to="2.7.0"/>
 		<upgrade from="2.6.7" to="2.7.0"/>
 		<upgrade from="2.6.8" to="2.7.0"/>
+		<upgrade from="2.6.9" to="2.7.0"/>
 		<upgrade from="2.7.0" to="2.8.0">
 			<php file="core/upgrades/270_to_280_groups.php"/>
 			<php file="core/upgrades/270_to_280_user_avatar_paths.php"/>
@@ -3260,21 +3188,6 @@
 		<author name="John Millaway"/>
 		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
 		<author name="charlie"/>
-		<author name="Brent R. Matzelle (original founder)"/>
-		<author name="@sherryl4george"/>
-		<author name="Chris Ryan"/>
-		<author name="@dominicus-75"/>
-		<author name="El&#xE7;in &#xD6;zel"/>
-		<author name="Can Y&#x131;lmaz"/>
-		<author name="Mehmet Benlio&#x11F;lu"/>
-		<author name="@yasinaydin"/>
-		<author name="Indrek P&#xE4;ri"/>
-		<author name="D&#xE1;vur S&#xF8;rensen &lt;http://www.profo-webdesign.dk&gt;"/>
-		<author name="@mirjalal"/>
-		<author name="Mitsuhiro Yoshida &lt;http://mitstek.com/&gt;"/>
-		<author name="Yoshi Sakai &lt;http://bluemooninc.jp/&gt;"/>
-		<author name="Jyry Kuukanen"/>
-		<author name="LiuXin &lt;http://www.80x86.cn/blog/&gt;"/>
 		<author name="Rodney Rehm"/>
 		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
 		<author name="Andrei Zmievski"/>
@@ -3284,68 +3197,6 @@
 		<author name="Lauren Matheson" email="inan@canada.com"/>
 		<author name="Solar Designer" email="solar at openwall.com"/>
 		<author name="Pete Nelson" email="@GunGeekATX"/>
-		<author name="Marcus Bointon (Synchro/coolbru)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon (@Synchro)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Jim Jagielski (jimjag)" email="jimjag@gmail.com"/>
-		<author name="Jim Jagielski" email="jimjag@gmail.com"/>
-		<author name="Andy Prevost (codeworxtech)" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Andy Prevost" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
-		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-		<author name="Manuel Reinhard" email="manu@sprain.ch"/>
-		<author name="Richard Davey (original author)" email="rich@corephp.co.uk"/>
-		<author name="Richard Davey" email="rich@corephp.co.uk"/>
-		<author name="by Donato Rouco" email="donatorouco@gmail.com"/>
-		<author name="by Donato" email="donatorouco@gmail.com"/>
-		<author name="VINADES.,JSC" email="contact@vinades.vn"/>
-		<author name="Mikael Stokkebro" email="info@stokkebro.dk"/>
-		<author name="Ali Jazayeri" email="jaza.ali@gmail.com"/>
-		<author name="Mohammad Hossein Mojtahedi" email="mhm5000@gmail.com"/>
-		<author name="Mohammad Hossein" email="mhm5000@gmail.com"/>
-		<author name="Eduards M." email="e@npd.lv"/>
-		<author name="Eduards M" email="e@npd.lv"/>
-		<author name="Avtandil Kikabidze aka LONGMAN" email="akalongman@gmail.com"/>
-		<author name="Avtandil Kikabidze" email="akalongman@gmail.com"/>
-		<author name="Klemen Tu&#x161;ar" email="techouse@gmail.com"/>
-		<author name="Klemen Tu" email="techouse@gmail.com"/>
-		<author name="Paulo Henrique Garcia" email="paulo@controllerweb.com.br"/>
-		<author name="Paulo Henrique" email="paulo@controllerweb.com.br"/>
-		<author name="Lucas Guimar&#xE3;es" email="lucas@lucasguimaraes.com"/>
-		<author name="Lucas Guimar" email="lucas@lucasguimaraes.com"/>
-		<author name="Phelipe Alves" email="phelipealvesdesouza@gmail.com"/>
-		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
-		<author name="Stefano Sabatini" email="sabas88@gmail.com"/>
-		<author name="Cecep Prawiro" email="cecep.prawiro@gmail.com"/>
-		<author name="Ronny Sherer" email="ronny@hoojima.com"/>
-		<author name="Dainius Kaupaitis" email="dk@sum.lt"/>
-		<author name="Hrvoj3e" email="hrvoj3e@gmail.com"/>
-		<author name="Matt Sturdy" email="matt.sturdy@gmail.com"/>
-		<author name="&#x410;&#x43B;&#x435;&#x43A;&#x441;&#x430;&#x43D;&#x434;&#x430;&#x440; &#x408;&#x435;&#x432;&#x440;&#x435;&#x43C;&#x43E;&#x432;&#x438;&#x45B;" email="ajevremovic@gmail.com"/>
-		<author name="Tuxion" email="team@tuxion.nl"/>
-		<author name="Nawawi Jamili" email="nawawi@rutweb.com"/>
-		<author name="Alex Florea" email="alecz.fia@gmail.com"/>
-		<author name="Aleksander Maksymiuk" email="info@setpro.pl"/>
-		<author name="liqwei" email="liqwei@liqwei.com"/>
-		<author name="Peter Dave Hello" email="@PeterDaveHello/"/>
-		<author name="Peter Dave" email="@PeterDaveHello/"/>
-		<author name="Jason Chiang" email="xcojad@gmail.com"/>
-		<author name="Yuriy Rudyy" email="yrudyy@prs.net.ua"/>
-		<author name="Mikhail Kyosev" email="mialygk@gmail.com"/>
-		<author name="Alexey Chumakov" email="alex@chumakov.ru"/>
-		<author name="Foster Snowhill" email="i18n@forstwoof.ru"/>
-		<author name="Johan Linn&#xE9;r" email="johan@linner.biz"/>
-		<author name="Johan Linn" email="johan@linner.biz"/>
-		<author name="Elan Ruusam&#xE4;e" email="glen@delfi.ee"/>
-		<author name="Elan Ruusam" email="glen@delfi.ee"/>
-		<author name="Hrayr Grigoryan" email="hrayr@bits.am"/>
-		<author name="Jonadabe" email="jonadabe@hotmail.com"/>
-		<author name="ChalkPE" email="amato0617@gmail.com"/>
-		<author name="bahjat al mostafa" email="bahjat983@hotmail.com"/>
-		<author name="bahjat al" email="bahjat983@hotmail.com"/>
-		<author name="young" email="masxy@foxmail.com"/>
-		<author name="Michal Tinka" email="michaltinka@gmail.com"/>
-		<author name="Ivan" email="web AT microstudi DOT com"/>
 		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
 		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
 		<author name="Monte Ohrt" email="monte at ohrt dot com"/>

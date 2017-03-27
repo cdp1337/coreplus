@@ -1015,14 +1015,14 @@ class UserModel extends Model {
 	 * @throw \Exception
 	 */
 	public function sendWelcomeEmail(){
-		$email = new \Email();
+		$email = new \Core\Email();
 		$email->templatename = 'emails/user/registration.tpl';
 		$email->assign('user', $this);
 		$email->assign('sitename', SITENAME);
 		$email->assign('rooturl', ROOT_URL);
 		$email->assign('loginurl', \Core\resolve_link('/user/login'));
 		$email->setSubject('Welcome to ' . SITENAME);
-		$email->to($this->get('email'));
+		$email->setTo($this->get('email'));
 
 		// TESTING
 		//error_log($email->renderBody());

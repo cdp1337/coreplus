@@ -577,6 +577,30 @@ class Component_2_1 {
 
 		return $pages;
 	}
+	
+	/**
+	 * Get all email provder classes defined in this component
+	 *
+	 * @return array
+	 */
+	public function getEmailBackends(){
+		$backends = [];
+
+		// I need to get the schema definitions first.
+		$node = $this->_xmlloader->getElement('provides');
+
+		// Now, get every table under this node.
+		foreach ($node->getElementsByTagName('emailbackend') as $subnode) {
+			/** @var DOMElement $subnode */
+
+			$name  = $subnode->getAttribute('name');
+			$class = $subnode->getAttribute('class');
+			
+			$backends[$class] = $name;
+		}
+
+		return $backends;
+	}
 
 	/**
 	 * Set and override the list of authors for this component.

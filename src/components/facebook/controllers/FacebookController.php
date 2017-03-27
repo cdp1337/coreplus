@@ -261,8 +261,8 @@ class FacebookController extends Controller_2_1{
 					]
 				);
 
-				$email = new Email();
-				$email->to($user->get('email'));
+				$email = new \Core\Email();
+				$email->setTo($user->get('email'));
 				$email->setSubject('Facebook Activation Request');
 				$email->templatename = 'emails/facebook/enable_confirmation.tpl';
 				$email->assign('link', \Core\resolve_link('/facebook/enable/' . $nonce));

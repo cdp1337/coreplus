@@ -37,6 +37,7 @@
 		<upgrade from="1.0.3" to="1.0.4"/>
 		<upgrade from="1.0.4" to="1.0.5"/>
 		<upgrade from="1.0.5" to="1.1.0"/>
+		<upgrade from="1.0.5-1~bpo268" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.2.0"/>
 		<upgrade from="1.2.0" to="1.2.1"/>
 		<upgrade from="1.2.1" to="1.2.2"/>

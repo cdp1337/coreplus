@@ -256,6 +256,7 @@
 		<upgrade from="4.0.1~core4" to="4.0.1~core5"/>
 		<upgrade from="4.0.1~core5" to="4.0.1~core6"/>
 		<upgrade from="4.0.1~core6" to="4.2.4~core1"/>
+		<upgrade from="4.0.1-1~bpo268" to="4.2.4~core1"/>
 		<upgrade from="4.2.4~core1" to="4.2.4-2"/>
 		<upgrade from="4.2.4-2" to="4.3.4-1"/>
 		<upgrade from="4.3.4-1" to="4.3.4-2"/>

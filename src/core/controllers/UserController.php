@@ -661,7 +661,7 @@ class UserController extends Controller_2_1{
 		// Send an activation notice email to the user if the active flag is set to true.
 		if($active){
 			try{
-				$email = new Email();
+				$email = new \Core\Email();
 
 				if(!$user->get('password')){
 					// Generate a Nonce for this user with the password reset.
@@ -683,7 +683,7 @@ class UserController extends Controller_2_1{
 				$email->assign('loginurl', \Core\resolve_link('/user/login'));
 				$email->assign('setpasswordlink', $setpasswordlink);
 				$email->setSubject('Welcome to ' . SITENAME);
-				$email->to($user->get('email'));
+				$email->setTo($user->get('email'));
 
 				// TESTING
 				//error_log($email->renderBody());
