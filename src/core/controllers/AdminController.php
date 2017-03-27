@@ -1429,7 +1429,7 @@ class AdminController extends Controller_2_1 {
 			'/core/email/from',
 			'/core/email/from_name',
 			'/core/email/sandbox_to',
-			'/core/email/mailer',
+			//'/core/email/mailer',
 			/*'/core/email/sendmail_path',
 			'/core/email/smtp_auth',
 			'/core/email/smtp_host',
@@ -1451,6 +1451,15 @@ class AdminController extends Controller_2_1 {
 			$form->addElement($f);
 		}
 		$form->addElement('submit', ['value' => t('STRING_SAVE')]);
+		
+		$backends = \Core\Email::GetBackends();
+		$backend = ConfigHandler::Get('/core/email/mailer');
+		if(isset($backends[$backend])){
+			\Core\set_message('t:MESSAGE_INFO_EMAIL_CURRENT_BACKEND_IS_S', $backends[$backend]);
+		}
+		else{
+			\Core\set_message('t:MESSAGE_ERROR_EMAIL_NO_BACKEND_CONFIGURED');
+		}
 
 		$view->title = 'Email Options &amp; Diagnostics';
 		$view->assign('form', $form);

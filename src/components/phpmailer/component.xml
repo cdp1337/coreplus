@@ -16,19 +16,25 @@
 		<config key="/phpmailer/smtp/user" type="string" default=""/>
 		<config key="/phpmailer/smtp/password" type="string" default=""/>
 	</configs>
+	<pages>
+		<page baseurl="phpmailer/config" title="t:STRING_PHPMAILER_CONFIG" group="t:STRING_CONFIGURE" admin="1" access="g:admin"/>
+	</pages>
 	<files>
 		<file filename="CHANGELOG" md5="c73683f62fa3746b14ca6577b1fbb850"/>
 		<file filename="README.md" md5="0093c14d52936a5818ed874cd5947140"/>
-		<file filename="libs/PHPMailerCore/EmailBackend.php" md5="52b50f3df193dc68cb4bbfc72de099e6">
+		<file filename="controllers/PHPMailerController.php" md5="ee8d2d449934012a64b8d68ad15e8ac8">
+			<controller name="PHPMailerController"/>
+		</file>
+		<file filename="libs/PHPMailerCore/EmailBackend.php" md5="aaa983e7f551c906101b041078b715c9">
 			<class name="PHPMailerCore\EmailBackend"/>
 		</file>
-		<file filename="libs/PHPMailerCore/Mail.php" md5="0d9d1df8f78b8e189a38d543080c6192">
+		<file filename="libs/PHPMailerCore/Mail.php" md5="123c25ce67120761cb7c6eec2a8ce369">
 			<class name="PHPMailerCore\Mail"/>
 		</file>
 		<file filename="libs/PHPMailerCore/SMTP.php" md5="ff39b997827271f48e5509186c55c717">
 			<class name="PHPMailerCore\SMTP"/>
 		</file>
-		<file filename="libs/PHPMailerCore/Sendmail.php" md5="059cd23ec08b03035c9e7a5a2058e3d8">
+		<file filename="libs/PHPMailerCore/Sendmail.php" md5="23b58225f5fb2786147a8acdcb629f31">
 			<class name="PHPMailerCore\Sendmail"/>
 		</file>
 		<file filename="libs/phpmailer/LICENSE" md5="1e22b70bead0fa0848a119546e610da5"/>
@@ -109,7 +115,9 @@
 		<file filename="libs/phpmailer/language/phpmailer.lang-zh_cn.php" md5="f903e36d8c3094f11c1829bc664cc0ac"/>
 		<file filename="upgrades/install-migrate-configs.php" md5="385aaebb94d5631ab6c0270018e8eec1"/>
 	</files>
-	<view/>
+	<view>
+		<file filename="templates/pages/phpmailer/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+	</view>
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -124,7 +132,6 @@
 		<upgrade from="5.2.21-1" to="5.2.22-1"/>
 	</upgrades>
 	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 		<author name="charlie"/>
 		<author name="Brent R. Matzelle (original founder)"/>
 		<author name="@sherryl4george"/>
@@ -141,6 +148,7 @@
 		<author name="Yoshi Sakai &lt;http://bluemooninc.jp/&gt;"/>
 		<author name="Jyry Kuukanen"/>
 		<author name="LiuXin &lt;http://www.80x86.cn/blog/&gt;"/>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 		<author name="Marcus Bointon (Synchro/coolbru)" email="phpmailer@synchromedia.co.uk"/>
 		<author name="Marcus Bointon (@Synchro)" email="phpmailer@synchromedia.co.uk"/>
 		<author name="Marcus Bointon" email="phpmailer@synchromedia.co.uk"/>

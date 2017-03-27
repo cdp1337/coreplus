@@ -1,0 +1,41 @@
+---
+MESSAGE_CONFIG_PHPMAILER_SENDMAIL_PATH:
+  en: >
+    Set to the absolute path for sendmail, (please consult your system administrator
+    if you do not know what this is).
+MESSAGE_CONFIG_PHPMAILER_SMTP_AUTH:
+  en: >
+    Select the authentication type for the SMTP server.  Most servers support LOGIN,
+    M$ Exchange supports NTLM.
+MESSAGE_CONFIG_PHPMAILER_SMTP_DOMAIN:
+  en: If authenticating to a M$ Exchange server, set the domain name here.
+MESSAGE_CONFIG_PHPMAILER_SMTP_HOST:
+  en: SMTP Host for sending emails through.
+MESSAGE_CONFIG_PHPMAILER_SMTP_PASSWORD:
+  en: SMTP Password, (if required).
+MESSAGE_CONFIG_PHPMAILER_SMTP_PORT:
+  en: >
+    SMTP Port to send over, usually 25 if encryption is disabled, 465 or 587 if
+    enabled.
+MESSAGE_CONFIG_PHPMAILER_SMTP_SECURITY:
+  en: Security mode for connecting to the SMTP server
+MESSAGE_CONFIG_PHPMAILER_SMTP_USER:
+  en: SMTP username.
+STRING_CONFIG_PHPMAILER_SENDMAIL_PATH:
+  en: Sendmail Path
+STRING_CONFIG_PHPMAILER_SMTP_AUTH:
+  en: SMTP Authentication Method
+STRING_CONFIG_PHPMAILER_SMTP_DOMAIN:
+  en: SMTP Domain
+STRING_CONFIG_PHPMAILER_SMTP_HOST:
+  en: SMTP Host
+STRING_CONFIG_PHPMAILER_SMTP_PASSWORD:
+  en: SMTP Password
+STRING_CONFIG_PHPMAILER_SMTP_PORT:
+  en: SMTP Port
+STRING_CONFIG_PHPMAILER_SMTP_SECURITY:
+  en: SMTP Security
+STRING_CONFIG_PHPMAILER_SMTP_USER:
+  en: SMTP User
+STRING_PHPMAILER_CONFIG:
+  en: "PHPMailer Configuration"
