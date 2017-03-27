@@ -120,6 +120,7 @@
 		<php file="upgrades/install-migrate-configs.php"/>
 	</install>
 	<upgrades>
+		<upgrade from="5.2.22-1~bpo268" to="5.2.22-1"/>
 		<upgrade from="5.2.21-1" to="5.2.22-1"/>
 	</upgrades>
 	<authors>

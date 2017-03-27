@@ -118,6 +118,7 @@
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="1.5.4"/>
 		<upgrade from="1.5.4" to="1.5.5"/>
+		<upgrade from="1.5.4-1~bpo268" to="1.5.5"/>
 		<upgrade from="1.5.5" to="1.5.6"/>
 		<upgrade from="1.5.6" to="1.6.0">
 			<php file="upgrades/next_page_updates.php"/>
