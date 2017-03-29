@@ -436,140 +436,16 @@ th {
   padding: 0;
 }
 
-/*
-
-// Typography
-$base-font-family: $helvetica;
-$header-font-family: $base-font-family;  // v 4.2.0
-$heading-font-family: $base-font-family; // v 4.2.6
-
-// Font Sizes
-$base-font-size: 1em;
-$h1-font-size: $base-font-size * 2;
-$h2-font-size: $base-font-size * 1.75;
-$h3-font-size: $base-font-size * 1.5;
-$h4-font-size: $base-font-size * 1.25;
-$h5-font-size: $base-font-size * 1.15;
-$h6-font-size: $base-font-size;
-
-// Line height
-$base-line-height: 1.5;
-$header-line-height: 1.25; // v 4.2.0
-$heading-line-height: 1.2; // v 4.2.6
-
-// Other Sizes
-$base-border-radius: 3px;
-$base-spacing: $base-line-height * 1em;
-$small-spacing: $base-spacing / 2;
-$base-z-index: 0;
-
-// Colors
-$blue: #365E96;
-$dark-gray: #DDD;
-$medium-gray: #999;
-$light-gray: #333;
-
-$info: #5464eb;
-$success: #46da46;
-$deprecated: #e4e0c8;
-$warning: #edc0ae;
-$error: #ec6f78;
-$tutorial: #338de4;
-
-// Font Colors
-$base-font-color: #a2a2a2;
-$base-accent-color: $blue;
-$action-color: $blue;
-
-// Border color
-$base-border-color: $light-gray;
-$base-border: 1px solid $base-border-color;
-
-// Background Color
-$base-background-color: black;
-$secondary-background-color: lighten($base-background-color, 16%);
-// Link Colors
-$base-link-color: $base-accent-color;
-$hover-link-color: darken($base-accent-color, 15);
-$base-button-color: $base-link-color;
-$hover-button-color: $hover-link-color;
-
-// Special buttons
-$button-reset-color: lighten($error, 66%);
-$button-reset-icon-color: lighten($error, 33%);
-$button-apply-color: lighten($success, 66%);
-$button-apply-icon-color: lighten($success, 33%);
-
-// Listing Table colors and styles
-$listing-table-tr-odd-bg: $base-background-color;
-$listing-table-tr-even-bg: lighten($light-gray, 8%);
-$listing-table-tr-hover-bg: #111D2D;
-$listing-table-th-color: $base-font-color;
-$listing-table-th-background: $base-background-color;
-
-$listing-table-border-width: 1px;
-$listing-table-border-style: solid;
-$listing-table-border-color: lighten($base-border-color, 8%);
-$listing-table-border-even-color: darken($listing-table-tr-even-bg, 7);
-$listing-table-border-odd-color: darken($listing-table-tr-odd-bg, 7);
-
-// Forms and Form Elements
-$form-border-color: $base-border-color;
-$form-border-color-hover: darken($base-border-color, 10);
-$form-border-color-focus: $base-accent-color;
-$form-border-radius: $base-border-radius;
-$form-box-shadow: inset 0 1px 3px rgba(black,0.06);
-$form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
-$form-font-size: $base-font-size;
-$form-font-family: $base-font-family;
-$form-element-description-color: lighten($dark-gray, 16%);
-$form-element-description-font-size: $base-font-size * .9;
-
-// Controls Options
-$controls-inline-background: inherit;
-$controls-inline-color: $action-color;
-
-$controls-inline-icon-background: inherit;
-$controls-inline-icon-color: $action-color;
-
-$controls-proxy-background: transparent;
-$controls-proxy-border: 1px solid $action-color;
-$controls-proxy-color: $action-color;
-$controls-proxy-hover-background: $base-background-color;
-$controls-proxy-hover-border: $base-border;
-$controls-proxy-hover-color: $base-font-color;
-
-$controls-popover-background: $base-background-color;
-$controls-popover-border: $base-border;
-$controls-popover-color: $action-color;
-$controls-popover-hover-background: darken($action-color, 33%);
-$controls-popover-hover-color: $action-color;
-
-$controls-popover-icon-background: darken($base-border-color, 8%);
-$controls-popover-icon-color: $base-font-color;
-
-// Animations
-$base-duration: 150ms;
-$base-timing: ease;
-
-// Responsive Breakpoints
-// These provide convenience sizes for various typical devices.
-// Feel free to use these or not, whatever! :)
-$breakpoint-wide: 1600px;   // "Wide" screens and formats.
-$breakpoint-narrow: 1000px; // Standard/narrow screens, not usually used except when needed
-$breakpoint-tablet: 790px;  // Tablets and phones in landscape
-$breakpoint-mobile: 500px;  // Phones and other small devices
-*/
 /* line 1, ../../scss/vendor/bitters/_buttons.scss */
 button, input[type="button"], input[type="reset"], input[type="submit"], a.button {
   appearance: none;
-  background-color: blue;
+  background-color: #365E96;
   border: 0;
-  border-radius: 20px;
+  border-radius: 3px;
   color: #fff;
   cursor: pointer;
   display: inline-block;
-  font-family: mono;
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   font-size: 1em;
   -webkit-font-smoothing: antialiased;
   font-weight: 600;
@@ -583,7 +459,7 @@ button, input[type="button"], input[type="reset"], input[type="submit"], a.butto
 }
 /* line 21, ../../scss/vendor/bitters/_buttons.scss */
 button:hover, button:focus, input[type="button"]:hover, input[type="button"]:focus, input[type="reset"]:hover, input[type="reset"]:focus, input[type="submit"]:hover, input[type="submit"]:focus, a.button:hover, a.button:focus {
-  background-color: #0000cc;
+  background-color: #2b4b78;
   color: #fff;
 }
 /* line 27, ../../scss/vendor/bitters/_buttons.scss */
@@ -593,13 +469,13 @@ button:disabled, input[type="button"]:disabled, input[type="reset"]:disabled, in
 }
 /* line 31, ../../scss/vendor/bitters/_buttons.scss */
 button:disabled:hover, input[type="button"]:disabled:hover, input[type="reset"]:disabled:hover, input[type="submit"]:disabled:hover, a.button:disabled:hover {
-  background-color: blue;
+  background-color: #365E96;
 }
 
 /* line 1, ../../scss/vendor/bitters/_forms.scss */
 fieldset {
-  background-color: white;
-  border: 1px solid #DDD;
+  background-color: #292929;
+  border: 1px solid #707070;
   margin: 0 0 0.75em;
   padding: 1.5em;
 }
@@ -609,7 +485,7 @@ input,
 label,
 select {
   display: block;
-  font-family: mono;
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   font-size: 1em;
 }
 
@@ -630,12 +506,12 @@ label abbr {
 /* line 29, ../../scss/vendor/bitters/_forms.scss */
 input[type="color"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"], input:not([type]), textarea,
 select[multiple=multiple] {
-  background-color: pink;
-  border: 1px solid #DDD;
-  border-radius: 20px;
+  background-color: black;
+  border: 1px solid #707070;
+  border-radius: 3px;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
-  font-family: mono;
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   font-size: 1em;
   margin-bottom: 0.75em;
   padding: 0.5em;
@@ -645,25 +521,25 @@ select[multiple=multiple] {
 /* line 43, ../../scss/vendor/bitters/_forms.scss */
 input[type="color"]:hover, input[type="date"]:hover, input[type="datetime"]:hover, input[type="datetime-local"]:hover, input[type="email"]:hover, input[type="month"]:hover, input[type="number"]:hover, input[type="password"]:hover, input[type="search"]:hover, input[type="tel"]:hover, input[type="text"]:hover, input[type="time"]:hover, input[type="url"]:hover, input[type="week"]:hover, input:not([type]):hover, textarea:hover,
 select[multiple=multiple]:hover {
-  border-color: #b1b1b1;
+  border-color: #5a5a5a;
 }
 /* line 47, ../../scss/vendor/bitters/_forms.scss */
 input[type="color"]:focus, input[type="date"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="email"]:focus, input[type="month"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="text"]:focus, input[type="time"]:focus, input[type="url"]:focus, input[type="week"]:focus, input:not([type]):focus, textarea:focus,
 select[multiple=multiple]:focus {
-  border-color: blue;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 5px rgba(0, 0, 230, 0.7);
+  border-color: #365E96;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 5px rgba(47, 82, 131, 0.7);
   outline: none;
 }
 /* line 53, ../../scss/vendor/bitters/_forms.scss */
 input[type="color"]:disabled, input[type="date"]:disabled, input[type="datetime"]:disabled, input[type="datetime-local"]:disabled, input[type="email"]:disabled, input[type="month"]:disabled, input[type="number"]:disabled, input[type="password"]:disabled, input[type="search"]:disabled, input[type="tel"]:disabled, input[type="text"]:disabled, input[type="time"]:disabled, input[type="url"]:disabled, input[type="week"]:disabled, input:not([type]):disabled, textarea:disabled,
 select[multiple=multiple]:disabled {
-  background-color: #f2b6c1;
+  background-color: black;
   cursor: not-allowed;
 }
 /* line 57, ../../scss/vendor/bitters/_forms.scss */
 input[type="color"]:disabled:hover, input[type="date"]:disabled:hover, input[type="datetime"]:disabled:hover, input[type="datetime-local"]:disabled:hover, input[type="email"]:disabled:hover, input[type="month"]:disabled:hover, input[type="number"]:disabled:hover, input[type="password"]:disabled:hover, input[type="search"]:disabled:hover, input[type="tel"]:disabled:hover, input[type="text"]:disabled:hover, input[type="time"]:disabled:hover, input[type="url"]:disabled:hover, input[type="week"]:disabled:hover, input:not([type]):disabled:hover, textarea:disabled:hover,
 select[multiple=multiple]:disabled:hover {
-  border: 1px solid #DDD;
+  border: 1px solid #707070;
 }
 
 /* line 63, ../../scss/vendor/bitters/_forms.scss */
@@ -733,7 +609,7 @@ table {
 
 /* line 9, ../../scss/vendor/bitters/_tables.scss */
 th {
-  border-bottom: 1px solid #a6a6a6;
+  border-bottom: 1px solid #545454;
   font-weight: 600;
   padding: 0.75em 0;
   text-align: left;
@@ -741,7 +617,7 @@ th {
 
 /* line 16, ../../scss/vendor/bitters/_tables.scss */
 td {
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid #707070;
   padding: 0.75em 0;
 }
 
@@ -754,8 +630,8 @@ th {
 
 /* line 1, ../../scss/vendor/bitters/_typography.scss */
 body {
-  color: red;
-  font-family: mono;
+  color: #a2a2a2;
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   font-feature-settings: "kern", "liga", "pnum";
   font-size: 1em;
   line-height: 1.5;
@@ -768,7 +644,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: mono;
+  font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
   font-size: 1em;
   line-height: 1.2;
   margin: 0 0 0.75em;
@@ -781,18 +657,18 @@ p {
 
 /* line 25, ../../scss/vendor/bitters/_typography.scss */
 a {
-  color: blue;
+  color: #365E96;
   text-decoration: none;
   transition: color 150ms ease;
 }
 /* line 30, ../../scss/vendor/bitters/_typography.scss */
 a:active, a:focus, a:hover {
-  color: #0000bf;
+  color: #294771;
 }
 
 /* line 37, ../../scss/vendor/bitters/_typography.scss */
 hr {
-  border-bottom: 1px solid #DDD;
+  border-bottom: 1px solid #707070;
   border-left: 0;
   border-right: 0;
   border-top: 0;
@@ -828,12 +704,12 @@ html {
 /* line 10, ../../scss/_form_elements.scss */
 .formelement span.form-element-description {
   margin-left: 2em;
-  color: #3a3a3a;
+  color: white;
   font-size: 0.9em;
 }
 /* line 16, ../../scss/_form_elements.scss */
 .formelement p.form-element-description {
-  color: #3a3a3a;
+  color: white;
   font-size: 0.9em;
   margin: 0 0 0.25em;
 }
@@ -872,7 +748,7 @@ html {
 }
 /* line 56, ../../scss/_form_elements.scss */
 .formelement.formcheckboxesinput .checkboxes-toggle {
-  color: #3a3a3a;
+  color: white;
   font-size: 0.9em;
   cursor: pointer;
   margin-left: 2em;
@@ -930,17 +806,17 @@ button.button-apply span, input[type="button"].button-apply span, input[type="re
 .button-group button, .button-group input[type="button"], .button-group input[type="reset"], .button-group input[type="submit"], .button-group a.button {
   border-radius: 0;
   float: left;
-  border-right: 1px solid #DDD;
+  border-right: 1px solid #707070;
 }
 /* line 133, ../../scss/_form_elements.scss */
 .button-group button:first-child, .button-group input[type="button"]:first-child, .button-group input[type="reset"]:first-child, .button-group input[type="submit"]:first-child, .button-group a.button:first-child {
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
+  border-top-left-radius: 3px;
+  border-bottom-left-radius: 3px;
 }
 /* line 137, ../../scss/_form_elements.scss */
 .button-group button:last-child, .button-group input[type="button"]:last-child, .button-group input[type="reset"]:last-child, .button-group input[type="submit"]:last-child, .button-group a.button:last-child {
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
   border-right: 0 none;
 }
 
@@ -1161,7 +1037,7 @@ menu.controls-prerendered.controls-no-proxy li {
   list-style: none;
   white-space: nowrap;
   margin-right: 0.25em;
-  color: blue;
+  color: #365E96;
 }
 /* line 196, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li:after {
@@ -1179,12 +1055,12 @@ menu.controls-prerendered.controls-no-proxy li:last-child:after {
 menu.controls-prerendered.controls-no-proxy li a {
   margin-right: 0.25em;
   background: inherit;
-  color: blue;
+  color: #365E96;
 }
 /* line 214, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li i {
   background: inherit;
-  color: blue;
+  color: #365E96;
 }
 /* line 221, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy {
@@ -1192,9 +1068,9 @@ menu.controls-prerendered.controls-have-proxy {
 }
 /* line 225, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy:hover label {
-  background: pink;
-  border: 1px solid #DDD;
-  color: red;
+  background: black;
+  border: 1px solid #707070;
+  color: #a2a2a2;
   border-bottom-width: 0;
   padding-bottom: 1em;
 }
@@ -1208,8 +1084,8 @@ menu.controls-prerendered.controls-have-proxy label {
   min-width: 8em;
   padding: 0.35em 0.75em;
   background: transparent;
-  border: 1px solid blue;
-  color: blue;
+  border: 1px solid #365E96;
+  color: #365E96;
 }
 /* line 247, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy ul {
@@ -1219,36 +1095,36 @@ menu.controls-prerendered.controls-have-proxy ul {
   top: 0;
   margin: -1em 0 0 0;
   padding: 0.15em 0 0 0;
-  color: blue;
-  border: 1px solid #DDD;
-  background: pink;
+  color: #365E96;
+  border: 1px solid #707070;
+  background: black;
   border-top-width: 0;
 }
 /* line 260, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li {
   list-style: none;
   white-space: nowrap;
-  background: pink;
+  background: black;
 }
 /* line 265, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li:hover {
-  background: #000057;
-  color: blue;
+  background: #09101a;
+  color: #365E96;
 }
 /* line 269, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li:hover i {
-  background: #000057;
+  background: #09101a;
 }
 /* line 274, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li a {
   display: block;
   padding: 0;
-  color: blue;
+  color: #365E96;
 }
 /* line 280, ../../scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li i {
-  background: #c9c9c9;
-  color: red;
+  background: #5c5c5c;
+  color: #a2a2a2;
   padding: 0.5em;
   text-align: center;
   width: 2.1em;
@@ -1308,14 +1184,14 @@ menu.controls-prerendered.controls-have-proxy li span {
     display: inline-block;
     padding: 0.25em 0.5em;
     background: inherit;
-    color: blue;
+    color: #365E96;
   }
   /* line 345, ../../scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li i {
     width: auto;
     padding: 0;
     background: inherit;
-    color: blue;
+    color: #365E96;
   }
 }
 /*****************************************************************************
@@ -1331,7 +1207,7 @@ menu.controls-prerendered.controls-have-proxy li span {
 .message-warning,
 .message-deprecated,
 .message-error {
-  border-radius: 20px;
+  border-radius: 3px;
   padding: 0.75em 0.75em 0.75em 55px;
   margin: 0.375em;
   text-align: center;
@@ -1622,7 +1498,7 @@ fieldset.collapsible.collapsed .collapsible-hint {
  */
 /* line 5, ../../scss/_content.scss */
 body {
-  background: pink;
+  background: black;
 }
 
 /* line 10, ../../scss/_content.scss */

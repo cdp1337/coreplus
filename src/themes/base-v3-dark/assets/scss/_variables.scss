@@ -1,129 +1,4 @@
 // Typography
-$base-font-family: mono;
-$header-font-family: $base-font-family;  // v 4.2.0
-$heading-font-family: $base-font-family; // v 4.2.6
-
-// Font Sizes
-$base-font-size: 1em;
-$h1-font-size: $base-font-size * 2;
-$h2-font-size: $base-font-size * 1.75;
-$h3-font-size: $base-font-size * 1.5;
-$h4-font-size: $base-font-size * 1.25;
-$h5-font-size: $base-font-size * 1.15;
-$h6-font-size: $base-font-size;
-
-// Line height
-$base-line-height: 1.5;
-$header-line-height: 1.25; // v 4.2.0
-$heading-line-height: 1.2; // v 4.2.6
-
-// Other Sizes
-$base-border-radius: 20px;
-$base-spacing: $base-line-height * 1em;
-$small-spacing: $base-spacing / 2;
-$base-z-index: 0;
-
-// Colors
-$blue: blue;
-$dark-gray: #111111;
-$medium-gray: #888;
-$light-gray: #DDD;
-
-$info: #5464eb;
-$success: #46da46;
-$deprecated: #e4e0c8;
-$warning: #edc0ae;
-$error: #ec6f78;
-$tutorial: #338de4;
-
-// Font Colors
-$base-font-color: red;
-$base-accent-color: $blue;
-$action-color: $blue;
-
-// Border color
-$base-border-color: $light-gray;
-$base-border: 1px solid $base-border-color;
-
-// Background Color
-$base-background-color: pink;
-$secondary-background-color: lighten($base-background-color, 16%);
-// Link Colors
-$base-link-color: $base-accent-color;
-$hover-link-color: darken($base-accent-color, 15);
-$base-button-color: $base-link-color;
-$hover-button-color: $hover-link-color;
-
-// Special buttons
-$button-reset-color: lighten($error, 66%);
-$button-reset-icon-color: lighten($error, 33%);
-$button-apply-color: lighten($success, 66%);
-$button-apply-icon-color: lighten($success, 33%);
-
-// Listing Table colors and styles
-$listing-table-tr-odd-bg: $base-background-color;
-$listing-table-tr-even-bg: lighten($light-gray, 8%);
-$listing-table-tr-hover-bg: #111D2D;
-$listing-table-th-color: $base-font-color;
-$listing-table-th-background: $base-background-color;
-
-$listing-table-border-width: 1px;
-$listing-table-border-style: solid;
-$listing-table-border-color: lighten($base-border-color, 8%);
-$listing-table-border-even-color: darken($listing-table-tr-even-bg, 7);
-$listing-table-border-odd-color: darken($listing-table-tr-odd-bg, 7);
-
-// Forms and Form Elements
-$form-border-color: $base-border-color;
-$form-border-color-hover: darken($base-border-color, 10);
-$form-border-color-focus: $base-accent-color;
-$form-border-radius: $base-border-radius;
-$form-box-shadow: inset 0 1px 3px rgba(black,0.06);
-$form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
-$form-font-size: $base-font-size;
-$form-font-family: $base-font-family;
-$form-element-description-color: lighten($dark-gray, 16%);
-$form-element-description-font-size: $base-font-size * .9;
-
-// Controls Options
-$controls-inline-background: inherit;
-$controls-inline-color: $action-color;
-
-$controls-inline-icon-background: inherit;
-$controls-inline-icon-color: $action-color;
-
-$controls-proxy-background: transparent;
-$controls-proxy-border: 1px solid $action-color;
-$controls-proxy-color: $action-color;
-$controls-proxy-hover-background: $base-background-color;
-$controls-proxy-hover-border: $base-border;
-$controls-proxy-hover-color: $base-font-color;
-
-$controls-popover-background: $base-background-color;
-$controls-popover-border: $base-border;
-$controls-popover-color: $action-color;
-$controls-popover-hover-background: darken($action-color, 33%);
-$controls-popover-hover-color: $action-color;
-
-$controls-popover-icon-background: darken($base-border-color, 8%);
-$controls-popover-icon-color: $base-font-color;
-
-// Animations
-$base-duration: 150ms;
-$base-timing: ease;
-
-// Responsive Breakpoints
-// These provide convenience sizes for various typical devices.
-// Feel free to use these or not, whatever! :)
-$breakpoint-wide: 1600px;   // "Wide" screens and formats.
-$breakpoint-narrow: 1000px; // Standard/narrow screens, not usually used except when needed
-$breakpoint-tablet: 790px;  // Tablets and phones in landscape
-$breakpoint-mobile: 500px;  // Phones and other small devices
-
-
-/*
-
-// Typography
 $base-font-family: $helvetica;
 $header-font-family: $base-font-family;  // v 4.2.0
 $heading-font-family: $base-font-family; // v 4.2.6
@@ -147,6 +22,7 @@ $base-border-radius: 3px;
 $base-spacing: $base-line-height * 1em;
 $small-spacing: $base-spacing / 2;
 $base-z-index: 0;
+$base-border-size: 1px;
 
 // Colors
 $blue: #365E96;
@@ -167,8 +43,8 @@ $base-accent-color: $blue;
 $action-color: $blue;
 
 // Border color
-$base-border-color: $light-gray;
-$base-border: 1px solid $base-border-color;
+$base-border-color: darken($medium-gray, 16%);
+$base-border: $base-border-size solid $base-border-color;
 
 // Background Color
 $base-background-color: black;
@@ -244,4 +120,3 @@ $breakpoint-wide: 1600px;   // "Wide" screens and formats.
 $breakpoint-narrow: 1000px; // Standard/narrow screens, not usually used except when needed
 $breakpoint-tablet: 790px;  // Tablets and phones in landscape
 $breakpoint-mobile: 500px;  // Phones and other small devices
-*/

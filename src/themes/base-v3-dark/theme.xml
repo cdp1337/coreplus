@@ -2,18 +2,21 @@
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
 <theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.3" name="Base V3 Dark">
 	<assets>
-		<file filename="assets/css/jquery-ui-1.11.4.css" md5="d1e78ac1cf604f1c82cecaf778251345"/>
-		<file filename="assets/css/jquery-ui-1.11.4.css.map" md5="da62021488f619aa6138941beeba5dd0"/>
-		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="94e809ff6a4b7e034ea01ddc9b4b9581"/>
-		<file filename="assets/css/print.css" md5="4640ecdf25621fa4ce61b3da316f1605"/>
-		<file filename="assets/css/print.css.map" md5="1674538990a1f9b043fae21c5a39229e"/>
-		<file filename="assets/css/print.min.css" md5="c66ac178433a9941d2f6e5bb60925277"/>
-		<file filename="assets/css/styles.css" md5="b501b2e65ddbbddf73a93cf6174f8488"/>
-		<file filename="assets/css/styles.css.map" md5="de9434b3bbb10352f52ff3cb355b9546"/>
-		<file filename="assets/css/styles.min.css" md5="adfaab2232f18aaeb76c6dd4b596dff1"/>
-		<file filename="assets/css/tinymce/content.css" md5="253e2b115e9460a797b6f25ddd51770b"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="c1119ff80f81b0f792e87ce344a73a5a"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="1b90620e2ad27d4f99def9a9fe21f3f3"/>
+		<file filename="assets/css/jquery-ui-1.11.4.css" md5="0763e330487e96fdb10cf581073d7a74"/>
+		<file filename="assets/css/jquery-ui-1.11.4.css.map" md5="0c9c9b071c5920282285ac2d72900f21"/>
+		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="8e5b41f2cb3808a7e7dda31f3270aa31"/>
+		<file filename="assets/css/jquery-ui-1.12.1.css" md5="d207126bda06dcac3a7985da0d7a9d34"/>
+		<file filename="assets/css/jquery-ui-1.12.1.css.map" md5="684fffcab6505a8fd939f28f259538a4"/>
+		<file filename="assets/css/jquery-ui-1.12.1.min.css" md5="4e8e643d5c978b2e5360156b3b5a0c5a"/>
+		<file filename="assets/css/print.css" md5="45dea8bf29833a1b85cf161538495ead"/>
+		<file filename="assets/css/print.css.map" md5="e02f4b92802460c076b20721d4a8e442"/>
+		<file filename="assets/css/print.min.css" md5="6138375160c125bd62126d47f101311c"/>
+		<file filename="assets/css/styles.css" md5="c4bd1e1fe46019776ed19cc42728f063"/>
+		<file filename="assets/css/styles.css.map" md5="2aa1f02d375efbcc01ff173fe0a89f98"/>
+		<file filename="assets/css/styles.min.css" md5="dc6fa7557457d08c969b5f39f91656fd"/>
+		<file filename="assets/css/tinymce/content.css" md5="4c80e3184d164c0bb09aa132190f3b21"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="3c579323265890a78050a736cdabba38"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="8b82fb91545ab8dc58bcce156278ac27"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="40d63018d016ead6648d9cee229a48d5" title=""/>
@@ -70,8 +73,8 @@
 		<file filename="assets/scss/_progress-log.scss" md5="bbbc79d05d748254a98d71fe1f48d290"/>
 		<file filename="assets/scss/_responsive.scss" md5="d41d8cd98f00b204e9800998ecf8427e"/>
 		<file filename="assets/scss/_screen.scss" md5="616a30b3d90d734a28c0b429991eb77e"/>
-		<file filename="assets/scss/_variables.scss" md5="06ad866a34daab5a4155e5bca7a48740"/>
-		<file filename="assets/scss/jquery-ui-1.11.4.scss" md5="954f813465bd8f2bca131e2352b4b46d"/>
+		<file filename="assets/scss/_variables.scss" md5="41a757a5d0da5cf2994a13eb44ce6c62"/>
+		<file filename="assets/scss/jquery-ui-1.12.1.scss" md5="3adfc567b95f30083b382d2f7ebcef4c"/>
 		<file filename="assets/scss/pages/_admin_health.scss" md5="9c02894ad0929bfc414cf75c7fa0e208"/>
 		<file filename="assets/scss/pages/_admin_log.scss" md5="765f4eaaaddad7b952ae7a362d1a9d30"/>
 		<file filename="assets/scss/pages/_admin_pages.scss" md5="e77e46e4e2828c4efae4dd11527ff267"/>
