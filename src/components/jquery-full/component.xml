@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.3-4" name="JQuery-Full" execmode="web">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<provides>
 		<provide name="JQuery" version="2.1.4" type="library"/>
@@ -34,7 +34,7 @@
 		<scriptlibrary name="jquery.icheck" call="JQuery::Include_Icheck"/>
 	</provides>
 	<configs>
-		<config key="/jquery/use_2_x" title="Use JQuery 2.x" type="enum" options="0|1|auto" default="auto" description="jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Uncheck this to revert back to 1.11 when calling jQuery if you need to support clients running old versions of IE."/>
+		<config key="/jquery/use_2_x" title="Use JQuery 2.x" type="enum" options="0|1|2|3|auto" default="auto" description="jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Uncheck this to revert back to 1.11 when calling jQuery if you need to support clients running old versions of IE."/>
 	</configs>
 	<assets>
 		<file filename="assets/css/images/aero.png" md5="5681c3c82b05e7236a747304d9efc65f"/>
@@ -67,33 +67,29 @@
 		<file filename="assets/css/images/ui-bg_highlight-soft_75_cccccc_1x100.png" md5="9f998df06abf7596b051218b6164b60e"/>
 		<file filename="assets/css/images/ui-icons_222222_256x240.png" md5="3a3c5468f484f07ac4a320d9e22acb8c"/>
 		<file filename="assets/css/images/ui-icons_2e83ff_256x240.png" md5="d92acecad29da2ccee5c9d491267f4a2"/>
+		<file filename="assets/css/images/ui-icons_444444_256x240.png" md5="d10bc07005bb2d604f4905183690ac04"/>
 		<file filename="assets/css/images/ui-icons_454545_256x240.png" md5="3b001ae33bd74fff64bc609ce6a55628"/>
+		<file filename="assets/css/images/ui-icons_555555_256x240.png" md5="00dd0ec0a16a1085e714c7906ff8fb06"/>
+		<file filename="assets/css/images/ui-icons_777620_256x240.png" md5="4e7e3e142f3939883cd0a7e00cabdaef"/>
+		<file filename="assets/css/images/ui-icons_777777_256x240.png" md5="40bf25799e4fec8079c7775083de09df"/>
 		<file filename="assets/css/images/ui-icons_888888_256x240.png" md5="6cc57703e2f287de68f76244a618f15c"/>
+		<file filename="assets/css/images/ui-icons_cc0000_256x240.png" md5="093a819138276b446611d1d2a45b98a2"/>
 		<file filename="assets/css/images/ui-icons_cd0a0a_256x240.png" md5="fdc58c14e91fbb086f953818c525a7ee"/>
+		<file filename="assets/css/images/ui-icons_ffffff_256x240.png" md5="ea4ebe072be75fbbea002631916836de"/>
 		<file filename="assets/css/images/yellow.png" md5="251d5e87dd14be5dc1f2f3fa4b405d92"/>
 		<file filename="assets/css/images/yellow@2x.png" md5="334c995aadc9bc51d9ba042af807cf3c"/>
-		<file filename="assets/css/jquery-ui-1.11.4.css" md5="f13d3c58407b2bac7d773900d84754f5"/>
-		<file filename="assets/css/jquery-ui-1.11.4.min.css" md5="cfacb039c20e0c0c52c438e86cc175d7"/>
+		<file filename="assets/css/jquery-ui-1.12.1.css" md5="6fd5a6e8197041971d02cf62d06f4b14"/>
 		<file filename="assets/css/jquery.icheck.css" md5="a75642d46565de832b31f2d073d25272"/>
 		<file filename="assets/css/jquery.icheck.min.css" md5="a75642d46565de832b31f2d073d25272"/>
 		<file filename="assets/css/jquery.readonly.css" md5="ca07e99b858d310cd3e855abf65d9b06"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.js" md5="3b80424646a7ecdb19273d86800c1ac0"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.min.js" md5="f5fb81fde31e9f5d0ccf14eb479cbc8d"/>
 		<file filename="assets/js/jquery/jquery-1.11.0.min.map" md5="88960207dc799796278610d3febe4abb"/>
-		<file filename="assets/js/jquery/jquery-2.1.3.js" md5="cf26f8f0ccb06be71e92d8db0fb64ab5"/>
-		<file filename="assets/js/jquery/jquery-2.1.3.min.js" md5="a9cbb890fd77bd9d5faec3d286255305"/>
-		<file filename="assets/js/jquery/jquery-2.1.3.min.map" md5="54fb7b3bd4b6443f87b9916edf490f38"/>
 		<file filename="assets/js/jquery/jquery-2.1.4.js" md5="107fbe9555bfc88ec5cab524c790fe34"/>
 		<file filename="assets/js/jquery/jquery-2.1.4.min.js" md5="f9c7afd05729f10f55b689f36bb20172"/>
 		<file filename="assets/js/jquery/jquery-2.1.4.min.map" md5="1a18b8c3ea01c2f0e75bbad327963469"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.js" md5="c913b6b5925699cd1bf4d6aa41082f70"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.2.custom.min.js" md5="82264f45e5690c782c99c9d5e8172b8b"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.js" md5="387c83ae31050eee0b744c6ea62eaf9e"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.3.custom.min.js" md5="61fa3eb2b0301ee34e5b07555d92001d"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.js" md5="c1af2a1f16eab3aa557897e9568775b2"/>
-		<file filename="assets/js/jquery/jquery-ui-1.10.4.custom.min.js" md5="520532740803557246b37f9c9f506053"/>
-		<file filename="assets/js/jquery/jquery-ui-1.11.4.js" md5="535c509d4c3ebb2ce7cdbd038a0613c3"/>
-		<file filename="assets/js/jquery/jquery-ui-1.11.4.min.js" md5="17fe7a8a35ed7075a4cf2e2ee476e1fb"/>
+		<file filename="assets/js/jquery/jquery-3.2.0.js" md5="73f0d16ec68ce7cf9c88d3e865712968"/>
+		<file filename="assets/js/jquery/jquery-ui-1.12.1.js" md5="ab5284de5e3d221e53647fd348e5644b"/>
 		<file filename="assets/js/jquery/jquery.cookie.js" md5="d5528dde0006c78be04817327c2f9b6f"/>
 		<file filename="assets/js/jquery/jquery.cookie.min.js" md5="bb836b7da5be2acc803205b68a575801"/>
 		<file filename="assets/js/jquery/jquery.form.js" md5="58cf3481d6fb6b8fe5af68940491c9d5"/>
@@ -124,10 +120,11 @@
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
 		<file filename="CHANGELOG" md5="78cdbf61a72056409f6af1b76d21cde1"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="2d6cd8eded810b37f83511608f999014">
+		<file filename="JQuery.lib.php" md5="6565387463b203964d1b1e295a123cf3">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
+		<file filename="i18n/strings.yml" md5="6fc3c71d1cc703521f30935a5497a224"/>
 	</files>
 	<description>
 		jQuery is a fast and concise JavaScript Library that simplifies HTML document traversing, event handling, animating, and Ajax interactions for rapid web development. jQuery is designed to change the way that you write JavaScript.
@@ -169,5 +166,13 @@
 		<upgrade from="2.1.3-2" to="2.1.3-3"/>
 		<upgrade from="2.1.3-3" to="2.1.3-4"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 

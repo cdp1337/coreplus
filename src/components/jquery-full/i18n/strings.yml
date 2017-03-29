@@ -1,0 +1,5 @@
+---
+MESSAGE_CONFIG_JQUERY_USE_2_X:
+  en: "jQuery 2.x includes performance gains, but breaks IE 8 compatibility.  Set to '1' to force using of jQuery 1.11 for IE 8 compatibility, or 'auto' to automatically use the newest version possible for the user's browser"
+STRING_CONFIG_JQUERY_USE_2_X:
+  en: "jQuery Version To Use"

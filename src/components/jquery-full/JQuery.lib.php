@@ -34,19 +34,25 @@ abstract class JQuery {
 				$use2x = '0';
 			}
 			else{
-				$use2x = '1';
+				$use2x = '3';
 			}
 		}
-
-		if($use2x == '1'){
-			// The site is setup to use 2.x, (default as of Core 4.0).
-			\Core\view()->addScript ('js/jquery/jquery-2.1.4.js');
+		
+		switch($use2x){
+			case '0':
+				// The admin requested not to use the new version of jQuery.  Stick with 1.11 then.
+				\Core\view()->addScript ('js/jquery/jquery-1.11.0.js');
+				break;
+			case '1':
+			case '2':
+				// The site is setup to use 2.x, (default as of Core 4.0).
+				\Core\view()->addScript ('js/jquery/jquery-2.1.4.js');
+				break;
+			case '3':
+				// Core 6.2 started using jQuery 3.x
+				\Core\view()->addScript ('js/jquery/jquery-3.2.0.js');
+				break;
 		}
-		else{
-			// The admin requested not to use the new version of jQuery.  Stick with 1.11 then.
-			\Core\view()->addScript ('js/jquery/jquery-1.11.0.js');
-		}
-
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
@@ -54,9 +60,9 @@ abstract class JQuery {
 	
 	public static function IncludeJQueryUI(){
 		self::IncludeJQuery();
-		\Core\view()->addScript ('js/jquery/jquery-ui-1.11.4.js');
+		\Core\view()->addScript ('js/jquery/jquery-ui-1.12.1.js');
 		\Core\view()->addScript ('js/jquery/jquery.ui.touch-punch.js');
-		\Core\view()->addStylesheet('css/jquery-ui-1.11.4.css');
+		\Core\view()->addStylesheet('css/jquery-ui-1.12.1.css');
 		
 		// IMPORTANT!  Tells the script that the include succeeded!
 		return true;
