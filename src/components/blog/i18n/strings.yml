@@ -20,13 +20,13 @@ MESSAGE_MODEL_BLOGARTICLEMODEL_SEARCH_INDEX_STR:
 MESSAGE_MODEL_BLOGARTICLEMODEL_TITLE:
   en: ""
 MESSAGE_MODEL_BLOGMODEL_MANAGE_ARTICLES_PERMISSION:
-  en: ""
+  en: "Select the type of users that can add and edit articles on this blog."
 MESSAGE_MODEL_BLOGMODEL_REMOTE_URL:
-  en: ""
+  en: "Enter the URL of the remote site to syndicate from, please include the full https:// prefixes as necessary."
 MESSAGE_MODEL_BLOGMODEL_SITE:
   en: ""
 MESSAGE_MODEL_BLOGMODEL_TYPE:
-  en: ""
+  en: "The type of the blog; be it local or remote.  Remote blogs allow you to syndicate remote content from an RSS feed."
 STRING_ADD_ARTICLE:
   en_US: Add Article
   en_PI: Add Article
@@ -54,12 +54,12 @@ STRING_MODEL_BLOGARTICLEMODEL_SEARCH_INDEX_STR:
 STRING_MODEL_BLOGARTICLEMODEL_TITLE:
   en: ""
 STRING_MODEL_BLOGMODEL_MANAGE_ARTICLES_PERMISSION:
-  en: ""
+  en: "Manage Article Permissions"
 STRING_MODEL_BLOGMODEL_REMOTE_URL:
-  en: ""
+  en: "Remote URL"
 STRING_MODEL_BLOGMODEL_SITE:
-  en: ""
+  en: "Site"
 STRING_MODEL_BLOGMODEL_TYPE:
-  en: ""
+  en: "Type"
 STRING_PERMISSION_BLOG_MANAGE_ALL:
   en: ""
