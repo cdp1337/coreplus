@@ -1,11 +1,9 @@
 <?php
 
-require_once(ROOT_PDIR . 'components/theme/functions/common.php');
-
 /**
  * The main theme administration controller.
  *
- * This is reponsible for all administrative tasks associated with the theme.
+ * This is responsible for all administrative tasks associated with the theme.
  */
 class ThemeController extends Controller_2_1{
 
@@ -441,7 +439,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 		// Validate the theme name
-		if(!\Theme\validate_theme_name($themename)){
+		if(!\Core\Theme\Theme\ValidateThemeName($themename)){
 			\Core\set_message('Invalid theme requested', 'error');
 			\Core\go_back();
 		}
@@ -451,7 +449,7 @@ class ThemeController extends Controller_2_1{
 
 		if($template){
 			// The template itself can be ignored.
-			if(!\Theme\validate_template_name($themename, $template)){
+			if(!\Core\Theme\Theme\ValidateTemplateName($themename, $template)){
 				\Core\set_message('Invalid template requested', 'error');
 				\Core\go_back();
 			}
@@ -523,12 +521,12 @@ class ThemeController extends Controller_2_1{
 		}
 
 		// Validate
-		if(!\Theme\validate_theme_name($theme)){
+		if(!\Core\Theme\Theme\ValidateThemeName($theme)){
 			\Core\set_message('Invalid theme requested', 'error');
 			\Core\go_back();
 		}
 
-		if(!\Theme\validate_template_name($theme, $template)){
+		if(!\Core\Theme\Theme\ValidateTemplateName($theme, $template)){
 			\Core\set_message('Invalid template requested', 'error');
 			\Core\go_back();
 		}
@@ -578,7 +576,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 		// Validate
-		if(!\Theme\validate_theme_name($theme)){
+		if(!\Core\Theme\Theme\ValidateThemeName($theme)){
 			\Core\set_message('Invalid theme requested', 'error');
 			\Core\go_back();
 		}

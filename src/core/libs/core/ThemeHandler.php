@@ -58,7 +58,7 @@ class ThemeHandler implements ISingleton{
 				
 				// Finally, load the theme and keep it in cache.
 				
-				$t = new Theme\Theme($file);
+				$t = new Core\Theme\Theme($file);
 				
 				$this->_themeCache[$file] = $t;
 				unset($t);
