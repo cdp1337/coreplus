@@ -1,0 +1,252 @@
+// Bourbon base styles.
+@import "../vendor/bourbon/bourbon";
+
+// Variables is used by Bitters, and defined outside vendor for customizations.
+@import "../variables";
+
+/** Admin Bar **/
+#admin-bar {
+	background-color: $base-background-color;
+	border-bottom: $base-border;
+	color: $base-foreground-color;
+	font-size: 80%;
+	padding: 0;
+	position: relative;
+	top: 0;
+	width:100%;
+	z-index: 9999;
+	
+	// This provides the clearfix for this bar.
+	&:after {
+		clear: both;
+		content: " ";
+		display: block;
+	}
+	
+	.admin-bar-anchor {
+		float: left;
+		margin-right: $base-spacing;
+		
+		svg {
+			height: 2.25em;
+			vertical-align: middle;
+			width: 2.25em;
+		}
+		
+		span {
+			display: none; // Hide the helper text for the anchor; this only gets displayed on certain resolutions.
+			
+			.collapsible-hint {
+				display: none;
+			}
+			.expandable-hint {
+				display: inline-block;
+			}
+		}
+	}
+	
+	ul.admin-bar-menu {
+		margin: 0;
+		padding-left: 2em;
+		
+		li.has-sub {
+			float: left;
+			line-height: 2em;
+			list-style: none;
+			margin-right: 2em;
+			position: relative;
+			
+			// Top-level links
+			a, a:visited {
+				color: $base-foreground-color;
+				text-decoration: none;
+				vertical-align: middle;
+			}
+			
+			// The inner navigation menu // group of links.
+			ul.sub-menu {
+				background-color: $base-background-color;
+				border-left: $base-border;
+				border-bottom: $base-border;
+				border-right: $base-border;
+				display: none; // Displayed with javascript / hover statuses.
+				left: -1em;
+				margin: 0;
+				min-width: 17em;
+				opacity: 0.9;
+				overflow: hidden;
+				padding-left: 0;
+				position: absolute;
+				top: 2.3em;
+				
+				// Each inner navigation entry
+				li {
+					float: none;
+					display: block;
+					margin-right: 0;
+					
+					// Inner links
+					a, a:visited {
+						display: block;
+						white-space: nowrap;
+						
+						&:after {
+							clear: both;
+							content: " ";
+							display: block;
+						}
+						
+						&.has-image {
+							padding: $small-spacing/2 $small-spacing/2 $small-spacing/2 3px;
+						}
+						&.no-image {
+							padding: $small-spacing/2 $small-spacing/2 $small-spacing/2 31px;
+						}
+					}
+					
+					a:hover {
+						background-color: $action-color;
+						color: $base-background-color;
+					}
+					
+					img {
+						vertical-align: middle;
+					}
+				}
+			}
+		}
+	}
+	
+	// A few styles when the touch is activated.
+	&.touch-active {
+		.admin-bar-anchor {
+			span {
+				.collapsible-hint {
+					display: inline-block;
+				}
+				.expandable-hint {
+					display: none;
+				}
+			}
+		}
+
+		ul.admin-bar-menu {
+			li {
+				cursor: pointer;
+				
+				&:hover, &:active {
+					color: $action-color;
+				}
+			}
+		}
+	}
+	
+	// The styles for when this menu is open AND a deep subentry is open!
+	&.deep {
+		ul.admin-bar-menu {
+			li.has-sub.active {
+				ul.sub-menu {
+					display: block;
+				}
+			}
+		}
+	}
+}
+
+#admin-bar .userloginwidget {
+	float:right;
+	display:inline-block;
+	margin-right:15px;
+	margin-top:8px;
+}
+
+
+@media only screen and (max-width: $breakpoint-tablet) {
+	#admin-bar {
+		font-size: 95%;
+		
+		.admin-bar-anchor {
+			cursor: pointer;
+			
+			span {
+				display: inline-block; // Show the span on this resolution!
+			}
+		}
+		
+		ul.admin-bar-menu {
+			background-color: $base-background-color;
+			display: none; // This gets displayed via the touch event.
+			flex-direction: row;
+			flex-wrap: wrap;
+			padding-left: 0;
+			position: absolute;
+			top: 2.25em;
+			width: 100%;
+			
+			li.has-sub {
+				cursor: pointer;
+				flex: 1;
+				line-height: 3em;
+				margin-right: 0;
+				min-width: 25%;
+				text-align: center;
+				
+				ul.sub-menu {
+					display: none;
+					flex-direction: row;
+					flex-wrap: wrap;
+					left: 0;
+					border: 0 none;
+					top: 2.85em;
+					width: 100%;
+
+					li {
+						border: $base-border;
+						display: inline-block;
+						flex: 1;
+						min-width: 33%;
+						overflow: hidden;
+						text-align: left;
+					}
+				}
+			}
+		}
+		
+		// The styles for when this menu as a whole when active (clicked on)
+		&.touch-active {
+			.admin-bar-anchor {
+				span {
+					.collapsible-hint {
+						display: inline-block;
+					}
+					.expandable-hint {
+						display: none;
+					}
+				}
+			}
+
+			ul.admin-bar-menu {
+				display: flex;
+			}
+		}
+		
+		// The styles for when this menu is open AND a deep subentry is open!
+		&.deep {
+			ul.admin-bar-menu {
+				li.has-sub {
+					display: none;
+				}
+				li.has-sub.active {
+					display: block;
+					width: 100%;
+					background-color: $secondary-background-color;
+					color: $secondary-foreground-color;
+					
+					ul.sub-menu {
+						display: flex;
+					}
+				}
+			}
+		}
+	}
+}

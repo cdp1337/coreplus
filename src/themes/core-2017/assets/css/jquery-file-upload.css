@@ -1,0 +1,267 @@
+/**
+ * Base font to use for the entire system.
+ *
+ * This gets applied to the body and used for all derivative font declarations by default.
+ * 
+ * Various font types provided by Bourbon:
+ * 
+ * Georgia font stack `$georgia`
+ * : "Georgia", "Cambria", "Times New Roman", "Times", serif;
+ * 
+ * Helvetica font stack `$helvetica`
+ * : "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+ * 
+ * Lucida Grande font stack `$lucida-grande`
+ * : "Lucida Grande", "Tahoma", "Verdana", "Arial", sans-serif;
+ * 
+ * Monospace font stack `$monospace`
+ * : "Bitstream Vera Sans Mono", "Consolas", "Courier", monospace;
+ * 
+ * Verdana font stack `$verdana`
+ * : "Verdana", "Geneva", sans-serif;
+ */
+/**
+ * Individual H1-H6 tags used throughout the site.
+ */
+/**
+ * Base font size for the entire system
+ */
+/**
+ * Individual sizes for the H1-H6 tags throughout the site.
+ */
+/**
+ * The base border radius, defines the basic "roundness" of everything.
+ */
+/**
+ * How wide should borders be by default
+ */
+/**
+ * Basic line height, (assumed to be EMs)
+ */
+/**
+ * H1-H6 tag line heights
+ */
+/**
+ * Basic spacing for paragraphs and the like
+ */
+/**
+ * Small spacing, for well, smaller elements.
+ */
+/**
+ * The base foreground color for the entire site,
+ * gets applied to the body.
+ */
+/**
+ * The base background color for the entire site,
+ * gets applied to the body.
+ */
+/**
+ * Secondary foreground colour, usually for fieldsets, dialogs, etc
+ */
+/**
+ * Secondary background colour, usually for fieldsets, dialogs, etc
+ */
+/**
+ * <body style="background-color"/>
+ * 
+ * Page background color; usually the same as the base, 
+ * but can be changed to create a stepped background.
+ */
+/**
+ * <header class="page-header" style="background-color"/>
+ * 
+ * The page header at the top that contains the logo and social links.
+ */
+/**
+ * "Action" colour for this site; this is generally
+ * the foreground color for <a/> tags and the background color for <input/> tags.
+ */
+/**
+ * Base colour for "info" notices to the end user
+ */
+/**
+ * Base colour for "success" notices to the end user
+ */
+/**
+ * Base colour for "deprecated" notices to the end user
+ */
+/**
+ * Base colour for "warning" notices to the end user
+ */
+/**
+ * Base colour for "error" notices to the end user
+ */
+/**
+ * Base colour for tutorials to the end user
+ */
+/**
+ * "Wide" screens and formats.
+ */
+/**
+ * Standard/narrow screens, not usually used except when needed
+ */
+/**
+ * Tablets and phones in landscape
+ */
+/**
+ * Phones and other small devices
+ */
+/**
+ * Default border color for the site
+ */
+/**
+ * Default border (full declaration), for the site
+ */
+/**
+ * <a class="button button-reset"/>
+ * 
+ * has some special styling to make it appear as a reset button.
+ */
+/**
+ * <a class="button button-apply"/>
+ * 
+ * has some special styling to make it appear as an apply button.
+ */
+/**
+ * Listing Table colours, backgrounds, and borders
+ */
+/**
+ * Update "all buttons" with the Core button class for links.
+ */
+/* line 7, ../scss/jquery-file-upload.scss */
+.multifileinput {
+  background-color: #111;
+  border-radius: 2px;
+  color: #BBB;
+  border: 1px solid #555555;
+  padding: 0.75em;
+  position: relative;
+}
+/* line 15, ../scss/jquery-file-upload.scss */
+.multifileinput:hover {
+  background-color: #361515;
+}
+/* line 18, ../scss/jquery-file-upload.scss */
+.multifileinput:hover .multiupload-drag-notice {
+  display: block;
+}
+/* line 23, ../scss/jquery-file-upload.scss */
+.multifileinput .multiupload-drag-notice {
+  color: #F72C2C;
+  display: none;
+  font-size: 33px;
+  margin-top: 10px;
+  padding-top: 0;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  z-index: 1;
+}
+/* line 35, ../scss/jquery-file-upload.scss */
+.multifileinput .fileupload-progress {
+  width: 100%;
+}
+
+/* line 40, ../scss/jquery-file-upload.scss */
+.fileupload-buttonbar {
+  z-index: 4;
+}
+
+/* line 44, ../scss/jquery-file-upload.scss */
+.multifileinput table.listing {
+  margin-top: 45px;
+}
+
+/* line 49, ../scss/jquery-file-upload.scss */
+.fileinput-button {
+  position: relative;
+  overflow: hidden;
+  float: left;
+  margin-right: 4px;
+}
+
+/* line 55, ../scss/jquery-file-upload.scss */
+.fileinput-button input {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  transform: translate(-300px, 0) scale(4);
+  font-size: 23px;
+  direction: ltr;
+  cursor: pointer;
+}
+
+/* line 67, ../scss/jquery-file-upload.scss */
+.fileupload-buttonbar .btn,
+.fileupload-buttonbar .toggle {
+  margin-bottom: 5px;
+}
+
+/* line 71, ../scss/jquery-file-upload.scss */
+.files .progress {
+  width: 200px;
+}
+
+/* line 74, ../scss/jquery-file-upload.scss */
+.progress-animated .bar {
+  background: url("../libs/jquery-file-upload/img/progressbar.gif") !important;
+  filter: none;
+}
+
+/* line 78, ../scss/jquery-file-upload.scss */
+.fileupload-loading {
+  position: absolute;
+  left: 50%;
+  width: 128px;
+  height: 128px;
+  background: url("../libs/jquery-file-upload/img/loading.gif") center no-repeat;
+  display: none;
+}
+
+/* line 86, ../scss/jquery-file-upload.scss */
+.fileupload-processing .fileupload-loading {
+  display: block;
+}
+
+/* line 90, ../scss/jquery-file-upload.scss */
+* html .fileinput-button {
+  line-height: 24px;
+  margin: 1px -3px 0 0;
+}
+
+/* line 95, ../scss/jquery-file-upload.scss */
+* + html .fileinput-button {
+  padding: 2px 15px;
+  margin: 1px 0 0 0;
+}
+
+@media (max-width: 767px) {
+  /* line 101, ../scss/jquery-file-upload.scss */
+  .fileupload-buttonbar .toggle,
+  .files .toggle,
+  .files .btn span {
+    display: none;
+  }
+
+  /* line 106, ../scss/jquery-file-upload.scss */
+  .files .preview * {
+    width: 40px;
+  }
+
+  /* line 109, ../scss/jquery-file-upload.scss */
+  .files .name * {
+    width: 80px;
+    display: inline-block;
+    word-wrap: break-word;
+  }
+
+  /* line 114, ../scss/jquery-file-upload.scss */
+  .files .progress {
+    width: 20px;
+  }
+}
+
+/*# sourceMappingURL=jquery-file-upload.css.map */
