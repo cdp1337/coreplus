@@ -138,7 +138,7 @@ class datastore implements AuthDriverInterface{
 		$form->set('callsMethod', 'DatastoreAuthController::LoginHandler');
 
 		$form->addElement('hidden', ['name' => 'redirect']);
-		$form->addElement('text', ['name' => 'email', 'title' => t('STRING_EMAIL'), 'required' => true]);
+		$form->addElement('email', ['name' => 'email', 'title' => t('STRING_EMAIL'), 'required' => true]);
 		$form->addElement('password', ['name' => 'pass', 'title' => t('STRING_PASSWORD'), 'required' => false]);
 		$form->addElement('submit', ['name' => 'submit', 'value' => t('STRING_LOGIN')]);
 
