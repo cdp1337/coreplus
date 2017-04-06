@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-2" logo="assets/images/chartistjs.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-2" logo="assets/images/logos/chartistjs.png">
 	<provides>
 		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
 	</provides>
@@ -26,7 +26,7 @@
 		<file filename="assets/css/chartist.css" md5="a9ed5f0eee5b5fcef1ad10262e6445f8"/>
 		<file filename="assets/css/chartist.css.map" md5="2a679b081b6650f1006910ccf30d542f"/>
 		<file filename="assets/css/chartist.min.css" md5="82d5df30b8d173ec308859d6f5f966d3"/>
-		<file filename="assets/images/chartistjs.png" md5="77f67582ccec539e358d88c19a8c0fd9"/>
+		<file filename="assets/images/logos/chartistjs.png" md5="77f67582ccec539e358d88c19a8c0fd9"/>
 		<file filename="assets/js/chartist.js" md5="cb31f9aa596227ba6ad01d5b88711798"/>
 		<file filename="assets/js/chartist.min.js" md5="0111fc3cd9cbde06b8bfe48c99e738a5"/>
 		<file filename="assets/js/chartist.min.js.map" md5="8a475158f2f74c33a010c325263f19c4"/>

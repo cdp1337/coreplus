@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHPMailer" version="5.2.22-1" logo="assets/images/phpmailer.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHPMailer" version="5.2.22-1" logo="assets/images/logos/phpmailer.png">
 	<provides>
 		<emailbackend name="PHPMailer - SMTP" class="PHPMailerCore\SMTP"/>
 		<emailbackend name="PHPMailer - mail" class="PHPMailerCore\Mail"/>
@@ -22,9 +22,10 @@
 	<files>
 		<file filename="CHANGELOG" md5="c73683f62fa3746b14ca6577b1fbb850"/>
 		<file filename="README.md" md5="0093c14d52936a5818ed874cd5947140"/>
-		<file filename="controllers/PHPMailerController.php" md5="ee8d2d449934012a64b8d68ad15e8ac8">
+		<file filename="controllers/PHPMailerController.php" md5="0bb7a07283b1e91fde2ed884a22fe924">
 			<controller name="PHPMailerController"/>
 		</file>
+		<file filename="i18n/strings.yml" md5="60ad541d48d66db8ae2fbe3a019ad54c"/>
 		<file filename="libs/PHPMailerCore/EmailBackend.php" md5="aaa983e7f551c906101b041078b715c9">
 			<class name="PHPMailerCore\EmailBackend"/>
 		</file>
@@ -116,13 +117,13 @@
 		<file filename="upgrades/install-migrate-configs.php" md5="385aaebb94d5631ab6c0270018e8eec1"/>
 	</files>
 	<view>
-		<file filename="templates/pages/phpmailer/config.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
+		<file filename="templates/pages/phpmailer/config.tpl" md5="0428438849262e9cef56dd437bf4bd57"/>
 	</view>
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<assets>
-		<file filename="assets/images/phpmailer.png" md5="47e4bc7f11c6e2007caa8363e36c407f"/>
+		<file filename="assets/images/logos/phpmailer.png" md5="47e4bc7f11c6e2007caa8363e36c407f"/>
 	</assets>
 	<install>
 		<php file="upgrades/install-migrate-configs.php"/>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1" name="Content" execmode="web" logo="assets/images/content.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1" name="Content" execmode="web" logo="assets/images/logos/content.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -78,7 +78,7 @@
 		<upgrade from="3.0.0" to="3.0.1"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/images/content.png" md5="86beb406ad3daac3eabb800366fc1bb7"/>
+		<file filename="assets/images/logos/content.png" md5="86beb406ad3daac3eabb800366fc1bb7"/>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-140.png" md5="673cfa327007694704fe95e47dcc9ec0"/>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-210.png" md5="4908ee304cc74dadd78bf4eeddf5c12c"/>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area.png" md5="f8cea628a881b575aecfa54f1fd32500"/>

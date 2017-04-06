@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-5" name="CodeMirror" execmode="web" logo="assets/images/codemirror.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-5" name="CodeMirror" execmode="web" logo="assets/images/logos/codemirror.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -44,7 +44,7 @@
 		<file filename="assets/css/codemirror.css" md5="6e4b3739e260eff061bcad017c3eec07"/>
 		<file filename="assets/css/codemirror.css.map" md5="cb9124be452b28e2610833b3a0567613"/>
 		<file filename="assets/css/codemirror.min.css" md5="8f73731edec25dfc56f2c225f8a6677d"/>
-		<file filename="assets/images/codemirror.png" md5="f824dab41f1b8c60a38187f0dfa70d53"/>
+		<file filename="assets/images/logos/codemirror.png" md5="f824dab41f1b8c60a38187f0dfa70d53"/>
 		<file filename="assets/libs/codemirror/AUTHORS" md5="dae54d0ba943da7adb0cd9cc83d8caeb"/>
 		<file filename="assets/libs/codemirror/CONTRIBUTING.md" md5="89dd65bf9084fce69e3701baaffe1de8"/>
 		<file filename="assets/libs/codemirror/addon/comment/comment.js" md5="e1233ff2b2428c5078ecfafbea23b7a0"/>

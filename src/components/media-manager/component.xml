@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Media Manager" logo="assets/images/media-manager.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Media Manager" logo="assets/images/logos/media-manager.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -39,7 +39,7 @@
 		<file filename="assets/css/mediamanager/navigator.css" md5="723519f99b97dd68b6421ede8259088f"/>
 		<file filename="assets/css/mediamanager/navigator.css.map" md5="fb86a9559c2b5c29d5c8cb4e30cd458a"/>
 		<file filename="assets/css/mediamanager/navigator.min.css" md5="94a3a07cf66b4f2d55fb1e37d4323b5a"/>
-		<file filename="assets/images/media-manager.png" md5="7d723bc3f76a5d68119c7a5205efa4fe"/>
+		<file filename="assets/images/logos/media-manager.png" md5="7d723bc3f76a5d68119c7a5205efa4fe"/>
 		<file filename="assets/js/mediamanager/navigator.js" md5="3b2c37128842c28178ca02e4d4931851"/>
 		<file filename="assets/js/mediamanager/navigator.min.js" md5="755f1980393c1a490e397c5aee6d212d"/>
 	</assets>

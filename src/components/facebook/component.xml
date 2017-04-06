@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component SYSTEM "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.2.0-1" name="Facebook" execmode="web" logo="assets/images/facebook.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.2.0-1" name="Facebook" execmode="web" logo="assets/images/logos/facebook.png">
 	<hooks>
 		<hook name="/core/page/rendering" call="FacebookHelper::HookRenderPage"/>
 		<hook name="/core/controllinks/usermodel" call="FacebookController::GetUserControlLinks"/>
@@ -42,7 +42,7 @@
 			<class name="FacebookHelper"/>
 		</file>
 		<file filename="LICENSE" md5="2b909e60ceb7fd50466e9268b55a3410"/>
-		<file filename="controllers/FacebookController.php" md5="65c521bf86751543da77d3fb5b2949cb">
+		<file filename="controllers/FacebookController.php" md5="e2f4a202f26169d009c28cb28f5901a5">
 			<controller name="FacebookController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="786b028b60fcdaaeeff698e0f2658703"/>
@@ -296,7 +296,7 @@
 	</upgrades>
 	<assets>
 		<file filename="assets/css/facebook.css" md5="705ee2ca2a443c5ff690c277ef26a2fe"/>
-		<file filename="assets/images/facebook.png" md5="a6143066f20ed05942ef66b3b53f2ccd"/>
+		<file filename="assets/images/logos/facebook.png" md5="a6143066f20ed05942ef66b3b53f2ccd"/>
 		<file filename="assets/js/facebook/login.js" md5="17a212d8244b41d712db7dbb480da122"/>
 		<file filename="assets/js/facebook/login.min.js" md5="47160cc5f84a321aba41e44d4e786d22"/>
 	</assets>

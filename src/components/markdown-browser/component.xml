@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="Markdown Browser" execmode="web" logo="assets/images/markdown-browser.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="Markdown Browser" execmode="web" logo="assets/images/logos/markdown-browser.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="php-markdown-lib" type="component"/>
@@ -53,6 +53,9 @@
 	</upgrades>
 	<users/>
 	<widgets/>
+	<assets>
+		<file filename="assets/images/logos/markdown-browser.png" md5="d7a3b0d4743a1156ade31b3e65386307"/>
+	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
@@ -61,8 +64,5 @@
 			GNU Affero General Public License
 		</license>
 	</licenses>
-	<assets>
-		<file filename="assets/images/markdown-browser.png" md5="d7a3b0d4743a1156ade31b3e65386307"/>
-	</assets>
 </component>
 

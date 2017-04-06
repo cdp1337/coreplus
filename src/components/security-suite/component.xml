@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Security-Suite" execmode="web" logo="assets/images/security-suite.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Security-Suite" execmode="web" logo="assets/images/logos/security-suite.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
@@ -61,7 +61,7 @@
 		<file filename="i18n/de.ini" md5="3013c421e24d6903b69251f135e0d3b6"/>
 		<file filename="i18n/en.ini" md5="7371ee8c0de4e64e0b2f2509c0becdf1"/>
 		<file filename="i18n/fr.ini" md5="0ce04f05d4a7bbfc0fb46889fa33aeb7"/>
-		<file filename="i18n/strings.yml" md5="b093cc11c4dbb03831f8ef0ebdc2bf09"/>
+		<file filename="i18n/strings.yml" md5="d88178e81019efe3e1d7841c878475c0"/>
 		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="f6d430efc682249e34a1af82d4ae999b">
 			<class name="SecuritySuite\IpBlacklistHelper"/>
 		</file>
@@ -117,7 +117,7 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
 	<assets>
-		<file filename="assets/images/security-suite.png" md5="ad92860dc048374ea7527ad60376d89e"/>
+		<file filename="assets/images/logos/security-suite.png" md5="ad92860dc048374ea7527ad60376d89e"/>
 		<file filename="assets/wp-admin/css/wp-admin.min.css" md5="1060bbdd464bed007f6fa460dd3f6a56"/>
 		<file filename="assets/wp-admin/css/wpcom.css" md5="faab35031e9109d28fc8435eb635c3af"/>
 		<file filename="assets/wp-includes/css/buttons.min.css" md5="f3dcaa18ed8e6638089d4e1a196ccae9"/>

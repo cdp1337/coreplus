@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.8.2-2" name="JQuery-lightbox" execmode="web" logo="assets/images/jquery-lightbox.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.8.2-2" name="JQuery-lightbox" execmode="web" logo="assets/images/logos/jquery-lightbox.png">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="jquery" type="library" version="1.9" operation="ge"/>
 		<require name="fontawesome" type="library" version="4.0.0" operation="ge"/>
 	</requires>
@@ -13,6 +13,7 @@
 	<assets>
 		<file filename="assets/css/lightbox.css" md5="4866e40e3a559b9c8e94508762ebfca8"/>
 		<file filename="assets/css/lightbox.min.css" md5="27f0f165135c7f2e26c94cb7a5ac5533"/>
+		<file filename="assets/images/logos/jquery-lightbox.png" md5="6e86922b55c5296dd191d455b61b4402"/>
 		<file filename="assets/js/lightbox.js" md5="cb589d2b8f529e516b28ae1de503818b"/>
 		<file filename="assets/js/lightbox.min.js" md5="f5319f94376ab89ab6b436fb44dee106"/>
 		<file filename="assets/js/lightbox.min.map" md5="0a5381055046172bf2de96363361d5e1"/>
@@ -24,7 +25,6 @@
 		</file>
 		<file filename="LICENSE" md5="5debb370f50e1dfd24ff5144233a2ef6"/>
 		<file filename="lightbox2-screen.jpg" md5="379d36f3b6398fd90c95f9bb6c70593b"/>
-		<file filename="picture.png" md5="8ddf202913b8a9938d6305bbce39d8fe"/>
 	</files>
 	<description>
 		Lightbox is small javascript library used to overlay images on top of the current page.
@@ -40,5 +40,8 @@
 	<screenshots>
 		<screenshot file="lightbox2-screen.jpg"/>
 	</screenshots>
+	<licenses>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
+	</licenses>
 </component>
 

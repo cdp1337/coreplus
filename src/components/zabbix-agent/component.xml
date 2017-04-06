@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.0" logo="assets/images/zabbix-agent.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.0" logo="assets/images/logos/zabbix-agent.png">
 	<description>
 		Monitoring agent for the Zabbix system.  Sends system health reports to the monitoring server every minute.
 	</description>
@@ -25,11 +25,11 @@
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
+	<assets>
+		<file filename="assets/images/logos/zabbix-agent.png" md5="b85c2ab6920a8390a5187c9aeebe463a"/>
+	</assets>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
 	</authors>
-	<assets>
-		<file filename="assets/images/zabbix-agent.png" md5="b85c2ab6920a8390a5187c9aeebe463a"/>
-	</assets>
 </component>
 

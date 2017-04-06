@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Gallery" execmode="web" logo="assets/images/gallery.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Gallery" execmode="web" logo="assets/images/logos/gallery.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -57,7 +57,7 @@
 	<assets>
 		<file filename="assets/css/gallery.css" md5="9d25741fa7d4c19808f4d2527eaa4b97"/>
 		<file filename="assets/gallery-arrow.png" md5="16bc541d24d9c8d5a124369eb51a4f8e"/>
-		<file filename="assets/images/gallery.png" md5="74f07e64024e5129ea294e313352d352"/>
+		<file filename="assets/images/logos/gallery.png" md5="74f07e64024e5129ea294e313352d352"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-140.png" md5="0d6f5d18020961db2d13f3f39940bcc1"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery-210.png" md5="ba153cf5bb8065ea1b472fca35a6189b"/>
 		<file filename="assets/images/previews/templates/widgets/gallery/photo-gallery.png" md5="ed55d46d67fa34a10801b670d32652e5"/>

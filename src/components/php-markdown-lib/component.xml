@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP Markdown Lib" version="1.7.0" logo="assets/images/php-markdown-lib.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP Markdown Lib" version="1.7.0" logo="assets/images/logos/php-markdown-lib.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -33,6 +33,9 @@
 	<view>
 		<file filename="templates/includes/forms/markdowninput.tpl" md5="39d600c155d7dc6f6e28a8d6e1661747"/>
 	</view>
+	<assets>
+		<file filename="assets/images/logos/php-markdown-lib.png" md5="d190443d677bd4999176ce5bb8bb874f"/>
+	</assets>
 	<authors>
 		<author name="Michel Fortin" email="michel.fortin@michelf.com"/>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
@@ -43,8 +46,5 @@
 		</license>
 		<license url="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</license>
 	</licenses>
-	<assets>
-		<file filename="assets/images/php-markdown-lib.png" md5="d190443d677bd4999176ce5bb8bb874f"/>
-	</assets>
 </component>
 

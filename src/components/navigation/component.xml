@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="Navigation" execmode="web" logo="assets/images/navigation.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="Navigation" execmode="web" logo="assets/images/logos/navigation.png">
 	<requires>
 		<require name="core" type="component" operation="ge" version="6.2.0"/>
 	</requires>
@@ -13,21 +13,21 @@
 		<file filename="controllers/NavigationController.php" md5="c386e82a5c30274e1543276494670ee1">
 			<controller name="NavigationController"/>
 		</file>
-		<file filename="i18n/strings.yml" md5="cc216c0980d987e5790e2b56afc57c6d"/>
-		<file filename="models/Navigation.model.php" md5="932ea911a691d96aca2c01b94697aa93">
+		<file filename="i18n/strings.yml" md5="ee530eba4bc9aacf65143e8f0c5e1a56"/>
+		<file filename="models/Navigation.model.php" md5="0cde707635c7440504822de317758de7">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="7ffd8b1caa8a10b3ed018984ea2b5c7a">
+		<file filename="models/NavigationEntry.model.php" md5="9f3779abc16891a37bf7d2d383213146">
 			<class name="NavigationEntryModel"/>
 		</file>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="d7b466a521859a4670ce8e0d98b7fa5c"/>
-		<file filename="widgets/NavigationWidget.php" md5="5e60c9c4aea841934b87f13cff6732f9">
+		<file filename="widgets/NavigationWidget.php" md5="03c977bd9ee2fe7d3822e1657f56b506">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
 	<view>
 		<file filename="templates/pages/navigation/create.tpl" md5="75c1c4157d0b64b0f5e05fa3a0ee9846"/>
-		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="d8bf610108f2baf2c64a7010a318553c"/>
+		<file filename="templates/pages/navigation/create_edit.inc.tpl" md5="10c1efc25edb9088c6947b902b802793"/>
 		<file filename="templates/pages/navigation/delete.tpl" md5="0caa8ffa5c92843faae19fbdec593da5"/>
 		<file filename="templates/pages/navigation/edit.tpl" md5="a6eda39bbc1a33dac2888ffe43ab7868"/>
 		<file filename="templates/pages/navigation/index.tpl" md5="48cd76b0860f828bd2aaa2475c16eb61"/>
@@ -38,6 +38,7 @@
 		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
 		<file filename="templates/widgets/navigation/view.tpl" md5="882955f52ee2d9973b731f08f7d07187"/>
 		<file filename="templates/widgets/navigation/view/horizontal-menu.tpl" md5="051a0eadd57718135ceec406ad4cc348"/>
+		<file filename="templates/widgets/navigation/view/jquery-cycle-menu.tpl" md5="84506dc8ebddcdb6c9daf45e62624794"/>
 	</view>
 	<widgets>
 		<widget baseurl="/navigation/siblings" title="Page Siblings Nav"/>
@@ -49,7 +50,7 @@
 		<file filename="assets/css/navigation.css" md5="524609c4329abb8375ff4d5b033393ed"/>
 		<file filename="assets/css/navigation.css.map" md5="7e4208c06ec35b93a8f8a74cfad68b06"/>
 		<file filename="assets/css/navigation.min.css" md5="6da274abebbf23ae72dc4f016e946c14"/>
-		<file filename="assets/images/navigation.png" md5="15107b97e4f5b4d5fe1636d7fc2d0835"/>
+		<file filename="assets/images/logos/navigation.png" md5="15107b97e4f5b4d5fe1636d7fc2d0835"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-140.png" md5="b802371dccad4efd732bc4d64fc6a6fc"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-210.png" md5="0707ae53fa3b89eecc1f2624abd366f3"/>
 		<file filename="assets/images/previews/templates/widgets/navigation/navigation-children-140.png" md5="a825bcc2dbed754cb091d733233acf88"/>

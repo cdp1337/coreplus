@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.3" logo="assets/images/cron.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.3" logo="assets/images/logos/cron.png">
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
@@ -86,7 +86,7 @@
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>
-		<file filename="assets/images/cron.png" md5="b981e3a09ce77af4b06a4fbe2413f9c4"/>
+		<file filename="assets/images/logos/cron.png" md5="b981e3a09ce77af4b06a4fbe2413f9c4"/>
 	</assets>
 </component>
 
