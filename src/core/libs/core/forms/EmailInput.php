@@ -1,6 +1,6 @@
 <?php
 /**
- * Class file for FormPasswordInput
+ * Class file for EmailInput
  *
  * @package Core\Forms
  * @author Charlie Powell <charlie@evalagency.com>
@@ -24,16 +24,16 @@ namespace Core\Forms;
 
 
 /**
- * Class FormPasswordInput provides a password input field
+ * Class EmailInput provides an email input field
  *
  * @package Core\Forms
  */
-class PasswordInput extends FormElement {
+class EmailInput extends FormElement {
 	public function  __construct($atts = null) {
 		parent::__construct($atts);
 
 		// Some defaults
-		$this->_attributes['class'] = 'formelement formpasswordinput';
+		$this->_attributes['class'] = 'formelement formemailinput';
 		$this->_validattributes     = array('accesskey', 'autocomplete', 'dir', 'disabled', 'id', 'lang', 'name', 'required', 'size', 'tabindex', 'width', 'height', 'value', 'style');
 	}
 }
