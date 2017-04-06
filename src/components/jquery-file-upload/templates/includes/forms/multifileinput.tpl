@@ -10,43 +10,35 @@
 	{/if}
 
 	<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-	<div class="row fileupload-buttonbar">
-		<div class="span7">
-			<!-- The fileinput-button span is used to style the file input field as button -->
-			<label style="display:block; float:left; position:relative; overflow:hidden; width:120px; margin-right:10px;">
-				<span class="button btn-success fileinput-button" style="min-width:90px;">
-					<i class="icon icon-plus"></i>
-					<span>Add files...</span>
-					<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
-				</span>
-			</label>
-			<!--<button type="submit" class="button btn-primary start">
-				<i class="icon icon-upload icon-white"></i>
-				<span>Start uploads</span>
-			</button>-->
-			<button type="reset" class="button btn-warning cancel">
-				<i class="icon icon-ban-circle"></i>
-				<span>Cancel uploads</span>
-			</button>
-		</div>
-		<!-- The global progress information -->
-		<div class="progress-container fileupload-progress" style="display:none;">
-			<!-- The global progress bar -->
-			<div class="progress progress-success progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-				<div class="bar" style="width:0%;"></div>
-			</div>
-			<!-- The extended global progress information -->
-			<div class="progress-extended">&nbsp;</div>
-		</div>
+	<div class="fileupload-buttonbar">
+		<!-- The fileinput-button span is used to style the file input field as button -->
+		<label style="display:block; float:left; position:relative; overflow:hidden;">
+			<span class="button btn-success fileinput-button">
+				<i class="icon icon-plus"></i>
+				<span>Add files...</span>
+				<input id="{$element->get('id')}" type="file" name="{$element->get('name')}[]" multiple="multiple" style="position:absolute; left:0pt; top:0pt; opacity:0;">
+			</span>
+		</label>
+		<!--<button type="submit" class="button btn-primary start">
+			<i class="icon icon-upload icon-white"></i>
+			<span>Start uploads</span>
+		</button>-->
+		<button type="reset" class="button btn-warning cancel">
+			<i class="icon icon-times-circle"></i>
+			<span>Cancel uploads</span>
+		</button>
 	</div>
+	
+	<!-- The global progress information -->
+	<progress id="{$element->get('id')}-progressbar" class="fileupload-progress" style="display:none;"></progress>
+	<br/>
+	<div id="{$element->get('id')}-progress-extended" class="progress-extended">&nbsp;</div>
 
 	<div class="multiupload-drag-notice">
 		<i class="icon icon-upload"></i>Drop files here to upload
 	</div>
-
-	<!-- The loading indicator is shown during file processing -->
-	<div class="fileupload-loading"></div>
-	<br>
+	<br/>
+	
 	<!-- The table listing the files available for upload/download -->
 	<table class="listing">
 		<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery"></tbody>
@@ -70,12 +62,12 @@
 		<td class="name"><span>{%=file.name%}</span></td>
 		<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
 		{% if (file.error) { %}
-			<td class="error" colspan="2"><span class="label label-important">Error</span> {%=file.error%}</td>
+			<td class="error" colspan="2"><p class="message message-error">{%=file.error%}</p></td>
 		{% } else if (o.files.valid && !i) { %}
 			{% if (!o.options.autoUpload) { %}
 			<td class="start">
 				<button class="button btn-primary">
-					<i class="icon icon-upload icon-white"></i>
+					<i class="icon icon-upload"></i>
 					<span>Start</span>
 				</button>
 			</td>
@@ -85,7 +77,7 @@
 		{% } %}
 		<td class="cancel">{% if (!i) { %}
 			<button class="button btn-warning">
-				<i class="icon icon-ban-circle icon-white"></i>
+				<i class="icon icon-ban-circle"></i>
 				<span>Cancel</span>
 			</button>
 		{% } %}</td>
@@ -100,7 +92,7 @@
 				<td class="preview"></td>
 				<td class="name"><span>{%=file.name%}</span></td>
 				<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
-				<td class="error" colspan="1"><span class="label label-important">Error!</span> {%=file.error%}</td>
+				<td class="error" colspan="1"><p class="message message-error"> {%=file.error%}</p></td>
 			{% } else { %}
 				<td class="preview">
 					{% if (file.thumbnail_url) { %}
@@ -117,7 +109,7 @@
 			{% } %}
 			<td class="delete">
 				<button class="button remove-uploaded-file-link" data-type="{%=file.delete_type%}" data-url="{%=file.delete_url%}">
-					<i class="icon icon-trash icon-white"></i>
+					<i class="icon icon-trash"></i>
 					<span>Remove File</span>
 				</button>
 			</td>
@@ -152,13 +144,57 @@
 <script>
 	$(function () {
 		var $form = $('#{$element->get('id')}').closest('form'),
-				$formelement = $('#{$element->get('id')}').closest('.multifileinput'),
-				$progressbar = $('.' + '{$element->get('id')}').find('.fileupload-progress'),
-				$bargraphinner = $progressbar.find('.bar'),
-				$barextendedinfo = $progressbar.find('.progress-extended'),
-				failnotice = false,
-				bitrates = [], // keep track of the last few bit rates for averaging purposes.
-				d = new Date();
+			$formelement = $('#{$element->get('id')}').closest('.multifileinput'),
+			$progressbar = $('#{$element->get('id')}-progressbar'),
+			$barextendedinfo = $('#{$element->get('id')}-progress-extended'),
+			failnotice = false,
+			bitrates = [], // keep track of the last few bit rates for averaging purposes.
+			d = new Date(),
+			dateStarted, formatSize, formatDuration;
+			
+		formatSize = function(raw, isSpeed){
+			var onegb = 1073741824,
+				onemb = 1048576,
+				onekb = 1024,
+				suffixes;
+		
+			if(isSpeed){
+				suffixes = ['bps', 'kbps', 'mbps', 'gbps'];
+			}
+			else{
+				suffixes = [' bytes', 'kB', 'MB', 'GB'];
+			}
+			
+			if(raw >= onegb){
+				return (Math.round(raw / onegb * 10) / 10) + suffixes[3];
+			}
+			else if(raw >= onemb){
+				return (Math.round(raw / onemb * 10) / 10) + suffixes[2];
+			}
+			else if(raw >= onekb){
+				return (Math.round(raw / onekb * 10) / 10) + suffixes[1];
+			}
+			else{
+				return raw + suffixes[0];
+			}
+		};
+		
+		formatDuration = function(raw){
+			var h, m, s;
+			h = raw > 3600 ? Math.floor(raw / 3600) : 0;
+			m = Math.floor((raw - (h * 3600)) / 60);
+			s = Math.floor(raw - (h * 3600) - (m * 60));
+
+			if(s === 0) s = '00';
+			else if(s < 10) s = '0' + s;
+
+			if(h > 0){
+				return h + ' hr ' + m + ' min';
+			}
+			else{
+				return m + ':' + s;
+			}
+		};
 
 		// Initialize the jQuery File Upload widget:
 		$formelement.fileupload({
@@ -174,10 +210,24 @@
 			},
 			start: function(e, data){
 				$progressbar.show();
-				$bargraphinner.width('1%');
 				bitrates = [];
+				dateStarted = new Date();
 			},
 			finished: function(e, data){
+				var dateFinished = new Date(),
+					duration = (dateFinished - dateStarted) / 1000,
+					strOut;
+				
+				// Upload is done, hide the progress bar.
+				$progressbar.hide();
+				
+				// Update the extended info.
+				strOut = 'Uploaded ' + formatSize(data.total, false) + 
+					' in ' + formatDuration(duration) +
+					' ( ' + formatSize(data.total * 8 / duration, true) + ' )';
+					
+				$barextendedinfo.html(strOut);
+				
 				// I need to bind the remove button event on the record!
 				data.context.find('.remove-uploaded-file-link').click(function(){
 					$(this).closest('tr').remove();
@@ -187,7 +237,6 @@
 			fail: function(e, data){
 				if(!failnotice){
 					failnotice = true;
-					$bargraphinner.width('0px');
 					$progressbar.hide();
 					// If the user clicked abort.... they probably don't care.
 					if(data.errorThrown != 'abort') alert(data.errorThrown);
@@ -195,78 +244,36 @@
 				}
 			},
 			progressall: function (e, data) {
+				$progressbar.attr('max', data.total);
+				$progressbar.attr('value', data.loaded);
 				var progress = parseFloat(data.loaded / data.total * 100, 10), i, sum,
-						avgbitrate, bitratestr, timeremainingstr, totalsizestr,
-						timeremaining = { raw: 0, h: null, m: null, s: null };
+					avgbitrate, bitratestr, timeremainingstr, totalsizestr,
+					speeds = { raw: 0, h: null, m: null, s: null };
 
-				//console.log(data);
-				if(progress >= 99){
-					$bargraphinner.width('0px');
-					$progressbar.hide();
+				if(bitrates.length > 10){
+					bitrates.shift();
 				}
-				else{
-					if(bitrates.length > 100){
-						bitrates.shift();
-					}
-					bitrates.push(data.bitrate);
-					sum = 0.00;
-					for(i=0; i<bitrates.length; i++){
-						sum += parseFloat(bitrates[i]);
-					}
-					// Since javascript doesn't support rounding to a certain number of decimal places... simply boost each number by a power of 100.
-					avgbitrate = Math.round((sum / bitrates.length) * 1000) / 1000;
-
-					// Now that I have the average bitrate for recent connections... convert that into a human readable string.
-					if(avgbitrate > (1024*1024)){
-						bitratestr = ((Math.round(avgbitrate / (1024*1024) * 10 )) / 10) + ' MB/s';
-					}
-					else if(avgbitrate > 1024){
-						bitratestr = ((Math.round(avgbitrate / (1024) * 10)) / 10) + ' kB/s';
-					}
-					else {
-						bitratestr = (Math.round(avgbitrate)) + ' B/s';
-					}
-
-					// Make the total size readable.
-					if(data.total > (1024*1024)){
-						totalsizestr = (Math.round(data.total / (1024*1024) * 10) / 10) + 'MB';
-					}
-					else if(data.total > 1024){
-						totalsizestr = (Math.round(data.total / (1024) * 10) / 10) + 'kB';
-					}
-					else{
-						totalsizestr = data.total + ' bytes';
-					}
-
-					// Figure out how much longer based on the data left and the average speed.
-					timeremaining.raw = (data.total - data.loaded) / (avgbitrate * .1) + 1;
-
-					if(timeremaining.raw > (60*60)){
-						timeremaining.h = Math.round(timeremaining.raw / 3600);
-						timeremaining.m = Math.round(timeremaining.raw % 3600);
-
-						// :p
-						timeremainingstr = (timeremaining.h * 2) + ' cups of coffee, ' + timeremaining.m + ' minute' + (timeremaining.m == 1 ? '' : 's');
-						//timeremainingstr = Math.round(timeremaining / 3600) + 'h ' + Math.round(timeremaining % 3600) + 'm';
-					}
-					else if(timeremaining.raw > 60){
-						timeremaining.m = Math.round(timeremaining.raw / 60);
-						timeremaining.s = Math.round(timeremaining.raw % 60);
-
-						timeremainingstr = timeremaining.m + ' minute' + (timeremaining.m == 1 ? '' : 's');// + ', ' +
-						//timeremaining.s + ' second' + (timeremaining.s == 1 ? '' : 's')
-					}
-					else {
-						timeremaining.s = Math.round(timeremaining.raw);
-
-						timeremainingstr = timeremaining.s + ' second' + (timeremaining.s == 1 ? '' : 's')
-					}
-
-					// Now I can write all this to the extended info bar!
-					$barextendedinfo.html(Math.round(progress) + '% of ' + totalsizestr + ' uploaded.  Estimated time remaining: ' + timeremainingstr + ' @ ' + bitratestr);
-
-					$bargraphinner.width( (Math.round(progress * 100) / 100) + '%');
+				bitrates.push(data.bitrate);
+				sum = 0.00;
+				for(i=0; i<bitrates.length; i++){
+					sum += parseFloat(bitrates[i]);
 				}
+				// Since javascript doesn't support rounding to a certain number of decimal places... simply boost each number by a power of 100.
+				avgbitrate = Math.round((sum / bitrates.length) * 1000) / 1000;
+
+				// Now that I have the average bitrate for recent connections...
+				// convert that into a human readable string.
+				bitratestr = formatSize(avgbitrate, true);
+
+				// Make the total size readable.
+				totalsizestr = formatSize(data.total, false);
+
+				// Figure out how much longer based on the data left and the average speed.
+				speeds.raw = (data.total - data.loaded) / (avgbitrate / 8);
+				timeremainingstr = formatDuration(speeds.raw);
+
+				// Now I can write all this to the extended info bar!
+				$barextendedinfo.html(Math.round(progress) + '% of ' + totalsizestr + ' uploaded.  Estimated time remaining: ' + timeremainingstr + ' @ ' + bitratestr);
 			},
 			_last: null
 		});
