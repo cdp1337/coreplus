@@ -48,6 +48,7 @@ class Form extends FormGroup {
 		'checkboxes'       => '\\Core\\Forms\\CheckboxesInput',
 		'date'             => '\\Core\\Forms\\DateInput',
 		'datetime'         => '\\Core\\Forms\\DateTimeInput',
+		'email'            => '\\Core\\Forms\\EmailInput',
 		'file'             => '\\Core\\Forms\\FileInput',
 		'hidden'           => '\\Core\\Forms\\HiddenInput',
 		'license'          => '\\Core\\Forms\\LicenseInput',
