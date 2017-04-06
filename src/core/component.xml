@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.2.0" name="core" logo="assets/images/coreplus.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="6.2.0" name="core" logo="assets/images/logos/coreplus.svg">
 	<description>
 		The core application, including all libraries required for a base application.
 	</description>
@@ -131,10 +131,10 @@
 		<file filename="core/bootstrap_postincludes.php" md5="713e626b88a4f6c634b37783c52cdada"/>
 		<file filename="core/bootstrap_predefines.php" md5="d267aad3079f4058579f0d31cbdee4a2"/>
 		<file filename="core/bootstrap_preincludes.php" md5="c3deceae3d39082ed940dcf6aea27061"/>
-		<file filename="core/controllers/AdminController.php" md5="833457af38c2851d198e16f0e208ee3e">
+		<file filename="core/controllers/AdminController.php" md5="deef394873447b4c92b190878d93d04e">
 			<controller name="AdminController"/>
 		</file>
-		<file filename="core/controllers/DatastoreAuthController.php" md5="6bff355ac8598a8507e8dddd00a1407f">
+		<file filename="core/controllers/DatastoreAuthController.php" md5="24dbfdb2234cf254196c255f01e1c59e">
 			<controller name="DatastoreAuthController"/>
 		</file>
 		<file filename="core/controllers/DirectoryController.class.php" md5="523e0d1f142094fb39bb3e1eb8c2cf9d">
@@ -143,7 +143,7 @@
 		<file filename="core/controllers/FileController.class.php" md5="b35d7028332b345edfb5599e794d7641">
 			<controller name="FileController"/>
 		</file>
-		<file filename="core/controllers/FormController.class.php" md5="5cdd2d7644d07fde5c2300ae7a8cd350">
+		<file filename="core/controllers/FormController.class.php" md5="bb3d4dc2721958bd3f911241c49989a3">
 			<controller name="FormController"/>
 		</file>
 		<file filename="core/controllers/GPGAuthController.php" md5="f76fe086ef03958a8a1563c317d8f8e4">
@@ -164,7 +164,7 @@
 		<file filename="core/controllers/UserConfigController.php" md5="f6b25d2187ce1cd83fbe1d425dbbb69e">
 			<controller name="UserConfigController"/>
 		</file>
-		<file filename="core/controllers/UserController.php" md5="3f84d75e67c4a31754abb9bdf941621b">
+		<file filename="core/controllers/UserController.php" md5="430c764ae34a05ecc4735e4223252fc5">
 			<controller name="UserController"/>
 		</file>
 		<file filename="core/controllers/UserGroupAdminController.php" md5="3a03efe45785fd62ab054bc488e1ae04">
@@ -184,7 +184,7 @@
 		<file filename="core/htaccess.assets" md5="da2857eaa47f6f264acbb3e780cbdc58"/>
 		<file filename="core/htaccess.private" md5="b07a184de48e4aec56e48171e253b3da"/>
 		<file filename="core/htaccess.public" md5="1ca087ba6a4a69941045d909be5bcbb5"/>
-		<file filename="core/i18n/strings.yml" md5="530257869141bea0c5a61892ba919ba6"/>
+		<file filename="core/i18n/strings.yml" md5="75fbd60a3a3e210e0c2aa59872493253"/>
 		<file filename="core/libs/core/BaconIpsumGenerator.class.php" md5="6e8775dd2b9f110c810f486bfa7dbd02">
 			<class name="BaconIpsumGenerator"/>
 		</file>
@@ -221,10 +221,10 @@
 		<file filename="core/libs/core/DB.class.php" md5="d20f8c7733c5c262c01f920004f3aab5">
 			<class name="DB"/>
 		</file>
-		<file filename="core/libs/core/Email.php" md5="a887dfd72e10783f802872a1eb650097">
+		<file filename="core/libs/core/Email.php" md5="0257db8d6c7fb2908472637542416424">
 			<class name="Core\Email"/>
 		</file>
-		<file filename="core/libs/core/EmailInterface.php" md5="c8a471c1978c94907531a13a8e555a00">
+		<file filename="core/libs/core/EmailInterface.php" md5="7685f1309efea2b00da1288b76aa2350">
 			<interface name="Core\EmailInterface"/>
 		</file>
 		<file filename="core/libs/core/Exceptions.php" md5="8b4d0342bbee5b64ae877ada9a174097">
@@ -540,6 +540,9 @@
 		<file filename="core/libs/core/forms/DateTimeInput.php" md5="f8ca6bbe6edd4f983e6381fb8e04e9b7">
 			<class name="Core\Forms\DateTimeInput"/>
 		</file>
+		<file filename="core/libs/core/forms/EmailInput.php" md5="ffadb69c912f952799b9ae7a469e604c">
+			<class name="Core\Forms\EmailInput"/>
+		</file>
 		<file filename="core/libs/core/forms/FileInput.php" md5="081a0ee54a9d0448caeb095f5f57f224">
 			<class name="Core\Forms\FileInput"/>
 		</file>
@@ -711,16 +714,16 @@
 		<file filename="core/libs/core/user/AuthDriverInterface.php" md5="3e68dc6cfa03eab313bc589f133e1b6f">
 			<interface name="Core\User\AuthDriverInterface"/>
 		</file>
-		<file filename="core/libs/core/user/Helper.php" md5="efa7ca371c4e942fe187093dbaf54777">
+		<file filename="core/libs/core/user/Helper.php" md5="b0cbbfe52ca767aa96adff298860d3d3">
 			<class name="Core\User\Helper"/>
 		</file>
 		<file filename="core/libs/core/user/ImportHelper.php" md5="2526717646d53c55c4ee4e997f4102ac">
 			<class name="Core\User\ImportHelper"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="04b47565380906871979cc74379a5fe8">
+		<file filename="core/libs/core/user/authdrivers/datastore.php" md5="00ab927b938205994c53065348d6f620">
 			<class name="Core\User\AuthDrivers\datastore"/>
 		</file>
-		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="949a69054e546f1424539b3d3708b2b5">
+		<file filename="core/libs/core/user/authdrivers/gpg.php" md5="ed964fd218db05e47a6dde481b2567a0">
 			<class name="Core\User\AuthDrivers\gpg"/>
 		</file>
 		<file filename="core/libs/core/utilities/Packager.php" md5="4d81d45a59845fa69d8f4b1334920975">
@@ -1403,7 +1406,7 @@
 		<file filename="core/models/UserGroupModel.php" md5="17a7afeb40bfd05b6bc8251caf936945">
 			<class name="UserGroupModel"/>
 		</file>
-		<file filename="core/models/UserModel.php" md5="afa8ae2af2b83c2037ea7255e35fc625">
+		<file filename="core/models/UserModel.php" md5="971523096d833c18cf1889b718308a18">
 			<class name="UserModel"/>
 		</file>
 		<file filename="core/models/UserUserConfigModel.php" md5="b6891787a7d623fd0918b8fdabcdf364">
@@ -1429,7 +1432,7 @@
 		<file filename="core/upgrades/270_to_280_user_avatar_paths.php" md5="4c150b7517de79a4e3f29bb343f5ddc5"/>
 		<file filename="core/upgrades/300_page_published.php" md5="63080ee9ed1e2cb9d3724bb4812f286d"/>
 		<file filename="core/upgrades/500_user_config_migration.php" md5="4344c06c6f1eb5e4e85707fec58dae05"/>
-		<file filename="core/widgets/AdminMenuWidget.php" md5="ab8e97197c81609c99877de3fd7c8e6d">
+		<file filename="core/widgets/AdminMenuWidget.php" md5="9e2197ec91782d0926e7744146a1ff55">
 			<class name="AdminMenuWidget"/>
 		</file>
 		<file filename="core/widgets/PageSearchWidget.php" md5="aa536732440714f732aff95c3236c6c1">
@@ -1564,7 +1567,7 @@
 		<file filename="core/templates/includes/user/view_primarybar.tpl" md5="2636992a4444200aad74529c11d608c8"/>
 		<file filename="core/templates/includes/user/view_sidebar.tpl" md5="081d7fabc2b088cf344c76d5b5a40da3"/>
 		<file filename="core/templates/pages/admin/config.tpl" md5="f568ec9e94806a60a086223f578c021c"/>
-		<file filename="core/templates/pages/admin/email_config.tpl" md5="f23e7e7851f0afe67e860838c156f055"/>
+		<file filename="core/templates/pages/admin/email_config.tpl" md5="5bd3df6b3cc0742f6335e79f12a5cb6b"/>
 		<file filename="core/templates/pages/admin/health.tpl" md5="bcf9aa625ca70fcb04cd4dba237a6914"/>
 		<file filename="core/templates/pages/admin/i18n-PREV.tpl" md5="20e5a7891945d7cddc8efb566f2cd4c5"/>
 		<file filename="core/templates/pages/admin/i18n.tpl" md5="6795037bf2dc9bde8b4043b07839db46"/>
@@ -1578,7 +1581,7 @@
 		<file filename="core/templates/pages/admin/seo_config.tpl" md5="87989a5ce0632ef57170a9121ccee314"/>
 		<file filename="core/templates/pages/admin/serverid.tpl" md5="9c7769c76853c03be1475db98f84ea73"/>
 		<file filename="core/templates/pages/admin/syncsearchindex.tpl" md5="d95f9468ee0c9fb6b7623e6e0c4def4c"/>
-		<file filename="core/templates/pages/admin/testui.tpl" md5="7854fa5292a1f3910be158559e591386"/>
+		<file filename="core/templates/pages/admin/testui.tpl" md5="9dfdf21ffe9eaa7cd091d711c462156f"/>
 		<file filename="core/templates/pages/datastoreauth/forgotpassword.tpl" md5="ed40e9f26a0782f1185c46dce4d5cc4c"/>
 		<file filename="core/templates/pages/datastoreauth/password.tpl" md5="1c0ba67c877ecc9cf3864e6f92c98bc3"/>
 		<file filename="core/templates/pages/directory/index.tpl" md5="ff2a21aa261521a4ce63762f12793ea0"/>
@@ -2449,7 +2452,6 @@
 		<file filename="core/assets/images/apps/wine_doors.png" md5="cf80353621e80a06e258127fe49559a4"/>
 		<file filename="core/assets/images/apps/x.png" md5="06fbfe843f885e3983ea755136f93fb8"/>
 		<file filename="core/assets/images/apps/xorg.png" md5="1163bae7cd8da5c73150db51f844cafe"/>
-		<file filename="core/assets/images/coreplus.png" md5="e34f36a88c71cb512d75df60896551d5"/>
 		<file filename="core/assets/images/devices/3floppy_mount.png" md5="b71a6c9e950f3a51ab8a67b020186ab1"/>
 		<file filename="core/assets/images/devices/3floppy_unmount.png" md5="ae1b2f5b6096dcc4983174ff029253df"/>
 		<file filename="core/assets/images/devices/audio_card.png" md5="462f65700345eb5ebad1c06c93263a9d"/>
@@ -2880,6 +2882,8 @@
 		<file filename="core/assets/images/licenses/gnu-lgpl-3.png" md5="ea1c6cff79f8daf1c089529e56428aa0"/>
 		<file filename="core/assets/images/loading-bar-small.gif" md5="657ee2fa16698cbc29d5a1f4b257de46"/>
 		<file filename="core/assets/images/logo.png" md5="a4d441acf634337bc88eec82fcc79a3f"/>
+		<file filename="core/assets/images/logos/coreplus.png" md5="e34f36a88c71cb512d75df60896551d5"/>
+		<file filename="core/assets/images/logos/coreplus.svg" md5="6515aeb2ffbbc27729708c97dba40eb4"/>
 		<file filename="core/assets/images/mimetypes/application-illustrator.png" md5="6e1d334fe31f7d28c8ed1c49b1d3fb6e"/>
 		<file filename="core/assets/images/mimetypes/application-javascript.png" md5="43bd833595a47e5a0737b6af9f3f71d5"/>
 		<file filename="core/assets/images/mimetypes/application-msword.png" md5="9dedb8dd79217a6afa02f2e3fd41ca4e"/>
