@@ -26,6 +26,8 @@
 <a href="#">
 	Generic Link
 </a>
+<br/><br/>
+
 <a class="button" href="#">
 	Generic Button/Link
 </a>
@@ -33,7 +35,22 @@
 	<i class="icon icon-ok"></i>
 	<span>Generic Button/Link (Now with 100% more icons!)</span>
 </a>
-<br/>
+<br/><br/>
+
+<div class="button-group">
+	<a href="#" class="button button-reset">
+		<i class="icon icon-recycle"></i>
+		<span>Reset</span>
+	</a>
+	<a href="#" class="button">
+		<span>Boring Button</span>
+	</a>
+	<a href="#" class="button button-apply">
+		<i class="icon icon-check-circle"></i>
+		<span>Apply</span>
+	</a>
+</div>
+<br/><br/>
 
 <div>
 <ul class="controls">
