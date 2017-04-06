@@ -75,46 +75,16 @@ class AdminMenuWidget extends \Core\Widget {
 					];
 				}
 
-				if($p->get('baseurl') == '/admin'){
-					// Admin gets special treatment.
-					$groups[t('STRING_ADMIN')]['href'] = '/admin';
-					continue;
-				}
-
-				switch($p->get('title')){
-					case 'System Configuration':
-						$p->set('title', "System Config");
-						break;
-					case 'Navigation Listings':
-						$p->set('title', "Navigation");
-						break;
-					case 'Content Page Listings':
-						$p->set('title', "Content Pages");
-						break;
-					default:
-						$p->set(
-							'title',
-							trim( str_replace(['Administration', 'Admin'],'', $p->get('title')) )
-						);
-				}
-
 				$title = $p->get('title');
 				// Support i18n here!
 				if(strpos($title, 't:') === 0){
 					$title = t(substr($title, 2));
 				}
 
-				if(isset($groups[$title])){
-					// Link the main group to this page instead of an empty link.
-					// This removes duplicate links such as the group "User" and page "User".
-					$groups[$title]['href'] = $p->get('rewriteurl');
-				}
-				else{
-					// The new grouped pages
-					$groups[$group]['children'][ $title ] = $p;
-					// And the flattened list to support legacy templates.
-					$flatlist[ $title ] = $p;
-				}
+				// The new grouped pages
+				$groups[$group]['children'][ $title ] = $p;
+				// And the flattened list to support legacy templates.
+				$flatlist[ $title ] = $p;
 			}
 
 			// This is a hack to make sure that users can view the /admin link if they can view other admin pages.
