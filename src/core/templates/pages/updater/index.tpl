@@ -1,6 +1,11 @@
-{script library="jquery"}{/script}
-{script library="jqueryui"}{/script}
-{script src="js/updater/index.js"}{/script}
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
+{if $jquery_available}
+	{script library="jquery"}{/script}
+	{script library="jqueryui"}{/script}
+	{script src="js/updater/index.js"}{/script}
+{/if}
+
 {css src="css/updater.css"}{/css}
 
 {if $sitecount == 0}
@@ -25,13 +30,15 @@
 	</script>{/script}
 {/if}
 
-<div id="update-everything-wrapper" style="display:none;">
-	<form action="{link '/updater/update_everything'}" method="POST" id="update-everything-form" target="update-everything">
-		<input type="submit" value="Update Everything"/>
-	</form>
+{if $jquery_available}
+	<div id="update-everything-wrapper" style="display:none;">
+		<form action="{link '/updater/update_everything'}" method="POST" id="update-everything-form" target="update-everything">
+			<input type="submit" value="Update Everything"/>
+		</form>
 
-	{progress_log_iframe name='update-everything' form='update-everything-form'}
-</div>
+		{progress_log_iframe name='update-everything' form='update-everything-form'}
+	</div>
+{/if}
 
 <!-- This will get populated with the update progress for installs and updates. -->
 <div id="update-terminal" style="display:none;"></div>
@@ -94,7 +101,11 @@
 						<a href="#" class="update-link perform-update" style="display:none;">Update</a>
 					{else}
 						{if $c->isInstalled()}
-							<a href="#" class="enable-link">Enable</a>
+							{if $jquery_available}
+								<a href="#" class="enable-link">Enable</a>
+							{else}
+								{a href="/updater/component/enable/`$c->getKeyName()`" confirm=""}Enable{/a}
+							{/if}
 						{else}
 							<a href="#" class="perform-update" data-type="components" data-name="{$c->getKeyName()}" data-version="{$c->getVersion()}">Install</a>
 						{/if}
@@ -107,27 +118,19 @@
 </table>
 <br/>
 
-{* Themes < 2.1.0 do not support keynames. *}
-
-{if Core::IsComponentAvailable('theme') && version_compare(Core::GetComponent('theme')->getVersion(), 2.1)}
-	<table class="listing" id="theme-list">
-		<tr>
-			<th>Theme</th>
-			<th>Version</th>
-			<th>&nbsp;</th>
+<table class="listing" id="theme-list">
+	<tr>
+		<th>Theme</th>
+		<th>Version</th>
+		<th>&nbsp;</th>
+	</tr>
+	{foreach from=$themes item=t}
+		<tr data-name="{$t->getKeyName()}" data-type="themes">
+			<td>{$t->getName()}</td>
+			<td>{$t->getVersion()}</td>
+			<td>
+				<a href="#" class="update-link perform-update" style="display:none;">Update</a>
+			</td>
 		</tr>
-		{foreach from=$themes item=t}
-			<tr data-name="{$t->getKeyName()}" data-type="themes">
-				<td>{$t->getName()}</td>
-				<td>{$t->getVersion()}</td>
-				<td>
-					<a href="#" class="update-link perform-update" style="display:none;">Update</a>
-				</td>
-			</tr>
-		{/foreach}
-	</table>
-{else}
-	<p class="message-error">
-		Either the "Theme" component is not installed or it is too old.  Please update it to at least 2.1 to get access to manage theme updates.
-	</p>
-{/if}
+	{/foreach}
+</table>

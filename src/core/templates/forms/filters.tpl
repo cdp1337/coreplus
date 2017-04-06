@@ -1,10 +1,18 @@
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
 {if sizeof($elements)}
-	<fieldset class="listing-filters collapsible {if !$filtersset}collapsed screen{/if}">
-		<div class="fieldset-title">
-			{t 'STRING_FILTERS'}
-			<i class="icon icon-chevron-down expandable-hint"></i>
-			<i class="icon icon-chevron-up collapsible-hint"></i>
-		</div>
+	<fieldset
+		class="listing-filters {if !$filtersset}screen{/if} {if $jquery_available}collapsible {if !$filtersset}collapsed{/if}{/if}"
+	>
+		{if $jquery_available}
+			<div class="fieldset-title">
+				{t 'STRING_FILTERS'}
+				<i class="icon icon-chevron-down expandable-hint"></i>
+				<i class="icon icon-chevron-up collapsible-hint"></i>
+			</div>
+		{else}
+			<legend>{t 'STRING_FILTERS'}</legend>
+		{/if}
 
 		<div class="collapsible-contents screen">
 			{if $readonly}
@@ -14,7 +22,7 @@
 						{$element->getValueTitle()}
 					{/if}
 				{/foreach}
-				{else}
+			{else}
 				<form action="" method="GET">
 					{foreach $elements as $element}
 						{$element->render()}
@@ -24,25 +32,31 @@
 						<hr class="listing-filters-break"/>
 					{/if}
 					
-					<!-- Render a submit button so 'Enter' works... -->
-					<input type="submit" style="display:none;"/>
-					
-					<div class="button-group">
-						<a href="#" class="button apply-filters button-apply">
-							<i class="icon icon-ok"></i>
-							<span>{t 'STRING_APPLY'}</span>
-						</a>
-						
-						<a href="#" class="button hide-filters">
-							<i class="icon icon-chevron-up"></i>
-							<span>{t 'STRING_HIDE'}</span>
-						</a>
-						
-						<a href="#" class="button reset-filters button-reset">
-							<i class="icon icon-times"></i>
-							<span>{t 'STRING_RESET'}</span>
-						</a>
-					</div>
+					{if $jquery_available}
+						<!-- Render a submit button so 'Enter' works... -->
+						<input type="submit" style="display:none;"/>
+
+						<div class="button-group">
+							<a href="#" class="button apply-filters button-apply">
+								<i class="icon icon-ok"></i>
+								<span>{t 'STRING_APPLY'}</span>
+							</a>
+
+							<a href="#" class="button hide-filters">
+								<i class="icon icon-chevron-up"></i>
+								<span>{t 'STRING_HIDE'}</span>
+							</a>
+
+							<a href="#" class="button reset-filters button-reset">
+								<i class="icon icon-times"></i>
+								<span>{t 'STRING_RESET'}</span>
+							</a>
+						</div>
+					{else}
+						<div>
+							<input type="submit" value="{t 'STRING_APPLY'}"/>
+						</div>
+					{/if}
 				</form>
 			{/if}
 		</div>
@@ -64,7 +78,7 @@
 	</fieldset>
 {/if}
 
-{script library="jqueryui"}{/script}
+{*script library="jquery"}{/script*}
 {script location="foot"}<script>
 	$(function(){
 		$('.apply-filters').click(function(){

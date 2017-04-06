@@ -1,4 +1,8 @@
-{script library="jquery"}{/script}
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
+{if $jquery_available}
+	{script library="jquery"}{/script}
+{/if}
 
 <div class="{$element->getClass()} {$element->get('id')} clearfix">
 
@@ -16,6 +20,7 @@
 	{/if}
 
 	<div class="form-element-value">
+		{if $jquery_available}
 		<select id="{$element->get('id')}" name="{$element->get('name')}" class="{$dynname}_main">
 			<option value="basic_anyone" {if $main_checked == 'basic_anyone'}selected="selected"{/if}>
 				Allow Anyone
@@ -49,29 +54,34 @@
 				</label>
 			{/foreach}
 		</div>
+		{else}
+			<input type="text" id="{$element->get('id')}" name="{$element->get('name')}" value="{$element->get('value')}"/>
+		{/if}
 	</div>
 
-	<script type="text/javascript">
-		$(function () {
-			{if $main_checked == 'advanced'}
-				/*
-				 * When the page loads, display the advanced options if that is requested by the controller.
-				 * 
-				 * This provides the expected behaviour to the end user of advanced options displaying by default
-				 * when that is the value set from the controller.
-				 */
-				$('.{$dynname}_advanced').show();
-			{/if}
-		});
-		
-		// Function to show/hide the advanced options when Other... is selected.
-		$('.{$dynname}_main').change(function () {
-			if ($(this).val() == 'advanced') {
-				$('.{$dynname}_advanced').show();
-			}
-			else {
-				$('.{$dynname}_advanced').hide();
-			}
-		});
-	</script>
+	{if $jquery_available}
+		<script type="text/javascript">
+			$(function () {
+				{if $main_checked == 'advanced'}
+					/*
+					 * When the page loads, display the advanced options if that is requested by the controller.
+					 * 
+					 * This provides the expected behaviour to the end user of advanced options displaying by default
+					 * when that is the value set from the controller.
+					 */
+					$('.{$dynname}_advanced').show();
+				{/if}
+			});
+
+			// Function to show/hide the advanced options when Other... is selected.
+			$('.{$dynname}_main').change(function () {
+				if ($(this).val() == 'advanced') {
+					$('.{$dynname}_advanced').show();
+				}
+				else {
+					$('.{$dynname}_advanced').hide();
+				}
+			});
+		</script>
+	{/if}
 </div>

@@ -22,16 +22,18 @@
 	</div>
 </div>
 
-{script library="jquery.icheck"}{/script}
-{script location="foot"}<script>
-	$(function(){
-		var $radio = $('input[type=radio]');
+{if Core::IsLibraryAvailable('jquery')}
+	{script library="jquery.icheck"}{/script}
+	{script location="foot"}<script>
+		$(function(){
+			var $radio = $('input[type=radio]');
 
-		$radio.icheck({ 'radioClass': 'iradio_flat'});
+			$radio.icheck({ 'radioClass': 'iradio_flat'});
 
-		$radio.on('ifChecked', function(event){
-			$(this).closest('.fileinput-selector').click();
+			$radio.on('ifChecked', function(event){
+				$(this).closest('.fileinput-selector').click();
+			});
+
 		});
-
-	});
-</script>{/script}
+	</script>{/script}
+{/if}

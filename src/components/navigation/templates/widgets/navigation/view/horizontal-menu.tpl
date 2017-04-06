@@ -1,4 +1,8 @@
-{script name="jquery" location="head"}{/script}
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
+{if $jquery_available}
+	{script name="jquery" location="head"}{/script}
+{/if}
 
 {css}<style>
 	.horizontal-layout {
@@ -38,16 +42,28 @@
 </ul>
 
 
-{script location="foot"}
-	// A little script to ensure the nav responds to hover states
-	$(function(){
-	$('ul.navigation-menu').find('li').mouseover(function(){ $(this).addClass('navigation-menu-over'); return true; }).mouseout(function(){ $(this).removeClass('navigation-menu-over'); return true;});
-	});
-{/script}
+{if $jquery_available}
+	{script location="foot"}
+		<script>
+		// A little script to ensure the nav responds to hover states
+		$(function(){
+			$('ul.navigation-menu')
+				.find('li')
+				.mouseover(function(){
+					$(this).addClass('navigation-menu-over');
+					return true;
+				})
+				.mouseout(function(){ 
+					$(this).removeClass('navigation-menu-over'); 
+					return true;
+				});
+		});
+		</script>
+	{/script}
+{/if}
 
 
-{if Core::IsLibraryAvailable('jqueryui') && Core::IsLibraryAvailable('jquery.hoverintent')}
-	{script library="jqueryui"}{/script}
+{if Core::IsLibraryAvailable('jquery.hoverintent')}
 	{script library="jquery.hoverintent"}{/script}
 
 	{script location="foot"}<script>

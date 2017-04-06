@@ -31,7 +31,7 @@
 	</div>
 </div>
 
-{if $can_lookup}
+{if $can_lookup && Core::IsLibraryAvailable('jqueryui')}
 
 	{script library="jquery"}{/script}
 	{script library="jqueryui"}{/script}

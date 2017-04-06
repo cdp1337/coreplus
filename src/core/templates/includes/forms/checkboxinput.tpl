@@ -1,3 +1,5 @@
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
 <div class="{$element->getClass()} {$element->get('id')}">
 
 	<label for="{$element->get('id')}" class="form-element-label">
@@ -18,9 +20,11 @@
 	</div>
 </div>
 
-{script library="jquery.icheck"}{/script}
-{script location="foot"}<script>
-	$(function(){
-		$('input[type=checkbox]').icheck({ 'checkboxClass': 'icheckbox_flat'});
-	});
-</script>{/script}
+{if $jquery_available}
+	{script library="jquery.icheck"}{/script}
+	{script location="foot"}<script>
+		$(function(){
+			$('input[type=checkbox]').icheck({ 'checkboxClass': 'icheckbox_flat'});
+		});
+	</script>{/script}
+{/if}

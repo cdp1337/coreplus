@@ -27,69 +27,71 @@
 </div>
 
 
-{script library="jquery"}{/script}
-{script library="jqueryui"}{/script}
-{script library="Core.Strings"}{/script}
-{script location="foot"}<script>
-	$(function(){
+{if Core::IsLibraryAvailable('jqueryui')}
+	{script library="jquery"}{/script}
+	{script library="jqueryui"}{/script}
+	{script library="Core.Strings"}{/script}
+	{script location="foot"}<script>
+		$(function(){
 
-		var
-			elementid = "{$element->getID()}", hiddenid,
-			$element, $hidden, $parent, lastval;
+			var
+				elementid = "{$element->getID()}", hiddenid,
+				$element, $hidden, $parent, lastval;
 
-		hiddenid = elementid.replace('formpagemetaauthorinput', 'formhiddeninput') + "id";
-		$element = $('#' + elementid);
-		$hidden = $('#' + hiddenid);
-		$parent = $element.closest('.formelement');
+			hiddenid = elementid.replace('formpagemetaauthorinput', 'formhiddeninput') + "id";
+			$element = $('#' + elementid);
+			$hidden = $('#' + hiddenid);
+			$parent = $element.closest('.formelement');
 
-		// Gogo autocomplete!
-		$element.autocomplete({
-			source: Core.ROOT_URL + 'form/pagemetas/autocompleteuser.ajax',
-			minLength: 2,
-			select: function( event, ui ) {
+			// Gogo autocomplete!
+			$element.autocomplete({
+				source: Core.ROOT_URL + 'form/pagemetas/autocompleteuser.ajax',
+				minLength: 2,
+				select: function( event, ui ) {
 
-				if(ui.item){
-					// This is a bit different because the value is actually going to a different field.
-					$hidden.val(ui.item.id);
-					$(this).val(ui.item.label);
-					$parent.removeClass('user-invalid').addClass('user-valid');
-					lastval = $element.val();
-					// The return false is to prevent jqueryui from setting the value to the id of the user.
-					// I want the label instead, (set above).
-					return false;
+					if(ui.item){
+						// This is a bit different because the value is actually going to a different field.
+						$hidden.val(ui.item.id);
+						$(this).val(ui.item.label);
+						$parent.removeClass('user-invalid').addClass('user-valid');
+						lastval = $element.val();
+						// The return false is to prevent jqueryui from setting the value to the id of the user.
+						// I want the label instead, (set above).
+						return false;
+					}
+					else{
+						// Just clear out the user id.
+						$hidden.val('');
+						$parent.removeClass('user-valid').addClass('user-invalid');
+						lastval = $element.val();
+					}
 				}
-				else{
-					// Just clear out the user id.
-					$hidden.val('');
-					$parent.removeClass('user-valid').addClass('user-invalid');
-					lastval = $element.val();
-				}
+				// ui-autocomplete-loading
+			});
+
+			// On changing the username, the authorid should be blanked out automatically!
+			//$element.change(function(){
+			$element.keyup(function(){
+
+				// The key did not cause a change, just return.
+				if(lastval == $element.val()) return;
+
+				$hidden.val('');
+				$parent.removeClass('user-valid').addClass('user-invalid');
+				lastval = $element.val();
+			});
+
+			// Initial load
+			if($hidden.val()){
+				$parent.addClass('user-valid');
 			}
-			// ui-autocomplete-loading
-		});
-
-		// On changing the username, the authorid should be blanked out automatically!
-		//$element.change(function(){
-		$element.keyup(function(){
-
-			// The key did not cause a change, just return.
-			if(lastval == $element.val()) return;
-
-			$hidden.val('');
-			$parent.removeClass('user-valid').addClass('user-invalid');
+			else{
+				$parent.addClass('user-invalid');
+			}
 			lastval = $element.val();
+
 		});
+		// formpagemetasinput-page-metas-author
 
-		// Initial load
-		if($hidden.val()){
-			$parent.addClass('user-valid');
-		}
-		else{
-			$parent.addClass('user-invalid');
-		}
-		lastval = $element.val();
-
-	});
-	// formpagemetasinput-page-metas-author
-
-</script>{/script}
+	</script>{/script}
+{/if}

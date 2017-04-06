@@ -1,10 +1,14 @@
-{* This input type actually requires jquery to function *}
-{script library="jquery"}{/script}
-{script src="js/core.fileupload.js"}{/script}
-{if Core::IsComponentAvailable('media-manager')}
-	{css src="assets/css/mediamanager/navigator.css"}{/css}
-	{script src="assets/js/mediamanager/navigator.js"}{/script}
-	{script library="jqueryui.readonly"}{/script}
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
+{if $jquery_available}
+	{* This input type actually requires jquery to function *}
+	{script library="jquery"}{/script}
+	{script src="js/core.fileupload.js"}{/script}
+	{if Core::IsComponentAvailable('media-manager')}
+		{css src="assets/css/mediamanager/navigator.css"}{/css}
+		{script src="assets/js/mediamanager/navigator.js"}{/script}
+		{script library="jqueryui.readonly"}{/script}
+	{/if}
 {/if}
 
 <div class="{$element->getClass()}">
@@ -96,7 +100,8 @@
 	</table>
 </div>
 
-
-<script type="text/javascript">
-	$(function(){ Core.fileupload("{$element->get('id')}"); });
-</script>
+{if $jquery_available}
+	<script type="text/javascript">
+		$(function(){ Core.fileupload("{$element->get('id')}"); });
+	</script>
+{/if}

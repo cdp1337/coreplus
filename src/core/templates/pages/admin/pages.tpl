@@ -40,7 +40,8 @@
 	}
 </style>{/css}
 
-{script}<script>
+{script name="jqueryui"}{/script}
+{script location="foot"}<script>
 	$(function() {
 		var $targets = $('.hover-info'),
 			$overlay = $('.links-create-options').dialog({

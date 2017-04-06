@@ -1,3 +1,5 @@
+{assign var="jquery_available" value=Core::IsLibraryAvailable('jquery')}
+
 <div class="{$element->getClass()} {$element->get('id')} checkboxes-toggleable" id="{$element->get('id')}">
 
 	<span class="form-element-label">
@@ -28,61 +30,62 @@
 	</div>
 </div>
 
-{script library="jquery"}{/script}
+{if $jquery_available}
+	{script library="jquery"}{/script}
+	{script location="foot"}<script>
 
-{script location="foot"}<script>
+		$(function(){
 
-	$(function(){
+			$('.checkboxes-toggleable').each(function(){
+				// Should this set be checked or unchecked by default?
+				var allchecked = true,
+					$this = $(this),
+					$checktoggle = $this.find('.checkboxes-toggle-check'),
+					$unchecktoggle = $this.find('.checkboxes-toggle-uncheck'),
+					$inputs = $this.find('input');
 
-		$('.checkboxes-toggleable').each(function(){
-			// Should this set be checked or unchecked by default?
-			var allchecked = true,
-				$this = $(this),
-				$checktoggle = $this.find('.checkboxes-toggle-check'),
-				$unchecktoggle = $this.find('.checkboxes-toggle-uncheck'),
-				$inputs = $this.find('input');
+				$inputs.each(function(){
+					if(!$(this).is(':checked')){
+						allchecked = false;
+						return false;
+					}
+				});
 
-			$inputs.each(function(){
-				if(!$(this).is(':checked')){
-					allchecked = false;
-					return false;
+				if(allchecked){
+					// All children checkboxes are checked... show the uncheck option.
+					$unchecktoggle.show();
 				}
-			});
+				else{
+					// There is at least one checkbox that is unchecked.  Display the check all option.
+					$checktoggle.show();
+				}
 
-			if(allchecked){
-				// All children checkboxes are checked... show the uncheck option.
-				$unchecktoggle.show();
-			}
-			else{
-				// There is at least one checkbox that is unchecked.  Display the check all option.
-				$checktoggle.show();
-			}
+				// Now, I can bind the click events on the toggle options.
+				$unchecktoggle.click(function(){
+					$inputs.each(function(){
+						$(this).prop('checked', false);
 
-			// Now, I can bind the click events on the toggle options.
-			$unchecktoggle.click(function(){
-				$inputs.each(function(){
-					$(this).prop('checked', false);
-
-					if( $(this).parent().hasClass('icheckbox_flat') ) {
-						$(this).icheck('update');
-					}
+						if( $(this).parent().hasClass('icheckbox_flat') ) {
+							$(this).icheck('update');
+						}
+					});
+					$unchecktoggle.toggle();
+					$checktoggle.toggle();
 				});
-				$unchecktoggle.toggle();
-				$checktoggle.toggle();
-			});
 
-			$checktoggle.click(function(){
-				$inputs.each(function(){
-					$(this).prop('checked', true);
+				$checktoggle.click(function(){
+					$inputs.each(function(){
+						$(this).prop('checked', true);
 
-					if( $(this).parent().hasClass('icheckbox_flat') ) {
-						$(this).icheck('update');
-					}
+						if( $(this).parent().hasClass('icheckbox_flat') ) {
+							$(this).icheck('update');
+						}
+					});
+					$unchecktoggle.toggle();
+					$checktoggle.toggle();
 				});
-				$unchecktoggle.toggle();
-				$checktoggle.toggle();
 			});
 		});
-	});
 
-</script>{/script}
+	</script>{/script}
+{/if}
