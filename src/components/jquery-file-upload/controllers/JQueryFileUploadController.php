@@ -159,6 +159,10 @@ class JQueryFileUploadController extends Controller_2_1 {
 
 		// Is the file upload complete?
 		if($file['size'] == $finalsize){
+			// Ensure this directory exists first.
+			$nd = \Core\Filestore\Factory::Directory($this->_formelement->get('basedir'));
+			$nd->mkdir();
+			
 			// Source
 			$f = \Core\Filestore\Factory::File($tmpfile);
 			// Destination
