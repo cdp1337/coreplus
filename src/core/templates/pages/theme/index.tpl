@@ -313,23 +313,6 @@
 	</ul>
 {/function}
 
-{if !$multisite}
-	<fieldset class="collapsed collapsible theme-section" id="theme-expandable-assets">
-		<h3 class="fieldset-title">
-			Assets
-			<i class="icon icon-chevron-down expandable-hint"></i>
-			<i class="icon icon-chevron-up collapsible-hint"></i>
-		</h3>
-		<p class="message-tutorial">
-			Assets are stylesheets, javascript files, and other static resources used by components that get installed to your CDN.
-		</p>
-		<div class="directory-listing">
-			{*call name=printAssetList items=$assets.assets*}
-			{call name=printTemplateList items=$assets.assets}
-		</div>
-	</fieldset>
-{/if}
-
 
 {if sizeof($templates) && !$multisite}
 	<fieldset class="collapsed collapsible theme-section" id="theme-expandable-templates">

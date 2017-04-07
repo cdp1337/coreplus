@@ -64,71 +64,6 @@ class ThemeController extends Controller_2_1{
 			}
 		}
 
-		// The source objects to look for assets in.
-		// Set initially to all the installed components.
-		$assetsources = Core::GetComponents();
-		// And add on the current theme.
-		$assetsources[] = $current;
-
-		// Load in all asset files available from the installed components and current theme.
-		// these are assembled into a virtual directory listing.
-		$assets = array();
-
-		// Give me the current theme!
-		foreach($assetsources as $source) {
-			/** @var Component_2_1 $source */
-
-			$dir = $source->getAssetDir();
-			if(!$dir) continue;
-
-			$dirlen = strlen($dir);
-			$name = $source->getName();
-
-			$dh = \Core\Filestore\Factory::Directory($dir);
-			$ls = $dh->ls(null, true);
-			foreach($ls as $obj){
-				// Skip directories.
-				if(!$obj instanceof \Core\Filestore\File) continue;
-
-				/** @var $obj \Core\Filestore\File */
-				$file = 'assets/' . substr($obj->getFilename(), $dirlen);
-
-				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
-				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
-				$newobj = \Core\Filestore\Factory::File($file);
-
-				$assets[$file] = array(
-					'file' => $file,
-					'obj' => $newobj,
-					'component' => $name,
-					'haswidgets' => false,
-					'has_stylesheets' => false,
-					'type' => 'asset',
-				);
-			}
-		}
-
-		// Now that the asset files have been loaded into a flat array, I need to convert that to the properly nested version.
-		ksort($assets);
-		$nestedassets = array();
-		foreach($assets as $k => $obj){
-			$parts = explode('/', $k);
-			$lastkey = sizeof($parts) - 1;
-			$thistarget =& $nestedassets;
-			foreach($parts as $i => $bit){
-				if($i == $lastkey){
-					$thistarget[$bit] = $obj;
-				}
-				else{
-					if(!isset($thistarget[$bit])){
-						$thistarget[$bit] = [];
-					}
-					$thistarget =& $thistarget[$bit];
-				}
-			}
-		}
-
-
 
 		// Get the templates throughout the site.  These can include pages, emails, form elements, etc.
 		$components = Core::GetComponents();
@@ -269,11 +204,10 @@ class ThemeController extends Controller_2_1{
 			$cssprintform = $sets[1]['form'];
 		}
 
-		$view->title = 'Theme Manager';
+		$view->title = 't:STRING_THEME_MANAGER';
 		$view->assign('themes', $themes);
 		$view->assign('current', $current);
 		$view->assign('options_form', $optionForm);
-		$view->assign('assets', $nestedassets);
 		$view->assign('templates', $nestedtemplates);
 		$view->assign('url_themeeditor', \Core\resolve_link('/theme/editor'));
 		$view->assign('url_themewidgets', \Core\resolve_link('/theme/widgets'));
@@ -284,6 +218,89 @@ class ThemeController extends Controller_2_1{
 		$view->assign('multisite', $multisite);
 		$view->assign('theme_selection_enabled', $themeSelectionEnabled);
 		$view->assign('email_selection_enabled', $emailSelectionEnabled);
+	}
+	
+	/**
+	 * Page to display the currently installed themes and shortcuts to various operations therein.
+	 */
+	public function assets(){
+		$view = $this->getView();
+		$selected = ConfigHandler::Get('/theme/selected');
+
+		$themes = ThemeHandler::GetAllThemes();
+		$current = ThemeHandler::GetTheme($selected);
+		// Set to true if multisite is enabled AND the page is currently on a child site.
+		$multisite = Core::IsLibraryAvailable('multisite') && MultiSiteHelper::IsEnabled() && MultiSiteHelper::GetCurrentSiteID() != 0;
+
+		// The source objects to look for assets in.
+		// Set initially to all the installed components.
+		$assetsources = Core::GetComponents();
+		// And add on the current theme.
+		$assetsources[] = $current;
+
+		// Load in all asset files available from the installed components and current theme.
+		// these are assembled into a virtual directory listing.
+		$assets = array();
+
+		// Give me the current theme!
+		foreach($assetsources as $source) {
+			/** @var Component_2_1 $source */
+
+			$dir = $source->getAssetDir();
+			if(!$dir) continue;
+
+			$dirlen = strlen($dir);
+			$name = $source->getName();
+
+			$dh = \Core\Filestore\Factory::Directory($dir);
+			$ls = $dh->ls(null, true);
+			foreach($ls as $obj){
+				// Skip directories.
+				if(!$obj instanceof \Core\Filestore\File) continue;
+
+				/** @var $obj \Core\Filestore\File */
+				$file = 'assets/' . substr($obj->getFilename(), $dirlen);
+
+				// Since this is a template, it may actually be in a different location than where the package maintainer put it.
+				// ie: user template user/templates/pages/user/view.tpl may be installed to themes/myawesometheme/pages/user/view.tpl instead.
+				$newobj = \Core\Filestore\Factory::File($file);
+
+				$assets[$file] = array(
+					'file' => $file,
+					'obj' => $newobj,
+					'component' => $name,
+					'haswidgets' => false,
+					'has_stylesheets' => false,
+					'type' => 'asset',
+				);
+			}
+		}
+
+		// Now that the asset files have been loaded into a flat array, I need to convert that to the properly nested version.
+		ksort($assets);
+		$nestedassets = array();
+		foreach($assets as $k => $obj){
+			$parts = explode('/', $k);
+			$lastkey = sizeof($parts) - 1;
+			$thistarget =& $nestedassets;
+			foreach($parts as $i => $bit){
+				if($i == $lastkey){
+					$thistarget[$bit] = $obj;
+				}
+				else{
+					if(!isset($thistarget[$bit])){
+						$thistarget[$bit] = [];
+					}
+					$thistarget =& $thistarget[$bit];
+				}
+			}
+		}
+
+		$view->title = 't:STRING_SITE_ASSETS';
+		$view->assign('themes', $themes);
+		$view->assign('current', $current);
+		$view->assign('assets', $nestedassets);
+		$view->assign('multisite', $multisite);
 	}
 
 	/**
