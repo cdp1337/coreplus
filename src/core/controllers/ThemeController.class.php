@@ -456,7 +456,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 		// Validate the theme name
-		if(!\Core\Theme\Theme\ValidateThemeName($themename)){
+		if(!\Core\Theme\Theme::ValidateThemeName($themename)){
 			\Core\set_message('Invalid theme requested', 'error');
 			\Core\go_back();
 		}
@@ -466,7 +466,7 @@ class ThemeController extends Controller_2_1{
 
 		if($template){
 			// The template itself can be ignored.
-			if(!\Core\Theme\Theme\ValidateTemplateName($themename, $template)){
+			if(!\Core\Theme\Theme::ValidateTemplateName($themename, $template)){
 				\Core\set_message('Invalid template requested', 'error');
 				\Core\go_back();
 			}
@@ -538,12 +538,12 @@ class ThemeController extends Controller_2_1{
 		}
 
 		// Validate
-		if(!\Core\Theme\Theme\ValidateThemeName($theme)){
+		if(!\Core\Theme\Theme::ValidateThemeName($theme)){
 			\Core\set_message('Invalid theme requested', 'error');
 			\Core\go_back();
 		}
 
-		if(!\Core\Theme\Theme\ValidateTemplateName($theme, $template)){
+		if(!\Core\Theme\Theme::ValidateTemplateName($theme, $template)){
 			\Core\set_message('Invalid template requested', 'error');
 			\Core\go_back();
 		}
@@ -593,7 +593,7 @@ class ThemeController extends Controller_2_1{
 		}
 
 		// Validate
-		if(!\Core\Theme\Theme\ValidateThemeName($theme)){
+		if(!\Core\Theme\Theme::ValidateThemeName($theme)){
 			\Core\set_message('Invalid theme requested', 'error');
 			\Core\go_back();
 		}
