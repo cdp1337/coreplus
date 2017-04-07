@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 24 Mar 2017 18:11:45 -0400
+ * @compiled Fri, 07 Apr 2017 10:47:56 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -15756,6 +15756,631 @@ return $string->getTranslation();
 }
 
 
+### REQUIRE_ONCE FROM core/libs/core/theme/Theme.php
+} // ENDING GLOBAL NAMESPACE
+namespace Core\Theme {
+use Core\CLI\CLI;
+use Core\Filestore\File;
+class Theme{
+private $_xmlloader = null;
+protected $_name;
+protected $_version;
+protected $_description;
+protected $_enabled = true;
+private $_versionDB = false;
+private $_loaded = false;
+public function __construct($name = null){
+$this->_xmlloader = new \XMLLoader();
+$this->_xmlloader->setRootName('theme');
+$filename = ROOT_PDIR . 'themes/' . $name . '/theme.xml';
+if(!$this->_xmlloader->loadFromFile($filename)){
+throw new \Exception('Parsing of XML Metafile [' . $filename . '] failed, not valid XML.');
+}
+}
+public function load(){
+if($this->_loaded) return;
+$this->_name = $this->_xmlloader->getRootDOM()->getAttribute('name');
+$this->_version = $this->_xmlloader->getRootDOM()->getAttribute("version");
+$dat = \ComponentFactory::_LookupComponentData('theme/' . $this->_name);
+if(!$dat) return;
+$this->_versionDB = $dat['version'];
+$this->_enabled = ($dat['enabled']) ? true : false;
+if(
+DEVELOPMENT_MODE &&
+defined('AUTO_INSTALL_ASSETS') &&
+AUTO_INSTALL_ASSETS &&
+EXEC_MODE == 'WEB' &&
+CDN_TYPE == 'local' &&
+$this->getKeyName() == \ConfigHandler::Get('/theme/selected')
+){
+\Core\log_verbose('Auto-installing assets for theme [' . $this->getName() . ']');
+$this->_parseAssets();
+}
+$this->_loaded = true;
+}
+public function getSkins(){
+$out = [];
+$default = null;
+$admindefault = null;
+$currenttheme = false;
+if($this->getKeyName() == \ConfigHandler::Get('/theme/selected')){
+$default = \ConfigHandler::Get('/theme/default_template');
+$admindefault = \ConfigHandler::Get('/theme/default_admin_template');
+if(!$admindefault) $admindefault = $default;
+$currenttheme = true;
+}
+foreach($this->_xmlloader->getElements('/skins/file') as $f){
+$basefilename = $f->getAttribute('filename');
+$filename = $this->getBaseDir() . 'skins/' . $basefilename;
+if($basefilename == 'blank.tpl'){
+continue;
+}
+$skin = \Core\Templates\Template::Factory($filename);
+$title = $f->getAttribute('title') ? $f->getAttribute('title') : $basefilename;
+$out[] = [
+'filename'        => $filename,
+'file'            => $basefilename,
+'title'           => $title,
+'default'         => ($default == $basefilename),
+'admindefault'    => ($admindefault == $basefilename),
+'has_stylesheets' => $skin->hasOptionalStylesheets(),
+'current_theme'   => $currenttheme,
+];
+}
+return $out;
+}
+public function getEmailSkins(){
+$out = [];
+$default = null;
+$currenttheme = false;
+if($this->getKeyName() == \ConfigHandler::Get('/theme/selected')){
+$default = \ConfigHandler::Get('/theme/default_email_template');
+$currenttheme = true;
+}
+foreach($this->_xmlloader->getElements('/emailskins/file') as $f){
+$basefilename = $f->getAttribute('filename');
+$filename = $this->getBaseDir() . 'emailskins/' . $basefilename;
+$skin = \Core\Templates\Template::Factory($filename);
+$title = $basefilename;
+$out[] = [
+'filename'        => $filename,
+'file'            => $basefilename,
+'title'           => $title,
+'default'         => ($default == $basefilename),
+'current_theme'   => $currenttheme,
+];
+}
+$out[] = [
+'filename'        => '',
+'file'            => '',
+'title'           => '-- No Skin --',
+'default'         => ($default == ''),
+'current_theme'   => $currenttheme,
+];
+return $out;
+}
+public function getTemplates(){
+return $this->getSkins();
+}
+public function getKeyName(){
+return str_replace(' ', '-', strtolower($this->_name));
+}
+public function getName(){
+return $this->_name;
+}
+public function getBaseDir($prefix = ROOT_PDIR){
+return $prefix . 'themes/' . $this->getKeyName() . '/';
+}
+public function save($minified = false){
+$this->_xmlloader->getRootDOM()->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");
+$XMLFilename = $this->getBaseDir() . 'theme.xml';
+if ($minified) {
+file_put_contents($XMLFilename, $this->_xmlloader->asMinifiedXML());
+}
+else {
+file_put_contents($XMLFilename, $this->_xmlloader->asPrettyXML());
+}
+}
+public function savePackageXML($minified = true, $filename = false) {
+$dom = new \XMLLoader();
+$dom->setRootName('package');
+$dom->load();
+$dom->getRootDOM()->setAttribute('type', 'theme');
+$dom->getRootDOM()->setAttribute('name', $this->getName());
+$dom->getRootDOM()->setAttribute('version', $this->getVersion());
+$dom->createElement('packager[version="' . \Core::GetComponent()->getVersion() . '"]');
+foreach ($this->_xmlloader->getRootDOM()->getElementsByTagName('upgrade') as $u) {
+$newu = $dom->getDOM()->importNode($u);
+$dom->getRootDOM()->appendChild($newu);
+}
+$desc = $this->_xmlloader->getElement('/description', false);
+if ($desc) {
+$newd            = $dom->getDOM()->importNode($desc);
+$newd->nodeValue = $desc->nodeValue;
+$dom->getRootDOM()->appendChild($newd);
+}
+$out = ($minified) ? $dom->asMinifiedXML() : $dom->asPrettyXML();
+if ($filename) {
+file_put_contents($filename, $out);
+}
+else {
+return $out;
+}
+}
+public function getRawXML($minified = false) {
+return ($minified) ? $this->_xmlloader->asMinifiedXML() : $this->_xmlloader->asPrettyXML();
+}
+public function setAssetFiles($files) {
+$this->_xmlloader->removeElements('/theme/assets/file');
+$newarray = [];
+foreach ($files as $f) {
+$newarray[$f['file']] = $f;
+}
+ksort($newarray);
+foreach ($newarray as $f) {
+$this->addAssetFile($f);
+}
+}
+public function addAssetFile($file){
+$this->_xmlloader->createElement('/theme/assets/file[@filename="' . $file['file'] . '"][@md5="' . $file['md5'] . '"]');
+}
+public function setSkinFiles($files) {
+$newarray = [];
+foreach ($files as $f) {
+if(strpos($f['file'], 'skins/') === 0) $f['file'] = substr($f['file'], 6);
+$newarray[$f['file']] = $f;
+}
+ksort($newarray);
+$used = [];
+foreach($this->_xmlloader->getElements('/theme/skins/file') as $el){
+$att_file = $el->getAttribute('filename');
+if(isset($newarray[$att_file])){
+$used[] = $att_file;
+$el->setAttribute('md5', $newarray[$att_file]['md5']);
+}
+else{
+$this->_xmlloader->getElement('/theme/skins', false)->removeChild($el);
+}
+}
+foreach($newarray as $f){
+if(!in_array($f['file'], $used)){
+$title = substr($f['file'], 6, -4);
+$this->_xmlloader->createElement('/theme/skins/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"][@title="' . $title . '"]');
+}
+}
+}
+public function setViewFiles($files) {
+$this->_xmlloader->removeElements('/theme/view/file');
+$newarray = [];
+foreach ($files as $f) {
+$newarray[$f['file']] = $f;
+}
+ksort($newarray);
+foreach ($newarray as $f) {
+$this->_xmlloader->createElement('/theme/view/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+}
+}
+public function setOtherFiles($files) {
+$this->_xmlloader->removeElements('/theme/otherfiles/file');
+$newarray = [];
+foreach ($files as $f) {
+$newarray[$f['file']] = $f;
+}
+ksort($newarray);
+foreach ($newarray as $f) {
+$this->_xmlloader->createElement('/theme/otherfiles/file[@filename="' . $f['file'] . '"][@md5="' . $f['md5'] . '"]');
+}
+}
+public function setFiles($files) {
+$this->setOtherFiles($files);
+}
+public function getLicenses() {
+$ret = [];
+foreach ($this->_xmlloader->getElementsByTagName('license') as $el) {
+$url   = @$el->getAttribute('url');
+$ret[] = [
+'title' => $el->nodeValue,
+'url'   => $url
+];
+}
+return $ret;
+}
+public function setLicenses($licenses) {
+$this->_xmlloader->removeElements('/license');
+foreach ($licenses as $lic) {
+$str          = '/license' . ((isset($lic['url']) && $lic['url']) ? '[@url="' . $lic['url'] . '"]' : '');
+$l            = $this->_xmlloader->getElement($str);
+$l->nodeValue = $lic['title'];
+}
+}
+public function getAuthors() {
+$ret = [];
+foreach ($this->_xmlloader->getElementsByTagName('author') as $el) {
+$ret[] = [
+'name'  => $el->getAttribute('name'),
+'email' => @$el->getAttribute('email'),
+];
+}
+return $ret;
+}
+public function setAuthors($authors) {
+$this->_xmlloader->removeElements('/author');
+foreach ($authors as $a) {
+if (isset($a['email']) && $a['email']) {
+$this->_xmlloader->getElement('/theme/author[@name="' . $a['name'] . '"][@email="' . $a['email'] . '"]');
+}
+else {
+$this->_xmlloader->getElement('/theme/author[@name="' . $a['name'] . '"]');
+}
+}
+}
+public function setRequires($name, $type, $version = null, $op = null){
+$node = $this->_xmlloader->getElement('/requires/require[@name="' . $name . '"][@type="' . $type . '"]');
+if($version){
+$node->setAttribute('version', $version);
+if($op){
+$node->setAttribute('operation', $op);
+}
+else{
+$node->removeAttribute('operation');
+}
+}
+else{
+$node->removeAttribute('version');
+$node->removeAttribute('operation');
+}
+}
+public function getVersion() {
+return $this->_version;
+}
+public function setVersion($vers) {
+if ($vers == $this->_version) return;
+if (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from=""][@to=""]', false))) {
+$upg->setAttribute('from', $this->_version);
+$upg->setAttribute('to', $vers);
+}
+elseif (($upg = $this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to=""]', false))) {
+$upg->setAttribute('to', $vers);
+}
+else {
+$this->_xmlloader->getElement('/upgrades/upgrade[@from="' . $this->_version . '"][@to="' . $vers . '"]');
+}
+$this->_version = $vers;
+$this->_xmlloader->getRootDOM()->setAttribute('version', $vers);
+}
+public function getDescription() {
+if ($this->_description === null) {
+$this->_description = trim($this->_xmlloader->getElement('/description')->nodeValue);
+}
+return $this->_description;
+}
+public function setDescription($desc) {
+$this->_description = $desc;
+$this->_xmlloader->getElement('/description')->nodeValue = $desc;
+}
+public function getViewSearchDir(){
+$d = $this->getBaseDir() . 'templates/';
+return (is_dir($d)) ? $d : null;
+}
+public function getAssetDir(){
+$d = $this->getBaseDir() . 'assets/';
+return (is_dir($d)) ? $d : null;
+}
+public function getSkinDir(){
+$d = $this->getBaseDir() . 'skins/';
+return (is_dir($d)) ? $d : null;
+}
+public function getConfigs(){
+$configs = array();
+$node = $this->_xmlloader->getElement('configs');
+foreach ($node->getElementsByTagName('config') as $confignode) {
+$key         = $confignode->getAttribute('key');
+if(strpos($key, '/theme/') === 0){
+$configs[] = \ConfigHandler::GetConfig($key);
+}
+}
+return $configs;
+}
+public function isLoadable(){
+return true; // Themes really can't quite be *not* loadable.
+}
+public function isInstalled(){
+return ($this->_versionDB === false)? false : true;
+}
+public function needsUpdated(){
+return ($this->_versionDB != $this->_version);
+}
+public function hasLibrary(){
+return false; // Themes don't have libraries.
+}
+public function hasJSLibrary(){
+return false; // Themes don't have JS libraries, (am I even supporting this anymore???)
+}
+public function hasModule(){
+return false; // Themes don't have modules.
+}
+public function hasView(){
+return true; // This is the only thing a theme is in fact...
+}
+public function install($verbose = 0){
+$changes = $this->_performInstall($verbose);
+$default = $this->_parseSkins(true, $verbose);
+if(is_array($default) && $changes !== false){
+$changes += $default;
+}
+if(is_array($changes) && $changes !== false){
+\SystemLogModel::LogInfoEvent('/updater/theme/install', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+}
+return $changes;
+}
+public function reinstall($verbosity = 0){
+$changes =  $this->_performInstall($verbosity);
+if(is_array($changes) && sizeof($changes)){
+\SystemLogModel::LogInfoEvent('/updater/theme/reinstall', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+}
+return $changes;
+}
+public function upgrade(){
+$changes =  $this->_performInstall();
+if(is_array($changes) && sizeof($changes)){
+\SystemLogModel::LogInfoEvent('/updater/theme/upgrade', 'Theme ' . $this->getName() . ' installed successfully!', implode("\n", $changes));
+}
+return $changes;
+}
+public function _parseConfigs($install = true, $verbosity = 0){
+$changes = array();
+$action = $install ? 'Installing' : 'Uninstalling';
+$set    = $install ? 'Set' : 'Unset';
+\Core\log_verbose($action . ' configs for ' . $this->getName());
+$node = $this->_xmlloader->getElement('configs');
+$componentName = 'theme/' . $this->getKeyName();
+foreach ($node->getElementsByTagName('config') as $confignode) {
+$key         = $confignode->getAttribute('key');
+$options     = $confignode->getAttribute('options');
+$type        = $confignode->getAttribute('type');
+$default     = $confignode->getAttribute('default');
+$title       = $confignode->getAttribute('title');
+$description = $confignode->getAttribute('description');
+$mapto       = $confignode->getAttribute('mapto');
+$encrypted   = $confignode->getAttribute('encrypted');
+$formAtts    = $confignode->getAttribute('form-attributes');
+if($encrypted === null || $encrypted === '') $encrypted = '0';
+if($verbosity == 2){
+CLI::PrintActionStart($action . ' config ' . $key);
+}
+if(strpos($key, '/theme/') !== 0){
+trigger_error('Please ensure that all config options in themes start with "/theme/"! (Mismatched config found in ' . $this->getName() . ':' . $key, E_USER_NOTICE);
+continue;
+}
+if(!$type) $type = 'string';
+$m   = \ConfigHandler::GetConfig($key);
+$m->set('options', $options);
+$m->set('type', $type);
+$m->set('default_value', $default);
+$m->set('title', $title);
+$m->set('description', $description);
+$m->set('mapto', $mapto);
+$m->set('encrypted', $encrypted);
+$m->set('form_attributes', $formAtts);
+$m->set('component', $componentName);
+if ($m->get('value') === null || !$m->exists()){
+$m->set('value', $confignode->getAttribute('default'));
+}
+if (is_array(\Core\Session::Get('configs')) && isset(\Core\Session::Get('configs')[$key])){
+$m->set('value', \Core\Session::Get('configs')[$key]);
+}
+if ($m->save()){
+$changes[] = $set . ' configuration [' . $m->get('key') . '] to [' . $m->get('value') . ']';
+if($verbosity == 2){
+CLI::PrintActionStatus(true);
+}
+}
+else{
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+}
+\ConfigHandler::CacheConfig($m);
+}
+return (sizeof($changes)) ? $changes : false;
+} // private function _parseConfigs
+public function _parseAssets($install = true, $verbosity = 0){
+$assetbase = \Core\Filestore\get_asset_path();
+$coretheme = \ConfigHandler::Get('/theme/selected');
+if($coretheme === null) $coretheme = 'default';
+$theme = $this->getKeyName();
+$changes = [];
+foreach($this->_xmlloader->getElements('/assets/file') as $node){
+if(!$this->getAssetDir()){
+continue;
+}
+$b = $this->getBaseDir();
+$filename = $node->getAttribute('filename');
+$trimmedfilename = substr($b . $node->getAttribute('filename'), strlen($this->getAssetDir()));
+$themespecificfilename = $assetbase . $theme . '/' . $trimmedfilename;
+$newfilename = 'assets/' . $trimmedfilename;
+if(file_exists(ROOT_PDIR . 'themes/custom/' . $newfilename)){
+$f = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/' . $newfilename);
+$srcname = '!CUSTOM!';
+}
+else{
+$f = new \Core\Filestore\Backends\FileLocal($b . $filename);
+$srcname = '-theme- ';
+}
+if($verbosity == 2){
+CLI::PrintActionStart('Installing ' . $srcname . ' asset ' . $f->getBasename());
+}
+$nf = \Core\Filestore\Factory::File($newfilename);
+if($nf->exists() && $nf->identicalTo($f)){
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+continue;
+}
+elseif($nf->exists()){
+$action = 'Replaced';
+}
+else{
+$action = 'Installed';
+}
+if(!$f->isReadable()){
+throw new \InstallerException('Source file [' . $f->getFilename() . '] is not readable.');
+}
+try{
+$f->copyTo($nf, true);
+}
+catch(\Exception $e){
+throw new \InstallerException('Unable to copy [' . $f->getFilename() . '] to [' . $nf->getFilename() . ']');
+}
+$change = $action . ' ' . $nf->getFilename();
+$changes[] = $change;
+if($verbosity == 1){
+CLI::PrintLine($change);
+}
+elseif($verbosity == 2){
+CLI::PrintActionStatus('ok');
+}
+}
+$directory = \Core\Filestore\Factory::Directory('themes/custom/assets');
+$ls = $directory->ls(null, true);
+$baseStrLen = strlen(ROOT_PDIR . '/themes/custom/assets');
+foreach($ls as $fileOrDir){
+if($fileOrDir instanceof File){
+$newfilename = substr($fileOrDir->getFilename(),$baseStrLen);
+if($verbosity == 2){
+CLI::PrintActionStart('Installing CUSTOM   asset ' . $newfilename);
+}
+$nf = \Core\Filestore\Factory::File('asset/' . $newfilename);
+if($nf->exists() && $nf->identicalTo($fileOrDir)){
+if($verbosity == 2){
+CLI::PrintActionStatus('skip');
+}
+continue;
+}
+elseif($nf->exists()){
+$action = 'Replaced';
+}
+else{
+$action = 'Installed';
+}
+try{
+$fileOrDir->copyTo($nf, true);
+}
+catch(\Exception $e){
+throw new \InstallerException('Unable to copy [' . $fileOrDir->getFilename() . '] to [' . $nf->getFilename() . ']');
+}
+$change = $action . ' ' . $nf->getFilename();
+$changes[] = $change;
+if($verbosity == 1){
+CLI::PrintLine($change);
+}
+elseif($verbosity == 2){
+CLI::PrintActionStatus('ok');
+}
+}
+}
+if(!sizeof($changes)){
+if($verbosity > 0){
+CLI::PrintLine('No changes required');
+}
+return false;
+}
+\Core\Cache::Delete('asset-resolveurl');
+return $changes;
+}
+public function _parseSkins($install = true, $verbosity = 0){
+$changes = array();
+$action = $install ? 'Installing' : 'Uninstalling';
+$set    = $install ? 'Set' : 'Unset';
+\Core\log_verbose($action . ' skins for ' . $this->getName());
+$node = $this->_xmlloader->getElement('skins');
+$defaultFrontend = $node->getAttribute('default');
+$adminFrontend   = $node->getAttribute('admindefault');
+$emailNode = $this->_xmlloader->getElement('emailskins');
+$defaultEmail = $emailNode->getAttribute('default');
+if($defaultFrontend){
+\ConfigHandler::Set('/theme/default_template', $defaultFrontend);
+$changes[] = 'Set default template';
+}
+if($adminFrontend){
+\ConfigHandler::Set('/theme/default_admin_template', $adminFrontend);
+$changes[] = 'Set default admin template';
+}
+if($defaultEmail){
+\ConfigHandler::Set('/theme/default_email_template', $defaultEmail);
+$changes[] = 'Set default email template';
+}
+return (sizeof($changes)) ? $changes : false;
+} // private function _parseSkins
+public function isDefault(){
+return \ConfigHandler::Get('/theme/selected') == $this->getKeyName();
+}
+public function getScreenshot(){
+$s = $this->_xmlloader->getElement('/screenshots/screenshot', false);
+if(!$s){
+return [
+'file' => '',
+'title' => $this->getName()
+];
+}
+else{
+$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
+return [
+'file' => $f,
+'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
+];
+}
+}
+public function getScreenshots(){
+$s = $this->_xmlloader->getElements('/screenshots/screenshot');
+if(!$s){
+return [ ];
+}
+else{
+$f = \Core\Filestore\Factory::File($this->getBaseDir() . $s->getAttribute('file'));
+return [
+'file' => $f,
+'title' => ($s->getAttribute('title') ? $s->getAttribute('title') : $this->getName()),
+];
+}
+}
+public static function ValidateThemeName($theme){
+static $_cache = array();
+if(isset($_cache[$theme])) return $_cache[$theme];
+$_cache[$theme] = false;
+if(!$theme) return false;
+if($theme{0} == '.') return false;
+if(strpos($theme, '..') !== false) return false;
+if(!is_dir(\ROOT_PDIR . 'themes/' . $theme)) return false;
+$_cache[$theme] = true;
+return true;
+}
+public static function ValidateTemplateName($theme, $template){
+if(!self::ValidateThemeName($theme)){
+return false;
+}
+$filename = \ROOT_PDIR . 'themes/' . $theme . '/skins/' . $template;
+if($template{0} == '.' || !$template || !is_readable($filename)){
+return false;
+}
+return true;
+}
+private function _performInstall($verbosity = 0){
+$changed = [];
+$change = $this->_parseAssets(true, $verbosity);
+if($change !== false) $changed = array_merge($changed, $change);
+$change = $this->_parseConfigs(true, $verbosity);
+if($change !== false) $changed = array_merge($changed, $change);
+$c = new \ComponentModel('theme/' . $this->_name);
+$c->set('version', $this->_version);
+$c->save();
+return (sizeof($changed)) ? $changed : false;
+}
+}
+} // ENDING NAMESPACE Core\Theme
+
+namespace  {
+
 
 
 ### REQUIRE_ONCE FROM core/libs/core/HookHandler.class.php
@@ -20996,6 +21621,7 @@ public static $Mappings = array(
 'checkboxes'       => '\\Core\\Forms\\CheckboxesInput',
 'date'             => '\\Core\\Forms\\DateInput',
 'datetime'         => '\\Core\\Forms\\DateTimeInput',
+'email'            => '\\Core\\Forms\\EmailInput',
 'file'             => '\\Core\\Forms\\FileInput',
 'hidden'           => '\\Core\\Forms\\HiddenInput',
 'license'          => '\\Core\\Forms\\LicenseInput',

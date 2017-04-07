@@ -114,6 +114,7 @@
 		<page baseurl="/admin/serverid" admin="1" access="g:admin" title="t:STRING_SERVER_ID" group="t:STRING_ADMIN"/>
 		<page baseurl="/admin/log/config" admin="1" access="g:admin" title="t:STRING_LOG_CONFIG" group="t:STRING_CONFIGURE" image="assets/images/apps/utilities_log_viewer.png"/>
 		<page baseurl="/theme" admin="1" access="g:admin" title="t:STRING_THEME_MANAGER" group="t:STRING_THEME_AND_LAYOUTS" image="assets/images/actions/color_line.png"/>
+		<page baseurl="/theme/assets" admin="1" access="g:admin" title="t:STRING_SITE_ASSETS" group="t:STRING_THEME_AND_LAYOUTS" image="assets/images/actions/color_line.png"/>
 	</pages>
 	<widgets>
 		<widget baseurl="/updater/check" title="Check For Updates" installable="/admin"/>

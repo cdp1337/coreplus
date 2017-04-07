@@ -122,3 +122,6 @@ require_once(ROOT_PDIR . 'core/libs/core/ViewControl.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/ViewMeta.class.php');
 require_once(ROOT_PDIR . 'core/libs/core/errormanagement/functions.php');
 require_once(ROOT_PDIR . 'core/functions/global.php');
+
+// Load in the new integrated theme.
+require_once(ROOT_PDIR . 'core/libs/core/theme/Theme.php');
