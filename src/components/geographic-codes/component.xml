@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Geographic Codes" execmode="both" logo="assets/images/geographic-codes.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Geographic Codes" execmode="both" logo="assets/images/logos/geographic-codes.png">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -104,16 +104,16 @@
 		<file filename="libs/GeoIp2/src/Record/Traits.php" md5="f3ab8a669c169a5e70f449c8151ef61c">
 			<class name="GeoIp2\Record\Traits"/>
 		</file>
-		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Database/ReaderTest.php" md5="1118a884e9464cab328db2975470809f">
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Database/ReaderTest.php" md5="adbbb48fde9ae6fe4b7ced23cf653c59">
 			<class name="GeoIp2\Test\WebService\ReaderTest"/>
 		</file>
-		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/CountryTest.php" md5="3db576019b0891b3f89762e489eab92f">
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/CountryTest.php" md5="1e7de3e46d6cfaf4df104c459761f9db">
 			<class name="GeoIp2\Test\Model\CountryTest"/>
 		</file>
-		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/NameTest.php" md5="b95dbc092e8280f44a19d8a90fc72328">
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/NameTest.php" md5="e37595e919f920564c7f82080527372c">
 			<class name="GeoIp2\Test\Model\NameTest"/>
 		</file>
-		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/OmniTest.php" md5="d71d8a9b9459bab4bd13f3753936776d">
+		<file filename="libs/GeoIp2/tests/GeoIp2/Test/Model/OmniTest.php" md5="f92afa786e3fe9dabe0e922908d2315f">
 			<class name="GeoIp2\Test\Model\OmniTest"/>
 		</file>
 		<file filename="libs/GeoIp2/tests/bootstrap.php" md5="3d9dac2ca18b01e861ac34200d4a2841"/>
@@ -138,13 +138,13 @@
 		<file filename="libs/MaxMind-DB-Reader-php/src/MaxMind/Db/Reader/Metadata.php" md5="72920eb4329883a189570e315d9ccf45">
 			<class name="MaxMind\Db\Reader\Metadata"/>
 		</file>
-		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/DecoderTest.php" md5="8c51cb0205d8abd032144d375bdade05">
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/DecoderTest.php" md5="f74808a837cbb0f5f13b57b4ba12ab21">
 			<class name="MaxMind\Db\Test\Reader\DecoderTest"/>
 		</file>
-		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/PointerTest.php" md5="ccbdd0f2f1214fd958e432537ba6c6f4">
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/Reader/PointerTest.php" md5="0db9e5977be125f2e9cb03404f8b3bb8">
 			<class name="MaxMind\Db\Test\Reader\PointerTest"/>
 		</file>
-		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/ReaderTest.php" md5="4d73231ad39f383fa4aecfc7ed1560bf">
+		<file filename="libs/MaxMind-DB-Reader-php/tests/MaxMind/Db/Test/ReaderTest.php" md5="8616218ded9a95ae8e9bdeafd1873b91">
 			<class name="MaxMind\Db\Test\Reader\ReaderTest"/>
 		</file>
 		<file filename="libs/MaxMind-DB-Reader-php/tests/bootstrap.php" md5="4fb24dd5dd38f07a4e4dab3146f3cd5b"/>
@@ -188,7 +188,7 @@
 		<file filename="assets/css/geographic-codes.css" md5="487b7f3d62f0b4ac7095921ee0c827f4"/>
 		<file filename="assets/css/geographic-codes.css.map" md5="115900926f461af9bded0ea0038da843"/>
 		<file filename="assets/css/geographic-codes.min.css" md5="48e52d7aac6cf8114d325f2bd09a91e4"/>
-		<file filename="assets/images/geographic-codes.png" md5="faaf49668cd64f9a28a373c19edb6233"/>
+		<file filename="assets/images/logos/geographic-codes.png" md5="faaf49668cd64f9a28a373c19edb6233"/>
 	</assets>
 	<install>
 		<sql file="datafiles/countries_bulk.sql"/>
@@ -219,6 +219,7 @@
 	</view>
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
+		<require name="jquery" type="library"/>
 	</requires>
 	<authors>
 		<author name="Charlie Powell" email="charlie@evalagency.com"/>
