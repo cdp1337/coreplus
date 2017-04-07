@@ -6,17 +6,21 @@
 		{css src="css/styles.css"}{/css}
 		{css src="css/custom.css" inline="1"}{/css}
 		{css src="css/custom_print.css" inline="1" media="print"}{/css}
+		
+		{if $smarty.const.THEME_SITE_COVERFLOW}
+			{css}<style>
+				header.page-header {
+					background-image: url('{link "`$smarty.const.THEME_SITE_COVERFLOW`"}');
+					background-size: cover;
+				}
+			</style>{/css}
+		{/if}
 
 		<!--[if lt IE 9]>
 			<script type="text/javascript" src="{asset src='js/html5shiv.js'}"></script>
 			<script type="text/javascript" src="{asset src='js/json2.js'}"></script>
 		<![endif]-->
 		{script library="fontawesome"}{/script}
-		{* This will enable the Core Plus context menus new in 2.4.0 *}
-		{if Core::IsLibraryAvailable('jquery')}
-			{script library="jquery"}{/script}
-		{/if}
-		{script src="js/core.context-controls.js"}{/script}
 
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>{$seotitle}</title>
