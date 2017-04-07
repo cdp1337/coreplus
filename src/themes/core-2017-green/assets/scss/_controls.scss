@@ -1,0 +1,354 @@
+/*****************************************************************************
+ *****************************************************************************
+ **                          CONTROL ELEMENTS                               **
+ ** Control objects provide little administrative functionality bits        **
+ ** throughout the site.  They generally appear as a <ul> with <a> or {a}   **
+ ** tags and spans inside.  The listing itself is re-rendered with          **
+ ** javascript to make it a popup menu for better usability.                **
+ *****************************************************************************
+ *****************************************************************************/
+
+/*** Controls that can be implemented throughout the site ***/
+ul.controls {
+	&.proxy {
+		margin: 0;
+		padding: 0;
+		max-width: 200px;
+		border: 1px solid;
+
+		li {
+			float:left;
+			margin-right:0.5em;
+			list-style:none;
+
+			a {
+				text-decoration: none;
+				font-size: 14px;
+				padding: 0.05em;
+				line-height: 18px;
+			}
+
+			a:hover {
+				text-shadow: none;
+				font-size: 18px;
+				padding: 0;
+			}
+
+			span {
+				display: none;
+			}
+		}
+
+		li:last-child {
+			// Remove the float on the last LI to prevent the UL box from collapsing.
+			float: none;
+		}
+
+		/* icon animations ftw! */
+		&.controls-animated {
+			.controls-proxy-icon {
+				opacity: 1;
+				transition: opacity 0.3s ease-in-out 0s;
+			}
+
+			.icon-spin {
+				opacity: 0.5;
+			}
+		}
+
+		&.controls-proxy {
+			color: #477DCA;
+			padding: 0.25em;
+
+			li {
+				float: none;
+			}
+		}
+	}
+
+	&.no-proxy {
+		margin: 0;
+		border: 0 none;
+
+		li {
+			float:left;
+			margin-right:0.5em;
+			list-style:none;
+			&:after {
+				content: ' |';
+			}
+		}
+
+		li:last-child {
+			// Remove the float on the last LI to prevent the UL box from collapsing.
+			float: none;
+			&:after {
+				content: '';
+			}
+		}
+		
+		i {
+			// Icons do not get displayed if there is no proxy.
+			display: none;
+		}
+		span {
+			display: inline;
+		}
+	}
+	
+	&.only-icons {
+		// An option to display ONLY the icons instead of text + icons.
+		i.icon {
+			display: inline-block;
+		}
+		span {
+			display: none;
+		}
+	}
+}
+
+/** Spruce up FA with some color :) **/
+ul.controls li i.icon-remove,
+ul.controls li i.icon-delete { color: #7a0200; }
+ul.controls li i.icon-edit { color: blue; }
+ul.controls li i.icon-plus,
+ul.controls li i.icon-add { color: green; }
+ul.controls li i.icon-rss { color: #e99700; }
+
+/**
+ * Contextual controls are similar, but slightly different.
+ * Instead of being inline, they're in a context menu.
+ */
+ul.controls.context-menu {
+	background: #eee;
+	border: 1px solid #999;
+	height: auto;
+	position: absolute;
+	top: 0;
+	text-align: left;
+	z-index: 9999;
+
+	li {
+		font-size: 14px;
+		float: none;
+		white-space: nowrap;
+		width: 100%;
+		/* This will get overwritten by a's */
+		color: #555;
+
+		a {
+			padding: 0.15em;
+			display: block;
+			color: #000;
+		}
+
+		a:hover {
+			font-size: 14px;
+			background: #AFC5EE;
+			color: #000;
+		}
+
+		i {
+			line-height: 1.5em;
+			padding-left: 4px;
+		}
+
+		span {
+			line-height: 1.9em;
+			padding: 0 2px;
+			display: inline;
+		}
+	}
+}
+
+/* The many links have a bit different styles. */
+ul.controls.context-menu-many-links {
+	box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
+	opacity: 0.9;
+}
+
+
+// Core 6.2 supports pre-rendered control menus!
+// This saves a LOT of time on large listing tables and chocks the rendering over to the server.
+// Not to mention optimized for mobile ;)
+div.controls-container {
+	min-width: 8em;
+	min-height: 2em;
+}
+
+menu.controls-prerendered {
+	margin: 0;
+	padding: 0;
+	font-size: 90%;
+	
+	&.controls-no-proxy {
+		ul {
+			margin-left: 0;
+		}
+		
+		li {
+			display: inline-block;
+			list-style: none;
+			white-space: nowrap;
+			margin-right: 0.25em;
+			color: $controls-inline-color;
+			
+			&:after {
+				content: ' |';
+			}
+			
+			&:last-child {
+				margin-right: 0;
+				
+				&:after {
+					content: '';
+				}
+			}
+			
+			a {
+				margin-right: 0.25em;
+				background: $controls-inline-background;
+				color: $controls-inline-color;
+			}
+			
+			i {
+				background: $controls-inline-icon-background;
+				color: $controls-inline-icon-color;
+			}
+		}
+	}
+	
+	&.controls-have-proxy {
+		position: absolute;
+		
+		&:hover {
+			label {
+				background: $controls-proxy-hover-background;
+				border: $controls-proxy-hover-border;
+				color: $controls-proxy-hover-color;
+				border-bottom-width: 0;
+				padding-bottom: 1em;
+			}
+			
+			ul {
+				display: block;
+			}
+		}
+		
+		label {
+			white-space: nowrap;
+			min-width: 8em;
+			padding: 0.35em 0.75em;
+			background: $controls-proxy-background;
+			border: $controls-proxy-border;
+			color: $controls-proxy-color;
+		}
+		
+		ul {
+			display: none;
+			position: relative;
+			z-index: 999;
+			top: 0;
+			margin: -1em 0 0 0;
+			padding: 0.15em 0 0 0;
+			color: $controls-popover-color;
+			border: $controls-popover-border;
+			background: $controls-popover-background;
+			border-top-width: 0;
+		}
+		
+		li {
+			list-style: none;
+			white-space: nowrap;
+			background: $controls-popover-background;
+			
+			&:hover {
+				background: $controls-popover-hover-background;
+				color: $controls-popover-hover-color;
+				
+				i {
+					background: $controls-popover-hover-background;
+				}
+			}
+			
+			a {
+				display: block;
+				padding: 0;
+				color: $controls-popover-color;
+			}
+			
+			i {
+				background: $controls-popover-icon-background;
+				color: $controls-popover-icon-color;
+				padding: 0.5em;
+				text-align: center;
+				width: 2.1em;
+			}
+			
+			span {
+				padding-right: 0.5em;
+			}
+		}
+	}
+}
+
+@media only screen and (max-width: $breakpoint-tablet){
+	menu.controls-prerendered {
+		margin: 0;
+		padding: 0;
+		font-size: 90%;
+
+		&.controls-have-proxy {
+			position: relative;
+			
+			label {
+				display: none;
+			}
+			
+			ul {
+				display: block;
+				position: relative;
+				z-index: 1;
+				top: 0;
+				margin: 0;
+				background-color: $controls-inline-background;
+				border: 0px none;
+			}
+
+			li {
+				display: inline-block;
+				list-style: none;
+				white-space: nowrap;
+				background-color: transparent;
+				margin-right: 0.25em;
+				
+				&:after {
+					content: ' |';
+				}
+				
+				&:last-child {
+					margin-right: 0;
+
+					&:after {
+						content: '';
+					}
+				}
+				
+
+				a {
+					display: inline-block;
+					padding: 0.25em 0.5em;
+					background: $controls-inline-background;
+					color: $controls-inline-color;
+				}
+				
+				i {
+					width: auto;
+					padding: 0;
+					background: $controls-inline-icon-background;
+					color: $controls-inline-icon-color;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,38 @@
+Index: src/themes/base-v3/assets/scss/vendor/bourbon/addons/_button.scss
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- src/themes/base-v3/assets/scss/vendor/bourbon/addons/_button.scss	(revision 891a7c245d8ea410c0db5fbebe3153bc8f92a51e)
++++ src/themes/base-v3/assets/scss/vendor/bourbon/addons/_button.scss	(revision )
+@@ -1,5 +1,7 @@
+-@mixin button ($style: simple, $base-color: #4294f0, $text-size: inherit, $padding: 7px 18px) {
++$base-accent-color: #4294f0 !default;
+ 
++@mixin button ($style: simple, $base-color: $base-accent-color, $text-size: inherit, $padding: 7px 18px) {
++
+   @if type-of($style) == string and type-of($base-color) == color {
+     @include buttonstyle($style, $base-color, $text-size, $padding);
+   }
+@@ -7,7 +9,7 @@
+   @if type-of($style) == string and type-of($base-color) == number {
+     $padding: $text-size;
+     $text-size: $base-color;
+-    $base-color: #4294f0;
++    $base-color: $base-accent-color;
+ 
+     @if $padding == inherit {
+       $padding: 7px 18px;
+@@ -38,10 +40,10 @@
+   @if type-of($style) == number {
+     $padding: $base-color;
+     $text-size: $style;
+-    $base-color: #4294f0;
++    $base-color: $base-accent-color;
+     $style: simple;
+ 
+-    @if $padding == #4294f0 {
++    @if $padding == $base-accent-color {
+       $padding: 7px 18px;
+     }
+ 

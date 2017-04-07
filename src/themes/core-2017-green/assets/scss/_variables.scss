@@ -1,0 +1,283 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                TYPOGRAPHY SETTINGS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Base font to use for the entire system.
+ *
+ * This gets applied to the body and used for all derivative font declarations by default.
+ * 
+ * Various font types provided by Bourbon:
+ * 
+ * Georgia font stack `$georgia`
+ * : "Georgia", "Cambria", "Times New Roman", "Times", serif;
+ * 
+ * Helvetica font stack `$helvetica`
+ * : "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
+ * 
+ * Lucida Grande font stack `$lucida-grande`
+ * : "Lucida Grande", "Tahoma", "Verdana", "Arial", sans-serif;
+ * 
+ * Monospace font stack `$monospace`
+ * : "Bitstream Vera Sans Mono", "Consolas", "Courier", monospace;
+ * 
+ * Verdana font stack `$verdana`
+ * : "Verdana", "Geneva", sans-serif;
+ */
+$base-font-family: $helvetica;
+
+/**
+ * Individual H1-H6 tags used throughout the site.
+ */
+$h1-font-family: $base-font-family;
+$h2-font-family: $base-font-family;
+$h3-font-family: $base-font-family;
+$h4-font-family: $base-font-family;
+$h5-font-family: $base-font-family;
+$h6-font-family: $base-font-family;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                       SIZES and RADIUSES
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Base font size for the entire system
+ */
+$base-font-size: 1em;
+
+/**
+ * Individual sizes for the H1-H6 tags throughout the site.
+ */
+$h1-font-size: $base-font-size * 2;
+$h2-font-size: $base-font-size * 1.75;
+$h3-font-size: $base-font-size * 1.5;
+$h4-font-size: $base-font-size * 1.25;
+$h5-font-size: $base-font-size * 1.15;
+$h6-font-size: $base-font-size;
+
+/**
+ * The base border radius, defines the basic "roundness" of everything.
+ */
+$base-border-radius: 2px;
+
+/**
+ * How wide should borders be by default
+ */
+$base-border-size: 1px;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                       LINE HEIGHTS and SPACING
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Basic line height, (assumed to be EMs)
+ */
+$base-line-height: 1.5;
+/**
+ * H1-H6 tag line heights
+ */
+$heading-line-height: 1.2;
+
+/**
+ * Basic spacing for paragraphs and the like
+ */
+$base-spacing: $base-line-height * 1em;
+/**
+ * Small spacing, for well, smaller elements.
+ */
+$small-spacing: $base-spacing / 2;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                       COLOURS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * The base foreground color for the entire site,
+ * gets applied to the body.
+ */
+$base-foreground-color: #003000;
+
+/**
+ * The base background color for the entire site,
+ * gets applied to the body.
+ */
+$base-background-color: #c3fec9;
+
+/**
+ * Secondary foreground colour, usually for fieldsets, dialogs, etc
+ */
+$secondary-foreground-color: #003000;
+
+/**
+ * Secondary background colour, usually for fieldsets, dialogs, etc
+ */
+$secondary-background-color: #dffbe2;
+
+/**
+ * <body style="background-color"/>
+ * 
+ * Page background color; usually the same as the base, 
+ * but can be changed to create a stepped background.
+ */
+$body-background-color: $secondary-background-color;
+
+/**
+ * <header class="page-header" style="background-color"/>
+ * 
+ * The page header at the top that contains the logo and social links.
+ */
+$page-header-background-color: $secondary-background-color;
+
+/**
+ * "Action" colour for this site; this is generally
+ * the foreground color for <a/> tags and the background color for <input/> tags.
+ */
+$action-color: #048004;
+
+/**
+ * Base colour for "info" notices to the end user
+ */
+$info-color: #242a57;
+/**
+ * Base colour for "success" notices to the end user
+ */
+$success-color: #075107;
+/**
+ * Base colour for "deprecated" notices to the end user
+ */
+$deprecated-color: #e4e0c8;
+/**
+ * Base colour for "warning" notices to the end user
+ */
+$warning-color: #815405;
+/**
+ * Base colour for "error" notices to the end user
+ */
+$error-color: #7c070e;
+/**
+ * Base colour for tutorials to the end user
+ */
+$tutorial-color: #0c3c6a;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                       ANIMATIONS
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+$base-duration: 150ms;
+$base-timing: ease;
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                       BREAKPOINT SIZES
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * "Wide" screens and formats.
+ */
+$breakpoint-wide: 1600px;
+
+/**
+ * Standard/narrow screens, not usually used except when needed
+ */
+$breakpoint-narrow: 1000px;
+
+/**
+ * Tablets and phones in landscape
+ */
+$breakpoint-tablet: 790px;
+
+/**
+ * Phones and other small devices
+ */
+$breakpoint-mobile: 500px;
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+//              DERIVATIVES - Settings that are based off the primary settings above
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/**
+ * Default border color for the site
+ */
+$base-border-color: mix($base-background-color, $base-foreground-color, 50%);
+
+/**
+ * Default border (full declaration), for the site
+ */
+$base-border: $base-border-size solid $base-border-color;
+
+/**
+ * <a class="button button-reset"/>
+ * 
+ * has some special styling to make it appear as a reset button.
+ */
+$button-reset-color: mix($error-color, $base-foreground-color, 33%);
+$button-reset-icon-color: mix($error-color, $base-foreground-color, 66%);
+
+/**
+ * <a class="button button-apply"/>
+ * 
+ * has some special styling to make it appear as an apply button.
+ */
+$button-apply-color: mix($success-color, $base-foreground-color, 33%);
+$button-apply-icon-color: mix($success-color, $base-foreground-color, 66%);
+
+/**
+ * Listing Table colours, backgrounds, and borders
+ */
+$listing-table-th-color: $base-foreground-color;
+$listing-table-th-background: $base-background-color;
+$listing-table-tr-even-bg: $secondary-background-color;
+$listing-table-tr-odd-bg: $base-background-color;
+$listing-table-tr-hover-bg: mix($action-color, $base-background-color, 16%);
+$listing-table-border-width: $base-border-size;
+$listing-table-border-style: solid;
+$listing-table-border-color: $base-border-color;
+$listing-table-border-even-color: mix($listing-table-tr-even-bg, $base-border-color, 33%);
+$listing-table-border-odd-color: mix($listing-table-tr-odd-bg, $base-border-color, 33%);
+
+// Forms and Form Elements
+$form-border-color: $base-border-color;
+$form-border-color-hover: mix($action-color, $base-border-color, 66%);
+$form-border-color-focus: $action-color;
+$form-border-radius: $base-border-radius;
+$form-box-shadow: inset 0 1px 3px rgba(black,0.06);
+$form-box-shadow-focus: $form-box-shadow, 0 0 5px rgba(darken($form-border-color-focus, 5), 0.7);
+$form-font-size: $base-font-size;
+$form-font-family: $base-font-family;
+$form-element-description-color: mix($base-background-color, $base-foreground-color, 8%);
+$form-element-description-font-size: $base-font-size * .9;
+
+// Controls Options
+$controls-inline-background: inherit;
+$controls-inline-color: $action-color;
+
+$controls-inline-icon-background: inherit;
+$controls-inline-icon-color: $action-color;
+
+$controls-proxy-background: transparent;
+$controls-proxy-border: 1px solid $action-color;
+$controls-proxy-color: $action-color;
+$controls-proxy-hover-background: $base-background-color;
+$controls-proxy-hover-border: $base-border;
+$controls-proxy-hover-color: $base-foreground-color;
+
+$controls-popover-background: $base-background-color;
+$controls-popover-border: $base-border;
+$controls-popover-color: $action-color;
+$controls-popover-hover-background: darken($action-color, 33%);
+$controls-popover-hover-color: $action-color;
+
+$controls-popover-icon-background: darken($base-border-color, 8%);
+$controls-popover-icon-color: $base-foreground-color;
+
+/**
+ * Update "all buttons" with the Core button class for links.
+ */
+$all-buttons: append($all-buttons, 'a.button', comma);
+$all-buttons: append($all-buttons, 'span.button', comma);

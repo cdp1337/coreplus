@@ -1,0 +1,92 @@
+
+.user-login-existing.col-1 {
+	.user-authdriver-title {
+		display: none;
+	}
+}
+.user-login-existing.col-2 {
+	// The block for each authdriver
+	.user-login-include {
+		border: 1px solid #CCC;
+		display: inline-block;
+		margin: 1%;
+		padding: 1%;
+		width: 47%;
+		vertical-align: top;
+	}
+
+	.user-authdriver-title {
+		color: #AAA;
+	}
+}
+
+
+.page-useractivity-details {
+	.column-name-user-and-browser {
+		min-width: 200px;
+	}
+	
+	.referrer-info {
+		font-size: 90%;
+		opacity: 0.6;
+	}
+}
+
+
+/**
+ * Styles just for user/view and user/me (they mimic each other generally).
+ */
+body.page-user-view, body.page-user-me {
+	.user-side-info {
+		float: left;
+		width: 24%;
+		
+		ul {
+			list-style: none;
+		}
+		
+		li {
+			font-size: 90%;
+		}
+	}
+
+	.user-primary-info {
+		float: left;
+		width: 75%;
+	}
+}
+
+/**
+ * Styles for the user group administration, spefically the report page
+ */
+.page-usergroupadmin-report .group {
+	page-break-inside: avoid;
+}
+
+@media only screen and (max-width: $breakpoint-mobile){
+	body.page-user-view, body.page-user-me {
+		.user-side-info {
+			float: none;
+			width: 100%;
+
+			ul {
+				list-style: none;
+			}
+
+			li {
+				font-size: 90%;
+				
+				&.user-field-avatar {
+					float: left;
+					margin-right: 1em;
+				}
+			}
+		}
+
+		.user-primary-info {
+			float: none;
+			width: 100%;
+			clear: left;
+		}
+	}
+}
