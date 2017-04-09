@@ -4,7 +4,7 @@
  *
  * @package Gallery
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (C) 2012  Charlie Powell
+ * @copyright Copyright (C) 2012-2017  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify

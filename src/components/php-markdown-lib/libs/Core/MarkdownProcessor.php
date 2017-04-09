@@ -7,7 +7,7 @@
  * @package   php-markdown
  * @author    Charlie Powell <charlie@evalagency.com>
  * @date      20150820.1027
- * @copyright Copyright (C) 2009-2016  Charlie Powell
+ * @copyright Copyright (C) 2009-2017  Charlie Powell
  * @license   BSD-3-Clause <https://opensource.org/licenses/BSD-3-Clause>
  */
 

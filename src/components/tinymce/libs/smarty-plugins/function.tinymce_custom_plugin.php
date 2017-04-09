@@ -3,7 +3,7 @@
  * @package TinyMCE
  * @since 2.1.3
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (C) 2009-2016  Charlie Powell
+ * @copyright Copyright (C) 2009-2017  Charlie Powell
  * @license GNU Library or "Lesser" General Public License version 2.1
  *
  * This program is free software: you can redistribute it and/or modify

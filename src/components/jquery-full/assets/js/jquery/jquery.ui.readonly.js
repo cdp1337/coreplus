@@ -3,8 +3,7 @@
  *
  * Version 2.0.1
  * 
- * http://dev.powelltechs.com/jquery.readonly
- * http://plugins.jquery.com/project/readonly
+ * https://github.com/cdp1337/jquery.readonly
  * 
  * Known good compatibility with jQuery 1.6.2
  * 
@@ -17,8 +16,7 @@
  * @todo Write example docs
  *
  *
- * @copyright Copyright (c) 2009 Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (c) 2011 Charlie Powell <cpowell@blindacre.com>
+ * @copyright Copyright (c) 2009-2017 Charlie Powell <charlie@evalagency.com>
  * 
  *
  * Dual licensed under the MIT and GPL licenses:

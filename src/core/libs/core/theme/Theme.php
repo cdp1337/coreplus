@@ -4,7 +4,7 @@
  * @package Theme
  * @since 2011.06
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright 2011, Charlie Powell
+ * @copyright Copyright 2011-2017  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl.html>
  * This system is licensed under the GNU LGPL, feel free to incorporate it into
  * custom applications, but keep all references of the original authors intact,

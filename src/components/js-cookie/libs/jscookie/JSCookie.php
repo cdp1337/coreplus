@@ -4,7 +4,7 @@
  *
  * @author    Charlie Powell <charlie@evalagency.com>
  * @date      20151009.1732
- * @copyright Copyright (C) 2009-2016  Charlie Powell
+ * @copyright Copyright (C) 2009-2017  Charlie Powell
  * @license   Released under the MIT license
  */
 

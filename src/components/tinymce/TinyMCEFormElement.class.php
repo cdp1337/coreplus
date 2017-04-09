@@ -5,7 +5,7 @@
  * @package TinyMCE
  * @since 0.1
  * @author Charlie Powell <charlie@evalagency.com>
- * @copyright Copyright (C) 2009-2016  Charlie Powell
+ * @copyright Copyright (C) 2009-2017  Charlie Powell
  * @license GNU Library or "Lesser" General Public License version 2.1
  */
 

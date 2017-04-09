@@ -4,6 +4,7 @@
  *
  * @package    Core
  * @author     Charlie Powell <charlie@evalagency.com>
+ * @copyright Copyright (C) 2009-2017  Charlie Powell
  * @license    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License
  * @link       http://php.net/manual/en/function.get-browser.php
  * @link       http://tempdownloads.browserscap.com/

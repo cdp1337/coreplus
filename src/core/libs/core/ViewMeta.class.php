@@ -5,7 +5,7 @@
  * @package Core
  * @author Charlie Powell <charlie@evalagency.com>
  * @since 2.4.0
- * @copyright Copyright (C) 2009-2016  Charlie Powell
+ * @copyright Copyright (C) 2009-2017  Charlie Powell
  * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -257,23 +257,6 @@ class ViewMetas implements Iterator, ArrayAccess {
  *
  * These are usually tiny icons or snippets of text that provide a bit of inline administrative
  * functionality for pages.
- *
- * @author Charlie Powell <charlie@evalagency.com>
- * @since 2.1.2
- * @copyright Copyright (C) 2009-2016  Charlie Powell
- * @license GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as
- * published by the Free Software Foundation, version 3.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with this program.  If not, see http://www.gnu.org/licenses/agpl-3.0.txt.
  */
 class ViewMeta {
 
