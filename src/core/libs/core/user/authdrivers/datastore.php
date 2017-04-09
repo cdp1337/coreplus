@@ -223,7 +223,7 @@ class datastore implements AuthDriverInterface{
 	 * @return string
 	 */
 	public function getAuthTitle() {
-		return 'Local Datastore';
+		return 'Local Account';
 	}
 
 	/**
