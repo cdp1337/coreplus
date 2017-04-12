@@ -4,8 +4,7 @@
 	</span>
 	<span itemprop="keywords">
 		{foreach $tags as $keyword}
-
-			<span clss="tags-display-widget-keyword">
+			<span class="tags-display-widget-keyword">
 				{if strpos($keyword.meta_value, 'u:') === 0 && Core::IsComponentAvailable('user-social')}
 					{assign var="keyworduser" value=UserModel::Construct(substr($keyword.meta_value,2))}
 
@@ -14,12 +13,11 @@
 						{$keyword.meta_value_title}
 					</a>
 				{else}
-					{*<a href="#somewhere-{$keyword.meta_value}">*}
+					{a href="/page/search?q=tag:`$keyword.meta_value`"}
 						{$keyword.meta_value_title}
-					{*</a>*}
+					{/a}
 				{/if}
 			</span>
-
 		{/foreach}
 	</span>
 </div>
