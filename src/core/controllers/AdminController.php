@@ -753,6 +753,19 @@ class AdminController extends Controller_2_1 {
 		}
 		// Sort them by name!
 		asort($componentopts);
+		
+		// Load all the tags on the site from the various pages and load them as a filter.
+		$pageMetas = Dataset::Init()
+			->select(['meta_value', 'meta_value_title'])
+			->table('page_meta')
+			->where('meta_key = keyword')
+			->unique(true)
+			->order('meta_value_title ASC')
+			->executeAndGet();
+		$pageMetaOptions = ['' => '-- All Tags --'];
+		foreach($pageMetas as $dat){
+			$pageMetaOptions[$dat['meta_value']] = $dat['meta_value_title'];
+		}
 
 		$pageschema = PageModel::GetSchema();
 
@@ -808,6 +821,15 @@ class AdminController extends Controller_2_1 {
 				'title' => t('STRING_INCLUDE_ADMIN_PAGES'),
 				'options' => ['all' => t('STRING_VIEW_ALL_PAGES'), 'no_admin' => t('STRING_EXCLUDE_ADMIN_PAGES')],
 				'value' => 'no_admin',
+			]
+		);
+		
+		$table->addFilter(
+			'select',
+			[
+				'name' => 'keyword',
+				'title' => 'Page Keyword',
+				'options' => $pageMetaOptions
 			]
 		);
 
@@ -905,6 +927,17 @@ class AdminController extends Controller_2_1 {
 		if($table->getFilterValue('page_types') == 'no_admin'){
 			$table->getModelFactory()->where('admin = 0');
 			$table->getModelFactory()->where('selectable = 1');
+		}
+		
+		if($table->getFilterValue('keyword')){
+			$pageMetas = PageMetaModel::FindRaw(
+				['meta_value = ' . $table->getFilterValue('keyword'), 'meta_key = keyword']
+			);
+			$pageURLs = [];
+			foreach($pageMetas as $row){
+				$pageURLs[] = $row['baseurl'];
+			}
+			$table->getModelFactory()->where('baseurl IN ' . implode(',', $pageURLs));
 		}
 
 
