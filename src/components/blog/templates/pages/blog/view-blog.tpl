@@ -24,6 +24,12 @@
 	{foreach $articles as $article}
 		<div class="blog-article blog-article-status-{$article.status}" itemscope="itemscope" itemtype="http://schema.org/BlogPosting">
 			<link itemprop="url" href="{link $article.baseurl}"/>
+			{if $article->getImage()}
+				<div class="blog-article-image">
+					{img placeholder="blog" file=$article->getImage() width='75' height='75' itemprop="thumbnailUrl"}
+				</div>
+			{/if}
+			
 			{a class="blog-article-title" href="`$article.baseurl`" itemprop="name"}
 				{$article.title}
 			{/a}
@@ -34,14 +40,6 @@
 			{else}
 				<div class="blog-article-date">Not Published</div>
 			{/if}
-
-
-			{if $article->getImage()}
-				<div class="blog-article-image">
-					{img placeholder="blog" file=$article->getImage() width='75' height='75' itemprop="thumbnailUrl"}
-				</div>
-			{/if}
-
 
 			{if $article->getTeaser()}
 				<p class="blog-article-excerpt" itemprop="articleBody">

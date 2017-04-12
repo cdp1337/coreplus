@@ -77,6 +77,7 @@ class BlogController extends Controller_2_1 {
 		$view->assign('page', $page);
 		$view->assign('filters', $filters);
 		$view->assign('query', $query);
+		$view->assign('manager', $manager);
 		if ($editor) {
 			//$view->addControl('Add Blog Article', '/blog/article/create/' . $blog->get('id'), 'add');
 		}

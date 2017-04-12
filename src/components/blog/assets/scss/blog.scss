@@ -3,21 +3,42 @@
  ***********************************************/
 
 .blog-listing {
+	// blog-listing is on the multi-blog index page and the single blog listing page.
+	
 	.blog-article {
+		// Each individual blog article within the index and listing pages.
+		
 		border-bottom: 1px solid #BBBBBB;
+		display: table;
 		margin-bottom: 1em;
 		padding-bottom: 0.5em;
-		clear: both;
+		width: 100%;
+		
+		.blog-article-image {
+			display: table-cell;
+			height: 80px;
+			overflow: hidden;
+			position: relative;
+			width: 90px;
+			vertical-align: top;
+			
+			img {
+				position: absolute;
+			}
+		}
+		
+		.blog-article-content {
+			display: table-cell;
+			padding-left: 1em;
+			
+			.blog-article-title {
+				font-size: 115%;
+				line-height: 1.5em;
+			}
+		}
 	}
-	.blog-article-title {
-		font-size: 115%;
-		line-height: 1.5em;
-	}
-	.blog-article-image {
-		float: left;
-		width: 90px;
-		text-align: center;
-	}
+	
+	
 	.blog-article-date {
 		float: right;
 		font-size: 90%;
