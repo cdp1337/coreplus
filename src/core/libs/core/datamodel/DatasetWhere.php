@@ -25,29 +25,20 @@ namespace Core\Datamodel;
 
 
 /**
- * A short teaser of what DatasetWhere does.
- *
- * More lengthy description of what DatasetWhere does and why it's fantastic.
- *
- * <h3>Usage Examples</h3>
- *
- *
- * @todo Write documentation for DatasetWhere
- * <h4>Example 1</h4>
- * <p>Description 1</p>
- * <code>
- * // Some code for example 1
- * $a = $b;
- * </code>
- *
- *
- * <h4>Example 2</h4>
- * <p>Description 2</p>
- * <code>
- * // Some code for example 2
- * $b = $a;
- * </code>
- *
+ * An individual where item, consisting of a field key, an operation, and a value.
+ * 
+ * ### Example Usage:
+ * 
+ * ```{.syntax-php}
+ * use \Core\Datamodel\DatasetWhere;
+ * 
+ * $item1 = new DatasetWhere('keyname = value');
+ * 
+ * $item2 = new DatasetWhere();
+ * $item2->field = 'keyname';
+ * $item2->op = '=';
+ * $item2->value = 'value';
+ * ```
  * 
  * @package Core\Datamodel
  * @author Charlie Powell <charlie@evalagency.com>

@@ -25,29 +25,10 @@ namespace Core\Datamodel;
 
 
 /**
- * A short teaser of what DatasetWhereClause does.
- *
- * More lengthy description of what DatasetWhereClause does and why it's fantastic.
- *
- * <h3>Usage Examples</h3>
- *
- *
- * @todo Write documentation for DatasetWhereClause
- * <h4>Example 1</h4>
- * <p>Description 1</p>
- * <code>
- * // Some code for example 1
- * $a = $b;
- * </code>
- *
- *
- * <h4>Example 2</h4>
- * <p>Description 2</p>
- * <code>
- * // Some code for example 2
- * $b = $a;
- * </code>
- *
+ * The full WHERE clause for a dataset or Model.
+ * 
+ * This can be named, has a separator, and can contain multiple DatasetWhere items 
+ * as well as multiple sub clauses.
  * 
  * @package Core\Datamodel
  * @author Charlie Powell <charlie@evalagency.com>
