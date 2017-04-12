@@ -5,7 +5,23 @@
 		{$model.title}
 	{/a}
 
-	<div class="search-relevancy">REL: {$result.relevancy|round:2}%</div>
+	{assign var=rel value=$result.relevancy|round:2}
+	<div class="search-relevancy" title="Relevancy {$rel}%">
+		REL:
+		{if $rel > 90}
+			<i class="icon icon-star"></i>
+			<i class="icon icon-star"></i>
+			<i class="icon icon-star"></i>
+		{elseif $rel > 66}
+			<i class="icon icon-star"></i>
+			<i class="icon icon-star"></i>
+			<i class="icon icon-star-o"></i>
+		{else}
+			<i class="icon icon-star"></i>
+			<i class="icon icon-star-o"></i>
+			<i class="icon icon-star-o"></i>
+		{/if}
+	</div>
 
 	{if $model->getImage()}
 		<div class="page-image">
