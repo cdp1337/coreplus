@@ -2317,6 +2317,86 @@ class PageModel extends Model {
 		}
 		return true;
 	}
+	
+	/**
+	 * Perform a model search on the records of this PageModel.
+	 * 
+	 * This has extra support for key:var tags, where key can be
+	 * 
+	 * * keyword
+	 *
+	 * @param string $query The base query to search
+	 * @param array $where  Any additional where parameters to add onto the factory
+	 *
+	 * @return array An array of ModelResult objects.
+	 */
+	public static function Search($query, $where = []){
+		$ret = [];
+
+		// If this object does not support searching, simply return an empty array.
+		$ref = new ReflectionClass(get_called_class());
+
+		if(!$ref->getProperty('HasSearch')->getValue()){
+			return $ret;
+		}
+
+		$fac = new ModelFactory(get_called_class());
+
+		if(sizeof($where)){
+			$fac->where($where);
+		}
+
+		if($ref->getProperty('HasDeleted')->getValue()){
+			$fac->where('deleted = 0');
+		}
+		
+		// Used in the relavency check, as tags do not get calculated into the base query.
+		$relAdd = 0;
+		
+		// Check if this query has some of the advanced query strings.
+		if(($pos = strpos($query, 'tag:')) !== false){
+			$tag = preg_replace('/.*tag:([a-zA-Z0-9\-]*).*/', '$1', $query);
+			// And drop this query from the original query.
+			$query = preg_replace('/tag:([a-zA-Z0-9\-]*)/', '', $query);
+			
+			$pageMetas = PageMetaModel::FindRaw(['meta_value = ' . $tag, 'meta_key = keyword']);
+			$pageURLs = [];
+			foreach($pageMetas as $row){
+				$pageURLs[] = $row['baseurl'];
+			}
+			$fac->where('baseurl IN ' . implode(',', $pageURLs));
+			$relAdd += 100;
+		}
+
+		if($query){
+			$fac->where(\Core\Search\Helper::GetWhereClause($query));
+		}
+		
+		foreach($fac->get() as $m){
+			/** @var Model $m */
+			$sr = new \Core\Search\ModelResult($query, $m);
+			
+			$sr->relevancy += $relAdd;
+			$sr->relevancy = min($sr->relevancy, 100);
+
+			// This may happen since the where clause can be a little open-ended.
+			if($sr->relevancy < 1) continue;
+			$sr->title = $m->getLabel();
+			$sr->link  = $m->get('baseurl');
+
+			$ret[] = $sr;
+		}
+
+		// Sort the results before returning them.
+		// Because otherwise, what's the point of a search algorithm?!?
+		usort($ret, function($a, $b) {
+			/** @var $a Core\Search\ModelResult */
+			/** @var $b Core\Search\ModelResult */
+			return $a->relevancy < $b->relevancy;
+		});
+
+		return $ret;
+	}
 
 	/**
 	 * Lookup a url in the rewrite cache.  Useful for initial rewrite -> base conversions
