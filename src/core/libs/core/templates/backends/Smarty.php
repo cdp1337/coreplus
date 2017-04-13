@@ -478,6 +478,53 @@ class Smarty implements Templates\TemplateInterface {
 
 		return $insertables;
 	}
+	
+	/**
+	 * Get an array of any meta field present in this template.
+	 * 
+	 * These are useful for the template defining some different behaviour
+	 * or additional piece of information required by the controllers.
+	 * 
+	 * @return array
+	 */
+	public function getMetas() {
+		// Will get populated with all the metas in this template.
+		$metas = [];
+
+		// Scan through $tpl and find any {*#META ... #*} section.
+		$contents = file_get_contents($this->_filename);
+
+		if(strpos($contents, '{*#META') !== false){
+			$segment = trim(preg_replace('/{\*#META(.*)#\*}.*/s', '$1', $contents));
+			$lines = array_map('trim', explode("\n", $segment));
+			foreach($lines as $l){
+				if($l == ''){
+					// Skip blank lines
+					continue;
+				}
+				$pos = strpos($l, ':'); 
+				if($pos === false){
+					// Skip lines that do not contain a colon
+					continue;
+				}
+				$key = substr($l, 0, $pos);
+				$val = trim(substr($l, $pos+1));
+				
+				if(isset($metas[$key]) && is_array($metas[$key])){
+					$metas[$key][] = $val;
+				}
+				elseif(isset($metas[$key])){
+					$metas[$key] = [ $metas[$key] ];
+					$metas[$key][] = $val;
+				}
+				else{
+					$metas[$key] = $val;
+				}
+			}
+		}
+		
+		return $metas;
+	}
 
 	/**
 	 * Get the registered view for this template, useful for setting CSS and Scripts in correct locations in the markup.
