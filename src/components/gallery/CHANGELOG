@@ -1,3 +1,16 @@
+Gallery 2.1.0
+
+	* [Bug] Fix in the gallery for Form namespacing.
+	* Update copyright to 2017.
+	* Move logo images into logos/ for everything.
+	* Remove the gallery widget page from the database.
+	* Widget updates and I18N for Gallery.
+	* Some more fixes to the widget namespace transition.
+	* More namespace fixes.
+	* Move all component logos to assets/
+	* Several minor 6.2 compatibility updates.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:05:25 -0400
+
 Gallery 2.0.3
 
 	* Better detection for image loading on gallery view.

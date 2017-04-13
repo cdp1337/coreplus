@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.3" name="Gallery" execmode="web" logo="assets/images/logos/gallery.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Gallery" execmode="web" logo="assets/images/logos/gallery.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="user" type="library"/>
@@ -34,18 +34,18 @@
 		<file filename="templates/widgets/gallery/view.tpl" md5="1740eb2a852e7a72233cc0d89bb485d3"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="d8be178a118ef6cb409a9e7cbd7589bd"/>
-		<file filename="controllers/GalleryController.php" md5="dcb6031b498e5065b5ce807d0cefbcfa">
+		<file filename="CHANGELOG" md5="8ce7ac9a8c5bc55b2724b86d6328c98b"/>
+		<file filename="controllers/GalleryController.php" md5="3805b73152822c4cc9711b7509dcb92e">
 			<controller name="GalleryController"/>
 		</file>
 		<file filename="helpers/GalleryFormHandler.class.php" md5="dc4d2b3f6520f27819e62b5de40d7e19">
 			<class name="GalleryFormHandler"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="9b1e4946745f03358a564c916ed325b3"/>
-		<file filename="models/GalleryAlbumModel.php" md5="7e16e200b33cc47738deb91184977e56">
+		<file filename="models/GalleryAlbumModel.php" md5="6e20b0f7a50e6782a1a48983bc70f109">
 			<class name="GalleryAlbumModel"/>
 		</file>
-		<file filename="models/GalleryImageModel.php" md5="e4d9546d553020fa497245986cc5275a">
+		<file filename="models/GalleryImageModel.php" md5="1e01e415985e4662ccb9381435cf9366">
 			<class name="GalleryImageModel"/>
 		</file>
 		<file filename="upgrades/140_to_141_cachedtitles.php" md5="0e316e5f9a13a315331c93f1fc44b4dc"/>
@@ -101,19 +101,11 @@
 		<upgrade from="2.0.0" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
 		<upgrade from="2.0.2" to="2.0.3"/>
-		<upgrade from="next" to="next">
+		<upgrade from="2.0.3" to="2.1.0">
 			<dataset action="delete" table="page">
 				<datasetwhere>baseurl = /gallerywidget/admin</datasetwhere>
 			</dataset>
 		</upgrade>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
