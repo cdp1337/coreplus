@@ -159,6 +159,36 @@ select {
 			padding: 0;
 		}
 	}
+	
+	&.formpagemetakeywordsinput {
+		
+		.form-element-value {
+			background-color: $base-background-color;
+			border: $base-border;
+			border-radius: $base-border-radius;
+			box-shadow: $form-box-shadow;
+			color: $base-foreground-color;
+			
+			&:before {
+				@include core2017-fa-icon($fa-var-tag);
+				color: $base-border-color;
+				padding-right: $base-spacing / 3;
+				padding-left: $base-spacing / 3;
+			}
+			
+			input {
+				border: 0px none;
+				box-shadow: none;
+				margin-bottom: 0;
+			}
+		}
+		.keywords-multi-select-option {
+			display: inline-block;
+			padding: 0 $small-spacing;
+			text-align: center;
+			
+		}
+	}
 
 }
 

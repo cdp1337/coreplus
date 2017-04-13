@@ -1,10 +1,11 @@
+@charset "UTF-8";
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 /**
  * 1. Set default font family to sans-serif.
  * 2. Prevent iOS text size adjust after orientation change, without disabling
  *    user zoom.
  */
-/* line 9, ../../scss/vendor/_normalize.scss */
+/* line 9, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 html {
   font-family: sans-serif;
   /* 1 */
@@ -17,7 +18,7 @@ html {
 /**
  * Remove default margin.
  */
-/* line 19, ../../scss/vendor/_normalize.scss */
+/* line 19, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 body {
   margin: 0;
 }
@@ -30,7 +31,7 @@ body {
  * and Firefox.
  * Correct `block` display not defined for `main` in IE 11.
  */
-/* line 33, ../../scss/vendor/_normalize.scss */
+/* line 33, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 article,
 aside,
 details,
@@ -51,7 +52,7 @@ summary {
  * 1. Correct `inline-block` display not defined in IE 8/9.
  * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
  */
-/* line 54, ../../scss/vendor/_normalize.scss */
+/* line 54, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 audio,
 canvas,
 progress,
@@ -66,7 +67,7 @@ video {
  * Prevent modern browsers from displaying `audio` without controls.
  * Remove excess height in iOS 5 devices.
  */
-/* line 67, ../../scss/vendor/_normalize.scss */
+/* line 67, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 audio:not([controls]) {
   display: none;
   height: 0;
@@ -76,7 +77,7 @@ audio:not([controls]) {
  * Address `[hidden]` styling not present in IE 8/9/10.
  * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
  */
-/* line 77, ../../scss/vendor/_normalize.scss */
+/* line 77, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 [hidden],
 template {
   display: none;
@@ -87,7 +88,7 @@ template {
 /**
  * Remove the gray background color from active links in IE 10.
  */
-/* line 89, ../../scss/vendor/_normalize.scss */
+/* line 89, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 a {
   background-color: transparent;
 }
@@ -95,7 +96,7 @@ a {
 /**
  * Improve readability when focused and also mouse hovered in all browsers.
  */
-/* line 97, ../../scss/vendor/_normalize.scss */
+/* line 97, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 a:active,
 a:hover {
   outline: 0;
@@ -106,7 +107,7 @@ a:hover {
 /**
  * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
  */
-/* line 109, ../../scss/vendor/_normalize.scss */
+/* line 109, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 abbr[title] {
   border-bottom: 1px dotted;
 }
@@ -114,7 +115,7 @@ abbr[title] {
 /**
  * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
  */
-/* line 117, ../../scss/vendor/_normalize.scss */
+/* line 117, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 b,
 strong {
   font-weight: bold;
@@ -123,7 +124,7 @@ strong {
 /**
  * Address styling not present in Safari and Chrome.
  */
-/* line 126, ../../scss/vendor/_normalize.scss */
+/* line 126, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 dfn {
   font-style: italic;
 }
@@ -132,7 +133,7 @@ dfn {
  * Address variable `h1` font-size and margin within `section` and `article`
  * contexts in Firefox 4+, Safari, and Chrome.
  */
-/* line 135, ../../scss/vendor/_normalize.scss */
+/* line 135, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 h1 {
   font-size: 2em;
   margin: 0.67em 0;
@@ -141,7 +142,7 @@ h1 {
 /**
  * Address styling not present in IE 8/9.
  */
-/* line 144, ../../scss/vendor/_normalize.scss */
+/* line 144, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 mark {
   background: #ff0;
   color: #000;
@@ -150,7 +151,7 @@ mark {
 /**
  * Address inconsistent and variable font size in all browsers.
  */
-/* line 153, ../../scss/vendor/_normalize.scss */
+/* line 153, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 small {
   font-size: 80%;
 }
@@ -158,7 +159,7 @@ small {
 /**
  * Prevent `sub` and `sup` affecting `line-height` in all browsers.
  */
-/* line 161, ../../scss/vendor/_normalize.scss */
+/* line 161, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 sub,
 sup {
   font-size: 75%;
@@ -167,12 +168,12 @@ sup {
   vertical-align: baseline;
 }
 
-/* line 169, ../../scss/vendor/_normalize.scss */
+/* line 169, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 sup {
   top: -0.5em;
 }
 
-/* line 173, ../../scss/vendor/_normalize.scss */
+/* line 173, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 sub {
   bottom: -0.25em;
 }
@@ -182,7 +183,7 @@ sub {
 /**
  * Remove border when inside `a` element in IE 8/9/10.
  */
-/* line 184, ../../scss/vendor/_normalize.scss */
+/* line 184, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 img {
   border: 0;
 }
@@ -190,7 +191,7 @@ img {
 /**
  * Correct overflow not hidden in IE 9/10/11.
  */
-/* line 192, ../../scss/vendor/_normalize.scss */
+/* line 192, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 svg:not(:root) {
   overflow: hidden;
 }
@@ -200,7 +201,7 @@ svg:not(:root) {
 /**
  * Address margin not present in IE 8/9 and Safari.
  */
-/* line 203, ../../scss/vendor/_normalize.scss */
+/* line 203, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 figure {
   margin: 1em 40px;
 }
@@ -208,7 +209,7 @@ figure {
 /**
  * Address differences between Firefox and other browsers.
  */
-/* line 211, ../../scss/vendor/_normalize.scss */
+/* line 211, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 hr {
   -moz-box-sizing: content-box;
   box-sizing: content-box;
@@ -218,7 +219,7 @@ hr {
 /**
  * Contain overflow in all browsers.
  */
-/* line 221, ../../scss/vendor/_normalize.scss */
+/* line 221, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 pre {
   overflow: auto;
 }
@@ -226,7 +227,7 @@ pre {
 /**
  * Address odd `em`-unit font size rendering in all browsers.
  */
-/* line 229, ../../scss/vendor/_normalize.scss */
+/* line 229, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 code,
 kbd,
 pre,
@@ -247,7 +248,7 @@ samp {
  * 2. Correct font properties not being inherited.
  * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
  */
-/* line 252, ../../scss/vendor/_normalize.scss */
+/* line 252, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 button,
 input,
 optgroup,
@@ -264,7 +265,7 @@ textarea {
 /**
  * Address `overflow` set to `hidden` in IE 8/9/10/11.
  */
-/* line 266, ../../scss/vendor/_normalize.scss */
+/* line 266, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 button {
   overflow: visible;
 }
@@ -275,7 +276,7 @@ button {
  * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
  * Correct `select` style inheritance in Firefox.
  */
-/* line 277, ../../scss/vendor/_normalize.scss */
+/* line 277, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 button,
 select {
   text-transform: none;
@@ -288,7 +289,7 @@ select {
  * 3. Improve usability and consistency of cursor style between image-type
  *    `input` and others.
  */
-/* line 290, ../../scss/vendor/_normalize.scss */
+/* line 290, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 button,
 html input[type="button"],
 input[type="reset"],
@@ -302,7 +303,7 @@ input[type="submit"] {
 /**
  * Re-set default cursor for disabled elements.
  */
-/* line 302, ../../scss/vendor/_normalize.scss */
+/* line 302, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 button[disabled],
 html input[disabled] {
   cursor: default;
@@ -311,7 +312,7 @@ html input[disabled] {
 /**
  * Remove inner padding and border in Firefox 4+.
  */
-/* line 311, ../../scss/vendor/_normalize.scss */
+/* line 311, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 button::-moz-focus-inner,
 input::-moz-focus-inner {
   border: 0;
@@ -322,7 +323,7 @@ input::-moz-focus-inner {
  * Address Firefox 4+ setting `line-height` on `input` using `!important` in
  * the UA stylesheet.
  */
-/* line 322, ../../scss/vendor/_normalize.scss */
+/* line 322, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 input {
   line-height: normal;
 }
@@ -334,7 +335,7 @@ input {
  * 1. Address box sizing set to `content-box` in IE 8/9/10.
  * 2. Remove excess padding in IE 8/9/10.
  */
-/* line 334, ../../scss/vendor/_normalize.scss */
+/* line 334, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 input[type="checkbox"],
 input[type="radio"] {
   box-sizing: border-box;
@@ -348,7 +349,7 @@ input[type="radio"] {
  * `font-size` values of the `input`, it causes the cursor style of the
  * decrement button to change from `default` to `text`.
  */
-/* line 346, ../../scss/vendor/_normalize.scss */
+/* line 346, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
   height: auto;
@@ -359,7 +360,7 @@ input[type="number"]::-webkit-outer-spin-button {
  * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
  *    (include `-moz` to future-proof).
  */
-/* line 357, ../../scss/vendor/_normalize.scss */
+/* line 357, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 input[type="search"] {
   -webkit-appearance: textfield;
   /* 1 */
@@ -374,7 +375,7 @@ input[type="search"] {
  * Safari (but not Chrome) clips the cancel button when the search input has
  * padding (and `textfield` appearance).
  */
-/* line 370, ../../scss/vendor/_normalize.scss */
+/* line 370, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 input[type="search"]::-webkit-search-cancel-button,
 input[type="search"]::-webkit-search-decoration {
   -webkit-appearance: none;
@@ -383,7 +384,7 @@ input[type="search"]::-webkit-search-decoration {
 /**
  * Define consistent border, margin, and padding.
  */
-/* line 379, ../../scss/vendor/_normalize.scss */
+/* line 379, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 fieldset {
   border: 1px solid #c0c0c0;
   margin: 0 2px;
@@ -394,7 +395,7 @@ fieldset {
  * 1. Correct `color` not being inherited in IE 8/9/10/11.
  * 2. Remove padding so people aren't caught out if they zero out fieldsets.
  */
-/* line 390, ../../scss/vendor/_normalize.scss */
+/* line 390, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 legend {
   border: 0;
   /* 1 */
@@ -405,7 +406,7 @@ legend {
 /**
  * Remove default vertical scrollbar in IE 8/9/10/11.
  */
-/* line 399, ../../scss/vendor/_normalize.scss */
+/* line 399, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 textarea {
   overflow: auto;
 }
@@ -414,7 +415,7 @@ textarea {
  * Don't inherit the `font-weight` (applied by a rule above).
  * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
  */
-/* line 408, ../../scss/vendor/_normalize.scss */
+/* line 408, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 optgroup {
   font-weight: bold;
 }
@@ -424,13 +425,13 @@ optgroup {
 /**
  * Remove most spacing between table cells.
  */
-/* line 419, ../../scss/vendor/_normalize.scss */
+/* line 419, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 table {
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-/* line 424, ../../scss/vendor/_normalize.scss */
+/* line 424, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
 td,
 th {
   padding: 0;
@@ -566,35 +567,491 @@ th {
 /**
  * Update "all buttons" with the Core button class for links.
  */
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Apr 12, 2017, 8:08:28 PM
+    Author     : charlie
+*/
+/*! normalize.css v3.0.2 | MIT License | git.io/normalize */
+/**
+ * 1. Set default font family to sans-serif.
+ * 2. Prevent iOS text size adjust after orientation change, without disabling
+ *    user zoom.
+ */
+/* line 9, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+html {
+  font-family: sans-serif;
+  /* 1 */
+  -ms-text-size-adjust: 100%;
+  /* 2 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+}
+
+/**
+ * Remove default margin.
+ */
+/* line 19, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+body {
+  margin: 0;
+}
+
+/* HTML5 display definitions
+   ========================================================================== */
+/**
+ * Correct `block` display not defined for any HTML5 element in IE 8/9.
+ * Correct `block` display not defined for `details` or `summary` in IE 10/11
+ * and Firefox.
+ * Correct `block` display not defined for `main` in IE 11.
+ */
+/* line 33, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+main,
+menu,
+nav,
+section,
+summary {
+  display: block;
+}
+
+/**
+ * 1. Correct `inline-block` display not defined in IE 8/9.
+ * 2. Normalize vertical alignment of `progress` in Chrome, Firefox, and Opera.
+ */
+/* line 54, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+audio,
+canvas,
+progress,
+video {
+  display: inline-block;
+  /* 1 */
+  vertical-align: baseline;
+  /* 2 */
+}
+
+/**
+ * Prevent modern browsers from displaying `audio` without controls.
+ * Remove excess height in iOS 5 devices.
+ */
+/* line 67, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+audio:not([controls]) {
+  display: none;
+  height: 0;
+}
+
+/**
+ * Address `[hidden]` styling not present in IE 8/9/10.
+ * Hide the `template` element in IE 8/9/11, Safari, and Firefox < 22.
+ */
+/* line 77, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+[hidden],
+template {
+  display: none;
+}
+
+/* Links
+   ========================================================================== */
+/**
+ * Remove the gray background color from active links in IE 10.
+ */
+/* line 89, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+a {
+  background-color: transparent;
+}
+
+/**
+ * Improve readability when focused and also mouse hovered in all browsers.
+ */
+/* line 97, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+a:active,
+a:hover {
+  outline: 0;
+}
+
+/* Text-level semantics
+   ========================================================================== */
+/**
+ * Address styling not present in IE 8/9/10/11, Safari, and Chrome.
+ */
+/* line 109, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+
+/**
+ * Address style set to `bolder` in Firefox 4+, Safari, and Chrome.
+ */
+/* line 117, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+b,
+strong {
+  font-weight: bold;
+}
+
+/**
+ * Address styling not present in Safari and Chrome.
+ */
+/* line 126, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+dfn {
+  font-style: italic;
+}
+
+/**
+ * Address variable `h1` font-size and margin within `section` and `article`
+ * contexts in Firefox 4+, Safari, and Chrome.
+ */
+/* line 135, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/**
+ * Address styling not present in IE 8/9.
+ */
+/* line 144, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+mark {
+  background: #ff0;
+  color: #000;
+}
+
+/**
+ * Address inconsistent and variable font size in all browsers.
+ */
+/* line 153, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` affecting `line-height` in all browsers.
+ */
+/* line 161, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+/* line 169, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+sup {
+  top: -0.5em;
+}
+
+/* line 173, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+sub {
+  bottom: -0.25em;
+}
+
+/* Embedded content
+   ========================================================================== */
+/**
+ * Remove border when inside `a` element in IE 8/9/10.
+ */
+/* line 184, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+img {
+  border: 0;
+}
+
+/**
+ * Correct overflow not hidden in IE 9/10/11.
+ */
+/* line 192, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+svg:not(:root) {
+  overflow: hidden;
+}
+
+/* Grouping content
+   ========================================================================== */
+/**
+ * Address margin not present in IE 8/9 and Safari.
+ */
+/* line 203, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+figure {
+  margin: 1em 40px;
+}
+
+/**
+ * Address differences between Firefox and other browsers.
+ */
+/* line 211, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+hr {
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  height: 0;
+}
+
+/**
+ * Contain overflow in all browsers.
+ */
+/* line 221, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+pre {
+  overflow: auto;
+}
+
+/**
+ * Address odd `em`-unit font size rendering in all browsers.
+ */
+/* line 229, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+/* Forms
+   ========================================================================== */
+/**
+ * Known limitation: by default, Chrome and Safari on OS X allow very limited
+ * styling of `select`, unless a `border` property is set.
+ */
+/**
+ * 1. Correct color not being inherited.
+ *    Known issue: affects color of disabled elements.
+ * 2. Correct font properties not being inherited.
+ * 3. Address margins set differently in Firefox 4+, Safari, and Chrome.
+ */
+/* line 252, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+button,
+input,
+optgroup,
+select,
+textarea {
+  color: inherit;
+  /* 1 */
+  font: inherit;
+  /* 2 */
+  margin: 0;
+  /* 3 */
+}
+
+/**
+ * Address `overflow` set to `hidden` in IE 8/9/10/11.
+ */
+/* line 266, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+button {
+  overflow: visible;
+}
+
+/**
+ * Address inconsistent `text-transform` inheritance for `button` and `select`.
+ * All other form control elements do not inherit `text-transform` values.
+ * Correct `button` style inheritance in Firefox, IE 8/9/10/11, and Opera.
+ * Correct `select` style inheritance in Firefox.
+ */
+/* line 277, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+button,
+select {
+  text-transform: none;
+}
+
+/**
+ * 1. Avoid the WebKit bug in Android 4.0.* where (2) destroys native `audio`
+ *    and `video` controls.
+ * 2. Correct inability to style clickable `input` types in iOS.
+ * 3. Improve usability and consistency of cursor style between image-type
+ *    `input` and others.
+ */
+/* line 290, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+button,
+html input[type="button"],
+input[type="reset"],
+input[type="submit"] {
+  -webkit-appearance: button;
+  /* 2 */
+  cursor: pointer;
+  /* 3 */
+}
+
+/**
+ * Re-set default cursor for disabled elements.
+ */
+/* line 302, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+button[disabled],
+html input[disabled] {
+  cursor: default;
+}
+
+/**
+ * Remove inner padding and border in Firefox 4+.
+ */
+/* line 311, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+/**
+ * Address Firefox 4+ setting `line-height` on `input` using `!important` in
+ * the UA stylesheet.
+ */
+/* line 322, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+input {
+  line-height: normal;
+}
+
+/**
+ * It's recommended that you don't attempt to style these elements.
+ * Firefox's implementation doesn't respect box-sizing, padding, or width.
+ *
+ * 1. Address box sizing set to `content-box` in IE 8/9/10.
+ * 2. Remove excess padding in IE 8/9/10.
+ */
+/* line 334, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+input[type="checkbox"],
+input[type="radio"] {
+  box-sizing: border-box;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+ * Fix the cursor style for Chrome's increment/decrement buttons. For certain
+ * `font-size` values of the `input`, it causes the cursor style of the
+ * decrement button to change from `default` to `text`.
+ */
+/* line 346, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Address `appearance` set to `searchfield` in Safari and Chrome.
+ * 2. Address `box-sizing` set to `border-box` in Safari and Chrome
+ *    (include `-moz` to future-proof).
+ */
+/* line 357, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+input[type="search"] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  -moz-box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  /* 2 */
+  box-sizing: content-box;
+}
+
+/**
+ * Remove inner padding and search cancel button in Safari and Chrome on OS X.
+ * Safari (but not Chrome) clips the cancel button when the search input has
+ * padding (and `textfield` appearance).
+ */
+/* line 370, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * Define consistent border, margin, and padding.
+ */
+/* line 379, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+fieldset {
+  border: 1px solid #c0c0c0;
+  margin: 0 2px;
+  padding: 0.35em 0.625em 0.75em;
+}
+
+/**
+ * 1. Correct `color` not being inherited in IE 8/9/10/11.
+ * 2. Remove padding so people aren't caught out if they zero out fieldsets.
+ */
+/* line 390, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+legend {
+  border: 0;
+  /* 1 */
+  padding: 0;
+  /* 2 */
+}
+
+/**
+ * Remove default vertical scrollbar in IE 8/9/10/11.
+ */
+/* line 399, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+textarea {
+  overflow: auto;
+}
+
+/**
+ * Don't inherit the `font-weight` (applied by a rule above).
+ * NOTE: the default cannot safely be changed in Chrome and Safari on OS X.
+ */
+/* line 408, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+optgroup {
+  font-weight: bold;
+}
+
+/* Tables
+   ========================================================================== */
+/**
+ * Remove most spacing between table cells.
+ */
+/* line 419, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* line 424, ../../../../core-2017/assets/scss/vendor/_normalize.scss */
+td,
+th {
+  padding: 0;
+}
+
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Apr 10, 2017, 11:17:44 AM
+    Author     : charlie
+*/
 /**
  * Styles for standard HTML tags
  */
-/* line 5, ../../scss/_standard_tags.scss */
+/* line 5, ../../../../core-2017/assets/scss/_standard_tags.scss */
 html {
   box-sizing: border-box;
   height: 100%;
 }
 
-/* line 10, ../../scss/_standard_tags.scss */
+/* line 10, ../../../../core-2017/assets/scss/_standard_tags.scss */
 *,
 *::before,
 *::after {
   box-sizing: inherit;
 }
 
-/* line 16, ../../scss/_standard_tags.scss */
+/* line 16, ../../../../core-2017/assets/scss/_standard_tags.scss */
 ::selection {
   background: #CA0000;
   color: #fbdfdf;
 }
 
-/* line 20, ../../scss/_standard_tags.scss */
+/* line 20, ../../../../core-2017/assets/scss/_standard_tags.scss */
 ::-moz-selection {
   background: #CA0000;
   color: #fbdfdf;
 }
 
-/* line 25, ../../scss/_standard_tags.scss */
+/* line 25, ../../../../core-2017/assets/scss/_standard_tags.scss */
 body {
   background-color: #fbb1b1;
   color: #300000;
@@ -604,42 +1061,42 @@ body {
   line-height: 1.5;
 }
 
-/* line 34, ../../scss/_standard_tags.scss */
+/* line 34, ../../../../core-2017/assets/scss/_standard_tags.scss */
 pre, code {
   font-family: "Bitstream Vera Sans Mono", "Consolas", "Courier", monospace;
 }
 
-/* line 38, ../../scss/_standard_tags.scss */
+/* line 38, ../../../../core-2017/assets/scss/_standard_tags.scss */
 ul {
   list-style-type: disc;
   margin: 0 0 0 1em;
   padding: 0;
 }
 
-/* line 44, ../../scss/_standard_tags.scss */
+/* line 44, ../../../../core-2017/assets/scss/_standard_tags.scss */
 ol {
   list-style-type: decimal;
   margin: 0 0 0 1em;
   padding: 0;
 }
 
-/* line 50, ../../scss/_standard_tags.scss */
+/* line 50, ../../../../core-2017/assets/scss/_standard_tags.scss */
 dl {
   margin: 0;
 }
 
-/* line 54, ../../scss/_standard_tags.scss */
+/* line 54, ../../../../core-2017/assets/scss/_standard_tags.scss */
 dt {
   font-weight: 600;
   margin: 0;
 }
 
-/* line 59, ../../scss/_standard_tags.scss */
+/* line 59, ../../../../core-2017/assets/scss/_standard_tags.scss */
 dd {
   margin: 0;
 }
 
-/* line 63, ../../scss/_standard_tags.scss */
+/* line 63, ../../../../core-2017/assets/scss/_standard_tags.scss */
 h1 {
   font-size: 2em;
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
@@ -647,7 +1104,7 @@ h1 {
   margin: 0 0 0.75em;
 }
 
-/* line 70, ../../scss/_standard_tags.scss */
+/* line 70, ../../../../core-2017/assets/scss/_standard_tags.scss */
 h2 {
   font-size: 1.75em;
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
@@ -655,7 +1112,7 @@ h2 {
   margin: 0 0 0.75em;
 }
 
-/* line 77, ../../scss/_standard_tags.scss */
+/* line 77, ../../../../core-2017/assets/scss/_standard_tags.scss */
 h3 {
   font-size: 1.5em;
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
@@ -663,7 +1120,7 @@ h3 {
   margin: 0 0 0.75em;
 }
 
-/* line 84, ../../scss/_standard_tags.scss */
+/* line 84, ../../../../core-2017/assets/scss/_standard_tags.scss */
 h4 {
   font-size: 1.25em;
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
@@ -671,7 +1128,7 @@ h4 {
   margin: 0 0 0.75em;
 }
 
-/* line 91, ../../scss/_standard_tags.scss */
+/* line 91, ../../../../core-2017/assets/scss/_standard_tags.scss */
 h5 {
   font-size: 1.15em;
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
@@ -679,7 +1136,7 @@ h5 {
   margin: 0 0 0.75em;
 }
 
-/* line 98, ../../scss/_standard_tags.scss */
+/* line 98, ../../../../core-2017/assets/scss/_standard_tags.scss */
 h6 {
   font-size: 1em;
   font-family: "Helvetica Neue", "Helvetica", "Roboto", "Arial", sans-serif;
@@ -687,7 +1144,7 @@ h6 {
   margin: 0 0 0.75em;
 }
 
-/* line 105, ../../scss/_standard_tags.scss */
+/* line 105, ../../../../core-2017/assets/scss/_standard_tags.scss */
 fieldset {
   background-color: #fbb1b1;
   border: 1px solid #967070;
@@ -697,30 +1154,41 @@ fieldset {
   padding: 1.5em;
 }
 
-/* line 114, ../../scss/_standard_tags.scss */
+/* line 114, ../../../../core-2017/assets/scss/_standard_tags.scss */
 legend {
   font-weight: 600;
   margin-bottom: 0.375em;
   padding: 0;
 }
 
-/* line 120, ../../scss/_standard_tags.scss */
+/* line 120, ../../../../core-2017/assets/scss/_standard_tags.scss */
 p {
   margin: 0 0 0.75em;
 }
 
-/* line 124, ../../scss/_standard_tags.scss */
+/* line 124, ../../../../core-2017/assets/scss/_standard_tags.scss */
 a {
   color: #CA0000;
   text-decoration: none;
   transition: color 150ms ease;
 }
-/* line 129, ../../scss/_standard_tags.scss */
+/* line 129, ../../../../core-2017/assets/scss/_standard_tags.scss */
 a:active, a:focus, a:hover {
   color: #980000;
 }
+/* line 135, ../../../../core-2017/assets/scss/_standard_tags.scss */
+a[target=_blank]:after {
+  content: " ";
+  display: inline-block;
+  font-family: FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  padding-left: 0.35em;
+}
 
-/* line 136, ../../scss/_standard_tags.scss */
+/* line 142, ../../../../core-2017/assets/scss/_standard_tags.scss */
 hr {
   border-bottom: 1px solid #967070;
   border-left: 0;
@@ -729,19 +1197,19 @@ hr {
   margin: 1.5em 0;
 }
 
-/* line 144, ../../scss/_standard_tags.scss */
+/* line 150, ../../../../core-2017/assets/scss/_standard_tags.scss */
 figure {
   margin: 0;
 }
 
-/* line 148, ../../scss/_standard_tags.scss */
+/* line 154, ../../../../core-2017/assets/scss/_standard_tags.scss */
 img,
 picture {
   margin: 0;
   max-width: 100%;
 }
 
-/* line 154, ../../scss/_standard_tags.scss */
+/* line 160, ../../../../core-2017/assets/scss/_standard_tags.scss */
 table {
   border-collapse: collapse;
   margin: 0.75em 0;
@@ -749,7 +1217,7 @@ table {
   width: 100%;
 }
 
-/* line 161, ../../scss/_standard_tags.scss */
+/* line 167, ../../../../core-2017/assets/scss/_standard_tags.scss */
 th {
   border-bottom: 1px solid #715454;
   font-weight: 600;
@@ -757,32 +1225,45 @@ th {
   text-align: left;
 }
 
-/* line 168, ../../scss/_standard_tags.scss */
+/* line 174, ../../../../core-2017/assets/scss/_standard_tags.scss */
 td {
   border-bottom: 1px solid #967070;
   padding: 0.75em 0;
 }
 
-/* line 173, ../../scss/_standard_tags.scss */
+/* line 179, ../../../../core-2017/assets/scss/_standard_tags.scss */
 tr,
 td,
 th {
   vertical-align: middle;
 }
 
-/* line 179, ../../scss/_standard_tags.scss */
+/* line 185, ../../../../core-2017/assets/scss/_standard_tags.scss */
 aside.markdown-toc {
   float: left;
   margin-right: 1em;
 }
-/* line 183, ../../scss/_standard_tags.scss */
+/* line 189, ../../../../core-2017/assets/scss/_standard_tags.scss */
 aside.markdown-toc ul {
   margin-left: 1em;
 }
 
-/* line 188, ../../scss/_standard_tags.scss */
+/* line 194, ../../../../core-2017/assets/scss/_standard_tags.scss */
 .useragent-pretty-browser, .useragent-pretty-platform, .useragent-pretty-device {
   display: inline-block;
+}
+
+/* line 200, ../../../../core-2017/assets/scss/_standard_tags.scss */
+a.agplv3-tag {
+  display: inline-block;
+  padding: 0 0.25em;
+  color: #636;
+}
+/* line 205, ../../../../core-2017/assets/scss/_standard_tags.scss */
+a.agplv3-tag:hover {
+  border-radius: 0.5em;
+  background-color: #636;
+  color: white;
 }
 
 /**
@@ -791,54 +1272,54 @@ aside.markdown-toc ul {
  * Styles for the skin layouts and the common elements therein,
  * such as outer wrappers, inner wrappers, headers, footers, sections, etc.
  */
-/* line 8, ../../scss/_layout.scss */
+/* line 8, ../../../../core-2017/assets/scss/_layout.scss */
 .outer-wrapper {
   background-color: #fbdfdf;
   color: #300000;
   margin: 0 auto;
   padding: 0 1.5em;
 }
-/* line 25, ../../scss/vendor/neat/mixins/_grid-container.scss */
+/* line 25, ../../../../core-2017/assets/scss/vendor/neat/mixins/_grid-container.scss */
 .outer-wrapper::after {
   clear: both;
   content: "";
   display: block;
 }
 
-/* line 15, ../../scss/_layout.scss */
+/* line 15, ../../../../core-2017/assets/scss/_layout.scss */
 .skin-basic .outer-wrapper,
 .skin-blank .outer-wrapper {
   max-width: 1000px;
 }
 
-/* line 19, ../../scss/_layout.scss */
+/* line 19, ../../../../core-2017/assets/scss/_layout.scss */
 .skin-wide .outer-wrapper {
   max-width: 100%;
 }
 
-/* line 23, ../../scss/_layout.scss */
+/* line 23, ../../../../core-2017/assets/scss/_layout.scss */
 header.page-header {
   background-color: #fbb1b1;
   margin: 0 -1.5em;
   padding: 0 1.5em;
 }
-/* line 31, ../../scss/_layout.scss */
+/* line 31, ../../../../core-2017/assets/scss/_layout.scss */
 header.page-header .site-social-links {
   float: right;
   font-size: 200%;
 }
-/* line 36, ../../scss/_layout.scss */
+/* line 36, ../../../../core-2017/assets/scss/_layout.scss */
 header.page-header .listing-schema-information {
   clear: right;
   float: right;
   font-size: 90%;
 }
-/* line 42, ../../scss/_layout.scss */
+/* line 42, ../../../../core-2017/assets/scss/_layout.scss */
 header.page-header .listing-schema-information .listing-schema-address-address {
   display: block;
 }
 
-/* line 48, ../../scss/_layout.scss */
+/* line 48, ../../../../core-2017/assets/scss/_layout.scss */
 .inner-wrapper {
   clear: both;
 }
@@ -846,62 +1327,62 @@ header.page-header .listing-schema-information .listing-schema-address-address {
 /**
  * The page controls that get floated to the right
  */
-/* line 55, ../../scss/_layout.scss */
+/* line 55, ../../../../core-2017/assets/scss/_layout.scss */
 .page-controls-wrapper {
   float: right;
 }
 
-/* line 60, ../../scss/_layout.scss */
+/* line 60, ../../../../core-2017/assets/scss/_layout.scss */
 .page-column-width-2 .page-column {
   width: calc(16.66667% - 23.33333px);
   float: left;
   margin-left: 20px;
 }
-/* line 65, ../../scss/_layout.scss */
+/* line 65, ../../../../core-2017/assets/scss/_layout.scss */
 .page-column-width-2 .page-content {
   width: calc(66.66667% - 33.33333px);
   float: left;
   margin-left: 20px;
 }
 
-/* line 71, ../../scss/_layout.scss */
+/* line 71, ../../../../core-2017/assets/scss/_layout.scss */
 .page-column-width-1 .page-column {
   width: calc(25% - 25px);
   float: left;
   margin-left: 20px;
 }
-/* line 75, ../../scss/_layout.scss */
+/* line 75, ../../../../core-2017/assets/scss/_layout.scss */
 .page-column-width-1 .page-content {
   width: calc(75% - 35px);
   float: left;
   margin-left: 20px;
 }
 
-/* line 81, ../../scss/_layout.scss */
+/* line 81, ../../../../core-2017/assets/scss/_layout.scss */
 .page-column-width-0 .page-column {
   display: none;
 }
 
-/* line 90, ../../scss/_layout.scss */
+/* line 90, ../../../../core-2017/assets/scss/_layout.scss */
 .page-content-and-columns-wrapper {
   clear: both;
   margin-top: 2em;
 }
 
-/* line 96, ../../scss/_layout.scss */
+/* line 96, ../../../../core-2017/assets/scss/_layout.scss */
 footer.page-footer {
   clear: both;
   padding-top: 2em;
 }
-/* line 100, ../../scss/_layout.scss */
+/* line 100, ../../../../core-2017/assets/scss/_layout.scss */
 footer.page-footer .listing-schema-information {
   font-size: 75%;
 }
-/* line 103, ../../scss/_layout.scss */
+/* line 103, ../../../../core-2017/assets/scss/_layout.scss */
 footer.page-footer .listing-schema-information .listing-schema-address-address {
   display: block;
 }
-/* line 108, ../../scss/_layout.scss */
+/* line 108, ../../../../core-2017/assets/scss/_layout.scss */
 footer.page-footer .legal-notice {
   font-size: 75%;
 }
@@ -911,12 +1392,12 @@ footer.page-footer .legal-notice {
  * it is assumed that the left column is more important.
  */
 @media only screen and (max-width: 1000px) {
-  /* line 120, ../../scss/_layout.scss */
+  /* line 120, ../../../../core-2017/assets/scss/_layout.scss */
   .page-column-width-2 .page-content {
     width: 80%;
     padding: 0 1em 0 0;
   }
-  /* line 124, ../../scss/_layout.scss */
+  /* line 124, ../../../../core-2017/assets/scss/_layout.scss */
   .page-column-width-2 #right-col {
     display: none;
   }
@@ -925,31 +1406,31 @@ footer.page-footer .legal-notice {
  * Layout settings with display sizes < 790px (by default)
  */
 @media only screen and (max-width: 790px) {
-  /* line 137, ../../scss/_layout.scss */
+  /* line 137, ../../../../core-2017/assets/scss/_layout.scss */
   .page-column-width-1 .page-content, .page-column-width-2 .page-content {
     width: 100%;
     padding: 0 1em;
   }
-  /* line 141, ../../scss/_layout.scss */
+  /* line 141, ../../../../core-2017/assets/scss/_layout.scss */
   .page-column-width-1 aside.page-column, .page-column-width-2 aside.page-column {
     display: none;
   }
 }
 @media only screen and (max-width: 500px) {
-  /* line 148, ../../scss/_layout.scss */
+  /* line 148, ../../../../core-2017/assets/scss/_layout.scss */
   .ui-tabs .ui-tabs-nav li {
     float: none;
     display: block;
     width: 100%;
   }
 
-  /* line 153, ../../scss/_layout.scss */
+  /* line 153, ../../../../core-2017/assets/scss/_layout.scss */
   .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
     float: none;
     display: block;
   }
 }
-/* line 1, ../../scss/_buttons.scss */
+/* line 1, ../../../../core-2017/assets/scss/_buttons.scss */
 button, input[type="button"], input[type="reset"], input[type="submit"], a.button, span.button {
   appearance: none;
   background-color: #CA0000;
@@ -971,49 +1452,49 @@ button, input[type="button"], input[type="reset"], input[type="submit"], a.butto
   vertical-align: middle;
   white-space: nowrap;
 }
-/* line 22, ../../scss/_buttons.scss */
+/* line 22, ../../../../core-2017/assets/scss/_buttons.scss */
 button:hover, button:focus, input[type="button"]:hover, input[type="button"]:focus, input[type="reset"]:hover, input[type="reset"]:focus, input[type="submit"]:hover, input[type="submit"]:focus, a.button:hover, a.button:focus, span.button:hover, span.button:focus {
   background-color: #a20000;
   color: #300000;
 }
-/* line 28, ../../scss/_buttons.scss */
+/* line 28, ../../../../core-2017/assets/scss/_buttons.scss */
 button:disabled, input[type="button"]:disabled, input[type="reset"]:disabled, input[type="submit"]:disabled, a.button:disabled, span.button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
-/* line 32, ../../scss/_buttons.scss */
+/* line 32, ../../../../core-2017/assets/scss/_buttons.scss */
 button:disabled:hover, input[type="button"]:disabled:hover, input[type="reset"]:disabled:hover, input[type="submit"]:disabled:hover, a.button:disabled:hover, span.button:disabled:hover {
   background-color: #CA0000;
 }
-/* line 38, ../../scss/_buttons.scss */
+/* line 38, ../../../../core-2017/assets/scss/_buttons.scss */
 button.button-reset i.icon, input[type="button"].button-reset i.icon, input[type="reset"].button-reset i.icon, input[type="submit"].button-reset i.icon, a.button.button-reset i.icon, span.button.button-reset i.icon {
   color: #620509;
 }
-/* line 41, ../../scss/_buttons.scss */
+/* line 41, ../../../../core-2017/assets/scss/_buttons.scss */
 button.button-reset span, input[type="button"].button-reset span, input[type="reset"].button-reset span, input[type="submit"].button-reset span, a.button.button-reset span, span.button.button-reset span {
   color: #490205;
 }
-/* line 47, ../../scss/_buttons.scss */
+/* line 47, ../../../../core-2017/assets/scss/_buttons.scss */
 button.button-apply i.icon, input[type="button"].button-apply i.icon, input[type="reset"].button-apply i.icon, input[type="submit"].button-apply i.icon, a.button.button-apply i.icon, span.button.button-apply i.icon {
   color: #153505;
 }
-/* line 50, ../../scss/_buttons.scss */
+/* line 50, ../../../../core-2017/assets/scss/_buttons.scss */
 button.button-apply span, input[type="button"].button-apply span, input[type="reset"].button-apply span, input[type="submit"].button-apply span, a.button.button-apply span, span.button.button-apply span {
   color: #221b02;
 }
 
-/* line 59, ../../scss/_buttons.scss */
+/* line 59, ../../../../core-2017/assets/scss/_buttons.scss */
 .button-group button, .button-group input[type="button"], .button-group input[type="reset"], .button-group input[type="submit"], .button-group a.button, .button-group span.button {
   border-radius: 0;
   float: left;
   border-right: 1px solid #967070;
 }
-/* line 64, ../../scss/_buttons.scss */
+/* line 64, ../../../../core-2017/assets/scss/_buttons.scss */
 .button-group button:first-child, .button-group input[type="button"]:first-child, .button-group input[type="reset"]:first-child, .button-group input[type="submit"]:first-child, .button-group a.button:first-child, .button-group span.button:first-child {
   border-top-left-radius: 2px;
   border-bottom-left-radius: 2px;
 }
-/* line 68, ../../scss/_buttons.scss */
+/* line 68, ../../../../core-2017/assets/scss/_buttons.scss */
 .button-group button:last-child, .button-group input[type="button"]:last-child, .button-group input[type="reset"]:last-child, .button-group input[type="submit"]:last-child, .button-group a.button:last-child, .button-group span.button:last-child {
   border-top-right-radius: 2px;
   border-bottom-right-radius: 2px;
@@ -1021,12 +1502,12 @@ button.button-apply span, input[type="button"].button-apply span, input[type="re
 }
 
 @media only screen and (max-width: 790px) {
-  /* line 77, ../../scss/_buttons.scss */
+  /* line 77, ../../../../core-2017/assets/scss/_buttons.scss */
   .button-group {
     display: table;
     width: 100%;
   }
-  /* line 81, ../../scss/_buttons.scss */
+  /* line 81, ../../../../core-2017/assets/scss/_buttons.scss */
   .button-group button, .button-group input[type="button"], .button-group input[type="reset"], .button-group input[type="submit"], .button-group a.button, .button-group span.button {
     display: table-cell;
     float: none;
@@ -1035,33 +1516,33 @@ button.button-apply span, input[type="button"].button-apply span, input[type="re
     padding: 0.5em 0;
   }
 }
-/* line 2, ../../scss/_collapsible_fieldsets.scss */
+/* line 2, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible .fieldset-title {
   margin: -1em -1em 0.5em;
 }
-/* line 4, ../../scss/_collapsible_fieldsets.scss */
+/* line 4, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible .fieldset-title img {
   vertical-align: middle;
 }
-/* line 10, ../../scss/_collapsible_fieldsets.scss */
+/* line 10, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible .expandable-hint {
   display: none;
 }
-/* line 13, ../../scss/_collapsible_fieldsets.scss */
+/* line 13, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible .collapsible-hint {
   display: inline-block;
   padding: 0 0.3em;
 }
-/* line 18, ../../scss/_collapsible_fieldsets.scss */
+/* line 18, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible.collapsed {
   padding: 1.5em 1.5em 0;
 }
-/* line 21, ../../scss/_collapsible_fieldsets.scss */
+/* line 21, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible.collapsed .expandable-hint {
   display: inline-block;
   padding: 0 0.3em;
 }
-/* line 25, ../../scss/_collapsible_fieldsets.scss */
+/* line 25, ../../../../core-2017/assets/scss/_collapsible_fieldsets.scss */
 fieldset.collapsible.collapsed .collapsible-hint {
   display: none;
 }
@@ -1076,7 +1557,7 @@ fieldset.collapsible.collapsed .collapsible-hint {
  *****************************************************************************
  *****************************************************************************/
 /*** Controls that can be implemented throughout the site ***/
-/* line 13, ../../scss/_controls.scss */
+/* line 13, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy {
   margin: 0;
   padding: 0;
@@ -1084,110 +1565,110 @@ ul.controls.proxy {
   border: 1px solid;
   /* icon animations ftw! */
 }
-/* line 19, ../../scss/_controls.scss */
+/* line 19, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy li {
   float: left;
   margin-right: 0.5em;
   list-style: none;
 }
-/* line 24, ../../scss/_controls.scss */
+/* line 24, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy li a {
   text-decoration: none;
   font-size: 14px;
   padding: 0.05em;
   line-height: 18px;
 }
-/* line 31, ../../scss/_controls.scss */
+/* line 31, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy li a:hover {
   text-shadow: none;
   font-size: 18px;
   padding: 0;
 }
-/* line 37, ../../scss/_controls.scss */
+/* line 37, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy li span {
   display: none;
 }
-/* line 42, ../../scss/_controls.scss */
+/* line 42, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy li:last-child {
   float: none;
 }
-/* line 49, ../../scss/_controls.scss */
+/* line 49, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy.controls-animated .controls-proxy-icon {
   opacity: 1;
   transition: opacity 0.3s ease-in-out 0s;
 }
-/* line 54, ../../scss/_controls.scss */
+/* line 54, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy.controls-animated .icon-spin {
   opacity: 0.5;
 }
-/* line 59, ../../scss/_controls.scss */
+/* line 59, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy.controls-proxy {
   color: #477DCA;
   padding: 0.25em;
 }
-/* line 63, ../../scss/_controls.scss */
+/* line 63, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.proxy.controls-proxy li {
   float: none;
 }
-/* line 69, ../../scss/_controls.scss */
+/* line 69, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy {
   margin: 0;
   border: 0 none;
 }
-/* line 73, ../../scss/_controls.scss */
+/* line 73, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy li {
   float: left;
   margin-right: 0.5em;
   list-style: none;
 }
-/* line 77, ../../scss/_controls.scss */
+/* line 77, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy li:after {
   content: ' |';
 }
-/* line 82, ../../scss/_controls.scss */
+/* line 82, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy li:last-child {
   float: none;
 }
-/* line 85, ../../scss/_controls.scss */
+/* line 85, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy li:last-child:after {
   content: '';
 }
-/* line 90, ../../scss/_controls.scss */
+/* line 90, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy i {
   display: none;
 }
-/* line 94, ../../scss/_controls.scss */
+/* line 94, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.no-proxy span {
   display: inline;
 }
-/* line 101, ../../scss/_controls.scss */
+/* line 101, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.only-icons i.icon {
   display: inline-block;
 }
-/* line 104, ../../scss/_controls.scss */
+/* line 104, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.only-icons span {
   display: none;
 }
 
 /** Spruce up FA with some color :) **/
-/* line 111, ../../scss/_controls.scss */
+/* line 111, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls li i.icon-remove,
 ul.controls li i.icon-delete {
   color: #7a0200;
 }
 
-/* line 113, ../../scss/_controls.scss */
+/* line 113, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls li i.icon-edit {
   color: blue;
 }
 
-/* line 114, ../../scss/_controls.scss */
+/* line 114, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls li i.icon-plus,
 ul.controls li i.icon-add {
   color: green;
 }
 
-/* line 116, ../../scss/_controls.scss */
+/* line 116, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls li i.icon-rss {
   color: #e99700;
 }
@@ -1196,7 +1677,7 @@ ul.controls li i.icon-rss {
  * Contextual controls are similar, but slightly different.
  * Instead of being inline, they're in a context menu.
  */
-/* line 122, ../../scss/_controls.scss */
+/* line 122, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu {
   background: #eee;
   border: 1px solid #999;
@@ -1206,7 +1687,7 @@ ul.controls.context-menu {
   text-align: left;
   z-index: 9999;
 }
-/* line 131, ../../scss/_controls.scss */
+/* line 131, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu li {
   font-size: 14px;
   float: none;
@@ -1215,24 +1696,24 @@ ul.controls.context-menu li {
   /* This will get overwritten by a's */
   color: #555;
 }
-/* line 139, ../../scss/_controls.scss */
+/* line 139, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu li a {
   padding: 0.15em;
   display: block;
   color: #000;
 }
-/* line 145, ../../scss/_controls.scss */
+/* line 145, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu li a:hover {
   font-size: 14px;
   background: #AFC5EE;
   color: #000;
 }
-/* line 151, ../../scss/_controls.scss */
+/* line 151, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu li i {
   line-height: 1.5em;
   padding-left: 4px;
 }
-/* line 156, ../../scss/_controls.scss */
+/* line 156, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu li span {
   line-height: 1.9em;
   padding: 0 2px;
@@ -1240,29 +1721,29 @@ ul.controls.context-menu li span {
 }
 
 /* The many links have a bit different styles. */
-/* line 165, ../../scss/_controls.scss */
+/* line 165, ../../../../core-2017/assets/scss/_controls.scss */
 ul.controls.context-menu-many-links {
   box-shadow: 10px 10px 9px 1px rgba(50, 50, 50, 0.2);
   opacity: 0.9;
 }
 
-/* line 174, ../../scss/_controls.scss */
+/* line 174, ../../../../core-2017/assets/scss/_controls.scss */
 div.controls-container {
   min-width: 8em;
   min-height: 2em;
 }
 
-/* line 179, ../../scss/_controls.scss */
+/* line 179, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered {
   margin: 0;
   padding: 0;
   font-size: 90%;
 }
-/* line 185, ../../scss/_controls.scss */
+/* line 185, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy ul {
   margin-left: 0;
 }
-/* line 189, ../../scss/_controls.scss */
+/* line 189, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li {
   display: inline-block;
   list-style: none;
@@ -1270,34 +1751,34 @@ menu.controls-prerendered.controls-no-proxy li {
   margin-right: 0.25em;
   color: #CA0000;
 }
-/* line 196, ../../scss/_controls.scss */
+/* line 196, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li:after {
   content: ' |';
 }
-/* line 200, ../../scss/_controls.scss */
+/* line 200, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li:last-child {
   margin-right: 0;
 }
-/* line 203, ../../scss/_controls.scss */
+/* line 203, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li:last-child:after {
   content: '';
 }
-/* line 208, ../../scss/_controls.scss */
+/* line 208, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li a {
   margin-right: 0.25em;
   background: inherit;
   color: #CA0000;
 }
-/* line 214, ../../scss/_controls.scss */
+/* line 214, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-no-proxy li i {
   background: inherit;
   color: #CA0000;
 }
-/* line 221, ../../scss/_controls.scss */
+/* line 221, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy {
   position: absolute;
 }
-/* line 225, ../../scss/_controls.scss */
+/* line 225, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy:hover label {
   background: #fbdfdf;
   border: 1px solid #967070;
@@ -1305,11 +1786,11 @@ menu.controls-prerendered.controls-have-proxy:hover label {
   border-bottom-width: 0;
   padding-bottom: 1em;
 }
-/* line 233, ../../scss/_controls.scss */
+/* line 233, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy:hover ul {
   display: block;
 }
-/* line 238, ../../scss/_controls.scss */
+/* line 238, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy label {
   white-space: nowrap;
   min-width: 8em;
@@ -1318,7 +1799,7 @@ menu.controls-prerendered.controls-have-proxy label {
   border: 1px solid #CA0000;
   color: #CA0000;
 }
-/* line 247, ../../scss/_controls.scss */
+/* line 247, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy ul {
   display: none;
   position: relative;
@@ -1331,28 +1812,28 @@ menu.controls-prerendered.controls-have-proxy ul {
   background: #fbdfdf;
   border-top-width: 0;
 }
-/* line 260, ../../scss/_controls.scss */
+/* line 260, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li {
   list-style: none;
   white-space: nowrap;
   background: #fbdfdf;
 }
-/* line 265, ../../scss/_controls.scss */
+/* line 265, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li:hover {
   background: #220000;
   color: #CA0000;
 }
-/* line 269, ../../scss/_controls.scss */
+/* line 269, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li:hover i {
   background: #220000;
 }
-/* line 274, ../../scss/_controls.scss */
+/* line 274, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li a {
   display: block;
   padding: 0;
   color: #CA0000;
 }
-/* line 280, ../../scss/_controls.scss */
+/* line 280, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li i {
   background: #805e5e;
   color: #300000;
@@ -1360,27 +1841,27 @@ menu.controls-prerendered.controls-have-proxy li i {
   text-align: center;
   width: 2.1em;
 }
-/* line 288, ../../scss/_controls.scss */
+/* line 288, ../../../../core-2017/assets/scss/_controls.scss */
 menu.controls-prerendered.controls-have-proxy li span {
   padding-right: 0.5em;
 }
 
 @media only screen and (max-width: 790px) {
-  /* line 296, ../../scss/_controls.scss */
+  /* line 296, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered {
     margin: 0;
     padding: 0;
     font-size: 90%;
   }
-  /* line 301, ../../scss/_controls.scss */
+  /* line 301, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy {
     position: relative;
   }
-  /* line 304, ../../scss/_controls.scss */
+  /* line 304, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy label {
     display: none;
   }
-  /* line 308, ../../scss/_controls.scss */
+  /* line 308, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy ul {
     display: block;
     position: relative;
@@ -1390,7 +1871,7 @@ menu.controls-prerendered.controls-have-proxy li span {
     background-color: inherit;
     border: 0px none;
   }
-  /* line 318, ../../scss/_controls.scss */
+  /* line 318, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li {
     display: inline-block;
     list-style: none;
@@ -1398,26 +1879,26 @@ menu.controls-prerendered.controls-have-proxy li span {
     background-color: transparent;
     margin-right: 0.25em;
   }
-  /* line 325, ../../scss/_controls.scss */
+  /* line 325, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li:after {
     content: ' |';
   }
-  /* line 329, ../../scss/_controls.scss */
+  /* line 329, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li:last-child {
     margin-right: 0;
   }
-  /* line 332, ../../scss/_controls.scss */
+  /* line 332, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li:last-child:after {
     content: '';
   }
-  /* line 338, ../../scss/_controls.scss */
+  /* line 338, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li a {
     display: inline-block;
     padding: 0.25em 0.5em;
     background: inherit;
     color: #CA0000;
   }
-  /* line 345, ../../scss/_controls.scss */
+  /* line 345, ../../../../core-2017/assets/scss/_controls.scss */
   menu.controls-prerendered.controls-have-proxy li i {
     width: auto;
     padding: 0;
@@ -1430,7 +1911,7 @@ menu.controls-prerendered.controls-have-proxy li span {
  **                          DEBUGGING CLASSES                              **
  *****************************************************************************
  *****************************************************************************/
-/* line 6, ../../scss/_debugging.scss */
+/* line 6, ../../../../core-2017/assets/scss/_debugging.scss */
 pre.xdebug-var-dump {
   padding: 0;
   text-align: left;
@@ -1440,7 +1921,7 @@ pre.xdebug-var-dump {
   margin: 0;
 }
 
-/* line 1, ../../scss/_filters_and_pagination.scss */
+/* line 1, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .pagination {
   color: #2c2424;
   font-size: 84%;
@@ -1448,74 +1929,74 @@ pre.xdebug-var-dump {
   margin: 0.5em 0;
   text-align: center;
 }
-/* line 8, ../../scss/_filters_and_pagination.scss */
+/* line 8, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .pagination a {
   text-decoration: none;
   color: #2c2424;
 }
-/* line 12, ../../scss/_filters_and_pagination.scss */
+/* line 12, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .pagination .disabled {
   color: #564a4a;
 }
-/* line 16, ../../scss/_filters_and_pagination.scss */
+/* line 16, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .pagination .pagination-pager {
   float: left;
 }
-/* line 20, ../../scss/_filters_and_pagination.scss */
+/* line 20, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .pagination .pagination-limit-selector {
   display: inline;
   margin-bottom: 0;
   width: auto;
 }
-/* line 27, ../../scss/_filters_and_pagination.scss */
+/* line 27, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .pagination .pagination-list {
   float: right;
 }
 
-/* line 33, ../../scss/_filters_and_pagination.scss */
+/* line 33, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .listing-filters .formelement {
   float: none;
   display: inline-block;
   margin-right: 1em;
   vertical-align: top;
 }
-/* line 40, ../../scss/_filters_and_pagination.scss */
+/* line 40, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
 .listing-filters .listing-filters-break {
   clear: left;
 }
 
 @media only screen and (max-width: 790px) {
-  /* line 49, ../../scss/_filters_and_pagination.scss */
+  /* line 49, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
   .listing-filters .formelement {
     width: 48%;
     margin-right: 1%;
   }
-  /* line 53, ../../scss/_filters_and_pagination.scss */
+  /* line 53, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
   .listing-filters .formelement:nth-child(2) {
     margin-right: 0;
   }
-  /* line 57, ../../scss/_filters_and_pagination.scss */
+  /* line 57, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
   .listing-filters .formelement select {
     width: 100%;
   }
 }
 @media only screen and (max-width: 500px) {
-  /* line 66, ../../scss/_filters_and_pagination.scss */
+  /* line 66, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
   .listing-filters .formelement {
     width: 100%;
     margin-right: 0;
   }
-  /* line 70, ../../scss/_filters_and_pagination.scss */
+  /* line 70, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
   .listing-filters .formelement select {
     width: 100%;
   }
 
-  /* line 77, ../../scss/_filters_and_pagination.scss */
+  /* line 77, ../../../../core-2017/assets/scss/_filters_and_pagination.scss */
   .pagination .pagination-list {
     display: none;
   }
 }
-/* line 1, ../../scss/_form_elements.scss */
+/* line 1, ../../../../core-2017/assets/scss/_form_elements.scss */
 label, .form-element-label {
   display: block;
   font-weight: 600;
@@ -1523,7 +2004,7 @@ label, .form-element-label {
   display: inline-block;
 }
 
-/* line 8, ../../scss/_form_elements.scss */
+/* line 8, ../../../../core-2017/assets/scss/_form_elements.scss */
 input,
 select,
 textarea {
@@ -1532,7 +2013,7 @@ textarea {
   font-size: 1em;
 }
 
-/* line 16, ../../scss/_form_elements.scss */
+/* line 16, ../../../../core-2017/assets/scss/_form_elements.scss */
 input[type="color"], input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"], input:not([type]), textarea {
   appearance: none;
   background-color: #fbdfdf;
@@ -1545,89 +2026,89 @@ input[type="color"], input[type="date"], input[type="datetime"], input[type="dat
   transition: border-color 150ms ease;
   width: 100%;
 }
-/* line 28, ../../scss/_form_elements.scss */
+/* line 28, ../../../../core-2017/assets/scss/_form_elements.scss */
 input[type="color"]:hover, input[type="date"]:hover, input[type="datetime"]:hover, input[type="datetime-local"]:hover, input[type="email"]:hover, input[type="month"]:hover, input[type="number"]:hover, input[type="password"]:hover, input[type="search"]:hover, input[type="tel"]:hover, input[type="text"]:hover, input[type="time"]:hover, input[type="url"]:hover, input[type="week"]:hover, input:not([type]):hover, textarea:hover {
   border-color: #785a5a;
 }
-/* line 32, ../../scss/_form_elements.scss */
+/* line 32, ../../../../core-2017/assets/scss/_form_elements.scss */
 input[type="color"]:focus, input[type="date"]:focus, input[type="datetime"]:focus, input[type="datetime-local"]:focus, input[type="email"]:focus, input[type="month"]:focus, input[type="number"]:focus, input[type="password"]:focus, input[type="search"]:focus, input[type="tel"]:focus, input[type="text"]:focus, input[type="time"]:focus, input[type="url"]:focus, input[type="week"]:focus, input:not([type]):focus, textarea:focus {
   border-color: #CA0000;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06), 0 0 5px rgba(177, 0, 0, 0.7);
   outline: none;
 }
-/* line 38, ../../scss/_form_elements.scss */
+/* line 38, ../../../../core-2017/assets/scss/_form_elements.scss */
 input[type="color"]:disabled, input[type="date"]:disabled, input[type="datetime"]:disabled, input[type="datetime-local"]:disabled, input[type="email"]:disabled, input[type="month"]:disabled, input[type="number"]:disabled, input[type="password"]:disabled, input[type="search"]:disabled, input[type="tel"]:disabled, input[type="text"]:disabled, input[type="time"]:disabled, input[type="url"]:disabled, input[type="week"]:disabled, input:not([type]):disabled, textarea:disabled {
   background-color: #eed4d4;
   cursor: not-allowed;
 }
-/* line 42, ../../scss/_form_elements.scss */
+/* line 42, ../../../../core-2017/assets/scss/_form_elements.scss */
 input[type="color"]:disabled:hover, input[type="date"]:disabled:hover, input[type="datetime"]:disabled:hover, input[type="datetime-local"]:disabled:hover, input[type="email"]:disabled:hover, input[type="month"]:disabled:hover, input[type="number"]:disabled:hover, input[type="password"]:disabled:hover, input[type="search"]:disabled:hover, input[type="tel"]:disabled:hover, input[type="text"]:disabled:hover, input[type="time"]:disabled:hover, input[type="url"]:disabled:hover, input[type="week"]:disabled:hover, input:not([type]):disabled:hover, textarea:disabled:hover {
   border: 1px solid #967070;
 }
-/* line 47, ../../scss/_form_elements.scss */
+/* line 47, ../../../../core-2017/assets/scss/_form_elements.scss */
 input[type="color"]::placeholder, input[type="date"]::placeholder, input[type="datetime"]::placeholder, input[type="datetime-local"]::placeholder, input[type="email"]::placeholder, input[type="month"]::placeholder, input[type="number"]::placeholder, input[type="password"]::placeholder, input[type="search"]::placeholder, input[type="tel"]::placeholder, input[type="text"]::placeholder, input[type="time"]::placeholder, input[type="url"]::placeholder, input[type="week"]::placeholder, input:not([type])::placeholder, textarea::placeholder {
   color: #836666;
 }
 
-/* line 52, ../../scss/_form_elements.scss */
+/* line 52, ../../../../core-2017/assets/scss/_form_elements.scss */
 textarea {
   resize: vertical;
 }
 
-/* line 56, ../../scss/_form_elements.scss */
+/* line 56, ../../../../core-2017/assets/scss/_form_elements.scss */
 [type="checkbox"],
 [type="radio"] {
   display: inline;
   margin-right: 0.375em;
 }
 
-/* line 62, ../../scss/_form_elements.scss */
+/* line 62, ../../../../core-2017/assets/scss/_form_elements.scss */
 [type="file"] {
   margin-bottom: 0.75em;
   width: 100%;
 }
 
-/* line 67, ../../scss/_form_elements.scss */
+/* line 67, ../../../../core-2017/assets/scss/_form_elements.scss */
 select {
   margin-bottom: 0.75em;
   width: 100%;
   color: #222;
 }
 
-/* line 73, ../../scss/_form_elements.scss */
+/* line 73, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement {
   margin-bottom: 1.25em;
 }
-/* line 76, ../../scss/_form_elements.scss */
+/* line 76, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement span.form-element-description {
   margin-left: 2em;
   color: #401212;
   font-size: 0.9em;
 }
-/* line 82, ../../scss/_form_elements.scss */
+/* line 82, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement p.form-element-description {
   color: #401212;
   font-size: 0.9em;
   margin: 0 0 0.25em;
 }
-/* line 89, ../../scss/_form_elements.scss */
+/* line 89, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formselect select {
   margin-bottom: 0.20em;
 }
-/* line 94, ../../scss/_form_elements.scss */
+/* line 94, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput, .formelement.formuserinput {
   /* Meta-Author input styles */
 }
-/* line 96, ../../scss/_form_elements.scss */
+/* line 96, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value, .formelement.formuserinput .form-element-value {
   position: relative;
 }
-/* line 99, ../../scss/_form_elements.scss */
+/* line 99, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value input, .formelement.formuserinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 103, ../../scss/_form_elements.scss */
+/* line 103, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator,
 .formelement.formpagemetaauthorinput .form-element-value .user-indicator, .formelement.formuserinput .form-element-value .meta-author-indicator,
 .formelement.formuserinput .form-element-value .user-indicator {
@@ -1635,48 +2116,81 @@ select {
   left: 8px;
   top: 4px;
 }
-/* line 111, ../../scss/_form_elements.scss */
+/* line 111, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator, .formelement.formuserinput.user-valid .user-invalid-indicator {
   display: none;
 }
-/* line 115, ../../scss/_form_elements.scss */
+/* line 115, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator, .formelement.formuserinput.user-invalid .user-valid-indicator {
   display: none;
 }
-/* line 122, ../../scss/_form_elements.scss */
+/* line 122, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formcheckboxesinput .checkboxes-toggle {
   color: #401212;
   font-size: 0.9em;
   cursor: pointer;
   margin-left: 2em;
 }
-/* line 129, ../../scss/_form_elements.scss */
+/* line 129, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formcheckboxesinput .form-element-value label {
   font-weight: inherit;
   display: inline-block;
   margin-right: 2em;
   min-width: 17em;
 }
-/* line 139, ../../scss/_form_elements.scss */
+/* line 139, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formradioinput .form-element-value label {
   font-weight: inherit;
   display: inline-block;
   margin-right: 1em;
 }
-/* line 146, ../../scss/_form_elements.scss */
+/* line 146, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formelement-disabled {
   opacity: 0.4;
 }
-/* line 153, ../../scss/_form_elements.scss */
+/* line 153, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formfileinput table.form-element-value .formfileinput-selector {
   width: 30%;
 }
-/* line 158, ../../scss/_form_elements.scss */
+/* line 158, ../../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formfileinput td {
   padding: 0;
 }
+/* line 165, ../../../../core-2017/assets/scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput .form-element-value {
+  background-color: #fbdfdf;
+  border: 1px solid #967070;
+  border-radius: 2px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+  color: #300000;
+}
+/* line 172, ../../../../core-2017/assets/scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput .form-element-value:before {
+  content: "";
+  display: inline-block;
+  font-family: FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #967070;
+  padding-right: 0.5em;
+  padding-left: 0.5em;
+}
+/* line 179, ../../../../core-2017/assets/scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput .form-element-value input {
+  border: 0px none;
+  box-shadow: none;
+  margin-bottom: 0;
+}
+/* line 185, ../../../../core-2017/assets/scss/_form_elements.scss */
+.formelement.formpagemetakeywordsinput .keywords-multi-select-option {
+  display: inline-block;
+  padding: 0 0.75em;
+  text-align: center;
+}
 
-/* line 167, ../../scss/_form_elements.scss */
+/* line 197, ../../../../core-2017/assets/scss/_form_elements.scss */
 body .readonly_overlay {
   background-color: rgba(230, 230, 230, 0.4);
   opacity: 1;
@@ -1687,7 +2201,7 @@ body .readonly_overlay {
  **                            LISTING TABLES                               **
  *****************************************************************************
  *****************************************************************************/
-/* line 9, ../../scss/_listing_tables.scss */
+/* line 9, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing {
   width: 100%;
   border: 1px solid #967070;
@@ -1697,20 +2211,20 @@ table.listing {
   table-layout: auto;
   /* Hidden columns, set by javascript. */
 }
-/* line 17, ../../scss/_listing_tables.scss */
+/* line 17, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing tr:nth-child(even) {
   background-color: #fbb1b1;
 }
-/* line 21, ../../scss/_listing_tables.scss */
+/* line 21, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing tr:nth-child(odd) {
   background-color: #fbdfdf;
 }
-/* line 25, ../../scss/_listing_tables.scss */
+/* line 25, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing tr:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
   background-color: #f3bbbb;
 }
-/* line 31, ../../scss/_listing_tables.scss */
+/* line 31, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing th {
   padding: 0.375em 0.25em;
   border: 1px solid #6b4f4f;
@@ -1719,17 +2233,17 @@ table.listing th {
   color: #300000;
   position: relative;
 }
-/* line 40, ../../scss/_listing_tables.scss */
+/* line 40, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing td {
   padding: 0.375em 0.25em;
   border: 1px solid #967070;
   vertical-align: top;
 }
-/* line 47, ../../scss/_listing_tables.scss */
+/* line 47, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing .column-optional {
   display: none;
 }
-/* line 53, ../../scss/_listing_tables.scss */
+/* line 53, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons {
   float: right;
   position: absolute;
@@ -1740,50 +2254,50 @@ table.listing.listing-table-sortable th .sort-icons {
   top: 4px;
   background: #fbdfdf;
 }
-/* line 63, ../../scss/_listing_tables.scss */
+/* line 63, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons i.icon-sort-up {
   position: absolute;
   top: 0;
   opacity: .3;
 }
-/* line 69, ../../scss/_listing_tables.scss */
+/* line 69, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons i.icon-sort-down {
   position: absolute;
   bottom: 0;
   opacity: .3;
 }
-/* line 75, ../../scss/_listing_tables.scss */
+/* line 75, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons i.icon-sort-current {
   opacity: 1;
 }
-/* line 80, ../../scss/_listing_tables.scss */
+/* line 80, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons:hover i.icon-sort-up {
   opacity: 1;
 }
-/* line 84, ../../scss/_listing_tables.scss */
+/* line 84, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th .sort-icons:hover i.icon-sort-down {
   opacity: 1;
 }
-/* line 93, ../../scss/_listing_tables.scss */
+/* line 93, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th i.sort-icon.other {
   visibility: hidden;
 }
-/* line 96, ../../scss/_listing_tables.scss */
+/* line 96, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th:hover i.sort-icon.other {
   visibility: visible;
 }
-/* line 99, ../../scss/_listing_tables.scss */
+/* line 99, ../../../../core-2017/assets/scss/_listing_tables.scss */
 table.listing.listing-table-sortable th:hover i.sort-icon.current {
   visibility: hidden;
 }
 
-/* line 112, ../../scss/_listing_tables.scss */
+/* line 112, ../../../../core-2017/assets/scss/_listing_tables.scss */
 .listing-table-column-select label {
   float: left;
   margin-right: 1%;
   width: 23%;
 }
-/* line 118, ../../scss/_listing_tables.scss */
+/* line 118, ../../../../core-2017/assets/scss/_listing_tables.scss */
 .listing-table-column-select .button-group {
   clear: left;
   padding-top: 1em;
@@ -1792,7 +2306,7 @@ table.listing.listing-table-sortable th:hover i.sort-icon.current {
   border-top-color: #967070;
 }
 
-/* line 128, ../../scss/_listing_tables.scss */
+/* line 128, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table {
   font-size: 95%;
   width: 100%;
@@ -1801,41 +2315,41 @@ div.listing-table {
   flex-flow: column nowrap;
   justify-content: space-between;
 }
-/* line 137, ../../scss/_listing_tables.scss */
+/* line 137, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-record {
   width: 100%;
   display: flex;
   flex-flow: row nowrap;
 }
-/* line 142, ../../scss/_listing_tables.scss */
+/* line 142, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(even) {
   background-color: #fbb1b1;
 }
-/* line 145, ../../scss/_listing_tables.scss */
+/* line 145, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(even) .listing-table-cell {
   border-color: #b78585;
 }
-/* line 149, ../../scss/_listing_tables.scss */
+/* line 149, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(odd) {
   background-color: #fbdfdf;
 }
-/* line 152, ../../scss/_listing_tables.scss */
+/* line 152, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-record:nth-child(odd) .listing-table-cell {
   border-color: #b79595;
 }
-/* line 156, ../../scss/_listing_tables.scss */
+/* line 156, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-record:hover {
   /* Give a little high-lighting effect on mouseover for the records. */
   background-color: #f3bbbb;
 }
-/* line 162, ../../scss/_listing_tables.scss */
+/* line 162, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-group {
   display: flex;
   flex-flow: row nowrap;
   flex-grow: 10;
   flex-basis: 0;
 }
-/* line 169, ../../scss/_listing_tables.scss */
+/* line 169, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-cell {
   border-top-width: 0;
   border-right-width: 1px;
@@ -1851,11 +2365,11 @@ div.listing-table .listing-table-cell {
   flex-grow: 10;
   flex-basis: 0;
 }
-/* line 184, ../../scss/_listing_tables.scss */
+/* line 184, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-cell:first-child {
   border-left-width: 1px;
 }
-/* line 188, ../../scss/_listing_tables.scss */
+/* line 188, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table .listing-table-cell.listing-table-cell-header {
   border-top-width: 1px;
   padding: 0.375em 0.25em;
@@ -1866,7 +2380,7 @@ div.listing-table .listing-table-cell.listing-table-cell-header {
   position: relative;
   min-width: 2.5em;
 }
-/* line 207, ../../scss/_listing_tables.scss */
+/* line 207, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons {
   float: right;
   position: absolute;
@@ -1877,43 +2391,43 @@ div.listing-table.listing-table-sortable .sort-icons {
   top: 4px;
   background: #fbdfdf;
 }
-/* line 217, ../../scss/_listing_tables.scss */
+/* line 217, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons i.icon-sort-up {
   position: absolute;
   top: 0;
   opacity: .3;
 }
-/* line 223, ../../scss/_listing_tables.scss */
+/* line 223, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons i.icon-sort-down {
   position: absolute;
   bottom: 0;
   opacity: .3;
 }
-/* line 229, ../../scss/_listing_tables.scss */
+/* line 229, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons i.icon-sort-current {
   opacity: 1;
 }
-/* line 234, ../../scss/_listing_tables.scss */
+/* line 234, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-up {
   opacity: 1;
 }
-/* line 238, ../../scss/_listing_tables.scss */
+/* line 238, ../../../../core-2017/assets/scss/_listing_tables.scss */
 div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
   opacity: 1;
 }
 
 @media only screen and (min-width: 790px) {
-  /* line 249, ../../scss/_listing_tables.scss */
+  /* line 249, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-group, div.listing-table .listing-table-cell-grouped {
     display: none;
   }
-  /* line 256, ../../scss/_listing_tables.scss */
+  /* line 256, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-cell-header.column-optional, div.listing-table .listing-table-cell-header.column-visibility-hidden,
   div.listing-table .listing-table-cell-ungrouped.column-optional,
   div.listing-table .listing-table-cell-ungrouped.column-visibility-hidden {
     display: none;
   }
-  /* line 262, ../../scss/_listing_tables.scss */
+  /* line 262, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-cell-header.column-optional.column-visibility-visible, div.listing-table .listing-table-cell-header.column-visibility-visible,
   div.listing-table .listing-table-cell-ungrouped.column-optional.column-visibility-visible,
   div.listing-table .listing-table-cell-ungrouped.column-visibility-visible {
@@ -1921,7 +2435,7 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
   }
 }
 @media only screen and (max-width: 790px) {
-  /* line 275, ../../scss/_listing_tables.scss */
+  /* line 275, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-header {
     /*.listing-table-group:first-child {
     	display: flex;
@@ -1931,37 +2445,37 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
     	display: none;
     }*/
   }
-  /* line 278, ../../scss/_listing_tables.scss */
+  /* line 278, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-header .column-group-secondary {
     display: none;
   }
-  /* line 291, ../../scss/_listing_tables.scss */
+  /* line 291, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-header .column-controls {
     display: none;
   }
-  /* line 297, ../../scss/_listing_tables.scss */
+  /* line 297, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-body {
     display: block;
   }
-  /* line 301, ../../scss/_listing_tables.scss */
+  /* line 301, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-body .listing-table-cell-ungrouped {
     display: none;
   }
-  /* line 305, ../../scss/_listing_tables.scss */
+  /* line 305, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-body .listing-table-group {
     flex-direction: row;
   }
-  /* line 310, ../../scss/_listing_tables.scss */
+  /* line 310, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-body .column-group-secondary .listing-table-cell:before {
     content: attr(data-title) ": ";
   }
-  /* line 317, ../../scss/_listing_tables.scss */
+  /* line 317, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-cell.column-optional {
     display: none;
   }
 }
 @media only screen and (max-width: 500px) {
-  /* line 331, ../../scss/_listing_tables.scss */
+  /* line 331, ../../../../core-2017/assets/scss/_listing_tables.scss */
   div.listing-table .listing-table-body .column-group-secondary {
     display: none;
   }
@@ -1972,7 +2486,7 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
  *****************************************************************************
  *****************************************************************************/
 /** general styles for most of the messages **/
-/* line 7, ../../scss/_messages.scss */
+/* line 7, ../../../../core-2017/assets/scss/_messages.scss */
 .message-note,
 .message-info,
 .message-success,
@@ -1988,7 +2502,7 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
   text-align: center;
 }
 
-/* line 21, ../../scss/_messages.scss */
+/* line 21, ../../../../core-2017/assets/scss/_messages.scss */
 .message-tutorial {
   border-radius: 2px;
   margin: 0.375em;
@@ -1999,7 +2513,7 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
 }
 
 /** And the message's icons **/
-/* line 31, ../../scss/_messages.scss */
+/* line 31, ../../../../core-2017/assets/scss/_messages.scss */
 .message-note .message-background-icon,
 .message-info .message-background-icon,
 .message-success .message-background-icon,
@@ -2017,108 +2531,108 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
 }
 
 /** Specific colors for specific message types. **/
-/* line 48, ../../scss/_messages.scss */
+/* line 48, ../../../../core-2017/assets/scss/_messages.scss */
 .message-note {
   background: #FCF0AD;
   border: 1px solid #BCB06D;
 }
-/* line 52, ../../scss/_messages.scss */
+/* line 52, ../../../../core-2017/assets/scss/_messages.scss */
 .message-note .message-background-icon {
   color: #BCB06D;
 }
 
-/* line 56, ../../scss/_messages.scss */
+/* line 56, ../../../../core-2017/assets/scss/_messages.scss */
 .message-info {
   background: #b2a1b1;
   border: 1px solid #6b6684;
   color: #242a57;
 }
-/* line 61, ../../scss/_messages.scss */
+/* line 61, ../../../../core-2017/assets/scss/_messages.scss */
 .message-info .message-background-icon {
   color: #242a57;
 }
 
-/* line 65, ../../scss/_messages.scss */
+/* line 65, ../../../../core-2017/assets/scss/_messages.scss */
 .message-success {
   background: #a8af96;
   border: 1px solid #58804e;
   color: #075107;
 }
-/* line 70, ../../scss/_messages.scss */
+/* line 70, ../../../../core-2017/assets/scss/_messages.scss */
 .message-success .message-background-icon {
   color: #075107;
 }
 
-/* line 74, ../../scss/_messages.scss */
+/* line 74, ../../../../core-2017/assets/scss/_messages.scss */
 .message-deprecated {
   background: #f3dfd7;
   border: 1px solid #ece0d0;
   color: #e4e0c8;
 }
-/* line 79, ../../scss/_messages.scss */
+/* line 79, ../../../../core-2017/assets/scss/_messages.scss */
 .message-deprecated .message-background-icon {
   color: #e4e0c8;
 }
 
-/* line 83, ../../scss/_messages.scss */
+/* line 83, ../../../../core-2017/assets/scss/_messages.scss */
 .message-warning {
   background: #d2b095;
   border: 1px solid #a9824d;
   color: #815405;
 }
-/* line 88, ../../scss/_messages.scss */
+/* line 88, ../../../../core-2017/assets/scss/_messages.scss */
 .message-warning .message-background-icon {
   color: #815405;
 }
 
-/* line 92, ../../scss/_messages.scss */
+/* line 92, ../../../../core-2017/assets/scss/_messages.scss */
 .message-error {
   background: #d09698;
   border: 1px solid #a64e53;
   color: #7c070e;
 }
-/* line 97, ../../scss/_messages.scss */
+/* line 97, ../../../../core-2017/assets/scss/_messages.scss */
 .message-error .message-background-icon {
   color: #7c070e;
 }
 
-/* line 101, ../../scss/_messages.scss */
+/* line 101, ../../../../core-2017/assets/scss/_messages.scss */
 .message-tutorial {
   background: #aaa8b7;
   border: 1px solid #5b7291;
   color: #0c3c6a;
 }
-/* line 106, ../../scss/_messages.scss */
+/* line 106, ../../../../core-2017/assets/scss/_messages.scss */
 .message-tutorial .message-background-icon {
   color: #0c3c6a;
 }
 
-/* line 2, ../../scss/_progress-log.scss */
+/* line 2, ../../../../core-2017/assets/scss/_progress-log.scss */
 .progress-log-wrapper .progress-log-title {
   display: inline-block;
   font-size: 1.5em;
   font-weight: bold;
   width: 90%;
 }
-/* line 9, ../../scss/_progress-log.scss */
+/* line 9, ../../../../core-2017/assets/scss/_progress-log.scss */
 .progress-log-wrapper .progress-log-view-details {
   display: inline-block;
   width: 9%;
   text-align: right;
 }
-/* line 15, ../../scss/_progress-log.scss */
+/* line 15, ../../../../core-2017/assets/scss/_progress-log.scss */
 .progress-log-wrapper .progress-log-progressbar {
   height: 2em;
   border: 1px solid #967070;
   border-radius: 2px;
   overflow: hidden;
 }
-/* line 22, ../../scss/_progress-log.scss */
+/* line 22, ../../../../core-2017/assets/scss/_progress-log.scss */
 .progress-log-wrapper .progress-log-progressbar-inner {
   height: 2em;
   background-color: #CA0000;
 }
-/* line 27, ../../scss/_progress-log.scss */
+/* line 27, ../../../../core-2017/assets/scss/_progress-log.scss */
 .progress-log-wrapper .progress-log-iframe {
   width: 100%;
   height: 25em;
@@ -2136,7 +2650,7 @@ div.listing-table.listing-table-sortable .sort-icons:hover i.icon-sort-down {
 <iframe id="$logname-frame" name="$logname" class="progress-log-iframe" style="display:none;"></iframe>
 </
 */
-/* line 28, ../../scss/tinymce/content.scss */
+/* line 13, ../../scss/tinymce/content.scss */
 body.mce-content-body {
   color: #300000;
   background-color: #fbdfdf;

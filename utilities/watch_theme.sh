@@ -31,8 +31,16 @@ if [ -z "$(which inotifywait 2>/dev/null)" ]; then
 	exit 1
 fi
 
+# Check if this theme extends another theme.
+EXTENDS="$(egrep 'extends=' src/themes/$THEME/theme.xml | sed 's:.*extends="\(.*\)".*:\1:')"
+if [ -n "$EXTENDS" ]; then
+	PATHS="$ROOTPDIR/src/themes/$THEME/assets/scss $ROOTPDIR/src/themes/$EXTENDS/assets/scss"
+else
+	PATHS="$ROOTPDIR/src/themes/$THEME/assets/scss"
+fi
+
 printheader "Starting watch!"
-while inotifywait -e modify -r $ROOTPDIR/src/themes/$THEME/assets/scss; do
+while inotifywait -e modify -r $PATHS; do
 	$ROOTPDIR/utilities/compiler.php --scss --theme=$THEME
 	$ROOTPDIR/utilities/reinstall.php --assets --theme=$THEME --verbosity=0
 done

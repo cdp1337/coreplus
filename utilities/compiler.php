@@ -504,12 +504,8 @@ if(($compileSCSSFull || $compileSCSSDev) && exec('which sass') == ''){
 }
 elseif(($compileSCSSFull || $compileSCSSDev)){
 	$sassversion = exec("sass --version | sed 's:^Sass \\([0-9\\.]*\\).*:\\1:'");
+	$extendPaths = null;
 	echo "Using SASS version " . $sassversion . "\n";
-
-	echo "Compiling SASS/SCSS resources...\n\n";
-	// [Filename] [CSS] [MIN]
-	echo 'FILENAME                                                                          DEV    MIN' . "\n";
-	echo '---------------------------------------------------------------------------------------------' . "\n";
 
 	$results = [];
 	// Allow specifying core, a component, or a theme.
@@ -521,11 +517,31 @@ elseif(($compileSCSSFull || $compileSCSSDev)){
 	}
 	elseif($onlyTheme !== null){
 		exec('find "' . ROOT_PDIR . 'themes/' . $onlyTheme . '/" -name "[a-z]*.scss"', $results);
+		
+		$theme = ThemeHandler::GetTheme($onlyTheme);
+		$extends = $theme->getXMLLoader()->getRootDOM()->getAttribute('extends');
+		$extendPaths = [];
+		$extendPaths[] = ROOT_PDIR . 'themes/' . $onlyTheme . '/assets/scss';
+		if($extends){
+			echo 'Theme extends ' . $extends . '!' . "\n";
+			$extendPaths[] = ROOT_PDIR . 'themes/' . $extends . '/assets/scss';
+			unset($extends);
+		}
+		
+		echo "Include Paths:\n";
+		foreach($extendPaths as $path){
+			echo "    " . $path . "\n";
+		}
 	}
 	else{
 		\Core\CLI\CLI::PrintError('You must specify at least one theme, component, or core!');
 		exit;
 	}
+	
+	echo "Compiling SASS/SCSS resources...\n\n";
+	// [Filename] [CSS] [MIN]
+	echo 'FILENAME                                                                          DEV    MIN' . "\n";
+	echo '---------------------------------------------------------------------------------------------' . "\n";
 
 	foreach($results as $file){
 
@@ -567,8 +583,21 @@ elseif(($compileSCSSFull || $compileSCSSDev)){
 		if(version_compare($sassversion, '3.4.4', '>=')){
 			// Version 3.4.4 of Sass changed some of the arguments for sourcemap,
 			// namely they reversed them.  So now the compressed version requires sourcemap instead of the standard one.
+			
+			// Allow extends to be used; this retrieve the assets from that base theme.
+			if($extendPaths){
+				$loadPath = '';
+				foreach($extendPaths as $path){
+					$loadPath .= ' -I ' . escapeshellarg($path);
+				}
+			}
+			else{
+				$loadPath = '';
+			}
 
-			exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines', $null, $ret);
+			$cmd = 'sass' . $loadPath . ' "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines';
+			//echo "\n" . $cmd . "\n";
+			exec($cmd, $null, $ret);
 			if($ret == 0) echo "[ OK ] ";
 			else echo "[ !! ]";
 
@@ -576,13 +605,18 @@ elseif(($compileSCSSFull || $compileSCSSDev)){
 				echo '[SKIP]';
 			}
 			else{
-				exec('sass "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines --sourcemap=none', $null, $ret);
+				exec('sass' . $loadPath . ' "' . $file . '":"' . $minfile . '" -C -f -t compressed --unix-newlines --sourcemap=none', $null, $ret);
 				if($ret == 0) echo "[ OK ] ";
 				else echo "[ !! ]";
 			}
 
 		}
 		else{
+			
+			if($extendPaths){
+				die('Theme extends another, please upgrade your sass version to at least 3.4.4!');
+			}
+			
 			// Provide backwards compatibility for developers using an older version of SASS.
 			exec('sass "' . $file . '":"' . $cssfile . '" -C -l -f -t expanded --unix-newlines --sourcemap', $null, $ret);
 			if($ret == 0) echo "[ OK ] ";

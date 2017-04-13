@@ -1,0 +1,35 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Apr 12, 2017, 8:08:28 PM
+    Author     : charlie
+*/
+
+// Normalize styling.
+@import "vendor/normalize";
+
+// Bourbon grid system, Neat.
+@import "vendor/neat/neat";
+
+// Load in support for FontAwesome's variable declarations, so that icons can be addressed by name.
+@import "../../../../components/fontawesome/assets/scss/_variables.scss";
+
+// Load in some common functions.
+@import "mixins";
+
+// Start Core-specific components
+@import "standard_tags";
+@import "layout";
+
+@import "buttons";
+@import "collapsible_fieldsets";
+@import "controls";
+@import "debugging";
+@import "filters_and_pagination";
+@import "form_elements";
+@import "listing_tables";
+@import "messages";
+@import "progress-log";

@@ -349,6 +349,15 @@ class Theme{
 	public function getRawXML($minified = false) {
 		return ($minified) ? $this->_xmlloader->asMinifiedXML() : $this->_xmlloader->asPrettyXML();
 	}
+	
+	/**
+	 * Get the XMLLoader for this theme, useful for low-level operations.
+	 * 
+	 * @return \XMLLoader
+	 */
+	public function getXMLLoader(){
+		return $this->_xmlloader;
+	}
 
 	/**
 	 * Set all asset files in this theme.  Only really usable in the installer.

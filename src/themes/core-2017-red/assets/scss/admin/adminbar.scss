@@ -1,8 +1,8 @@
 // Bourbon base styles.
-@import "../vendor/bourbon/bourbon";
+@import "vendor/bourbon/bourbon";
 
 // Variables is used by Bitters, and defined outside vendor for customizations.
-@import "../variables";
+@import "variables";
 
 /** Admin Bar **/
 #admin-bar {

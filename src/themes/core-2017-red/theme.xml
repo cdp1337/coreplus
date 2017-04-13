@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Core 2017 Red">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Core 2017 Red" extends="core-2017">
 	<assets>
 		<file filename="assets/css/admin/adminbar.css" md5="eb833e9eec10ca3c3f17ea76eb52b70e"/>
 		<file filename="assets/css/admin/adminbar.css.map" md5="f2bcd8ef6dfc602d92430b9a90375bb9"/>

@@ -4,35 +4,14 @@
 // Bourbon base styles.
 @import "vendor/bourbon/bourbon";
 
-// Variables is used by Bitters, and defined outside vendor for customizations.
+// Grab the variables for this theme.
 @import "variables";
-//@import "vendor/bitters/base";
 
-// Bourbon grid system, Neat.
-@import "vendor/neat/neat";
+// Grab the base system and all dependencies.
+@import "base";
 
-// Start Core-specific components
-@import "standard_tags";
-@import "layout";
-
-@import "buttons";
-@import "collapsible_fieldsets";
-@import "controls";
-@import "debugging";
-@import "filters_and_pagination";
-@import "form_elements";
-@import "listing_tables";
-@import "messages";
-@import "progress-log";
-
-@import "pages/updater";
-@import "pages/widgets";
-@import "pages/theme";
-@import "pages/user";
-@import "pages/admin_health";
-@import "pages/admin_log";
-@import "pages/page";
-@import "pages/gallery";
+// Load all the pages and widgets defined in the theme.
+@import "pages";
 
 @media print {
 	@import "_print";
@@ -40,18 +19,6 @@
 
 @media screen,projection {
 	@import "screen";
-}
-
-a.agplv3-tag {
-	display: inline-block;
-	padding: 0 0.25em;
-	color: #636;
-
-	&:hover {
-		border-radius: 0.5em;
-		background-color: #636;
-		color: white;
-	}
 }
 
 @import "responsive";

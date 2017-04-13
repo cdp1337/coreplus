@@ -28,6 +28,7 @@
 <!ATTLIST theme
 	name CDATA #REQUIRED
 	version CDATA #REQUIRED
+	extends CDATA #IMPLIED
 	xmlns:xsi CDATA #FIXED "http://www.w3.org/2001/XMLSchema-instance"
 >
 

@@ -1,0 +1,19 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/*
+    Created on : Apr 10, 2017, 11:17:44 AM
+    Author     : charlie
+*/
+
+@mixin core2017-fa-icon($icon) {
+	content: $icon;
+	display: inline-block;
+	font-family: FontAwesome;
+	font-size: inherit; // can't have font-size inherit on line above, so need to override
+	text-rendering: auto; // optimizelegibility throws things off #1094
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
