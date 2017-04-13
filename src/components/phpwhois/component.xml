@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0-4" name="PHPWhois" execmode="both">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.0.0-5" name="PHPWhois" execmode="both">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="geographic-codes" type="component" version="1.0.0"/>
 	</requires>
 	<configs/>
@@ -15,22 +15,22 @@
 		<scriptlibrary name="fancy_ip" call="phpwhois\JSHelper::LoadFancyIP"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="d1e7f340bec91318c3a6c2c9cde4a70f"/>
+		<file filename="CHANGELOG" md5="c0bcf5b44a193e84681627260a9fc5f5"/>
 		<file filename="LICENSE" md5="eb723b61539feef013de476e68b5c50a"/>
 		<file filename="README.md" md5="69c7d3436fca6c02694c8ed9427053a7"/>
-		<file filename="controllers/PhpwhoisController.php" md5="7658e02813924a9834e5c1c2d39883a0">
+		<file filename="controllers/PhpwhoisController.php" md5="efa5824d36e9d29a9f8b79a488b73c76">
 			<controller name="PhpwhoisController"/>
 		</file>
-		<file filename="lib/JSHelper.php" md5="6d9c39f67dca7badce478765ab3944fa">
+		<file filename="lib/JSHelper.php" md5="eaf487ea6c4f94ed6a68f16003aa45b7">
 			<class name="phpwhois\JSHelper"/>
 		</file>
-		<file filename="lib/Whois.php" md5="7a93397089239a641e83f8b9f506af7f">
+		<file filename="lib/Whois.php" md5="eea738109edc8088c3c0b275f8cd310b">
 			<class name="Whois"/>
 		</file>
-		<file filename="lib/WhoisNotFoundResult.php" md5="8a2c42e25730830ad59b5fe6678d2c43">
+		<file filename="lib/WhoisNotFoundResult.php" md5="ddf4a260a0cd23af3f4d041cc8f5ce49">
 			<class name="WhoisNotFoundResult"/>
 		</file>
-		<file filename="lib/WhoisResult.php" md5="b8992665c2fd15b832a21db7cb1bf159">
+		<file filename="lib/WhoisResult.php" md5="b56ed6ddb3e446a6242c7d161df3e6bd">
 			<class name="WhoisResult"/>
 		</file>
 		<file filename="lib/phpwhois/whois.idna.php" md5="0748aae8ea6c86ababbaad4b08ba49ad">
@@ -42,7 +42,7 @@
 			<class name="phpwhois\Whois"/>
 		</file>
 		<file filename="lib/phpwhois/whois.parser.php" md5="6b295b31e11cb5f01796a04a64b4d241"/>
-		<file filename="lib/phpwhois/whois/WhoisQuery.php" md5="e89bcc2c1480c20dac7fa24b631aff06">
+		<file filename="lib/phpwhois/whois/WhoisQuery.php" md5="072f54a7948a921403d43a80286f24da">
 			<class name="phpwhois\whois\WhoisQuery"/>
 		</file>
 		<file filename="lib/phpwhois/whois/domain/whois.ae.php" md5="ffa7831b0ed6fc302c967a99cb7d486e">
@@ -421,22 +421,12 @@
 		<upgrade from="5.0.0~core2" to="5.0.0-2"/>
 		<upgrade from="5.0.0-2" to="5.0.0-3"/>
 		<upgrade from="5.0.0-3" to="5.0.0-4"/>
+		<upgrade from="5.0.0-4" to="5.0.0-5"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/phpwhois/fancy_ip.css" md5="c78fb7fd4a37703a00f30ef4f2524361"/>
 		<file filename="assets/js/phpwhois/fancy_ip.js" md5="639b50c6c9aa0cce635a6b9a28f93dc3"/>
 		<file filename="assets/js/phpwhois/fancy_ip.min.js" md5="c4d66a2ed3fd15ec6c5920c237778a6f"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="David Saez"/>
-		<author name="Dmitry Lukashin &lt;http://lukashin.ru/en/&gt;"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-		<license url="http://www.gnu.org/licenses/gpl-2.0.html">GNU General Public License</license>
-	</licenses>
 </component>
 
