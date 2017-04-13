@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.2" logo="screenshots/favicon-204x204.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Favicon" version="2.0.3" logo="screenshots/favicon-204x204.png">
 	<description>
 		A simple component to display a favicon for various browsers and mobile devices.
 	</description>
@@ -25,13 +25,13 @@
 		<hook name="/core/page/rendering" call="FaviconController::PageHook"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="dd680db862816aa65aa7588d6ed2d4c2"/>
+		<file filename="CHANGELOG" md5="6ab7c5738b2d111e6b22e43fe987121b"/>
 		<file filename="README.md" md5="e758db0d8cb23bbfe0b3132575fed948"/>
-		<file filename="controllers/FaviconController.php" md5="41dbfd6e22ed3a2a2151c8be5e638177">
+		<file filename="controllers/FaviconController.php" md5="eedfe678a19c6cda134befd72697ef76">
 			<controller name="FaviconController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="5d0c49480d54a4255ba67fa89a14e223"/>
-		<file filename="libs/favicon/ViewMeta_favicon.php" md5="13220ac07868f95b9f612c6edecf1cc5">
+		<file filename="libs/favicon/ViewMeta_favicon.php" md5="3327e61d85a383028187d7e3f553a7a7">
 			<class name="ViewMeta_favicon"/>
 		</file>
 		<file filename="screenshots/favicon-204x204.png" md5="65b24afa1d7a7b8593f77da51e72651b"/>
@@ -42,7 +42,7 @@
 		<file filename="templates/pages/favicon/admin.tpl" md5="e3f088332a0988dea016f681cb5af413"/>
 	</view>
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<upgrades>
 		<upgrade from="1.0.0" to="1.0.1"/>
@@ -55,6 +55,7 @@
 		<upgrade from="1.2.4" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
 		<upgrade from="2.0.1" to="2.0.2"/>
+		<upgrade from="2.0.2" to="2.0.3"/>
 	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/ui-view.png" title="Frontend UI View"/>
