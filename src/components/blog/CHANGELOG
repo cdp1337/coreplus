@@ -1,3 +1,18 @@
+Blog 2.1.0
+
+	* New support for video logs.
+	* Cleanup blog listing pages just a bit.
+	* Update copyright to 2017.
+	* I18N for Blog.
+	* Upgrade paths from LTS 2.x to 6.2
+	* Some more fixes to the widget namespace transition.
+	* More namespace updates.
+	* More namespace fixes.
+	* Refactor namespacing for PHPUnit so that tests at least work again.
+	* Move all component logos to assets/
+	* Several minor 6.2 compatibility updates.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:02:04 -0400
+
 Blog 2.0.1
 
 	* More images throughout everything!
