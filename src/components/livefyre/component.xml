@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.3" name="Livefyre" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.4" name="Livefyre" execmode="web">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<configs>
 		<config key="/livefyre/siteid" type="string" description="Your LiveFyre SiteID"/>
@@ -23,11 +23,11 @@
 		<file filename="templates/widgets/livefyre/view.tpl" md5="296d59df8c74a3a5ea5d4ad4061e3fb2"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="04caafc5bb8d432e12bde2ebf02b06d3"/>
-		<file filename="controllers/LivefyreController.php" md5="06d6d51b8fc5dab5f7fe5f20b86464ba">
+		<file filename="CHANGELOG" md5="e728e9265288031e3a4bbcda585a69b9"/>
+		<file filename="controllers/LivefyreController.php" md5="2e2dec3aa395733d34b29f8d1b89d575">
 			<controller name="LivefyreController"/>
 		</file>
-		<file filename="widgets/LivefyreWidget.php" md5="2f60c95bba5ed00a2c0e2586aaf0fa0e">
+		<file filename="widgets/LivefyreWidget.php" md5="417ef68a5161679340bb4c6e72169c04">
 			<class name="LivefyreWidget"/>
 		</file>
 	</files>
@@ -42,9 +42,7 @@
 		<upgrade from="1.0.0" to="1.0.1"/>
 		<upgrade from="1.0.1" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
+		<upgrade from="1.0.3" to="1.0.4"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
 </component>
 
