@@ -1,3 +1,10 @@
+jQuery-File-Upload 8.5.0-6
+
+	* Cleanup the UI for bulk file uploads.
+	* Ensure upload directories exist before trying to save the file.
+	* Form & Widget refactoring.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:06:39 -0400
+
 jQuery-File-Upload 8.5.0-5
 
 	* Classname fix for new font-awesome.
