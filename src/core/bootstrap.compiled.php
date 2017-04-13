@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Sun, 09 Apr 2017 16:49:24 -0400
+ * @compiled Wed, 12 Apr 2017 20:44:26 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -7059,6 +7059,48 @@ foreach($pages as $page){
 $page->save();
 }
 return true;
+}
+public static function Search($query, $where = []){
+$ret = [];
+$ref = new ReflectionClass(get_called_class());
+if(!$ref->getProperty('HasSearch')->getValue()){
+return $ret;
+}
+$fac = new ModelFactory(get_called_class());
+if(sizeof($where)){
+$fac->where($where);
+}
+if($ref->getProperty('HasDeleted')->getValue()){
+$fac->where('deleted = 0');
+}
+$relAdd = 0;
+if(($pos = strpos($query, 'tag:')) !== false){
+$tag = preg_replace('/.*tag:([a-zA-Z0-9\-]*).*/', '$1', $query);
+$query = preg_replace('/tag:([a-zA-Z0-9\-]*)/', '', $query);
+$pageMetas = PageMetaModel::FindRaw(['meta_value = ' . $tag, 'meta_key = keyword']);
+$pageURLs = [];
+foreach($pageMetas as $row){
+$pageURLs[] = $row['baseurl'];
+}
+$fac->where('baseurl IN ' . implode(',', $pageURLs));
+$relAdd += 100;
+}
+if($query){
+$fac->where(\Core\Search\Helper::GetWhereClause($query));
+}
+foreach($fac->get() as $m){
+$sr = new \Core\Search\ModelResult($query, $m);
+$sr->relevancy += $relAdd;
+$sr->relevancy = min($sr->relevancy, 100);
+if($sr->relevancy < 1) continue;
+$sr->title = $m->getLabel();
+$sr->link  = $m->get('baseurl');
+$ret[] = $sr;
+}
+usort($ret, function($a, $b) {
+return $a->relevancy < $b->relevancy;
+});
+return $ret;
 }
 private static function _LookupUrl($url = null, $site = null) {
 self::_LoadRoutingCaches();
@@ -15909,6 +15951,9 @@ return $out;
 }
 public function getRawXML($minified = false) {
 return ($minified) ? $this->_xmlloader->asMinifiedXML() : $this->_xmlloader->asPrettyXML();
+}
+public function getXMLLoader(){
+return $this->_xmlloader;
 }
 public function setAssetFiles($files) {
 $this->_xmlloader->removeElements('/theme/assets/file');
