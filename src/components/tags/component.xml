@@ -2,7 +2,7 @@
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
 <component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.3" name="Tags" execmode="web">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="user" type="library"/>
 	</requires>
 	<view searchdir="templates">
@@ -10,7 +10,10 @@
 	</view>
 	<files>
 		<file filename="CHANGELOG" md5="8232ce5379327d9f1160e66ea2c58db9"/>
-		<file filename="widgets/TagsWidget.php" md5="374cfa66e8b651a72d1c1cd279a71d1b">
+		<file filename="controllers/TagsController.php" md5="ce0cea2866ff7046cdaffc906977d14c">
+			<controller name="TagsController"/>
+		</file>
+		<file filename="widgets/TagsWidget.php" md5="3dde8e4efea21eca8ac7ba149ad86744">
 			<class name="TagsWidget"/>
 		</file>
 	</files>
@@ -20,5 +23,14 @@
 		<upgrade from="1.0.1-1~bpo268" to="1.0.2"/>
 		<upgrade from="1.0.2" to="1.0.3"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="charlie"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+	</licenses>
 </component>
 
