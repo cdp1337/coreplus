@@ -1,3 +1,11 @@
+Tags 1.1.0
+
+	* Tags now link to the page search system!
+	* Upgrade paths from LTS 2.x to 6.2
+	* Some more fixes to the widget namespace transition.
+	* More images throughout everything!
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:10:40 -0400
+
 Tags 1.0.3
 
 	* Update the copyright to 2015 and my email address throughout the project.
