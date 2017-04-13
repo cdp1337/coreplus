@@ -918,7 +918,7 @@ EOD;
 			'theme.xml',
 		];
 
-		$this->_name = $this->_xmlLoader->getElement('//theme')->getAttribute('name');
+		$this->_name = $this->_xmlLoader->getElement('/theme')->getAttribute('name');
 
 		$this->_licenses = [];
 		foreach($this->_xmlLoader->getElements('//theme/licenses/license') as $el){
