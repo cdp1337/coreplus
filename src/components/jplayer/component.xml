@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-6" name="jPlayer" execmode="web" logo="assets/images/logos/jplayer.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.0-7" name="jPlayer" execmode="web" logo="assets/images/logos/jplayer.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="JQuery" type="library" version="1.4" operation="ge"/>
@@ -18,9 +18,10 @@
 		<upgrade from="2.2.0~core3" to="2.2.0-4"/>
 		<upgrade from="2.2.0-4" to="2.2.0-5"/>
 		<upgrade from="2.2.0-5" to="2.2.0-6"/>
+		<upgrade from="2.2.0-6" to="2.2.0-7"/>
 	</upgrades>
 	<files>
-		<file filename="CHANGELOG" md5="705fed3b15a78d896a6bb3d36f15bb66"/>
+		<file filename="CHANGELOG" md5="24e340a25cc3467bdc5c45bae3b10872"/>
 		<file filename="jPlayer.class.php" md5="d55160306298b4ff5a0ca70a259518b5">
 			<class name="jPlayer"/>
 		</file>
@@ -50,8 +51,5 @@
 		<file filename="assets/js/popcorn.jplayer.min.js" md5="cca3c285c2f87924ec91073f16acc6d6"/>
 		<file filename="assets/swf/Jplayer.swf" md5="f85e71a50abbaf2a1866ef16d392a420"/>
 	</assets>
-	<authors>
-		<author name="Mark J Panaghiston"/>
-	</authors>
 </component>
 
