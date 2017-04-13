@@ -4,6 +4,9 @@ Core Plus 6.2.0
 	* [Bug] Force the session to be updated when it exists on page exit.
 	* [Bug] Better support for time durations > 1 minute.
 	* [Bug] Fix CLI detection when the SHELL env variable is not present.
+	* [Bug] Fix the issue with ajax form submissions not saving correctly.
+	* [Bug] Fix in the gallery for Form namespacing.
+	* [Bug] Fix resolve asset directory to not try to look for default/ anymore.
 	* [Performance] Better cache for the t() function.
 	* [Feature] New support for a mimetype format on Model get calls.
 	* [Feature] Better responsiveness on listing "tables".
@@ -29,6 +32,64 @@ Core Plus 6.2.0
 	* New support for "source" attributes to populate "options" on form elements.
 	* Drop Model::ATT_TYPE_MYSQL_TIMESTAMP; was a duplicate of ISO_8601_DATETIME.
 	* Better support for CSV mimetypes.
+	* New option to pull meta information from within templates.
+	* Support for page edit form manipulation from within the template.
+	* Better handling of long filenames; the extension is preserved.
+	* Sort page templates alphabetically.
+	* Themes can now extend other themes!
+	* Set the relavency for pages as stars.
+	* New support for administratively searching for pages with specific tags
+	* New support for searching for pages with a specific tag!
+	* documentation update
+	* Rename "local datastore" to "local account".. more human friendly.
+	* Update copyright to 2017.
+	* Some I18N strings for Core.
+	* These were methods, not functions...
+	* Extract asset management away from the core Theme manager.
+	* Better support in Core when jQuery is unavailable.
+	* Migrate Theme into Core.
+	* New vector logo for Core.
+	* Remove some legacy code in the admin menu widget.
+	* Add button groups to the test UI
+	* Registration for the new Email input
+	* Use the new Email input for logins
+	* New form input type; email.
+	* Set the upload directory to public for file upload tests.
+	* Move logo images into logos/ for everything.
+	* Update the phpmailer configuration to use its own page.
+	* Upgrade paths from LTS 2.x to 6.2
+	* More updates to the email changes across Core.
+	* Latest work on the email migrations.
+	* Switch Core Email to the root phpMailer backend.
+	* Initial migration of phpMailer from Core to its own component.
+	* Minor fix to the error management.
+	* Little fixes to the widget system.
+	* Some more fixes to the widget namespace transition.
+	* Add support for GPG2
+	* Better exception handling for invalid date strings.
+	* Default update repository sites to https:// when not set.
+	* Update help text with the new repo location for Core.
+	* Refactor namespacing for PHPUnit so that tests at least work again.
+	* Some error handling on the health check systems.
+	* Some namespace fixes in the Date input field.
+	* Move all component logos to assets/
+	* A little less randomness on the installer...
+	* Better randomness on default installations.
+	* Missed an a2enmod rewrite for debian 8.
+	* Provide a quick-install script for installing dependencies.
+	* Helper for checking for AllowOverride None after installs.
+	* Checks for mysql in the installer.
+	* Better "fix" message for mod rewrite.
+	* Refactor the install system to work with Core 6.2.
+	* Better method of handling when PHP is not available.
+	* WIP work for the log system update.
+	* \Form() namespace change.
+	* Refactor Forms, Markdown, AWS, and Widgets.
+	* Minify some js assets.
+	* Provide a failsafe for file upload options if a default is not selected.
+	* Add update path from 2.6.7 to  6.2.0
+	* WIP Downstream work for the 6.2.0 release.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:00:53 -0400
 
 Core Plus 6.1.1
 
