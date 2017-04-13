@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.3-4" name="JQuery-Full" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2.0-1" name="JQuery-Full" execmode="web">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -105,7 +105,7 @@
 		<file filename="assets/js/jquery/jquery.smooth-scroll.min.js" md5="34b5513756446947afd1b7399d02ea65"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.js" md5="fbd3ec46c4cb84a8433f3b5c468e98cf"/>
 		<file filename="assets/js/jquery/jquery.ui.nestedSortable.min.js" md5="dd45d742a6d4fbdd99332aec91b9773d"/>
-		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="cd04a69450026b78ed328237dfb4788c"/>
+		<file filename="assets/js/jquery/jquery.ui.readonly.js" md5="342a60f7b89648cb4a1a6398d5fffbe0"/>
 		<file filename="assets/js/jquery/jquery.ui.readonly.min.js" md5="55025c93f11da391211ec622363b24d1"/>
 		<file filename="assets/js/jquery/jquery.ui.touch-punch.js" md5="700b877cd3ade98ce6cd4be349d81a5c"/>
 		<file filename="assets/js/jquery/jquery.ui.touch-punch.min.js" md5="448c18a1f5f01f814422e8248d53c113"/>
@@ -118,9 +118,9 @@
 	</assets>
 	<files>
 		<file filename="AUTHORS.txt" md5="062b09043331627683f6b91b0e99daeb"/>
-		<file filename="CHANGELOG" md5="78cdbf61a72056409f6af1b76d21cde1"/>
+		<file filename="CHANGELOG" md5="2dafaa2d8473113836b48da19ae84eaf"/>
 		<file filename="GPL-LICENSE.txt" md5="2c1778696d3ba68569a0352e709ae6b7"/>
-		<file filename="JQuery.lib.php" md5="6565387463b203964d1b1e295a123cf3">
+		<file filename="JQuery.lib.php" md5="a6abd4d6e1703491bc78afb74719d39e">
 			<class name="JQuery"/>
 		</file>
 		<file filename="MIT-LICENSE.txt" md5="8d437ebbf8fbfa406e069912b96eaab1"/>
@@ -165,14 +165,7 @@
 		<upgrade from="2.1.3~core1" to="2.1.3-2"/>
 		<upgrade from="2.1.3-2" to="2.1.3-3"/>
 		<upgrade from="2.1.3-3" to="2.1.3-4"/>
+		<upgrade from="2.1.3-4" to="3.2.0-1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
