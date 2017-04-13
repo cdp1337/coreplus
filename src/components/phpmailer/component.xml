@@ -20,7 +20,7 @@
 		<page baseurl="phpmailer/config" title="t:STRING_PHPMAILER_CONFIG" group="t:STRING_CONFIGURE" admin="1" access="g:admin"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="c73683f62fa3746b14ca6577b1fbb850"/>
+		<file filename="CHANGELOG" md5="5f4b5bc6265ca0c8fb85d7a4517d8452"/>
 		<file filename="README.md" md5="0093c14d52936a5818ed874cd5947140"/>
 		<file filename="controllers/PHPMailerController.php" md5="0bb7a07283b1e91fde2ed884a22fe924">
 			<controller name="PHPMailerController"/>
@@ -123,7 +123,7 @@
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<assets>
-		<file filename="assets/images/logos/phpmailer.png" md5="47e4bc7f11c6e2007caa8363e36c407f"/>
+		<file filename="assets/images/logos/phpmailer.png" md5="d00356b44a968a47198285a4c0a89acf"/>
 	</assets>
 	<install>
 		<php file="upgrades/install-migrate-configs.php"/>
@@ -132,91 +132,5 @@
 		<upgrade from="5.2.22-1~bpo268" to="5.2.22-1"/>
 		<upgrade from="5.2.21-1" to="5.2.22-1"/>
 	</upgrades>
-	<authors>
-		<author name="charlie"/>
-		<author name="Brent R. Matzelle (original founder)"/>
-		<author name="@sherryl4george"/>
-		<author name="Chris Ryan"/>
-		<author name="@dominicus-75"/>
-		<author name="Elçin Özel"/>
-		<author name="Can Yılmaz"/>
-		<author name="Mehmet Benlioğlu"/>
-		<author name="@yasinaydin"/>
-		<author name="Indrek Päri"/>
-		<author name="Dávur Sørensen &lt;http://www.profo-webdesign.dk&gt;"/>
-		<author name="@mirjalal"/>
-		<author name="Mitsuhiro Yoshida &lt;http://mitstek.com/&gt;"/>
-		<author name="Yoshi Sakai &lt;http://bluemooninc.jp/&gt;"/>
-		<author name="Jyry Kuukanen"/>
-		<author name="LiuXin &lt;http://www.80x86.cn/blog/&gt;"/>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Marcus Bointon (Synchro/coolbru)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon (@Synchro)" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Marcus Bointon" email="phpmailer@synchromedia.co.uk"/>
-		<author name="Jim Jagielski (jimjag)" email="jimjag@gmail.com"/>
-		<author name="Jim Jagielski" email="jimjag@gmail.com"/>
-		<author name="Andy Prevost (codeworxtech)" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Andy Prevost" email="codeworxtech@users.sourceforge.net"/>
-		<author name="Konstantin Riabitsev" email="icon@linux.duke.edu"/>
-		<author name="Jim Jagielski" email="jim@jaguNET.com / jimjag@gmail.com"/>
-		<author name="Manuel Reinhard" email="manu@sprain.ch"/>
-		<author name="Richard Davey (original author)" email="rich@corephp.co.uk"/>
-		<author name="Richard Davey" email="rich@corephp.co.uk"/>
-		<author name="by Donato Rouco" email="donatorouco@gmail.com"/>
-		<author name="by Donato" email="donatorouco@gmail.com"/>
-		<author name="VINADES.,JSC" email="contact@vinades.vn"/>
-		<author name="Mikael Stokkebro" email="info@stokkebro.dk"/>
-		<author name="Ali Jazayeri" email="jaza.ali@gmail.com"/>
-		<author name="Mohammad Hossein Mojtahedi" email="mhm5000@gmail.com"/>
-		<author name="Mohammad Hossein" email="mhm5000@gmail.com"/>
-		<author name="Eduards M." email="e@npd.lv"/>
-		<author name="Eduards M" email="e@npd.lv"/>
-		<author name="Avtandil Kikabidze aka LONGMAN" email="akalongman@gmail.com"/>
-		<author name="Avtandil Kikabidze" email="akalongman@gmail.com"/>
-		<author name="Klemen Tušar" email="techouse@gmail.com"/>
-		<author name="Klemen Tu" email="techouse@gmail.com"/>
-		<author name="Paulo Henrique Garcia" email="paulo@controllerweb.com.br"/>
-		<author name="Paulo Henrique" email="paulo@controllerweb.com.br"/>
-		<author name="Lucas Guimarães" email="lucas@lucasguimaraes.com"/>
-		<author name="Lucas Guimar" email="lucas@lucasguimaraes.com"/>
-		<author name="Phelipe Alves" email="phelipealvesdesouza@gmail.com"/>
-		<author name="Ilias Bartolini" email="brain79@inwind.it"/>
-		<author name="Stefano Sabatini" email="sabas88@gmail.com"/>
-		<author name="Cecep Prawiro" email="cecep.prawiro@gmail.com"/>
-		<author name="Ronny Sherer" email="ronny@hoojima.com"/>
-		<author name="Dainius Kaupaitis" email="dk@sum.lt"/>
-		<author name="Hrvoj3e" email="hrvoj3e@gmail.com"/>
-		<author name="Matt Sturdy" email="matt.sturdy@gmail.com"/>
-		<author name="Александар Јевремовић" email="ajevremovic@gmail.com"/>
-		<author name="Tuxion" email="team@tuxion.nl"/>
-		<author name="Nawawi Jamili" email="nawawi@rutweb.com"/>
-		<author name="Alex Florea" email="alecz.fia@gmail.com"/>
-		<author name="Aleksander Maksymiuk" email="info@setpro.pl"/>
-		<author name="liqwei" email="liqwei@liqwei.com"/>
-		<author name="Peter Dave Hello" email="@PeterDaveHello/"/>
-		<author name="Peter Dave" email="@PeterDaveHello/"/>
-		<author name="Jason Chiang" email="xcojad@gmail.com"/>
-		<author name="Yuriy Rudyy" email="yrudyy@prs.net.ua"/>
-		<author name="Mikhail Kyosev" email="mialygk@gmail.com"/>
-		<author name="Alexey Chumakov" email="alex@chumakov.ru"/>
-		<author name="Foster Snowhill" email="i18n@forstwoof.ru"/>
-		<author name="Johan Linnér" email="johan@linner.biz"/>
-		<author name="Johan Linn" email="johan@linner.biz"/>
-		<author name="Elan Ruusamäe" email="glen@delfi.ee"/>
-		<author name="Elan Ruusam" email="glen@delfi.ee"/>
-		<author name="Hrayr Grigoryan" email="hrayr@bits.am"/>
-		<author name="Jonadabe" email="jonadabe@hotmail.com"/>
-		<author name="ChalkPE" email="amato0617@gmail.com"/>
-		<author name="bahjat al mostafa" email="bahjat983@hotmail.com"/>
-		<author name="bahjat al" email="bahjat983@hotmail.com"/>
-		<author name="young" email="masxy@foxmail.com"/>
-		<author name="Michal Tinka" email="michaltinka@gmail.com"/>
-		<author name="Ivan" email="web AT microstudi DOT com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
