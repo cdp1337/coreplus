@@ -1,3 +1,13 @@
+CodeMirror 5.6.0-6
+
+	* Update copyright to 2017.
+	* Move logo images into logos/ for everything.
+	* Move all component logos to assets/
+	* Better support for codemirror dependencies internally.
+	* Provide some boiler-plate themes for codemirror as SCSS.
+	* Refactor CodeMirror styles to be more themeable.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:03:38 -0400
+
 CodeMirror 5.6.0-5
 
 	* More images throughout everything!

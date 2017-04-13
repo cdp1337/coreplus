@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-5" name="CodeMirror" execmode="web" logo="assets/images/logos/codemirror.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="5.6.0-6" name="CodeMirror" execmode="web" logo="assets/images/logos/codemirror.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="a4546d6c86682ef19c48239d55c28dde"/>
+		<file filename="CHANGELOG" md5="69fb3d004bf5f61120d2f09830d755cc"/>
 		<file filename="LICENSE" md5="9b220ffd4c5ac8f2dd268ac13493a602"/>
 		<file filename="README.md" md5="0f08084b2e14a8ae88004b4cc635bc3d"/>
 		<file filename="assets/scss/codemirror.scss" md5="5ff8f46c9ea65ea97a83cb6083a7dd5b"/>
-		<file filename="classes/codemirror/Utils.php" md5="962c9558a76604b93deb14fb66bbc009">
+		<file filename="classes/codemirror/Utils.php" md5="45ff38fe9382743135017d8e9f2d18a2">
 			<class name="CodeMirror\Utils"/>
 		</file>
 	</files>
@@ -39,6 +39,7 @@
 		<upgrade from="5.6.0~core1" to="5.6.0-3"/>
 		<upgrade from="5.6.0-3" to="5.6.0-4"/>
 		<upgrade from="5.6.0-4" to="5.6.0-5"/>
+		<upgrade from="5.6.0-5" to="5.6.0-6"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/codemirror.css" md5="6e4b3739e260eff061bcad017c3eec07"/>
@@ -726,17 +727,5 @@
 		<file filename="assets/libs/codemirror/theme/yeti.css" md5="623dc805bc84dd6d25deef376593354e"/>
 		<file filename="assets/libs/codemirror/theme/zenburn.css" md5="94ad50bf3d048ed92cc513cd901dc685"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Nick Hinsch" email="nicholas@evalagency.com"/>
-		<author name="Constantin Jucovschi" email="c.jucovschi@jacobs-university.de"/>
-		<author name="Stas Kobzar" email="stas@modulis.ca"/>
-		<author name="Hans Engel"/>
-		<author name="Gautam Mehta"/>
-		<author name="Koh Zi Han, based on implementation by Koh Zi Chun"/>
-	</authors>
-	<licenses>
-		<license url="http://opensource.org/licenses/MIT">MIT License</license>
-	</licenses>
 </component>
 
