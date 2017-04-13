@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="2.0.0">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="User-Social" version="2.0.1">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<hooks/>
 	<files>
-		<file filename="CHANGELOG" md5="311377bc120a52dfbb7b3f50d23a6aed"/>
+		<file filename="CHANGELOG" md5="98f1715d143a501b488c898feef6359b"/>
 		<file filename="README.md" md5="97aac508b463a1040b383a0f0654d113"/>
 		<file filename="controllers/UserProfileController.php" md5="66853e201317d6ef72b0925f6f298fc2">
 			<controller name="UserProfileController"/>
@@ -14,12 +14,12 @@
 		<file filename="helpers/UserSocialHelper.class.php" md5="17e15c95ad67ecf10ca506267b0b22c7">
 			<class name="UserSocialHelper"/>
 		</file>
-		<file filename="i18n/en.ini" md5="873c051db4281d5088d1617a4ef2e42e"/>
+		<file filename="i18n/strings.yml" md5="581aa8d5280eff29e770bb61979538d3"/>
 		<file filename="models/UserSocial_UserModelSupplemental.php" md5="c3cd42143f7fd598af12d2a8d46fa729">
 			<class name="UserSocial_UserModelSupplemental"/>
 		</file>
 		<file filename="upgrades/123_user_config_migration.php" md5="242140d3faf6585e0addd0d918381b6f"/>
-		<file filename="widgets/UserProfileWidget.php" md5="d3439ef919e587370e2daa7aa00fd567">
+		<file filename="widgets/UserProfileWidget.php" md5="66f559f86436d38c4db2be7d6eacbe17">
 			<class name="UserProfileWidget"/>
 		</file>
 	</files>
@@ -45,9 +45,7 @@
 		<upgrade from="1.2.3" to="2.0.0">
 			<php file="upgrades/123_user_config_migration.php"/>
 		</upgrade>
+		<upgrade from="2.0.0" to="2.0.1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
 </component>
 
