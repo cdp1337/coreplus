@@ -727,16 +727,6 @@ class PageModel extends Model {
 			]
 		);
 
-		// I need to add the pagemetas!
-		foreach($this->getMetasArray() as $key => $dat){
-			$type = $dat['type'];
-			unset($dat['type']);
-			$dat['name'] = 'metas[' . $key . ']';
-			$dat['group'] = 'Meta Information & URL (SEO)'; 
-			
-			$ret['metas_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
-		}
-
 		// And the page insertables.
 		$tpl = Core\Templates\Template::Factory($this->getTemplateName());
 		if($tpl){
@@ -755,6 +745,38 @@ class PageModel extends Model {
 
 				$ret['insertables_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
 			}
+		}
+		
+		// This system allows templates to manipulate some of the meta fields.
+		$metaRegroups = [];
+		if($tpl){
+			$tmpMetas = $tpl->getMetas();
+			
+			if(isset($tmpMetas['page-edit-meta-regroup']) && is_array($tmpMetas['page-edit-meta-regroup'])){
+				foreach($tmpMetas['page-edit-meta-regroup'] as $set){
+					$pos = strpos($set, ' ');
+					$key = substr($set, 0, $pos);
+					$dst = substr($set, $pos+1);
+					$metaRegroups[$key] = $dst;
+				}
+			}
+			elseif(isset($tmpMetas['page-edit-meta-regroup'])){
+				$set = $tmpMetas['page-edit-meta-regroup'];
+				$pos = strpos($set, ' ');
+				$key = substr($set, 0, $pos);
+				$dst = substr($set, $pos+1);
+				$metaRegroups[$key] = $dst;
+			}
+		}
+		
+		// I need to add the pagemetas!
+		foreach($this->getMetasArray() as $key => $dat){
+			$type = $dat['type'];
+			unset($dat['type']);
+			$dat['name'] = 'metas[' . $key . ']';
+			$dat['group'] = isset($metaRegroups[ $dat['name'] ]) ? $metaRegroups[ $dat['name'] ] : 'Meta Information & URL (SEO)'; 
+			
+			$ret['metas_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
 		}
 		
 		return $ret;
