@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JS Cookie" version="2.0.3-3">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="JS Cookie" version="2.0.3-4">
 	<provides>
 		<provide version="2.0.3" name="js.cookie" type="library"/>
 		<scriptlibrary name="js.cookie" call="\JSCookie\JSCookie::IncludeJS"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="97e44d7c54eed338b3832b097201f634"/>
+		<file filename="CHANGELOG" md5="2ba43bd78698e60588ac70c44ef51530"/>
 		<file filename="CONTRIBUTING.md" md5="a830e593ceb228b849e91ff850562633"/>
 		<file filename="MIT-LICENSE.txt" md5="962f4f746673a8b7bb2c26d1800de5cb"/>
 		<file filename="README.md" md5="24690bc71e38173a017ad96af81799b6"/>
-		<file filename="libs/jscookie/JSCookie.php" md5="17f6153c13eec7820cd7c9491050805e">
+		<file filename="libs/jscookie/JSCookie.php" md5="626e723722b1dcd0855e8efb0d70d402">
 			<class name="JSCookie\JSCookie"/>
 		</file>
 	</files>
@@ -22,9 +22,10 @@
 	<upgrades>
 		<upgrade from="2.0.3-1" to="2.0.3-2"/>
 		<upgrade from="2.0.3-2" to="2.0.3-3"/>
+		<upgrade from="2.0.3-3" to="2.0.3-4"/>
 	</upgrades>
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 </component>
 
