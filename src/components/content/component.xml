@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0.1" name="Content" execmode="web" logo="assets/images/logos/content.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1.0" name="Content" execmode="web" logo="assets/images/logos/content.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -12,19 +12,19 @@
 		<widgetcreate title="Content Area" class="ContentWidget"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="275ae8d4515762330823ef0053c46c88"/>
-		<file filename="controllers/ContentController.php" md5="8074889c91f2eba2d2817db89b322787">
+		<file filename="CHANGELOG" md5="95731348a3305927c51532b80b7631bd"/>
+		<file filename="controllers/ContentController.php" md5="257cc521aa0d20e30e657a219b1e43c9">
 			<controller name="ContentController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="03d1435baa1b6984b25cf8199dbaea8f"/>
-		<file filename="models/ContentModel.php" md5="9347ee122e7ab2e53e6e1580da60493a">
+		<file filename="models/ContentModel.php" md5="7d24ea7784ccc04a9bba62b188a3d6ca">
 			<class name="ContentModel"/>
 		</file>
 		<file filename="upgrades/310_page_updates.php" md5="549b9de9daba51cff04fe6c2cd6d6db1"/>
-		<file filename="widgets/ContentAdminWidget.php" md5="4f25d6fbb9885afc56f90dc7331b728e">
+		<file filename="widgets/ContentAdminWidget.php" md5="b72ef60f5c4b7470bebcf5c238940013">
 			<class name="ContentAdminWidget"/>
 		</file>
-		<file filename="widgets/ContentWidget.php" md5="9f7b6087e5d11fa0e7276a7f883684ad">
+		<file filename="widgets/ContentWidget.php" md5="75874895c89d80bf137a2cf3787081aa">
 			<class name="ContentWidget"/>
 		</file>
 	</files>
@@ -40,8 +40,6 @@
 		<file filename="templates/pages/content/delete.tpl" md5="64255b05d03ba0b58cbacb107e2b2dff"/>
 		<file filename="templates/pages/content/edit.tpl" md5="1f45af7838e6eb4421220a6dd5a8428d"/>
 		<file filename="templates/pages/content/view.tpl" md5="f9a40b24658d333da22f7726de3d032e"/>
-		<file filename="templates/pages/content/view/blog-article-review.tpl" md5="e674fc01f91355940c0386e71ec8f89f"/>
-		<file filename="templates/pages/content/view/blog-article.tpl" md5="d29f440cd4e863e00d963d9cd5c34bac"/>
 		<file filename="templates/pages/content/view/markdown.tpl" md5="6d535f0b3cb7bbabdd70b9e1935bf034"/>
 		<file filename="templates/pages/content/view/option1.tpl" md5="4c8037182441dcac26d7f31496ac2a1a"/>
 		<file filename="templates/widgets/content/execute.tpl" md5="0db0ff3eae107a310d9b9fe853452575"/>
@@ -76,6 +74,7 @@
 		<upgrade from="2.5.1" to="2.5.2"/>
 		<upgrade from="2.5.2" to="3.0.0"/>
 		<upgrade from="3.0.0" to="3.0.1"/>
+		<upgrade from="3.0.1" to="3.1.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/images/logos/content.png" md5="86beb406ad3daac3eabb800366fc1bb7"/>
@@ -83,13 +82,5 @@
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area-210.png" md5="4908ee304cc74dadd78bf4eeddf5c12c"/>
 		<file filename="assets/images/previews/templates/widgets/content/custom-content-area.png" md5="f8cea628a881b575aecfa54f1fd32500"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 

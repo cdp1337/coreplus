@@ -1,3 +1,13 @@
+Content 3.1.0
+
+	* [Feature] New support for a mimetype format on Model get calls.
+	* New support for video logs.
+	* Update copyright to 2017.
+	* Move logo images into logos/ for everything.
+	* Move all component logos to assets/
+	* Add direct link for creating a new content page in the admin menu.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:03:53 -0400
+
 Content 3.0.1
 
 	* More images throughout everything!
