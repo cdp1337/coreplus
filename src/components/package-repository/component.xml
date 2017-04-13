@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.3.1" logo="assets/images/logos/package-repository.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Package Repository" version="1.3.2" logo="assets/images/logos/package-repository.png">
 	<configs>
 		<config key="/package_repository/base_directory" type="string"/>
 		<config key="/package_repository/is_private" default="0" type="boolean"/>
@@ -21,7 +21,7 @@
 		<page baseurl="/packagerepositorylicense/features" title="t:STRING_PACKAGE_REPOSITORY_LICENSE_FEATURE_MANAGER" admin="1" group="t:STRING_CONFIGURE" access="p:/package_repository/licenses/manager" image="assets/images/actions/kgpg_key1_kopete.png"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="fcfca3c8a8038ca61f65bd14ab7e129a"/>
+		<file filename="CHANGELOG" md5="428425c3f310b7777d9b73d2941f92f0"/>
 		<file filename="README.md" md5="de233577a6cb1e8d6cb660e9ae9d95ed"/>
 		<file filename="assets/scss/package-repository.scss" md5="c0ec0d8ad35fac327622b3a1c4be6565"/>
 		<file filename="controllers/PackageRepositoryController.php" md5="f5cd6b2b845b26de0ee49d5c626a49c0">
@@ -62,6 +62,7 @@
 		<upgrade from="1.2.0" to="1.2.1"/>
 		<upgrade from="1.2.1" to="1.3.0"/>
 		<upgrade from="1.3.0" to="1.3.1"/>
+		<upgrade from="1.3.1" to="1.3.2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/package-repository.css" md5="e3e84fdae6058076a4f0971ad715506c"/>
@@ -72,8 +73,5 @@
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
 </component>
 
