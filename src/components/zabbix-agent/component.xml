@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.0" logo="assets/images/logos/zabbix-agent.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Zabbix Agent" version="1.0.1" logo="assets/images/logos/zabbix-agent.png">
 	<description>
 		Monitoring agent for the Zabbix system.  Sends system health reports to the monitoring server every minute.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="2a64b580f73f29c7bda64284fc019e4e"/>
+		<file filename="CHANGELOG" md5="0604fe5cb3db5aec5435800f35a22466"/>
 		<file filename="README.md" md5="6b7f9d4633b0306a3feb976e3061fe45"/>
 		<file filename="controllers/ZabbixAgentController.php" md5="2898e87da28a9abb08aa025c85d0a7cc">
 			<controller name="ZabbixAgentController"/>
@@ -28,8 +28,8 @@
 	<assets>
 		<file filename="assets/images/logos/zabbix-agent.png" md5="b85c2ab6920a8390a5187c9aeebe463a"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 </component>
 
