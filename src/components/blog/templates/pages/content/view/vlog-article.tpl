@@ -1,3 +1,12 @@
+{*#META
+page-edit-meta-regroup: metas[author] Basic
+page-edit-meta-regroup: metas[image] Basic
+page-edit-meta-regroup: metas[keywords] Basic
+page-edit-meta-regroup: metas[description] Basic
+#*}
+
+{css src="assets/css/blog.css"}{/css}
+
 <div itemscope itemtype="http://schema.org/BlogPosting" class="blog-article" xmlns="http://www.w3.org/1999/html">
 
 	{insertable name="page_h1" assign="page_h1" title="Page Heading" type="text" description="The page H1 tag."}
@@ -20,11 +29,14 @@
 			<div class="blog-article-date">Not Published</div>
 		{/if}
 	</div>
-
-
-	{if $page->getImage()}
-		{img class="blog-article-img" file=$page->getImage() width='620' height='400' itemprop="thumbnailUrl" alt="`$page.title|escape`" includemeta=1}
-	{/if}
+	
+	{insertable name="video" assign="video" title="Posting Video" accept="video/*" type="file" description="The showcase video for this post."}{/insertable}
+	
+	{link $video assign="videourl"}
+	
+	<video src="{$videourl}" controls>
+		<a href="{$videourl}">Download</a>
+	</video>
 
 	<div class="blog-article-body" itemprop="articleBody">
 		{insertable name="body" title="Body Content" type="wysiwyg"}{/insertable}

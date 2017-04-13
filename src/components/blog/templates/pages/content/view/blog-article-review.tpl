@@ -1,3 +1,12 @@
+{*#META
+page-edit-meta-regroup: metas[author] Basic
+page-edit-meta-regroup: metas[image] Basic
+page-edit-meta-regroup: metas[keywords] Basic
+page-edit-meta-regroup: metas[description] Basic
+#*}
+
+{css src="assets/css/blog.css"}{/css}
+
 <div itemscope itemtype="http://schema.org/Review" class="blog-article" xmlns="http://www.w3.org/1999/html">
 
 	<div class="blog-article-posting-stats">

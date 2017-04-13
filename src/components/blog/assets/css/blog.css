@@ -83,4 +83,12 @@ table.listing tbody .blog-article-status-draft {
   padding-bottom: 0.25em;
 }
 
+/**
+ * The actual page
+ */
+/* line 99, ../scss/blog.scss */
+.blog-article video {
+  max-width: 100%;
+}
+
 /*# sourceMappingURL=blog.css.map */

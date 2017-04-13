@@ -90,3 +90,13 @@ table.listing tbody .blog-article-status-draft {
 		padding-bottom: 0.25em;
 	}
 }
+
+/**
+ * The actual page
+ */
+
+.blog-article {
+	video {
+		max-width: 100%;
+	}
+}
