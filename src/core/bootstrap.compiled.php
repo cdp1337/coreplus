@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Wed, 12 Apr 2017 20:44:26 -0400
+ * @compiled Thu, 13 Apr 2017 18:55:05 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -6188,13 +6188,6 @@ $ret['rewrites'] = \Core\Forms\FormElement::Factory('textarea',
 'description' => 'Enter rewrite aliases that point to this page, one per line.  You may use the fully resolved path or simply the part after the ".com".',
 ]
 );
-foreach($this->getMetasArray() as $key => $dat){
-$type = $dat['type'];
-unset($dat['type']);
-$dat['name'] = 'metas[' . $key . ']';
-$dat['group'] = 'Meta Information & URL (SEO)';
-$ret['metas_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
-}
 $tpl = Core\Templates\Template::Factory($this->getTemplateName());
 if($tpl){
 foreach($tpl->getInsertables() as $key => $dat){
@@ -6209,6 +6202,32 @@ $dat['value'] = $i->get('value');
 }
 $ret['insertables_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
 }
+}
+$metaRegroups = [];
+if($tpl){
+$tmpMetas = $tpl->getMetas();
+if(isset($tmpMetas['page-edit-meta-regroup']) && is_array($tmpMetas['page-edit-meta-regroup'])){
+foreach($tmpMetas['page-edit-meta-regroup'] as $set){
+$pos = strpos($set, ' ');
+$key = substr($set, 0, $pos);
+$dst = substr($set, $pos+1);
+$metaRegroups[$key] = $dst;
+}
+}
+elseif(isset($tmpMetas['page-edit-meta-regroup'])){
+$set = $tmpMetas['page-edit-meta-regroup'];
+$pos = strpos($set, ' ');
+$key = substr($set, 0, $pos);
+$dst = substr($set, $pos+1);
+$metaRegroups[$key] = $dst;
+}
+}
+foreach($this->getMetasArray() as $key => $dat){
+$type = $dat['type'];
+unset($dat['type']);
+$dat['name'] = 'metas[' . $key . ']';
+$dat['group'] = isset($metaRegroups[ $dat['name'] ]) ? $metaRegroups[ $dat['name'] ] : 'Meta Information & URL (SEO)';
+$ret['metas_' . $key] = \Core\Forms\FormElement::Factory($type, $dat);
 }
 return $ret;
 }
@@ -19670,6 +19689,36 @@ $insertables[ $nodedata['name'] ] = $nodedata;
 catch(\Exception $e){
 }
 return $insertables;
+}
+public function getMetas() {
+$metas = [];
+$contents = file_get_contents($this->_filename);
+if(strpos($contents, '{*#META') !== false){
+$segment = trim(preg_replace('/{\*#META(.*)#\*}.*/s', '$1', $contents));
+$lines = array_map('trim', explode("\n", $segment));
+foreach($lines as $l){
+if($l == ''){
+continue;
+}
+$pos = strpos($l, ':');
+if($pos === false){
+continue;
+}
+$key = substr($l, 0, $pos);
+$val = trim(substr($l, $pos+1));
+if(isset($metas[$key]) && is_array($metas[$key])){
+$metas[$key][] = $val;
+}
+elseif(isset($metas[$key])){
+$metas[$key] = [ $metas[$key] ];
+$metas[$key][] = $val;
+}
+else{
+$metas[$key] = $val;
+}
+}
+}
+return $metas;
 }
 public function getView() {
 return $this->_view === null ? \Core\view() : $this->_view;
