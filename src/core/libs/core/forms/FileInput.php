@@ -275,7 +275,12 @@ class FileInput extends FormElement {
 				// Destination
 				// Make sure the filename is sanitized.
 				// Also, limit the new filename to 40 characters.
-				$newbasename = substr(\Core\str_to_url($in['name'], true), 0, 40);
+				$newbasename = \Core\str_to_url($in['name'], true);
+				// Trim off the extension.
+				$ext = \Core\Filestore\get_extension_from_string($newbasename);
+				$newbasename = substr($newbasename, 0, 0-strlen($ext));
+				$newbasename = substr($newbasename, 0, 40);
+				$newbasename .= '.' . $ext;
 				$nf = \Core\Filestore\Factory::File($this->get('basedir') . '/' . $newbasename);
 
 				// do NOT copy the contents over until the accept check has been ran!
