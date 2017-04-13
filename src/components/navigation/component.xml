@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.2" name="Navigation" execmode="web" logo="assets/images/logos/navigation.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.6.3" name="Navigation" execmode="web" logo="assets/images/logos/navigation.png">
 	<requires>
 		<require name="core" type="component" operation="ge" version="6.2.0"/>
 	</requires>
@@ -8,20 +8,20 @@
 		<page baseurl="/navigation/create" title="Create Navigation Menu" group="t:STRING_CONTENT" access="g:admin" admin="1"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="bc23e2cda1bb070e0d350fc8b1ec936f"/>
+		<file filename="CHANGELOG" md5="258886d1e015ea9d8b57eb6af0d82395"/>
 		<file filename="assets/scss/navigation.scss" md5="271eb2ce6a8d6329b27d67e25dda8a33"/>
-		<file filename="controllers/NavigationController.php" md5="c386e82a5c30274e1543276494670ee1">
+		<file filename="controllers/NavigationController.php" md5="e1e0fef7d96f71b9540ce5780de40fc3">
 			<controller name="NavigationController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="ee530eba4bc9aacf65143e8f0c5e1a56"/>
-		<file filename="models/Navigation.model.php" md5="0cde707635c7440504822de317758de7">
+		<file filename="models/Navigation.model.php" md5="36dfe07de05153b8485033d6e8554b36">
 			<class name="NavigationModel"/>
 		</file>
-		<file filename="models/NavigationEntry.model.php" md5="9f3779abc16891a37bf7d2d383213146">
+		<file filename="models/NavigationEntry.model.php" md5="1e83ef37659cff8973af557be5b581dc">
 			<class name="NavigationEntryModel"/>
 		</file>
 		<file filename="upgrades/230_nav_widget_editables.php" md5="d7b466a521859a4670ce8e0d98b7fa5c"/>
-		<file filename="widgets/NavigationWidget.php" md5="03c977bd9ee2fe7d3822e1657f56b506">
+		<file filename="widgets/NavigationWidget.php" md5="14aa436acea5bf28a0a13ebfba300fbf">
 			<class name="NavigationWidget"/>
 		</file>
 	</files>
@@ -37,7 +37,7 @@
 		<file filename="templates/widgets/navigation/siblings.tpl" md5="e02e7719cfb212e4d9f5637b396e5f10"/>
 		<file filename="templates/widgets/navigation/siblingsandchildren.tpl" md5="2f26fdaa35d28a1a094699a825db64d8"/>
 		<file filename="templates/widgets/navigation/view.tpl" md5="882955f52ee2d9973b731f08f7d07187"/>
-		<file filename="templates/widgets/navigation/view/horizontal-menu.tpl" md5="051a0eadd57718135ceec406ad4cc348"/>
+		<file filename="templates/widgets/navigation/view/horizontal-menu.tpl" md5="f8fb0c39737e49622ffb05943a9966bc"/>
 		<file filename="templates/widgets/navigation/view/jquery-cycle-menu.tpl" md5="84506dc8ebddcdb6c9daf45e62624794"/>
 	</view>
 	<widgets>
@@ -94,14 +94,7 @@
 		<upgrade from="2.5.2" to="2.6.0"/>
 		<upgrade from="2.6.0" to="2.6.1"/>
 		<upgrade from="2.6.1" to="2.6.2"/>
+		<upgrade from="2.6.2" to="2.6.3"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 

@@ -1,3 +1,15 @@
+Navigation 2.6.3
+
+	* [Feature] New support for a mimetype format on Model get calls.
+	* Update copyright to 2017.
+	* Better support in Core when jQuery is unavailable.
+	* Move logo images into logos/ for everything.
+	* Upgrade paths from LTS 2.x to 6.2
+	* New support for cycle-based navigations.
+	* Move all component logos to assets/
+	* Form & Widget refactoring.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:08:31 -0400
+
 Navigation 2.6.2
 
 	* Navigation widgets now support horizontal menus!
