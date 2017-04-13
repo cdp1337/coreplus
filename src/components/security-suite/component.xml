@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Security-Suite" execmode="web" logo="assets/images/logos/security-suite.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="Security-Suite" execmode="web" logo="assets/images/logos/security-suite.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="phpwhois" type="component"/>
@@ -50,11 +50,11 @@
 		Includes anti-spam by stopforumspam.com, IP Blacklist, and site-wide password protection.
 	</description>
 	<files>
-		<file filename="CHANGELOG" md5="055780ce4e86ec642744fd8c39264d53"/>
+		<file filename="CHANGELOG" md5="51e1fdb256ee791fe75a57a34e0ca537"/>
 		<file filename="controllers/SecurityController.php" md5="8ea5c71487fe4b0ac3e70f26296abab9">
 			<controller name="SecurityController"/>
 		</file>
-		<file filename="controllers/WPHoneypotController.php" md5="3acd01b4e34da133ad7b433b1c8b2ac2">
+		<file filename="controllers/WPHoneypotController.php" md5="eb758b444b1c50bd3816e5323ccfea07">
 			<controller name="WPHoneypotController"/>
 		</file>
 		<file filename="i18n/ar.ini" md5="7f9a8d11dbd58388c16eeee3d0c71900"/>
@@ -62,28 +62,28 @@
 		<file filename="i18n/en.ini" md5="7371ee8c0de4e64e0b2f2509c0becdf1"/>
 		<file filename="i18n/fr.ini" md5="0ce04f05d4a7bbfc0fb46889fa33aeb7"/>
 		<file filename="i18n/strings.yml" md5="d88178e81019efe3e1d7841c878475c0"/>
-		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="f6d430efc682249e34a1af82d4ae999b">
+		<file filename="libs/securitysuite/IpBlacklistHelper.php" md5="ed0e788da32c4b811667650a556880b8">
 			<class name="SecuritySuite\IpBlacklistHelper"/>
 		</file>
-		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="a831625cd81fc72eb4984a1685bc0b44">
+		<file filename="libs/securitysuite/SimpleSitePassword.php" md5="0df49262738d88cf6089a1a58dacfda5">
 			<class name="SecuritySuite\SimpleSitePassword"/>
 		</file>
-		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="ace1db77dfdedd363236c143b27bb760">
+		<file filename="libs/securitysuite/StopForumSpam.class.php" md5="4d955396f8f06937412366b70d3d5765">
 			<class name="SecuritySuite\StopForumSpam"/>
 		</file>
-		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="9dd497eaa65769397e1c6ffc1df4c580">
+		<file filename="libs/securitysuite/spamcan/SpamCheck.php" md5="bd34b0030abb7178ba0ca5143c971eb2">
 			<class name="SecuritySuite\SpamCan\SpamCheck"/>
 			<class name="SecuritySuite\SpamCan\SpamCheckResult"/>
 		</file>
 		<file filename="listed_ip_1.zip" md5="9e6a0866ba2c7b797b0bbe39af7a6736"/>
 		<file filename="listed_ip_1_all.zip" md5="aabf67226a6d5d2bebcf6cc4e6a8c187"/>
-		<file filename="models/IpBlacklistModel.php" md5="679111ba5457e122be3a6ff1a975bdac">
+		<file filename="models/IpBlacklistModel.php" md5="7d1e8f4aba2346ad5b697fd550ffb71c">
 			<class name="IpBlacklistModel"/>
 		</file>
 		<file filename="models/SecurityLogModel.php" md5="a2f1c71c47ee33fff7de2e57447cb056">
 			<class name="SecurityLogModel"/>
 		</file>
-		<file filename="models/SpamHamKeywordModel.php" md5="15a93c61855fd326769d5a9e5300efe3">
+		<file filename="models/SpamHamKeywordModel.php" md5="da746fe2a1834ddee2250a86029ea55f">
 			<class name="SpamHamKeywordModel"/>
 		</file>
 		<file filename="models/sfsBlacklistModel.php" md5="4d6d7c012a546ea0f6b54215961af3fa">
@@ -115,6 +115,7 @@
 		<upgrade from="1.6.0" to="1.6.1"/>
 		<upgrade from="1.6.1" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
+		<upgrade from="2.0.1" to="2.0.2"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/images/logos/security-suite.png" md5="ad92860dc048374ea7527ad60376d89e"/>
@@ -122,13 +123,5 @@
 		<file filename="assets/wp-admin/css/wpcom.css" md5="faab35031e9109d28fc8435eb635c3af"/>
 		<file filename="assets/wp-includes/css/buttons.min.css" md5="f3dcaa18ed8e6638089d4e1a196ccae9"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
