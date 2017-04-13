@@ -113,6 +113,9 @@ class PagePageSelectInput extends SelectInput{
 		if(!sizeof($matches)){
 			return '';
 		}
+		
+		// Sort!
+		asort($matches);
 
 		$options = array_merge(array('' => '-- Default Page Template --'), $matches);
 		$this->set('options', $options);
