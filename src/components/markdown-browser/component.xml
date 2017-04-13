@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.2.1" name="Markdown Browser" execmode="web" logo="assets/images/logos/markdown-browser.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.3.0" name="Markdown Browser" execmode="web" logo="assets/images/logos/markdown-browser.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="php-markdown-lib" type="component"/>
@@ -25,9 +25,9 @@
 		<hook name="/cron/5-minute" call="MarkdownBrowserController::_AutoRegisterFiles"/>
 	</hooks>
 	<files>
-		<file filename="CHANGELOG" md5="a51b91824d11aa261bae5ef43fca873b"/>
+		<file filename="CHANGELOG" md5="4b1994019809f73275d5e6a2ed796756"/>
 		<file filename="README.md" md5="f4f72d72499902599c77b0e065712f0a"/>
-		<file filename="controllers/MarkdownBrowserController.php" md5="f238307c7d7dee1c6d0df913aeb4d506">
+		<file filename="controllers/MarkdownBrowserController.php" md5="27b9ac8419b160d66e7ed9770200630a">
 			<controller name="MarkdownBrowserController"/>
 			<class name="MarkdownBrowserUrlHelper"/>
 		</file>
@@ -50,19 +50,12 @@
 		<upgrade from="2.0.0" to="2.1.0"/>
 		<upgrade from="2.1.0" to="2.2.0"/>
 		<upgrade from="2.2.0" to="2.2.1"/>
+		<upgrade from="2.2.1" to="2.3.0"/>
 	</upgrades>
 	<users/>
 	<widgets/>
 	<assets>
 		<file filename="assets/images/logos/markdown-browser.png" md5="d7a3b0d4743a1156ade31b3e65386307"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
