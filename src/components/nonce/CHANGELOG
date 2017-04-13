@@ -1,3 +1,12 @@
+Nonce 1.2.1
+
+	* Update copyright to 2017.
+	* Upgrade paths from LTS 2.x to 6.2
+	* Refactor namespacing for PHPUnit so that tests at least work again.
+	* Form & Widget refactoring.
+	* More images throughout everything!
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:08:40 -0400
+
 Nonce 1.2.0
 
 	* Migrate i18n logic from .ini to .yml.
