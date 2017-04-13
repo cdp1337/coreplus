@@ -1,3 +1,9 @@
+Chartist.JS 0.9.8-3
+
+	* Move logo images into logos/ for everything.
+	* Move all component logos to assets/
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:02:44 -0400
+
 Chartist.JS 0.9.8-2
 
 	* More images throughout everything!

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-2" logo="assets/images/logos/chartistjs.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Chartist.JS" version="0.9.8-3" logo="assets/images/logos/chartistjs.png">
 	<provides>
 		<scriptlibrary name="chartist.js" call="ChartistJS::IncludeJS"/>
 	</provides>
 	<files>
-		<file filename="CHANGELOG" md5="2ad715ae941e15d28b8301d0efec53ec"/>
+		<file filename="CHANGELOG" md5="e4cd38a07e33dff2bad589560c8467d7"/>
 		<file filename="CHANGELOG.md" md5="e13af389bde5daa8ceb3d1c0d4403264"/>
 		<file filename="CODINGSTYLE.md" md5="be72d83bc148e1ad9874d889a109307d"/>
 		<file filename="CONTRIBUTING.md" md5="d5ac0fe9972fbaa49c539e28f8c61487"/>
@@ -35,15 +35,10 @@
 		<upgrade from="0.9.5-1" to="0.9.5-2"/>
 		<upgrade from="0.9.5-2" to="0.9.8-1"/>
 		<upgrade from="0.9.8-1" to="0.9.8-2"/>
+		<upgrade from="0.9.8-2" to="0.9.8-3"/>
 	</upgrades>
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.wtfpl.net/">WTFPL</license>
-	</licenses>
 </component>
 
