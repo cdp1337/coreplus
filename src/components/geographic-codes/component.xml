@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Geographic Codes" execmode="both" logo="assets/images/logos/geographic-codes.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.1.0" name="Geographic Codes" execmode="both" logo="assets/images/logos/geographic-codes.png">
 	<description>
 		A collection of geographic utilities for geocoding, ip-lookups, and dealing with geographic addresses in general.
 	</description>
@@ -10,16 +10,16 @@
 	</forms>
 	<smartyplugins directory="smarty-plugins"/>
 	<files>
-		<file filename="CHANGELOG" md5="4d8fdce2f5e5a88db9dd9195a03e7db8"/>
+		<file filename="CHANGELOG" md5="eb564729dd947650798359063dc4a9ea"/>
 		<file filename="README.md" md5="f9b7f8a97be5c4f55afea2ef46724f50"/>
 		<file filename="assets/scss/geographic-codes.scss" md5="3f365b9b9738e830d8fa81cf03d87aa8"/>
-		<file filename="classes/GeoAddressFormInput.php" md5="d15cab6ad272543ba639bfd45301a780">
+		<file filename="classes/GeoAddressFormInput.php" md5="72cdff59573a932cb6b7fd7b11e8c9e3">
 			<class name="GeoAddressFormInput"/>
 		</file>
 		<file filename="classes/GeoProvinceFormInput.php" md5="b768aef1c0266131693407c16e38a55c">
 			<class name="GeoProvinceFormInput"/>
 		</file>
-		<file filename="controllers/GeoAddressController.php" md5="91792353e30098794c50b62a13a930e3">
+		<file filename="controllers/GeoAddressController.php" md5="a4c5155afd3cd59424a363021074b1d3">
 			<controller name="GeoAddressController"/>
 		</file>
 		<file filename="datafiles/cities_bulk_ca.sql" md5="adf8ca71d11458748402d2056e345fa3"/>
@@ -28,7 +28,7 @@
 		<file filename="datafiles/countries_bulk.sql" md5="8da1368352b8a22b274b72bb3610041c"/>
 		<file filename="datafiles/provinces.sql" md5="ab8d439b6592edb3ee0fbf14f17ed099"/>
 		<file filename="datafiles/provinces_bulk.sql" md5="69171fbe479e1656317b82b5ba9d997a"/>
-		<file filename="geocode/IPLookup.php" md5="26764c4dbe1f838eb1e516e0733c74d8">
+		<file filename="geocode/IPLookup.php" md5="2c6f4eaa5f3a6897415e62d73aebfd31">
 			<class name="geocode\IPLookup"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="e0413b837b6f3822c0f91913ae3b37fc"/>
@@ -173,16 +173,16 @@
 		<file filename="models/GeoAddressModel.php" md5="d267548ddef8dcd71295f479bd559da1">
 			<class name="GeoAddressModel"/>
 		</file>
-		<file filename="models/GeoCiyModel.php" md5="b3c12fecc2c9700ed05d5fef0e6748c4">
+		<file filename="models/GeoCiyModel.php" md5="c27fef63e83f3aed9c4cca4f19ede37d">
 			<class name="GeoCityModel"/>
 		</file>
-		<file filename="models/GeoCountryModel.php" md5="c64d35d1b532b3b1666b676c4a94289a">
+		<file filename="models/GeoCountryModel.php" md5="bb232b51e688f6f9f563efd1ef70f174">
 			<class name="GeoCountryModel"/>
 		</file>
-		<file filename="models/GeoProvinceModel.php" md5="95a1e0afccc24541473b6afdb03683dd">
+		<file filename="models/GeoProvinceModel.php" md5="b642466a88b6721200ba4b31d6fb9f1c">
 			<class name="GeoProvinceModel"/>
 		</file>
-		<file filename="smarty-plugins/function.geoiplookup.php" md5="d781f99707c1b0fb278e180d75f75e8f"/>
+		<file filename="smarty-plugins/function.geoiplookup.php" md5="d6814d7100a2c769d8e50730ad70cf80"/>
 	</files>
 	<assets>
 		<file filename="assets/css/geographic-codes.css" md5="487b7f3d62f0b4ac7095921ee0c827f4"/>
@@ -212,6 +212,7 @@
 		<upgrade from="1.6.2" to="1.7.0"/>
 		<upgrade from="1.7.0" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
+		<upgrade from="2.0.1" to="2.1.0"/>
 	</upgrades>
 	<view>
 		<file filename="templates/includes/forms/geoaddressforminput.tpl" md5="776939ef16bcaea206f2546b61e37ddf"/>
@@ -221,13 +222,5 @@
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="jquery" type="library"/>
 	</requires>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 

@@ -1,3 +1,13 @@
+Geographic Codes 2.1.0
+
+	* Update copyright to 2017.
+	* Logo location + jQuery requirement for geocodes.
+	* Refactor namespacing for PHPUnit so that tests at least work again.
+	* Move all component logos to assets/
+	* Form & Widget refactoring.
+	* Better support for private IP addresses, (both IPv4 AND IPv6!)
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:05:43 -0400
+
 Geographic Codes 2.0.1
 
 	* More images throughout everything!
