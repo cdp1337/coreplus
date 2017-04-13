@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.1" name="Google" execmode="web" logo="assets/images/logos/google.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0.2" name="Google" execmode="web" logo="assets/images/logos/google.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
@@ -29,24 +29,24 @@
 		<page baseurl="/google/configure" title="Google Keys and Apps" group="t:STRING_CONFIGURE" access="g:admin" admin="1" selectable="0"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="83fdfb0155d9d2645aea0b573367d2e2"/>
-		<file filename="controllers/GoogleController.php" md5="fc6bb54b8eed36c32a4924af66860e58">
+		<file filename="CHANGELOG" md5="bcb48003d69d5d7f6907b015c6603cc3"/>
+		<file filename="controllers/GoogleController.php" md5="15c8a51fb8a412befd6eb153379949f6">
 			<controller name="GoogleController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="25e02654a405f03e4b0a309b9458f626"/>
-		<file filename="libs/google/CSE/Helper.php" md5="c38f429641fc9c6a15744ecb4e86dba7">
+		<file filename="libs/google/CSE/Helper.php" md5="f376059cae5bd149a70b8876409603a4">
 			<class name="Google\CSE\Helper"/>
 		</file>
-		<file filename="libs/google/analytics/Helper.php" md5="74c87f785b3cec6145e3ec8491ef98a9">
+		<file filename="libs/google/analytics/Helper.php" md5="93e932c429c5181ea0f59768c43ff5e8">
 			<class name="Google\Analytics\Helper"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeRequest.php" md5="dbb354e17d6f55e4b477c3d88b6c50bf">
+		<file filename="libs/google/maps/GeocodeRequest.php" md5="61ba9fad4c52315be66c35f990ea8d4d">
 			<class name="Google\Maps\GeocodeRequest"/>
 		</file>
-		<file filename="libs/google/maps/GeocodeResponse.php" md5="a81301a81f48cc89d0eaae816d1c83ed">
+		<file filename="libs/google/maps/GeocodeResponse.php" md5="7e72e15b2fb80a85930c803d642fc871">
 			<class name="Google\Maps\GeocodeResponse"/>
 		</file>
-		<file filename="libs/google/maps/Helper.php" md5="795b471c04d771edea9ef63b7eb16a62">
+		<file filename="libs/google/maps/Helper.php" md5="fd7c25879292ff229e0f7a08eaa929f2">
 			<class name="Google\Maps\Helper"/>
 		</file>
 	</files>
@@ -71,6 +71,7 @@
 		<upgrade from="1.5.2" to="1.5.3"/>
 		<upgrade from="1.5.3" to="2.0.0"/>
 		<upgrade from="2.0.0" to="2.0.1"/>
+		<upgrade from="2.0.1" to="2.0.2"/>
 	</upgrades>
 	<view>
 		<file filename="templates/pages/google/configure.tpl" md5="a3fc7915404242b727080991ab014cda"/>
@@ -78,14 +79,5 @@
 	<assets>
 		<file filename="assets/images/logos/google.png" md5="224c385de2902523e856dab565b463fd"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-		<author name="Nicholas Hinsch" email="nicholas@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 
