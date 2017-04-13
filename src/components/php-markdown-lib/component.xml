@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP Markdown Lib" version="1.7.0" logo="assets/images/logos/php-markdown-lib.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PHP Markdown Lib" version="1.7.0-1" logo="assets/images/logos/php-markdown-lib.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 	</requires>
 	<files>
-		<file filename="CHANGELOG" md5="4af8ceff05dcc648c21dffa2eba6cb6a"/>
+		<file filename="CHANGELOG" md5="d20feafb65276b2c80d5340cfb9db946"/>
 		<file filename="License.md" md5="1dbbf231d98ac9c5012342c2cf622f82"/>
 		<file filename="Readme.md" md5="56053198424aae8f0661ca0e7d1d9f58"/>
 		<file filename="Readme.php" md5="06c70305f1837db551b08b5e5729c55b"/>
 		<file filename="composer.json" md5="f3c5c68eb29718d028ec13b97362485d"/>
-		<file filename="libs/Core/Forms/MarkdownInput.php" md5="19d870fa6d46bdd9c0c92897209f0846">
+		<file filename="libs/Core/Forms/MarkdownInput.php" md5="7b11d391bb9bfeb2007983f388aa4c40">
 			<class name="Core\Forms\MarkdownInput"/>
 		</file>
-		<file filename="libs/Core/MarkdownProcessor.php" md5="1e4d950a6898220a76287e60ecd6ea79">
+		<file filename="libs/Core/MarkdownProcessor.php" md5="5a61394f5e1b4a687ae7e0b13df5a33c">
 			<class name="Core\MarkdownProcessor"/>
 		</file>
 		<file filename="libs/Michelf/Markdown.inc.php" md5="f998ac3927b4c09a63be0e8057ed1838"/>
@@ -36,15 +36,8 @@
 	<assets>
 		<file filename="assets/images/logos/php-markdown-lib.png" md5="d190443d677bd4999176ce5bb8bb874f"/>
 	</assets>
-	<authors>
-		<author name="Michel Fortin" email="michel.fortin@michelf.com"/>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-		<license url="https://opensource.org/licenses/BSD-3-Clause">3-Clause BSD License</license>
-	</licenses>
+	<upgrades>
+		<upgrade from="1.7.0" to="1.7.0-1"/>
+	</upgrades>
 </component>
 
