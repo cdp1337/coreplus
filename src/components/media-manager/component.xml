@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.0" name="Media Manager" logo="assets/images/logos/media-manager.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.2.1" name="Media Manager" logo="assets/images/logos/media-manager.png">
 	<requires>
 		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="jquery" type="library"/>
@@ -25,13 +25,13 @@
 		<file filename="templates/pages/mediamanagernavigator/index/list.tpl" md5="ad6f9a103c4be9d3bb9b491082a388a5"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="8d472ea24cc997be775df9e2947bb691"/>
+		<file filename="CHANGELOG" md5="21982353ea95675a837d63106020a097"/>
 		<file filename="assets/scss/mediamanager/navigator.scss" md5="396c6a0e76af12591512d543ae638e5b"/>
-		<file filename="controllers/MediaManagerNavigatorController.php" md5="db26936680d9b17c43280d8cecb69985">
+		<file filename="controllers/MediaManagerNavigatorController.php" md5="82dab5f92e2523b5e3e0ddb6aee02f5b">
 			<controller name="MediaManagerNavigatorController"/>
 		</file>
 		<file filename="i18n/strings.yml" md5="8ef45762b247f9bc2a5bc3f5e8c3862b"/>
-		<file filename="libs/mediamanager/Navigator.php" md5="e9234f753d5a021f496fb37d384d14da">
+		<file filename="libs/mediamanager/Navigator.php" md5="0873078e1291cfcea632465d9f3effb0">
 			<class name="MediaManager\Navigator"/>
 		</file>
 	</files>
@@ -55,14 +55,7 @@
 		<upgrade from="1.0.7" to="1.1.0"/>
 		<upgrade from="1.1.0" to="1.1.1"/>
 		<upgrade from="1.1.1" to="1.2.0"/>
+		<upgrade from="1.2.0" to="1.2.1"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
-			GNU Affero General Public License
-		</license>
-	</licenses>
 </component>
 

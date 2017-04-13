@@ -1,3 +1,13 @@
+Media Manager 1.2.1
+
+	* Update copyright to 2017.
+	* Move logo images into logos/ for everything.
+	* Upgrade paths from LTS 2.x to 6.2
+	* Move all component logos to assets/
+	* Form namespace change.
+	* Form & Widget refactoring.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:08:19 -0400
+
 Media Manager 1.2.0
 
 	* More images throughout everything!
