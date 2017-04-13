@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.4-2" name="TinyMCE" execmode="web">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="4.3.4-3" name="TinyMCE" execmode="web">
 	<requires>
-		<require name="core" type="component" version="6.0.0" operation="ge"/>
+		<require name="core" type="component" version="6.2.0" operation="ge"/>
 		<require name="jquery" type="library"/>
 	</requires>
 	<provides>
@@ -19,22 +19,22 @@
 	<configs/>
 	<pages/>
 	<view>
-		<file filename="templates/forms/elements/tinymceformelement.tpl" md5="feb3be1d78680691f20449d716935242"/>
+		<file filename="templates/includes/forms/tinymceformelement.tpl" md5="d6a6bd311333f27eb77cc9dae7dd7522"/>
 		<file filename="templates/pages/tinymce/browser-icons.tpl" md5="7b14d6788d1b568fb8423480c1ac155e"/>
 		<file filename="templates/pages/tinymce/link.phtml" md5="16f8682d627e691a9e9839a426d042b4"/>
 	</view>
 	<files>
-		<file filename="CHANGELOG" md5="ff330fe3504eb49f24b27231c6975d1c"/>
+		<file filename="CHANGELOG" md5="074aeb1b5274602469b5dd38547a58f9"/>
 		<file filename="LICENSE.TXT" md5="045d04e17422d99e338da75b9c749b7c"/>
-		<file filename="TinyMCEFormElement.class.php" md5="14c646a39d765431b64c186918742802">
+		<file filename="TinyMCEFormElement.class.php" md5="bf270dc333c23eb10f34c1e4dbbde39f">
 			<class name="TinyMCEFormElement"/>
 		</file>
 		<file filename="changelog.txt" md5="4d7505646c4aa7e07037ad0b773dd681"/>
-		<file filename="controllers/TinyMCEController.php" md5="ac0e0b64e01f965c92d6cd779b23000e">
+		<file filename="controllers/TinyMCEController.php" md5="0616777a327e9dbabe3d48d363627fbe">
 			<controller name="TinyMCEController"/>
 		</file>
-		<file filename="libs/smarty-plugins/function.tinymce_custom_plugin.php" md5="8a899c3dae897899985d14caa6fc1c4d"/>
-		<file filename="libs/tinymce/TinyMCE.php" md5="377315cffb635a63c1f0be6a2e201660">
+		<file filename="libs/smarty-plugins/function.tinymce_custom_plugin.php" md5="740ed8dabaf73e2831d1f92ff2fff616"/>
+		<file filename="libs/tinymce/TinyMCE.php" md5="7af62e4cdc1e161825bb61e20c3f20cb">
 			<class name="TinyMCE\TinyMCE"/>
 		</file>
 	</files>
@@ -260,14 +260,7 @@
 		<upgrade from="4.2.4~core1" to="4.2.4-2"/>
 		<upgrade from="4.2.4-2" to="4.3.4-1"/>
 		<upgrade from="4.3.4-1" to="4.3.4-2"/>
+		<upgrade from="4.3.4-2" to="4.3.4-3"/>
 	</upgrades>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
-	<licenses>
-		<license url="http://www.gnu.org/licenses/lgpl-2.1.html">
-			GNU Lesser General Public License
-		</license>
-	</licenses>
 </component>
 

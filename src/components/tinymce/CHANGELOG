@@ -1,3 +1,12 @@
+TinyMCE 4.3.4-3
+
+	* [Bug] Flip the order of the attribute instantiation on TinyMCE Elements.
+	* Update copyright to 2017.
+	* Upgrade paths from LTS 2.x to 6.2
+	* Form & Widget refactoring.
+	* More images throughout everything!
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:10:55 -0400
+
 TinyMCE 4.3.4-2
 
 	* Ensure HTML5 element support for tinymce.
