@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.0.3" logo="assets/images/logos/cron.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Cron" version="2.1.0" logo="assets/images/logos/cron.png">
 	<hooks>
 		<hookregister name="/cron/1-minute" description="Hourly hook called from the cron system"/>
 		<hookregister name="/cron/5-minute" description="Hourly hook called from the cron system"/>
@@ -40,7 +40,7 @@
 		<widget baseurl="/cron/dashboard" title="Cron Status Dashboard" installable="/admin"/>
 	</widgets>
 	<files>
-		<file filename="CHANGELOG" md5="194cc54f3a525955b88e9ccb9ffce4a5"/>
+		<file filename="CHANGELOG" md5="fe16b381c712d4cbc3771e57ca87383a"/>
 		<file filename="README.md" md5="addbc7f6e77640e87a70e40a44948e61"/>
 		<file filename="classes/CronHelper.php" md5="592a77bef59ee2d228cc91687b668511">
 			<class name="CronHelper"/>
@@ -52,7 +52,7 @@
 		<file filename="models/CronLogModel.php" md5="a009f692f5f5485638c0ed1257f1550c">
 			<class name="CronLogModel"/>
 		</file>
-		<file filename="models/CronPersistentJobModel.php" md5="689ac038fd46146568a66b4551c8125b">
+		<file filename="models/CronPersistentJobModel.php" md5="2fff820988b82b512460f653eb292623">
 			<class name="CronPersistentJobModel"/>
 		</file>
 		<file filename="upgrades/202_remove_cron_entries.php" md5="1126db9bdf0acd988f752740b681b7cc"/>
@@ -83,6 +83,7 @@
 		<upgrade from="2.0.2" to="2.0.3">
 			<php file="upgrades/202_remove_cron_entries.php"/>
 		</upgrade>
+		<upgrade from="2.0.3" to="2.1.0"/>
 	</upgrades>
 	<assets>
 		<file filename="assets/css/cron.css" md5="1fb2835458acdf8e3a098952e4eafa32"/>

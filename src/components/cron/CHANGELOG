@@ -1,3 +1,13 @@
+Cron 2.1.0
+
+	* [Feature] New support of "persistent" cron jobs!
+	* Update copyright to 2017.
+	* Move logo images into logos/ for everything.
+	* Upgrade paths from LTS 2.x to 6.2
+	* Move all component logos to assets/
+	* Form & Widget refactoring.
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:04:25 -0400
+
 Cron 2.0.3
 
 	* Requests to the cron subsystem no longer get recorded into user activity.
