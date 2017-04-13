@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE component PUBLIC "SYSTEM" "http://corepl.us/api/2_4/component.dtd">
-<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GPG Key Manager" version="1.0.0" logo="assets/images/logos/gpg-key-manager.png">
+<component xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="GPG Key Manager" version="1.0.1" logo="assets/images/logos/gpg-key-manager.png">
 	<pages>
 		<page baseurl="/gpgkeymanager" title="t:STRING_GPGKEYMANAGER" admin="1" access="g:admin" group="t:STRING_ADMIN" image="assets/images/actions/kgpg_key2_kopete.png"/>
 	</pages>
 	<files>
-		<file filename="CHANGELOG" md5="e0e0ac7e2797d0c004d605bdea266b5a"/>
+		<file filename="CHANGELOG" md5="086c89f7d7e5ed832e130d25511e5f5d"/>
 		<file filename="README.md" md5="061baee83f696ae60e675b4d284d8dbb"/>
 		<file filename="controllers/GPGKeyManagerController.php" md5="b57eec227ec1cfcac45031c3cf7f463f">
 			<controller name="GPGKeyManagerController"/>
@@ -23,8 +23,8 @@
 	<assets>
 		<file filename="assets/images/logos/gpg-key-manager.png" md5="fb39282d5467bef30c0e583e9539342e"/>
 	</assets>
-	<authors>
-		<author name="Charlie Powell" email="charlie@evalagency.com"/>
-	</authors>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 </component>
 

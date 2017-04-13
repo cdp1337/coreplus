@@ -1,3 +1,10 @@
+GPG Key Manager 1.0.1
+
+	* Move logo images into logos/ for everything.
+	* More namespace fixes.
+	* Move all component logos to assets/
+	-- Charlie Powell <support@corepl.us>  Thu, 13 Apr 2017 19:06:09 -0400
+
 GPG Key Manager 1.0.0
 
 	* Initial version
