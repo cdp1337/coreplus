@@ -824,14 +824,16 @@ class AdminController extends Controller_2_1 {
 			]
 		);
 		
-		$table->addFilter(
-			'select',
-			[
-				'name' => 'keyword',
-				'title' => 'Page Keyword',
-				'options' => $pageMetaOptions
-			]
-		);
+		if(sizeof($pageMetaOptions) > 1){
+			$table->addFilter(
+				'select',
+				[
+					'name' => 'keyword',
+					'title' => 'Page Keyword',
+					'options' => $pageMetaOptions
+				]
+			);
+		}
 
 		// Add in all the columns for this listing table.
 		if(Core::IsComponentAvailable('multisite') && MultiSiteHelper::IsEnabled() && \Core\user()->checkAccess('g:admin')){
