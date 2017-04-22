@@ -1758,7 +1758,7 @@
 		<config key="/theme/default_template" type="string" default="basic.tpl" description=""/>
 		<config key="/theme/default_admin_template" type="string" default="basic.tpl" description=""/>
 		<config key="/theme/default_email_template" type="string" default="" description=""/>
-		<config key="/theme/selected" type="string" default="base-v3" description=""/>
+		<config key="/theme/selected" type="string" default="core-2017" description=""/>
 	</configs>
 	<permissions>
 		<permission key="/core/systemlog/view" description="View system log entries"/>
