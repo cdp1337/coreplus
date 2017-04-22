@@ -326,7 +326,7 @@ class GeneralFormatter {
 					}
 				}
 				else{
-					if($p{0} == '!'){
+					if(strlen($p) > 0 && $p{0} == '!'){
 						$prefix = t('STRING_NOT') . ' ';
 						$p = substr($p, 1);
 					}
