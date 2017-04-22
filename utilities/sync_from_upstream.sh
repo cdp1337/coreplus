@@ -70,6 +70,10 @@ echo "Syncing core themes..."
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/default/" "$BASEDIR/src/themes/default"
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/base-v2"
 rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v3/" "$BASEDIR/src/themes/base-v3"
+rsync $OPTIONS --delete "$UPSTREAM/src/themes/core-2017/" "$BASEDIR/src/themes/core-2017"
+rsync $OPTIONS --delete "$UPSTREAM/src/themes/core-2017-green/" "$BASEDIR/src/themes/core-2017-green"
+rsync $OPTIONS --delete "$UPSTREAM/src/themes/core-2017-light/" "$BASEDIR/src/themes/core-2017-light"
+rsync $OPTIONS --delete "$UPSTREAM/src/themes/core-2017-red/" "$BASEDIR/src/themes/core-2017-red"
 
 echo "Syncing core components..."
 sync_component "phpwhois"
@@ -84,7 +88,7 @@ for i in $COMPONENTS; do
 		sync_component "$i"
 
 	elif [ "$i" == "sitemap" ]; then
-		# User has been migrated into Core as of 3.0.x
+		# Sitemap has been migrated into Core as of 3.0.x
 		echo "Deleting legacy component $i..."
 		rm -fr "$BASEDIR/src/components/$i"
 
@@ -101,7 +105,12 @@ for i in $COMPONENTS; do
 		sync_component "google"
 
 	elif [ "$i" == "jsonjs" ]; then
-		# User has been migrated into Core as of 2.8.x
+		# jsonjs has been migrated into Core as of 2.8.x
+		echo "Deleting legacy component $i..."
+		rm -fr "$BASEDIR/src/components/$i"
+
+	elif [ "$i" == "theme" ]; then
+		# Theme has been migrated into Core as of 6.2.0
 		echo "Deleting legacy component $i..."
 		rm -fr "$BASEDIR/src/components/$i"
 
