@@ -38,7 +38,7 @@ class ThemeTemplateChangeModel extends Model {
 		),
 		'content' => array(
 			'type' => Model::ATT_TYPE_DATA,
-			'required' => true,
+			'required' => false,
 			'form' => array(
 				'type' => 'textarea',
 			),

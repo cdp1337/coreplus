@@ -195,14 +195,14 @@ class ThemeController extends Controller_2_1{
 				
 				// This file must ALWAYS be in themes/custom.
 				$fh = \Core\Filestore\Factory::File(ROOT_PDIR . 'themes/custom/assets/' . $file);
-				$content = $fh->getContents();
+				$content = $fh->exists() ? $fh->getContents() : '';
 
 				$m = new ThemeTemplateChangeModel();
 				$m->set('content', $content);
 				$m->set('filename', 'assets/' . $file);
 
 				$form = \Core\Forms\Form::BuildFromModel($m);
-
+				
 				$form->set('callsmethod', 'ThemeController::_SaveEditorHandler');
 				// I need to add the file as a system element so core doesn't try to reuse the same forms on concurrent edits.
 				//$form->addElement('system', array('name' => 'revision', 'value' => $revision));
