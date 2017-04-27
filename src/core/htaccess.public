@@ -8,8 +8,12 @@
     SetHandler application/x-httpd-php-source
 </FilesMatch>
 
+<FilesMatch "\.phtml?$">
+    SetHandler application/x-httpd-php-source
+</FilesMatch>
+
 # Anything that can be processed on the client-side needs to be squashed.
-<FilesMatch "\.(as|asp|css|dart|hta|htm|html|js|ts|vbe|vbs|wsc|wsf|xhtml)$">
+<FilesMatch "\.(as|asp|css|dart|hta|htm|html|shtml|js|ts|vbe|vbs|wsc|wsf|xhtml)$">
     Order deny,allow
     Deny from All
 </FilesMatch>
