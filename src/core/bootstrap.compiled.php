@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Thu, 13 Apr 2017 18:55:05 -0400
+ * @compiled Mon, 08 May 2017 15:31:12 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1334,12 +1334,28 @@ define('DS', DIRECTORY_SEPARATOR);
 # Color 1 is always standard and
 # Color 2 is always the bold version.
 if(EXEC_MODE == 'CLI'){
-define('COLOR_LINE', "\033[0;30m");
-define('COLOR_HEADER', "\033[1;36m");
-define('COLOR_SUCCESS', "\033[1;32m");
-define('COLOR_WARNING', "\033[1;33m");
-define('COLOR_ERROR', "\033[1;31m");
-define('COLOR_DEBUG', "\033[0;34m");
+define('COLOR_BLK1', "\033[0;30m");
+define('COLOR_BLK2', "\033[1;30m");
+define('COLOR_RED1', "\033[0;31m");
+define('COLOR_RED2', "\033[1;31m");
+define('COLOR_GRN1', "\033[0;32m");
+define('COLOR_GRN2', "\033[1;32m");
+define('COLOR_YLW1', "\033[0;33m");
+define('COLOR_YLW2', "\033[1;33m");
+define('COLOR_BLU1', "\033[0;34m");
+define('COLOR_BLU2', "\033[1;34m");
+define('COLOR_PRP1', "\033[0;35m");
+define('COLOR_PRP2', "\033[1;35m");
+define('COLOR_CYN1', "\033[0;36m");
+define('COLOR_CYN2', "\033[1;36m");
+define('COLOR_WHT1', "\033[0;37m");
+define('COLOR_WHT2', "\033[1;37m");
+define('COLOR_LINE', COLOR_BLK1);
+define('COLOR_HEADER', COLOR_CYN2);
+define('COLOR_SUCCESS', COLOR_GRN2);
+define('COLOR_WARNING', COLOR_YLW2);
+define('COLOR_ERROR', COLOR_RED2);
+define('COLOR_DEBUG', COLOR_BLU1);
 define('COLOR_NORMAL', "\033[0m");
 define('COLOR_RESET', "\033[0m");
 define('NBSP', ' ');
@@ -3141,6 +3157,7 @@ $this->_linked[] = [
 'model' => $linkmodel,
 'on'    => is_array($linkon) ? $linkon : [$linkon => $k],
 'link'  => $linktype,
+'order' => (isset($sdat['link']['order'])) ? $sdat['link']['order'] : null,
 ];
 }
 }
@@ -3628,7 +3645,7 @@ $s[$k]['validationmessage'] = $k . ' must be a valid number.';
 }
 if(!(
 is_int($v) ||
-ctype_digit($v) ||
+is_numeric($v) ||
 (is_float($v) && strpos($v, '.') === false)
 )){
 $valid = false;
@@ -14778,6 +14795,9 @@ $s = self::_Factory('FLUSH')->flush();
 self::$_KeyCache = array();
 return $s;
 }
+public static function Ls(){
+return self::_Factory('FLUSH')->listKeys();
+}
 private static function _Factory($key, $expires = 7200){
 if(self::$_Backend === null){
 $cs = \ConfigHandler::LoadConfigFile("configuration");
@@ -14829,6 +14849,7 @@ public function read();
 public function update($data);
 public function delete();
 public function flush();
+public function listKeys();
 }
 } // ENDING NAMESPACE Core\Cache
 
@@ -14907,6 +14928,9 @@ unlink($this->_dir . $file);
 }
 closedir($dir);
 return true;
+}
+public function listKeys(){
+return [];
 }
 private function is_expired() {
 clearstatcache();
@@ -17573,10 +17597,26 @@ set_error_handler('Core\\ErrorManagement\\error_handler', error_reporting());
 register_shutdown_function('HookHandler::DispatchHook', '/core/shutdown');
 register_shutdown_function('Core\\ErrorManagement\\check_for_fatal');
 if (EXEC_MODE == 'CLI') {
-$servername          = null;
+if ($core_settings['site_url'] != ''){
+$servername = 'http://' . $core_settings['site_url'];
+$host = $core_settings['site_url'];
+}
+elseif(isset($_SERVER['HTTP_HOST'])){
+$servername = 'http://' . $_SERVER['HTTP_HOST'];
+$host = $_SERVER['HTTP_HOST'];
+}
+else{
+$servername = null;
+$host = 'localhost';
+}
 $servernameSSL       = null;
 $servernameNOSSL     = null;
-$rooturl             = isset($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] : null;
+if($servername !== null){
+$rooturl = $servername . (defined('ROOT_WDIR') ? ROOT_WDIR : '');
+}
+else{
+$rooturl = null;
+}
 $rooturlNOSSL        = $rooturl;
 $rooturlSSL          = $rooturl;
 $curcall             = null;
@@ -21713,6 +21753,7 @@ public static $Mappings = array(
 'button'           => '\\Core\\Forms\\ButtonInput',
 'checkbox'         => '\\Core\\Forms\\CheckboxInput',
 'checkboxes'       => '\\Core\\Forms\\CheckboxesInput',
+'color'            => '\\Core\\Forms\\ColorInput',
 'date'             => '\\Core\\Forms\\DateInput',
 'datetime'         => '\\Core\\Forms\\DateTimeInput',
 'email'            => '\\Core\\Forms\\EmailInput',
