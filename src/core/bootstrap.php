@@ -129,10 +129,31 @@ register_shutdown_function('Core\\ErrorManagement\\check_for_fatal');
  * CUR_CALL
  */
 if (EXEC_MODE == 'CLI') {
-	$servername          = null;
+	/**
+	 * Hostname + Full URL of server.
+	 * ie: http://www.example.com, https://127.0.0.1:8443, or NULL
+	 */
+	if ($core_settings['site_url'] != ''){
+		$servername = 'http://' . $core_settings['site_url'];
+		$host = $core_settings['site_url'];
+	}
+	elseif(isset($_SERVER['HTTP_HOST'])){
+		$servername = 'http://' . $_SERVER['HTTP_HOST'];
+		$host = $_SERVER['HTTP_HOST'];
+	}
+	else{
+		$servername = null;
+		$host = 'localhost';
+	}
 	$servernameSSL       = null;
 	$servernameNOSSL     = null;
-	$rooturl             = isset($_SERVER['HTTP_HOST']) ? 'http://' . $_SERVER['HTTP_HOST'] : null;
+	
+	if($servername !== null){
+		$rooturl = $servername . (defined('ROOT_WDIR') ? ROOT_WDIR : '');
+	}
+	else{
+		$rooturl = null;
+	}
 	$rooturlNOSSL        = $rooturl;
 	$rooturlSSL          = $rooturl;
 	$curcall             = null;
