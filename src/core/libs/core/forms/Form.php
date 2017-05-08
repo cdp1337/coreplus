@@ -46,6 +46,7 @@ class Form extends FormGroup {
 		'button'           => '\\Core\\Forms\\ButtonInput',
 		'checkbox'         => '\\Core\\Forms\\CheckboxInput',
 		'checkboxes'       => '\\Core\\Forms\\CheckboxesInput',
+		'color'            => '\\Core\\Forms\\ColorInput',
 		'date'             => '\\Core\\Forms\\DateInput',
 		'datetime'         => '\\Core\\Forms\\DateTimeInput',
 		'email'            => '\\Core\\Forms\\EmailInput',
