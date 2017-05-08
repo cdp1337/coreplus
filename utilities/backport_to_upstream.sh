@@ -72,6 +72,10 @@ echo "Syncing core themes..."
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/default/" "$BASEDIR/src/themes/default"
 #rsync $OPTIONS --delete "$UPSTREAM/src/themes/base-v2/" "$BASEDIR/src/themes/base-v2"
 rsync $OPTIONS --delete "$BASEDIR/src/themes/base-v3/" "$UPSTREAM/src/themes/base-v3"
+rsync $OPTIONS --delete "$BASEDIR/src/themes/core-2017/" "$UPSTREAM/src/themes/core-2017"
+rsync $OPTIONS --delete "$BASEDIR/src/themes/core-2017-light/" "$UPSTREAM/src/themes/core-2017-light"
+rsync $OPTIONS --delete "$BASEDIR/src/themes/core-2017-green/" "$UPSTREAM/src/themes/core-2017-green"
+rsync $OPTIONS --delete "$BASEDIR/src/themes/core-2017-red/" "$UPSTREAM/src/themes/core-2017-red"
 
 echo "Syncing core components..."
 for i in $COMPONENTS; do
