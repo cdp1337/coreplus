@@ -124,15 +124,15 @@ class Memcache implements CacheInterface {
 	public function flush() {
 		return self::$_Connection->flush();
 	}
-
-	/**
-	 * Method: is_expired()
-	 *
-	 * Memcache manages it's own expirations.
-	 *
-	 * @returns boolean Whether the cache is expired or not.
-	 */
-	private function is_expired() {
-		return false;
+	
+	public function listKeys(){
+		if(self::$_IsMemcached){
+			return self::$_Connection->getAllKeys();
+		}
+		else{
+			// @todo Not supported yet.
+		
+			return [];
+		}
 	}
 }

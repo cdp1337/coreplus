@@ -165,6 +165,12 @@ class File implements CacheInterface {
 
 		return true;
 	}
+	
+	public function listKeys(){
+		// @todo Not supported yet.
+		
+		return [];
+	}
 
 	/**
 	 * Method: is_expired()

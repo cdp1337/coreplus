@@ -80,4 +80,12 @@ interface CacheInterface {
 	 * @return boolean Whether the operation was successful.
 	 */
 	public function flush();
+	
+	/**
+	 * Return a list of all keys on this backend, not supported by all processors!
+	 * 
+	 * @since 2017.04
+	 * @return array
+	 */
+	public function listKeys();
 }

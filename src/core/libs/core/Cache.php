@@ -106,6 +106,10 @@ class Cache {
 		self::$_KeyCache = array();
 		return $s;
 	}
+	
+	public static function Ls(){
+		return self::_Factory('FLUSH')->listKeys();
+	}
 
 	/**
 	 * @param     $key
