@@ -396,13 +396,13 @@ class Model implements ArrayAccess {
 					$linkmodel .= 'Model';
 				}
 
-
 				// And populate the linked array with this link data.
 				$this->_linked[] = [
 					'key'   => $k,
 					'model' => $linkmodel,
 					'on'    => is_array($linkon) ? $linkon : [$linkon => $k],
 					'link'  => $linktype,
+					'order' => (isset($sdat['link']['order'])) ? $sdat['link']['order'] : null,
 				];
 			}
 		}
@@ -1310,7 +1310,8 @@ class Model implements ArrayAccess {
 
 			if(!(
 				is_int($v) ||
-				ctype_digit($v) ||
+				//ctype_digit($v) ||
+				is_numeric($v) ||
 				(is_float($v) && strpos($v, '.') === false)
 			)){
 				$valid = false;
