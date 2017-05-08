@@ -959,7 +959,7 @@ class Table implements \Iterator {
 					
 					// Render the column data itself.
 					$out .= '<td class="' . $c->getClass() . '">';
-					$out .= $rec->render($c->renderkey);
+					$out .= $rec->get($c->renderkey, \View::CTYPE_HTML);
 					$out .= '</td>';
 				}
 
