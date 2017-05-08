@@ -118,39 +118,98 @@ define('DS', DIRECTORY_SEPARATOR);
 # Color 2 is always the bold version.
 
 /*
-const C_BLK1 = "\033[0;30m";
-const C_BLK2 = "\033[1;30m";
-const C_RED1 = "\033[0;31m";
-const C_RED2 = "\033[1;31m";
-const C_GRN1 = "\033[0;32m";
-const C_GRN2 = "\033[1;32m";
-const C_YLW1 = "\033[0;33m";
-const C_YLW2 = "\033[1;33m";
-const C_BLU1 = "\033[0;34m";
-const C_BLU2 = "\033[1;34m";
-const C_PRP1 = "\033[0;35m";
-const C_PRP2 = "\033[1;35m";
-const C_CYN1 = "\033[0;36m";
-const C_CYN2 = "\033[1;36m";
-const C_WHT1 = "\033[0;37m";
-const C_WHT2 = "\033[1;37m";
-const C_RESET = "\033[0m";
-const C_NONE = "";
+
 */
 
 if(EXEC_MODE == 'CLI'){
-	// Line color, the separating characters
-	define('COLOR_LINE', "\033[0;30m");
-	// Heading color
-	define('COLOR_HEADER', "\033[1;36m");
-	// Success color
-	define('COLOR_SUCCESS', "\033[1;32m");
-	// Warning color
-	define('COLOR_WARNING', "\033[1;33m");
-	// Error color
-	define('COLOR_ERROR', "\033[1;31m");
-	// Debug color
-	define('COLOR_DEBUG', "\033[0;34m");
+	/**
+	 * Black
+	 */
+	define('COLOR_BLK1', "\033[0;30m");
+	/**
+	 * Bold Black
+	 */
+	define('COLOR_BLK2', "\033[1;30m");
+	/**
+	 * Red
+	 */
+	define('COLOR_RED1', "\033[0;31m");
+	/**
+	 * Bright Red
+	 */
+	define('COLOR_RED2', "\033[1;31m");
+	/**
+	 * Green
+	 */
+	define('COLOR_GRN1', "\033[0;32m");
+	/**
+	 * Bright Green
+	 */
+	define('COLOR_GRN2', "\033[1;32m");
+	/**
+	 * Yellow
+	 */
+	define('COLOR_YLW1', "\033[0;33m");
+	/**
+	 * Bright Yellow
+	 */
+	define('COLOR_YLW2', "\033[1;33m");
+	/**
+	 * Blue
+	 */
+	define('COLOR_BLU1', "\033[0;34m");
+	/**
+	 * Bright Blue
+	 */
+	define('COLOR_BLU2', "\033[1;34m");
+	/**
+	 * Purple
+	 */
+	define('COLOR_PRP1', "\033[0;35m");
+	/**
+	 * Bright Purple
+	 */
+	define('COLOR_PRP2', "\033[1;35m");
+	/**
+	 * Cyan
+	 */
+	define('COLOR_CYN1', "\033[0;36m");
+	/**
+	 * Light Cyan
+	 */
+	define('COLOR_CYN2', "\033[1;36m");
+	/**
+	 * White
+	 */
+	define('COLOR_WHT1', "\033[0;37m");
+	/**
+	 * Bold White
+	 */
+	define('COLOR_WHT2', "\033[1;37m");
+	/**
+	 * Line color, the separating characters
+	 */
+	define('COLOR_LINE', COLOR_BLK1);
+	/**
+	 * Heading color
+	 */
+	define('COLOR_HEADER', COLOR_CYN2);
+	/**
+	 *  Success color
+	 */
+	define('COLOR_SUCCESS', COLOR_GRN2);
+	/**
+	 *  Warning color
+	 */
+	define('COLOR_WARNING', COLOR_YLW2);
+	/**
+	 *  Error color
+	 */
+	define('COLOR_ERROR', COLOR_RED2);
+	/**
+	 *  Debug color
+	 */
+	define('COLOR_DEBUG', COLOR_BLU1);
 	// Normal color, alias of RESET for CLI operation, but has other meaning on WEB operation.
 	define('COLOR_NORMAL', "\033[0m");
 	// Reset color
