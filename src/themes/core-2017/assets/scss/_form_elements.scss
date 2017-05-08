@@ -64,6 +64,10 @@ textarea {
 	width: 100%;
 }
 
+input[type="color"] {
+	min-height: 3em;
+}
+
 select {
 	margin-bottom: $small-spacing;
 	width: 100%;

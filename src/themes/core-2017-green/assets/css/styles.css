@@ -2069,46 +2069,51 @@ textarea {
 }
 
 /* line 67, ../../../core-2017/assets/scss/_form_elements.scss */
+input[type="color"] {
+  min-height: 3em;
+}
+
+/* line 71, ../../../core-2017/assets/scss/_form_elements.scss */
 select {
   margin-bottom: 0.75em;
   width: 100%;
   color: #222;
 }
 
-/* line 73, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 77, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement {
   margin-bottom: 1.25em;
 }
-/* line 76, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 80, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement span.form-element-description {
   margin-left: 2em;
   color: #104010;
   font-size: 0.9em;
 }
-/* line 82, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 86, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement p.form-element-description {
   color: #104010;
   font-size: 0.9em;
   margin: 0 0 0.25em;
 }
-/* line 89, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 93, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formselect select {
   margin-bottom: 0.20em;
 }
-/* line 94, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 98, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput, .formelement.formuserinput {
   /* Meta-Author input styles */
 }
-/* line 96, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 100, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value, .formelement.formuserinput .form-element-value {
   position: relative;
 }
-/* line 99, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 103, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value input, .formelement.formuserinput .form-element-value input {
   padding-left: 24px;
   width: 93%;
 }
-/* line 103, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 107, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput .form-element-value .meta-author-indicator,
 .formelement.formpagemetaauthorinput .form-element-value .user-indicator, .formelement.formuserinput .form-element-value .meta-author-indicator,
 .formelement.formuserinput .form-element-value .user-indicator {
@@ -2116,47 +2121,47 @@ select {
   left: 8px;
   top: 4px;
 }
-/* line 111, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 115, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput.user-valid .meta-author-invalid-indicator, .formelement.formuserinput.user-valid .user-invalid-indicator {
   display: none;
 }
-/* line 115, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 119, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetaauthorinput.user-invalid .meta-author-valid-indicator, .formelement.formuserinput.user-invalid .user-valid-indicator {
   display: none;
 }
-/* line 122, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 126, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formcheckboxesinput .checkboxes-toggle {
   color: #104010;
   font-size: 0.9em;
   cursor: pointer;
   margin-left: 2em;
 }
-/* line 129, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 133, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formcheckboxesinput .form-element-value label {
   font-weight: inherit;
   display: inline-block;
   margin-right: 2em;
   min-width: 17em;
 }
-/* line 139, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 143, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formradioinput .form-element-value label {
   font-weight: inherit;
   display: inline-block;
   margin-right: 1em;
 }
-/* line 146, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 150, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formelement-disabled {
   opacity: 0.4;
 }
-/* line 153, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 157, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formfileinput table.form-element-value .formfileinput-selector {
   width: 30%;
 }
-/* line 158, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 162, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formfileinput td {
   padding: 0;
 }
-/* line 165, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 169, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .form-element-value {
   background-color: #c3fec9;
   border: 1px solid #629765;
@@ -2164,7 +2169,7 @@ select {
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
   color: #003000;
 }
-/* line 172, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 176, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .form-element-value:before {
   content: "";
   display: inline-block;
@@ -2177,20 +2182,20 @@ select {
   padding-right: 0.5em;
   padding-left: 0.5em;
 }
-/* line 179, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 183, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .form-element-value input {
   border: 0px none;
   box-shadow: none;
   margin-bottom: 0;
 }
-/* line 185, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 189, ../../../core-2017/assets/scss/_form_elements.scss */
 .formelement.formpagemetakeywordsinput .keywords-multi-select-option {
   display: inline-block;
   padding: 0 0.75em;
   text-align: center;
 }
 
-/* line 197, ../../../core-2017/assets/scss/_form_elements.scss */
+/* line 201, ../../../core-2017/assets/scss/_form_elements.scss */
 body .readonly_overlay {
   background-color: rgba(230, 230, 230, 0.4);
   opacity: 1;
