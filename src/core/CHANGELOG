@@ -1,3 +1,20 @@
+Core Plus 6.2.1
+
+	* [Bug] Fix LINK orders and int checks.
+	* [Bug] Fix for get() as opposed to render() in listing tables.
+	* Minor fix in the Emailer for an incorrect namespace.
+	* New input type; color.
+	* New support for Cache::Ls()
+	* Wider selection of colours in CLI.
+	* Better support for URL overriding in CLI mode.
+	* prevent execution of phtml/shtml within public assets directory
+	* Some fixes that should address the Theme editor.
+	* Minor fix for permissions formatting.
+	* Skip the page tag filter if no tags present.
+	* Switch default theme from base-v3 to core-2017.
+	* Minor fix to correctly pull in theme names.
+	-- Charlie Powell <support@corepl.us>  Fri, 02 Jun 2017 22:39:25 -0400
+
 Core Plus 6.2.0
 
 	* [Security] Update phpMailer to newest version upstream.
