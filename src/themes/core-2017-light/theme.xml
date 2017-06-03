@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE theme PUBLIC "SYSTEM" "http://corepl.us/api/2_4/theme.dtd">
-<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.0" name="Core 2017 Light" extends="core-2017">
+<theme xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0.1" name="Core 2017 Light" extends="core-2017">
 	<assets>
 		<file filename="assets/css/admin/adminbar.css" md5="2464f0b0ca0a7e2d4df6e4698627b4a3"/>
 		<file filename="assets/css/admin/adminbar.css.map" md5="6675fa94efbd2babbc270f9f85f009ea"/>
@@ -14,15 +14,15 @@
 		<file filename="assets/css/jquery-ui-1.12.1.css" md5="0ea1656bb68dc108b6ab4acf9da7fcc3"/>
 		<file filename="assets/css/jquery-ui-1.12.1.css.map" md5="c6f2f12ac7b5b4af47a1d6e895ae7f5b"/>
 		<file filename="assets/css/jquery-ui-1.12.1.min.css" md5="6d33148b364228ce619dc8ccd2a68415"/>
-		<file filename="assets/css/print.css" md5="ad297adba193846a1df6bec43879138c"/>
-		<file filename="assets/css/print.css.map" md5="362439a1c43b9dc80b1073d1fc69b36a"/>
-		<file filename="assets/css/print.min.css" md5="11bdf48c1e00eab904b34ff0aa4813de"/>
-		<file filename="assets/css/styles.css" md5="3436ef3a9b15cb5469b973b135156ede"/>
-		<file filename="assets/css/styles.css.map" md5="ba9c2dd39eba2acd9fabe4566a4c24db"/>
-		<file filename="assets/css/styles.min.css" md5="fbc1f9575021a9ebd237b3e96c8b34e4"/>
-		<file filename="assets/css/tinymce/content.css" md5="5fe44818d00f88d74f94937f48ff3c77"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="72033d868cb842641709be6b246774f3"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="48dd7894886bd319ba0a653cb252bd98"/>
+		<file filename="assets/css/print.css" md5="2504afe0803897d077541985768086bd"/>
+		<file filename="assets/css/print.css.map" md5="a6b094c089c96c17ef9fdc18c1fa3bfa"/>
+		<file filename="assets/css/print.min.css" md5="96080d22a73ff422ad535495b47c2692"/>
+		<file filename="assets/css/styles.css" md5="bce1902075f71d300f28c9c07e2c05a3"/>
+		<file filename="assets/css/styles.css.map" md5="8c218e88d13aae651e2ce3e220bdbbeb"/>
+		<file filename="assets/css/styles.min.css" md5="5e6e88d6bbe17206d2a0234d1a83e2b2"/>
+		<file filename="assets/css/tinymce/content.css" md5="caddf0bd054ff0c754c56b6e59c8665a"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="3d082294f528bf3b9ee6dc22f46e5447"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="84e00ac7c52de785adb5ada4a4a5c21d"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="104d34104d89e98afc386eeed216433c" title="Basic Skin"/>
@@ -66,7 +66,7 @@
 		<file filename="email_basic.tpl"/>
 	</emailskins>
 	<otherfiles>
-		<file filename="CHANGELOG" md5="a9fd75df8c7dfac31e1e2e37e5eefab1"/>
+		<file filename="CHANGELOG" md5="bf65a4d3546880b0efd7bb3c2a5a3602"/>
 		<file filename="assets/scss/_variables.scss" md5="3768ff5f28e2b4f64b448c6be876d756"/>
 		<file filename="assets/scss/admin/adminbar.scss" md5="1058bc0a52036c12a2a4f028eb670dff"/>
 		<file filename="assets/scss/jquery-file-upload.scss" md5="2d0f28a23bfd051483db51d8e8a70b69"/>
@@ -83,7 +83,9 @@
 		<file filename="screenshots/screen1.png" md5="d05a61727af783311a18bc40f99809a6"/>
 		<file filename="widgets/adminmenu/view.tpl" md5="fb79cab839a42db638579252a6f883a2"/>
 	</otherfiles>
-	<upgrades></upgrades>
+	<upgrades>
+		<upgrade from="1.0.0" to="1.0.1"/>
+	</upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
 	</screenshots>
