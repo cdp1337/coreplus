@@ -14,15 +14,15 @@
 		<file filename="assets/css/jquery-ui-1.12.1.css" md5="b550e029a6b7fadee4aa28653be5ae8e"/>
 		<file filename="assets/css/jquery-ui-1.12.1.css.map" md5="c59ac807e4b9d93a905fd80ab6c770e0"/>
 		<file filename="assets/css/jquery-ui-1.12.1.min.css" md5="50581ed40a412b539630598271d00eb0"/>
-		<file filename="assets/css/print.css" md5="6c3bc06948ac779503fcfc714bdb8291"/>
-		<file filename="assets/css/print.css.map" md5="67417a9c804ee868b679eddc716cda10"/>
-		<file filename="assets/css/print.min.css" md5="92241003f0539cfb97cc9f6c0c4c9470"/>
-		<file filename="assets/css/styles.css" md5="e9f7566803fd33371baef86be781f5f1"/>
-		<file filename="assets/css/styles.css.map" md5="67975b31d49a9843c9fdbb2694517b2a"/>
-		<file filename="assets/css/styles.min.css" md5="e397f00f725b0f447eed969f88edac1c"/>
-		<file filename="assets/css/tinymce/content.css" md5="913aa4ee7522f1630904ed3581989d26"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="03978eb7110d7c203f3851e9ca4ec9a2"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="8ad81ff5a6ef6f952bc5bd01bc3c4e44"/>
+		<file filename="assets/css/print.css" md5="9f48eb33022662775467c7285160ddaf"/>
+		<file filename="assets/css/print.css.map" md5="a1f803cee100e464d26d29c33e4a2b7e"/>
+		<file filename="assets/css/print.min.css" md5="7eaa92e9aa1b303cd8f9628ad344f122"/>
+		<file filename="assets/css/styles.css" md5="0dfdf34987bcd63d9844b022bd3c7d56"/>
+		<file filename="assets/css/styles.css.map" md5="80b669120046ca1b498b1a9d00ca1b63"/>
+		<file filename="assets/css/styles.min.css" md5="de1664adc0344e140dfc96c09452aef7"/>
+		<file filename="assets/css/tinymce/content.css" md5="fb6033aea2398850e9666241b1de5d9c"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="be5e8d9d10008ed53dab2cc220b78ba4"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="f28b22fe20f06e279c1d6cd8ca2aaa59"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="104d34104d89e98afc386eeed216433c" title="Basic Skin"/>
@@ -83,7 +83,7 @@
 		<file filename="screenshots/screen1.png" md5="cdd432156c45249f61d3d6fffd11f767"/>
 		<file filename="widgets/adminmenu/view.tpl" md5="fb79cab839a42db638579252a6f883a2"/>
 	</otherfiles>
-	<upgrades/>
+	<upgrades></upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
 	</screenshots>

@@ -14,15 +14,15 @@
 		<file filename="assets/css/jquery-ui-1.12.1.css" md5="deb946e770b183017f5a44db414d611a"/>
 		<file filename="assets/css/jquery-ui-1.12.1.css.map" md5="617124398657882f14756e125c1be23e"/>
 		<file filename="assets/css/jquery-ui-1.12.1.min.css" md5="56cc7675d32fa99072c8035047af541d"/>
-		<file filename="assets/css/print.css" md5="09be19c0f05ee9bec934984018f36b94"/>
-		<file filename="assets/css/print.css.map" md5="e18341b6379a5a85c361d593872306c4"/>
-		<file filename="assets/css/print.min.css" md5="e63c7177ffa9beba12c40b58087b06fb"/>
-		<file filename="assets/css/styles.css" md5="dbcc435b857de8013d5e0d87afa5e6cd"/>
-		<file filename="assets/css/styles.css.map" md5="519060c517a30ea605b24cbfe39ca273"/>
-		<file filename="assets/css/styles.min.css" md5="72971fec8eb8bd9b5d5e6095bbb1827b"/>
-		<file filename="assets/css/tinymce/content.css" md5="a8698462175120278b0f9242521a75f9"/>
-		<file filename="assets/css/tinymce/content.css.map" md5="7046949860fc748b828b71052b8f95f9"/>
-		<file filename="assets/css/tinymce/content.min.css" md5="09eec8b0952f6639dade72c15c05449f"/>
+		<file filename="assets/css/print.css" md5="ed10f801e6e789a565df94d9d0c28bf1"/>
+		<file filename="assets/css/print.css.map" md5="cf1c904a095cc98d3d8eac52289d002b"/>
+		<file filename="assets/css/print.min.css" md5="11e1268b5f9f0ec4ac485db51c6c96bf"/>
+		<file filename="assets/css/styles.css" md5="dd67f73832ef9ca83805ce57dd61c115"/>
+		<file filename="assets/css/styles.css.map" md5="78581ba4324aed42ddcbcc185e4481f6"/>
+		<file filename="assets/css/styles.min.css" md5="37ab0c98c00fed6a354fcdaf3259a1aa"/>
+		<file filename="assets/css/tinymce/content.css" md5="47326e4452b804b605e750955fb157e8"/>
+		<file filename="assets/css/tinymce/content.css.map" md5="57ea49cbefd49d1eeccc92c5ae993c02"/>
+		<file filename="assets/css/tinymce/content.min.css" md5="c33b77c770ca2e76d22a72473ef2dd20"/>
 	</assets>
 	<skins default="basic.tpl" admindefault="wide.tpl">
 		<file filename="basic.tpl" md5="104d34104d89e98afc386eeed216433c" title="Basic Skin"/>
@@ -73,7 +73,7 @@
 		<file filename="assets/scss/_controls.scss" md5="42fa4a3805a48cd531d98a165ee129ca"/>
 		<file filename="assets/scss/_debugging.scss" md5="1b0978ef99dfd17c0e2df59dbea683e4"/>
 		<file filename="assets/scss/_filters_and_pagination.scss" md5="0c2ffa742c5fa4dd53cd73cfdb68862e"/>
-		<file filename="assets/scss/_form_elements.scss" md5="cf5ab547fa8a6f6a7a63f428fe8b425e"/>
+		<file filename="assets/scss/_form_elements.scss" md5="4dcd88ba9a83afe866137f1f2e401071"/>
 		<file filename="assets/scss/_layout.scss" md5="8386166ce2c16bde59491ad041c7bf5d"/>
 		<file filename="assets/scss/_listing_tables.scss" md5="7b4667e10c9280ffb056767b9c0b9add"/>
 		<file filename="assets/scss/_messages.scss" md5="6e67f191409a77a85f8ac704538125f5"/>
@@ -211,7 +211,7 @@
 		<file filename="screenshots/screen1.png" md5="599951df25ae3f6c5ab42b4816b0c654"/>
 		<file filename="widgets/adminmenu/view.tpl" md5="fb79cab839a42db638579252a6f883a2"/>
 	</otherfiles>
-	<upgrades/>
+	<upgrades></upgrades>
 	<screenshots>
 		<screenshot file="screenshots/screen1.png"/>
 	</screenshots>
