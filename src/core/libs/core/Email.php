@@ -303,7 +303,7 @@ class Email implements EmailInterface {
 	public function send() {
 		if(!\ConfigHandler::Get('/core/email/enable_sending')){
 			// Allow a config option to disable sending entirely.
-			SystemLogModel::LogInfoEvent('/email/disabled', 'Email sending is disabled, not sending email ' . $m->Subject . '!');
+			\SystemLogModel::LogInfoEvent('/email/disabled', 'Email sending is disabled, not sending email ' . $m->Subject . '!');
 			return false;
 		}
 
