@@ -234,8 +234,7 @@ abstract class Factory {
 			strpos($uri, 'private/') === 0 ||
 			strpos($uri, get_private_path()) === 0
 		){
-			// @TODO
-			//return resolve_private_file($uri);
+			return resolve_private_directory($uri);
 		}
 
 		// Is this a tmp request?

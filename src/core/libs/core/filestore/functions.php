@@ -429,36 +429,7 @@ function resolve_asset_file($filename){
  * @throws \Exception
  */
 function resolve_public_file($filename){
-	$resolved = get_public_path();
-
-	if (strpos($filename, 'public/') === 0) {
-		// Allow "assets/blah" to be passed in
-		$filename = substr($filename, 7);
-	}
-	elseif(strpos($filename, $resolved) === 0){
-		// Allow the fully resolved name to be passed in
-		$filename = substr($filename, strlen($resolved));
-	}
-
-	switch(CDN_TYPE){
-		case 'local':
-			if(\Core\ftp()){
-				// FTP has its own sub-type.
-				return new Backends\FileFTP($resolved . $filename);
-			}
-			else{
-				return new Backends\FileLocal($resolved . $filename);
-			}
-			break;
-
-		case 'ftp':
-			return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
-			break;
-
-		default:
-			throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
-			break;
-	}
+	return _resolve_type_file($filename, get_public_path(), 'public/', 'file');
 }
 
 /**
@@ -471,11 +442,49 @@ function resolve_public_file($filename){
  * @throws \Exception
  */
 function resolve_private_file($filename){
-	$resolved = get_private_path();
+	return _resolve_type_file($filename, get_private_path(), 'private/', 'file');
+}
 
-	if (strpos($filename, 'private/') === 0) {
+/**
+ * Resolve a name for a public to an actual file.
+ *
+ * @param $filename
+ *
+ * @return \Core\Filestore\Directory
+ *
+ * @throws \Exception
+ */
+function resolve_public_directory($filename){
+	return _resolve_type_file($filename, get_public_path(), 'public/', 'directory');
+}
+
+/**
+ * Resolve a name for a private to an actual file.
+ *
+ * @param $filename
+ *
+ * @return \Core\Filestore\Directory
+ *
+ * @throws \Exception
+ */
+function resolve_private_directory($filename){
+	return _resolve_type_file($filename, get_private_path(), 'private/', 'directory');
+}
+
+/**
+ * Resolve a name for a public/private to an actual file.
+ *
+ * @param $filename
+ *
+ * @return \Core\Filestore\File
+ *
+ * @throws \Exception
+ */
+function _resolve_type_file($filename, $resolved, $prefix, $type){
+
+	if (strpos($filename, $prefix) === 0) {
 		// Allow "assets/blah" to be passed in
-		$filename = substr($filename, 8);
+		$filename = substr($filename, strlen($prefix));
 	}
 	elseif(strpos($filename, $resolved) === 0){
 		// Allow the fully resolved name to be passed in
@@ -486,15 +495,24 @@ function resolve_private_file($filename){
 		case 'local':
 			if(\Core\ftp()){
 				// FTP has its own sub-type.
-				return new Backends\FileFTP($resolved . $filename);
+				return 
+					$type === 'file' ? 
+					new Backends\FileFTP($resolved . $filename) : 
+					new Backends\DirectoryFTP($resolved . $filename);
 			}
 			else{
-				return new Backends\FileLocal($resolved . $filename);
+				return
+					$type === 'file' ? 
+					new Backends\FileLocal($resolved . $filename) :
+					new Backends\DirectoryLocal($resolved . $filename);
 			}
 			break;
 
 		case 'ftp':
-			return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
+			return 
+				$type === 'file' ? 
+				new Backends\FileFTP($resolved  . $filename, cdn_ftp()) :
+				new Backends\DirectoryFTP($resolved . $filename, cdn_ftp());
 			break;
 
 		default:
@@ -547,45 +565,7 @@ function resolve_asset_directory($filename){
 }
 
 
-/**
- * Resolve a name for a public to an actual file.
- *
- * @param $filename
- *
- * @return \Core\Filestore\Directory
- *
- * @throws \Exception
- */
-function resolve_public_directory($filename){
-	$resolved = get_public_path();
 
-	if (strpos($filename, 'public/') === 0) {
-		// Allow "assets/blah" to be passed in
-		$filename = substr($filename, 7);
-	}
-	elseif(strpos($filename, $resolved) === 0){
-		// Allow the fully resolved name to be passed in
-		$filename = substr($filename, strlen($resolved));
-	}
-
-	// I need to check the custom, current theme, and finally default locations for the file.
-	$theme = \ConfigHandler::Get('/theme/selected');
-	switch(CDN_TYPE){
-		case 'local':
-			if(\Core\ftp()){
-				// FTP has its own sub-type.
-				return new Backends\DirectoryFTP($resolved . $filename);
-			}
-			else{
-				return new Backends\DirectoryLocal($resolved . $filename);
-			}
-
-			break;
-		default:
-			throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
-			break;
-	}
-}
 
 /**
  * Function to translate a PHP upload error into a human-readable string.
