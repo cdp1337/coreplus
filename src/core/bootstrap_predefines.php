@@ -225,7 +225,7 @@ else{
 	// Success color
 	define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold; font-family:Courier,mono;'>");
 	// Warning color
-	define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold; font-family:Courier,mono;'>");
+	define('COLOR_WARNING', "<span style='color:#9e9e00; font-weight:bold; font-family:Courier,mono;'>");
 	// Error color
 	define('COLOR_ERROR', "<span style='color:red; font-weight:bold; font-family:Courier,mono;'>");
 	// Debug color
