@@ -322,24 +322,34 @@ class DatamodelProfiler {
 				break;
 			}
 
-			$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
-			$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
+			if($dat['type'] === 'read'){
+				$typecolor = '#88F';
+				$tpad = '  ';
+				
+				if($dat['time'] <= .001)    $icolor = COLOR_SUCCESS;
+				elseif($dat['time'] <= .01) $icolor = COLOR_WARNING;
+				else                         $icolor = COLOR_ERROR;
+			}
+			else{
+				$typecolor = '#005';
+				$tpad = ' ';
+				
+				if($dat['time'] <= .01)    $icolor = COLOR_SUCCESS;
+				elseif($dat['time'] <= .1) $icolor = COLOR_WARNING;
+				else                        $icolor = COLOR_ERROR;
+			}
+			
+			$reset  = COLOR_RESET;
 			$type   = $dat['type'];
 			$time   = str_pad(\Core\time_duration_format($dat['time'], 2), 9, '0', STR_PAD_LEFT);
-			$query  = $dat['query'];
+			$query = htmlentities($dat['query'], ENT_QUOTES | ENT_HTML5);
 			$caller = print_r($dat['caller'], true);
 			if($dat['rows'] !== null){
 				$caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 			}
-			$out .= sprintf(
-				"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] <code class='sql'>%s</code></span>\n",
-				$caller,
-				$typecolor,
-				$type,
-				$tpad,
-				$time,
-				htmlentities($query, ENT_QUOTES | ENT_HTML5)
-			);
+			$out .= <<<EOL
+<span title='$caller'><span style="color:$typecolor;">[$type]</span>${tpad}[${icolor}${time}${reset}] <code class="sql">$query</code></span>\n
+EOL;
 		}
 
 		// Purge the output.
