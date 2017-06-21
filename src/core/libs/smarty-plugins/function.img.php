@@ -24,6 +24,13 @@
  *
  * The {img} smarty function is the recommended way to load images in templates from asset or public directories.
  * In addition to automatically resolving URLs, it can also handle server-side resizing and a few other nifty features.
+ * 
+ * #### "Blank" images
+ * 
+ * *Core 6.2.2* A "blank" image can now be requested via 'src="BLANK"'!
+ * This gets replaced with a 1x1 transparent GIF image and no File magick ran.
+ * Use this when you need to render an <img/> tag with no src but still be valid and with no
+ * unnecessary calls back to # or about:blank or anything.
  *
  * #### Image Types &amp; Animations
  *
@@ -88,6 +95,7 @@
  *    * string
  *    * Source filename to display.  This can start with "assets" for an asset, or "public" for a public file.
  *    * Either "file" or "src" is required.
+ *    * Set to "BLANK" (caps matter), to render a 1x1 transparent pixel.
  *  * width
  *    * int
  *    * Maximum image width (in pixels).
@@ -119,6 +127,10 @@ function smarty_function_img($params, $smarty){
 			throw new SmartyException('{img} tag expects a \Core\Filestore\File object for the "file" parameter.');
 		}
 		unset($params['file']);
+	}
+	elseif(isset($params['src']) && $params['src'] === 'BLANK'){
+		$f = null;
+		$params['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAA‌​AAALAAAAAABAAEAAAICR‌​AEAOw==';
 	}
 	elseif(isset($params['src'])){
 		$f = \Core\Filestore\Factory::File($params['src']);
@@ -183,7 +195,7 @@ function smarty_function_img($params, $smarty){
 		$f = \Core\Filestore\Factory::File('assets/images/placeholders/' . $placeholder . '.png');
 	}
 
-	if(!$f){
+	if(!($f || isset($params['src']))){
 		throw new SmartyException('{img} tag requires either "src", "file", or a "placeholder" parameter.');
 	}
 
@@ -192,13 +204,13 @@ function smarty_function_img($params, $smarty){
 		$attributes[$k] = $v;
 	}
 
-	if($f instanceof Core\Filestore\Backends\FileRemote){
+	if($f && $f instanceof Core\Filestore\Backends\FileRemote){
 		// Erm... Give the original URL with the dimension requests.
 		$attributes['src'] = $f->getURL();
 		if($width) $attributes['width'] = $width;
 		if($height) $attributes['height'] = $height;
 	}
-	elseif($f->getExtension() == 'svg'){
+	elseif($f && $f->getExtension() == 'svg'){
 		// Vector graphics should be sent to the user agent for processing there.
 		// This provides the best quality, (as opposed to rasterizing the data).
 		if($inline){
@@ -213,7 +225,7 @@ function smarty_function_img($params, $smarty){
 			if($height) $attributes['height'] = $height;
 		}
 	}
-	else{
+	elseif($f){
 		// Try to lookup the preview file.
 		// if it exists, then YAY... I can return that direct resource.
 		// otherwise, I should check and see if the file is larger than a set filesize.
@@ -247,7 +259,7 @@ function smarty_function_img($params, $smarty){
 	}
 
 	// All images need alt data!
-	if(!isset($attributes['alt'])){
+	if(!isset($attributes['alt']) && $f){
 		$attributes['alt'] = $f->getTitle();
 	}
 
@@ -257,7 +269,7 @@ function smarty_function_img($params, $smarty){
 	$html .= '/>';
 
 	// If the extended metadata was requested... look that up too!
-	if(isset($params['includemeta']) && $params['includemeta']){
+	if(isset($params['includemeta']) && $params['includemeta'] && $f){
 
 		$metahelper  = new \Core\Filestore\FileMetaHelper($f);
 		$metacontent = $metahelper->getAsHTML();
