@@ -578,13 +578,31 @@ class Table implements \Iterator {
 		$this->getFilters()->load($request);
 	}
 
-	public function render($section = null){
-		if(!$this->_applied){
-			$this->getFilters()->applyToFactory($this->getModelFactory());
-			$this->_results = $this->getModelFactory()->get();
-			$this->_applied = true;
-		}
+	
+	/**
+	 * Apply the automatic filters to the embedded Factory.
+	 * 
+	 * This is usually called automatically and doesn't need to be called externally
+	 * unless the fully resolved Factory is required by an external source,
+	 * (such as graph data or something similar).
+	 */
+	public function applyFilters(){
+ 		if(!$this->_applied){
+ 			$this->getFilters()->applyToFactory($this->getModelFactory());
+ 			$this->_applied = true;
+ 		}
+	}
 
+	public function render($section){
+		// Ensure that the filters are applied first!
+		// This method is safe to call multiple times.
+		$this->applyFilters();
+		
+		// Load the results into the internal array.
+		if($this->_results === null){
+			$this->_results = $this->getModelFactory()->get();
+		}
+		
 		switch($section){
 			case null:
 				return $this->_renderHead() . $this->_renderBody() . $this->_renderFoot();
