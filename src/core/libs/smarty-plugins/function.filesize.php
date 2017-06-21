@@ -28,6 +28,8 @@
  * {filesize 123} => "123 bytes"
  * {filesize 2048} => "2 kiB"
  * </pre>
+ * 
+ * * Core 6.2.2 * A "round" parameter is supported to provide the level of precision to use.
  *
  * @param array  $params  Associative (and/or indexed) array of smarty parameters passed in from the template
  * @param Smarty $smarty  Parent Smarty template object
@@ -39,5 +41,7 @@ function smarty_function_filesize($params, $smarty){
 	
 	$size = $params[0];
 	
-	return \Core\Filestore\format_size($size);
+	$round = isset($params['round']) ? $params['round'] : 2;
+	
+	return \Core\Filestore\format_size($size, $round);
 }
