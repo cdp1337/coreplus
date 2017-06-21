@@ -15,7 +15,7 @@
  * @copyright Copyright (C) 2009-2016  Charlie Powell
  * @license     GNU Affero General Public License v3 <http://www.gnu.org/licenses/agpl-3.0.txt>
  *
- * @compiled Fri, 02 Jun 2017 22:25:17 -0400
+ * @compiled Wed, 21 Jun 2017 00:07:11 -0400
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Affero General Public License as
@@ -1126,24 +1126,31 @@ if($i > 1000){
 $out .= 'Plus ' . ($qls - 1000) . ' more!' . "\n";
 break;
 }
-$typecolor = ($dat['type'] == 'read') ? '#88F' : '#005';
-$tpad   = ($dat['type'] == 'read') ? '  ' : ' ';
+if($dat['type'] === 'read'){
+$typecolor = '#88F';
+$tpad = '  ';
+if($dat['time'] <= .001)    $icolor = COLOR_SUCCESS;
+elseif($dat['time'] <= .01) $icolor = COLOR_WARNING;
+else                         $icolor = COLOR_ERROR;
+}
+else{
+$typecolor = '#005';
+$tpad = ' ';
+if($dat['time'] <= .01)    $icolor = COLOR_SUCCESS;
+elseif($dat['time'] <= .1) $icolor = COLOR_WARNING;
+else                        $icolor = COLOR_ERROR;
+}
+$reset  = COLOR_RESET;
 $type   = $dat['type'];
 $time   = str_pad(\Core\time_duration_format($dat['time'], 2), 9, '0', STR_PAD_LEFT);
-$query  = $dat['query'];
+$query = htmlentities($dat['query'], ENT_QUOTES | ENT_HTML5);
 $caller = print_r($dat['caller'], true);
 if($dat['rows'] !== null){
 $caller .= "\n" . 'Number of affected rows: ' . $dat['rows'];
 }
-$out .= sprintf(
-"<span title='%s'><span style='color:%s;'>[%s]</span>%s[%s] <code class='sql'>%s</code></span>\n",
-$caller,
-$typecolor,
-$type,
-$tpad,
-$time,
-htmlentities($query, ENT_QUOTES | ENT_HTML5)
-);
+$out .= <<<EOL
+<span title='$caller'><span style="color:$typecolor;">[$type]</span>${tpad}[${icolor}${time}${reset}] <code class="sql">$query</code></span>\n
+EOL;
 }
 Session::UnsetKey('datamodel_profiler_events/*');
 return $out;
@@ -1364,7 +1371,7 @@ else{
 define('COLOR_LINE', "<span style='color:grey; font-family:Courier,mono;'>");
 define('COLOR_HEADER', "<span style='color:cyan; font-weight:bold; font-family:Courier,mono;'>");
 define('COLOR_SUCCESS', "<span style='color:green; font-weight:bold; font-family:Courier,mono;'>");
-define('COLOR_WARNING', "<span style='color:yellow; font-weight:bold; font-family:Courier,mono;'>");
+define('COLOR_WARNING', "<span style='color:#9e9e00; font-weight:bold; font-family:Courier,mono;'>");
 define('COLOR_ERROR', "<span style='color:red; font-weight:bold; font-family:Courier,mono;'>");
 define('COLOR_DEBUG', "<span style='color:lightskyblue; font-family:Courier,mono;'>");
 define('COLOR_NORMAL', "<span style='font-family:Courier,mono;'>");
@@ -11674,34 +11681,20 @@ break;
 }
 }
 function resolve_public_file($filename){
-$resolved = get_public_path();
-if (strpos($filename, 'public/') === 0) {
-$filename = substr($filename, 7);
-}
-elseif(strpos($filename, $resolved) === 0){
-$filename = substr($filename, strlen($resolved));
-}
-switch(CDN_TYPE){
-case 'local':
-if(\Core\ftp()){
-return new Backends\FileFTP($resolved . $filename);
-}
-else{
-return new Backends\FileLocal($resolved . $filename);
-}
-break;
-case 'ftp':
-return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
-break;
-default:
-throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
-break;
-}
+return _resolve_type_file($filename, get_public_path(), 'public/', 'file');
 }
 function resolve_private_file($filename){
-$resolved = get_private_path();
-if (strpos($filename, 'private/') === 0) {
-$filename = substr($filename, 8);
+return _resolve_type_file($filename, get_private_path(), 'private/', 'file');
+}
+function resolve_public_directory($filename){
+return _resolve_type_file($filename, get_public_path(), 'public/', 'directory');
+}
+function resolve_private_directory($filename){
+return _resolve_type_file($filename, get_private_path(), 'private/', 'directory');
+}
+function _resolve_type_file($filename, $resolved, $prefix, $type){
+if (strpos($filename, $prefix) === 0) {
+$filename = substr($filename, strlen($prefix));
 }
 elseif(strpos($filename, $resolved) === 0){
 $filename = substr($filename, strlen($resolved));
@@ -11709,14 +11702,23 @@ $filename = substr($filename, strlen($resolved));
 switch(CDN_TYPE){
 case 'local':
 if(\Core\ftp()){
-return new Backends\FileFTP($resolved . $filename);
+return
+$type === 'file' ?
+new Backends\FileFTP($resolved . $filename) :
+new Backends\DirectoryFTP($resolved . $filename);
 }
 else{
-return new Backends\FileLocal($resolved . $filename);
+return
+$type === 'file' ?
+new Backends\FileLocal($resolved . $filename) :
+new Backends\DirectoryLocal($resolved . $filename);
 }
 break;
 case 'ftp':
-return new Backends\FileFTP($resolved  . $filename, cdn_ftp());
+return
+$type === 'file' ?
+new Backends\FileFTP($resolved  . $filename, cdn_ftp()) :
+new Backends\DirectoryFTP($resolved . $filename, cdn_ftp());
 break;
 default:
 throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
@@ -11734,29 +11736,6 @@ $filename = substr($filename, 6);
 elseif(strpos($filename, $resolved) === 0){
 $filename = substr($filename, strlen($resolved));
 }
-switch(CDN_TYPE){
-case 'local':
-if(\Core\ftp()){
-return new Backends\DirectoryFTP($resolved . $filename);
-}
-else{
-return new Backends\DirectoryLocal($resolved . $filename);
-}
-break;
-default:
-throw new \Exception('Unsupported CDN type: ' . CDN_TYPE);
-break;
-}
-}
-function resolve_public_directory($filename){
-$resolved = get_public_path();
-if (strpos($filename, 'public/') === 0) {
-$filename = substr($filename, 7);
-}
-elseif(strpos($filename, $resolved) === 0){
-$filename = substr($filename, strlen($resolved));
-}
-$theme = \ConfigHandler::Get('/theme/selected');
 switch(CDN_TYPE){
 case 'local':
 if(\Core\ftp()){
@@ -12169,6 +12148,7 @@ if(
 strpos($uri, 'private/') === 0 ||
 strpos($uri, get_private_path()) === 0
 ){
+return resolve_private_directory($uri);
 }
 if(strpos($uri, 'tmp/') === 0){
 return new Backends\DirectoryLocal(get_tmp_path() . substr($uri, 4));

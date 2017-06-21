@@ -135,7 +135,7 @@
 		<file filename="core/assets/scss/user.scss" md5="a8d7c218bdabd498a0372ed9086a345d"/>
 		<file filename="core/bootstrap.php" md5="01d4fa70c3ec29651caf4d8b872ea48f"/>
 		<file filename="core/bootstrap_postincludes.php" md5="713e626b88a4f6c634b37783c52cdada"/>
-		<file filename="core/bootstrap_predefines.php" md5="8e59b2e2b2d0410ae2ad487d1e79a246"/>
+		<file filename="core/bootstrap_predefines.php" md5="80e08a1b431df3b4e5d11ec0b36486f3"/>
 		<file filename="core/bootstrap_preincludes.php" md5="a01b23fdfe3d4ee870ab8e0ead0c0aff"/>
 		<file filename="core/controllers/AdminController.php" md5="e48924e2bc5dc5a9c57428eb47761e08">
 			<controller name="AdminController"/>
@@ -467,7 +467,7 @@
 		<file filename="core/libs/core/filestore/Directory_Backend.interface.php" md5="74074e4519deb3a977460749d17e3631">
 			<interface name="Directory_Backend"/>
 		</file>
-		<file filename="core/libs/core/filestore/Factory.php" md5="7d1886cc4e24799ed43c615d789e71db">
+		<file filename="core/libs/core/filestore/Factory.php" md5="c30480c1b659a40d9393b97279945c98">
 			<class name="Core\Filestore\Factory"/>
 		</file>
 		<file filename="core/libs/core/filestore/File.interface.php" md5="6d971bf1a05820d99c2256e74f95c1b2">
@@ -527,7 +527,7 @@
 		<file filename="core/libs/core/filestore/ftp/FTPMetaFile.php" md5="daab027973b4c627f2ea3b5354582496">
 			<class name="Core\Filestore\FTP\FTPMetaFile"/>
 		</file>
-		<file filename="core/libs/core/filestore/functions.php" md5="50f9700bb7ff8d6ea1e32b47ddf59411"/>
+		<file filename="core/libs/core/filestore/functions.php" md5="fd20da4b3665ccf4b24249a1d28031d4"/>
 		<file filename="core/libs/core/formatter/CurrencyFormatter.php" md5="6d02286ff987b8f45c88a979d1edae43">
 			<class name="Core\Formatter\CurrencyFormatter"/>
 		</file>
@@ -693,7 +693,7 @@
 		<file filename="core/libs/core/listingtable/Column.php" md5="c056ec616c3db15003a1c3bf60535f0c">
 			<class name="Core\ListingTable\Column"/>
 		</file>
-		<file filename="core/libs/core/listingtable/Table.php" md5="c9966c882caa053da7bdae1358ad2a65">
+		<file filename="core/libs/core/listingtable/Table.php" md5="831ab36cc5513a0f757a71d7f5a3169a">
 			<class name="Core\ListingTable\Table"/>
 		</file>
 		<file filename="core/libs/core/search/DoubleMetaPhone.php" md5="83b809f860d8bbad75fc44499c60bdcc">
@@ -765,7 +765,7 @@
 		<file filename="core/libs/core/utilities/logger/Logger.php" md5="d06e4dab1074505e5c784b79c1b891e6">
 			<class name="Core\Utilities\Logger\Logger"/>
 		</file>
-		<file filename="core/libs/core/utilities/profiler/DatamodelProfiler.php" md5="447e87667c5a667c19e33e91e36d61bf">
+		<file filename="core/libs/core/utilities/profiler/DatamodelProfiler.php" md5="e7273bc52a888ab01534d7a651638fd7">
 			<class name="Core\Utilities\Profiler\DatamodelProfiler"/>
 		</file>
 		<file filename="core/libs/core/utilities/profiler/Profiler.php" md5="c63dbf92b3d8f89156fddfd48038e3c0">
@@ -854,11 +854,11 @@
 		<file filename="core/libs/smarty-plugins/function.duration.php" md5="199f58cf868e3822b273a535d4d68a6b"/>
 		<file filename="core/libs/smarty-plugins/function.email.php" md5="3bfe44903be9d5259feeb077781b4ea0"/>
 		<file filename="core/libs/smarty-plugins/function.file_thumbnail.php" md5="85879f8457820681a19a382525353202"/>
-		<file filename="core/libs/smarty-plugins/function.filesize.php" md5="554d9bf66298d4d74143dba46dd55b2d"/>
+		<file filename="core/libs/smarty-plugins/function.filesize.php" md5="b11f614e9b0fd6b14cf2744d0dd87698"/>
 		<file filename="core/libs/smarty-plugins/function.filespeed.php" md5="654cbf86f65cfd86e56dc9173aca108b"/>
 		<file filename="core/libs/smarty-plugins/function.gpg_fingerprint.php" md5="a19cc7b40215b411e0281df4a51ecf6f"/>
 		<file filename="core/libs/smarty-plugins/function.head.php" md5="457456384563ccfba5e5d34deb7d4185"/>
-		<file filename="core/libs/smarty-plugins/function.img.php" md5="c25a9138933585a27acc0db0e332915b"/>
+		<file filename="core/libs/smarty-plugins/function.img.php" md5="736c457f610e6ae72a67ba73694318dd"/>
 		<file filename="core/libs/smarty-plugins/function.json_encode.php" md5="f2d4587236e6e0bded7223eb5a732089"/>
 		<file filename="core/libs/smarty-plugins/function.link.php" md5="8d48713982668840f413c7847dac33e9"/>
 		<file filename="core/libs/smarty-plugins/function.multisite.php" md5="f58d5995992f7baff9af06dff9ce27b1"/>
@@ -2516,6 +2516,9 @@
 		<file filename="core/assets/images/devices/cpu.png" md5="f55de58d608ee7fce200a238e1778616"/>
 		<file filename="core/assets/images/devices/display.png" md5="ec423c80c28d5eaaf6b6dc1b64735b51"/>
 		<file filename="core/assets/images/devices/drive_harddisk.png" md5="f97beccc8e718ce33b57100bfa0e081f"/>
+		<file filename="core/assets/images/devices/drive_harddisk_bsd.png" md5="d6e4475b833ef4ee77adccf4b535f279"/>
+		<file filename="core/assets/images/devices/drive_harddisk_lin.png" md5="c60d81038936dcc5e18ddc784e32dff2"/>
+		<file filename="core/assets/images/devices/drive_harddisk_win.png" md5="ac2a859cb819396a253b214d3ea212f8"/>
 		<file filename="core/assets/images/devices/drive_optical.png" md5="df20a9fa7b1be51957cca8d14635bae0"/>
 		<file filename="core/assets/images/devices/drive_remote.png" md5="ec943dadacdb17eb1228507548fa52a5"/>
 		<file filename="core/assets/images/devices/drive_removable_media.png" md5="41ed8a6a5c5f34147f3f4c528193e4ba"/>
@@ -3227,5 +3230,44 @@
 		<upgrade from="6.1.2" to="6.2.0"/>
 		<upgrade from="6.2.0" to="6.2.1"/>
 	</upgrades>
+	<authors>
+		<author name="Charlie Powell" email="charlie@evalagency.com"/>
+		<author name="Brent Cook" email="busterbcook@yahoo.com"/>
+		<author name="John Griffin" email="jgriffin316@netscape.net"/>
+		<author name="John Millaway"/>
+		<author name="Brent Cook &lt;busterbcook@yahoo.com"/>
+		<author name="charlie"/>
+		<author name="Rodney Rehm"/>
+		<author name="Jason Sweat (added cc, bcc and subject functionality)"/>
+		<author name="Andrei Zmievski"/>
+		<author name="Thue Kristensen"/>
+		<author name="Erich Enke" email="erich.Enke@gmail.com"/>
+		<author name="Jason Pell" email="jasonpell@hotmail.com"/>
+		<author name="Lauren Matheson" email="inan@canada.com"/>
+		<author name="Solar Designer" email="solar at openwall.com"/>
+		<author name="Pete Nelson" email="@GunGeekATX"/>
+		<author name="Vlad Andersen" email="vlad.andersen@gmail.com"/>
+		<author name="Chris Wanstrath" email="chris@ozmm.org"/>
+		<author name="Monte Ohrt" email="monte at ohrt dot com"/>
+		<author name="Duda" email="duda@big.hu"/>
+		<author name="Roberto Berto" email="roberto@berto.net"/>
+		<author name="Monte Ohrt" email="monte AT ohrt DOT com"/>
+		<author name="Mark Priatel" email="mpriatel@rogers.com"/>
+		<author name="Gerard" email="gerard@interfold.com"/>
+		<author name="Jason Sweat" email="jsweat_php@yahoo.com"/>
+		<author name="Christopher Kvarme" email="christopher.kvarme@flashjab.com"/>
+		<author name="Messju Mohr" email="messju at lammfellpuschen dot de"/>
+		<author name="boots" email="boots dot smarty at yahoo dot com"/>
+		<author name="Ralf Strehle (minor optimization)" email="ralf dot strehle at yahoo dot de"/>
+		<author name="Ralf Strehle" email="ralf dot strehle at yahoo dot de"/>
+		<author name="Uwe Tews" email="uwe.tews@googlemail.com"/>
+	</authors>
+	<licenses>
+		<license url="http://www.gnu.org/licenses/agpl-3.0.html">
+			GNU Affero General Public License
+		</license>
+		<license>Public Domain</license>
+		<license url="http://opensource.org/licenses/MIT">MIT License</license>
+	</licenses>
 </component>
 
