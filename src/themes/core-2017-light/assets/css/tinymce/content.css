@@ -1176,8 +1176,9 @@ a {
 a:active, a:focus, a:hover {
   color: #1a7ea0;
 }
-/* line 135, ../../../../core-2017/assets/scss/_standard_tags.scss */
-a[target=_blank]:after {
+
+/* line 137, ../../../../core-2017/assets/scss/_standard_tags.scss */
+#inner-wrapper a[target=_blank]:after {
   content: " ";
   display: inline-block;
   font-family: FontAwesome;
@@ -1188,7 +1189,7 @@ a[target=_blank]:after {
   padding-left: 0.35em;
 }
 
-/* line 142, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 143, ../../../../core-2017/assets/scss/_standard_tags.scss */
 hr {
   border-bottom: 1px solid #aaaaaa;
   border-left: 0;
@@ -1197,19 +1198,19 @@ hr {
   margin: 1.5em 0;
 }
 
-/* line 150, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 151, ../../../../core-2017/assets/scss/_standard_tags.scss */
 figure {
   margin: 0;
 }
 
-/* line 154, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 155, ../../../../core-2017/assets/scss/_standard_tags.scss */
 img,
 picture {
   margin: 0;
   max-width: 100%;
 }
 
-/* line 160, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 161, ../../../../core-2017/assets/scss/_standard_tags.scss */
 table {
   border-collapse: collapse;
   margin: 0.75em 0;
@@ -1217,7 +1218,7 @@ table {
   width: 100%;
 }
 
-/* line 167, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 168, ../../../../core-2017/assets/scss/_standard_tags.scss */
 th {
   border-bottom: 1px solid gray;
   font-weight: 600;
@@ -1225,41 +1226,41 @@ th {
   text-align: left;
 }
 
-/* line 174, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 175, ../../../../core-2017/assets/scss/_standard_tags.scss */
 td {
   border-bottom: 1px solid #aaaaaa;
   padding: 0.75em 0;
 }
 
-/* line 179, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 180, ../../../../core-2017/assets/scss/_standard_tags.scss */
 tr,
 td,
 th {
   vertical-align: middle;
 }
 
-/* line 185, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 186, ../../../../core-2017/assets/scss/_standard_tags.scss */
 aside.markdown-toc {
   float: left;
   margin-right: 1em;
 }
-/* line 189, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 190, ../../../../core-2017/assets/scss/_standard_tags.scss */
 aside.markdown-toc ul {
   margin-left: 1em;
 }
 
-/* line 194, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 195, ../../../../core-2017/assets/scss/_standard_tags.scss */
 .useragent-pretty-browser, .useragent-pretty-platform, .useragent-pretty-device {
   display: inline-block;
 }
 
-/* line 200, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 201, ../../../../core-2017/assets/scss/_standard_tags.scss */
 a.agplv3-tag {
   display: inline-block;
   padding: 0 0.25em;
   color: #636;
 }
-/* line 205, ../../../../core-2017/assets/scss/_standard_tags.scss */
+/* line 206, ../../../../core-2017/assets/scss/_standard_tags.scss */
 a.agplv3-tag:hover {
   border-radius: 0.5em;
   background-color: #636;

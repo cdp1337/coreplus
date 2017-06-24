@@ -131,12 +131,13 @@ a {
 	&:hover {
 		color: shade($action-color, 25%);
 	}
-	
-	&[target=_blank]:after {
-		// Stylize any external link with the external link icon.
-		@include core2017-fa-icon(" \f08e");
-		padding-left: 0.35em;
-	}
+}
+
+// External links inside the inner wrapper (body wrapper), should have an icon.
+#inner-wrapper a[target=_blank]:after {
+	// Stylize any external link with the external link icon.
+	@include core2017-fa-icon(" \f08e");
+	padding-left: 0.35em;
 }
 
 hr {
