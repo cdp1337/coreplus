@@ -323,7 +323,7 @@ Updater = {};
 			$terminal = $('<iframe name="terminal" id="terminal"></iframe>');
 			$form = $('<form action="' + url + '&verbose=1" method="POST" target="terminal"></form>');
 
-			$terminal.load(function(){
+			$terminal.on('load', function(){
 				var $body = $(this).contents().find('body'),
 					$results = $body.find('#results');
 

@@ -103,7 +103,7 @@
 				}
 			};
 			
-			$iframe.load(function(){
+			$iframe.on('load', function(){
 				clearInterval(go);
 				processText();
 				$progressInner.css('width', '100%');

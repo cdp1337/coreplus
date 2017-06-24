@@ -30,7 +30,7 @@
 
 		go = setInterval(function(){ document.getElementById('import-log').contentWindow.scrollBy(0,20); }, 100);
 
-		$('#import-log').load(function(){
+		$('#import-log').on('load', function(){
 			clearInterval(go);
 			document.getElementById('import-log').contentWindow.scrollBy(0,200);
 		});
